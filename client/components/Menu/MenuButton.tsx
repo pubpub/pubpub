@@ -31,7 +31,7 @@ const getIconProp = (icon: IconName | React.ReactNode) => {
 };
 
 export const MenuButton = (props: MenuButtonProps) => {
-	const { placement = undefined, buttonContent, children, buttonProps, ...restProps } = props;
+	const { placement, buttonContent, children, buttonProps, ...restProps } = props;
 
 	const buttonPropsWithIcon = {
 		...buttonProps,

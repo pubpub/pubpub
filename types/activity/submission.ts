@@ -18,7 +18,7 @@ export type SubmissionCreatedActivityItem = SubmissionActivityItemBase & {
 	kind: 'submission-created';
 };
 
-export type SubmissionStatusUpdatedActivityItem = SubmissionActivityItemBase & {
+export type SubmissionUpdatedActivityItem = SubmissionActivityItemBase & {
 	kind: 'submission-updated';
 	payload: {
 		status?: Diff<Submission['status']>;
@@ -31,5 +31,5 @@ export type SubmissionDeletedActivityItem = SubmissionActivityItemBase & {
 
 export type SubmissionActivityItem =
 	| SubmissionCreatedActivityItem
-	| SubmissionStatusUpdatedActivityItem
+	| SubmissionUpdatedActivityItem
 	| SubmissionDeletedActivityItem;

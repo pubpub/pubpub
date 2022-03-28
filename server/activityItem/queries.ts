@@ -558,7 +558,7 @@ export const createPubDiscussionCommentAddedActivityItem = async (
 	});
 };
 
-export const createSubmissionStatusUpdatedActivityItem = async (
+export const createSubmissionUpdatedActivityItem = async (
 	actorId: null | string,
 	submissionId: string,
 	oldSubmission: types.Submission,

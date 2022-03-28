@@ -1,14 +1,14 @@
 import React from 'react';
 
-import { SubmissionStatusUpdatedActivityItem } from 'types';
+import { SubmissionUpdatedActivityItem } from 'types';
 
 import { pubTitle, collectionTitle } from '../titles';
 import { itemRenderer } from './itemRenderer';
 
 type Titles = 'pub' | 'collection';
 
-export const renderSubmissionUpdated = itemRenderer<SubmissionStatusUpdatedActivityItem, Titles>({
-	icon: 'office',
+export const renderSubmissionUpdated = itemRenderer<SubmissionUpdatedActivityItem, Titles>({
+	icon: 'manually-entered-data',
 	titleRenderers: {
 		pub: pubTitle,
 		collection: collectionTitle,
@@ -35,7 +35,7 @@ export const renderSubmissionUpdated = itemRenderer<SubmissionStatusUpdatedActiv
 			if (to === 'declined') {
 				return (
 					<>
-						{actor} denoed {pub} for submission to {collection}
+						{actor} denied {pub} for submission to {collection}
 					</>
 				);
 			}
