@@ -17,22 +17,21 @@ export const renderSubmissionUpdated = itemRenderer<SubmissionUpdatedActivityIte
 		const { payload } = item;
 		const { actor, pub, collection } = titles;
 		if (payload.status) {
-			const { to } = payload.status;
-			if (to === 'pending') {
+			if (payload.status.to === 'pending') {
 				return (
 					<>
-						{actor} submitted {pub} to {collection}
+						{actor} submitted {pub} into {collection}
 					</>
 				);
 			}
-			if (to === 'accepted') {
+			if (payload.status.to === 'accepted') {
 				return (
 					<>
 						{actor} accepted {pub} for submission to {collection}
 					</>
 				);
 			}
-			if (to === 'declined') {
+			if (payload.status.to === 'declined') {
 				return (
 					<>
 						{actor} denied {pub} for submission to {collection}
@@ -42,7 +41,8 @@ export const renderSubmissionUpdated = itemRenderer<SubmissionUpdatedActivityIte
 		}
 		return (
 			<>
-				{actor} updated the submission status for {pub} in [collection]
+				{actor} updated the submission status for {pub} in {collection} from
+				<i>{payload.status?.from}</i> to <i>{payload.status?.to}</i>
 			</>
 		);
 	},
