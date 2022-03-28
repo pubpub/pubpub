@@ -1,19 +1,41 @@
 @import '../PubHeader/themes.scss';
 @import 'styles/variables.scss';
-$light-grey: #BDBDBD;
+
+$light-grey: #bdbdbd;
 $lighter-grey: #747474;
-// $spub-configuration-width: 1000px;
-// $title-elements-spacing: 15px;
 
 .spub-header-component {
-	&,.minimal-editor-component > .editor-wrapper {
+	position: relative;
+	z-index: 20;
+
+	.pub-header-sticky-component {
+		opacity: 0;
+	}
+
+	&.js-is-sticky,
+	&.js-is-stuck {
+		border-bottom: 1px solid #d2d2d2;
+		.content-container {
+			opacity: 0;
+		}
+		.pub-header-sticky-component {
+			opacity: 1;
+			visibility: unset;
+		}
+	}
+
+	&,
+	.minimal-editor-component > .editor-wrapper {
 		background-color: #f8f8f8;
 	}
-	h1,h2 {
+
+	h1,
+	h2 {
 		color: var(--community-accent-dark);
 		font-style: normal;
 		text-align: left;
 	}
+
 	h1 {
 		font-family: $header-font;
 		font-size: 40px;
@@ -23,15 +45,18 @@ $lighter-grey: #747474;
 		box-decoration-break: clone;
 		margin-bottom: 36px;
 	}
+
 	h2 {
 		font-size: 14px;
 		font-weight: 500;
 		line-height: 17px;
 		letter-spacing: 0.05em;
 	}
-	.instruction, .bp3-label {
+
+	.instruction,
+	.bp3-label {
 		max-width: 750px;
-		.prosemirror-placeholder{
+		.prosemirror-placeholder {
 			opacity: 1;
 			padding: 0 3px;
 			&:after {
@@ -43,29 +68,34 @@ $lighter-grey: #747474;
 			}
 		}
 	}
+
 	.instruction {
 		font-weight: 300;
 		color: $lighter-grey;
 		letter-spacing: 0.015em;
 	}
+
 	input {
 		background: inherit;
 		min-height: unset;
 		border: none;
 		border-bottom: 1px solid $light-grey;
-		&,&:focus {
+		&,
+		&:focus {
 			box-shadow: none;
 		}
 		&::placeholder {
 			color: $lighter-grey;
 			font-style: italic;
 			font-weight: 300;
-			letter-spacing: .015em;
+			letter-spacing: 0.015em;
 		}
 	}
+
 	.bp3-input {
 		box-shadow: none;
 	}
+
 	.bp3-label {
 		margin: 15px 0;
 	}

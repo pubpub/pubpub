@@ -1,6 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { getJSON } from 'components/Editor';
 
 import { GridWrapper } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -8,21 +7,13 @@ import { useSticky } from 'client/utils/useSticky';
 import { useViewport } from 'client/utils/useViewport';
 
 import { usePubContext } from '../pubHooks';
-import { getTocHeadings } from './headerUtils';
+import { getPubHeadings } from './headerUtils';
 import { mobileViewportCutoff } from './constants';
 import PubDetails from './details';
 import PubHeaderBackground from './PubHeaderBackground';
 import PubHeaderContent from './PubHeaderContent';
 import SmallHeaderButton from './SmallHeaderButton';
 import PubHeaderSticky from './PubHeaderSticky';
-
-const getPubHeadings = (pubData, collabData) => {
-	let docJson = pubData.initialDoc;
-	if (collabData.editorChangeObject && collabData.editorChangeObject.view) {
-		docJson = getJSON(collabData.editorChangeObject.view);
-	}
-	return docJson ? getTocHeadings(docJson) : [];
-};
 
 require('./pubHeader.scss');
 
@@ -58,7 +49,12 @@ const PubHeader = (props: Props) => {
 	const [fixedHeight, setFixedHeight] = useState<number | null>(null);
 	const { viewportWidth } = useViewport();
 
-	const pubHeadings = getPubHeadings(pubData, collabData);
+	// TODO(ian): Move this computation to usePubBodyState()
+	const pubHeadings = useMemo(
+		() => getPubHeadings(pubData.initialDoc, collabData.editorChangeObject),
+		[pubData.initialDoc, collabData.editorChangeObject],
+	);
+
 	const isMobile = viewportWidth && viewportWidth <= mobileViewportCutoff;
 
 	useSticky({

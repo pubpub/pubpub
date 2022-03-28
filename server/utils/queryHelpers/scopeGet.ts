@@ -373,7 +373,7 @@ getActivePermissions = async (
 
 	const canEdit = permissionLevelIndex > 0;
 	const canCreateReviews =
-		!activePub.submission && (canEdit || activePublicPermissions.canCreateReviews);
+		!activePub?.submission && (canEdit || activePublicPermissions.canCreateReviews);
 
 	return {
 		activePermission: permissionLevelIndex > -1 ? permissionLevels[permissionLevelIndex] : null,
