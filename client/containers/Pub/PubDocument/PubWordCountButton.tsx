@@ -24,16 +24,16 @@ const PubHeaderFormattingWordCountButton = (props: Props) => {
 		}
 		return null;
 	}, [open, doc]);
-	const content = counts ? (
+	const content = (
 		<div className="pub-word-count-button-popover-content">
 			<dl>
 				<dt>Words</dt>
-				<dd>{counts[0]}</dd>
+				<dd>{counts?.[0]}</dd>
 				<dt>Characters</dt>
-				<dd>{counts[1]}</dd>
+				<dd>{counts?.[1]}</dd>
 			</dl>
 		</div>
-	) : undefined;
+	);
 
 	return (
 		<Popover
