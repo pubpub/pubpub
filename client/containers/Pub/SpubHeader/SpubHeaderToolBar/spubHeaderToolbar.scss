@@ -1,13 +1,10 @@
 @import 'styles/variables.scss';
-
-$light-orange: #fbb360;
-$medium-green: #43b177;
-$purple: #5c415d;
+@import '~@blueprintjs/core/lib/scss/variables';
 
 $status-colors: (
-	'declined': $purple,
-	'pending': $light-orange,
-	'accepted': $medium-green,
+	'pending': $gold4, //#F0B726
+	'accepted': $green2, //#1C6E42
+	'declined': $red2, //#AC2F33
 );
 
 $spub-configuration-width: 1000px;
