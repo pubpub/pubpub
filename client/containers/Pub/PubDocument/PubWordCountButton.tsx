@@ -17,18 +17,23 @@ const getWordAndCharacterCountsFromDoc = (node: Node) => {
 
 const PubHeaderFormattingWordCountButton = (props: Props) => {
 	const { doc } = props;
-	const [wordCount, characterCount] = useMemo(() => getWordAndCharacterCountsFromDoc(doc), []);
 	const [open, setOpen] = useState(false);
-	const content = (
+	const counts = useMemo(() => {
+		if (open) {
+			return getWordAndCharacterCountsFromDoc(doc);
+		}
+		return null;
+	}, [open, doc]);
+	const content = counts ? (
 		<div className="pub-word-count-button-popover-content">
 			<dl>
 				<dt>Words</dt>
-				<dd>{wordCount.toLocaleString()}</dd>
+				<dd>{counts[0]}</dd>
 				<dt>Characters</dt>
-				<dd>{characterCount.toLocaleString()}</dd>
+				<dd>{counts[1]}</dd>
 			</dl>
 		</div>
-	);
+	) : undefined;
 
 	return (
 		<Popover
