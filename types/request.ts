@@ -1,9 +1,13 @@
-import { Community } from './community';
-import { Collection } from './collection';
-import { Pub } from './pub';
-import { Member, MemberPermission } from './member';
-import { DefinitelyHas, Maybe } from './util';
-import { Scope } from './scope';
+import {
+	Collection,
+	Community,
+	Scope,
+	DefinitelyHas,
+	Maybe,
+	Member,
+	MemberPermission,
+	Pub,
+} from 'types';
 
 export type LoginData = {
 	id: string | null;
