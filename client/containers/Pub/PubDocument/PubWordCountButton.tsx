@@ -28,9 +28,9 @@ const PubHeaderFormattingWordCountButton = (props: Props) => {
 		<div className="pub-word-count-button-popover-content">
 			<dl>
 				<dt>Words</dt>
-				<dd>{counts?.[0]}</dd>
+				<dd>{counts?.[0].toLocaleString()}</dd>
 				<dt>Characters</dt>
-				<dd>{counts?.[1]}</dd>
+				<dd>{counts?.[1].toLocaleString()}</dd>
 			</dl>
 		</div>
 	);
