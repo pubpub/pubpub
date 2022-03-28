@@ -17,9 +17,9 @@ const createEmptyWorkflow = (): EditableSubmissionWorkflow => {
 		title: '',
 		introText: getEmptyDoc(),
 		instructionsText: getEmptyDoc(),
-		acceptedText: getEmptyDoc(),
-		declinedText: getEmptyDoc(),
-		emailText: getEmptyDoc(),
+		congratulationsEmailText: getEmptyDoc(),
+		condolencesEmailText: getEmptyDoc(),
+		thanksEmailText: getEmptyDoc(),
 		targetEmailAddress: '',
 		enabled: false,
 	};

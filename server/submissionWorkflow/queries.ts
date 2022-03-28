@@ -11,22 +11,22 @@ export const createSubmissionWorkflow = async (props: CreateFields) => {
 		enabled,
 		introText,
 		instructionsText,
-		emailText,
+		thanksEmailText,
 		title,
 		targetEmailAddress,
-		acceptedText,
-		declinedText,
+		congratulationsEmailText,
+		condolencesEmailText,
 	} = props;
 	const submissionWorkflow = {
 		enabled,
 		instructionsText,
-		emailText,
+		thanksEmailText,
 		introText,
 		title,
 		targetEmailAddress,
 		collectionId,
-		acceptedText,
-		declinedText,
+		congratulationsEmailText,
+		condolencesEmailText,
 	};
 	return SubmissionWorkflow.create(submissionWorkflow);
 };
@@ -36,23 +36,23 @@ export const updateSubmissionWorkflow = async (update: UpdateFields) => {
 		collectionId,
 		enabled,
 		instructionsText,
-		emailText,
+		thanksEmailText,
 		introText,
 		title,
 		targetEmailAddress,
-		acceptedText,
-		declinedText,
+		congratulationsEmailText,
+		condolencesEmailText,
 	} = update;
 	await SubmissionWorkflow.update(
 		{
 			enabled,
 			instructionsText,
-			emailText,
+			thanksEmailText,
 			targetEmailAddress,
 			introText,
 			title,
-			acceptedText,
-			declinedText,
+			congratulationsEmailText,
+			condolencesEmailText,
 		},
 		{ where: { collectionId } },
 	);

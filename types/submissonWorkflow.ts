@@ -8,9 +8,9 @@ export type SubmissionWorkflow = {
 	title: string;
 	introText: DocJson;
 	instructionsText: DocJson;
-	acceptedText: DocJson;
-	declinedText: DocJson;
-	emailText: DocJson;
+	congratulationsEmailText: DocJson;
+	condolencesEmailText: DocJson;
+	thanksEmailText: DocJson;
 	targetEmailAddress: string;
 	collectionId: string;
 	collection?: Collection;

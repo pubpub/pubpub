@@ -33,9 +33,9 @@ const validator: RecordValidator<EditableSubmissionWorkflow> = {
 	title: isValidTitle,
 	introText: isValidDocJson,
 	instructionsText: isValidDocJson,
-	emailText: isValidDocJson,
-	acceptedText: isAlwaysValid,
-	declinedText: isAlwaysValid,
+	thanksEmailText: isValidDocJson,
+	congratulationsEmailText: isAlwaysValid,
+	condolencesEmailText: isAlwaysValid,
 	targetEmailAddress: isValidEmail,
 	enabled: isAlwaysValid,
 };
@@ -121,7 +121,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				number={3}
 				title="Send an automated email when a submission is received"
 				className="email-step"
-				done={fieldValidStates.targetEmailAddress && fieldValidStates.emailText}
+				done={fieldValidStates.targetEmailAddress && fieldValidStates.thanksEmailText}
 			>
 				<p>
 					When a submission is completed, PubPub will email the submitter and CC this
@@ -159,8 +159,8 @@ const SubmissionWorkflowEditor = (props: Props) => {
 					body={
 						<WorkflowTextEditor
 							placeholder="Custom email text"
-							initialContent={workflow.emailText}
-							onContent={(content) => updateWorkflow({ emailText: content })}
+							initialContent={workflow.thanksEmailText}
+							onContent={(content) => updateWorkflow({ thanksEmailText: content })}
 						/>
 					}
 				/>
@@ -169,7 +169,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				number={4}
 				title="Create a template response for accepted and declined submissions"
 				className="accept-reject-step"
-				done={fieldValidStates.acceptedText && fieldValidStates.declinedText}
+				done={fieldValidStates.congratulationsEmailText && fieldValidStates.condolencesEmailText}
 			>
 				<p>
 					These are just templates. You'll be able to customize the message you send
@@ -187,9 +187,9 @@ const SubmissionWorkflowEditor = (props: Props) => {
 								body={
 									<WorkflowTextEditor
 										placeholder="Custom email text"
-										initialContent={workflow.acceptedText}
+										initialContent={workflow.congratulationsEmailText}
 										onContent={(content) =>
-											updateWorkflow({ acceptedText: content })
+											updateWorkflow({ congratulationsEmailText: content })
 										}
 									/>
 								}
@@ -207,9 +207,9 @@ const SubmissionWorkflowEditor = (props: Props) => {
 								body={
 									<WorkflowTextEditor
 										placeholder="Custom email text"
-										initialContent={workflow.declinedText}
+										initialContent={workflow.condolencesEmailText}
 										onContent={(content) =>
-											updateWorkflow({ declinedText: content })
+											updateWorkflow({ condolencesEmailText: content })
 										}
 									/>
 								}
