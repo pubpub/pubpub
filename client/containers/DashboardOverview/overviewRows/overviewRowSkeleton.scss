@@ -1,4 +1,11 @@
 @import '../overviewStyles.scss';
+@import '~@blueprintjs/core/lib/scss/variables';
+
+$status-colors: (
+	'pending': $gold4, //#F0B726
+	'accepted': $green2, //#1C6E42
+	'declined': $red2, //#AC2F33
+);
 
 $mobile-viewport-cutoff: 750px;
 
@@ -82,6 +89,11 @@ $mobile-viewport-cutoff: 750px;
             color: $medium-grey;
 
             > .summary-icon-pair {
+								@each $status, $color in $status-colors {
+									.status-color-#{$status} {
+										color: $color;
+									}
+								}
                 display: flex;
                 align-items: center;
                 > :first-child {
