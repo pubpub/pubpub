@@ -84,6 +84,7 @@ export const summarizePub = async (pubId: string, summarizeParentScopes = true) 
 	await persistScopeSummaryForModel(pub, {
 		discussions,
 		reviews,
+		submissions: 0,
 		pubs: 0,
 		collections: 0,
 	});
