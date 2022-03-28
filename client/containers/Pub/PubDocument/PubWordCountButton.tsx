@@ -12,9 +12,7 @@ type Props = {
 const getWordAndCharacterCountsFromDoc = (node: Node) => {
 	const text = node.textBetween(0, node.content.size, ' ', ' ');
 	const words = text.split(' ').filter((word) => word !== '');
-	const wordCount = words.length;
-	const characterCount = words.reduce((a, x) => a + x.length, 0);
-	return [wordCount, characterCount];
+	return [words.length, text.length];
 };
 
 const PubHeaderFormattingWordCountButton = (props: Props) => {
