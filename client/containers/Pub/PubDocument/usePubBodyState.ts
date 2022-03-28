@@ -1,3 +1,4 @@
+import { isEmptyDoc } from 'client/components/Editor';
 import { useMemo } from 'react';
 import { DocJson } from 'types';
 import { usePubContext } from '../pubHooks';
@@ -10,6 +11,9 @@ type PubBodyState = {
 };
 
 const createSubmissionPreview = (doc: DocJson, abstract: DocJson) => {
+	if (isEmptyDoc(abstract)) {
+		return doc;
+	}
 	return {
 		...doc,
 		content: [

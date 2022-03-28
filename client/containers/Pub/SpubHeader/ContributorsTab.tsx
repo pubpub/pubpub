@@ -3,15 +3,15 @@ import { Label } from '@blueprintjs/core';
 
 import { PubAttributionEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { PubPageData } from 'types';
+import { Callback, Pub } from 'types';
 
 import SpubHeaderTab from './SpubHeaderTab';
 
 require('./contributorsTabComponent.scss');
 
 type Props = {
-	pubData: PubPageData;
-	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
+	pubData: Pub;
+	onUpdatePub: Callback<Partial<Pub>>;
 };
 
 const ContributorsTab = (props: Props) => {
@@ -21,10 +21,6 @@ const ContributorsTab = (props: Props) => {
 
 	return (
 		<SpubHeaderTab className="contributors-tab-component">
-			<p className="instruction">
-				Add the names, roles & affiliations of other people who have a part to play in the
-				creation of this submission's content.
-			</p>
 			<Label>
 				<h2 className="contributors-header">
 					Contributors {contributorCount && `(${contributorCount})`}

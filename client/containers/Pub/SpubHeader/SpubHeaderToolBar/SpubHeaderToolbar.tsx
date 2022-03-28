@@ -94,9 +94,7 @@ const SpubHeaderToolbar = (props: Props) => {
 						selectedTabId={props.selectedTab}
 					>
 						<Tab id="instructions" title={instructionTabTitle} />
-
-						<Tab id="submission" title={submissionTabTitle} />
-
+						<Tab id="details" title={submissionTabTitle} />
 						<Tab id="contributors" title={contributorsTabTitle} />
 						<Tab id="preview" title={previewTabTitle} />
 					</Tabs>
