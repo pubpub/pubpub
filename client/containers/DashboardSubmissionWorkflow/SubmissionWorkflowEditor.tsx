@@ -248,9 +248,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 								initialContent={workflow.introText}
 								onContent={(introText) => updateWorkflow({ introText })}
 							/>
-							<Button className="fake-submit-button">
-								Create a submission
-							</Button>
+							<Button className="fake-submit-button">Create a submission</Button>
 						</>
 					}
 				/>
