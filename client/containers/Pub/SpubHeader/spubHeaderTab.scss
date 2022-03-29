@@ -1,6 +1,19 @@
 @import './styles.scss';
 @import 'styles/variables.scss';
 
+@mixin input-with-border {
+	border: none;
+	border-bottom: 1px solid $light-grey;
+	&:focus-within {
+		border-color: var(--community-accent-dark);
+	}
+	&,
+	&:focus {
+		box-shadow: none;
+		background: inherit;
+	}
+}
+
 .spub-header-tab-component {
 	margin-top: 10px;
 
@@ -17,8 +30,6 @@
 		font-weight: 400;
 		line-height: 56px;
 		letter-spacing: 0em;
-		box-decoration-break: clone;
-		margin-bottom: 36px;
 	}
 
 	h2 {
@@ -29,8 +40,25 @@
 	}
 
 	.instruction,
-	.bp3-label {
+	.bp3-label,
+	.minimal-editor-component {
 		max-width: 750px;
+	}
+
+	.minimal-editor-component {
+		@include input-with-border();
+
+		> .editor-wrapper {
+			background-color: #f8f8f8;
+			border-top: none;
+		}
+
+		> .instruction {
+			font-weight: 300;
+			color: $lighter-grey;
+			letter-spacing: 0.015em;
+		}
+
 		.prosemirror-placeholder {
 			opacity: 1;
 			padding: 0 3px;
@@ -44,25 +72,10 @@
 		}
 	}
 
-	.minimal-editor-component > .editor-wrapper {
-		background-color: #f8f8f8;
-	}
-
-	.instruction {
-		font-weight: 300;
-		color: $lighter-grey;
-		letter-spacing: 0.015em;
-	}
-
 	input {
-		background: inherit;
+		@include input-with-border();
 		min-height: unset;
-		border: none;
-		border-bottom: 1px solid $light-grey;
-		&,
-		&:focus {
-			box-shadow: none;
-		}
+
 		&::placeholder {
 			color: $lighter-grey;
 			font-style: italic;
@@ -71,8 +84,21 @@
 		}
 	}
 
-	.bp3-input {
-		box-shadow: none;
+	.bp3-tag-input {
+		&,
+		&.bp3-active {
+			background: inherit;
+			box-shadow: none;
+		}
+		.bp3-tag-input-values {
+			@include input-with-border();
+			> * {
+				margin-bottom: 4px;
+			}
+		}
+		input {
+			border: none;
+		}
 	}
 
 	.bp3-label {

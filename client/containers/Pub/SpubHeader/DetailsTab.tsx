@@ -31,6 +31,7 @@ const DetailsTab = (props: Props) => {
 					}
 					defaultValue={props.pub.title}
 					placeholder="Type your submission's title here..."
+					fill
 				/>
 			</Label>
 			<h2>Abstract</h2>
@@ -42,6 +43,7 @@ const DetailsTab = (props: Props) => {
 				debounceEditsMs={300}
 				useFormattingBar
 				constrainHeight
+				noMinHeight
 			/>
 			<Label>
 				<h2>Default Download File</h2>
