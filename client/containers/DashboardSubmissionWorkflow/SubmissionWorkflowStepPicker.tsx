@@ -41,32 +41,31 @@ const SubmissionWorkflowStepPicker = (props: Props) => {
 				const passed = selectedStepIndex > index;
 				const incomplete = passed && !stepCompletions[step];
 				return (
-					<>
-						<Tab
-							{...tabs}
-							id={step}
-							as="div"
-							className={classNames(
-								'step',
-								reached && 'reached',
-								incomplete && 'incomplete',
-							)}
-							stopId={step}
-							onClick={() => onSelectStep(step as SubmissionWorkflowConfigStep)}
-						>
-							<div className="label">
-								<div className="icon-container">
-									{incomplete ? (
-										<Icon icon="warning-sign" intent="warning" iconSize={22} />
-									) : (
-										<div className="number">{index + 1}</div>
-									)}
-								</div>
-								{label}
+					<Tab
+						{...tabs}
+						id={step}
+						key={step}
+						as="div"
+						className={classNames(
+							'step',
+							reached && 'reached',
+							incomplete && 'incomplete',
+						)}
+						stopId={step}
+						onClick={() => onSelectStep(step as SubmissionWorkflowConfigStep)}
+					>
+						<div className="label">
+							<div className="icon-container">
+								{incomplete ? (
+									<Icon icon="warning-sign" intent="warning" iconSize={22} />
+								) : (
+									<div className="number">{index + 1}</div>
+								)}
 							</div>
-							<div className="progress-indicator" />
-						</Tab>
-					</>
+							{label}
+						</div>
+						<div className="progress-indicator" />
+					</Tab>
 				);
 			})}
 		</TabList>
