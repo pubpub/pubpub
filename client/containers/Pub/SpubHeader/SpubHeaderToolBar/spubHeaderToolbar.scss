@@ -1,5 +1,5 @@
 @import 'styles/variables.scss';
-$spub-configuration-width: 1000px;
+@import 'containers/DashboardOverview/overviewStyles.scss';
 
 .spub-header-toolbar-component {
 	.toolbar-container .col-12 {
@@ -51,6 +51,13 @@ $spub-configuration-width: 1000px;
 	}
 	.status {
 		display: flex;
+		em {
+			margin-right: 5px;
+		}
+		strong {
+			font-weight: 500;
+		}
+		@include status-colors;
 	}
 
 	.status-text {
