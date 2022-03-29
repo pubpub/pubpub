@@ -169,7 +169,10 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				number={4}
 				title="Create a template response for accepted and declined submissions"
 				className="accept-reject-step"
-				done={fieldValidStates.congratulationsEmailText && fieldValidStates.condolencesEmailText}
+				done={
+					fieldValidStates.congratulationsEmailText &&
+					fieldValidStates.condolencesEmailText
+				}
 			>
 				<p>
 					These are just templates. You'll be able to customize the message you send
