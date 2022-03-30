@@ -3,7 +3,7 @@ import dateFormat from 'dateformat';
 import { Menu, MenuItem, Tag } from '@blueprintjs/core';
 
 import { ContributorsList, DashboardFrame, PubHeaderBackground } from 'components';
-import { DefinitelyHas, PubPageData } from 'types';
+import { Review, SanitizedPubData } from 'types';
 import { formatDate } from 'utils/dates';
 import { getPubPublishedDate, getPubLatestReleaseDate } from 'utils/pub/pubDates';
 import { usePageContext } from 'utils/hooks';
@@ -11,11 +11,12 @@ import CitationsPreview from 'containers/Pub/PubHeader/CitationsPreview';
 
 import { getAllPubContributors } from 'utils/contributors';
 import PubTimeline from './PubTimeline';
+import { getDashUrl } from 'utils/dashboard';
 
 require('./pubOverview.scss');
 
 type Props = {
-	pubData: DefinitelyHas<PubPageData, 'reviews'>;
+	pubData: SanitizedPubData;
 };
 
 const PubOverview = (props: Props) => {
@@ -59,7 +60,7 @@ const PubOverview = (props: Props) => {
 				{pubData.collectionPubs.map((cp, index) => {
 					return (
 						<span key={cp.id}>
-							<a href={`/dash/collection/${cp.collection!.slug}`}>
+							<a href={getDashUrl({ collectionSlug: cp.collection!.slug })}>
 								{cp.collection!.title}
 							</a>
 							{index !== pubData.collectionPubs.length - 1 && <span>, </span>}
@@ -70,12 +71,12 @@ const PubOverview = (props: Props) => {
 		);
 	};
 
-	const renderReviews = () => {
+	const renderReviews = (reviews: Review[]) => {
 		return (
 			<div className="section list">
 				<div className="section-header">Reviews</div>
 				<Menu className="list-content">
-					{pubData.reviews
+					{reviews
 						.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
 						.map((review) => {
 							return (
@@ -140,7 +141,7 @@ const PubOverview = (props: Props) => {
 					{pubData.doi && renderSection('DOI', pubData.doi)}
 					{renderContributors()}
 					{renderCollections()}
-					{!!pubData.reviews.length && renderReviews()}
+					{!!pubData.reviews?.length && renderReviews(pubData.reviews)}
 				</div>
 				<div className="column">
 					<PubTimeline pubData={pubData} />
