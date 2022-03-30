@@ -83,6 +83,7 @@ const DashboardCollectionOverview = (props: Props) => {
 	const query = filter?.query;
 	const isSearchingOrFiltering = !!searchTerm || !!query;
 	const canDragDrop = !isSearchingOrFiltering && canManage;
+	console.log(initialPubs);
 
 	const {
 		currentQuery: { loadMorePubs, pubs: pubsFoundInCollection, hasLoadedAllPubs },
@@ -237,17 +238,17 @@ const DashboardCollectionOverview = (props: Props) => {
 		);
 	};
 
-	const renderSubmissionsOpenBanner = () => {
+	const renderBanner = (bannerText: String) => {
 		return (
-			<div style={{ background: lighterAccentColor }} className="submissions-banner">
-				Submissions are now open
+			<div style={{ background: lighterAccentColor }} className="banner">
+				<div className="banner-text">{bannerText}</div>
 			</div>
 		);
 	};
 
 	return (
 		<DashboardFrame
-			banner={renderSubmissionsOpenBanner()}
+			banner={renderBanner('Submissions are now open')}
 			icon={getSchemaForKind(collection.kind)?.bpDisplayIcon}
 			title="Overview"
 			className="dashboard-collection-overview-container"
