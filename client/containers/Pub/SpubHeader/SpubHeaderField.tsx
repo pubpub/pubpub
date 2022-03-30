@@ -14,7 +14,14 @@ type Props = {
 };
 
 const SpubHeaderField = (props: Props) => {
-	const { asLabel, children, title, instructions, fullWidth = false, hasMargin = true } = props;
+	const {
+		asLabel = false,
+		children,
+		fullWidth = false,
+		hasMargin = true,
+		instructions,
+		title,
+	} = props;
 
 	const content = (
 		<>
