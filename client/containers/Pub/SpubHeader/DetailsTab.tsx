@@ -52,7 +52,7 @@ const DetailsTab = (props: Props) => {
 			{requireDescription && (
 				<SpubHeaderField
 					title="Description"
-					instructions="A short subheader that will be shown below your Submission's title."
+					instructions="A short subheader that will be shown below your submission's title."
 					valid={validatedFields.description}
 					invalidNotice="Description must not be empty"
 				>
