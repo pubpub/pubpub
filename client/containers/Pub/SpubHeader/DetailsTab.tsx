@@ -24,7 +24,7 @@ const DetailsTab = (props: Props) => {
 				appear.
 			</div>
 			<Label>
-				<h2>Submission Title</h2>
+				<h2>Title</h2>
 				<InputGroup
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
 						onUpdatePubDebounced({ title: evt.target.value })
