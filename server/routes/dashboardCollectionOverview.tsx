@@ -11,9 +11,8 @@ import { getCollectionOverview } from 'server/utils/queryHelpers';
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { SubmissionWorkflow } from 'server/models';
 
-const getSubmissionWorkflow = async (collectionId: string): Promise<Number> => {
-	const workflow: Number = await SubmissionWorkflow.count({ where: { collectionId } });
-	return workflow;
+const collectionHasSubmissionWorkflow = (collectionId: string): Promise<Number> => {
+	return SubmissionWorkflow.count({ where: { collectionId } }) as Promise<number>;
 };
 
 app.get('/dash/collection/:collectionSlug', (req, res) => {
@@ -44,11 +43,10 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 		}
 
 		const overviewData = await getCollectionOverview(initialData);
-		const submissionWorkflowPresent = await Promise.all([
-			getSubmissionWorkflow(overviewData.collection.id),
-		]);
+		const hasSubmissionWorkflow = await collectionHasSubmissionWorkflow(
+			overviewData.collection.id,
+		);
 
-		const submissionWorkflows = submissionWorkflowPresent[0];
 		const {
 			communityData: { id: communityId },
 			loginData: { id: userId },
@@ -64,7 +62,7 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 			<Html
 				chunkName="DashboardCollectionOverview"
 				initialData={initialData}
-				viewData={{ overviewData, submissionWorkflows }}
+				viewData={{ overviewData, hasSubmissionWorkflow }}
 				headerComponents={generateMetaComponents({
 					initialData,
 					title: `Overview · ${title}`,

@@ -38,7 +38,7 @@ type Props = {
 		userScopeVisits: UserScopeVisit[];
 		includesAllPubs: boolean;
 	};
-	submissionWorkflows: Number;
+	hasSubmissionWorkflow: Number;
 };
 
 const getQuickActionsForCollection = (collection: Collection): QuickAction[] => {
@@ -63,7 +63,7 @@ const getQuickActionsForCollection = (collection: Collection): QuickAction[] => 
 };
 
 const DashboardCollectionOverview = (props: Props) => {
-	const { overviewData, submissionWorkflows } = props;
+	const { overviewData, hasSubmissionWorkflow } = props;
 	const {
 		pubs: initialPubs,
 		collectionPubs: initialCollectionPubs,
@@ -246,8 +246,8 @@ const DashboardCollectionOverview = (props: Props) => {
 		);
 	};
 
-	const renderSubmissionBanner = submissionWorkflows
-		? renderBanner('Submissions are Now Open!')
+	const renderSubmissionBanner = hasSubmissionWorkflow
+		? renderBanner('Submissions are now open for this collection!')
 		: null;
 
 	return (
