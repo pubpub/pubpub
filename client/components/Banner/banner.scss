@@ -1,15 +1,16 @@
 .banner {
-    display: flex;
-    justify-content: initial;
-    border: 2px solid var(--community-accent-dark);
-    border-radius: 6px;
-    margin-bottom: 16px;
-    padding: 9px 16px;
-    .banner-text {
-        font-weight: bold;
-        font-size: 14px;
-    }
-    .right-of-banner {
-        
-    }
+	display: flex;
+	justify-content: initial;
+	border: 2px solid var(--community-accent-dark);
+	border-radius: 6px;
+	margin-bottom: 16px;
+	padding: 9px 16px;
+	.banner-text {
+		font-weight: bold;
+		font-size: 14px;
+	}
+	.right-of-banner {
+		width: 120px;
+		height: 30px;
+	}
 }

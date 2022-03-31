@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import classNames from 'classnames';
-import { NonIdealState } from '@blueprintjs/core';
+import { AnchorButton, NonIdealState } from '@blueprintjs/core';
 import { DragDropContext, DraggableProvidedDragHandleProps, DropResult } from 'react-beautiful-dnd';
 import Color from 'color';
 
@@ -238,13 +238,30 @@ const DashboardCollectionOverview = (props: Props) => {
 		);
 	};
 
+	const renderRightElement = (
+		<AnchorButton
+			href={getDashUrl({
+				collectionSlug: collection.slug,
+				mode: 'submissions',
+			})}
+		>
+			'View submissions'
+		</AnchorButton>
+	);
 	const renderBanner = (bannerText: String) => {
-		return <Banner bannerText={bannerText} accentColor={lighterAccentColor} />;
+		return (
+			<Banner
+				bannerText={bannerText}
+				accentColor={lighterAccentColor}
+				right={renderRightElement}
+			/>
+		);
 	};
 
-	const submissionBanner = hasSubmissionWorkflow
-		? renderBanner('Submissions are now open for this collection!')
-		: null;
+	const submissionBanner =
+		hasSubmissionWorkflow && canManage
+			? renderBanner('Submissions are now open for this collection!')
+			: null;
 
 	return (
 		<DashboardFrame
