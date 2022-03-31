@@ -240,14 +240,18 @@ const DashboardCollectionOverview = (props: Props) => {
 
 	const renderRightElement = (
 		<AnchorButton
+			minimal={true}
+			intent="primary"
+			className="view-submissions-button"
 			href={getDashUrl({
 				collectionSlug: collection.slug,
 				mode: 'submissions',
 			})}
 		>
-			'View submissions'
+			View submissions
 		</AnchorButton>
 	);
+
 	const renderBanner = (bannerText: String) => {
 		return (
 			<Banner

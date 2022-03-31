@@ -17,7 +17,7 @@ const Banner = (props: Props) => {
 	return (
 		<div style={{ background: lighterAccentColor }} className="banner">
 			<div className="banner-text">{bannerText}</div>
-			<div className="right-of-banner">{right}</div>
+			<div>{right}</div>
 		</div>
 	);
 };
