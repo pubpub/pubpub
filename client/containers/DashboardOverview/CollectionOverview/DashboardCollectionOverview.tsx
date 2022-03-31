@@ -4,7 +4,7 @@ import { NonIdealState } from '@blueprintjs/core';
 import { DragDropContext, DraggableProvidedDragHandleProps, DropResult } from 'react-beautiful-dnd';
 import Color from 'color';
 
-import { DashboardFrame, DragDropListing, DragHandle } from 'components';
+import { Banner, DashboardFrame, DragDropListing, DragHandle } from 'components';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import { indexByProperty } from 'utils/arrays';
@@ -239,11 +239,7 @@ const DashboardCollectionOverview = (props: Props) => {
 	};
 
 	const renderBanner = (bannerText: String) => {
-		return (
-			<div style={{ background: lighterAccentColor }} className="banner">
-				<div className="banner-text">{bannerText}</div>
-			</div>
-		);
+		return <Banner bannerText={bannerText} accentColor={lighterAccentColor} />;
 	};
 
 	const submissionBanner = hasSubmissionWorkflow
