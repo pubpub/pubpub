@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import classNames from 'classnames';
-import { NonIdealState } from '@blueprintjs/core';
+import { AnchorButton, NonIdealState } from '@blueprintjs/core';
 import { DragDropContext, DraggableProvidedDragHandleProps, DropResult } from 'react-beautiful-dnd';
+import Color from 'color';
 
-import { DashboardFrame, DragDropListing, DragHandle } from 'components';
+import { Banner, DashboardFrame, DragDropListing, DragHandle } from 'components';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import { indexByProperty } from 'utils/arrays';
@@ -37,6 +38,7 @@ type Props = {
 		userScopeVisits: UserScopeVisit[];
 		includesAllPubs: boolean;
 	};
+	hasSubmissionWorkflow: Number;
 };
 
 const getQuickActionsForCollection = (collection: Collection): QuickAction[] => {
@@ -61,7 +63,7 @@ const getQuickActionsForCollection = (collection: Collection): QuickAction[] => 
 };
 
 const DashboardCollectionOverview = (props: Props) => {
-	const { overviewData } = props;
+	const { overviewData, hasSubmissionWorkflow } = props;
 	const {
 		pubs: initialPubs,
 		collectionPubs: initialCollectionPubs,
@@ -73,6 +75,7 @@ const DashboardCollectionOverview = (props: Props) => {
 		scopeData: {
 			activePermissions: { canManage },
 		},
+		communityData,
 	} = usePageContext();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filter, setFilter] = useState<null | OverviewSearchFilter>(null);
@@ -140,6 +143,11 @@ const DashboardCollectionOverview = (props: Props) => {
 		setPubsAddedToCollection((current) => [...current, pub]);
 		addCollectionPub(pub);
 	};
+
+	const lighterAccentColor = useMemo(
+		() => Color(communityData.accentColorDark).alpha(0.1),
+		[communityData.accentColorDark],
+	);
 
 	const renderCollectionPubRow = (
 		collectionPub: CollectionPub,
@@ -230,8 +238,38 @@ const DashboardCollectionOverview = (props: Props) => {
 		);
 	};
 
+	const renderRightElement = (
+		<AnchorButton
+			minimal={true}
+			intent="primary"
+			className="view-submissions-button"
+			href={getDashUrl({
+				collectionSlug: collection.slug,
+				mode: 'submissions',
+			})}
+		>
+			View submissions
+		</AnchorButton>
+	);
+
+	const renderBanner = (bannerText: String) => {
+		return (
+			<Banner
+				bannerText={bannerText}
+				accentColor={lighterAccentColor}
+				right={renderRightElement}
+			/>
+		);
+	};
+
+	const submissionBanner =
+		hasSubmissionWorkflow && canManage
+			? renderBanner('Submissions are now open for this collection!')
+			: null;
+
 	return (
 		<DashboardFrame
+			banner={submissionBanner}
 			icon={getSchemaForKind(collection.kind)?.bpDisplayIcon}
 			title="Overview"
 			className="dashboard-collection-overview-container"

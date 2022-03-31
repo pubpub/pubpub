@@ -13,7 +13,9 @@ type Props = {
 	customNodes?: Record<string, NodeSpec>;
 	debounceEditsMs?: number;
 	focusOnLoad?: boolean;
+	noMinHeight?: boolean;
 	initialContent?: any;
+	isReadOnly?: boolean;
 	isTranslucent?: boolean;
 	onEdit?: OnEditFn;
 	onContent?: ({ text: string, content: any }) => unknown;
@@ -33,11 +35,13 @@ const MinimalEditor = (props: Props) => {
 		debounceEditsMs = 0,
 		initialContent,
 		constrainHeight = false,
+		noMinHeight = false,
 		onEdit,
 		onContent,
 		useFormattingBar = false,
 		focusOnLoad = false,
 		placeholder,
+		isReadOnly = false,
 		isTranslucent = false,
 		getButtons = defaultGetButtons,
 	} = props;
@@ -93,6 +97,7 @@ const MinimalEditor = (props: Props) => {
 				constrainHeight && 'constrain-height',
 				isTranslucent && 'translucent',
 				useFormattingBar && 'has-formatting-bar',
+				noMinHeight && 'no-min-height',
 			)}
 		>
 			{useFormattingBar && FormattingBar && (
@@ -110,6 +115,7 @@ const MinimalEditor = (props: Props) => {
 			<div className="editor-wrapper" onClick={handleWrapperClick}>
 				<div ref={controlsContainerRef} />
 				<Editor
+					isReadOnly={isReadOnly}
 					customNodes={customNodes}
 					debounceEditsMs={debounceEditsMs}
 					initialContent={initialContent}

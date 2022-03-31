@@ -1,4 +1,5 @@
 @import '../overviewStyles.scss';
+@import 'styles/variables.scss';
 
 .primary-collection-swap-popover {
 	max-width: 300px;
@@ -17,5 +18,9 @@
 .dashboard-collection-overview-container {
 	.collection-empty-state {
 		margin-top: $empty-state-margin-top;
+	}
+
+	.view-submissions-button {
+		
 	}
 }
