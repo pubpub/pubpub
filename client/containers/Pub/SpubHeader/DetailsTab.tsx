@@ -4,11 +4,11 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { PubPageData, Pub, DocJson, DefinitelyHas, Submission } from 'types';
 import { DownloadChooser } from 'components';
+import { ValidatedSubmissionFields } from 'utils/submission/validate';
 
 import SpubHeaderTab from './SpubHeaderTab';
 import SpubHeaderField from './SpubHeaderField';
 import AbstractEditor from './AbstractEditor';
-import { ValidatedSubmissionFields } from './validate';
 
 type Props = {
 	pub: Pub;

@@ -5,11 +5,11 @@ import Color from 'color';
 import { GridWrapper, DialogLauncher } from 'components';
 import { Submission, DefinitelyHas } from 'types';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
+import { ValidatedSubmissionFields } from 'utils/submission/validate';
 
 import { capitalize } from 'utils/strings';
 import SubmitDialog from './SubmitDialog';
 import { SpubHeaderTab } from '../SpubHeader';
-import { ValidatedSubmissionFields } from '../validate';
 
 require('./spubHeaderToolbar.scss');
 
