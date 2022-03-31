@@ -9,6 +9,12 @@ import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getCollectionOverview } from 'server/utils/queryHelpers';
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
+import { SubmissionWorkflow } from 'server/models';
+
+const getSubmissionWorkflow = async (collectionId: string): Promise<Number> => {
+	const workflow: Number = await SubmissionWorkflow.count({ where: { collectionId } });
+	return workflow;
+};
 
 app.get('/dash/collection/:collectionSlug', (req, res) => {
 	const { collectionSlug } = req.params;
@@ -38,6 +44,11 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 		}
 
 		const overviewData = await getCollectionOverview(initialData);
+		const submissionWorkflowPresent = await Promise.all([
+			getSubmissionWorkflow(overviewData.collection.id),
+		]);
+
+		const submissionWorkflows = submissionWorkflowPresent[0];
 		const {
 			communityData: { id: communityId },
 			loginData: { id: userId },
@@ -45,13 +56,15 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 		const {
 			collection: { id: collectionId, title },
 		} = overviewData;
+
 		createUserScopeVisit({ userId, communityId, collectionId });
+
 		return renderToNodeStream(
 			res,
 			<Html
 				chunkName="DashboardCollectionOverview"
 				initialData={initialData}
-				viewData={{ overviewData }}
+				viewData={{ overviewData, submissionWorkflows }}
 				headerComponents={generateMetaComponents({
 					initialData,
 					title: `Overview · ${title}`,
