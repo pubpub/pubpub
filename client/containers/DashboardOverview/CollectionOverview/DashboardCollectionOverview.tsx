@@ -246,13 +246,13 @@ const DashboardCollectionOverview = (props: Props) => {
 		);
 	};
 
-	const renderSubmissionBanner = hasSubmissionWorkflow
+	const submissionBanner = hasSubmissionWorkflow
 		? renderBanner('Submissions are now open for this collection!')
 		: null;
 
 	return (
 		<DashboardFrame
-			banner={renderSubmissionBanner}
+			banner={submissionBanner}
 			icon={getSchemaForKind(collection.kind)?.bpDisplayIcon}
 			title="Overview"
 			className="dashboard-collection-overview-container"
