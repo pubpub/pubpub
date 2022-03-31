@@ -2,16 +2,16 @@ import React from 'react';
 import dateFormat from 'dateformat';
 import { Menu, MenuItem, Tag } from '@blueprintjs/core';
 
-import { ContributorsList, DashboardFrame, PubHeaderBackground } from 'components';
 import { Review, SanitizedPubData } from 'types';
+import { ContributorsList, DashboardFrame, PubHeaderBackground } from 'components';
+import CitationsPreview from 'containers/Pub/PubHeader/CitationsPreview';
 import { formatDate } from 'utils/dates';
+import { getAllPubContributors } from 'utils/contributors';
+import { getDashUrl } from 'utils/dashboard';
 import { getPubPublishedDate, getPubLatestReleaseDate } from 'utils/pub/pubDates';
 import { usePageContext } from 'utils/hooks';
-import CitationsPreview from 'containers/Pub/PubHeader/CitationsPreview';
 
-import { getAllPubContributors } from 'utils/contributors';
 import PubTimeline from './PubTimeline';
-import { getDashUrl } from 'utils/dashboard';
 
 require('./pubOverview.scss');
 
