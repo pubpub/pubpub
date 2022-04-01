@@ -24,20 +24,12 @@ export const renderSubmissionUpdated = itemRenderer<SubmissionUpdatedActivityIte
 					</>
 				);
 			}
-			if (payload.status.to === 'accepted') {
-				return (
-					<>
-						{actor} accepted {pub} for submission to {collection}
-					</>
-				);
-			}
-			if (payload.status.to === 'declined') {
-				return (
-					<>
-						{actor} denied {pub} for submission to {collection}
-					</>
-				);
-			}
+			return (
+				<>
+					{actor} updated the submission status for {pub} in {collection} from{' '}
+					<i>{payload.status.from}</i> to <i>{payload.status.to}</i>
+				</>
+			);
 		}
 
 		return null;
