@@ -16,6 +16,6 @@ export const renderActivityItem = (
 	const renderer = activityItemRenderers[item.kind] as ActivityItemRenderer<any>;
 
 	return renderer(item, context).message !== null
-		? (renderer(item, context) as RenderedActivityItem)
+		? renderer(item, context)
 		: (null as unknown as RenderedActivityItem);
 };
