@@ -8,6 +8,5 @@ export const renderActivityItem = (
 	context: ActivityRenderContext,
 ): RenderedActivityItem => {
 	const renderer = activityItemRenderers[item.kind] as ActivityItemRenderer<any>;
-
 	return renderer(item, context) as RenderedActivityItem;
 };
