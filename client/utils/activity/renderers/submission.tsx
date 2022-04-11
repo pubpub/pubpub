@@ -16,23 +16,19 @@ export const renderSubmissionUpdated = itemRenderer<SubmissionUpdatedActivityIte
 	message: ({ titles, item }) => {
 		const { payload } = item;
 		const { actor, pub, collection } = titles;
-		if (payload.status) {
-			const { from, to } = payload.status;
-			if (payload.status.to === 'pending') {
-				return (
-					<>
-						{actor} submitted {pub} into {collection}
-					</>
-				);
-			}
+		const { from, to } = payload.status;
+		if (payload.status.to === 'pending') {
 			return (
 				<>
-					{actor} updated the submission status for {pub} in {collection} from{' '}
-					<i>{from}</i> to <i>{to}</i>
+					{actor} submitted {pub} into {collection}
 				</>
 			);
 		}
-
-		return null;
+		return (
+			<>
+				{actor} updated the submission status for {pub} in {collection} from <i>{from}</i>{' '}
+				to <i>{to}</i>
+			</>
+		);
 	},
 });
