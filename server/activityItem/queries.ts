@@ -590,6 +590,7 @@ export const createSubmissionUpdatedActivityItem = async (
 			pub: {
 				title: submission.pub.title,
 			},
+			status: { from: oldSubmission.status, to: submission.status },
 		},
 	});
 };

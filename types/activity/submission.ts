@@ -14,10 +14,6 @@ type SubmissionActivityItemBase = InsertableActivityItemBase & {
 	};
 };
 
-export type SubmissionCreatedActivityItem = SubmissionActivityItemBase & {
-	kind: 'submission-created';
-};
-
 export type SubmissionUpdatedActivityItem = SubmissionActivityItemBase & {
 	kind: 'submission-status-updated';
 	payload: {
@@ -25,11 +21,4 @@ export type SubmissionUpdatedActivityItem = SubmissionActivityItemBase & {
 	};
 };
 
-export type SubmissionDeletedActivityItem = SubmissionActivityItemBase & {
-	kind: 'submission-deleted';
-};
-
-export type SubmissionActivityItem =
-	| SubmissionCreatedActivityItem
-	| SubmissionUpdatedActivityItem
-	| SubmissionDeletedActivityItem;
+export type SubmissionActivityItem = SubmissionUpdatedActivityItem;
