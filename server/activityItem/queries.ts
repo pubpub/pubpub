@@ -583,7 +583,7 @@ export const createSubmissionUpdatedActivityItem = async (
 		communityId: submission.pub.communityId,
 		collectionId: submission.submissionWorkflow.collectionId,
 		pubId: submission.pub.id,
-		kind: 'submission-updated' as const,
+		kind: 'submission-status-updated' as const,
 		payload: {
 			submissionId,
 			...diffs,

@@ -164,7 +164,7 @@ describe('/api/submissions', () => {
 				})
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-updated',
+			kind: 'submission-status-updated',
 			pubId: submission.pubId,
 			actorId: collectionManager.id,
 			payload: {
@@ -197,7 +197,7 @@ describe('/api/submissions', () => {
 				})
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-updated',
+			kind: 'submission-status-updated',
 			pubId: submission.pubId,
 			actorId: collectionManager.id,
 			payload: {
