@@ -17,7 +17,7 @@ type SubmissionActivityItemBase = InsertableActivityItemBase & {
 export type SubmissionUpdatedActivityItem = SubmissionActivityItemBase & {
 	kind: 'submission-status-updated';
 	payload: {
-		status: Diff<Exclude<Submission['status'], 'incomplete'>>;
+		status: Diff<Submission['status']>;
 	};
 };
 
