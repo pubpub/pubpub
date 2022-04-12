@@ -103,7 +103,7 @@ const SpubHeaderToolbar = (props: Props) => {
 		}
 
 		if (status !== 'incomplete') {
-			const statusText = status === 'pending' ? 'Received' : capitalize(status);
+			const statusText = status === 'received' ? 'Received' : capitalize(status);
 			return (
 				<div className="status">
 					<Icon
@@ -135,7 +135,7 @@ const SpubHeaderToolbar = (props: Props) => {
 						<Tab id="contributors" title={contributorsTabTitle} />
 						<Tab id="preview" title={previewTabTitle} />
 					</Tabs>
-					<div>{renderRight()}</div>
+					{renderRight()}
 				</div>
 			</GridWrapper>
 		</div>
