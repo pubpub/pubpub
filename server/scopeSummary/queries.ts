@@ -11,6 +11,7 @@ import {
 	SubmissionWorkflow,
 	ScopeSummary,
 } from 'server/models';
+import { Op } from 'sequelize';
 import { ScopeSummary as ScopeSummaryType } from 'types';
 import { addScopeSummaries } from 'utils/scopeSummaries';
 
@@ -38,12 +39,12 @@ export const summarizeCommunity = async (communityId: string) => {
 
 	const pubs = await Pub.findAll({
 		where: { communityId },
-		include: [{ model: Submission, as: 'submission' }],
+		include: [
+			{ model: Submission, as: 'submission', where: { status: { [Op.ne]: 'incomplete' } } },
+		],
 	});
 	const collections = await Collection.count({ where: { communityId } });
-	const submissions = pubs.filter(
-		(pub) => pub.submission && pub.submission.status === 'received',
-	);
+	const submissions = pubs.filter((pub) => !!pub.submission);
 
 	const pubsInCommunity = await Pub.findAll({
 		where: { communityId },
@@ -69,7 +70,13 @@ export const summarizeCollection = async (collectionId: string) => {
 			{
 				model: SubmissionWorkflow,
 				as: 'submissionWorkflow',
-				include: [{ model: Submission, as: 'submissions' }],
+				include: [
+					{
+						model: Submission,
+						as: 'submissions',
+						where: { status: { [Op.ne]: 'incomplete' } },
+					},
+				],
 			},
 		],
 	});
