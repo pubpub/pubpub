@@ -1,11 +1,11 @@
 export type Scope = { communityId: string } & ({ pubId: string } | { collectionId: string } | {});
 
 export type ScopeSummary = {
-	submissions: number;
 	collections: number;
 	pubs: number;
 	discussions: number;
 	reviews: number;
+	submissions: number;
 };
 
 export type UserScopeVisit = {

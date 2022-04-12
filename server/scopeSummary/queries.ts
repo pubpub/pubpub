@@ -8,6 +8,7 @@ import {
 	Discussion,
 	ReviewNew,
 	Submission,
+	SubmissionWorkflow,
 	ScopeSummary,
 } from 'server/models';
 import { ScopeSummary as ScopeSummaryType } from 'types';
@@ -35,10 +36,14 @@ const persistScopeSummaryForModel = async (model: any, summary: ScopeSummaryType
 export const summarizeCommunity = async (communityId: string) => {
 	const community = await Community.findOne({ where: { id: communityId } });
 
-	const [pubs, collections] = await Promise.all([
-		Pub.count({ where: { communityId } }),
-		Collection.count({ where: { communityId } }),
-	]);
+	const pubs = await Pub.findAll({
+		where: { communityId },
+		include: [{ model: Submission, as: 'submission' }],
+	});
+	const collections = await Collection.count({ where: { communityId } });
+	const submissions = pubs.filter(
+		(pub) => pub.submission && pub.submission.status !== 'accepted',
+	);
 
 	const pubsInCommunity = await Pub.findAll({
 		where: { communityId },
@@ -51,13 +56,23 @@ export const summarizeCommunity = async (communityId: string) => {
 
 	return persistScopeSummaryForModel(community, {
 		...addScopeSummaries(...scopeSummaries),
-		pubs,
+		pubs: pubs.length,
+		submissions: submissions.length,
 		collections,
 	});
 };
 
 export const summarizeCollection = async (collectionId: string) => {
-	const collection = await Collection.findOne({ where: { id: collectionId } });
+	const collection = await Collection.findOne({
+		where: { id: collectionId },
+		include: [
+			{
+				model: SubmissionWorkflow,
+				as: 'submissionWorkflow',
+				include: [{ model: Submission, as: 'submissions' }],
+			},
+		],
+	});
 
 	const collectionPubs = await CollectionPub.findAll({
 		where: { collectionId },
@@ -66,6 +81,8 @@ export const summarizeCollection = async (collectionId: string) => {
 		],
 	});
 
+	const submissions = collection.submissionWorkflow?.submissions.length;
+
 	const scopeSummaries: ScopeSummaryType[] = collectionPubs
 		.map((cp) => cp.pub.scopeSummary)
 		.filter((x): x is ScopeSummaryType => !!x);
@@ -73,34 +90,8 @@ export const summarizeCollection = async (collectionId: string) => {
 	return persistScopeSummaryForModel(collection, {
 		...addScopeSummaries(...scopeSummaries),
 		pubs: collectionPubs.length,
+		submissions,
 	});
-};
-
-export const summarizeSubmission = async (pubId: string, summarizeParentScopes = true) => {
-	const pub = await Pub.findOne({
-		where: { id: pubId },
-		include: [{ model: Submission as 'submission' }],
-	});
-	const [discussions, reviews] = await Promise.all([
-		Discussion.count({ where: { pubId } }),
-		ReviewNew.count({ where: { pubId } }),
-	]);
-	await persistScopeSummaryForModel(pub, {
-		discussions,
-		reviews,
-		submissions: 0,
-		pubs: 0,
-		collections: 0,
-	});
-	if (summarizeParentScopes) {
-		const collectionPubs = await CollectionPub.findAll({ where: { pubId } });
-		await Bluebird.map(
-			collectionPubs,
-			(collectionPub) => summarizeCollection(collectionPub.collectionId),
-			{ concurrency: 5 },
-		);
-		await summarizeCommunity(pub.communityId);
-	}
 };
 
 export const summarizePub = async (pubId: string, summarizeParentScopes = true) => {
