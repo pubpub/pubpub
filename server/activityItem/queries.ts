@@ -577,7 +577,6 @@ export const createSubmissionUpdatedActivityItem = async (
 				},
 			],
 		});
-	const diffs = getDiffsForPayload(submission, oldSubmission, ['status']);
 
 	if (submission.status !== oldSubmission.status) {
 		return createActivityItem({
@@ -588,7 +587,6 @@ export const createSubmissionUpdatedActivityItem = async (
 			kind: 'submission-status-updated' as const,
 			payload: {
 				submissionId,
-				...diffs,
 				pub: {
 					title: submission.pub.title,
 				},
