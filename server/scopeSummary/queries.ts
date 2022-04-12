@@ -42,7 +42,7 @@ export const summarizeCommunity = async (communityId: string) => {
 	});
 	const collections = await Collection.count({ where: { communityId } });
 	const submissions = pubs.filter(
-		(pub) => pub.submission && pub.submission.status !== 'accepted',
+		(pub) => pub.submission && pub.submission.status === 'received',
 	);
 
 	const pubsInCommunity = await Pub.findAll({
