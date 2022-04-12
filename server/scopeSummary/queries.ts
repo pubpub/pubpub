@@ -81,7 +81,7 @@ export const summarizeCollection = async (collectionId: string) => {
 		],
 	});
 
-	const submissions = collection.submissionWorkflow?.submissions.length;
+	const submissions = collection.submissionWorkflow?.submissions.length || 0;
 
 	const scopeSummaries: ScopeSummaryType[] = collectionPubs
 		.map((cp) => cp.pub.scopeSummary)
