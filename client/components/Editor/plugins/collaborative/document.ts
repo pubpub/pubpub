@@ -1,9 +1,18 @@
-import { Plugin } from 'prosemirror-state';
+import firebase from 'firebase';
+import { Schema } from 'prosemirror-model';
+import { Plugin, PluginKey } from 'prosemirror-state';
 import { receiveTransaction, sendableSteps } from 'prosemirror-collab';
 import { Step } from 'prosemirror-transform';
 import { uncompressStepJSON } from 'prosemirror-compress-pubpub';
 
-import { storeCheckpoint, createFirebaseChange } from '../../utils';
+import { DefinitelyHas } from 'types';
+
+import { PluginsOptions } from '../../types';
+import {
+	storeCheckpoint,
+	createFirebaseChange,
+	getFirebaseConnectionMonitorRef,
+} from '../../utils';
 
 /*
 Rough pipeline:
@@ -24,15 +33,25 @@ If there is an ongoing transaction, it will eventually finish and trigger a new 
 	or, it will fail and that will cause processStoredKeyables to fire.
 */
 
-export default (schema, props, collabDocPluginKey, localClientId) => {
-	let view;
-	let mostRecentRemoteKey = props.collaborativeOptions.initialDocKey;
-	let ongoingTransaction = false;
-	let pendingRemoteKeyables = [];
-	const ref = props.collaborativeOptions.firebaseRef;
-	const onStatusChange = props.collaborativeOptions.onStatusChange || function () {};
-	const onUpdateLatestKey = props.collaborativeOptions.onUpdateLatestKey || function () {};
+const noop = () => {};
 
+export default (
+	schema: Schema,
+	options: DefinitelyHas<PluginsOptions, 'collaborativeOptions'>,
+	collabDocPluginKey: PluginKey,
+	localClientId: string,
+) => {
+	const { collaborativeOptions, isReadOnly, onError = noop } = options;
+	const {
+		firebaseRef: ref,
+		onStatusChange = noop,
+		onUpdateLatestKey = noop,
+	} = collaborativeOptions;
+	let view;
+	let mostRecentRemoteKey = collaborativeOptions.initialDocKey;
+	let ongoingTransaction = false;
+	let listeningOn: null | firebase.database.Query = null;
+	let pendingRemoteKeyables = [];
 	/* sendCollabChanges is called only from the main Editor */
 	/* disppatchTransaction view spec paramater. sendCollabChanges */
 	/* is called on every transaction, but it quickly exits if the */
@@ -48,14 +67,14 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 	const sendCollabChanges = (newState) => {
 		const sendable = sendableSteps(newState);
 
-		if (props.isReadOnly || ongoingTransaction || !sendable) {
+		if (isReadOnly || ongoingTransaction || !sendable) {
 			return null;
 		}
 
 		ongoingTransaction = true;
 		return ref
 			.child('changes')
-			.child(mostRecentRemoteKey + 1)
+			.child(String(mostRecentRemoteKey + 1))
 			.transaction(
 				(existingRemoteSteps) => {
 					onStatusChange('saving');
@@ -66,7 +85,7 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 					}
 					return createFirebaseChange(sendable.steps, localClientId);
 				},
-				null,
+				undefined,
 				false,
 			)
 			.then((transactionResult) => {
@@ -86,7 +105,7 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 			})
 			.catch((err) => {
 				console.error('Error in firebase transaction:', err);
-				props.onError(err);
+				onError(err);
 			});
 	};
 
@@ -122,11 +141,12 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 				onUpdateLatestKey(mostRecentRemoteKey);
 			} catch (err) {
 				console.error('Error in recieveCollabChanges:', err);
-				props.onError(err);
+				onError(err as Error);
 			}
 		});
 		pendingRemoteKeyables = [];
-		if (sendableSteps(view.state)) {
+		const sendable = sendableSteps(view.state);
+		if (sendable) {
 			sendCollabChanges(view.state);
 		}
 		return null;
@@ -142,6 +162,12 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 	};
 
 	const loadDocument = () => {
+		getFirebaseConnectionMonitorRef(ref).on('value', (snapshot) => {
+			if (!snapshot.val()) {
+				onStatusChange('disconnected');
+			}
+		});
+
 		return ref
 			.child('changes')
 			.orderByKey()
@@ -149,16 +175,14 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 			.once('value')
 			.then((changesSnapshot) => {
 				const snapshotVal = changesSnapshot.val() || {};
-				const allSteps = [];
-				const allStepClientIds = [];
+				const allSteps: any[] = [];
+				const allStepClientIds: any[] = [];
 				const keys = Object.keys(snapshotVal);
 
 				/* Uncompress steps and add stepClientIds */
 				Object.keys(snapshotVal).forEach((key) => {
 					const { steps, clientIds } = extractSnapshot(snapshotVal[key]);
-					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 					allSteps.push(...steps);
-					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 					allStepClientIds.push(...clientIds);
 				});
 
@@ -177,15 +201,17 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 				const finishedLoadingTrans = view.state.tr;
 				finishedLoadingTrans.setMeta('finishedLoading', true);
 				view.dispatch(finishedLoadingTrans);
+				onStatusChange('connected');
 
 				/* Listen to Changes */
-				return ref
+				listeningOn = ref
 					.child('changes')
 					.orderByKey()
-					.startAt(String(mostRecentRemoteKey + 1))
-					.on('child_added', (snapshot) => {
-						receiveCollabChanges(snapshot);
-					});
+					.startAt(String(mostRecentRemoteKey + 1));
+
+				return listeningOn!.on('child_added', (snapshot) => {
+					receiveCollabChanges(snapshot);
+				});
 			})
 			.catch((err) => {
 				console.error('In loadDocument Error with ', err, err.message);
@@ -199,7 +225,7 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 				return {
 					isLoaded: false,
 					localClientId,
-					localClientData: props.collaborativeOptions.clientData,
+					localClientData: collaborativeOptions.clientData,
 					sendCollabChanges,
 				};
 			},
@@ -208,7 +234,7 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 					isLoaded: transaction.getMeta('finishedLoading') || pluginState.isLoaded,
 					mostRecentRemoteKey,
 					localClientId,
-					localClientData: props.collaborativeOptions.clientData,
+					localClientData: collaborativeOptions.clientData,
 					sendCollabChanges,
 				};
 			},
@@ -216,7 +242,11 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 		view: (initView) => {
 			view = initView;
 			loadDocument();
-			return {};
+			return {
+				destroy: () => {
+					listeningOn?.off('child_added');
+				},
+			};
 		},
 	});
 };

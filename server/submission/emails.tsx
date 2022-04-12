@@ -17,13 +17,13 @@ const getEmailKindToSend = (
 	previousStatus: types.SubmissionStatus,
 	currentStatus: types.SubmissionStatus,
 ): null | types.SubmissionEmailKind => {
-	if (previousStatus === 'incomplete' && currentStatus === 'pending') {
+	if (previousStatus === 'incomplete' && currentStatus === 'received') {
 		return 'received';
 	}
-	if (previousStatus === 'pending' && currentStatus === 'accepted') {
+	if (previousStatus === 'received' && currentStatus === 'accepted') {
 		return 'accepted';
 	}
-	if (previousStatus === 'pending' && currentStatus === 'declined') {
+	if (previousStatus === 'received' && currentStatus === 'declined') {
 		return 'declined';
 	}
 	return null;
@@ -53,7 +53,7 @@ const deriveEmailCustomText = (
 		return customText;
 	}
 	if (emailKind === 'received') {
-		return submissionWorkflow.emailText;
+		return submissionWorkflow.receivedEmailText;
 	}
 	return null;
 };
