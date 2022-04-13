@@ -1,4 +1,3 @@
-/* global describe, it, expect, beforeAll, afterAll, beforeEach, jest */
 import { setup, teardown, login, modelize, expectCreatedActivityItem, stub } from 'stubstub';
 import * as types from 'types';
 import { Submission, SubmissionWorkflow } from 'server/models';
@@ -57,8 +56,11 @@ setup(beforeAll, async () => {
 let sendEmailMock: jest.Mock = null as any;
 beforeAll(() => {
 	sendEmailMock = jest.fn();
-	stub('server/utils/email', {
-		sendEmail: sendEmailMock,
+	stub('server/submission/emails', {
+		sendSubmissionEmail: sendEmailMock,
+	});
+	stub('server/submission/abstract', {
+		appendAbstractToPubDraft: () => {},
 	});
 });
 
@@ -164,7 +166,7 @@ describe('/api/submissions', () => {
 				})
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-updated',
+			kind: 'submission-status-updated',
 			pubId: submission.pubId,
 			actorId: collectionManager.id,
 			payload: {
@@ -197,7 +199,7 @@ describe('/api/submissions', () => {
 				})
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-updated',
+			kind: 'submission-status-updated',
 			pubId: submission.pubId,
 			actorId: collectionManager.id,
 			payload: {

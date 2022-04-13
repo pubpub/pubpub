@@ -1,24 +1,15 @@
-import {
-	Collection,
-	Community,
-	Scope,
-	DefinitelyHas,
-	Maybe,
-	Member,
-	MemberPermission,
-	Pub,
-} from 'types';
+import { Collection, Community, Scope, DefinitelyHas, Member, MemberPermission, Pub } from 'types';
 
 export type LoginData = {
 	id: string | null;
-	initials: Maybe<string>;
-	slug: Maybe<string>;
-	fullName: Maybe<string>;
-	firstName: Maybe<string>;
-	lastName: Maybe<string>;
-	avatar: Maybe<string>;
-	title: Maybe<string>;
-	gdprConsent: Maybe<boolean>;
+	initials?: string;
+	slug?: string;
+	fullName?: string;
+	firstName?: string;
+	lastName?: string;
+	avatar?: string;
+	title?: string;
+	gdprConsent?: string;
 };
 
 export type LocationData = {
@@ -50,22 +41,42 @@ export type ScopeData = {
 		isSuperAdmin: boolean;
 	};
 	elements: {
+		activeIds: {
+			communityId: string;
+			collectionId?: string;
+			pubId?: string;
+		};
 		activeTarget: Community | Collection | Pub;
-		activeTargetType: 'community' | 'collection' | 'pub';
+		activeTargetType: 'organization' | 'community' | 'collection' | 'pub';
 		activeTargetName: string;
 		activeCommunity: Community;
 		activeCollection?: Collection;
 		activePub?: Pub;
 		inactiveCollections?: Collection[];
 	};
+	activeCounts: {
+		reviews: number;
+		submissions: number;
+	};
 	scope: Scope;
 	memberData: Member[];
+};
+
+export type InitialCommunityData = DefinitelyHas<
+	Community,
+	'collections' | 'pages' | 'scopeSummary'
+>;
+
+export type InitialNotificationsData = {
+	hasNotifications: boolean;
+	hasUnreadNotifications: boolean;
 };
 
 export type InitialData = {
 	scopeData: ScopeData;
 	locationData: LocationData;
 	loginData: LoginData;
-	communityData: DefinitelyHas<Community, 'collections' | 'pages'>;
+	communityData: InitialCommunityData;
 	featureFlags: Record<string, boolean>;
+	initialNotificationsData: InitialNotificationsData;
 };
