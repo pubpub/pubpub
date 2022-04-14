@@ -110,7 +110,7 @@ const PubHeader = (props: Props) => {
 				)}
 				<ToggleDetailsButton showingDetails={showingDetails} onClick={toggleDetails} />
 			</GridWrapper>
-			{sticky && <PubHeaderSticky pubData={pubData} pubHeadings={pubHeadings} />}
+			<PubHeaderSticky pubData={pubData} pubHeadings={pubHeadings} />
 		</PubHeaderBackground>
 	);
 };

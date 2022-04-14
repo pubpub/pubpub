@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useLayout } from 'client/components/LayoutEditor/useLayout';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import stickybits, { StickyBits } from 'stickybits';
 
 type Callback = () => unknown;
@@ -52,7 +53,11 @@ export const useSticky = (options: Options) => {
 		return () => {};
 	}, [isActive, offset, target]);
 
-	useOrFakeResizeObserver(() => stickyInstanceRef.current && stickyInstanceRef.current.update());
+	// Update the stickybits instance each time the parent component updates.
+	useLayoutEffect(() => stickyInstanceRef.current?.update());
+	// Update the stickybits instance when the body height changes, which could
+	// affect the y-offset of the sticky element.
+	useOrFakeResizeObserver(() => stickyInstanceRef.current?.update());
 };
 
 export const isSticky = (element: HTMLElement) => {
