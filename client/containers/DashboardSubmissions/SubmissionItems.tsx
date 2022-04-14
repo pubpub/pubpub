@@ -58,7 +58,7 @@ const SubmissionItems = (props: Props) => {
 	const isSearchingOrFiltering = !!filter || !!searchTerm;
 
 	const {
-		currentQuery: { pubs, isLoading, hasLoadedAllPubs, loadMorePubs },
+		currentQuery: { pubs: foundPubs, isLoading, hasLoadedAllPubs, loadMorePubs },
 	} = useManyPubs<PubWithSubmission>({
 		isEager: isSearchingOrFiltering,
 		initialPubs,
@@ -71,6 +71,11 @@ const SubmissionItems = (props: Props) => {
 			scopedCollectionId: collection.id,
 			...filter?.query,
 		},
+	});
+
+	const pubs = foundPubs.filter((pub) => {
+		const submittedCollectionId = pub.submission?.submissionWorkflow?.collectionId;
+		return submittedCollectionId && submittedCollectionId === collection.id;
 	});
 
 	const canLoadMorePubs = !hasLoadedAllPubs;
