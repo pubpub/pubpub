@@ -144,11 +144,6 @@ const DashboardCollectionOverview = (props: Props) => {
 		addCollectionPub(pub);
 	};
 
-	const lighterAccentColor = useMemo(
-		() => Color(communityData.accentColorDark).alpha(0.1),
-		[communityData.accentColorDark],
-	);
-
 	const renderCollectionPubRow = (
 		collectionPub: CollectionPub,
 		dragHandleProps: Maybe<DraggableProvidedDragHandleProps>,
@@ -237,6 +232,11 @@ const DashboardCollectionOverview = (props: Props) => {
 			</>
 		);
 	};
+
+	const lighterAccentColor = useMemo(
+		() => Color(communityData.accentColorDark).alpha(0.1),
+		[communityData.accentColorDark],
+	);
 
 	const renderRightElement = (
 		<AnchorButton

@@ -10,9 +10,13 @@ import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getCollectionOverview } from 'server/utils/queryHelpers';
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { SubmissionWorkflow } from 'server/models';
+import { SubmissionWorkflow as SubmissionWorkflowType } from 'types';
 
-const collectionHasSubmissionWorkflow = (collectionId: string): Promise<Number> => {
-	return SubmissionWorkflow.count({ where: { collectionId } }) as Promise<number>;
+const collectionHasSubmissionWorkflow = (collectionId: string): SubmissionWorkflowType => {
+	const submissionWorkflow: SubmissionWorkflowType = SubmissionWorkflow.findOne({
+		where: { collectionId },
+	});
+	return submissionWorkflow;
 };
 
 app.get('/dash/collection/:collectionSlug', (req, res) => {
@@ -43,9 +47,10 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 		}
 
 		const overviewData = await getCollectionOverview(initialData);
-		const hasSubmissionWorkflow = await collectionHasSubmissionWorkflow(
+		const submissionWorkFlow = await collectionHasSubmissionWorkflow(
 			overviewData.collection.id,
 		);
+		const hasSubmissionWorkflow = submissionWorkFlow && submissionWorkFlow.enabled;
 
 		const {
 			communityData: { id: communityId },
