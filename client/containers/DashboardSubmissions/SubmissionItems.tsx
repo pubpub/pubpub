@@ -73,10 +73,9 @@ const SubmissionItems = (props: Props) => {
 		},
 	});
 
-	const pubs = foundPubs.filter((pub) => {
-		const submittedCollectionId = pub.submission?.submissionWorkflow?.collectionId;
-		return submittedCollectionId && submittedCollectionId === collection.id;
-	});
+	const pubs = foundPubs.filter(
+		(pub) => pub.submission?.submissionWorkflow?.collectionId === collection.id,
+	);
 
 	const canLoadMorePubs = !hasLoadedAllPubs;
 	useInfiniteScroll({
