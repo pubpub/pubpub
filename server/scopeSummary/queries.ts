@@ -83,11 +83,22 @@ export const summarizeCollection = async (collectionId: string) => {
 	const collectionPubs = await CollectionPub.findAll({
 		where: { collectionId },
 		include: [
-			{ model: Pub, as: 'pub', include: [{ model: ScopeSummary, as: 'scopeSummary' }] },
+			{
+				model: Pub,
+				as: 'pub',
+				include: [
+					{ model: ScopeSummary, as: 'scopeSummary' },
+					{ model: Submission, as: 'submission' },
+				],
+			},
 		],
 	});
 
-	const submissions = collection.submissionWorkflow?.submissions.length || 0;
+	const submissions = collectionPubs.filter(
+		(cp) =>
+			collection.submissionWorkflow.id &&
+			cp.pub.submission?.submissionWorkflowId === collection.submissionWorkflow.id,
+	);
 	const scopeSummaries: types.ScopeSummary[] = collectionPubs
 		.map((cp) => cp.pub.scopeSummary)
 		.filter((x): x is types.ScopeSummary => !!x);
@@ -95,7 +106,7 @@ export const summarizeCollection = async (collectionId: string) => {
 	return persistScopeSummaryForModel(collection, {
 		...addScopeSummaries(...scopeSummaries),
 		pubs: collectionPubs.length,
-		submissions,
+		submissions: submissions.length,
 	});
 };
 
