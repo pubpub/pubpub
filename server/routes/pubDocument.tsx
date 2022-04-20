@@ -114,15 +114,13 @@ const getEnrichedPubData = async ({
 };
 
 const speedLimiter = slowDown({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	delayAfter: 5, // allow 5 requests per 15 minutes, then...
-	delayMs: 100, // 6th request has a 100ms delay, 7th has a 200ms delay, 8th gets 300ms, etc.
+	windowMs: 60000, // 1 minute for requests to be kept in memory. value of 60000ms is default but expressed here for clarity
+	delayAfter: 240, // allow 240 requests per minute, then...
+	delayMs: 100, // 240th request has a 100ms delay, 7th has a 200ms delay, 8th gets 300ms, etc.
+	maxDelay: 20000, // max time of request delay will be 20secs
 });
 
-//  apply to all requests
-app.use(speedLimiter);
-
-app.get('/pub/:pubSlug/release/:releaseNumber', async (req, res, next) => {
+app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
@@ -147,7 +145,7 @@ app.get('/pub/:pubSlug/release/:releaseNumber', async (req, res, next) => {
 	}
 });
 
-app.get('/pub/:pubSlug/release-id/:releaseId', async (req, res, next) => {
+app.get('/pub/:pubSlug/release-id/:releaseId', speedLimiter, async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
@@ -166,7 +164,7 @@ app.get('/pub/:pubSlug/release-id/:releaseId', async (req, res, next) => {
 	}
 });
 
-app.get('/pub/:pubSlug/discussion-id/:discussionId', async (req, res, next) => {
+app.get('/pub/:pubSlug/discussion-id/:discussionId', speedLimiter, async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
