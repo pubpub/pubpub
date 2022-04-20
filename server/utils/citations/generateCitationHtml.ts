@@ -8,6 +8,7 @@ import { pubUrl } from 'utils/canonicalUrls';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { renderJournalCitationForCitations } from 'utils/citations';
 import { getAllPubContributors } from 'utils/contributors';
+import { ControlsButton } from 'client/components/FormattingBar/controlComponents/ControlsButton';
 
 const getDatePartsObject = (date) => ({
 	'date-parts': [date.getFullYear(), date.getMonth() + 1, date.getDate()],
@@ -47,11 +48,14 @@ export const generateCitationHtml = async (
 	const pubIssuedDate = getPubPublishedDate(pubData);
 	const pubLink = pubUrl(communityData, pubData);
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
-	const authors = getAllPubContributors(pubData).map(({ user }) => {
-		return {
-			given: user.firstName,
-			family: user.lastName,
-		};
+	const authors = getAllPubContributors(pubData).map((attribution) => {
+		if (attribution.collectionId || (attribution.pubId && attribution.isAuthor)) {
+			return {
+				given: attribution.user.firstName,
+				family: attribution.user.lastName,
+			};
+		}
+		return {};
 	});
 	const authorEntry = authors.length ? { author: authors } : {};
 	const commonData = {
