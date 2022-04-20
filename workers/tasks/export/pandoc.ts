@@ -165,6 +165,7 @@ const reactPubDoc = (options: ExportWithPandocOptions) => {
 const callPandoc = (pandocJson: object, args: string[]) => {
 	const proc = spawnSync('pandoc', args, {
 		input: JSON.stringify(pandocJson),
+		maxBuffer: 1024 * 1024 * 25,
 	});
 	return proc.stderr.toString();
 };
