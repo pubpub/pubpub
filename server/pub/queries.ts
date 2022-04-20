@@ -106,12 +106,11 @@ export const updatePub = (inputValues, updatePermissions, actorId) => {
 	});
 };
 
-export const destroyPub = (pubId: string, actorId: null | string = null) => {
-	return Pub.destroy({
+export const destroyPub = async (pubId: string, actorId: null | string = null) => {
+	const pub = await Pub.deleteOne({
 		where: { id: pubId },
-		individualHooks: true,
-		actorId,
-	}).then(() => {
+	});
+	return pub.destroy({ actorId }).then(() => {
 		deletePubSearchData(pubId);
 		return true;
 	});
