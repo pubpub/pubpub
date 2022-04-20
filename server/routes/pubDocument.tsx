@@ -1,4 +1,5 @@
 import React from 'react';
+import slowDown from 'express-slow-down';
 
 import { getPubPageContextTitle } from 'utils/pubPageTitle';
 import { getPdfDownloadUrl, getTextAbstract, getGoogleScholarNotes } from 'utils/pub/metadata';
@@ -112,6 +113,15 @@ const getEnrichedPubData = async ({
 	};
 };
 
+const speedLimiter = slowDown({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	delayAfter: 3, // allow 10 requests per 15 minutes, then...
+	delayMs: 500,
+});
+
+//  apply to all requests
+app.use(speedLimiter);
+
 app.get('/pub/:pubSlug/release/:releaseNumber', async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
@@ -182,41 +192,45 @@ app.get('/pub/:pubSlug/discussion-id/:discussionId', async (req, res, next) => {
 	}
 });
 
-app.get(['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'], async (req, res, next) => {
-	if (!hostIsValid(req, 'community')) {
-		return next();
-	}
-	try {
-		const initialData = await getInitialData(req);
-		const { historyKey: historyKeyString, pubSlug } = req.params;
-		const { canViewDraft, canView } = initialData.scopeData.activePermissions;
-		const hasHistoryKey = historyKeyString !== undefined;
-		const historyKey = parseInt(historyKeyString, 10);
-		const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
-
-		if (isHistoryKeyInvalid) {
-			throw new NotFoundError();
+app.get(
+	['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'],
+	speedLimiter,
+	async (req, res, next) => {
+		if (!hostIsValid(req, 'community')) {
+			return next();
 		}
+		try {
+			const initialData = await getInitialData(req);
+			const { historyKey: historyKeyString, pubSlug } = req.params;
+			const { canViewDraft, canView } = initialData.scopeData.activePermissions;
+			const hasHistoryKey = historyKeyString !== undefined;
+			const historyKey = parseInt(historyKeyString, 10);
+			const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
 
-		if (!canViewDraft && !canView) {
-			throw new NotFoundError();
+			if (isHistoryKeyInvalid) {
+				throw new NotFoundError();
+			}
+
+			if (!canViewDraft && !canView) {
+				throw new NotFoundError();
+			}
+
+			const pubData = await Promise.all([
+				getEnrichedPubData({
+					pubSlug,
+					initialData,
+					historyKey: hasHistoryKey ? historyKey : null,
+				}),
+				getMembers(initialData),
+			]).then(([enrichedPubData, membersData]) => ({
+				...enrichedPubData,
+				membersData,
+			}));
+			const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
+			console.log(req.slowDown);
+			return renderPubDocument(res, pubData, initialData, customScripts);
+		} catch (err) {
+			return handleErrors(req, res, next)(err);
 		}
-
-		const pubData = await Promise.all([
-			getEnrichedPubData({
-				pubSlug,
-				initialData,
-				historyKey: hasHistoryKey ? historyKey : null,
-			}),
-			getMembers(initialData),
-		]).then(([enrichedPubData, membersData]) => ({
-			...enrichedPubData,
-			membersData,
-		}));
-		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-
-		return renderPubDocument(res, pubData, initialData, customScripts);
-	} catch (err) {
-		return handleErrors(req, res, next)(err);
-	}
-});
+	},
+);
