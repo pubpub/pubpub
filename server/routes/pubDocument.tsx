@@ -115,8 +115,8 @@ const getEnrichedPubData = async ({
 
 const speedLimiter = slowDown({
 	windowMs: 15 * 60 * 1000, // 15 minutes
-	delayAfter: 3, // allow 10 requests per 15 minutes, then...
-	delayMs: 500,
+	delayAfter: 5, // allow 5 requests per 15 minutes, then...
+	delayMs: 100, // 6th request has a 100ms delay, 7th has a 200ms delay, 8th gets 300ms, etc.
 });
 
 //  apply to all requests
@@ -227,7 +227,6 @@ app.get(
 				membersData,
 			}));
 			const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-			console.log(req.slowDown);
 			return renderPubDocument(res, pubData, initialData, customScripts);
 		} catch (err) {
 			return handleErrors(req, res, next)(err);
