@@ -6,7 +6,6 @@ import { jsonToNode, getNotes, Note } from 'components/Editor';
 import { NoteManager } from 'client/utils/notes';
 import { getStructuredCitations } from 'server/utils/citations';
 import { RenderedStructuredValues } from 'utils/notesCore';
-import { PandocTarget } from 'utils/export/formats';
 
 import { NotesData, NoteWithStructuredHtml, PubMetadata } from './types';
 
