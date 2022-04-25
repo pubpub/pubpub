@@ -92,7 +92,7 @@ export const summarizeCollection = async (collectionId: string) => {
 
 	const submissions = collectionPubs.filter(
 		(cp) =>
-			collection.submissionWorkflow.id &&
+			collection.submissionWorkflow?.id &&
 			cp.pub?.submission?.submissionWorkflowId === collection.submissionWorkflow.id,
 	);
 	const scopeSummaries: types.ScopeSummary[] = collectionPubs
