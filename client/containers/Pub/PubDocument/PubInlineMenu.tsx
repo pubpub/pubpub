@@ -1,6 +1,6 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
-import { Button } from '@blueprintjs/core';
+import { Button, Tooltip, Position } from '@blueprintjs/core';
 
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
@@ -63,15 +63,17 @@ const PubInlineMenu = () => {
 		>
 			{renderFormattingBar()}
 			{(canView || canCreateDiscussions) && (
-				<Button
-					minimal={true}
-					icon={<Icon icon="chat" />}
-					onClick={() => {
-						const view = collabData.editorChangeObject!.view;
-						setLocalHighlight(view, selection.from, selection.to, uuidv4());
-						moveToEndOfSelection(collabData.editorChangeObject!.view);
-					}}
-				/>
+				<Tooltip content="Start a discussion" position={Position.TOP}>
+					<Button
+						minimal={true}
+						icon={<Icon icon="chat" />}
+						onClick={() => {
+							const view = collabData.editorChangeObject!.view;
+							setLocalHighlight(view, selection.from, selection.to, uuidv4());
+							moveToEndOfSelection(collabData.editorChangeObject!.view);
+						}}
+					/>
+				</Tooltip>
 			)}
 			<ClickToCopyButton
 				className="click-to-copy"
