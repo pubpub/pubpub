@@ -40,7 +40,7 @@ const App = (props: Props) => {
 	const pathObject = getPaths(viewData, locationData, chunkName);
 	const { ActiveComponent, hideNav, hideFooter, isDashboard } = pathObject;
 	const { viewportWidth } = useViewport();
-	const isMobile = viewportWidth! <= 750;
+	const isMobile = viewportWidth && viewportWidth! <= 750;
 
 	// Our debugging lifeline
 	if (typeof window !== 'undefined') {
@@ -67,9 +67,9 @@ const App = (props: Props) => {
 						<React.Fragment>
 							<SideMenu />
 							<Breadcrumbs />
-						</React.Fragment>)
-					}
-					{isDashboard && isMobile && (<BottomMenu isMobile/>)}
+						</React.Fragment>
+					)}
+					{isDashboard && isMobile && <BottomMenu isMobile />}
 					{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message */}
 					<div id="main-content" tabIndex="-1">
 						<ActiveComponent {...viewData} />
