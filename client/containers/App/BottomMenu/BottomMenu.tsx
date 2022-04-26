@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Color from 'color';
+// import Color from 'color';
 import { Icon, MenuButton, MenuItem } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl, getDashboardModes } from 'utils/dashboard';
