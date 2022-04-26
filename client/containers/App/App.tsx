@@ -6,6 +6,7 @@ import { Header, Footer, LegalBanner, AccentStyle, NavBar, SkipLink } from 'comp
 import { Community } from 'types';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
+import { useViewport } from 'client/utils/useViewport';
 
 import SideMenu from './SideMenu';
 import Breadcrumbs from './Breadcrumbs';
