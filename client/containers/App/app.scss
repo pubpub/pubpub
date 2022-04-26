@@ -65,7 +65,8 @@ $mobile-viewport-cutoff: 750px;
           width: 100%;
           position: fixed;
           height: 50px;
-          top: calc(100vh - 50px);
+          bottom: 0;
+          padding-bottom: env(safe-area-inset-bottom);
           left: 0;
           z-index: 999;
         }
