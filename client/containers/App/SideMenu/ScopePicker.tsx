@@ -71,7 +71,7 @@ const ScopePicker = (props: Props) => {
 	return (
 		<div className="scope-picker-component">
 			<MenuButton
-				aria-label={!isMobile ? "Dashboard Menu" : "Mobile Dash Menu"}
+				aria-label={!isMobile ? 'Dashboard Menu' : 'Mobile Dash Menu'}
 				buttonContent={
 					<React.Fragment>
 						<div className="top">{currentScopeTitle}</div>
@@ -85,7 +85,7 @@ const ScopePicker = (props: Props) => {
 					minimal: true,
 					rightIcon: 'caret-down',
 				}}
-				placement={isMobile ? "top-start" : "bottom-start"}
+				placement={isMobile ? 'top-start' : 'bottom-start'}
 				className="scope-menu"
 			>
 				<ScopeDropdown isDashboard />
