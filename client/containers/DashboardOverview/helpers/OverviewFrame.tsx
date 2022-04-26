@@ -4,7 +4,7 @@ require('./overviewFrame.scss');
 
 type Props = {
 	primary: React.ReactNode;
-	secondary: React.ReactNode;
+	secondary?: React.ReactNode;
 };
 
 const OverviewFrame = (props: Props) => {
@@ -13,7 +13,7 @@ const OverviewFrame = (props: Props) => {
 	return (
 		<div className="overview-frame-component">
 			<div className="primary">{primary}</div>
-			<div className="secondary">{secondary}</div>
+			{secondary && <div className="secondary">{secondary}</div>}
 		</div>
 	);
 };

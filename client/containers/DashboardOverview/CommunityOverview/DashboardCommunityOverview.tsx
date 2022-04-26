@@ -5,6 +5,7 @@ import { Collection, Pub, UserScopeVisit } from 'types';
 
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
+import { useViewport } from 'client/utils/useViewport';
 
 import CommunityItems from './CommunityItems';
 import {
@@ -54,6 +55,9 @@ const DashboardCommunityOverview = (props: Props) => {
 		},
 	} = usePageContext();
 
+	const { viewportWidth } = useViewport();
+	const isMobile = viewportWidth && viewportWidth! <= 750;
+
 	return (
 		<DashboardFrame title="Overview">
 			<OverviewFrame
@@ -67,25 +71,27 @@ const DashboardCommunityOverview = (props: Props) => {
 					</OverviewSection>
 				}
 				secondary={
-					<>
-						{userScopeVisits.length > 0 && (
-							<OverviewSection title="recently viewed">
-								<RecentVisitList
-									userScopeVisits={userScopeVisits}
-									pubs={recentPubs}
-									collections={collections}
-								/>
+					!isMobile && (
+						<>
+							{userScopeVisits.length > 0 && (
+								<OverviewSection title="recently viewed">
+									<RecentVisitList
+										userScopeVisits={userScopeVisits}
+										pubs={recentPubs}
+										collections={collections}
+									/>
+								</OverviewSection>
+							)}
+							{canManage && (
+								<OverviewSection title="Quick Actions" spaced>
+									<QuickActions actions={quickActions} />
+								</OverviewSection>
+							)}
+							<OverviewSection title="About">
+								<ScopeSummaryList scope={communityData} scopeKind="community" />
 							</OverviewSection>
-						)}
-						{canManage && (
-							<OverviewSection title="Quick Actions" spaced>
-								<QuickActions actions={quickActions} />
-							</OverviewSection>
-						)}
-						<OverviewSection title="About">
-							<ScopeSummaryList scope={communityData} scopeKind="community" />
-						</OverviewSection>
-					</>
+						</>
+					)
 				}
 			/>
 		</DashboardFrame>
