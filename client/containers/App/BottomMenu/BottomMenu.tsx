@@ -12,8 +12,7 @@ type Props = {
 	isMobile?: boolean;
 };
 
-const BottomMenu = (props: Props) => {
-	const { isMobile } = props;
+const BottomMenu = ({ isMobile }: Props) => {
 	const { locationData, communityData, scopeData } = usePageContext();
 	const { activePermissions, elements } = scopeData;
 	const { canManage } = activePermissions;
@@ -21,10 +20,7 @@ const BottomMenu = (props: Props) => {
 	const collectionSlug = activeCollection && activeCollection.slug;
 	const pubSlug = locationData.params.pubSlug;
 
-	const backgroundColor = Color(communityData.accentColorDark)
-		.fade(0.95)
-		.rgb()
-		.string();
+	// const backgroundColor = Color(communityData.accentColorDark).fade(0.95).rgb().string();
 
 	const contentItems = [
 		{
@@ -116,11 +112,11 @@ const BottomMenu = (props: Props) => {
 			/>
 
 			<div className="content">
-				<ScopePicker isMobile/>
+				<ScopePicker isMobile={isMobile} />
 				<MenuButton
-					aria-label={"Dashboard Mode"}
+					aria-label="Dashboard Mode"
 					buttonContent={
-							<div className="current-mode">{getDashboardModes(locationData).mode}</div>
+						<div className="current-mode">{getDashboardModes(locationData).mode}</div>
 					}
 					buttonProps={{
 						className: 'mode-button',
@@ -128,13 +124,14 @@ const BottomMenu = (props: Props) => {
 						minimal: true,
 						rightIcon: 'caret-down',
 					}}
-					placement={"top"}
+					placement="top"
 					className="mode-menu"
 				>
 					{contentItems
 						.filter((item) => {
 							const { validScopes, manageRequired } = item;
-							const scopeIsValid = !validScopes || validScopes.includes(activeTargetType);
+							const scopeIsValid =
+								!validScopes || validScopes.includes(activeTargetType);
 							const permissionIsValid = canManage || !manageRequired;
 							return scopeIsValid && permissionIsValid;
 						})
@@ -147,9 +144,12 @@ const BottomMenu = (props: Props) => {
 									href={item.href}
 									key={item.title}
 									text={
-										<div key={item.title} className={classNames({ menu: true, active })}>
-												<Icon className="side-icon" icon={item.icon} />
-												<span className="side-text">{item.title}</span>
+										<div
+											key={item.title}
+											className={classNames({ menu: true, active })}
+										>
+											<Icon className="side-icon" icon={item.icon} />
+											<span className="side-text">{item.title}</span>
 										</div>
 									}
 								/>
