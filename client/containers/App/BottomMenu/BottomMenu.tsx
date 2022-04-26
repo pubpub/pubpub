@@ -127,7 +127,7 @@ const BottomMenu = ({ isMobile }: Props) => {
 							minimal: true,
 							rightIcon: 'caret-down',
 						}}
-						placement="top-end"
+						placement="top-start"
 						className="mode-menu"
 					>
 						<div className="mode-dropdown-component">
