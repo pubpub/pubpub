@@ -113,49 +113,55 @@ const BottomMenu = ({ isMobile }: Props) => {
 
 			<div className="content">
 				<ScopePicker isMobile={isMobile} />
-				<MenuButton
-					aria-label="Dashboard Mode"
-					buttonContent={
-						<div className="current-mode">{getDashboardModes(locationData).mode}</div>
-					}
-					buttonProps={{
-						className: 'mode-button',
-						fill: true,
-						minimal: true,
-						rightIcon: 'caret-down',
-					}}
-					placement="top"
-					className="mode-menu"
-				>
-					{contentItems
-						.filter((item) => {
-							const { validScopes, manageRequired } = item;
-							const scopeIsValid =
-								!validScopes || validScopes.includes(activeTargetType);
-							const permissionIsValid = canManage || !manageRequired;
-							return scopeIsValid && permissionIsValid;
-						})
-						.map((item) => {
-							const { mode } = getDashboardModes(locationData);
-							const itemMode = item.title.toLowerCase().replace(/ /gi, '-');
-							const active = mode === itemMode;
-							return (
-								<MenuItem
-									href={item.href}
-									key={item.title}
-									text={
-										<div
+				<div className="mode-menu-component">
+					<MenuButton
+						aria-label="Dashboard Mode"
+						buttonContent={
+							<div className="current-mode">
+								{getDashboardModes(locationData).mode}
+							</div>
+						}
+						buttonProps={{
+							className: 'mode-button',
+							fill: true,
+							minimal: true,
+							rightIcon: 'caret-down',
+						}}
+						placement="top-end"
+						className="mode-menu"
+					>
+						<div className="mode-dropdown-component">
+							{contentItems
+								.filter((item) => {
+									const { validScopes, manageRequired } = item;
+									const scopeIsValid =
+										!validScopes || validScopes.includes(activeTargetType);
+									const permissionIsValid = canManage || !manageRequired;
+									return scopeIsValid && permissionIsValid;
+								})
+								.map((item) => {
+									const { mode } = getDashboardModes(locationData);
+									const itemMode = item.title.toLowerCase().replace(/ /gi, '-');
+									const active = mode === itemMode;
+									return (
+										<MenuItem
+											href={item.href}
 											key={item.title}
-											className={classNames({ menu: true, active })}
-										>
-											<Icon className="side-icon" icon={item.icon} />
-											<span className="side-text">{item.title}</span>
-										</div>
-									}
-								/>
-							);
-						})}
-				</MenuButton>
+											text={
+												<div
+													key={item.title}
+													className={classNames({ menu: true, active })}
+												>
+													<Icon className="side-icon" icon={item.icon} />
+													<span className="side-text">{item.title}</span>
+												</div>
+											}
+										/>
+									);
+								})}
+						</div>
+					</MenuButton>
+				</div>
 			</div>
 		</div>
 	);
