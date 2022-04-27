@@ -1,41 +1,69 @@
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .dashboard-content-header {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    .dashboard-header-left {
-        .title {
-            display: flex;
-            align-items: center;
-            .target-type {
-                font-weight: 400;
-                text-transform: capitalize;
-            }
-            font-weight: 600;
-            font-size: 24px;
-            .number {
-                margin-left: 12px;
-                opacity: 0.6;
-            }
-        }
-        .details {
-            font-size: 16px;
-            color: #666;
-            font-weight: 300;
-            padding-top: 20px;
-        }
-        flex: 1 1 auto;
-    }
-    .dashboard-header-right {
-        flex: 0 0 auto;
-        .controls {
-            display: flex;
-        }
-        .bp3-button {
-            margin-left: 1em;
-        }
-        .bp3-button-group .bp3-button {
-            z-index: unset;
-            margin-left: auto;
-        }
-    }
+	display: flex;
+	align-items: flex-start;
+	margin-bottom: 20px;
+	.dashboard-header-left {
+		.title {
+			display: flex;
+			align-items: center;
+			.target-type {
+				font-weight: 400;
+				text-transform: capitalize;
+			}
+			font-weight: 600;
+			font-size: 24px;
+			.number {
+				margin-left: 12px;
+				opacity: 0.6;
+			}
+		}
+		.details {
+			font-size: 16px;
+			color: #666;
+			font-weight: 300;
+			padding-top: 20px;
+		}
+		flex: 1 1 auto;
+	}
+	.dashboard-header-right {
+		flex: 0 0 auto;
+		.controls {
+			display: flex;
+			@include mobile {
+				flex-wrap: wrap;
+				max-width: 100vw;
+			}
+		}
+		.bp3-button {
+			margin-left: 1em;
+			@include mobile {
+				font-size: 12px;
+				padding: 4px 4px;
+				margin-top: 4px;
+				margin-bottom: 4px;
+				margin-left: 0;
+				margin-right: 3px;
+			}
+		}
+		.bp3-button-group .bp3-button {
+			z-index: unset;
+			margin-left: auto;
+		}
+		@include mobile {
+			margin-top: 6px;
+		}
+	}
+	@include mobile {
+		margin-top: 20px;
+		margin-bottom: 10px;
+		flex-wrap: wrap;
+	}
 }
