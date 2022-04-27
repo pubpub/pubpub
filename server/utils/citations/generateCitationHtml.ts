@@ -49,8 +49,8 @@ export const generateCitationHtml = async (
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
 	const authors = getAllPubContributors(pubData).map((attribution) => {
 		if (
-			types.isCollectionAttribution(attribution) ||
-			(types.isPubAttribution(attribution) && attribution.isAuthor)
+			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
+			attribution.isAuthor
 		) {
 			return {
 				given: attribution.user.firstName,
