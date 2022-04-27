@@ -84,6 +84,6 @@ export default (schema) => {
 	if (schema.nodes.code_block) rules.push(codeBlockRule(schema.nodes.code_block));
 	if (schema.nodes.heading) rules.push(headingRule(schema.nodes.heading, 6));
 	if (schema.nodes.math_inline) rules.push(inlineMathRule(schema.nodes.math_inline));
-	if (schema.nodes.math_block) rules.push(blockMathRule(schema.nodes.math_block));
+	if (schema.nodes.math_display) rules.push(blockMathRule(schema.nodes.math_display));
 	return inputRules({ rules });
 };
