@@ -60,11 +60,25 @@ export const generateCitationHtml = async (
 		return {};
 	});
 	const authorEntry = authors.length ? { author: authors } : {};
+	const editors = { editor: [{ given: 'Lamont', family: 'Tier' }] };
+	const illustrators = { illustrator: [{ given: 'Pablo', family: 'Picasso' }] };
+	const translators = { translator: [{ given: 'qweliannnn', family: 'another one' }] };
+	const collectionEditors = {
+		'collection-editor': [{ given: 'Testname', family: 'Testfamilyname' }],
+	};
+	const chairs = { chair: [{ given: 'James', family: 'Pearson' }] };
+
+	// for role[0] provide a atrribution appropriate to the CSL-JSON output
 	const commonData = {
 		// @ts-expect-error ts-migrate(2783) FIXME: 'type' is specified more than once, so this usage ... Remove this comment to see the full error message
 		type: 'article-journal',
 		title: pubData.title,
 		...authorEntry,
+		...editors,
+		...illustrators,
+		...collectionEditors,
+		...chairs,
+		...translators,
 		...renderJournalCitationForCitations(
 			primaryCollection?.kind,
 			communityData.citeAs,
