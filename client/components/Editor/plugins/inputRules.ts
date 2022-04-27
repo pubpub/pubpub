@@ -7,6 +7,13 @@ import {
 	ellipsis,
 } from 'prosemirror-inputrules';
 
+import {
+	makeBlockMathInputRule,
+	makeInlineMathInputRule,
+	REGEX_INLINE_MATH_DOLLARS,
+	REGEX_BLOCK_MATH_DOLLARS,
+} from '@benrbray/prosemirror-math';
+
 // : (NodeType) → InputRule
 // Given a blockquote node type, returns an input rule that turns `"> "`
 // at the start of a textblock into a blockquote.
@@ -52,6 +59,20 @@ export function headingRule(nodeType, maxLevel) {
 	}));
 }
 
+// : (NodeType) → InputRule
+// Given a math block node type, returns an input rule that turns a
+// textblock starting with one dollar sign into an inline math node.
+export function inlineMathRule(nodeType) {
+	return makeInlineMathInputRule(REGEX_INLINE_MATH_DOLLARS, nodeType);
+}
+
+// : (NodeType) → InputRule
+// Given a math block node type, returns an input rule that turns a
+// textblock starting with two dollar signs into a math block.
+export function blockMathRule(nodeType) {
+	return makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, nodeType);
+}
+
 // : (Schema) → Plugin
 // A set of input rules for creating the basic block quotes, lists,
 // code blocks, and heading.
@@ -62,5 +83,7 @@ export default (schema) => {
 	if (schema.nodes.bullet_list) rules.push(bulletListRule(schema.nodes.bullet_list));
 	if (schema.nodes.code_block) rules.push(codeBlockRule(schema.nodes.code_block));
 	if (schema.nodes.heading) rules.push(headingRule(schema.nodes.heading, 6));
+	if (schema.nodes.math_inline) rules.push(inlineMathRule(schema.nodes.math_inline));
+	if (schema.nodes.math_block) rules.push(blockMathRule(schema.nodes.math_block));
 	return inputRules({ rules });
 };

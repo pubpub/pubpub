@@ -12,11 +12,15 @@ import {
 	newlineInCode,
 	createParagraphNear,
 	liftEmptyBlock,
+	joinBackward,
+	selectNodeBackward,
+	deleteSelection,
 } from 'prosemirror-commands';
 import { wrapInList, splitListItem, liftListItem, sinkListItem } from 'prosemirror-schema-list';
 import { undo, redo } from 'prosemirror-history';
 import { undoInputRule } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
+import { mathBackspaceCmd, insertMathCmd } from '@benrbray/prosemirror-math';
 
 import { splitBlockPreservingTextAlign } from '../commands';
 
@@ -132,6 +136,14 @@ export default (schema) => {
 			);
 			return true;
 		});
+	}
+	if (schema.nodes.math_inline) {
+		bind('Mod-Space', insertMathCmd(schema.nodes.math_inline));
+		// modify the default keymap chain for backspace
+		bind(
+			'Backspace',
+			chainCommands(deleteSelection, mathBackspaceCmd, joinBackward, selectNodeBackward),
+		);
 	}
 
 	// All but the custom block splitting command in this chain are taken from the default
