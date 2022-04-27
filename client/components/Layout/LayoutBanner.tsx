@@ -51,35 +51,39 @@ class LayoutBanner extends Component<Props, State> {
 
 	renderButton() {
 		const { buttonError } = this.state;
+		const isLoggedIn = !!this.props.loginData.id;
 
 		if (!this.props.content.showButton) {
 			return null;
 		}
 
 		const buttonType =
-			this.props.content.buttonType ||
-			(this.props.content.showButton ? 'create-pub' : undefined);
+			this.props.content.buttonType || (this.props.content.showButton && 'create-pub');
+
 		const buttonText =
-			buttonType === 'create-pub' && !this.props.loginData.id
-				? 'Login to Create Pub' || this.props.content.buttonText
-				: buttonType === 'create-pub' && this.props.loginData.id
+			!isLoggedIn && buttonType === 'create-pub'
+				? 'Login to Create Pub'
+				: this.props.content.buttonText
+				? this.props.content.buttonText
+				: isLoggedIn && buttonType === 'create-pub'
 				? 'Create Pub'
 				: buttonType === 'signup'
 				? 'Create an Account'
 				: buttonType === 'link'
 				? 'Go to Link'
 				: undefined;
+
 		const buttonUrl =
 			buttonType === 'link'
 				? this.props.content.buttonUrl
-				: buttonType === 'create-pub' && !this.props.loginData.id
+				: isLoggedIn && buttonType === 'create-pub'
 				? `/login?redirect=${this.props.locationData.path}`
 				: buttonType === 'signup'
 				? '/signup'
 				: undefined;
 
 		const onButtonClick =
-			buttonType === 'create-pub' && this.props.loginData.id ? this.createPub : undefined;
+			(buttonType === 'create-pub' && isLoggedIn && this.createPub) || undefined;
 
 		const button = (
 			<AnchorButton
