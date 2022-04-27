@@ -35,6 +35,7 @@ const createCss = () => {
 	// Unfortunately, the export task runs in a thread managed by the worker_threads API, which
 	// node-sass does not support (see https://github.com/sass/node-sass/issues/2746). So we will
 	// just generate the bundle once per Heroku deploy and save it to a file.
+	// TODO: (ben) adapt this for dart-sass or sass, depending where we land for dependabot update
 	if (!fs.existsSync(cssPath)) {
 		const nodeSass = require('node-sass');
 		const nodeModulesPath = path.join(process.env.PWD!, 'node_modules');
