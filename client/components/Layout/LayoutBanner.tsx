@@ -84,7 +84,7 @@ class LayoutBanner extends Component<Props, State> {
 				: undefined;
 
 		const onButtonClick =
-			(buttonType === 'create-pub' && isLoggedIn && this.createPub) || undefined;
+			(isLoggedIn && buttonType === 'create-pub' && this.createPub) || undefined;
 
 		const button = (
 			<AnchorButton
