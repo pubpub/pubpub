@@ -41,7 +41,7 @@ $menu-min-width: auto;
 // ****************************
 @import '~@blueprintjs/core/src/common/_variables.scss';
 
-$pt-border-radius: floor($pt-grid-size / 5);
+$pt-border-radius: floor($pt-grid-size * 0.2);
 
 // Import Core Blueprint sass
 // ****************************
