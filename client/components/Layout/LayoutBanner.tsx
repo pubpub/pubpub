@@ -16,6 +16,19 @@ type Props = {
 
 type State = any;
 
+export const getButtonText = (
+	buttonType: 'create-pub' | 'signup' | 'link' | null,
+	customButtonText: string,
+	isLoggedIn = true,
+): string | undefined => {
+	if (!isLoggedIn && buttonType === 'create-pub') return 'Login to Create Pub';
+	if (customButtonText) return customButtonText;
+	if (isLoggedIn && buttonType === 'create-pub') return 'Create Pub';
+	if (buttonType === 'signup') return 'Create an Account';
+	if (buttonType === 'link') return 'Go to Link';
+	return undefined;
+};
+
 const createPubFailureText =
 	'Error creating a new Pub. You may want to refresh the page and try again.';
 
@@ -60,19 +73,7 @@ class LayoutBanner extends Component<Props, State> {
 		const buttonType =
 			this.props.content.buttonType || (this.props.content.showButton && 'create-pub');
 
-		const buttonText =
-			!isLoggedIn && buttonType === 'create-pub'
-				? 'Login to Create Pub'
-				: this.props.content.buttonText
-				? this.props.content.buttonText
-				: isLoggedIn && buttonType === 'create-pub'
-				? 'Create Pub'
-				: buttonType === 'signup'
-				? 'Create an Account'
-				: buttonType === 'link'
-				? 'Go to Link'
-				: undefined;
-
+		const buttonText = getButtonText(buttonType, this.props.content.buttonText, isLoggedIn);
 		const buttonUrl =
 			buttonType === 'link'
 				? this.props.content.buttonUrl
