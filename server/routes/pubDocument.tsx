@@ -32,6 +32,12 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 		loginData: { id: userId },
 	} = initialData;
 	createUserScopeVisit({ userId, communityId, pubId: pubData.id });
+	const { collectionPubs } = pubData;
+	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
+	// console.log([
+	// 	...pubData.attributions,
+	// 	...(primaryCollection && primaryCollection.attributions),
+	// ]);
 	return renderToNodeStream(
 		res,
 		<Html
@@ -40,7 +46,10 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 			viewData={{ pubData }}
 			customScripts={customScripts}
 			headerComponents={generateMetaComponents({
-				attributions: pubData.attributions,
+				attributions: [
+					...pubData.attributions,
+					...(primaryCollection && primaryCollection.attributions),
+				],
 				collection: chooseCollectionForPub(pubData, initialData.locationData),
 				contextTitle: getPubPageContextTitle(pubData, initialData.communityData),
 				description: pubData.description,

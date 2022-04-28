@@ -227,29 +227,50 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			});
 
 		const citationAuthorTags = authors.map((author) => {
+			if (author.user) {
+				return (
+					<meta
+						key={`author-cite-${author.id}`}
+						name="citation_author"
+						content={author.user.fullName}
+					/>
+				);
+			}
 			return (
 				<meta
 					key={`author-cite-${author.id}`}
 					name="citation_author"
-					content={author.user.fullName}
+					content={author.name}
 				/>
 			);
 		});
 		const dcAuthorTags = authors.map((author) => {
-			return (
-				<meta
-					key={`author-dc-${author.id}`}
-					name="dc.creator"
-					content={author.user.fullName}
-				/>
-			);
+			if (author.user) {
+				return (
+					<meta
+						key={`author-dc-${author.id}`}
+						name="dc.creator"
+						content={author.user.fullName}
+					/>
+				);
+			}
+			return <meta key={`author-dc-${author.id}`} name="dc.creator" content={author.name} />;
 		});
 		const contributorRoleTags = contributors.map((contributor) => {
+			if (contributor.user) {
+				return (
+					<meta
+						key={`editor-cite-${contributor.id}`}
+						name="citation_editor"
+						content={contributor.user.fullName}
+					/>
+				);
+			}
 			return (
 				<meta
 					key={`editor-cite-${contributor.id}`}
 					name="citation_editor"
-					content={contributor.user.fullName}
+					content={contributor.name}
 				/>
 			);
 		});
