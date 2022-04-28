@@ -7,7 +7,7 @@ import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { pubUrl } from 'utils/canonicalUrls';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { renderJournalCitationForCitations } from 'utils/citations';
-import { getAllPubContributors } from 'utils/contributors';
+import { getAllPubContributors, getAllPubContributorsRoles } from 'utils/contributors';
 
 const getDatePartsObject = (date) => ({
 	'date-parts': [date.getFullYear(), date.getMonth() + 1, date.getDate()],
@@ -60,13 +60,81 @@ export const generateCitationHtml = async (
 		return {};
 	});
 	const authorEntry = authors.length ? { author: authors } : {};
-	const editors = { editor: [{ given: 'Lamont', family: 'Tier' }] };
-	const illustrators = { illustrator: [{ given: 'Pablo', family: 'Picasso' }] };
-	const translators = { translator: [{ given: 'qweliannnn', family: 'another one' }] };
-	const collectionEditors = {
+
+	const editors = getAllPubContributorsRoles(pubData, 'editor').map((attribution) => {
+		if (
+			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
+			attribution.isAuthor
+		) {
+			return {
+				given: attribution.user.firstName,
+				family: attribution.user.lastName,
+			};
+		}
+		return {};
+	});
+	const editorEntry = editors.length ? { editor: editors } : {};
+
+	const illustrators = getAllPubContributorsRoles(pubData, 'illustrator').map((attribution) => {
+		if (
+			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
+			attribution.isAuthor
+		) {
+			return {
+				given: attribution.user.firstName,
+				family: attribution.user.lastName,
+			};
+		}
+		return {};
+	});
+	const illustratorEntry = illustrators.length ? { illustrator: illustrators } : {};
+
+	const translators = getAllPubContributorsRoles(pubData, 'Translator').map((attribution) => {
+		if (
+			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
+			attribution.isAuthor
+		) {
+			return {
+				given: attribution.user.firstName,
+				family: attribution.user.lastName,
+			};
+		}
+		return {};
+	});
+	const translatorEntry = translators.length ? { translator: translators } : {};
+
+	const collectionEditors = getAllPubContributorsRoles(pubData, 'Series Editor').map(
+		(attribution) => {
+			if (
+				(types.isCollectionAttribution(attribution) ||
+					types.isPubAttribution(attribution)) &&
+				attribution.isAuthor
+			) {
+				return {
+					given: attribution.user.firstName,
+					family: attribution.user.lastName,
+				};
+			}
+			return {};
+		},
+	);
+	const collectionEditorEntry = {
 		'collection-editor': [{ given: 'Testname', family: 'Testfamilyname' }],
 	};
-	const chairs = { chair: [{ given: 'James', family: 'Pearson' }] };
+
+	const chairs = getAllPubContributorsRoles(pubData, 'Chair').map((attribution) => {
+		if (
+			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
+			attribution.isAuthor
+		) {
+			return {
+				given: attribution.user.firstName,
+				family: attribution.user.lastName,
+			};
+		}
+		return {};
+	});
+	const chairEntry = { chair: [{ given: 'James', family: 'Pearson' }] };
 
 	// for role[0] provide a atrribution appropriate to the CSL-JSON output
 	const commonData = {
@@ -74,11 +142,11 @@ export const generateCitationHtml = async (
 		type: 'article-journal',
 		title: pubData.title,
 		...authorEntry,
-		...editors,
-		...illustrators,
-		...collectionEditors,
-		...chairs,
-		...translators,
+		...editorEntry,
+		...illustratorEntry,
+		...collectionEditorEntry,
+		...chairEntry,
+		...translatorEntry,
 		...renderJournalCitationForCitations(
 			primaryCollection?.kind,
 			communityData.citeAs,

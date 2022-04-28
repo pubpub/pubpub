@@ -46,13 +46,54 @@ export const getAllPubContributors = (
 ) => {
 	const { collectionPubs } = pubData;
 	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
-
 	const contributors = [
 		...orderedContributors(pubData.attributions),
 		...orderedContributors(primaryCollection && primaryCollection.attributions),
 	].map(ensureUserForAttribution);
 
 	return resolveContributors(contributors, hideAuthors, hideNonAuthors);
+};
+
+export const getAllPubContributorsRoles = (
+	pubData: Pub,
+	field: string,
+	hideAuthors = false,
+	hideNonAuthors = false,
+) => {
+	const { collectionPubs } = pubData;
+	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
+
+	const contributors = [
+		...orderedContributors(pubData.attributions),
+		...orderedContributors(primaryCollection && primaryCollection.attributions),
+	].map(ensureUserForAttribution);
+
+	// check if role is present on contributor
+	// remove from array
+	// return array
+	if (field === 'editor') {
+		const contributorsWithRoles = contributors.filter((contributor) => {
+			return (
+				(contributor.roles && contributor.roles[0] === 'Editor') ||
+				(contributor.roles && contributor.roles[0] === 'Writing – Review & Editing')
+			);
+		});
+		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
+	}
+	if (field === 'illustrator') {
+		const contributorsWithRoles = contributors.filter((contributor) => {
+			return (
+				(contributor.roles && contributor.roles[0] === 'Illustrator') ||
+				(contributor.roles && contributor.roles[0] === 'Visualization')
+			);
+		});
+
+		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
+	}
+	const contributorsWithRoles = contributors.filter((contributor) => {
+		return contributor.roles && contributor.roles[0] === field;
+	});
+	return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 };
 
 export const getAllCollectionContributors = (
