@@ -201,6 +201,31 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			.filter((item) => {
 				return item.isAuthor;
 			});
+		const contributors = attributions
+			.sort((foo, bar) => {
+				if (foo.order < bar.order) {
+					return -1;
+				}
+				if (foo.order > bar.order) {
+					return 1;
+				}
+				if (foo.createdAt < bar.createdAt) {
+					return 1;
+				}
+				if (foo.createdAt > bar.createdAt) {
+					return -1;
+				}
+				return 0;
+			})
+			.filter((contributor) => {
+				return (
+					contributor.roles &&
+					(contributor.roles[0] === 'Series Editor' ||
+						contributor.roles[0] === 'Editor' ||
+						contributor.roles[0] === 'Series Editor')
+				);
+			});
+
 		const citationAuthorTags = authors.map((author) => {
 			return (
 				<meta
@@ -219,7 +244,21 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 				/>
 			);
 		});
-		outputComponents = [...outputComponents, citationAuthorTags, dcAuthorTags];
+		const contributorRoleTags = contributors.map((contributor) => {
+			return (
+				<meta
+					key={`editor-cite-${contributor.id}`}
+					name="citation_editor"
+					content={contributor.user.fullName}
+				/>
+			);
+		});
+		outputComponents = [
+			...outputComponents,
+			citationAuthorTags,
+			dcAuthorTags,
+			contributorRoleTags,
+		];
 	}
 
 	if (publishedAt) {
