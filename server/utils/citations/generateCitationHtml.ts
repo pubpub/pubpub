@@ -118,7 +118,6 @@ export const generateCitationHtml = async (
 			return {};
 		},
 	);
-
 	const collectionEditorEntry = collectionEditors.length
 		? { 'collection-editor': collectionEditors }
 		: {};
