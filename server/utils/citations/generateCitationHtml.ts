@@ -118,9 +118,10 @@ export const generateCitationHtml = async (
 			return {};
 		},
 	);
-	const collectionEditorEntry = {
-		'collection-editor': [{ given: 'Testname', family: 'Testfamilyname' }],
-	};
+
+	const collectionEditorEntry = collectionEditors.length
+		? { 'collection-editor': collectionEditors }
+		: {};
 
 	const chairs = getAllPubContributorsRoles(pubData, 'Chair').map((attribution) => {
 		if (
@@ -134,10 +135,8 @@ export const generateCitationHtml = async (
 		}
 		return {};
 	});
-	const chairEntry = { chair: [{ given: 'James', family: 'Pearson' }] };
+	const chairEntry = chairs.length ? { chair: chairs } : {};
 
-	console.log(collectionEditors, chairs);
-	// for role[0] provide a atrribution appropriate to the CSL-JSON output
 	const commonData = {
 		// @ts-expect-error ts-migrate(2783) FIXME: 'type' is specified more than once, so this usage ... Remove this comment to see the full error message
 		type: 'article-journal',

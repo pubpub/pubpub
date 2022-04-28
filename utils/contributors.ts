@@ -56,7 +56,7 @@ export const getAllPubContributors = (
 
 export const getAllPubContributorsRoles = (
 	pubData: Pub,
-	field: string,
+	role: string,
 	hideAuthors = false,
 	hideNonAuthors = false,
 ) => {
@@ -68,10 +68,8 @@ export const getAllPubContributorsRoles = (
 		...orderedContributors(primaryCollection && primaryCollection.attributions),
 	].map(ensureUserForAttribution);
 
-	// check if role is present on contributor
-	// remove from array
-	// return array
-	if (field === 'editor') {
+	// filter if role is present on contributor
+	if (role === 'editor') {
 		const contributorsWithRoles = contributors.filter((contributor) => {
 			return (
 				(contributor.roles && contributor.roles[0] === 'Editor') ||
@@ -80,7 +78,7 @@ export const getAllPubContributorsRoles = (
 		});
 		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 	}
-	if (field === 'illustrator') {
+	if (role === 'illustrator') {
 		const contributorsWithRoles = contributors.filter((contributor) => {
 			return (
 				(contributor.roles && contributor.roles[0] === 'Illustrator') ||
@@ -91,7 +89,7 @@ export const getAllPubContributorsRoles = (
 		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 	}
 	const contributorsWithRoles = contributors.filter((contributor) => {
-		return contributor.roles && contributor.roles[0] === field;
+		return contributor.roles && contributor.roles[0] === role;
 	});
 	return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 };
