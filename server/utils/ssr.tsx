@@ -220,7 +220,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			.filter((contributor) => {
 				return (
 					contributor.roles &&
-					(contributor.roles[0] === 'Series Editor' ||
+					(contributor.roles[0] === 'Writing - Review & Editing' ||
 						contributor.roles[0] === 'Editor' ||
 						contributor.roles[0] === 'Series Editor')
 				);
