@@ -136,6 +136,7 @@ export const generateCitationHtml = async (
 	});
 	const chairEntry = { chair: [{ given: 'James', family: 'Pearson' }] };
 
+	console.log(collectionEditors, chairs);
 	// for role[0] provide a atrribution appropriate to the CSL-JSON output
 	const commonData = {
 		// @ts-expect-error ts-migrate(2783) FIXME: 'type' is specified more than once, so this usage ... Remove this comment to see the full error message
