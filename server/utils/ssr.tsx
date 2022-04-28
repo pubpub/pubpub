@@ -275,7 +275,6 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 				/>
 			);
 		});
-		console.log(contributorRoleTags);
 		outputComponents = [
 			...outputComponents,
 			citationAuthorTags,
