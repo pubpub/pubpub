@@ -36,6 +36,7 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 	// getting collection pub attribution
 	const { collectionPubs } = pubData;
 	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
+	const collectionAttributions = primaryCollection ? primaryCollection.attributions : [];
 	return renderToNodeStream(
 		res,
 		<Html
@@ -44,10 +45,7 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 			viewData={{ pubData }}
 			customScripts={customScripts}
 			headerComponents={generateMetaComponents({
-				attributions: [
-					...pubData.attributions,
-					...(primaryCollection && primaryCollection.attributions),
-				],
+				attributions: [...pubData.attributions, ...collectionAttributions],
 				collection: chooseCollectionForPub(pubData, initialData.locationData),
 				contextTitle: getPubPageContextTitle(pubData, initialData.communityData),
 				description: pubData.description,
