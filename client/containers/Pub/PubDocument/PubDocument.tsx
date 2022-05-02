@@ -145,7 +145,7 @@ const PubDocument = (props: Props) => {
 					/>
 				)}
 			</PubSuspendWhileTyping>
-			<PubLinkController locationData={locationData} mainContentRef={mainContentRef} />
+			<PubLinkController mainContentRef={mainContentRef} />
 		</div>
 	);
 };
