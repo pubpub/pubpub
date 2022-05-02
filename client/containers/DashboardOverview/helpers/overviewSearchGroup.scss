@@ -58,8 +58,6 @@ $transition-duration: 100ms;
 		@include mobile {
 			display: block;
 			border: 0;
-			border-top: 1px solid $accent-color;
-			border-bottom: 1px solid $accent-color;
 			padding-top: 12px;
 			padding-left: 0;
 			padding-right: 0;

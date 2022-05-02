@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-// import Color from 'color';
+import Color from 'color';
 import { Icon, MenuButton, MenuItem } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl, getDashboardModes } from 'utils/dashboard';
@@ -20,7 +20,7 @@ const BottomMenu = ({ isMobile }: Props) => {
 	const collectionSlug = activeCollection && activeCollection.slug;
 	const pubSlug = locationData.params.pubSlug;
 
-	// const backgroundColor = Color(communityData.accentColorDark).fade(0.95).rgb().string();
+	const backgroundColor = Color(communityData.accentColorDark).fade(0.95).rgb().string();
 
 	const contentItems = [
 		{
@@ -127,10 +127,18 @@ const BottomMenu = ({ isMobile }: Props) => {
 							minimal: true,
 							rightIcon: 'caret-down',
 						}}
-						placement="top-start"
 						className="mode-menu"
+						positionFixed={true}
 					>
 						<div className="mode-dropdown-component">
+							<style
+								/* eslint-disable-next-line react/no-danger */
+								dangerouslySetInnerHTML={{
+									__html: `
+										.mode-dropdown-component { background: ${backgroundColor}; border-top: 2px solid ${communityData.accentColorDark} }
+									`,
+								}}
+							/>
 							{contentItems
 								.filter((item) => {
 									const { validScopes, manageRequired } = item;
@@ -152,8 +160,8 @@ const BottomMenu = ({ isMobile }: Props) => {
 													key={item.title}
 													className={classNames({ menu: true, active })}
 												>
-													<Icon className="side-icon" icon={item.icon} />
-													<span className="side-text">{item.title}</span>
+													<div className="side-icon"><Icon icon={item.icon} /></div>
+													<div className="side-text">{item.title}</div>
 												</div>
 											}
 										/>

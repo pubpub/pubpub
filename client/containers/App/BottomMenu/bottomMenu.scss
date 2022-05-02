@@ -74,7 +74,7 @@
 		display: flex;
 		flex-direction: row;
 		.scope-picker-component {
-			width: 48%;
+			width: 50%;
 			max-width: 48%;
 			.scope-button {
 				height: 50px;
@@ -92,8 +92,8 @@
 			}
 		}
 		.mode-menu-component {
-			width: 48%;
-			max-width: 48%;
+			flex-grow: 1;
+			width: auto;
 		}
 		.mode-button {
 			height: 50px;
@@ -113,7 +113,37 @@
 	}
 }
 .mode-menu {
+	left: 0 !important;
+	top: unset !important;
+	bottom: 50px !important;
+	transform: none !important;
+	padding: 0px !important;
+	width: 100%;
 	.mode-dropdown-component {
-		min-width: 150px;
+		a {
+			padding: 0px !important;
+			.menu {
+				height: 50px;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				.side-icon {
+					opacity: 0.5;
+					padding-left: 20px;
+				}
+				.side-text {
+					padding-left: 15px;
+					font-size: 16px;
+				}
+				&.active {
+					.side-icon {
+						opacity: 1;
+					}
+					.side-text {
+						font-weight: 600;
+					}
+				}
+			}
+		}
 	}
 }

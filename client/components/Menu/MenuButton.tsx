@@ -29,7 +29,7 @@ const getIconProp = (icon: IconName | React.ReactNode) => {
 };
 
 export const MenuButton = (props: MenuButtonProps) => {
-	const { placement, buttonContent, children, buttonProps, ...restProps } = props;
+	const { placement, positionFixed, buttonContent, children, buttonProps, ...restProps } = props;
 
 	const buttonPropsWithIcon = {
 		...buttonProps,
@@ -39,6 +39,7 @@ export const MenuButton = (props: MenuButtonProps) => {
 	return (
 		<Menu
 			placement={placement}
+			positionFixed={positionFixed}
 			disclosure={({ ref, ...restDisclosureProps }) => (
 				<Button
 					children={buttonContent}
