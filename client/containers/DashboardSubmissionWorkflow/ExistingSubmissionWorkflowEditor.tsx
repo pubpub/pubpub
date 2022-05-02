@@ -31,7 +31,7 @@ const ExistingSubmissionWorkflowEditor = (props: Props) => {
 		hasChanges,
 		isPersisting,
 	} = usePersistableState(initialWorkflow, async (update, full) => {
-		await updateSubmissionWorkflow(update, activeCollection.id);
+		await updateSubmissionWorkflow(update, activeCollection!.id);
 		// The setTimeout() gives the usePersistableState hook a chance to disable its
 		// onBeforeUnload hook (which triggers a browser popup asking the user if they really want
 		// to navigate away) -- this is helpful because the parent DashboardSubmissionWorkflow
@@ -39,24 +39,25 @@ const ExistingSubmissionWorkflowEditor = (props: Props) => {
 		setTimeout(() => onWorkflowUpdated(full), 0);
 	});
 
-	return (
-		<DashboardSubmissionWorkflowFrame
-			controls={
-				<Button
-					disabled={!isValid || !hasChanges}
-					onClick={persist}
-					loading={isPersisting}
-					intent="primary"
-				>
-					Save Changes
-				</Button>
-			}
+	const saveChangesButton = (
+		<Button
+			disabled={!isValid || !hasChanges}
+			onClick={persist}
+			loading={isPersisting}
+			intent="primary"
 		>
+			Save Changes
+		</Button>
+	);
+
+	return (
+		<DashboardSubmissionWorkflowFrame controls={saveChangesButton}>
 			<SubmissionWorkflowEditor
 				workflow={workflow}
 				onUpdateWorkflow={updateWorkflow}
 				onValidateWorkflow={setIsValid}
-				collection={activeCollection}
+				collection={activeCollection!}
+				finalStepButton={saveChangesButton}
 			/>
 		</DashboardSubmissionWorkflowFrame>
 	);

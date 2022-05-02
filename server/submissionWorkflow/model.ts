@@ -9,14 +9,20 @@ export default (sequelize, dataTypes) => {
 			instructionsText: { type: dataTypes.JSONB, allowNull: false },
 			acceptedText: { type: dataTypes.JSONB, allowNull: false },
 			declinedText: { type: dataTypes.JSONB, allowNull: false },
-			emailText: { type: dataTypes.JSONB, allowNull: false },
+			receivedEmailText: { type: dataTypes.JSONB, allowNull: false },
 			introText: { type: dataTypes.JSONB, allowNull: false },
 			targetEmailAddress: { type: dataTypes.STRING, allowNull: false },
+			requireAbstract: { type: dataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+			requireDescription: { type: dataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 		},
 		{
 			classMethods: {
 				associate: (models) => {
-					const { Collection, SubmissionWorkflow } = models;
+					const { Collection, SubmissionWorkflow, Submission } = models;
+					SubmissionWorkflow.hasMany(Submission, {
+						as: 'submissions',
+						foreignKey: 'submissionWorkflowId',
+					});
 					SubmissionWorkflow.belongsTo(Collection, {
 						as: 'collection',
 						foreignKey: 'collectionId',

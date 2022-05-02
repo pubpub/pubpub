@@ -15,6 +15,7 @@ type MenuButtonProps = {
 		rightIcon?: IconName | React.ReactNode;
 		minimal?: boolean;
 		small?: boolean;
+		loading?: boolean;
 	};
 	disabled?: boolean;
 	children: React.ReactNode;
@@ -28,7 +29,7 @@ const getIconProp = (icon: IconName | React.ReactNode) => {
 };
 
 export const MenuButton = (props: MenuButtonProps) => {
-	const { buttonContent, children, buttonProps, ...restProps } = props;
+	const { placement, buttonContent, children, buttonProps, ...restProps } = props;
 
 	const buttonPropsWithIcon = {
 		...buttonProps,
@@ -37,6 +38,7 @@ export const MenuButton = (props: MenuButtonProps) => {
 
 	return (
 		<Menu
+			placement={placement}
 			disclosure={({ ref, ...restDisclosureProps }) => (
 				<Button
 					children={buttonContent}

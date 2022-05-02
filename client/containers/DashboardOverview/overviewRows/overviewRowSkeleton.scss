@@ -82,6 +82,9 @@ $mobile-viewport-cutoff: 750px;
             color: $medium-grey;
 
             > .summary-icon-pair {
+                .bp3-icon {
+                    @include status-colors;
+                }
                 display: flex;
                 align-items: center;
                 > :first-child {

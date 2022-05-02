@@ -1,7 +1,6 @@
-/* global describe, it, expect, beforeAll, afterAll, beforeEach, jest */
 import { setup, teardown, login, modelize, expectCreatedActivityItem, stub } from 'stubstub';
 import * as types from 'types';
-import { Member, Submission } from 'server/models';
+import { Submission, SubmissionWorkflow } from 'server/models';
 import { finishDeferredTasks } from 'server/utils/deferred';
 
 const models = modelize`
@@ -57,8 +56,11 @@ setup(beforeAll, async () => {
 let sendEmailMock: jest.Mock = null as any;
 beforeAll(() => {
 	sendEmailMock = jest.fn();
-	stub('server/utils/email', {
-		sendEmail: sendEmailMock,
+	stub('server/submission/emails', {
+		sendSubmissionEmail: sendEmailMock,
+	});
+	stub('server/submission/abstract', {
+		appendAbstractToPubDraft: () => {},
 	});
 });
 
@@ -67,7 +69,7 @@ beforeEach(() => {
 });
 
 describe('/api/submissions', () => {
-	it('forbids pub managers to update pub status beyond pending', async () => {
+	it('forbids pub managers to update pub status beyond received', async () => {
 		const { pubManager, submission } = models;
 		const agent = await login(pubManager);
 		await agent
@@ -81,7 +83,7 @@ describe('/api/submissions', () => {
 		const agent = await login(anotherAdmin);
 		await agent
 			.put('/api/submissions')
-			.send({ id: submission.id, status: 'pending' })
+			.send({ id: submission.id, status: 'received' })
 			.expect(403);
 	});
 
@@ -90,7 +92,7 @@ describe('/api/submissions', () => {
 		const agent = await login(collectionEditor);
 		await agent
 			.put('/api/submissions')
-			.send({ id: submission.id, status: 'pending' })
+			.send({ id: submission.id, status: 'received' })
 			.expect(403);
 	});
 
@@ -123,21 +125,21 @@ describe('/api/submissions', () => {
 			.expect(403);
 	});
 
-	it('allows pub managers to set submission status to pending', async () => {
+	it('allows pub managers to set submission status to received', async () => {
 		const { pubManager, submission } = models;
 		const agent = await login(pubManager);
 		await agent
 			.put('/api/submissions')
-			.send({ id: submission.id, status: 'pending' })
+			.send({ id: submission.id, status: 'received' })
 			.expect(201);
 		const { status, submittedAt } = await Submission.findOne({ where: { id: submission.id } });
-		expect(status).toEqual('pending');
+		expect(status).toEqual('received');
 		expect(Number.isNaN(new Date(submittedAt).getTime())).toEqual(false);
 		await finishDeferredTasks();
 		expect(sendEmailMock).toHaveBeenCalled();
 	});
 
-	it('forbids admins from updating status out of one of [pending, accepted, declined]', async () => {
+	it('forbids admins from updating status out of one of [received, accepted, declined]', async () => {
 		const { admin, submission } = models;
 		const agent = await login(admin);
 		await agent
@@ -164,7 +166,7 @@ describe('/api/submissions', () => {
 				})
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-status-changed',
+			kind: 'submission-status-updated',
 			pubId: submission.pubId,
 			actorId: collectionManager.id,
 			payload: {
@@ -197,7 +199,7 @@ describe('/api/submissions', () => {
 				})
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-status-changed',
+			kind: 'submission-status-updated',
 			pubId: submission.pubId,
 			actorId: collectionManager.id,
 			payload: {
@@ -217,16 +219,7 @@ describe('/api/submissions', () => {
 	it('allows admin to delete a submission', async () => {
 		const { admin, submission } = models;
 		const agent = await login(admin);
-		await expectCreatedActivityItem(
-			agent.delete('/api/submissions').send({ id: submission.id }).expect(200),
-		).toMatchObject({
-			kind: 'submission-deleted',
-			pubId: submission.pubId,
-			actorId: admin.id,
-			payload: {
-				submissionId: submission.id,
-			},
-		});
+		await agent.delete('/api/submissions').send({ id: submission.id }).expect(200);
 		const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 		expect(submissionNow).toEqual(null);
 	});
@@ -234,20 +227,16 @@ describe('/api/submissions', () => {
 	it('allows a visitor to create a new submission', async () => {
 		const { guest, submissionWorkflow } = models;
 		const agent = await login(guest);
-		const {
-			body: { pubId, status },
-		} = await expectCreatedActivityItem(
-			agent
-				.post('/api/submissions')
-				.send({ submissionWorkflowId: submissionWorkflow.id })
-				.expect(201),
-		).toMatchResultingObject((response) => ({
-			kind: 'submission-created',
-			pubId: response.body.pubId,
-			actorId: guest.id,
-		}));
-		expect(await Member.count({ where: { pubId, userId: guest.id } })).toEqual(1);
-		expect(status).toEqual('incomplete');
+		await agent
+			.post('/api/submissions')
+			.send({ submissionWorkflowId: submissionWorkflow.id })
+			.expect(201);
+
+		expect(
+			await SubmissionWorkflow.count({
+				where: { id: submissionWorkflow.id },
+			}),
+		).toEqual(1);
 	});
 });
 

@@ -11,6 +11,7 @@ import {
 	Scope,
 } from 'types';
 import {
+	attributesPublicUser,
 	ActivityItem,
 	Collection,
 	CollectionPub,
@@ -35,6 +36,7 @@ type PromiseRecord<T extends { [k: string]: any }> = {
 };
 
 type FetchActivityItemsOptions = {
+	since?: string;
 	scope: Scope;
 	filters?: ActivityFilter[];
 	limit?: number;
@@ -76,6 +78,7 @@ const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilte
 	]),
 	discussion: itemKindFilter(['pub-discussion-comment-added']),
 	pubEdge: itemKindFilter(['pub-edge-created', 'pub-edge-removed']),
+	submission: itemKindFilter(['submission-status-updated']),
 };
 
 const getWhereQueryForChildScopes = async (scope: Scope) => {
@@ -121,13 +124,18 @@ const applyFiltersToWhereQuery = (whereQuery: any, filters: ActivityFilter[]) =>
 const fetchActivityItemModels = async (
 	options: Required<FetchActivityItemsOptions>,
 ): Promise<types.ActivityItem[]> => {
-	const { scope, limit, offset } = options;
+	const { scope, limit, offset, since } = options;
 	const whereQuery = {
+		...(since && {
+			timestamp: {
+				[Op.gte]: since,
+			},
+		}),
 		communityId: scope.communityId,
 		...(await getWhereQueryForChildScopes(scope)),
 	};
 	const models = await ActivityItem.findAll({
-		limit,
+		...(limit && { limit }),
 		offset,
 		where: applyFiltersToWhereQuery(whereQuery, options.filters),
 		order: [['timestamp', 'DESC']],
@@ -137,7 +145,7 @@ const fetchActivityItemModels = async (
 
 const getActivityItemAssociationIds = (
 	items: types.ActivityItem[],
-	scope: Scope,
+	scope?: Scope,
 ): ActivityAssociationIds => {
 	const associationIds = createActivityAssociationSets();
 	const {
@@ -156,12 +164,14 @@ const getActivityItemAssociationIds = (
 		thread,
 		user,
 	} = associationIds;
-	community.add(scope.communityId);
-	if ('pubId' in scope) {
-		pub.add(scope.pubId);
-	}
-	if ('collectionId' in scope) {
-		collection.add(scope.collectionId);
+	if (scope) {
+		community.add(scope.communityId);
+		if ('pubId' in scope) {
+			pub.add(scope.pubId);
+		}
+		if ('collectionId' in scope) {
+			collection.add(scope.collectionId);
+		}
 	}
 	items.forEach((item) => {
 		community.add(item.communityId);
@@ -209,11 +219,7 @@ const getActivityItemAssociationIds = (
 			item.kind === 'member-removed'
 		) {
 			user.add(item.payload.userId);
-		} else if (
-			item.kind === 'submission-created' ||
-			item.kind === 'submission-status-changed' ||
-			item.kind === 'submission-deleted'
-		) {
+		} else if (item.kind === 'submission-status-updated') {
 			submission.add(item.payload.submissionId);
 		} else if (
 			item.kind === 'page-created' ||
@@ -226,11 +232,18 @@ const getActivityItemAssociationIds = (
 	return associationIds;
 };
 
-const fetchModels = async <T extends WithId>(Model: any, ids: Set<string>): Promise<IdIndex<T>> => {
+const fetchModels = async <T extends WithId>(
+	Model: any,
+	ids: Set<string>,
+	attributes?: string[],
+): Promise<IdIndex<T>> => {
 	if (ids.size === 0) {
 		return {};
 	}
-	const models = await Model.findAll({ where: { id: { [Op.in]: Array.from(ids) } } });
+	const models = await Model.findAll({
+		where: { id: { [Op.in]: Array.from(ids) } },
+		...(attributes && { attributes }),
+	});
 	return indexById(models as T[]);
 };
 
@@ -286,16 +299,24 @@ const fetchAssociations = (
 		submission: fetchModels<types.Submission>(Submission, submission),
 		threadComment: fetchModels<types.ThreadComment>(ThreadComment, threadComment),
 		thread: fetchModels<types.Thread>(Thread, thread),
-		user: fetchModels<types.User>(User, user),
+		user: fetchModels<types.User>(User, user, attributesPublicUser),
 	});
+};
+
+export const fetchAssociationsForActivityItems = async (
+	activityItems: types.ActivityItem[],
+	scope?: Scope,
+) => {
+	const associationIds = getActivityItemAssociationIds(activityItems, scope);
+	return fetchAssociations(associationIds);
 };
 
 export const fetchActivityItems = async (
 	options: FetchActivityItemsOptions,
 ): Promise<ActivityItemsFetchResult> => {
-	const { offset = 0, limit = 50, scope, filters = [] } = options;
-	const activityItems = await fetchActivityItemModels({ offset, limit, scope, filters });
-	const associationIds = getActivityItemAssociationIds(activityItems, options.scope);
-	const associations = await fetchAssociations(associationIds);
+	const { offset = 0, limit = 0, scope, filters = [], since = '' } = options;
+	const activityItems = await fetchActivityItemModels({ since, offset, limit, scope, filters });
+	const associations = await fetchAssociationsForActivityItems(activityItems, options.scope);
+
 	return { activityItems, associations, fetchedAllItems: activityItems.length < limit };
 };

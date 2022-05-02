@@ -24,10 +24,10 @@ type Props = {
 
 const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 	all: {
-		submissionStatuses: ['pending', 'accepted', 'declined'],
+		submissionStatuses: ['received', 'accepted', 'declined'],
 	},
-	pending: {
-		submissionStatuses: ['pending'],
+	received: {
+		submissionStatuses: ['received'],
 	},
 	accepted: {
 		submissionStatuses: ['accepted'],
@@ -38,9 +38,9 @@ const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 };
 
 const pendingSearchFilter: OverviewSearchFilter = {
-	id: 'pending',
+	id: 'received',
 	title: 'Received',
-	query: queriesForSubmissionPubs.pending,
+	query: queriesForSubmissionPubs.received,
 };
 
 const overviewSearchFilters: OverviewSearchFilter[] = [
@@ -58,7 +58,7 @@ const SubmissionItems = (props: Props) => {
 	const isSearchingOrFiltering = !!filter || !!searchTerm;
 
 	const {
-		currentQuery: { pubs, isLoading, hasLoadedAllPubs, loadMorePubs },
+		currentQuery: { pubs: foundPubs, isLoading, hasLoadedAllPubs, loadMorePubs },
 	} = useManyPubs<PubWithSubmission>({
 		isEager: isSearchingOrFiltering,
 		initialPubs,
@@ -72,6 +72,10 @@ const SubmissionItems = (props: Props) => {
 			...filter?.query,
 		},
 	});
+
+	const pubs = foundPubs.filter(
+		(pub) => pub.submission?.submissionWorkflow?.collectionId === collection.id,
+	);
 
 	const canLoadMorePubs = !hasLoadedAllPubs;
 	useInfiniteScroll({

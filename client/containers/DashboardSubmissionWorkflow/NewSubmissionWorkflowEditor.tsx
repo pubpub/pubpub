@@ -19,9 +19,11 @@ const createEmptyWorkflow = (): EditableSubmissionWorkflow => {
 		instructionsText: getEmptyDoc(),
 		acceptedText: getEmptyDoc(),
 		declinedText: getEmptyDoc(),
-		emailText: getEmptyDoc(),
+		receivedEmailText: getEmptyDoc(),
 		targetEmailAddress: '',
 		enabled: false,
+		requireAbstract: false,
+		requireDescription: false,
 	};
 };
 
@@ -46,7 +48,7 @@ const NewSubmissionWorkflowEditor = (props: Props) => {
 		initial: createEmptyWorkflow,
 		communityId: communityData.id,
 		featureName: 'new-submission-workflow-editor',
-		path: [`collection-${activeCollection.id}`],
+		path: [`collection-${activeCollection!.id}`],
 		debounce: 100,
 	});
 
@@ -56,7 +58,7 @@ const NewSubmissionWorkflowEditor = (props: Props) => {
 
 	const handleCreateNewWorkflow = useCallback(() => {
 		setIsPersisting(true);
-		createSubmissionWorkflow(workflow, activeCollection.id)
+		createSubmissionWorkflow(workflow, activeCollection!.id)
 			.then(onWorkflowCreated)
 			.finally(() => setIsPersisting(false));
 	}, [workflow, activeCollection, onWorkflowCreated]);
@@ -71,18 +73,19 @@ const NewSubmissionWorkflowEditor = (props: Props) => {
 							setWorkflow((current) => ({ ...current, ...update }))
 						}
 						onValidateWorkflow={setIsValid}
-						collection={activeCollection}
+						collection={activeCollection!}
+						finalStepButton={
+							<Button
+								disabled={!isValid}
+								onClick={handleCreateNewWorkflow}
+								loading={isPersisting}
+								icon="tick"
+								intent="primary"
+							>
+								Finish creating workflow
+							</Button>
+						}
 					/>
-					<p>
-						<Button
-							disabled={!isValid}
-							onClick={handleCreateNewWorkflow}
-							icon="tick"
-							loading={isPersisting}
-						>
-							Save and continue
-						</Button>
-					</p>
 				</>
 			);
 		}

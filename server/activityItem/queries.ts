@@ -14,6 +14,7 @@ import {
 	Submission,
 	Thread,
 	ThreadComment,
+	SubmissionWorkflow,
 } from 'server/models';
 
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
@@ -557,63 +558,42 @@ export const createPubDiscussionCommentAddedActivityItem = async (
 	});
 };
 
-export const createSubmissionActivityItem = async (
-	kind: 'submission-deleted' | 'submission-created',
-	actorId: null | string,
-	submissionId: string,
-) => {
-	const {
-		pubId,
-		pub: { title, communityId },
-	}: types.DefinitelyHas<types.Submission, 'pub'> = await Submission.findOne({
-		where: { id: submissionId },
-		include: [
-			{
-				model: Pub,
-				as: 'pub',
-			},
-		],
-	});
-	return createActivityItem({
-		actorId,
-		communityId,
-		pubId,
-		kind,
-		payload: {
-			submissionId,
-			pub: {
-				title,
-			},
-		},
-	});
-};
-
-export const createSubmissionStatusChangedActivityItem = async (
+export const createSubmissionUpdatedActivityItem = async (
 	actorId: null | string,
 	submissionId: string,
 	oldSubmission: types.Submission,
 ) => {
-	const submission: types.DefinitelyHas<types.Submission, 'pub'> = await Submission.findOne({
-		where: { id: submissionId },
-		include: [
-			{
-				model: Pub,
-				as: 'pub',
+	const submission: types.DefinitelyHas<types.Submission, 'pub' | 'submissionWorkflow'> =
+		await Submission.findOne({
+			where: { id: submissionId },
+			include: [
+				{
+					model: Pub,
+					as: 'pub',
+				},
+				{
+					model: SubmissionWorkflow,
+					as: 'submissionWorkflow',
+				},
+			],
+		});
+
+	if (submission.status !== oldSubmission.status) {
+		return createActivityItem({
+			actorId,
+			communityId: submission.pub.communityId,
+			collectionId: submission.submissionWorkflow.collectionId,
+			pubId: submission.pub.id,
+			kind: 'submission-status-updated' as const,
+			payload: {
+				submissionId,
+				pub: {
+					title: submission.pub.title,
+				},
+				status: { from: oldSubmission.status, to: submission.status },
 			},
-		],
-	});
-	const diffs = getDiffsForPayload(submission, oldSubmission, ['status']);
-	return createActivityItem({
-		actorId,
-		communityId: submission.pub.communityId,
-		pubId: submission.pub.id,
-		kind: 'submission-status-changed' as const,
-		payload: {
-			submissionId,
-			...diffs,
-			pub: {
-				title: submission.pub.title,
-			},
-		},
-	});
+		});
+	}
+
+	return null;
 };

@@ -36,7 +36,7 @@ const getActiveSubmissionsCount = ({ activeCollection }) => {
 	if (activeCollection) {
 		return Submission.count({
 			where: {
-				status: 'pending',
+				status: 'received',
 			},
 			include: [
 				{
@@ -174,6 +174,11 @@ getScopeElements = async (scopeInputs) => {
 					model: Release,
 					as: 'releases',
 					attributes: ['id', 'historyKey'],
+				},
+				{
+					model: Submission,
+					as: 'submission',
+					attributes: ['id'],
 				},
 			],
 		});
@@ -367,6 +372,8 @@ getActivePermissions = async (
 		activePublicPermissions.canViewDraft || activePublicPermissions.canEditDraft;
 
 	const canEdit = permissionLevelIndex > 0;
+	const canCreateReviews =
+		!activePub?.submission && (canEdit || activePublicPermissions.canCreateReviews);
 
 	return {
 		activePermission: permissionLevelIndex > -1 ? permissionLevels[permissionLevelIndex] : null,
@@ -377,6 +384,6 @@ getActivePermissions = async (
 		canAdminCommunity,
 		canManageCommunity,
 		...activePublicPermissions,
-		canCreateReviews: canEdit || activePublicPermissions.canCreateReviews,
+		canCreateReviews,
 	};
 };

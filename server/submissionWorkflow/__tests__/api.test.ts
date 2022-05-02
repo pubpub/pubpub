@@ -1,4 +1,3 @@
-/* global it, expect, beforeAll, afterAll */
 import { setup, teardown, login, modelize } from 'stubstub';
 
 import { getEmptyDoc } from 'client/components/Editor';
@@ -41,7 +40,7 @@ const models = modelize`
 
 const sharedCreationValues = {
 	instructionsText: getEmptyDoc(),
-	emailText: getEmptyDoc(),
+	receivedEmailText: getEmptyDoc(),
 	acceptedText: getEmptyDoc(),
 	declinedText: getEmptyDoc(),
 	introText: getEmptyDoc(),
