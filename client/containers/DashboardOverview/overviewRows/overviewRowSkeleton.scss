@@ -91,4 +91,10 @@
 			}
 		}
 	}
+	@include mobile {
+		padding: 10px 10px;
+		.center-container {
+			margin-left: 20px;
+		}
+	}
 }

@@ -58,13 +58,21 @@ $transition-duration: 100ms;
 		@include mobile {
 			display: block;
 			border: 0;
-			padding-top: 12px;
+			padding-top: 5px;
 			padding-left: 0;
 			padding-right: 0;
-			padding-bottom: 12px;
+			padding-bottom: 10px;
+			.bp3-icon.search-icon {
+				margin-top: -5px;
+				margin-left: 9px;
+				> svg {
+					width: 14px;
+					height: 14px;
+				}
+			}
 			.right-controls {
-				margin-top: 12px;
-				padding-top: 14px;
+				margin-top: 5px;
+				padding-top: 10px;
 				border-top: 1px solid $accent-color;
 				> div {
 					border: 1px solid $accent-color;
@@ -72,6 +80,7 @@ $transition-duration: 100ms;
 			}
 			input {
 				width: 90%;
+				font-size: 14px;
 			}
 		}
 	}
