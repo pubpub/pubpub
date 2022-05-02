@@ -169,7 +169,6 @@ export type SanitizedPubData = Pub & {
 	attributions: PubAttribution[];
 	discussions: Discussion[];
 	collectionPubs: CollectionPubWithAttributions[];
-	isReadOnly: boolean;
 	isRelease: boolean;
 	releases: Release[];
 	releaseNumber: number | null;
