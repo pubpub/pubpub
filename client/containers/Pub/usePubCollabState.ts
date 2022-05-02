@@ -83,17 +83,12 @@ export const usePubCollabState = (options: Options) => {
 
 	useEffect(() => {
 		if (draft && firebaseToken) {
-			initFirebase(draft.firebasePath, firebaseToken).then((firebaseRefs) => {
-				if (!firebaseRefs) {
+			initFirebase(draft.firebasePath, firebaseToken).then((firebaseDraftRef) => {
+				if (!firebaseDraftRef) {
 					return;
 				}
-				const [firebaseDraftRef, connectionRef] = firebaseRefs;
 				updateCollabState({ firebaseDraftRef });
 				firebaseDraftRef?.child('cursors').on('value', syncRemoteCollabUsers);
-				connectionRef.on('value', (snapshot) => {
-					const isConnected = snapshot.val() === true;
-					updateCollabState({ status: isConnected ? 'connected' : 'disconnected' });
-				});
 			});
 		}
 	}, [draft, firebaseToken, updateCollabState, syncRemoteCollabUsers]);

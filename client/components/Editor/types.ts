@@ -3,7 +3,6 @@ import { Plugin, EditorState, Transaction } from 'prosemirror-state';
 import firebase from 'firebase';
 
 import { DiscussionAnchor } from 'types';
-import { PubCollabStatus } from 'client/containers/Pub/usePubCollabState';
 import { NoteManager } from 'client/utils/notes';
 import SuggestionManager from 'client/utils/suggestions/suggestionManager';
 
@@ -31,13 +30,20 @@ export type PluginLoader = (schema: Schema, options: PluginsOptions) => Plugin |
 
 export type EditorChangeObject = ReturnType<typeof getChangeObject>;
 
+export type CollaborativeEditorStatus =
+	| 'disconnected'
+	| 'connecting'
+	| 'connected'
+	| 'saving'
+	| 'saved';
+
 export type CollaborativeOptions = {
 	clientData: {
 		id: null | string;
 	};
 	firebaseRef: firebase.database.Reference;
 	initialDocKey: number;
-	onStatusChange?: (status: PubCollabStatus) => unknown;
+	onStatusChange?: (status: CollaborativeEditorStatus) => unknown;
 	onUpdateLatestKey?: (key: number) => unknown;
 };
 

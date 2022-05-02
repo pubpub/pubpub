@@ -1,34 +1,63 @@
-import React from 'react';
-import { Tab, Tabs, Icon, IconName } from '@blueprintjs/core';
+import React, { useMemo, useRef, useState } from 'react';
 
-import { DocJson, PubHistoryState, PubPageData } from 'types';
+import { DocJson, Pub, PubPageData } from 'types';
+import { PendingChangesProvider } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
+import { useSticky } from 'client/utils/useSticky';
+import { usePendingChanges } from 'utils/hooks';
+import { createSubmissionValidator, validateSubmission } from 'utils/submission/validate';
 
 import { usePubContext } from '../pubHooks';
+import PubHeader from '../PubHeader';
+import { getPubHeadings } from '../PubHeader/headerUtils';
+import PubHeaderSticky from '../PubHeader/PubHeaderSticky';
 import InstructionsTab from './InstructionsTab';
-import SubmissionTab from './SubmissionTab';
-import PreviewTab from './PreviewTab';
+import DetailsTab from './DetailsTab';
+import ContributorsTab from './ContributorsTab';
+import SpubHeaderToolBar from './SpubHeaderToolBar';
 
 require('./spubHeader.scss');
 
-export type SpubHeaderTab = 'instructions' | 'submission' | 'preview';
-
-export const renderTabTitle = (icon: IconName, title: string) => (
-	<>
-		<Icon icon={icon} /> {title}
-	</>
-);
+export type SpubHeaderTab = 'instructions' | 'details' | 'contributors' | 'preview';
 
 const SpubHeader = () => {
+	const { pendingPromise } = usePendingChanges();
 	const {
 		updatePubData,
-		updateLocalData,
 		pubData,
+		collabData: { editorChangeObject },
 		updateSubmissionState,
 		submissionState,
-		historyData,
 	} = usePubContext();
 	const { selectedTab, submission } = submissionState!;
+	const headerRef = useRef<HTMLDivElement>(null);
+
+	const [validator] = useState(() => createSubmissionValidator(submission.submissionWorkflow));
+
+	const { validatedFields } = useMemo(
+		() =>
+			validateSubmission(
+				{
+					title: pubData.title,
+					description: pubData.description ?? '',
+					abstract: submission.abstract,
+				},
+				validator,
+			),
+		[pubData, submission, validator],
+	);
+
+	// TODO(ian): Move this computation to usePubBodyState()
+	const pubHeadings = useMemo(
+		() => getPubHeadings(pubData.initialDoc, editorChangeObject),
+		[pubData.initialDoc, editorChangeObject],
+	);
+
+	useSticky({
+		isActive: !!headerRef.current,
+		target: '.spub-header-component',
+		offset: headerRef?.current?.offsetHeight ? 37 - headerRef.current.offsetHeight : 0,
+	});
 
 	const updateAbstract = async (newAbstract: DocJson) => {
 		updateSubmissionState(({ submission: currentSubmission }) => ({
@@ -37,78 +66,74 @@ const SpubHeader = () => {
 				abstract: newAbstract,
 			},
 		}));
-		return apiFetch.put('/api/submissions', {
-			abstract: newAbstract,
-			id: submission.id,
-		});
+		return pendingPromise(
+			apiFetch.put('/api/submissions', {
+				abstract: newAbstract,
+				id: submission.id,
+			}),
+		);
 	};
 
-	const updateAndSavePubData = async (newPubData: Partial<PubPageData>) => {
-		updatePubData(newPubData);
-		return apiFetch('/api/pubs', {
-			method: 'PUT',
-			body: JSON.stringify({
-				...newPubData,
-				pubId: pubData.id,
-				communityId: pubData.communityId,
-			}),
-		}).catch(() => updatePubData(pubData));
+	const updateAndSavePubData = async (newPubData: Partial<Pub>) => {
+		const { title, description } = newPubData;
+		updatePubData(newPubData as Partial<PubPageData>);
+		if (title || description) {
+			await pendingPromise(
+				apiFetch
+					.put('/api/pubs', {
+						pubId: pubData.id,
+						title,
+						description,
+					})
+					.catch(() => updatePubData(pubData)),
+			);
+		}
 	};
 
 	const setSelectedTab = (nextTab: SpubHeaderTab) => {
 		updateSubmissionState({ selectedTab: nextTab });
 	};
 
-	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
-		return updateLocalData('history', newHistoryData);
-	};
-
-	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
-	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
-	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
-	const maybeActiveClass = (tabId: string) => (tabId === selectedTab ? 'active' : 'inactive');
-
 	return (
-		<Tabs
-			id="spubHeader"
-			onChange={(t) => setSelectedTab(t as any)}
-			selectedTabId={selectedTab}
-			className="spub-header-component tabs bp3-large"
-		>
-			<Tab
-				id="instructions"
-				title={instructionTabTitle}
-				className={`tab-panel ${maybeActiveClass('instructions')}`}
-				panel={<InstructionsTab submissionWorkflow={submission.submissionWorkflow!} />}
-			/>
-			<Tab
-				id="submission"
-				title={submissionTabTitle}
-				className={`tab-panel ${maybeActiveClass('submission')}`}
-				panel={
-					<SubmissionTab
-						abstract={submission.abstract}
+		<div className="spub-header-component" ref={headerRef} data-tab={selectedTab}>
+			<style>{`
+				body { background-color: #f8f8f8; }
+				.pub-document-component { background-color: white; }
+			`}</style>
+			<div className="content-container">
+				<SpubHeaderToolBar
+					validatedFields={validatedFields}
+					onSelectTab={(t: SpubHeaderTab) => setSelectedTab(t)}
+					selectedTab={selectedTab}
+					submission={submission}
+				/>
+				{selectedTab === 'instructions' && (
+					<InstructionsTab
+						onBeginSubmission={() => setSelectedTab('details')}
+						submissionWorkflow={submission.submissionWorkflow!}
+					/>
+				)}
+				{selectedTab === 'details' && (
+					<DetailsTab
+						submission={submission}
+						validatedFields={validatedFields}
 						onUpdatePub={updateAndSavePubData}
 						onUpdateAbstract={updateAbstract}
 						pub={pubData}
 					/>
-				}
-			/>
-			<Tab
-				id="preview"
-				title={previewTabTitle}
-				className={`${maybeActiveClass('preview')}`}
-				panel={
-					<PreviewTab
-						updateHistoryData={updateHistoryData}
-						historyData={historyData}
-						pubData={pubData}
-						submission={submission}
-					/>
-				}
-			/>
-		</Tabs>
+				)}
+				{selectedTab === 'contributors' && (
+					<ContributorsTab pubData={pubData} onUpdatePub={updateAndSavePubData} />
+				)}
+				{selectedTab === 'preview' && <PubHeader sticky={false} />}
+			</div>
+			<PubHeaderSticky pubData={pubData} pubHeadings={pubHeadings} />
+		</div>
 	);
 };
 
-export default SpubHeader;
+export default () => (
+	<PendingChangesProvider>
+		<SpubHeader />
+	</PendingChangesProvider>
+);

@@ -5,11 +5,10 @@ import { useDebouncedCallback } from 'use-debounce/lib';
 
 import { Editor } from 'components';
 import discussionSchema from 'components/Editor/schemas/discussion';
-import { EditorChangeObject } from 'client/components/Editor';
+import { EditorChangeObject, CollaborativeEditorStatus } from 'client/components/Editor';
 
 import { usePubContext } from '../pubHooks';
 import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
-import { PubCollabStatus } from '../usePubCollabState';
 import PubErrorAlert from './PubErrorAlert';
 
 require('./pubBody.scss');
@@ -55,7 +54,7 @@ const PubBody = (props: Props) => {
 		markSentryError(err);
 	}, []);
 
-	const [handleStatusChange] = useDebouncedCallback((nextStatus: PubCollabStatus) => {
+	const [handleStatusChange] = useDebouncedCallback((nextStatus: CollaborativeEditorStatus) => {
 		if (nextStatus === 'saved') {
 			setLastSavedTime(Date.now());
 		}

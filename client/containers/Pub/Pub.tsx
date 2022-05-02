@@ -19,11 +19,7 @@ const SomePubHeader = () => {
 	const pubContext = usePubContext();
 	const { submissionState } = pubContext;
 	const HeaderComponent = submissionState ? SpubHeader : PubHeader;
-	return (
-		<PubSuspendWhileTyping delay={1000}>
-			{() => <HeaderComponent {...pubContext} />}
-		</PubSuspendWhileTyping>
-	);
+	return <PubSuspendWhileTyping delay={1000}>{() => <HeaderComponent />}</PubSuspendWhileTyping>;
 };
 
 const Pub = (props: Props) => {

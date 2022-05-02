@@ -30,17 +30,20 @@ const PubDocument = () => {
 		collabData,
 		updatePubData,
 		updateLocalData,
-		updateHistoryData,
 		pubBodyState: { isReadOnly, hidePubBody },
 	} = usePubContext();
 	const { isViewingHistory } = historyData;
-	const { communityData, locationData } = usePageContext();
+	const { communityData, locationData, scopeData } = usePageContext();
+	const { canEdit, canEditDraft } = scopeData.activePermissions;
 	const mainContentRef = useRef(null);
 	const sideContentRef = useRef(null);
 	const editorWrapperRef = useRef(null);
 
 	usePermalinkOnMount();
 	usePubHrefs({ enabled: !isReadOnly });
+
+	const showPubFileImport = (canEdit || canEditDraft) && !isReadOnly;
+	const updateHistoryData = (next) => updateLocalData('history', next);
 
 	if (hidePubBody) {
 		return null;
@@ -67,7 +70,7 @@ const PubDocument = () => {
 						isolated
 					/>
 					<PubBody editorWrapperRef={editorWrapperRef} />
-					{!isReadOnly && (
+					{showPubFileImport && (
 						<PubFileImport
 							editorChangeObject={collabData.editorChangeObject!}
 							updatePubData={updatePubData}
