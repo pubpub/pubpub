@@ -37,7 +37,7 @@ const PubDocument = (props: Props) => {
 	const { submissionState } = usePubContext();
 	const { canEdit, canEditDraft } = scopeData.activePermissions;
 	const [areDiscussionsShown, setDiscussionsShown] = useState(true);
-	const mainContentRef = useRef(null);
+	const mainContentRef = useRef<null | HTMLDivElement>(null);
 	const sideContentRef = useRef(null);
 	const editorWrapperRef = useRef(null);
 

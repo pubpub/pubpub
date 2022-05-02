@@ -10,7 +10,7 @@ import { usePubData } from '../../pubHooks';
 
 type Props = {
 	element: Element;
-	mainContentRef: React.MutableRefObject<any>;
+	mainContentRef: React.MutableRefObject<null | HTMLDivElement>;
 };
 
 const LinkPopover = (props: Props) => {

@@ -5,7 +5,7 @@ import { getHighestAncestorWithId } from 'client/utils/dom';
 import LinkPopover from './LinkPopover';
 
 type Props = {
-	mainContentRef: React.MutableRefObject<any>;
+	mainContentRef: React.MutableRefObject<null | HTMLDivElement>;
 };
 
 const clickToCopySelector = '.click-to-copy, .click-to-copy *';
