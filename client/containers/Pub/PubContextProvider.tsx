@@ -1,10 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { NodeLabelMap } from 'client/components/Editor';
 import { NoteManager } from 'client/utils/notes';
 import { PatchFn, PubHistoryState, PubPageData } from 'types';
 
 import { useLazyRef } from 'client/utils/useLazyRef';
+import { getPubHeadings, PubHeading } from './PubHeader/headerUtils';
 import {
 	PubSubmissionState,
 	PubSubmissionStatePatchFn,
@@ -39,6 +40,7 @@ export type PubContextType = {
 	updateSubmissionState: PubSubmissionStatePatchFn;
 	updateLocalData: UpdateLocalDataFn;
 	noteManager: NoteManager;
+	pubHeadings: PubHeading[];
 };
 
 const shimPubContextProps = {
@@ -70,6 +72,7 @@ export const PubContextProvider = (props: Props) => {
 		editorChangeObject: collabData.editorChangeObject,
 	});
 	const pubBodyState = usePubBodyState({ pubData, collabData, historyData, submissionState });
+
 	const { current: noteManager } = useLazyRef(
 		() =>
 			new NoteManager(
@@ -77,6 +80,11 @@ export const PubContextProvider = (props: Props) => {
 				pubData.citationInlineStyle,
 				pubData.initialStructuredCitations,
 			),
+	);
+
+	const pubHeadings = useMemo(
+		() => getPubHeadings(pubData.initialDoc, collabData.editorChangeObject),
+		[pubData.initialDoc, collabData.editorChangeObject],
 	);
 
 	const updateLocalData: UpdateLocalDataFn = useCallback(
@@ -112,6 +120,7 @@ export const PubContextProvider = (props: Props) => {
 		noteManager,
 		pubBodyState,
 		updateLocalData,
+		pubHeadings,
 	};
 
 	return <PubContext.Provider value={pubContext}>{children}</PubContext.Provider>;
