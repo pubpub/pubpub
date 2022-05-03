@@ -50,4 +50,7 @@ $mobile-viewport-cutoff: 750px;
 	.custom-css-tooltip-target {
 		margin-left: 5px;
 	}
+	@include mobile {
+		margin-bottom: 2em;
+	}
 }

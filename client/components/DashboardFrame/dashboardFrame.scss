@@ -53,6 +53,7 @@ $mobile-viewport-cutoff: 750px;
 			@include mobile {
 				font-size: 12px;
 				margin-right: 3px;
+				margin-left: 0px;
 			}
 		}
 		.bp3-button-group .bp3-button {
@@ -60,12 +61,13 @@ $mobile-viewport-cutoff: 750px;
 			margin-left: auto;
 		}
 		@include mobile {
+			margin-top: 10px;
 		}
 	}
 	@include mobile {
 		margin-top: 20px;
 		margin-bottom: 5px;
-		justify-content: space-between;
-		align-items: center;
+		align-items: flex-start;
+		flex-direction: column;
 	}
 }
