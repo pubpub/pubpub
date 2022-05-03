@@ -91,17 +91,18 @@ const renderContributors = (contributors) => {
 	if (!contributors) {
 		return null;
 	}
-
-	const contributorNames = contributors.person_name.map(
-		(contributor) =>
-			`${contributor.given_name} ${contributor.surname} (${contributor['@contributor_role']})`,
-	);
-
 	return (
 		<>
 			<dt>Contributors</dt>
 			<dd>
-				<ul>{contributorNames}</ul>
+				{contributors.map((contributor) => {
+					return (
+						<ul key={contributor.surname}>
+							{contributor.given_name} {contributor.surname}{' '}
+							{contributor['@contributor_role']}
+						</ul>
+					);
+				})}
 			</dd>
 		</>
 	);
@@ -127,12 +128,13 @@ const renderArticlePreview = (body) => {
 			journal_article: {
 				titles,
 				publication_date,
-				contributors,
+				contributors: content,
 				'rel:program': relationships,
 			},
 			journal_metadata: {
 				full_title: journalFullTitle,
 				doi_data: { doi: journalDoi },
+				contributors: metadata,
 			},
 			journal_issue,
 		},
@@ -144,7 +146,7 @@ const renderArticlePreview = (body) => {
 			<dl>
 				{renderTitles(titles)}
 				{renderPublicationDate(publication_date)}
-				{renderContributors(contributors)}
+				{renderContributors([...content.person_name, ...metadata.person_name])}
 			</dl>
 			<h6>Journal Metadata</h6>
 			<dl>
@@ -167,10 +169,11 @@ const renderBookPreview = (body) => {
 				edition_number,
 				publisher,
 				publication_date: bookPublicationDate,
+				contributors: metadata,
 			},
 			content_item: {
 				titles: contentTitles,
-				contributors,
+				contributors: content,
 				publication_date: contentPublicationDate,
 				'rel:program': relationships,
 			},
@@ -190,7 +193,7 @@ const renderBookPreview = (body) => {
 			<h6>Content</h6>
 			<dl>
 				{renderTitles(contentTitles)}
-				{renderContributors(contributors)}
+				{renderContributors([...content.person_name, ...metadata.person_name])}
 				{renderPublicationDate(contentPublicationDate)}
 			</dl>
 			{renderRelationships(relationships)}
@@ -200,8 +203,13 @@ const renderBookPreview = (body) => {
 
 const renderConferencePreview = (body) => {
 	const {
+		// contributors come from the contributors(lists all)
+		// and conference_paper(list the primary content contributor) field
+		// not which to use. could reduce a list of dupes or make a set.
+		// for now i'll just use contributors
 		conference: {
-			conference_paper: { contributors, titles, 'rel:program': relationships },
+			contributors,
+			conference_paper: { titles, 'rel:program': relationships },
 			event_metadata: {
 				conference_name,
 				conference_date: { '#text': conferenceDate },
@@ -209,13 +217,12 @@ const renderConferencePreview = (body) => {
 			proceedings_metadata: { proceedings_title, publication_date, publisher },
 		},
 	} = body;
-
 	return (
 		<>
 			<h6>Conference Paper</h6>
 			<dl>
 				{renderTitles(titles)}
-				{renderContributors(contributors)}
+				{renderContributors(contributors.person_name)}
 			</dl>
 			<h6>Event Metadata</h6>
 			<dl>
@@ -236,17 +243,18 @@ const renderConferencePreview = (body) => {
 	);
 };
 
+// the contributors are returned in when logging out in contributors.js but
+// just one gets appended
 const renderPreprintPreview = (body) => {
 	const {
 		posted_content: { contributors, titles, 'rel:program': relationships, posted_date },
 	} = body;
-
 	return (
 		<>
 			<h6>Preprint</h6>
 			<dl>
 				{renderTitles(titles)}
-				{renderContributors(contributors)}
+				{renderContributors(contributors.person_name)}
 				{renderPublicationDate(posted_date, 'Posted Date')}
 			</dl>
 			{renderRelationships(relationships)}
@@ -265,13 +273,12 @@ const renderPeerReviewPreview = (body) => {
 			review_date,
 		},
 	} = body;
-
 	return (
 		<>
 			<h6>Peer Review</h6>
 			<dl>
 				{renderTitles(titles)}
-				{renderContributors(contributors)}
+				{renderContributors(contributors.person_name)}
 				{renderPublicationDate(review_date, 'Review Date')}
 				{type && (
 					<>
@@ -310,7 +317,7 @@ const renderSupplementPreview = (body) => {
 				<dt>Parent Relation</dt>
 				<dd>isPartOf</dd>
 				{renderTitles(titles)}
-				{renderContributors(contributors)}
+				{renderContributors(contributors.person_name)}
 				{renderPublicationDate(publication_date)}
 			</dl>
 		</>
