@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Node } from 'prosemirror-model';
 import { usePrevious } from 'react-use';
+import { Node } from 'prosemirror-model';
 
 import { EditorChangeObject, updateNodeAttrsById } from 'client/components/Editor';
 
