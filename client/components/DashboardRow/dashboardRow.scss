@@ -1,5 +1,13 @@
 @import 'styles/variables.scss';
 
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 $hover-background: #f9f9f9;
 
 .dashboard-row-component {
@@ -103,5 +111,29 @@ $hover-background: #f9f9f9;
             bottom: 1.5em;
             left: -26px;
         }
+    }
+    @include mobile {
+      .inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        .left {
+          .subtitle {
+            font-size: 12px;
+          }
+        }
+        .right {
+          display: flex;
+          flex-direction: row-reverse;
+          font-size: 12px;
+          padding-top: 5px;
+          .bp3-button {
+            margin-right: 0px;
+            margin-left: 10px;
+            font-size: 12px;
+          }
+        }
+      }
     }
 }
