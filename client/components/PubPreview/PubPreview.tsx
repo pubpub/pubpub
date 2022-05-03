@@ -149,6 +149,7 @@ const PubPreview = (props: Props) => {
 							{publishedDate ? (
 								<span className="date">
 									Published: {dateFormat(publishedDate, 'mmm dd, yyyy')}
+									{pubData.releases.length === 0 && ' (Not yet released)'}
 								</span>
 							) : (
 								<span className="date">Unpublished</span>

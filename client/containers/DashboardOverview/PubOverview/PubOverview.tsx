@@ -36,7 +36,11 @@ const PubOverview = (props: Props) => {
 	const renderPubDates = () => {
 		const publishedDate = getPubPublishedDate(pubData);
 		const latestReleaseDate = getPubLatestReleaseDate(pubData, { excludeFirstRelease: true });
-		const publishedOnString = publishedDate ? formatDate(publishedDate) : <i>Unpublished</i>;
+		const publishedOnString = publishedDate ? (
+			`${formatDate(publishedDate)}${pubData.releases.length === 0 && ' (Not yet released)'}`
+		) : (
+			<i>Unpublished</i>
+		);
 		return (
 			<div className="pub-dates">
 				{renderSection('Created on', formatDate(pubData.createdAt))}

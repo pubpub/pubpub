@@ -27,8 +27,8 @@ const PubDetails = (props: Props) => {
 	const { canView } = scopeData.activePermissions;
 
 	const createdAt = getPubCreatedDate(pubData);
-	const publishedAt = getPubPublishedDate(pubData);
-	const updatedAt = getPubUpdatedDate({ pub: pubData });
+	const publishedDate = getPubPublishedDate(pubData);
+	const updatedDate = getPubUpdatedDate({ pub: pubData });
 
 	return (
 		<div className="pub-details-component">
@@ -56,13 +56,20 @@ const PubDetails = (props: Props) => {
 					)}
 					<h6 className="pub-header-themed-secondary">Published</h6>
 					<div className="full-height-date">
-						{publishedAt ? dateFormat(publishedAt, 'mmm dd, yyyy') : <i>Unpublished</i>}
+						{publishedDate ? (
+							<>
+								{dateFormat(publishedDate, 'mmm dd, yyyy')}
+								{pubData.releases.length === 0 && ' (Not yet released)'}
+							</>
+						) : (
+							<i>Unpublished</i>
+						)}
 					</div>
-					{updatedAt && updatedAt !== publishedAt && (
+					{updatedDate && updatedDate !== publishedDate && (
 						<React.Fragment>
 							<h6 className="pub-header-themed-secondary">Updated</h6>
 							<div className="full-height-date">
-								{dateFormat(updatedAt, 'mmm dd, yyyy')}
+								{dateFormat(updatedDate, 'mmm dd, yyyy')}
 							</div>
 						</React.Fragment>
 					)}

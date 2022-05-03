@@ -87,7 +87,10 @@ const TitleGroup = (props: Props) => {
 			{publishedDate && (
 				<div className="published-date">
 					<span className="pub-header-themed-secondary">Published on</span>
-					<span>{formatDate(publishedDate)}</span>
+					<span>
+						{formatDate(publishedDate)}
+						{pubData.releases.length === 0 && ' (Not yet released)'}
+					</span>
 				</div>
 			)}
 		</div>

@@ -58,10 +58,15 @@ const PubHeaderContent = (props: Props) => {
 				)}
 				<div className="basic-details">
 					<span className="metadata-pair">
-						{publishedDate && (
-							<b className="pub-header-themed-secondary">Published on</b>
+						{publishedDate ? (
+							<>
+								<b className="pub-header-themed-secondary">Published on </b>
+								{formatDate(publishedDate)}
+								{pubData.releases.length === 0 && ' (Not yet released)'}
+							</>
+						) : (
+							<i>Unpublished</i>
 						)}
-						{publishedDate ? formatDate(publishedDate) : <i>Unpublished</i>}
 					</span>
 					{doi && (
 						<span className="metadata-pair doi-pair">
