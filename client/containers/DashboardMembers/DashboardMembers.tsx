@@ -55,7 +55,7 @@ const DashboardMembers = (props: Props) => {
 				</SettingsSection>
 			)}
 
-			<SettingsSection title="Members">
+			<SettingsSection title={"Members ("+membersByType.community.length+")"}>
 				{showLocalEmptyState && <i>No members yet.</i>}
 				{membersData.invitations.map((invitation) => {
 					return (
