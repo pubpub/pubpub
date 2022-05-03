@@ -76,7 +76,8 @@ const ScopePicker = (props: Props) => {
 				/* eslint-disable-next-line react/no-danger */
 				dangerouslySetInnerHTML={{
 					__html: `
-						.scope-dropdown-component { background: ${backgroundColor}; border-top: 2px solid ${communityData.accentColorDark} }
+						.scope-dropdown-component { background: ${backgroundColor}; }
+						.scope-menu { border-top: 2px solid ${communityData.accentColorDark} }
 					`,
 				}}
 			/>)}
