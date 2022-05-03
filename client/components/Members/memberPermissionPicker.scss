@@ -1,3 +1,11 @@
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .member-permission-picker-component {
 	display: flex;
 	button.picker-column {
@@ -52,5 +60,8 @@
 			font-size: 14px;
 			color: #555;
 		}
+	}
+	@include mobile {
+		
 	}
 }

@@ -1,3 +1,11 @@
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .inherited-members-block-component {
 	background: #f9f9f9;
 	outline: 10px solid #f9f9f9;
@@ -8,8 +16,9 @@
 	.top {
 		display: flex;
 		justify-content: space-between;
-		.scope {
-			font-weight: bold;
+		margin-bottom: 10px;
+		@include mobile {
+			margin-bottom: 10px;
 		}
 	}
 	.preview-block {

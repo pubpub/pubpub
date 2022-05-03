@@ -1,9 +1,28 @@
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .dashboard-members-container {
 	.settings-section-component {
 		margin: 2em 0em 4em;
+		@include mobile {
+			margin-bottom: 2em;
+			margin-top: 1em;
+			&:last-of-type {
+				margin-bottom: 100px;
+			}
+		}
 		.add-member-controls {
 			.user-autocomplete-component {
 				width: 94%;
+				@include mobile {
+					width: 70%;
+					margin-right: 10px;
+				}
 			}
 		}
 	}
