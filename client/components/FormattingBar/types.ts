@@ -72,7 +72,3 @@ export type FormattingBarButtonData = {
 	isToggle?: boolean;
 	isDisabled?: EditorChangeObjectDecider;
 } & ({ command: CommandSpec } | { insertNodeType: string } | { isMedia: true });
-
-export type ControlsComponentProps = {
-	selectedNode: SelectedNodeState;
-};
