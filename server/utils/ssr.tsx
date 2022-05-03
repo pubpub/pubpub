@@ -201,7 +201,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 				return 0;
 			})
 			.filter((item) => {
-				return item.isAuthor;
+				return item.isAuthor && !item.roles;
 			});
 
 		const getPrimaryRole = (contributor: Attribution) => contributor.roles?.[0];
