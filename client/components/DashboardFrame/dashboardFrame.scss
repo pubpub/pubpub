@@ -43,16 +43,15 @@ $mobile-viewport-cutoff: 750px;
 			@include mobile {
 				flex-wrap: wrap;
 				max-width: 100vw;
+				.bp3-form-group {
+					margin-bottom: 0px;
+				}
 			}
 		}
 		.bp3-button {
 			margin-left: 1em;
 			@include mobile {
 				font-size: 12px;
-				padding: 4px 10px;
-				margin-top: 4px;
-				margin-bottom: 4px;
-				margin-left: 0;
 				margin-right: 3px;
 			}
 		}
@@ -61,12 +60,12 @@ $mobile-viewport-cutoff: 750px;
 			margin-left: auto;
 		}
 		@include mobile {
-			margin-top: 6px;
 		}
 	}
 	@include mobile {
 		margin-top: 20px;
 		margin-bottom: 5px;
-		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
 	}
 }
