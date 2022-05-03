@@ -10,11 +10,10 @@ const roleList = {
 	Chair: 'chair',
 };
 
-function checkRole(attribution) {
-	return attribution.roles && attribution.roles[0] in roleList
-		? roleList[attribution.roles[0]]
-		: 'author';
-}
+const checkRole = (attribution) => {
+	return roleList[attribution.roles?.[0]] ?? 'author';
+};
+
 export default (attributions) => {
 	if (attributions.length === 0) {
 		return {};

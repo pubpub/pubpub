@@ -36,7 +36,7 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 	// getting collection pub attribution
 	const { collectionPubs } = pubData;
 	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
-	const collectionAttributions = primaryCollection ? primaryCollection.attributions : [];
+	const collectionAttributions = primaryCollection?.attributions ?? [];
 	return renderToNodeStream(
 		res,
 		<Html

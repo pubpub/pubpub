@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import * as ReactBeautifulDnD from 'react-beautiful-dnd';
-import { Collection, InitialData } from 'types';
+import { Collection, InitialData, Attribution } from 'types';
 
 export const renderToNodeStream = (res, reactElement) => {
 	res.setHeader('content-type', 'text/html');
@@ -26,6 +26,8 @@ type MetaProps = {
 	notes?: string[];
 	canonicalUrl?: string;
 };
+
+const contributorRoles = ['Writing – Review & Editing', 'Editor', 'Series Editor'];
 
 export const generateMetaComponents = (metaProps: MetaProps) => {
 	const {
@@ -201,6 +203,8 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			.filter((item) => {
 				return item.isAuthor;
 			});
+
+		const getPrimaryRole = (contributor: Attribution) => contributor.roles?.[0];
 		const contributors = attributions
 			.sort((foo, bar) => {
 				if (foo.order < bar.order) {
@@ -218,12 +222,9 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 				return 0;
 			})
 			.filter((contributor) => {
+				const primaryRole = getPrimaryRole(contributor);
 				return (
-					contributor.isAuthor &&
-					contributor.roles &&
-					(contributor.roles[0] === 'Writing – Review & Editing' ||
-						contributor.roles[0] === 'Editor' ||
-						contributor.roles[0] === 'Series Editor')
+					contributor.isAuthor && primaryRole && contributorRoles.includes(primaryRole)
 				);
 			});
 

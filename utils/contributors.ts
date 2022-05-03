@@ -14,6 +14,11 @@ const orderedContributors = (maybeContributors: Attribution[] | undefined | null
 		return 0;
 	});
 
+const editorRoles = ['Editor', 'Writing – Review & Editing'];
+const illustratorRoles = ['Illustrator', 'Visualization'];
+const getPrimaryRole = (contributor: AttributionWithUser) =>
+	contributor.roles ? contributor.roles[0] : '';
+
 const resolveContributors = (
 	contributors: AttributionWithUser[],
 	hideAuthors: boolean,
@@ -71,25 +76,19 @@ export const getAllPubContributorsRoles = (
 	// filter if role is present on contributor
 	if (role === 'editor') {
 		const contributorsWithRoles = contributors.filter((contributor) => {
-			return (
-				(contributor.roles && contributor.roles[0] === 'Editor') ||
-				(contributor.roles && contributor.roles[0] === 'Writing – Review & Editing')
-			);
+			return editorRoles.includes(getPrimaryRole(contributor));
 		});
 		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 	}
 	if (role === 'illustrator') {
 		const contributorsWithRoles = contributors.filter((contributor) => {
-			return (
-				(contributor.roles && contributor.roles[0] === 'Illustrator') ||
-				(contributor.roles && contributor.roles[0] === 'Visualization')
-			);
+			return illustratorRoles.includes(getPrimaryRole(contributor));
 		});
 
 		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 	}
 	const contributorsWithRoles = contributors.filter((contributor) => {
-		return contributor.roles && contributor.roles[0] === role;
+		return getPrimaryRole(contributor) === role;
 	});
 	return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 };

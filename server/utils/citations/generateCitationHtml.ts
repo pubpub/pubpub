@@ -39,6 +39,18 @@ const getCollectionLevelData = (collection) => {
 	};
 };
 
+const getContributorName = (attribution: types.Attribution) =>
+	(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
+	attribution.isAuthor &&
+	// TODO: attribution.user check is confusing because these have a user
+	// object but ssr.tsx metadata attributions do not
+	// could use type.DefinitelyHas<type.Attribution, 'user> but...
+	// would rather fix the attribution model to have consistent behavior for user objects
+	// ian mentioned this in AttributionRow.tsx
+	attribution.user
+		? { given: attribution.user.firstName, family: attribution.user.lastName }
+		: {};
+
 export const generateCitationHtml = async (
 	pubData: types.SanitizedPubData,
 	communityData: types.Community,
@@ -47,93 +59,26 @@ export const generateCitationHtml = async (
 	const pubIssuedDate = getPubPublishedDate(pubData);
 	const pubLink = pubUrl(communityData, pubData);
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
-	const authors = getAllPubContributors(pubData).map((attribution) => {
-		if (
-			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
-			attribution.isAuthor
-		) {
-			return {
-				given: attribution.user.firstName,
-				family: attribution.user.lastName,
-			};
-		}
-		return {};
-	});
+	const authors = getAllPubContributors(pubData).map(getContributorName);
 	const authorEntry = authors.length ? { author: authors } : {};
 
-	const editors = getAllPubContributorsRoles(pubData, 'editor').map((attribution) => {
-		if (
-			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
-			attribution.isAuthor
-		) {
-			return {
-				given: attribution.user.firstName,
-				family: attribution.user.lastName,
-			};
-		}
-		return {};
-	});
+	const editors = getAllPubContributorsRoles(pubData, 'editor').map(getContributorName);
 	const editorEntry = editors.length ? { editor: editors } : {};
 
-	const illustrators = getAllPubContributorsRoles(pubData, 'illustrator').map((attribution) => {
-		if (
-			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
-			attribution.isAuthor
-		) {
-			return {
-				given: attribution.user.firstName,
-				family: attribution.user.lastName,
-			};
-		}
-		return {};
-	});
+	const illustrators = getAllPubContributorsRoles(pubData, 'illustrator').map(getContributorName);
 	const illustratorEntry = illustrators.length ? { illustrator: illustrators } : {};
 
-	const translators = getAllPubContributorsRoles(pubData, 'Translator').map((attribution) => {
-		if (
-			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
-			attribution.isAuthor
-		) {
-			return {
-				given: attribution.user.firstName,
-				family: attribution.user.lastName,
-			};
-		}
-		return {};
-	});
+	const translators = getAllPubContributorsRoles(pubData, 'Translator').map(getContributorName);
 	const translatorEntry = translators.length ? { translator: translators } : {};
 
 	const collectionEditors = getAllPubContributorsRoles(pubData, 'Series Editor').map(
-		(attribution) => {
-			if (
-				(types.isCollectionAttribution(attribution) ||
-					types.isPubAttribution(attribution)) &&
-				attribution.isAuthor
-			) {
-				return {
-					given: attribution.user.firstName,
-					family: attribution.user.lastName,
-				};
-			}
-			return {};
-		},
+		getContributorName,
 	);
 	const collectionEditorEntry = collectionEditors.length
 		? { 'collection-editor': collectionEditors }
 		: {};
 
-	const chairs = getAllPubContributorsRoles(pubData, 'Chair').map((attribution) => {
-		if (
-			(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
-			attribution.isAuthor
-		) {
-			return {
-				given: attribution.user.firstName,
-				family: attribution.user.lastName,
-			};
-		}
-		return {};
-	});
+	const chairs = getAllPubContributorsRoles(pubData, 'Chair').map(getContributorName);
 	const chairEntry = chairs.length ? { chair: chairs } : {};
 
 	const commonData = {
