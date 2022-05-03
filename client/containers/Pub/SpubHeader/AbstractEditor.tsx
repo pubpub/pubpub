@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { Callback, DocJson } from 'types';
 import { MinimalEditor } from 'components';
@@ -30,6 +30,12 @@ const AbstractEditor = (props: Props) => {
 		return { readOnlyAbstractDoc: null, readOnlyEditorKey: Date.now() };
 	}, [isReadOnly, editorChangeObject, initialDoc]);
 
+	useEffect(() => {
+		if (isReadOnly) {
+			onUpdateAbstract(readOnlyAbstractDoc as DocJson);
+		}
+	}, [isReadOnly, readOnlyAbstractDoc]);
+
 	const sharedProps = {
 		customNodes: { doc: { content: 'paragraph' } },
 		constrainHeight: true,
@@ -58,5 +64,4 @@ const AbstractEditor = (props: Props) => {
 		/>
 	);
 };
-
 export default AbstractEditor;
