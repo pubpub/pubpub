@@ -30,11 +30,15 @@ const AbstractEditor = (props: Props) => {
 		return { readOnlyAbstractDoc: null, readOnlyEditorKey: Date.now() };
 	}, [isReadOnly, editorChangeObject, initialDoc]);
 
-	useEffect(() => {
-		if (isReadOnly) {
-			onUpdateAbstract(readOnlyAbstractDoc as DocJson);
-		}
-	}, [isReadOnly, readOnlyAbstractDoc]);
+	useEffect(
+		() => {
+			if (isReadOnly) {
+				onUpdateAbstract(readOnlyAbstractDoc as DocJson);
+			}
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[isReadOnly, readOnlyAbstractDoc],
+	);
 
 	const sharedProps = {
 		customNodes: { doc: { content: 'paragraph' } },
