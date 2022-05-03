@@ -1,3 +1,12 @@
+@import '../../styles/variables.scss';
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .header-component {
     background-size: cover;
     background-repeat: no-repeat;
@@ -54,6 +63,21 @@
                 .bp3-button {
                     padding: 0px 10px;
                 }
+            }
+            .mobile-header-buttons {
+              display: flex;
+              align-items: center;
+              .bp3-button {
+                padding: 0px 5px;
+                width: 12px;
+                height: 12px;
+                .bp3-icon {
+                  color: currentColor !important;
+                }
+                .avatar-component {
+                  margin-left: 5px;
+                }
+              }
             }
         }
     }
@@ -129,7 +153,7 @@
     }
 }
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: $mobile-viewport-cutoff) {
     .header-component {
         .hide-on-mobile {
             display: none !important;
@@ -138,7 +162,7 @@
           .main-content {
             .logo-wrapper {
                 text-overflow: ellipsis;
-                font-size: 20px;
+                font-size: 18px;
                 letter-spacing: 0px;
                 max-width: 55%;
                 img {

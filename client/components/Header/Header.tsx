@@ -9,11 +9,13 @@ import {
 	MenuButton,
 	MenuItem,
 	UserNotificationsPopover,
+	Icon
 } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getResizedUrl } from 'utils/images';
 import { apiFetch } from 'client/utils/apiFetch';
 import { CommunityHeroButton } from 'types';
+import { useViewport } from 'client/utils/useViewport';
 
 require('./header.scss');
 
@@ -37,6 +39,8 @@ const Header = (props: Props) => {
 			window.location.href = '/';
 		});
 	};
+	const { viewportWidth } = useViewport();
+	const isMobile = viewportWidth! <= 750;
 	const handleCreatePub = () => {
 		setIsLoading(true);
 		return apiFetch
@@ -192,21 +196,49 @@ const Header = (props: Props) => {
 							</a>
 						)}
 					</div>
-					<div className="buttons-wrapper">
-						{isBasePubPub && (
-							<React.Fragment>
-								<AnchorButton
-									href="/explore"
-									minimal={true}
-									large={true}
-									text="Explore"
-								/>
-								<AnchorButton
-									href="/pricing"
-									minimal={true}
-									large={true}
-									text="Pricing"
-								/>
+					{(viewportWidth && !isMobile) ? (
+						<div className="buttons-wrapper">
+							{isBasePubPub && (
+								<React.Fragment>
+									<AnchorButton
+										href="/explore"
+										minimal={true}
+										large={true}
+										text="Explore"
+									/>
+									<AnchorButton
+										href="/pricing"
+										minimal={true}
+										large={true}
+										text="Pricing"
+									/>
+									<AnchorButton
+										href="/search"
+										minimal={true}
+										large={true}
+										text="Search"
+										className="hide-on-mobile"
+									/>
+									<AnchorButton
+										href="/about"
+										minimal={true}
+										large={true}
+										text="About"
+									/>
+								</React.Fragment>
+							)}
+							{!isBasePubPub &&
+								loggedIn &&
+								(!communityData.hideCreatePubButton || canManage) && (
+									<Button
+										large={true}
+										minimal={true}
+										text="Create Pub"
+										onClick={handleCreatePub}
+										loading={isLoading}
+									/>
+								)}
+							{!isBasePubPub && (
 								<AnchorButton
 									href="/search"
 									minimal={true}
@@ -214,93 +246,143 @@ const Header = (props: Props) => {
 									text="Search"
 									className="hide-on-mobile"
 								/>
+							)}
+							{!isBasePubPub && (
+								<MenuButton
+									aria-label="Dashboard Menu"
+									placement="bottom-end"
+									menuStyle={{ zIndex: 20 }}
+									buttonProps={{
+										className: 'header-dashboard-button hide-on-mobile',
+										minimal: true,
+										large: true,
+										rightIcon: 'caret-down',
+									}}
+									buttonContent="Dashboard"
+								>
+									<ScopeDropdown />
+								</MenuButton>
+							)}
+							{loggedIn && <UserNotificationsPopover />}
+							{loggedIn && (
+								<MenuButton
+									aria-label="User menu"
+									placement="bottom-end"
+									// The z-index of the PubHeaderFormatting is 19
+									menuStyle={{ zIndex: 20 }}
+									buttonProps={{
+										minimal: true,
+										large: true,
+									}}
+									buttonContent={
+										<Avatar
+											initials={loginData.initials}
+											avatar={loginData.avatar}
+											width={30}
+										/>
+									}
+								>
+									<MenuItem
+										href={`/user/${loginData.slug}`}
+										text={
+											<React.Fragment>
+												{loginData.fullName}
+												<span className="subtext" style={{ marginLeft: 4 }}>
+													View Profile
+												</span>
+											</React.Fragment>
+										}
+									/>
+									<MenuItem href="/legal/settings" text="Privacy settings" />
+									<MenuItem onClick={handleLogout} text="Logout" />
+								</MenuButton>
+							)}
+							{!loggedIn && (
 								<AnchorButton
-									href="/about"
-									minimal={true}
-									large={true}
-									text="About"
-								/>
-							</React.Fragment>
-						)}
-						{!isBasePubPub &&
-							loggedIn &&
-							(!communityData.hideCreatePubButton || canManage) && (
-								<Button
 									large={true}
 									minimal={true}
-									text="Create Pub"
-									onClick={handleCreatePub}
-									loading={isLoading}
+									text="Login or Signup"
+									href={`/login${redirectString}`}
 								/>
 							)}
-						{!isBasePubPub && (
-							<AnchorButton
-								href="/search"
-								minimal={true}
-								large={true}
-								text="Search"
-								className="hide-on-mobile"
-							/>
-						)}
-						{!isBasePubPub && (
-							<MenuButton
-								aria-label="Dashboard Menu"
-								placement="bottom-end"
-								menuStyle={{ zIndex: 20 }}
-								buttonProps={{
-									className: 'header-dashboard-button hide-on-mobile',
-									minimal: true,
-									large: true,
-									rightIcon: 'caret-down',
-								}}
-								buttonContent="Dashboard"
-							>
-								<ScopeDropdown />
-							</MenuButton>
-						)}
-						{loggedIn && <UserNotificationsPopover />}
-						{loggedIn && (
-							<MenuButton
-								aria-label="User menu"
-								placement="bottom-end"
-								// The z-index of the PubHeaderFormatting is 19
-								menuStyle={{ zIndex: 20 }}
-								buttonProps={{
-									minimal: true,
-									large: true,
-								}}
-								buttonContent={
-									<Avatar
-										initials={loginData.initials}
-										avatar={loginData.avatar}
-										width={30}
+						</div>
+					) : (
+						<div className="mobile-header-buttons">
+							<div className="bp3-button-group">
+								{!isBasePubPub &&
+									loggedIn &&
+									(!communityData.hideCreatePubButton || canManage) && (
+										<AnchorButton
+											minimal={true}
+											onClick={handleCreatePub}
+											loading={isLoading}
+											icon="add-to-artifact"
+										/>
+									)}
+								{!isBasePubPub && (
+									<AnchorButton
+										href="/search"
+										minimal={true}
+										icon="search"
 									/>
-								}
-							>
-								<MenuItem
-									href={`/user/${loginData.slug}`}
-									text={
-										<React.Fragment>
-											{loginData.fullName}
-											<span className="subtext" style={{ marginLeft: 4 }}>
-												View Profile
-											</span>
-										</React.Fragment>
-									}
-								/>
-								<MenuItem href="/legal/settings" text="Privacy settings" />
-								<MenuItem onClick={handleLogout} text="Logout" />
-							</MenuButton>
-						)}
-						{!loggedIn && (
-							<AnchorButton
-								large={true}
-								minimal={true}
-								text="Login or Signup"
-								href={`/login${redirectString}`}
-							/>
-						)}
-					</div>
+								)}
+								{!isBasePubPub && (
+									<MenuButton
+										aria-label="Dashboard Menu"
+										placement="bottom-end"
+										menuStyle={{ zIndex: 20 }}
+										buttonProps={{
+											className: 'header-dashboard-button',
+											minimal: true,
+											icon: 'settings'
+										}}
+										buttonContent=""
+									>
+										<ScopeDropdown />
+									</MenuButton>
+								)}
+								{loggedIn && <UserNotificationsPopover />}
+								{loggedIn && (
+									<MenuButton
+										aria-label="User menu"
+										placement="bottom-end"
+										// The z-index of the PubHeaderFormatting is 19
+										menuStyle={{ zIndex: 20 }}
+										buttonProps={{
+											minimal: true,
+										}}
+										buttonContent={
+											<Avatar
+												initials={loginData.initials}
+												avatar={loginData.avatar}
+												width={20}
+											/>
+										}
+									>
+										<MenuItem
+											href={`/user/${loginData.slug}`}
+											text={
+												<React.Fragment>
+													{loginData.fullName}
+													<span className="subtext" style={{ marginLeft: 4 }}>
+														View Profile
+													</span>
+												</React.Fragment>
+											}
+										/>
+										<MenuItem href="/legal/settings" text="Privacy settings" />
+										<MenuItem onClick={handleLogout} text="Logout" />
+									</MenuButton>
+								)}
+								{!loggedIn && (
+									<AnchorButton
+										minimal={true}
+										text="Login or Signup"
+										href={`/login${redirectString}`}
+									/>
+								)}
+							</div>
+						</div>) }
 				</GridWrapper>
 			</div>
 			{!hideHero && (
