@@ -73,6 +73,10 @@ export const getAllPubContributors = (
 		...orderedContributors(primaryCollection && primaryCollection.attributions),
 	].map(ensureUserForAttribution);
 
+	if (role === 'contributors') {
+		return resolveContributors(contributors, hideAuthors, hideNonAuthors);
+	}
+
 	// author is not a 'role' but bare with me
 	if (role === 'author') {
 		const contributorsWithRoles = contributors.filter((contributor) => {
@@ -121,6 +125,6 @@ export const getContributorName = (attribution: Attribution) => {
 };
 
 export const getAuthorString = (pub) => {
-	const contributors = getAllPubContributors(pub, false, true);
+	const contributors = getAllPubContributors(pub, 'author', false, true);
 	return joinOxford(contributors.map((c) => c.user.fullName));
 };
