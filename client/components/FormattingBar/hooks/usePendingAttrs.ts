@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 
@@ -42,7 +42,7 @@ export const usePendingAttrs = ({
 	const [pendingKeys, setPendingKeys] = useState<string[]>([]);
 	const selectedNodeId = selectedNode?.attrs.id;
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (targetedNodeId) {
 			const pendingAttrs = getPendingAttrsObject(attrs, pendingKeys);
 			if (editorView) {
@@ -69,11 +69,11 @@ export const usePendingAttrs = ({
 		setPendingKeys([]);
 	};
 
-	const updateAttrs = (nextAttrs) => {
+	const updateAttrs = (nextAttrs: Attrs) => {
 		setPendingKeys((prevPendingKeys) => [
 			...new Set([...prevPendingKeys, ...Object.keys(nextAttrs)]),
 		]);
-		setAttrs((prevAttrs) => ({ ...prevAttrs, ...nextAttrs }));
+		setAttrs((prevAttrs: Attrs) => ({ ...prevAttrs, ...nextAttrs }));
 	};
 
 	return {

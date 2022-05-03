@@ -66,6 +66,7 @@ const ControlsFootnoteCitation = (props: Props) => {
 	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const isFootnote = selectedNode.type.name === 'footnote';
 	const { commitChanges, hasPendingChanges, updateAttrs: rawUpdateAttrs, attrs } = pendingAttrs;
+	console.log({ pendingAttrs });
 	const { structuredValue, unstructuredValue, customLabel } = unwrapPendingAttrs(
 		attrs,
 		isFootnote,
@@ -77,6 +78,12 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const [debouncedValue] = useDebounce(structuredValue, 250);
 	const html = renderedStructuredValue?.html;
 	const showPreview = html || unstructuredValue;
+
+	useEffect(() => {
+		console.log('mount!');
+	}, []);
+
+	console.log({ unstructuredValue });
 
 	useEffect(() => {
 		noteManager.getRenderedValue(debouncedValue).then((val) => setRenderedStructuredValue(val));
@@ -103,6 +110,7 @@ const ControlsFootnoteCitation = (props: Props) => {
 		<div className="section" key="unstructured">
 			<div className="title">Rich Text</div>
 			<SimpleEditor
+				debug
 				initialHtmlString={unstructuredValue}
 				onChange={(htmlString) => {
 					updateAttrs({ unstructuredValue: htmlString });
