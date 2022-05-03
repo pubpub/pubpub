@@ -44,22 +44,22 @@ const resolveContributors = (
 	});
 };
 
+// export const getAllPubContributors = (
+// 	pubData: Pub,
+// 	hideAuthors = false,
+// 	hideNonAuthors = false,
+// ) => {
+// 	const { collectionPubs } = pubData;
+// 	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
+// 	const contributors = [
+// 		...orderedContributors(pubData.attributions),
+// 		...orderedContributors(primaryCollection && primaryCollection.attributions),
+// 	].map(ensureUserForAttribution);
+
+// 	return resolveContributors(contributors, hideAuthors, hideNonAuthors);
+// };
+
 export const getAllPubContributors = (
-	pubData: Pub,
-	hideAuthors = false,
-	hideNonAuthors = false,
-) => {
-	const { collectionPubs } = pubData;
-	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
-	const contributors = [
-		...orderedContributors(pubData.attributions),
-		...orderedContributors(primaryCollection && primaryCollection.attributions),
-	].map(ensureUserForAttribution);
-
-	return resolveContributors(contributors, hideAuthors, hideNonAuthors);
-};
-
-export const getAllPubContributorsRoles = (
 	pubData: Pub,
 	role: string,
 	hideAuthors = false,
@@ -72,6 +72,14 @@ export const getAllPubContributorsRoles = (
 		...orderedContributors(pubData.attributions),
 		...orderedContributors(primaryCollection && primaryCollection.attributions),
 	].map(ensureUserForAttribution);
+
+	// author is not a 'role' but bare with me
+	if (role === 'author') {
+		const contributorsWithRoles = contributors.filter((contributor) => {
+			return !contributor.roles;
+		});
+		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
+	}
 
 	// filter if role is present on contributor
 	if (role === 'editor') {

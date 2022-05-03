@@ -7,7 +7,7 @@ import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { pubUrl } from 'utils/canonicalUrls';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { renderJournalCitationForCitations } from 'utils/citations';
-import { getAllPubContributors, getAllPubContributorsRoles } from 'utils/contributors';
+import { getAllPubContributors } from 'utils/contributors';
 
 const getDatePartsObject = (date) => ({
 	'date-parts': [date.getFullYear(), date.getMonth() + 1, date.getDate()],
@@ -59,26 +59,26 @@ export const generateCitationHtml = async (
 	const pubIssuedDate = getPubPublishedDate(pubData);
 	const pubLink = pubUrl(communityData, pubData);
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
-	const authors = getAllPubContributors(pubData).map(getContributorName);
+	const authors = getAllPubContributors(pubData, 'author').map(getContributorName);
 	const authorEntry = authors.length ? { author: authors } : {};
 
-	const editors = getAllPubContributorsRoles(pubData, 'editor').map(getContributorName);
+	const editors = getAllPubContributors(pubData, 'editor').map(getContributorName);
 	const editorEntry = editors.length ? { editor: editors } : {};
 
-	const illustrators = getAllPubContributorsRoles(pubData, 'illustrator').map(getContributorName);
+	const illustrators = getAllPubContributors(pubData, 'illustrator').map(getContributorName);
 	const illustratorEntry = illustrators.length ? { illustrator: illustrators } : {};
 
-	const translators = getAllPubContributorsRoles(pubData, 'Translator').map(getContributorName);
+	const translators = getAllPubContributors(pubData, 'Translator').map(getContributorName);
 	const translatorEntry = translators.length ? { translator: translators } : {};
 
-	const collectionEditors = getAllPubContributorsRoles(pubData, 'Series Editor').map(
+	const collectionEditors = getAllPubContributors(pubData, 'Series Editor').map(
 		getContributorName,
 	);
 	const collectionEditorEntry = collectionEditors.length
 		? { 'collection-editor': collectionEditors }
 		: {};
 
-	const chairs = getAllPubContributorsRoles(pubData, 'Chair').map(getContributorName);
+	const chairs = getAllPubContributors(pubData, 'Chair').map(getContributorName);
 	const chairEntry = chairs.length ? { chair: chairs } : {};
 
 	const commonData = {
