@@ -1,5 +1,16 @@
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .dashboard-row-listing-component {
     padding: 0;
     margin: 0;
     list-style: none;
+    @include mobile {
+      margin-bottom: 50px;
+    }
 }

@@ -268,6 +268,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 					rightIcon="arrow-right"
 					intent="primary"
 					onClick={() => setStep(nextStep)}
+					className="next-step-button"
 				>
 					Next: <b>{label}</b>
 				</Button>

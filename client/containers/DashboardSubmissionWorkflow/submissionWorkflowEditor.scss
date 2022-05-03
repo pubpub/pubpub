@@ -1,5 +1,13 @@
 @import './shared.scss';
 
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .submission-workflow-editor-component {
     .step-content {
         margin: 10px 0;
@@ -8,6 +16,10 @@
             margin: 10px 0;
             font-size: 20px;
             font-weight: 500;
+            @include mobile {
+              margin-bottom: 0px;
+              margin-top: 25px;
+            }
         }
     }
 
@@ -39,6 +51,31 @@
                 flex-grow: 1;
                 margin-right: 10px;
             }
+            @include mobile {
+              flex-direction: column;
+              > .bp3-input-group {
+                  margin-bottom: 10px;
+                  margin-right: 0px;
+              }
+            }
         }
+    }
+    @include mobile {
+      .submission-workflow-step-picker-component {
+        .label {
+          flex-direction: column;
+          align-items: flex-start;
+          font-size: 12px;
+          .number {
+            margin-bottom: 10px;
+          }
+        }
+      }
+      .next-step-button {
+        margin-bottom: 75px;
+      }
+      .save-changes-button {
+        margin-bottom: 75px;
+      }
     }
 }

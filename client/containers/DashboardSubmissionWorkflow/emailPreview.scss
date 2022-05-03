@@ -1,5 +1,13 @@
 @import './shared.scss';
 
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .email-preview-component {
     @include box;
     background: $light-background;
@@ -10,6 +18,13 @@
         align-items: center;
         padding: 10px;
         border-bottom: 1px solid $border-color;
+        @include mobile {
+          flex-wrap: wrap;
+          span {
+            margin-right: 10px;
+            margin-top: 5px;
+          }
+        }
 
         > .address-box {
             display: flex;
@@ -17,6 +32,11 @@
             margin-left: 30px;
             > .label {
                 margin-right: 5px;
+            }
+            @include mobile {
+              margin-top: 5px;
+              font-size: 12px;
+              margin-left: 0px;
             }
         }
     }
