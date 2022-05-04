@@ -29,9 +29,8 @@ const PubBody = (props: Props) => {
 	const {
 		noteManager,
 		updateCollabData,
-		updateHistoryData,
 		pubData: { initialDocKey, nodeLabels },
-		historyData: { isViewingHistory },
+		historyData: { isViewingHistory, setLatestHistoryKey },
 		collabData: { status, firebaseDraftRef, localCollabUser },
 		pubBodyState: { key, initialContent, isReadOnly, includeCollabPlugin, discussionAnchors },
 	} = usePubContext();
@@ -68,20 +67,13 @@ const PubBody = (props: Props) => {
 		[updateCollabData],
 	);
 
-	const handleLatestKey = useCallback(
-		(latestKey: number) => {
-			updateHistoryData({ latestKey, currentKey: latestKey });
-		},
-		[updateHistoryData],
-	);
-
 	const collaborativeOptions = includeCollabPlugin &&
 		!!firebaseDraftRef && {
 			initialDocKey,
 			firebaseRef: firebaseDraftRef,
 			clientData: localCollabUser,
 			onStatusChange: handleStatusChange,
-			onUpdateLatestKey: handleLatestKey,
+			onUpdateLatestKey: setLatestHistoryKey,
 		};
 
 	const discussionOptions = !isViewingHistory && {

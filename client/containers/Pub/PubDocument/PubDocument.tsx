@@ -43,7 +43,6 @@ const PubDocument = () => {
 	usePubHrefs({ enabled: !isReadOnly });
 
 	const showPubFileImport = (canEdit || canEditDraft) && !isReadOnly;
-	const updateHistoryData = (next) => updateLocalData('history', next);
 
 	if (hidePubBody) {
 		return null;
@@ -92,10 +91,10 @@ const PubDocument = () => {
 				<div className="side-content" ref={sideContentRef}>
 					{isViewingHistory && (
 						<PubHistoryViewer
-							updateHistoryData={updateHistoryData}
 							historyData={historyData}
 							pubData={pubData}
-							onClose={() => updateHistoryData({ isViewingHistory: false })}
+							onClose={() => historyData.setIsViewingHistory(false)}
+							onSetCurrentHistoryKey={historyData.setCurrentHistoryKey}
 						/>
 					)}
 				</div>

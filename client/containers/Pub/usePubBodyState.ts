@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { DiscussionAnchor, DocJson } from 'types';
+import { isJSDocReadonlyTag } from 'typescript';
 import { usePageContext } from 'utils/hooks';
 
 import { PubContextType } from './PubContextProvider';
@@ -39,8 +40,6 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 		return [];
 	}, [discussions, isRelease, currentKey]);
 
-	const submissionPreviewDoc = submissionState?.submissionPreviewDoc;
-
 	if (isInMaintenanceMode) {
 		return {
 			key: 'maintenance',
@@ -59,13 +58,34 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 		};
 	}
 
-	if (submissionPreviewDoc) {
+	if (submissionState) {
+		const submissionPreviewDoc = submissionState?.submissionPreviewDoc;
+		if (submissionPreviewDoc) {
+			return {
+				key: `submission-preview-${currentKey}`,
+				isReadOnly: true,
+				initialContent: submissionPreviewDoc,
+				includeCollabPlugin: false,
+				discussionAnchors,
+			};
+		}
+		if (submissionState.selectedTab === 'instructions') {
+			return {
+				key: '',
+				isReadOnly: true,
+				includeCollabPlugin: false,
+				initialContent: initialDoc,
+				hidePubBody: true,
+			};
+		}
+	}
+
+	if (isRelease) {
 		return {
-			key: `submission-preview-${currentKey}`,
+			key: 'release',
 			isReadOnly: true,
-			initialContent: submissionPreviewDoc,
+			initialContent: initialDoc,
 			includeCollabPlugin: false,
-			hidePubBody: true,
 			discussionAnchors,
 		};
 	}

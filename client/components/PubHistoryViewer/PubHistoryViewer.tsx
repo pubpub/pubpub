@@ -15,7 +15,7 @@ type Props = {
 	pubData: Pub;
 	historyData: PubHistoryState;
 	onClose: () => unknown;
-	updateHistoryData: (patch: Partial<PubHistoryState>) => unknown;
+	onSetCurrentHistoryKey: (key: number) => unknown;
 };
 
 const bucketTimestamp = (timestamp, intervalMs) => {
@@ -92,7 +92,7 @@ const getDateForHistoryKey = (historyKey, timestamps) => {
 };
 
 const PubHistoryViewer = (props: Props) => {
-	const { historyData, pubData, updateHistoryData, onClose } = props;
+	const { historyData, pubData, onSetCurrentHistoryKey, onClose } = props;
 	const { timestamps, latestKey, currentKey, outstandingRequests, loadedIntoHistory } =
 		historyData;
 	const { releases } = pubData;
@@ -144,7 +144,7 @@ const PubHistoryViewer = (props: Props) => {
 	};
 
 	const changeCurrentKeyBy = (step) => {
-		updateHistoryData({ currentKey: currentKey + step });
+		onSetCurrentHistoryKey(currentKey + step);
 	};
 
 	const renderSliderLabel = (sliderVal) => {
@@ -176,7 +176,7 @@ const PubHistoryViewer = (props: Props) => {
 					icon="blank"
 					text={dateString}
 					key={key}
-					onClick={() => updateHistoryData({ currentKey: startKey })}
+					onClick={() => onSetCurrentHistoryKey(startKey)}
 					active={containsCurrentKey}
 					intent={containsCurrentKey ? 'primary' : 'none'}
 				/>
@@ -296,7 +296,7 @@ const PubHistoryViewer = (props: Props) => {
 					labelStepSize={latestKey + 1}
 					value={sliderValue}
 					onChange={setSliderValue}
-					onRelease={(value) => updateHistoryData({ currentKey: value - 1 })}
+					onRelease={(value) => onSetCurrentHistoryKey(value - 1)}
 				/>
 			)}
 			<Menu>

@@ -89,7 +89,6 @@ const PubHeader = (props: Props) => {
 					<PubHeaderContent
 						pubData={pubData}
 						updateLocalData={updateLocalData}
-						historyData={historyData}
 						pubHeadings={pubHeadings}
 						onShowHeaderDetails={toggleDetails}
 					/>

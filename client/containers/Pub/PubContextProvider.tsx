@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 
 import { NodeLabelMap } from 'client/components/Editor';
 import { NoteManager } from 'client/utils/notes';
-import { PatchFn, PubHistoryState, PubPageData } from 'types';
+import { PatchFn, PubPageData } from 'types';
 
 import { useLazyRef } from 'client/utils/useLazyRef';
 import { getPubHeadings, PubHeading } from './PubHeader/headerUtils';
@@ -12,7 +12,7 @@ import {
 	usePubSubmissionState,
 } from './usePubSubmissionState';
 import { usePubCollabState, PubCollabState } from './usePubCollabState';
-import { usePubHistoryState, PubHistoryStatePatchFn } from './usePubHistoryState';
+import { usePubHistoryState } from './usePubHistoryState';
 import { IdlePatchFn, useIdlyUpdatedState } from './useIdlyUpdatedState';
 import { PubBodyState, usePubBodyState } from './usePubBodyState';
 
@@ -21,19 +21,14 @@ type Props = {
 	pubData: PubPageData;
 };
 
-type UpdateLocalDataFn = (
-	kind: 'pub' | 'collab' | 'history',
-	data: any,
-	options?: { isImmediate?: boolean },
-) => void;
+type UpdateLocalDataFn = (kind: 'pub', data: any, options?: { isImmediate?: boolean }) => void;
 
 export type PubContextType = {
 	inPub: boolean;
 	pubData: PubPageData;
 	pubBodyState: PubBodyState;
 	updatePubData: PatchFn<PubPageData>;
-	historyData: PubHistoryState;
-	updateHistoryData: PubHistoryStatePatchFn;
+	historyData: ReturnType<typeof usePubHistoryState>;
 	collabData: PubCollabState;
 	updateCollabData: IdlePatchFn<PubCollabState>;
 	submissionState: null | PubSubmissionState;
@@ -66,7 +61,7 @@ export const PubContextProvider = (props: Props) => {
 	const { children, pubData: initialPubData } = props;
 	const [pubData, updatePubData] = useIdlyUpdatedState(initialPubData);
 	const [collabData, updateCollabData] = usePubCollabState({ pubData });
-	const [historyData, updateHistoryData] = usePubHistoryState({ pubData });
+	const historyData = usePubHistoryState({ pubData });
 	const [submissionState, updateSubmissionState] = usePubSubmissionState({
 		pubData,
 		editorChangeObject: collabData.editorChangeObject,
@@ -97,14 +92,8 @@ export const PubContextProvider = (props: Props) => {
 					updatePubData(data);
 				}
 			}
-			if (kind === 'collab') {
-				updateCollabData(data);
-			}
-			if (kind === 'history') {
-				updateHistoryData(data);
-			}
 		},
-		[updatePubData, updateCollabData, updateHistoryData],
+		[updatePubData],
 	);
 
 	const pubContext: PubContextType = {
@@ -114,7 +103,6 @@ export const PubContextProvider = (props: Props) => {
 		collabData,
 		updateCollabData,
 		historyData,
-		updateHistoryData,
 		submissionState,
 		updateSubmissionState,
 		noteManager,

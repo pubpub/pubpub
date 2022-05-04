@@ -38,7 +38,7 @@ const getLocalCollabUser = (canEdit: boolean, loginData: LoginData) => {
 	return {
 		id: loginData.id,
 		backgroundColor: `rgba(${userColor}, 0.2)`,
-		cursorColor: userColor,
+		cursorColor: `rgba(${userColor}, 1.0)`,
 		image: loginData.avatar || null,
 		name: loginData.fullName || 'Anonymous',
 		initials: loginData.initials || '?',

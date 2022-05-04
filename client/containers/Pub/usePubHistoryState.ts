@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import queryString from 'query-string';
 
-import { PatchFn, PatchFnArg, PubHistoryState, PubPageData, PubDraftInfo } from 'types';
+import { PubHistoryState, PubPageData, PubDraftInfo } from 'types';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
@@ -10,9 +10,6 @@ import { useIdlyUpdatedState } from './useIdlyUpdatedState';
 type Options = {
 	pubData: PubPageData;
 };
-
-type HistoryStateUpdate = Pick<PubHistoryState, 'currentKey' | 'latestKey' | 'isViewingHistory'>;
-export type PubHistoryStatePatchFn = PatchFn<HistoryStateUpdate>;
 
 const loadPubVersionFromHistory = (
 	pubId: string,
@@ -57,25 +54,30 @@ export const usePubHistoryState = (options: Options) => {
 	const pubId = pubData.id;
 	const { latestKey, currentKey } = historyState;
 
-	const updateCertainHistoryState = useCallback(
-		(next: PatchFnArg<HistoryStateUpdate>) => {
-			updateHistoryState(next);
-		},
+	const setLatestHistoryKey = useCallback(
+		(key: number) =>
+			updateHistoryState((currentState) => {
+				return {
+					currentKey: key,
+					latestKey: key,
+					timestamps: {
+						[key]: Date.now(),
+						...currentState.timestamps,
+					},
+				};
+			}),
 		[updateHistoryState],
 	);
 
-	useEffect(() => {
-		if (latestKey >= 0) {
-			updateHistoryState((state) => {
-				return {
-					timestamps: {
-						...state.timestamps,
-						[latestKey]: Date.now(),
-					},
-				};
-			});
-		}
-	}, [latestKey, updateHistoryState]);
+	const setCurrentHistoryKey = useCallback(
+		(key: number) => updateHistoryState({ currentKey: key }),
+		[updateHistoryState],
+	);
+
+	const setIsViewingHistory = useCallback(
+		(value: boolean) => updateHistoryState({ isViewingHistory: value }),
+		[updateHistoryState],
+	);
 
 	useEffect(() => {
 		const isCurrentDocHistorical = currentKey < latestKey;
@@ -111,5 +113,10 @@ export const usePubHistoryState = (options: Options) => {
 		}
 	}, [currentKey, latestKey, accessHash, pubId, updateHistoryState]);
 
-	return [historyState, updateCertainHistoryState] as const;
+	return {
+		...historyState,
+		setCurrentHistoryKey,
+		setLatestHistoryKey,
+		setIsViewingHistory,
+	};
 };

@@ -14,7 +14,6 @@ import TitleGroup from './TitleGroup';
 import UtilityButtons from './UtilityButtons';
 
 type Props = {
-	historyData: any;
 	onShowHeaderDetails: (...args: any[]) => any;
 	pubData: PubPageData;
 	pubHeadings: any[];
@@ -22,19 +21,15 @@ type Props = {
 };
 
 const PubHeaderContent = (props: Props) => {
-	const { historyData, onShowHeaderDetails, pubData, pubHeadings, updateLocalData } = props;
+	const { onShowHeaderDetails, pubData, pubHeadings, updateLocalData } = props;
 	const { doi, isInMaintenanceMode } = pubData;
 	const { communityData } = usePageContext();
-	const { submissionState } = usePubContext();
+	const { submissionState, historyData } = usePubContext();
 	const publishedDate = getPubPublishedDate(pubData);
 	const isSubmission = !!submissionState;
 
 	const updatePubData = (newPubData) => {
 		return updateLocalData('pub', newPubData, { isImmediate: true });
-	};
-
-	const updateHistoryData = (newHistoryData) => {
-		return updateLocalData('history', newHistoryData);
 	};
 
 	const updateAndSavePubData = (newPubData) => {
@@ -97,7 +92,6 @@ const PubHeaderContent = (props: Props) => {
 					pubData={pubData}
 					historyData={historyData}
 					updatePubData={updatePubData}
-					updateHistoryData={updateHistoryData}
 				/>
 			)}
 		</div>

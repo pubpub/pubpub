@@ -320,12 +320,13 @@ export const initialHistoryData = {
 
 const StatefulPubHistoryWrapper = () => {
 	const [historyData, setHistoryData] = useState(initialHistoryData);
-	const updateHistoryData = (next) => setHistoryData((current) => ({ ...current, ...next }));
 	return (
 		<PubHistoryViewer
 			pubData={pubData as any}
 			historyData={historyData as any}
-			updateHistoryData={updateHistoryData}
+			onSetCurrentHistoryKey={(currentKey) =>
+				setHistoryData((current) => ({ ...current, currentKey }))
+			}
 			onClose={() => {}}
 		/>
 	);
