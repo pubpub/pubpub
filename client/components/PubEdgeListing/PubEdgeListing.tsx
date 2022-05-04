@@ -13,7 +13,7 @@ import PubEdgeListingControls from './PubEdgeListingControls';
 
 require('./pubEdgeListing.scss');
 
-type OwnProps = {
+type Props = {
 	accentColor: string;
 	className?: string;
 	hideIfNoInitialMatches?: boolean;
@@ -21,14 +21,6 @@ type OwnProps = {
 	pubData: PubPageData;
 	initialMode?: string;
 	initialFilters?: string[];
-};
-
-const defaultProps = {
-	className: '',
-	hideIfNoInitialMatches: true,
-	isolated: false,
-	initialMode: Mode.Carousel,
-	initialFilters: [Filter.Child],
 };
 
 const edgeUniqueFingerprint = (pubEdgeInContext, assertIsUnique) => {
@@ -112,16 +104,14 @@ const collateAndFilterPubEdges = (filters, pubData) => {
 	};
 };
 
-type Props = OwnProps & typeof defaultProps;
-
 const PubEdgeListing = (props: Props) => {
 	const {
 		accentColor,
-		className,
-		hideIfNoInitialMatches,
-		initialMode,
-		initialFilters,
-		isolated,
+		className = '',
+		hideIfNoInitialMatches = true,
+		initialMode = Mode.Carousel,
+		initialFilters = [Filter.Child],
+		isolated = false,
 		pubData,
 	} = props;
 	const [index, setIndex] = useState(0);
@@ -245,5 +235,5 @@ const PubEdgeListing = (props: Props) => {
 		</div>
 	);
 };
-PubEdgeListing.defaultProps = defaultProps;
+
 export default PubEdgeListing;

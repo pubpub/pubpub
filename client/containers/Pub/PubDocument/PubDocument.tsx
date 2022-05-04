@@ -33,9 +33,9 @@ const PubDocument = () => {
 		pubBodyState: { isReadOnly, hidePubBody },
 	} = usePubContext();
 	const { isViewingHistory } = historyData;
-	const { communityData, locationData, scopeData } = usePageContext();
+	const { communityData, scopeData } = usePageContext();
 	const { canEdit, canEditDraft } = scopeData.activePermissions;
-	const mainContentRef = useRef(null);
+	const mainContentRef = useRef<null | HTMLDivElement>(null);
 	const sideContentRef = useRef(null);
 	const editorWrapperRef = useRef(null);
 
@@ -110,7 +110,7 @@ const PubDocument = () => {
 					/>
 				)}
 			</PubSuspendWhileTyping>
-			<PubLinkController locationData={locationData} mainContentRef={mainContentRef} />
+			<PubLinkController mainContentRef={mainContentRef} />
 		</div>
 	);
 };
