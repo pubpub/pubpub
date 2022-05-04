@@ -98,8 +98,8 @@ const renderContributors = (contributors) => {
 				{contributors.map((contributor) => {
 					return (
 						<ul key={contributor.surname}>
-							{contributor.given_name} {contributor.surname}{' '}
-							{contributor['@contributor_role']}
+							{contributor.given_name} {contributor.surname} (
+							{contributor['@contributor_role']})
 						</ul>
 					);
 				})}
@@ -117,6 +117,7 @@ const renderJournalIssue = (journal_issue) => {
 			<dl>
 				{renderTitles(titles)}
 				{renderPublicationDate(publication_date)}
+				{renderContributors(journal_issue.contributors.person_name)}
 			</dl>
 		</>
 	);
@@ -138,14 +139,13 @@ const renderArticlePreview = (body) => {
 			journal_issue,
 		},
 	} = body;
-	const journal_issue_contributors = journal_issue && journal_issue.contributors.person_name;
 	return (
 		<>
 			<h6>Journal Article</h6>
 			<dl>
 				{renderTitles(titles)}
 				{renderPublicationDate(publication_date)}
-				{renderContributors([...content.person_name, ...journal_issue_contributors])}
+				{renderContributors(content.person_name)}
 			</dl>
 			<h6>Journal Metadata</h6>
 			<dl>
@@ -187,12 +187,13 @@ const renderBookPreview = (body) => {
 				<dt>Edition Number</dt>
 				<dd>{edition_number}</dd>
 				{renderPublisher(publisher)}
+				{renderContributors(metadata.person_name)}
 				{renderPublicationDate(bookPublicationDate)}
 			</dl>
 			<h6>Content</h6>
 			<dl>
 				{renderTitles(contentTitles)}
-				{renderContributors([...content.person_name, ...metadata.person_name])}
+				{renderContributors(content.person_name)}
 				{renderPublicationDate(contentPublicationDate)}
 			</dl>
 			{renderRelationships(relationships)}
@@ -208,7 +209,11 @@ const renderConferencePreview = (body) => {
 		// for now i'll just use contributors
 		conference: {
 			contributors,
-			conference_paper: { titles, 'rel:program': relationships },
+			conference_paper: {
+				titles,
+				contributors: conference_contributors,
+				'rel:program': relationships,
+			},
 			event_metadata: {
 				conference_name,
 				conference_date: { '#text': conferenceDate },
@@ -216,12 +221,13 @@ const renderConferencePreview = (body) => {
 			proceedings_metadata: { proceedings_title, publication_date, publisher },
 		},
 	} = body;
+
 	return (
 		<>
 			<h6>Conference Paper</h6>
 			<dl>
 				{renderTitles(titles)}
-				{renderContributors(contributors.person_name)}
+				{renderContributors(conference_contributors.person_name)}
 			</dl>
 			<h6>Event Metadata</h6>
 			<dl>
@@ -237,6 +243,8 @@ const renderConferencePreview = (body) => {
 				{renderPublicationDate(publication_date)}
 				{renderPublisher(publisher)}
 			</dl>
+			<h6>Contributors</h6>
+			<dl>{renderContributors(contributors.person_name)}</dl>
 			{renderRelationships(relationships)}
 		</>
 	);
