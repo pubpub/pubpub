@@ -44,21 +44,6 @@ const resolveContributors = (
 	});
 };
 
-// export const getAllPubContributors = (
-// 	pubData: Pub,
-// 	hideAuthors = false,
-// 	hideNonAuthors = false,
-// ) => {
-// 	const { collectionPubs } = pubData;
-// 	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
-// 	const contributors = [
-// 		...orderedContributors(pubData.attributions),
-// 		...orderedContributors(primaryCollection && primaryCollection.attributions),
-// 	].map(ensureUserForAttribution);
-
-// 	return resolveContributors(contributors, hideAuthors, hideNonAuthors);
-// };
-
 export const getAllPubContributors = (
 	pubData: Pub,
 	role: string,

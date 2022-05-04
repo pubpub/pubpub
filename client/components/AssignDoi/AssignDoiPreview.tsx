@@ -134,19 +134,18 @@ const renderArticlePreview = (body) => {
 			journal_metadata: {
 				full_title: journalFullTitle,
 				doi_data: { doi: journalDoi },
-				contributors: metadata,
 			},
 			journal_issue,
 		},
 	} = body;
-
+	const journal_issue_contributors = journal_issue && journal_issue.contributors.person_name;
 	return (
 		<>
 			<h6>Journal Article</h6>
 			<dl>
 				{renderTitles(titles)}
 				{renderPublicationDate(publication_date)}
-				{renderContributors([...content.person_name, ...metadata.person_name])}
+				{renderContributors([...content.person_name, ...journal_issue_contributors])}
 			</dl>
 			<h6>Journal Metadata</h6>
 			<dl>
