@@ -2,7 +2,12 @@ import React from 'react';
 import dateFormat from 'dateformat';
 
 import { collectionUrl } from 'utils/canonicalUrls';
-import { getPubPublishedDate, getPubUpdatedDate, getPubCreatedDate } from 'utils/pub/pubDates';
+import {
+	getPubPublishedDateString,
+	getPubPublishedDate,
+	getPubUpdatedDate,
+	getPubCreatedDate,
+} from 'utils/pub/pubDates';
 import { ClickToCopyButton, ContributorsList } from 'components';
 import { getAllPubContributors } from 'utils/contributors';
 import { usePageContext } from 'utils/hooks';
@@ -27,6 +32,7 @@ const PubDetails = (props: Props) => {
 	const { canView } = scopeData.activePermissions;
 
 	const createdAt = getPubCreatedDate(pubData);
+	const publishedDateString = getPubPublishedDateString(pubData);
 	const publishedDate = getPubPublishedDate(pubData);
 	const updatedDate = getPubUpdatedDate({ pub: pubData });
 
@@ -56,14 +62,7 @@ const PubDetails = (props: Props) => {
 					)}
 					<h6 className="pub-header-themed-secondary">Published</h6>
 					<div className="full-height-date">
-						{publishedDate ? (
-							<>
-								{dateFormat(publishedDate, 'mmm dd, yyyy')}
-								{pubData.releases.length === 0 && ' (Not yet released)'}
-							</>
-						) : (
-							<i>Unpublished</i>
-						)}
+						{publishedDateString || <i>Unpublished</i>}
 					</div>
 					{updatedDate && updatedDate !== publishedDate && (
 						<React.Fragment>
