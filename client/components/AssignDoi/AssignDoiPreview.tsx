@@ -203,10 +203,6 @@ const renderBookPreview = (body) => {
 
 const renderConferencePreview = (body) => {
 	const {
-		// contributors come from the contributors(lists all)
-		// and conference_paper(list the primary content contributor) field
-		// not which to use. could reduce a list of dupes or make a set.
-		// for now i'll just use contributors
 		conference: {
 			contributors,
 			conference_paper: {
@@ -250,8 +246,6 @@ const renderConferencePreview = (body) => {
 	);
 };
 
-// the contributors are returned in when logging out in contributors.js but
-// just one gets appended
 const renderPreprintPreview = (body) => {
 	const {
 		posted_content: { contributors, titles, 'rel:program': relationships, posted_date },

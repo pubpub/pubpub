@@ -42,11 +42,6 @@ const getCollectionLevelData = (collection) => {
 const getContributorName = (attribution: types.Attribution) =>
 	(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
 	attribution.isAuthor &&
-	// TODO: attribution.user check is confusing because these have a user
-	// object but ssr.tsx metadata attributions do not
-	// could use type.DefinitelyHas<type.Attribution, 'user> but...
-	// would rather fix the attribution model to have consistent behavior for user objects
-	// ian mentioned this in AttributionRow.tsx
 	attribution.user
 		? { given: attribution.user.firstName, family: attribution.user.lastName }
 		: {};

@@ -33,7 +33,6 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 		loginData: { id: userId },
 	} = initialData;
 	createUserScopeVisit({ userId, communityId, pubId: pubData.id });
-	// getting collection pub attribution
 	const { collectionPubs } = pubData;
 	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
 	const collectionAttributions = primaryCollection?.attributions ?? [];
