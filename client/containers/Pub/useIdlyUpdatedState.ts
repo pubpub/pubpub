@@ -20,6 +20,9 @@ const createIdleCallbackManager = (timeout: number) => {
 	let idleStateCallbackHandle: null | number = null;
 
 	const runCallbacks = () => {
+		// This call batches React useState updates within these callbacks into a single re-render.
+		// When we upgrade to React 18, this will become the default behavior, and we can remove it.
+		// https://reactjs.org/blog/2022/03/29/react-v18.html#new-feature-automatic-batching
 		ReactDOM.unstable_batchedUpdates(() => {
 			for (let i = 0; i < callbacks.length; i++) {
 				callbacks[i]();
