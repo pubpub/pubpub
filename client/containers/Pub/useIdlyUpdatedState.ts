@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 
 import { Callback, PatchFn, PatchFnArg } from 'types';
 
@@ -14,19 +15,49 @@ export type IdlePatchFn<T> = PatchFn<T> & {
 	immediately: (isImmediate: boolean) => PatchFn<T>;
 };
 
-export const useIdlyUpdatedState = <T>(initialValue: InitialValue<T>, timeout = 50) => {
+const createIdleCallbackManager = (timeout: number) => {
+	let callbacks: Callback[] = [];
+	let idleStateCallbackHandle: null | number = null;
+
+	const runCallbacks = () => {
+		ReactDOM.unstable_batchedUpdates(() => {
+			for (let i = 0; i < callbacks.length; i++) {
+				callbacks[i]();
+			}
+			idleStateCallbackHandle = null;
+			callbacks = [];
+		});
+	};
+
+	const requestBatchedIdleCallback = (callback: Callback) => {
+		if (!callbacks.includes(callback)) {
+			callbacks.push(callback);
+		}
+		if ('requestIdleCallback' in window) {
+			if (idleStateCallbackHandle === null) {
+				idleStateCallbackHandle = requestIdleCallback(runCallbacks, { timeout });
+			}
+		} else {
+			runCallbacks();
+		}
+	};
+
+	return { requestBatchedIdleCallback };
+};
+
+const { requestBatchedIdleCallback } = createIdleCallbackManager(50);
+
+export const useIdlyUpdatedState = <T>(initialValue: InitialValue<T>) => {
 	const [state, setUnderlyingState] = useState(initialValue);
 	const queuedUpdates = useRef<PatchFnArg<T>[]>([]);
-	const idleCallback = useRef<null | number>(null);
 
 	const commitStateChanges = useCallback(
 		() =>
 			setUnderlyingState((prevState) => {
-				idleCallback.current = null;
 				let nextState = prevState;
-				const itemsInQueue = queuedUpdates.current.length;
-				for (let i = 0; i < itemsInQueue; i++) {
-					const update = queuedUpdates.current[i];
+				const updates = queuedUpdates.current;
+				for (let i = 0; i < updates.length; i++) {
+					const update = updates[i];
 					const patch = typeof update === 'function' ? update(nextState) : update;
 					nextState = { ...nextState, ...patch };
 				}
@@ -40,13 +71,7 @@ export const useIdlyUpdatedState = <T>(initialValue: InitialValue<T>, timeout = 
 		() => {
 			const stateUpdater = (update: PatchFnArg<T>) => {
 				queuedUpdates.current.push(update);
-				if ('requestIdleCallback' in window) {
-					if (!idleCallback.current) {
-						idleCallback.current = requestIdleCallback(commitStateChanges, { timeout });
-					}
-				} else {
-					commitStateChanges();
-				}
+				requestBatchedIdleCallback(commitStateChanges);
 			};
 
 			const immediately = (isImmediate = true) => {
@@ -64,7 +89,7 @@ export const useIdlyUpdatedState = <T>(initialValue: InitialValue<T>, timeout = 
 		},
 		// React Hook useMemo has a missing dependency: 'T'
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[timeout, commitStateChanges],
+		[commitStateChanges],
 	);
 
 	return [state, updateState] as const;
