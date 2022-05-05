@@ -28,6 +28,21 @@ type MetaProps = {
 };
 
 const contributorRoles = ['Writing – Review & Editing', 'Editor', 'Series Editor'];
+const sortAttributions = (foo, bar) => {
+	if (foo.order < bar.order) {
+		return -1;
+	}
+	if (foo.order > bar.order) {
+		return 1;
+	}
+	if (foo.createdAt < bar.createdAt) {
+		return 1;
+	}
+	if (foo.createdAt > bar.createdAt) {
+		return -1;
+	}
+	return 0;
+};
 
 export const generateMetaComponents = (metaProps: MetaProps) => {
 	const {
@@ -184,49 +199,15 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	}
 
 	if (attributions) {
-		const authors = attributions
-			.sort((foo, bar) => {
-				if (foo.order < bar.order) {
-					return -1;
-				}
-				if (foo.order > bar.order) {
-					return 1;
-				}
-				if (foo.createdAt < bar.createdAt) {
-					return 1;
-				}
-				if (foo.createdAt > bar.createdAt) {
-					return -1;
-				}
-				return 0;
-			})
-			.filter((item) => {
-				return item.isAuthor && !item.roles;
-			});
+		const authors = attributions.sort(sortAttributions).filter((item) => {
+			return item.isAuthor && !item.roles;
+		});
 
 		const getPrimaryRole = (contributor: Attribution) => contributor.roles?.[0];
-		const contributors = attributions
-			.sort((foo, bar) => {
-				if (foo.order < bar.order) {
-					return -1;
-				}
-				if (foo.order > bar.order) {
-					return 1;
-				}
-				if (foo.createdAt < bar.createdAt) {
-					return 1;
-				}
-				if (foo.createdAt > bar.createdAt) {
-					return -1;
-				}
-				return 0;
-			})
-			.filter((contributor) => {
-				const primaryRole = getPrimaryRole(contributor);
-				return (
-					contributor.isAuthor && primaryRole && contributorRoles.includes(primaryRole)
-				);
-			});
+		const contributors = attributions.sort(sortAttributions).filter((item) => {
+			const primaryRole = getPrimaryRole(item);
+			return item.isAuthor && primaryRole && contributorRoles.includes(primaryRole);
+		});
 
 		const citationAuthorTags = authors.map((author) => {
 			if (author.user) {
