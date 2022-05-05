@@ -62,7 +62,6 @@ export const getAllPubContributors = (
 		return resolveContributors(contributors, hideAuthors, hideNonAuthors);
 	}
 
-	// author is not a 'role' but bare with me
 	if (role === 'author') {
 		const contributorsWithRoles = contributors.filter((contributor) => {
 			return !contributor.roles;
@@ -70,7 +69,6 @@ export const getAllPubContributors = (
 		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 	}
 
-	// filter if role is present on contributor
 	if (role === 'editor') {
 		const contributorsWithRoles = contributors.filter((contributor) => {
 			return editorRoles.includes(getPrimaryRole(contributor));
