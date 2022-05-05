@@ -1,7 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import queryString from 'query-string';
+import { EditorView } from 'prosemirror-view';
 
-import { PubHistoryState, PubPageData, PubDraftInfo } from 'types';
+import { PubHistoryState, PubPageData, PubDraftInfo, DocJson } from 'types';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
@@ -9,6 +10,7 @@ import { useIdlyUpdatedState } from './useIdlyUpdatedState';
 
 type Options = {
 	pubData: PubPageData;
+	editorView: null | EditorView;
 };
 
 const loadPubVersionFromHistory = (
@@ -26,7 +28,8 @@ const loadPubVersionFromHistory = (
 	);
 
 export const usePubHistoryState = (options: Options) => {
-	const { pubData } = options;
+	const { pubData, editorView } = options;
+	const { initialDoc } = pubData;
 	const {
 		locationData: {
 			query: { access: accessHash },
@@ -36,6 +39,7 @@ export const usePubHistoryState = (options: Options) => {
 	const [historyState, updateHistoryState] = useIdlyUpdatedState<PubHistoryState>(() => {
 		const { historyData } = pubData;
 		const isViewingHistory = historyData.currentKey !== historyData.latestKey;
+		const latestHistoryDoc = isViewingHistory ? initialDoc : null;
 		return {
 			...historyData,
 			timestamps: {
@@ -46,13 +50,14 @@ export const usePubHistoryState = (options: Options) => {
 			latestKeyReceivedAt: null,
 			isViewingHistory,
 			loadedIntoHistory: isViewingHistory,
-			historyDocKey: `history-${historyData.currentKey}`,
-			historyDoc: isViewingHistory ? pubData.initialDoc : null,
+			historyDoc: latestHistoryDoc,
+			latestHistoryDoc,
+			historyDocEditorKey: `history-${historyData.currentKey}`,
 		};
 	});
 
 	const pubId = pubData.id;
-	const { latestKey, currentKey } = historyState;
+	const { isViewingHistory, currentKey, latestKey } = historyState;
 
 	const setLatestHistoryKey = useCallback(
 		(key: number) =>
@@ -75,43 +80,62 @@ export const usePubHistoryState = (options: Options) => {
 	);
 
 	const setIsViewingHistory = useCallback(
-		(value: boolean) => updateHistoryState({ isViewingHistory: value }),
-		[updateHistoryState],
+		(nextIsViewingHistory: boolean) => {
+			if (nextIsViewingHistory) {
+				const latestHistoryDoc = editorView
+					? (editorView.state.doc.toJSON() as DocJson)
+					: initialDoc;
+				updateHistoryState({
+					isViewingHistory: true,
+					latestHistoryDoc,
+					historyDoc: latestHistoryDoc,
+				});
+			} else {
+				updateHistoryState({ isViewingHistory: false });
+			}
+		},
+		[updateHistoryState, editorView, initialDoc],
 	);
 
 	useEffect(() => {
-		const isCurrentDocHistorical = currentKey < latestKey;
-		if (isCurrentDocHistorical) {
-			updateHistoryState((state) => {
-				return {
-					outstandingRequests: state.outstandingRequests + 1,
-				};
-			});
-			loadPubVersionFromHistory(pubId, currentKey, accessHash).then((draftInfo) => {
-				const {
-					doc,
-					historyData: { timestamps },
-				} = draftInfo;
+		if (isViewingHistory) {
+			if (currentKey === latestKey) {
+				updateHistoryState((state) => ({
+					historyDoc: state.latestHistoryDoc,
+					historyDocEditorKey: `history-${latestKey}`,
+				}));
+			} else {
 				updateHistoryState((state) => {
-					const outstandingRequestsUpdate = {
-						outstandingRequests: state.outstandingRequests - 1,
+					return {
+						outstandingRequests: state.outstandingRequests + 1,
 					};
-					if (state.currentKey === currentKey) {
-						return {
-							...outstandingRequestsUpdate,
-							historyDoc: doc,
-							historyDocKey: `history-${currentKey}`,
-							timestamps: {
-								...state.timestamps,
-								...timestamps,
-							},
-						};
-					}
-					return outstandingRequestsUpdate;
 				});
-			});
+				loadPubVersionFromHistory(pubId, currentKey, accessHash).then((draftInfo) => {
+					const {
+						doc,
+						historyData: { timestamps },
+					} = draftInfo;
+					updateHistoryState((state) => {
+						const outstandingRequestsUpdate = {
+							outstandingRequests: state.outstandingRequests - 1,
+						};
+						if (state.currentKey === currentKey) {
+							return {
+								...outstandingRequestsUpdate,
+								historyDoc: doc,
+								historyDocEditorKey: `history-${currentKey}`,
+								timestamps: {
+									...state.timestamps,
+									...timestamps,
+								},
+							};
+						}
+						return outstandingRequestsUpdate;
+					});
+				});
+			}
 		}
-	}, [currentKey, latestKey, accessHash, pubId, updateHistoryState]);
+	}, [isViewingHistory, currentKey, latestKey, accessHash, pubId, updateHistoryState]);
 
 	return {
 		...historyState,

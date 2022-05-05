@@ -310,10 +310,10 @@ const pubData = {
 export const initialHistoryData = {
 	timestamps: editTimestamps,
 	currentKey: 14678,
+	historyDocEditorKey: `history-14678`,
 	latestKey: 14678,
 	isViewingHistory: false,
 	loadedIntoHistory: false,
-	historyDocKey: 'string',
 	outstandingRequests: 0,
 	latestKeyReceivedAt: 0,
 };

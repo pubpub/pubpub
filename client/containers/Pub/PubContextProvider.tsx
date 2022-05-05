@@ -61,7 +61,10 @@ export const PubContextProvider = (props: Props) => {
 	const { children, pubData: initialPubData } = props;
 	const [pubData, updatePubData] = useIdlyUpdatedState(initialPubData);
 	const [collabData, updateCollabData] = usePubCollabState({ pubData });
-	const historyData = usePubHistoryState({ pubData });
+	const historyData = usePubHistoryState({
+		pubData,
+		editorView: collabData.editorChangeObject?.view ?? null,
+	});
 	const [submissionState, updateSubmissionState] = usePubSubmissionState({
 		pubData,
 		editorChangeObject: collabData.editorChangeObject,

@@ -144,8 +144,9 @@ export type PubHistoryState = {
 	latestKey: number;
 	isViewingHistory: boolean;
 	loadedIntoHistory: boolean;
-	historyDocKey: null | string;
+	historyDocEditorKey: string;
 	historyDoc: null | DocJson;
+	latestHistoryDoc: null | DocJson;
 	outstandingRequests: number;
 	latestKeyReceivedAt: Maybe<number>;
 	timestamps: Record<string, number>;

@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { DiscussionAnchor, DocJson } from 'types';
-import { isJSDocReadonlyTag } from 'typescript';
 import { usePageContext } from 'utils/hooks';
 
 import { PubContextType } from './PubContextProvider';
@@ -9,6 +8,7 @@ type Options = Pick<PubContextType, 'pubData' | 'submissionState' | 'collabData'
 
 export type PubBodyState = {
 	initialContent: DocJson;
+	initialHistoryKey?: number;
 	includeCollabPlugin: boolean;
 	isReadOnly: boolean;
 	key: string | number;
@@ -18,9 +18,9 @@ export type PubBodyState = {
 
 export const usePubBodyState = (options: Options): PubBodyState => {
 	const {
-		pubData: { initialDoc, isInMaintenanceMode, isRelease, discussions },
+		pubData: { initialDoc, initialDocKey, isInMaintenanceMode, isRelease, discussions },
 		submissionState,
-		historyData: { currentKey, isViewingHistory, historyDoc, historyDocKey },
+		historyData: { currentKey, isViewingHistory, historyDoc, historyDocEditorKey },
 		collabData: { firebaseDraftRef },
 	} = options;
 	const {
@@ -49,9 +49,9 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 		};
 	}
 
-	if (isViewingHistory && historyDoc && historyDocKey) {
+	if (isViewingHistory && historyDoc && historyDocEditorKey) {
 		return {
-			key: historyDocKey,
+			key: historyDocEditorKey,
 			isReadOnly: true,
 			initialContent: historyDoc,
 			includeCollabPlugin: false,
@@ -94,6 +94,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 		key: firebaseDraftRef ? 'ready' : 'unready',
 		isReadOnly: !(canEdit || canEditDraft),
 		initialContent: initialDoc,
+		initialHistoryKey: initialDocKey,
 		includeCollabPlugin: !!firebaseDraftRef,
 		discussionAnchors,
 	};
