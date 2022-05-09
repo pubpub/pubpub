@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { DefinitelyHas, Submission, PubPageData, DocJson } from 'types';
-import { EditorChangeObject } from 'client/components/Editor';
+import { EditorChangeObject, isEmptyDoc } from 'client/components/Editor';
 
 import { SpubHeaderTab } from './SpubHeader/SpubHeader';
 import { IdlePatchFn, useIdlyUpdatedState } from './useIdlyUpdatedState';
@@ -21,6 +21,9 @@ type UpdatablePubSubmissionState = Omit<PubSubmissionState, 'submissionPreviewDo
 export type PubSubmissionStatePatchFn = IdlePatchFn<UpdatablePubSubmissionState>;
 
 const createSubmissionPreview = (doc: DocJson, abstract: DocJson) => {
+	if (isEmptyDoc(abstract)) {
+		return doc;
+	}
 	return {
 		...doc,
 		content: [
