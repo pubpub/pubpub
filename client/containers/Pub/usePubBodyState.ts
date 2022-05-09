@@ -74,7 +74,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 				initialContent: submissionPreviewDoc,
 				initialHistoryKey: initialDocKey,
 				includeCollabPlugin: false,
-				includeDiscussionsPlugin: true,
+				includeDiscussionsPlugin: false,
 				discussionAnchors,
 			};
 		}
