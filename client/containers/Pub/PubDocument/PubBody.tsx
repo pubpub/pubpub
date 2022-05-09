@@ -30,14 +30,15 @@ const PubBody = (props: Props) => {
 		noteManager,
 		updateCollabData,
 		pubData: { nodeLabels },
-		historyData: { isViewingHistory, setLatestHistoryKey },
+		historyData: { setLatestHistoryKey },
 		collabData: { status, firebaseDraftRef, localCollabUser },
 		pubBodyState: {
-			key,
+			editorKey,
 			initialContent,
 			initialHistoryKey,
 			isReadOnly,
 			includeCollabPlugin,
+			includeDiscussionsPlugin,
 			discussionAnchors,
 		},
 	} = usePubContext();
@@ -75,7 +76,6 @@ const PubBody = (props: Props) => {
 	);
 
 	const collaborativeOptions = includeCollabPlugin &&
-		typeof initialHistoryKey === 'number' &&
 		!!firebaseDraftRef && {
 			initialDocKey: initialHistoryKey,
 			firebaseRef: firebaseDraftRef,
@@ -84,17 +84,16 @@ const PubBody = (props: Props) => {
 			onUpdateLatestKey: setLatestHistoryKey,
 		};
 
-	const discussionOptions = !isViewingHistory &&
-		typeof initialHistoryKey === 'number' && {
-			draftRef: firebaseDraftRef,
-			initialHistoryKey,
-			discussionAnchors: discussionAnchors || [],
-		};
+	const discussionOptions = includeDiscussionsPlugin && {
+		draftRef: firebaseDraftRef,
+		initialHistoryKey,
+		discussionAnchors: discussionAnchors || [],
+	};
 
 	return (
 		<main className="pub-body-component" ref={editorWrapperRef}>
 			<Editor
-				key={key}
+				key={editorKey}
 				customNodes={discussionSchema}
 				enableSuggestions
 				nodeLabels={nodeLabels}

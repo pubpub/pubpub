@@ -40,7 +40,7 @@ const ToggleDetailsButton = (props: ToggleDetailsProps) => {
 
 const PubHeader = (props: Props) => {
 	const headerRef = useRef<HTMLDivElement>(null);
-	const { pubData, historyData, updateLocalData, pubHeadings } = usePubContext();
+	const { pubData, updateLocalData, pubHeadings } = usePubContext();
 	const { sticky = true } = props;
 	const { communityData } = usePageContext();
 	const [showingDetails, setShowingDetails] = useState(false);

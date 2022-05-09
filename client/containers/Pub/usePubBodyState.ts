@@ -7,13 +7,14 @@ import { PubContextType } from './PubContextProvider';
 type Options = Pick<PubContextType, 'pubData' | 'submissionState' | 'collabData' | 'historyData'>;
 
 export type PubBodyState = {
-	initialContent: DocJson;
-	initialHistoryKey?: number;
-	includeCollabPlugin: boolean;
-	isReadOnly: boolean;
-	key: string | number;
 	hidePubBody?: true;
-	discussionAnchors?: DiscussionAnchor[];
+	initialContent: DocJson;
+	initialHistoryKey: number;
+	includeCollabPlugin: boolean;
+	includeDiscussionsPlugin: boolean;
+	isReadOnly: boolean;
+	editorKey: string | number;
+	discussionAnchors: null | DiscussionAnchor[];
 };
 
 export const usePubBodyState = (options: Options): PubBodyState => {
@@ -42,19 +43,25 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 
 	if (isInMaintenanceMode) {
 		return {
-			key: 'maintenance',
+			editorKey: 'maintenance',
 			isReadOnly: true,
 			initialContent: initialDoc,
+			initialHistoryKey: initialDocKey,
 			includeCollabPlugin: false,
+			includeDiscussionsPlugin: false,
+			discussionAnchors: null,
 		};
 	}
 
 	if (isViewingHistory && historyDoc && historyDocEditorKey) {
 		return {
-			key: historyDocEditorKey,
+			editorKey: historyDocEditorKey,
 			isReadOnly: true,
 			initialContent: historyDoc,
+			initialHistoryKey: initialDocKey,
 			includeCollabPlugin: false,
+			includeDiscussionsPlugin: false,
+			discussionAnchors: null,
 		};
 	}
 
@@ -62,40 +69,48 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 		const submissionPreviewDoc = submissionState?.submissionPreviewDoc;
 		if (submissionPreviewDoc) {
 			return {
-				key: `submission-preview-${currentKey}`,
+				editorKey: `submission-preview-${currentKey}`,
 				isReadOnly: true,
 				initialContent: submissionPreviewDoc,
+				initialHistoryKey: initialDocKey,
 				includeCollabPlugin: false,
+				includeDiscussionsPlugin: true,
 				discussionAnchors,
 			};
 		}
 		if (submissionState.selectedTab === 'instructions') {
 			return {
-				key: '',
+				editorKey: '',
+				hidePubBody: true,
 				isReadOnly: true,
 				includeCollabPlugin: false,
 				initialContent: initialDoc,
-				hidePubBody: true,
+				initialHistoryKey: initialDocKey,
+				includeDiscussionsPlugin: false,
+				discussionAnchors: null,
 			};
 		}
 	}
 
 	if (isRelease) {
 		return {
-			key: 'release',
+			editorKey: 'release',
 			isReadOnly: true,
+			initialHistoryKey: initialDocKey,
 			initialContent: initialDoc,
 			includeCollabPlugin: false,
+			includeDiscussionsPlugin: true,
 			discussionAnchors,
 		};
 	}
 
 	return {
-		key: firebaseDraftRef ? 'ready' : 'unready',
+		editorKey: firebaseDraftRef ? 'ready' : 'unready',
 		isReadOnly: !(canEdit || canEditDraft),
 		initialContent: initialDoc,
 		initialHistoryKey: initialDocKey,
 		includeCollabPlugin: !!firebaseDraftRef,
+		includeDiscussionsPlugin: true,
 		discussionAnchors,
 	};
 };
