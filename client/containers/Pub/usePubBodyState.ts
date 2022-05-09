@@ -15,6 +15,7 @@ export type PubBodyState = {
 	isReadOnly: boolean;
 	editorKey: string | number;
 	discussionAnchors: null | DiscussionAnchor[];
+	canCreateAnchoredDiscussions: boolean;
 };
 
 export const usePubBodyState = (options: Options): PubBodyState => {
@@ -50,6 +51,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			includeCollabPlugin: false,
 			includeDiscussionsPlugin: false,
 			discussionAnchors: null,
+			canCreateAnchoredDiscussions: false,
 		};
 	}
 
@@ -62,6 +64,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			includeCollabPlugin: false,
 			includeDiscussionsPlugin: false,
 			discussionAnchors: null,
+			canCreateAnchoredDiscussions: false,
 		};
 	}
 
@@ -76,6 +79,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 				includeCollabPlugin: false,
 				includeDiscussionsPlugin: false,
 				discussionAnchors,
+				canCreateAnchoredDiscussions: false,
 			};
 		}
 		if (submissionState.selectedTab === 'instructions') {
@@ -88,6 +92,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 				initialHistoryKey: initialDocKey,
 				includeDiscussionsPlugin: false,
 				discussionAnchors: null,
+				canCreateAnchoredDiscussions: false,
 			};
 		}
 	}
@@ -101,6 +106,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			includeCollabPlugin: false,
 			includeDiscussionsPlugin: true,
 			discussionAnchors,
+			canCreateAnchoredDiscussions: true,
 		};
 	}
 
@@ -112,5 +118,6 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 		includeCollabPlugin: !!firebaseDraftRef,
 		includeDiscussionsPlugin: true,
 		discussionAnchors,
+		canCreateAnchoredDiscussions: true,
 	};
 };

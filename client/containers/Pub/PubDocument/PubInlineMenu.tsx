@@ -62,7 +62,7 @@ const PubInlineMenu = () => {
 			style={{ position: 'absolute', top: topPosition, left: selectionBoundingBox.left }}
 		>
 			{renderFormattingBar()}
-			{(canView || canCreateDiscussions) && (
+			{(canView || canCreateDiscussions) && pubBodyState.canCreateAnchoredDiscussions && (
 				<Button
 					aria-label="Start a discussion"
 					title="Start a discussion"
