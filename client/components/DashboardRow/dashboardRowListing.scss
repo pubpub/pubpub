@@ -7,10 +7,10 @@ $mobile-viewport-cutoff: 750px;
 }
 
 .dashboard-row-listing-component {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    @include mobile {
-      margin-bottom: 50px;
-    }
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	@include mobile {
+		margin-bottom: 50px;
+	}
 }

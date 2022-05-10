@@ -89,11 +89,11 @@
 					color: #fff;
 					margin-top: 0px;
 				}
-				[data-icon="caret-down"] {
+				[data-icon='caret-down'] {
 					transition: transform 150ms ease-in-out;
 				}
-				&[aria-expanded="true"] {
-					[data-icon="caret-down"] {
+				&[aria-expanded='true'] {
+					[data-icon='caret-down'] {
 						transform: rotate(180deg);
 					}
 				}
@@ -117,14 +117,14 @@
 			.bp3-icon {
 				color: #fff;
 			}
-			[data-icon="caret-down"] {
+			[data-icon='caret-down'] {
 				transition: transform 150ms ease-in-out;
 			}
-			&[aria-expanded="true"] {
-				[data-icon="caret-down"] {
+			&[aria-expanded='true'] {
+				[data-icon='caret-down'] {
 					transform: rotate(180deg);
 				}
-			}			
+			}
 		}
 	}
 }

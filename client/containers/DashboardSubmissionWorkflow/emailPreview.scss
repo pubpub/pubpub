@@ -9,40 +9,40 @@ $mobile-viewport-cutoff: 750px;
 }
 
 .email-preview-component {
-    @include box;
-    background: $light-background;
-    font-family: monospace;
+	@include box;
+	background: $light-background;
+	font-family: monospace;
 
-    > .address-header {
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        border-bottom: 1px solid $border-color;
-        @include mobile {
-          flex-wrap: wrap;
-          span {
-            margin-right: 10px;
-            margin-top: 5px;
-          }
-        }
+	> .address-header {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+		border-bottom: 1px solid $border-color;
+		@include mobile {
+			flex-wrap: wrap;
+			span {
+				margin-right: 10px;
+				margin-top: 5px;
+			}
+		}
 
-        > .address-box {
-            display: flex;
-            align-items: baseline;
-            margin-left: 30px;
-            > .label {
-                margin-right: 5px;
-            }
-            @include mobile {
-              margin-top: 5px;
-              font-size: 12px;
-              margin-left: 0px;
-            }
-        }
-    }
+		> .address-box {
+			display: flex;
+			align-items: baseline;
+			margin-left: 30px;
+			> .label {
+				margin-right: 5px;
+			}
+			@include mobile {
+				margin-top: 5px;
+				font-size: 12px;
+				margin-left: 0px;
+			}
+		}
+	}
 
-    > .content-box {
-        padding: 10px;
-        font-size: 0.95em;
-    }
+	> .content-box {
+		padding: 10px;
+		font-size: 0.95em;
+	}
 }

@@ -7,11 +7,11 @@ $mobile-viewport-cutoff: 750px;
 }
 
 .dashboard-settings-container_custom-css-popover {
-    max-width: 400px;
+	max-width: 400px;
 }
 
 .image-upload-row {
-  @include mobile {
-    flex-direction: column;
-  }
+	@include mobile {
+		flex-direction: column;
+	}
 }
