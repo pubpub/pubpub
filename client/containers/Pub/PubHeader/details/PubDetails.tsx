@@ -106,6 +106,7 @@ const PubDetails = (props: Props) => {
 							if (collection) {
 								return (
 									<a
+										key={collection.title}
 										className="collection-list-entry hoverline"
 										href={collectionUrl(communityData, collection)}
 									>

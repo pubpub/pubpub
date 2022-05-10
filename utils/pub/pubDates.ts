@@ -32,13 +32,12 @@ export const getPubPublishedDate = (pub: Pub, includeCustomPublishedAt = true) =
 	return null;
 };
 
-export const getPubPublishedDateString = (pub: Pub): string => {
-	const publishedDate = pub.customPublishedAt || pub.releases[0]?.createdAt;
+export const getPubPublishedDateString = (pub: Pub): string | null => {
+	const publishedDate = getPubPublishedDate(pub, true);
 	let publishedDateString = '';
-	if (publishedDate)
-		publishedDateString = formatDate(getLocalDateMatchingUtcCalendarDate(publishedDate));
+	if (publishedDate) publishedDateString = formatDate(publishedDate);
 	if (publishedDate && pub.releases.length === 0) publishedDateString += ' (Not yet released)';
-	return publishedDateString;
+	return publishedDateString || null;
 };
 
 export const getPubLatestReleaseDate = (pub: Pub, { excludeFirstRelease = false } = {}) => {
