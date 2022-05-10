@@ -397,6 +397,7 @@ getActivePermissions = async (
 		canAdminCommunity,
 		canManageCommunity,
 		canViewCommunity,
+		canEditCommunity,
 		...activePublicPermissions,
 		canCreateReviews,
 	};
