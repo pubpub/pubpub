@@ -328,6 +328,12 @@ getActivePermissions = async (
 		canAdminCommunity ||
 		scopeMemberData.find((member) => member.communityId && member.permissions === 'manage');
 
+	const canViewCommunity =
+		isSuperAdmin ||
+		canAdminCommunity ||
+		canManageCommunity ||
+		scopeMemberData.find((member) => member.communityId && member.permissions === 'view');
+
 	const booleanOr = (precedent, value) => {
 		/* Don't inherit value from null */
 		return typeof value === 'boolean' ? value : precedent;
@@ -383,6 +389,7 @@ getActivePermissions = async (
 		canAdmin: permissionLevelIndex > 2,
 		canAdminCommunity,
 		canManageCommunity,
+		canViewCommunity,
 		...activePublicPermissions,
 		canCreateReviews,
 	};
