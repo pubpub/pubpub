@@ -138,7 +138,11 @@ const CreateCollectionDialog = (props: Props) => {
 						/>
 					)}
 					{slugStatusError && (
-						<Callout className="error-callout" intent="danger" title={slugStatusError} />
+						<Callout
+							className="error-callout"
+							intent="danger"
+							title={slugStatusError}
+						/>
 					)}
 					<RadioGroup
 						{...kindRadio}

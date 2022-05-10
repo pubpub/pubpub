@@ -9,7 +9,6 @@ import {
 	MenuButton,
 	MenuItem,
 	UserNotificationsPopover,
-	Icon
 } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getResizedUrl } from 'utils/images';
@@ -196,7 +195,7 @@ const Header = (props: Props) => {
 							</a>
 						)}
 					</div>
-					{(viewportWidth && !isMobile) ? (
+					{viewportWidth && !isMobile ? (
 						<div className="buttons-wrapper">
 							{isBasePubPub && (
 								<React.Fragment>
@@ -320,11 +319,7 @@ const Header = (props: Props) => {
 										/>
 									)}
 								{!isBasePubPub && (
-									<AnchorButton
-										href="/search"
-										minimal={true}
-										icon="search"
-									/>
+									<AnchorButton href="/search" minimal={true} icon="search" />
 								)}
 								{!isBasePubPub && (
 									<MenuButton
@@ -334,7 +329,7 @@ const Header = (props: Props) => {
 										buttonProps={{
 											className: 'header-dashboard-button',
 											minimal: true,
-											icon: 'settings'
+											icon: 'settings',
 										}}
 										buttonContent=""
 									>
@@ -364,7 +359,10 @@ const Header = (props: Props) => {
 											text={
 												<React.Fragment>
 													{loginData.fullName}
-													<span className="subtext" style={{ marginLeft: 4 }}>
+													<span
+														className="subtext"
+														style={{ marginLeft: 4 }}
+													>
 														View Profile
 													</span>
 												</React.Fragment>
@@ -382,7 +380,8 @@ const Header = (props: Props) => {
 									/>
 								)}
 							</div>
-						</div>) }
+						</div>
+					)}
 				</GridWrapper>
 			</div>
 			{!hideHero && (

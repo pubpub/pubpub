@@ -78,7 +78,7 @@ const DashboardCommunityOverview = (props: Props) => {
 	};
 
 	return (
-		<DashboardFrame title="Overview" controls={(isMobile && canManage) && renderControls()}>
+		<DashboardFrame title="Overview" controls={isMobile && canManage && renderControls()}>
 			<OverviewFrame
 				primary={
 					<OverviewSection title="Explore" icon="overview" descendTitle>

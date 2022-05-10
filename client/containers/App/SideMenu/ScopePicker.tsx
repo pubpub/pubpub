@@ -72,15 +72,17 @@ const ScopePicker = (props: Props) => {
 
 	return (
 		<div className="scope-picker-component">
-			{(isMobile && <style
-				/* eslint-disable-next-line react/no-danger */
-				dangerouslySetInnerHTML={{
-					__html: `
+			{isMobile && (
+				<style
+					/* eslint-disable-next-line react/no-danger */
+					dangerouslySetInnerHTML={{
+						__html: `
 						.scope-dropdown-component { background: ${backgroundColor}; }
 						.scope-menu { border-top: 2px solid ${communityData.accentColorDark} }
 					`,
-				}}
-			/>)}
+					}}
+				/>
+			)}
 			<MenuButton
 				aria-label={!isMobile ? 'Dashboard Menu' : 'Mobile Dash Menu'}
 				buttonContent={

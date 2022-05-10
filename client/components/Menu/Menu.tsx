@@ -15,7 +15,7 @@ export type MenuProps = {
 	menuStyle?: object;
 	onDismiss?: () => unknown;
 	placement?: Placement;
-	positionFixed?: PopperOptions["positionFixed"];
+	positionFixed?: PopperOptions['positionFixed'];
 };
 
 const defaultProps = {
@@ -24,7 +24,7 @@ const defaultProps = {
 	menuStyle: {},
 	onDismiss: () => {},
 	placement: undefined,
-	positionFixed: false
+	positionFixed: false,
 };
 
 const renderDisclosure = (disclosure, disclosureProps) => {
@@ -44,7 +44,6 @@ export const Menu = React.forwardRef((props: MenuProps, ref) => {
 		onDismiss,
 		gutter,
 		menuStyle,
-		positionFixed,
 		...restProps
 	} = props;
 
@@ -55,7 +54,7 @@ export const Menu = React.forwardRef((props: MenuProps, ref) => {
 		gutter,
 		unstable_preventOverflow: false,
 		unstable_flip: false,
-		unstable_fixed: props.positionFixed
+		unstable_fixed: props.positionFixed,
 	});
 
 	const handleDismiss = () => {

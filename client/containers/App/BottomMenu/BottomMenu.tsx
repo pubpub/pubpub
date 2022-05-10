@@ -160,7 +160,9 @@ const BottomMenu = ({ isMobile }: Props) => {
 													key={item.title}
 													className={classNames({ menu: true, active })}
 												>
-													<div className="side-icon"><Icon icon={item.icon} /></div>
+													<div className="side-icon">
+														<Icon icon={item.icon} />
+													</div>
 													<div className="side-text">{item.title}</div>
 												</div>
 											}
