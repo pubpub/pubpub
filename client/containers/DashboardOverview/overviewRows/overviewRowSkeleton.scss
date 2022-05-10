@@ -1,5 +1,13 @@
 @import '../overviewStyles.scss';
 
+$mobile-viewport-cutoff: 750px;
+
+@mixin mobile {
+	@media only screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
 .overview-row-skeleton-component {
 	position: relative;
 	color: var(--community-accent-dark);
