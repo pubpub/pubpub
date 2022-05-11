@@ -1,0 +1,16 @@
+.header-controls-component {
+    color: white;
+
+    &.bp3-dark {
+        a {
+            color: #fff;
+        }
+    }
+
+    .bp3-button {
+        color: currentColor;
+        .bp3-icon {
+            color: currentColor;
+        }
+    }
+}

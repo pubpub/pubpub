@@ -12,6 +12,12 @@ import { NotificationsState } from './types';
 
 require('./userNotifications.scss');
 
+type ButtonRenderOptions = { hasUnreadNotifications: boolean };
+
+type Props = {
+	children: (opts: ButtonRenderOptions) => React.ReactElement;
+};
+
 const getNotificationsData = (
 	initialNotificationsData: InitialNotificationsData,
 	notificationsState: Maybe<NotificationsState>,
@@ -34,7 +40,8 @@ const getNotificationsData = (
 	return initialNotificationsData;
 };
 
-const UserNotificationsPopover = () => {
+const UserNotificationsPopover = (props: Props) => {
+	const { children } = props;
 	const userNotifications = useNotificationsState();
 	const { initialNotificationsData } = usePageContext();
 
@@ -44,14 +51,7 @@ const UserNotificationsPopover = () => {
 	);
 
 	if (hasNotifications) {
-		const button = (
-			<Button
-				className="user-notifications-button"
-				icon={<Icon icon={hasUnreadNotifications ? 'inbox-update' : 'inbox'} />}
-				minimal
-				large
-			/>
-		);
+		const button = children({ hasUnreadNotifications });
 		if (userNotifications) {
 			const { state, context } = userNotifications;
 			return (

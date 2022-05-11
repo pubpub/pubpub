@@ -5,3 +5,15 @@
 	top: 0;
 	transform: translateY(-50%);
 }
+
+@mixin mobile($mobile-viewport-cutoff: 750px) {
+	@media screen and (max-width: $mobile-viewport-cutoff) {
+		@content;
+	}
+}
+
+@mixin desktop($mobile-viewport-cutoff: 750px) {
+	@media screen and (min-width: #{1 + $mobile-viewport-cutoff}) {
+		@content;
+	}
+}
