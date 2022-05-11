@@ -28,7 +28,9 @@ const getChildEdges = (pubData: Pub) => {
 			}
 			return false;
 		}),
-		...outboundEdges.filter((edge) => edge.pubIsParent && edge.targetPub),
+		...outboundEdges.filter(
+			(edge) => edge.pubIsParent && (edge.targetPub || edge.externalPublication),
+		),
 	];
 };
 
