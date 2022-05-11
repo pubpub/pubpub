@@ -331,14 +331,11 @@ getActivePermissions = async (
 	const canEditCommunity =
 		isSuperAdmin ||
 		canAdminCommunity ||
-		canManageCommunity ||
 		scopeMemberData.find((member) => member.communityId && member.permissions === 'edit');
 
 	const canViewCommunity =
 		isSuperAdmin ||
 		canAdminCommunity ||
-		canManageCommunity ||
-		canEditCommunity ||
 		scopeMemberData.find((member) => member.communityId && member.permissions === 'view');
 
 	const booleanOr = (precedent, value) => {

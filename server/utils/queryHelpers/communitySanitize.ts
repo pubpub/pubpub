@@ -7,7 +7,7 @@ export default (communityData, locationData, loginData, scopeData) => {
 		.filter((item) => {
 			/* Collection access is granted when */
 			/* 1. it is public collection, or */
-			/* 2. the user can view a community or */
+			/* 2. the user has view permission in a community or */
 			/* 3. the user has explicit permissions on the collection */
 			const hasCollectionMemberAccess = item.members.find((member) => {
 				return member.userId === loginData.id;
