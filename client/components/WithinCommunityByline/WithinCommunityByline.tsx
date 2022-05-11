@@ -5,7 +5,7 @@ import { AttributionWithUser } from 'types';
 import { usePageContext } from 'utils/hooks';
 import { Tooltip, Icon } from '@blueprintjs/core';
 
-// I bet there's a better way to do this?
+// Review Note; I bet there's a better way to do this?
 type OwnProps = Omit<BylineProps, 'contributors'> & {
 	contributors: AttributionWithUser[];
 };
@@ -25,7 +25,7 @@ const WithinCommunityByline = (props: OwnProps) => {
 		bylinePrefix = (
 			<Tooltip
 				content="Contributors (A-Z)"
-				children={<Icon iconSize={14} icon="sort-alphabetical" className="byline-icon" />}
+				children={<Icon iconSize={12} icon="sort-alphabetical" className="byline-icon" />}
 			/>
 		);
 	}
