@@ -1,6 +1,6 @@
-import React from 'react';
-import classNames from 'classnames';
+import React, { useState, useEffect } from 'react';
 import { Button, AnchorButton } from '@blueprintjs/core';
+import classNames from 'classnames';
 import omit from 'lodash.omit';
 
 import { Callback } from 'types';
@@ -34,8 +34,10 @@ const componentPrefix = 'mobile-aware-button-component';
 
 const MobileAwareButton = React.forwardRef((props: Props, ref: any) => {
 	const { href, onClick, className, minimal = true, ...buttonProps } = props;
-	const { isMobile: isMobileViewport } = useViewport();
-	const elementRef = isMobileViewport !== null ? ref : null;
+	const { isMobile: isMobileViewport } = useViewport({ withEarlyMeasurement: true });
+	const [isFirstMount, setIsFirstMount] = useState(true);
+
+	useEffect(() => setIsFirstMount(false), []);
 
 	const resolveDisplayOptions = (isMobileButton: boolean) => {
 		if ('mobileOrDesktop' in props) {
@@ -54,16 +56,22 @@ const MobileAwareButton = React.forwardRef((props: Props, ref: any) => {
 	};
 
 	const renderMobileOrDesktopButton = (isMobileButton: boolean) => {
-		if (isMobileViewport !== null && isMobileViewport !== isMobileButton) {
-			console.log('bailing', { isMobileViewport, isMobileButton });
+		const matchesViewportSize = isMobileViewport === isMobileButton;
+		// During server-side rendering, isFirstMount is true, so we unconditionally render
+		// both the mobile and the desktop versions of the button, and rely on CSS to show only the
+		// correct one. During the first client render, we already know what viewport size we have,
+		// but we still need to render both buttons because React insists that the first client
+		// render match the server render exactly. After that, we can stop rendering one button.
+		if (!isFirstMount && !matchesViewportSize) {
 			return null;
 		}
 		const sharedProps = {
 			...omit(buttonProps, 'mobile', 'desktop', 'mobileOrDesktop'),
 			...resolveDisplayOptionsProps(isMobileButton),
 			minimal,
-			elementRef,
-			key: `is-mobile-${isMobileButton}`,
+			// We need to be careful to wire this ref into only the button we plan to show, because
+			// it'll be used to position popovers for menus and the like.
+			elementRef: matchesViewportSize ? ref : null,
 			large: !isMobileButton,
 			className: classNames(
 				className,
