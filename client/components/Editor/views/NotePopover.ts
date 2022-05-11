@@ -1,6 +1,6 @@
 import { DOMSerializer, Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import Popper from 'popper.js';
+import { createPopper } from '@popperjs/core';
 
 import { rectContainsPoint, rectUnion } from 'utils/geom';
 
@@ -15,7 +15,7 @@ class NotePopover {
 	private unstructuredAttrKey: string;
 	private viewContainer: HTMLElement;
 	private tooltip: null | HTMLElement = null;
-	private popper: null | Popper = null;
+	private popper: null | ReturnType<typeof createPopper> = null;
 	private node: Node;
 	private notePopoverId: string;
 
@@ -54,16 +54,19 @@ class NotePopover {
 		document.body.appendChild(tooltip);
 		document.addEventListener('mousemove', this.handleMouseMove);
 		this.tooltip = tooltip;
-		this.popper = new Popper(this.dom, tooltip, {
+		this.popper = createPopper(this.dom, tooltip, {
 			placement: 'top-start',
-			modifiers: {
-				flip: {
-					behavior: 'flip',
+			modifiers: [
+				{
+					name: 'preventOverflow',
+					options: {
+						boundary: this.viewContainer,
+					},
 				},
-				preventOverflow: {
-					boundariesElement: this.viewContainer,
+				{
+					name: 'flip',
 				},
-			},
+			],
 		});
 	}
 
