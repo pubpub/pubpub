@@ -6,11 +6,11 @@ import { usePageContext } from 'utils/hooks';
 import { Tooltip, Icon } from '@blueprintjs/core';
 
 // Review Note; I bet there's a better way to do this?
-type OwnProps = Omit<BylineProps, 'contributors'> & {
+type Props = Omit<BylineProps, 'contributors'> & {
 	contributors: AttributionWithUser[];
 };
 
-const WithinCommunityByline = (props: OwnProps) => {
+const WithinCommunityByline = (props: Props) => {
 	const { communityData } = usePageContext();
 	const { contributors } = props;
 	let { bylinePrefix } = props;
