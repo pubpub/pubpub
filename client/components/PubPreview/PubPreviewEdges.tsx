@@ -28,9 +28,7 @@ const getChildEdges = (pubData: Pub) => {
 			}
 			return false;
 		}),
-		...outboundEdges.filter(
-			(edge) => edge.pubIsParent && (edge.targetPub || edge.externalPublication),
-		),
+		...outboundEdges.filter((edge) => edge.pubIsParent),
 	];
 };
 
@@ -44,7 +42,7 @@ const getEdgesByRelationType = (edges: PubEdge[]): Record<string, PubEdge[]> => 
 	return res;
 };
 
-const renderEdgeLink = (edge: PubEdge, renderTitle: Boolean = false) => {
+const renderEdgeLink = (edge: PubEdge, renderTitle = false) => {
 	const { pubIsParent, targetPub, pub, externalPublication } = edge;
 	if (externalPublication) {
 		const { contributors = [], title, url } = externalPublication;
