@@ -89,6 +89,7 @@ $pub-body-font-size: if-is-export(14px, 20px);
 		margin: 0;
 		> p {
 			margin: 0;
+			display: inline-block;
 		}
 	}
 
@@ -102,8 +103,9 @@ $pub-body-font-size: if-is-export(14px, 20px);
 
 	ul,
 	ol {
-		padding-left: 1em;
+		padding-left: 0;
 		margin: 0em 0em 1em;
+		list-style-position: inside;
 		ul,
 		ol {
 			margin-bottom: 0em;
