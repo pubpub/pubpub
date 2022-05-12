@@ -2,18 +2,12 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import { Button, AnchorButton, Intent } from '@blueprintjs/core';
 
-import {
-	GridWrapper,
-	Avatar,
-	ScopeDropdown,
-	MenuButton,
-	MenuItem,
-	UserNotificationsPopover,
-} from 'components';
+import { GridWrapper, HeaderControls } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getResizedUrl } from 'utils/images';
 import { apiFetch } from 'client/utils/apiFetch';
 import { CommunityHeroButton } from 'types';
+import { useViewport } from 'client/utils/useViewport';
 
 require('./header.scss');
 
@@ -37,6 +31,8 @@ const Header = (props: Props) => {
 			window.location.href = '/';
 		});
 	};
+	const { viewportWidth } = useViewport();
+	const isMobile = viewportWidth! <= 750;
 	const handleCreatePub = () => {
 		setIsLoading(true);
 		return apiFetch
@@ -151,15 +147,11 @@ const Header = (props: Props) => {
 	const backgroundStyle = calculateBackgroundStyle(hideHero);
 
 	const loggedIn = !!loginData.slug;
-	const canManage = scopeData.activePermissions.canManageCommunity;
 	const isBasePubPub = locationData.isBasePubPub;
 
 	const resizedHeaderLogo = getResizedUrl(communityData.headerLogo, 'inside', undefined, 50);
 	const resizedHeroLogo = getResizedUrl(communityData.heroLogo, 'inside', undefined, 200);
 	const resizedHeroImage = getResizedUrl(communityData.heroImage, 'inside', 600);
-	const redirectString = `?redirect=${locationData.path}${
-		locationData.queryString.length > 1 ? locationData.queryString : ''
-	}`;
 	const heroPrimaryButton: Partial<CommunityHeroButton> = communityData.heroPrimaryButton || {};
 	const heroSecondaryButton: Partial<CommunityHeroButton> =
 		communityData.heroSecondaryButton || {};
@@ -192,115 +184,7 @@ const Header = (props: Props) => {
 							</a>
 						)}
 					</div>
-					<div className="buttons-wrapper">
-						{isBasePubPub && (
-							<React.Fragment>
-								<AnchorButton
-									href="/explore"
-									minimal={true}
-									large={true}
-									text="Explore"
-								/>
-								<AnchorButton
-									href="/pricing"
-									minimal={true}
-									large={true}
-									text="Pricing"
-								/>
-								<AnchorButton
-									href="/search"
-									minimal={true}
-									large={true}
-									text="Search"
-									className="hide-on-mobile"
-								/>
-								<AnchorButton
-									href="/about"
-									minimal={true}
-									large={true}
-									text="About"
-								/>
-							</React.Fragment>
-						)}
-						{!isBasePubPub &&
-							loggedIn &&
-							(!communityData.hideCreatePubButton || canManage) && (
-								<Button
-									large={true}
-									minimal={true}
-									text="Create Pub"
-									onClick={handleCreatePub}
-									loading={isLoading}
-								/>
-							)}
-						{!isBasePubPub && (
-							<AnchorButton
-								href="/search"
-								minimal={true}
-								large={true}
-								text="Search"
-								className="hide-on-mobile"
-							/>
-						)}
-						{!isBasePubPub && (
-							<MenuButton
-								aria-label="Dashboard Menu"
-								placement="bottom-end"
-								menuStyle={{ zIndex: 20 }}
-								buttonProps={{
-									className: 'header-dashboard-button hide-on-mobile',
-									minimal: true,
-									large: true,
-									rightIcon: 'caret-down',
-								}}
-								buttonContent="Dashboard"
-							>
-								<ScopeDropdown />
-							</MenuButton>
-						)}
-						{loggedIn && <UserNotificationsPopover />}
-						{loggedIn && (
-							<MenuButton
-								aria-label="User menu"
-								placement="bottom-end"
-								// The z-index of the PubHeaderFormatting is 19
-								menuStyle={{ zIndex: 20 }}
-								buttonProps={{
-									minimal: true,
-									large: true,
-								}}
-								buttonContent={
-									<Avatar
-										initials={loginData.initials}
-										avatar={loginData.avatar}
-										width={30}
-									/>
-								}
-							>
-								<MenuItem
-									href={`/user/${loginData.slug}`}
-									text={
-										<React.Fragment>
-											{loginData.fullName}
-											<span className="subtext" style={{ marginLeft: 4 }}>
-												View Profile
-											</span>
-										</React.Fragment>
-									}
-								/>
-								<MenuItem href="/legal/settings" text="Privacy settings" />
-								<MenuItem onClick={handleLogout} text="Logout" />
-							</MenuButton>
-						)}
-						{!loggedIn && (
-							<AnchorButton
-								large={true}
-								minimal={true}
-								text="Login or Signup"
-								href={`/login${redirectString}`}
-							/>
-						)}
-					</div>
+					<HeaderControls isBasePubPub={locationData.isBasePubPub} loggedIn={loggedIn} />
 				</GridWrapper>
 			</div>
 			{!hideHero && (
