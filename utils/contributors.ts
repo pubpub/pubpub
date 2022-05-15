@@ -16,6 +16,8 @@ const orderedContributors = (maybeContributors: Attribution[] | undefined | null
 
 const editorRoles = ['Editor', 'Writing – Review & Editing'];
 const illustratorRoles = ['Illustrator', 'Visualization'];
+const otherKnownRoles = ['Translator', 'Series Editor', 'Chair'];
+
 const getPrimaryRole = (contributor: AttributionWithUser) =>
 	contributor.roles ? contributor.roles[0] : '';
 
@@ -66,8 +68,9 @@ export const getAllPubContributors = (
 		const contributorsWithRoles = contributors.filter((contributor) => {
 			return (
 				!contributor.roles ||
-				(!editorRoles.includes(getPrimaryRole(contributor)) &&
-					!illustratorRoles.includes(getPrimaryRole(contributor)))
+				!editorRoles
+					.concat(illustratorRoles, otherKnownRoles)
+					.includes(getPrimaryRole(contributor))
 			);
 		});
 		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
