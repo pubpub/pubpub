@@ -39,9 +39,9 @@ const getCollectionLevelData = (collection) => {
 	};
 };
 
-const getContributorName = (attribution: types.Attribution) =>
+const getContributorName = (attribution: types.Attribution, index, arr, hideNonAuthors = true) =>
 	(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
-	attribution.isAuthor &&
+	(hideNonAuthors ? attribution.isAuthor : true) &&
 	attribution.user
 		? { given: attribution.user.firstName, family: attribution.user.lastName }
 		: {};
@@ -57,7 +57,9 @@ export const generateCitationHtml = async (
 	const authors = getAllPubContributors(pubData, 'author').map(getContributorName);
 	const authorEntry = authors.length ? { author: authors } : {};
 
-	const editors = getAllPubContributors(pubData, 'editor').map(getContributorName);
+	const editors = getAllPubContributors(pubData, 'editor').map((contributor, index, array) =>
+		getContributorName(contributor, index, array, false),
+	);
 	const editorEntry = editors.length ? { editor: editors } : {};
 
 	const illustrators = getAllPubContributors(pubData, 'illustrator').map(getContributorName);
@@ -67,13 +69,15 @@ export const generateCitationHtml = async (
 	const translatorEntry = translators.length ? { translator: translators } : {};
 
 	const collectionEditors = getAllPubContributors(pubData, 'Series Editor').map(
-		getContributorName,
+		(contributor, index, array) => getContributorName(contributor, index, array, false),
 	);
 	const collectionEditorEntry = collectionEditors.length
 		? { 'collection-editor': collectionEditors }
 		: {};
 
-	const chairs = getAllPubContributors(pubData, 'Chair').map(getContributorName);
+	const chairs = getAllPubContributors(pubData, 'Chair').map((contributor, index, array) =>
+		getContributorName(contributor, index, array, false),
+	);
 	const chairEntry = chairs.length ? { chair: chairs } : {};
 
 	const commonData = {
