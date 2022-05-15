@@ -64,7 +64,11 @@ export const getAllPubContributors = (
 
 	if (role === 'author') {
 		const contributorsWithRoles = contributors.filter((contributor) => {
-			return !contributor.roles;
+			return (
+				!contributor.roles ||
+				(!editorRoles.includes(getPrimaryRole(contributor)) &&
+					!illustratorRoles.includes(getPrimaryRole(contributor)))
+			);
 		});
 		return resolveContributors(contributorsWithRoles, hideAuthors, hideNonAuthors);
 	}
