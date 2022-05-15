@@ -62,10 +62,14 @@ export const generateCitationHtml = async (
 	);
 	const editorEntry = editors.length ? { editor: editors } : {};
 
-	const illustrators = getAllPubContributors(pubData, 'illustrator').map(getContributorName);
+	const illustrators = getAllPubContributors(pubData, 'illustrator').map(
+		(contributor, index, array) => getContributorName(contributor, index, array, false),
+	);
 	const illustratorEntry = illustrators.length ? { illustrator: illustrators } : {};
 
-	const translators = getAllPubContributors(pubData, 'Translator').map(getContributorName);
+	const translators = getAllPubContributors(pubData, 'Translator').map(
+		(contributor, index, array) => getContributorName(contributor, index, array, false),
+	);
 	const translatorEntry = translators.length ? { translator: translators } : {};
 
 	const collectionEditors = getAllPubContributors(pubData, 'Series Editor').map(
