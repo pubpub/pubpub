@@ -88,7 +88,7 @@ const renderPublicationDate = (publication_date, title = 'Publication Date') => 
 };
 
 const renderContributors = (contributors) => {
-	if (!contributors.person_name) {
+	if (!contributors) {
 		return null;
 	}
 	return (
