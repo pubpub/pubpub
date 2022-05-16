@@ -330,11 +330,9 @@ getActivePermissions = async (
 
 	const member = scopeMember.bind(this, scopeMemberData);
 	const canAdminCommunity = isSuperAdmin || member('admin');
-	const hasSuperPermissions = canAdminCommunity;
-
-	const canManageCommunity = hasSuperPermissions || member('manage');
-	const canEditCommunity = hasSuperPermissions || member('edit');
-	const canViewCommunity = hasSuperPermissions || member('view');
+	const canManageCommunity = canAdminCommunity || member('manage');
+	const canEditCommunity = canManageCommunity || member('edit');
+	const canViewCommunity = canEditCommunity || member('view');
 
 	const booleanOr = (precedent, value) => {
 		/* Don't inherit value from null */
