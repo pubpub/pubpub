@@ -27,7 +27,7 @@ const CreatePubButton = () => {
 			loading={isLoading}
 			onClick={handleCreatePub}
 			desktop={{ text: 'Create Pub' }}
-			mobile={{ icon: 'add-to-artifact' }}
+			mobile={{ icon: 'pubDocNew' }}
 		/>
 	);
 };
