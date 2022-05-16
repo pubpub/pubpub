@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-import { Scope } from 'types';
+import { Scope, MemberPermission } from 'types';
 import {
 	Collection,
 	CollectionPub,
@@ -296,7 +296,7 @@ getActivePermissions = async (
 ) => {
 	const { activePub, activeCollection, activeCommunity, inactiveCollections } = scopeElements;
 	const isSuperAdmin = checkIfSuperAdmin(scopeInputs.loginId);
-	const permissionLevels = ['view', 'edit', 'manage', 'admin'];
+	const permissionLevels: MemberPermission[] = ['view', 'edit', 'manage', 'admin'];
 	let defaultPermissionIndex = -1;
 
 	[activePub, activeCollection, activeCommunity, ...inactiveCollections]
@@ -319,7 +319,7 @@ getActivePermissions = async (
 		return currLevelIndex > prev ? currLevelIndex : prev;
 	}, defaultPermissionIndex);
 
-	const scopedMember = (permissionLevel: string) => {
+	const memberHasCommunityPermissions = (permissionLevel: MemberPermission) => {
 		return (
 			permissionLevels.includes(permissionLevel) &&
 			scopeMemberData.find(
@@ -328,10 +328,10 @@ getActivePermissions = async (
 		);
 	};
 
-	const canAdminCommunity = isSuperAdmin || scopedMember('admin');
-	const canManageCommunity = canAdminCommunity || scopedMember('manage');
-	const canEditCommunity = canManageCommunity || scopedMember('edit');
-	const canViewCommunity = canEditCommunity || scopedMember('view');
+	const canAdminCommunity = isSuperAdmin || memberHasCommunityPermissions('admin');
+	const canManageCommunity = canAdminCommunity || memberHasCommunityPermissions('manage');
+	const canEditCommunity = canManageCommunity || memberHasCommunityPermissions('edit');
+	const canViewCommunity = canEditCommunity || memberHasCommunityPermissions('view');
 
 	const booleanOr = (precedent, value) => {
 		/* Don't inherit value from null */
