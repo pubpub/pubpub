@@ -39,7 +39,7 @@ const getCollectionLevelData = (collection) => {
 	};
 };
 
-const getContributorName = (attribution: types.Attribution, index, arr, hideNonAuthors = true) =>
+const getContributorName = (attribution: types.Attribution, index, arr, hideNonAuthors = false) =>
 	(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
 	(hideNonAuthors ? attribution.isAuthor : true) &&
 	attribution.user
@@ -54,34 +54,28 @@ export const generateCitationHtml = async (
 	const pubIssuedDate = getPubPublishedDate(pubData);
 	const pubLink = pubUrl(communityData, pubData);
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
-	const authors = getAllPubContributors(pubData, 'author').map(getContributorName);
+	const authors = getAllPubContributors(pubData, 'author').map((contributor, index, array) =>
+		getContributorName(contributor, index, array, true),
+	);
 	const authorEntry = authors.length ? { author: authors } : {};
 
-	const editors = getAllPubContributors(pubData, 'editor').map((contributor, index, array) =>
-		getContributorName(contributor, index, array, false),
-	);
+	const editors = getAllPubContributors(pubData, 'editor').map(getContributorName);
 	const editorEntry = editors.length ? { editor: editors } : {};
 
-	const illustrators = getAllPubContributors(pubData, 'illustrator').map(
-		(contributor, index, array) => getContributorName(contributor, index, array, false),
-	);
+	const illustrators = getAllPubContributors(pubData, 'illustrator').map(getContributorName);
 	const illustratorEntry = illustrators.length ? { illustrator: illustrators } : {};
 
-	const translators = getAllPubContributors(pubData, 'Translator').map(
-		(contributor, index, array) => getContributorName(contributor, index, array, false),
-	);
+	const translators = getAllPubContributors(pubData, 'Translator').map(getContributorName);
 	const translatorEntry = translators.length ? { translator: translators } : {};
 
 	const collectionEditors = getAllPubContributors(pubData, 'Series Editor').map(
-		(contributor, index, array) => getContributorName(contributor, index, array, false),
+		getContributorName,
 	);
 	const collectionEditorEntry = collectionEditors.length
 		? { 'collection-editor': collectionEditors }
 		: {};
 
-	const chairs = getAllPubContributors(pubData, 'Chair').map((contributor, index, array) =>
-		getContributorName(contributor, index, array, false),
-	);
+	const chairs = getAllPubContributors(pubData, 'Chair').map(getContributorName);
 	const chairEntry = chairs.length ? { chair: chairs } : {};
 
 	const commonData = {
