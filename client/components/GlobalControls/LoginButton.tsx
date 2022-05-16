@@ -12,7 +12,13 @@ const LoginButton = (props: Props) => {
 	const { path, queryString } = locationData;
 	const redirectString = `?redirect=${path}${queryString.length > 1 ? queryString : ''}`;
 	const loginHref = `/login${redirectString}`;
-	return <GlobalControlsButton href={loginHref} mobileOrDesktop={{ text: 'Login or Signup' }} />;
+	return (
+		<GlobalControlsButton
+			href={loginHref}
+			desktop={{ text: 'Login or Signup' }}
+			mobile={{ text: 'Login' }}
+		/>
+	);
 };
 
 export default LoginButton;

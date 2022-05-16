@@ -23,7 +23,6 @@ const WrappedGlobalControls = (props: Props) => {
 					alignItems: 'center',
 					justifyContent: 'flex-end',
 					minHeight: '40px',
-					padding: '0px 20px',
 				}}
 			>
 				<GlobalControls {...restProps} />
