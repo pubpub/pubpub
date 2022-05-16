@@ -1,6 +1,6 @@
 export default (communityData, locationData, loginData, scopeData) => {
 	const cleanedData = { ...communityData };
-	const { canManageCommunity, canViewCommunity } = scopeData.activePermissions;
+	const { canManageCommunity, canViewCommunity, canEdit } = scopeData.activePermissions;
 	const availablePages = {};
 
 	cleanedData.collections = cleanedData.collections
@@ -12,7 +12,13 @@ export default (communityData, locationData, loginData, scopeData) => {
 			const hasCollectionMemberAccess = item.members.find((member) => {
 				return member.userId === loginData.id;
 			});
-			return canViewCommunity || item.isPublic || hasCollectionMemberAccess;
+			return (
+				canViewCommunity ||
+				canManageCommunity ||
+				canEdit ||
+				item.isPublic ||
+				hasCollectionMemberAccess
+			);
 		})
 		.map((collection) => {
 			if (!collection.pageId) {

@@ -319,24 +319,23 @@ getActivePermissions = async (
 		return currLevelIndex > prev ? currLevelIndex : prev;
 	}, defaultPermissionIndex);
 
-	const canAdminCommunity =
-		isSuperAdmin ||
-		scopeMemberData.find((member) => member.communityId && member.permissions === 'admin');
+	const scopeMember = (scopedMember: any, permissionLevel: string) => {
+		return (
+			!permissionLevels.includes(permissionLevel) ||
+			scopedMember.find(
+				(member) => member.communityId && member.permissions === permissionLevel,
+			)
+		);
+	};
 
-	const canManageCommunity =
-		isSuperAdmin ||
-		canAdminCommunity ||
-		scopeMemberData.find((member) => member.communityId && member.permissions === 'manage');
+	const member = scopeMember.bind(this, scopeMemberData);
 
-	const canEditCommunity =
-		isSuperAdmin ||
-		canAdminCommunity ||
-		scopeMemberData.find((member) => member.communityId && member.permissions === 'edit');
+	const canAdminCommunity = isSuperAdmin || member('admin');
+	const hasSuperPermissions = canAdminCommunity;
 
-	const canViewCommunity =
-		isSuperAdmin ||
-		canAdminCommunity ||
-		scopeMemberData.find((member) => member.communityId && member.permissions === 'view');
+	const canManageCommunity = hasSuperPermissions || member('manage');
+	const canEditCommunity = hasSuperPermissions || member('edit');
+	const canViewCommunity = hasSuperPermissions || member('view');
 
 	const booleanOr = (precedent, value) => {
 		/* Don't inherit value from null */
