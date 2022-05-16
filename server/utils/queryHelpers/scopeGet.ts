@@ -321,7 +321,7 @@ getActivePermissions = async (
 
 	const scopeMember = (scopedMember: any, permissionLevel: string) => {
 		return (
-			!permissionLevels.includes(permissionLevel) ||
+			permissionLevels.includes(permissionLevel) &&
 			scopedMember.find(
 				(member) => member.communityId && member.permissions === permissionLevel,
 			)
@@ -329,7 +329,6 @@ getActivePermissions = async (
 	};
 
 	const member = scopeMember.bind(this, scopeMemberData);
-
 	const canAdminCommunity = isSuperAdmin || member('admin');
 	const hasSuperPermissions = canAdminCommunity;
 

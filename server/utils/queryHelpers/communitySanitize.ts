@@ -1,6 +1,6 @@
 export default (communityData, locationData, loginData, scopeData) => {
 	const cleanedData = { ...communityData };
-	const { canManageCommunity, canViewCommunity, canEdit } = scopeData.activePermissions;
+	const { canManageCommunity, canViewCommunity, canEditCommunity } = scopeData.activePermissions;
 	const availablePages = {};
 
 	cleanedData.collections = cleanedData.collections
@@ -15,7 +15,7 @@ export default (communityData, locationData, loginData, scopeData) => {
 			return (
 				canViewCommunity ||
 				canManageCommunity ||
-				canEdit ||
+				canEditCommunity ||
 				item.isPublic ||
 				hasCollectionMemberAccess
 			);
