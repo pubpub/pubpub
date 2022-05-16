@@ -56,8 +56,12 @@ const dateTimestamps = (timestamps, intervalMs = 1000 * 60 * 15) => {
 };
 
 const dateReleases = (releases) => {
-	return releases.map((release) => {
-		return { type: 'release', date: new Date(release.createdAt), release };
+	return releases.map((release, index) => {
+		return {
+			type: 'release',
+			date: new Date(release.createdAt),
+			releaseNumber: index + 1,
+		};
 	});
 };
 
@@ -183,7 +187,7 @@ const PubHistoryViewer = (props: Props) => {
 			);
 		}
 		if (entry.type === 'release') {
-			const { release } = entry;
+			const { releaseNumber } = entry;
 			const dateString = formatDate(date, {
 				includeTime: true,
 				includeDate: false,
@@ -195,7 +199,7 @@ const PubHistoryViewer = (props: Props) => {
 					intent="success"
 					icon="document-share"
 					key={key}
-					href={pubUrl(communityData, pubData, { releaseNumber: release.historyKey + 1 })}
+					href={pubUrl(communityData, pubData, { releaseNumber })}
 					target="_blank"
 				/>
 			);
