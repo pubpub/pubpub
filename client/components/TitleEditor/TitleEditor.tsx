@@ -2,6 +2,7 @@ import React, { ClipboardEvent, useCallback, useEffect, useRef } from 'react';
 
 type Props = {
 	initialValue?: string;
+	onChange?: (value: string) => void;
 };
 
 const SUPPORTED_ACCENT_TAGS = new Set(['i', 'em', 'b', 'strong']);
@@ -54,8 +55,10 @@ function parseDom(html: string) {
 	return template;
 }
 
-export default function TitleEditor({ initialValue }: Props) {
+export default function TitleEditor(props: Props) {
+	const { initialValue, onChange } = props;
 	const node = useRef<HTMLDivElement>(null);
+	const init = useRef(false);
 	const onPaste = useCallback(
 		(event: ClipboardEvent) => {
 			event.preventDefault();
@@ -105,13 +108,18 @@ export default function TitleEditor({ initialValue }: Props) {
 		if (node.current?.textContent === '') {
 			node.current.innerHTML = '';
 		}
+		onChange?.(node.current?.innerHTML ?? '');
 	}, [node]);
 
 	useEffect(() => {
+		if (init.current) return;
 		if (node.current) {
-			node.current.innerHTML = initialValue ?? '';
+			let value = initialValue ?? '';
+			node.current.innerHTML = value;
+			init.current = true;
+			onChange?.(value);
 		}
-	}, [initialValue]);
+	}, [initialValue, onChange]);
 
 	return (
 		<div
