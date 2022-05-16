@@ -86,6 +86,7 @@ export { default as SkipLink } from './SkipLink/SkipLink';
 export { default as SubmissionEmail } from './SubmissionEmail/SubmissionEmail';
 export { default as SubscriptionButton } from './SubscriptionButton/SubscriptionButton';
 export { default as TabToShow } from './TabToShow/TabToShow';
+export { default as TitleEditor } from './TitleEditor/TitleEditor';
 export { default as Thread } from './Thread/Thread';
 export { default as ThreadInput } from './ThreadInput/ThreadInput';
 export { default as TimeAgo } from './TimeAgo/TimeAgo';
