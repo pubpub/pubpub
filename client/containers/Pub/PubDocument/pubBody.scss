@@ -86,9 +86,8 @@ $pub-body-font-size: if-is-export(14px, 20px);
 
 	li {
 		margin: 0;
-		> p:first-child {
+		> p {
 			margin: 0;
-			display: inline;
 		}
 	}
 
@@ -102,12 +101,22 @@ $pub-body-font-size: if-is-export(14px, 20px);
 
 	ul,
 	ol {
-		padding-left: 0;
+		padding-left: 1em;
 		margin: 0em 0em 1em;
-		list-style-position: inside;
 		ul,
 		ol {
 			margin-bottom: 0em;
+		}
+	}
+	// keep OL markers inside TD elements, esp. as digits increase
+	td ol {
+		padding-left: 0;
+		list-style-position: inside;
+		li p {
+			word-break: break-all;
+			&:first-child {
+				display: inline;
+			}
 		}
 	}
 	hr {
