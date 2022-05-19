@@ -25,6 +25,17 @@ export type DashboardMenuState = {
 	activeMode: null | ActiveDashboardMode;
 };
 
+const inferDashboardModeFromPath = (path: string): DashboardMode => {
+	const [_nothing, _dash, ...rest] = path.split('/');
+	assert(_nothing === '' && _dash === 'dash');
+	const next = rest.shift();
+	if (next === 'collection' || next === 'pub') {
+		rest.shift(); // This is the Collection or Pub slug
+		return rest.shift() as DashboardMode;
+	}
+	return next as DashboardMode;
+};
+
 const getActiveDashboardMode = (locationData: LocationData): null | ActiveDashboardMode => {
 	const {
 		path,
@@ -32,16 +43,15 @@ const getActiveDashboardMode = (locationData: LocationData): null | ActiveDashbo
 		params: { subMode, reviewNumber },
 	} = locationData;
 	if (isDashboard) {
-		const [_nothing, _dash, mode] = path.split('/');
-		assert(_nothing === '' && _dash === 'dash');
 		if (reviewNumber) {
 			return {
 				mode: 'reviews',
 				subMode: reviewNumber,
 			};
 		}
+		const mode = inferDashboardModeFromPath(path);
 		return {
-			mode: mode as DashboardMode,
+			mode,
 			subMode: subMode || null,
 		};
 	}
