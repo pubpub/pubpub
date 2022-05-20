@@ -110,7 +110,8 @@ export const generateCitationHtml = async (
 			default: pubCiteObject
 				.format('bibliography', {
 					format: 'html',
-					template: pubData.citationStyle,
+					template:
+						pubData.citationStyle === 'harvard' ? 'harvard1' : pubData.citationStyle,
 					lang: 'en-US',
 				})
 				.replace(/\n/gi, ''),
