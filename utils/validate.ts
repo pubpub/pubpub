@@ -1,5 +1,6 @@
-import { isEmptyDoc } from 'client/components/Editor';
 import { DocJson, Maybe } from 'types';
+import { isEmptyDoc } from 'components/Editor';
+import { isValidEmail } from 'utils/email';
 
 type AnyRecord = Record<string, any>;
 
@@ -35,6 +36,9 @@ export const isTruthyAnd = <T>(
 		return fallback;
 	};
 };
+
+export const isValidEmailList = (emailList: string[]) =>
+	emailList.every((emailAddress) => isValidEmail(emailAddress));
 
 export const validate = <Rec extends AnyRecord>(
 	rec: Rec,
