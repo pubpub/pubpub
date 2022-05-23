@@ -139,7 +139,13 @@ export default function TitleEditor(props: Props) {
 	};
 
 	if (typeof window === 'undefined' || isReadOnly) {
-		return <div {...sharedProps} dangerouslySetInnerHTML={{ __html: initialValue }} />;
+		return (
+			<div
+				{...sharedProps}
+				// eslint-disable-next-line react/no-danger
+				dangerouslySetInnerHTML={{ __html: initialValue }}
+			/>
+		);
 	}
 
 	return (
