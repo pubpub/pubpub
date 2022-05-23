@@ -9,7 +9,12 @@ import ScopePicker from './ScopePicker';
 
 require('./sideMenu.scss');
 
-const SideMenu = () => {
+type Props = {
+	className?: string;
+};
+
+const SideMenu = (props: Props) => {
+	const { className } = props;
 	const {
 		communityData,
 		dashboardMenu: { menuItems },
@@ -17,7 +22,7 @@ const SideMenu = () => {
 	const backgroundColor = Color(communityData.accentColorDark).fade(0.95).rgb().string();
 
 	return (
-		<div className="side-menu-component">
+		<div className={classNames('side-menu-component', className)}>
 			<style
 				/* eslint-disable-next-line react/no-danger */
 				dangerouslySetInnerHTML={{

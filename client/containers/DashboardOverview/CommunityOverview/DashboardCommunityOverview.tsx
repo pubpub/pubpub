@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
+import { Button } from '@blueprintjs/core';
 
-import { DashboardFrame } from 'components';
+import { DashboardFrame, MobileAware } from 'components';
 import { Collection, Pub, UserScopeVisit } from 'types';
-import { AnchorButton, Button } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
-import { useViewport } from 'client/utils/useViewport';
 import CreateCollectionDialog from '../../App/Breadcrumbs/CreateCollectionDialog';
 
 import CommunityItems from './CommunityItems';
@@ -57,28 +56,30 @@ const DashboardCommunityOverview = (props: Props) => {
 		},
 	} = usePageContext();
 
-	const { viewportWidth } = useViewport();
-	const isMobile = viewportWidth && viewportWidth! <= 750;
 	const [newCollectionIsOpen, setNewCollectionIsOpen] = useState(false);
 
-	const renderControls = () => {
+	const renderMobileOnlyControls = () => {
 		return (
-			<React.Fragment>
-				<Button icon="plus" onClick={() => setNewCollectionIsOpen(true)} outlined>
-					Create Collection
-				</Button>
-				<CreateCollectionDialog
-					isOpen={newCollectionIsOpen}
-					onClose={() => {
-						setNewCollectionIsOpen(false);
-					}}
-				/>
-			</React.Fragment>
+			<MobileAware
+				mobile={
+					<div>
+						<Button icon="plus" onClick={() => setNewCollectionIsOpen(true)} outlined>
+							Create Collection
+						</Button>
+						<CreateCollectionDialog
+							isOpen={newCollectionIsOpen}
+							onClose={() => {
+								setNewCollectionIsOpen(false);
+							}}
+						/>
+					</div>
+				}
+			/>
 		);
 	};
 
 	return (
-		<DashboardFrame title="Overview" controls={isMobile && canManage && renderControls()}>
+		<DashboardFrame title="Overview" controls={canManage && renderMobileOnlyControls()}>
 			<OverviewFrame
 				primary={
 					<OverviewSection title="Explore" icon="overview" descendTitle>
@@ -90,27 +91,25 @@ const DashboardCommunityOverview = (props: Props) => {
 					</OverviewSection>
 				}
 				secondary={
-					!isMobile && (
-						<>
-							{userScopeVisits.length > 0 && (
-								<OverviewSection title="recently viewed">
-									<RecentVisitList
-										userScopeVisits={userScopeVisits}
-										pubs={recentPubs}
-										collections={collections}
-									/>
-								</OverviewSection>
-							)}
-							{canManage && (
-								<OverviewSection title="Quick Actions" spaced>
-									<QuickActions actions={quickActions} />
-								</OverviewSection>
-							)}
-							<OverviewSection title="About">
-								<ScopeSummaryList scope={communityData} scopeKind="community" />
+					<>
+						{userScopeVisits.length > 0 && (
+							<OverviewSection title="recently viewed">
+								<RecentVisitList
+									userScopeVisits={userScopeVisits}
+									pubs={recentPubs}
+									collections={collections}
+								/>
 							</OverviewSection>
-						</>
-					)
+						)}
+						{canManage && (
+							<OverviewSection title="Quick Actions" spaced>
+								<QuickActions actions={quickActions} />
+							</OverviewSection>
+						)}
+						<OverviewSection title="About">
+							<ScopeSummaryList scope={communityData} scopeKind="community" />
+						</OverviewSection>
+					</>
 				}
 			/>
 		</DashboardFrame>

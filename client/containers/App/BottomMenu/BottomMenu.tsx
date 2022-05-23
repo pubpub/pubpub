@@ -10,9 +10,11 @@ require('./bottomMenu.scss');
 
 type Props = {
 	isMobile?: boolean;
+	className?: string;
 };
 
-const BottomMenu = ({ isMobile }: Props) => {
+const BottomMenu = (props: Props) => {
+	const { className, isMobile } = props;
 	const {
 		communityData,
 		dashboardMenu: { activeMode, menuItems },
@@ -21,7 +23,7 @@ const BottomMenu = ({ isMobile }: Props) => {
 	const backgroundColor = Color(communityData.accentColorDark).fade(0.95).rgb().string();
 
 	return (
-		<div className="bottom-menu-component">
+		<div className={classNames('bottom-menu-component', className)}>
 			<style
 				/* eslint-disable-next-line react/no-danger */
 				dangerouslySetInnerHTML={{

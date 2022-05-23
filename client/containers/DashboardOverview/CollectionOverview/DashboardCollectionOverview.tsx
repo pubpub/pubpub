@@ -12,7 +12,6 @@ import { Collection, CollectionPub, Maybe, DefinitelyHas, UserScopeVisit } from 
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
-import { useViewport } from 'client/utils/useViewport';
 
 import {
 	OverviewFrame,
@@ -268,9 +267,6 @@ const DashboardCollectionOverview = (props: Props) => {
 			? renderBanner('Submissions are now open for this collection!')
 			: null;
 
-	const { viewportWidth } = useViewport();
-	const isMobile = viewportWidth! <= 750;
-
 	return (
 		<DashboardFrame
 			banner={submissionBanner}
@@ -286,10 +282,7 @@ const DashboardCollectionOverview = (props: Props) => {
 				/>
 			}
 		>
-			<OverviewFrame
-				primary={renderPrimaryContent()}
-				secondary={!isMobile && renderSecondaryContent()}
-			/>
+			<OverviewFrame primary={renderPrimaryContent()} secondary={renderSecondaryContent()} />
 		</DashboardFrame>
 	);
 };
