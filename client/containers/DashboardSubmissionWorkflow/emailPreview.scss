@@ -1,12 +1,6 @@
+@import 'styles/mixins.scss';
+
 @import './shared.scss';
-
-$mobile-viewport-cutoff: 750px;
-
-@mixin mobile {
-	@media screen and (max-width: $mobile-viewport-cutoff) {
-		@content;
-	}
-}
 
 .email-preview-component {
 	@include box;

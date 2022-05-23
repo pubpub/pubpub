@@ -1,10 +1,4 @@
-$mobile-viewport-cutoff: 750px;
-
-@mixin mobile {
-	@media screen and (max-width: $mobile-viewport-cutoff) {
-		@content;
-	}
-}
+@import 'styles/mixins.scss';
 
 .member-permission-picker-component {
 	display: flex;

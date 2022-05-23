@@ -1,11 +1,5 @@
-@import '../../styles/variables.scss';
-$mobile-viewport-cutoff: 750px;
-
-@mixin mobile {
-	@media screen and (max-width: $mobile-viewport-cutoff) {
-		@content;
-	}
-}
+@import 'styles/variables.scss';
+@import 'styles/mixins.scss';
 
 .header-component {
 	background-size: cover;
@@ -128,7 +122,7 @@ $mobile-viewport-cutoff: 750px;
 	}
 }
 
-@media only screen and (max-width: $mobile-viewport-cutoff) {
+@include mobile {
 	.header-component {
 		.hide-on-mobile {
 			display: none !important;
