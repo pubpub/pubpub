@@ -65,7 +65,6 @@ const commonProps = {
 	role: 'textbox',
 	'aria-label': 'Edit Pub title',
 	tabIndex: 0,
-	contentEditable: true,
 };
 
 export default function TitleEditor(props: Props) {
@@ -110,6 +109,12 @@ export default function TitleEditor(props: Props) {
 			event.preventDefault();
 		} else if (event.key.toLowerCase() === 'u' && event.metaKey) {
 			event.preventDefault();
+		} else if (event.key.toLowerCase() === 'b' && event.metaKey) {
+			event.preventDefault();
+			document.execCommand('Bold', false);
+		} else if (event.key.toLowerCase() === 'i' && event.metaKey) {
+			event.preventDefault();
+			document.execCommand('Italic', false);
 		}
 	}, []);
 
@@ -142,6 +147,7 @@ export default function TitleEditor(props: Props) {
 		return (
 			<div
 				{...sharedProps}
+				contentEditable={!isReadOnly}
 				// eslint-disable-next-line react/no-danger
 				dangerouslySetInnerHTML={{ __html: initialValue }}
 			/>
@@ -152,6 +158,7 @@ export default function TitleEditor(props: Props) {
 		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 		<div
 			{...sharedProps}
+			contentEditable={true}
 			ref={node}
 			onKeyDown={onKeyDown}
 			onPaste={onPaste}
