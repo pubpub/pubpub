@@ -1,5 +1,3 @@
-@import 'styles/mixins.scss';
-
 .member-permission-picker-component {
 	display: flex;
 	button.picker-column {
@@ -54,7 +52,5 @@
 			font-size: 14px;
 			color: #555;
 		}
-	}
-	@include mobile {
 	}
 }
