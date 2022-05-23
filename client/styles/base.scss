@@ -16,13 +16,8 @@ body {
 	padding: 0;
 	width: 100vw;
 	overflow-x: hidden;
-	-ms-overflow-style: none; /* for Internet Explorer, Edge */
-	scrollbar-width: none; /* for Firefox */
-	overflow-y: scroll;
 }
-body::-webkit-scrollbar {
-	display: none;
-}
+
 a {
 	text-decoration: underline;
 	cursor: pointer;
