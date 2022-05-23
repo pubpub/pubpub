@@ -1,9 +1,11 @@
-import React, { ClipboardEvent, useCallback, useEffect, useRef } from 'react';
+import React, { ClipboardEvent, useCallback, useEffect, useRef, HTMLAttributes } from 'react';
 
 type Props = {
 	isReadOnly?: boolean;
 	initialValue?: string;
 	onChange?: (value: string) => void;
+	className?: string;
+	placeholder?: string;
 };
 
 const SUPPORTED_DECORATIONS = new Set(['i', 'em', 'b', 'strong']);
@@ -64,7 +66,7 @@ const sharedProps = {
 };
 
 export default function TitleEditor(props: Props) {
-	const { initialValue, onChange, isReadOnly = false } = props;
+	const { initialValue, onChange, isReadOnly = false, ...restProps } = props;
 	const node = useRef<HTMLDivElement>(null);
 	const init = useRef(false);
 	const onPaste = useCallback(
@@ -128,17 +130,23 @@ export default function TitleEditor(props: Props) {
 	}, [initialValue, onChange]);
 
 	if (typeof window === 'undefined' || isReadOnly) {
-		return <div {...sharedProps}>{initialValue}</div>;
+		return (
+			<div {...sharedProps} {...restProps}>
+				{initialValue}
+			</div>
+		);
 	}
 
 	return (
 		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 		<div
 			{...sharedProps}
+			{...restProps}
 			ref={node}
 			onKeyDown={onKeyDown}
 			onPaste={onPaste}
 			onInput={onInput}
+			data-placeholder={restProps.placeholder}
 		/>
 	);
 }

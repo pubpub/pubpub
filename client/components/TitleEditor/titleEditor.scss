@@ -1,0 +1,7 @@
+.title-editor-component {
+	&[contenteditable='true']:empty:not(:focus):before {
+		content: attr(data-placeholder);
+		color: grey;
+		font-style: italic;
+	}
+}
