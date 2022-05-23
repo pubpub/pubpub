@@ -28,7 +28,6 @@ export { default as FormattingBar } from './FormattingBar/FormattingBar';
 export { default as GlobalControls } from './GlobalControls';
 export { default as GridWrapper } from './GridWrapper/GridWrapper';
 export { default as Header } from './Header/Header';
-export { default as HeaderControls } from './HeaderControls';
 export { default as Icon, IconName } from './Icon/Icon';
 export { default as ImageCropper } from './ImageCropper/ImageCropper';
 export { default as ImageUpload } from './ImageUpload/ImageUpload';
