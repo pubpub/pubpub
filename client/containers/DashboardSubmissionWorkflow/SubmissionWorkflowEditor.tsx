@@ -4,11 +4,11 @@ import { Button, Checkbox, FormGroup, InputGroup, Label, TagInput } from '@bluep
 import { Collection } from 'types';
 import { LayoutSubmissionBannerSkeleton } from 'client/components/Layout';
 import { usePageContext } from 'utils/hooks';
-import { isValidEmailList } from 'utils/email';
 import { withValue } from 'utils/fp';
 import { collectionUrl } from 'utils/canonicalUrls';
 import {
 	RecordValidator,
+	isValidEmailList,
 	isNonEmptyDocJson,
 	isNonEmptyString,
 	isAlwaysValid,
