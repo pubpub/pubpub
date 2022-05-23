@@ -45,7 +45,7 @@ const BottomMenu = ({ isMobile }: Props) => {
 							rightIcon: 'caret-down',
 						}}
 						className="mode-menu"
-						positionFixed={true}
+						unstable_fixed
 					>
 						<div className="mode-dropdown-component">
 							{menuItems.map((item) => {

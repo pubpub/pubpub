@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
-import { Button } from '@blueprintjs/core';
 
-import { Icon, Popover } from 'components';
+import { Popover } from 'components';
 import { InitialNotificationsData, Maybe } from 'types';
 
 import { usePageContext } from 'utils/hooks';
@@ -42,8 +41,8 @@ const getNotificationsData = (
 
 const UserNotificationsPopover = (props: Props) => {
 	const { children } = props;
-	const userNotifications = useNotificationsState();
 	const { initialNotificationsData } = usePageContext();
+	const userNotifications = useNotificationsState();
 
 	const { hasNotifications, hasUnreadNotifications } = useMemo(
 		() => getNotificationsData(initialNotificationsData, userNotifications?.state),

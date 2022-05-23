@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { Classes } from '@blueprintjs/core';
 import * as RK from 'reakit/Menu';
 
-import { Placement, PopperOptions } from 'popper.js';
 import { MenuContext, MenuConfigContext } from './menuContexts';
 
 export type MenuProps = {
@@ -14,17 +13,8 @@ export type MenuProps = {
 	gutter?: number;
 	menuStyle?: object;
 	onDismiss?: () => unknown;
-	placement?: Placement;
-	positionFixed?: PopperOptions['positionFixed'];
-};
-
-const defaultProps = {
-	className: '',
-	gutter: undefined,
-	menuStyle: {},
-	onDismiss: () => {},
-	placement: undefined,
-	positionFixed: false,
+	placement?: RK.MenuProps['placement'];
+	unstable_fixed?: boolean;
 };
 
 const renderDisclosure = (disclosure, disclosureProps) => {
@@ -37,13 +27,14 @@ const renderDisclosure = (disclosure, disclosureProps) => {
 export const Menu = React.forwardRef((props: MenuProps, ref) => {
 	const {
 		'aria-label': ariaLabel,
-		children,
+		children = '',
 		className,
 		disclosure,
 		placement,
-		onDismiss,
+		onDismiss = () => {},
 		gutter,
-		menuStyle,
+		unstable_fixed = false,
+		menuStyle = {},
 		...restProps
 	} = props;
 
@@ -54,7 +45,7 @@ export const Menu = React.forwardRef((props: MenuProps, ref) => {
 		gutter,
 		unstable_preventOverflow: false,
 		unstable_flip: false,
-		unstable_fixed: props.positionFixed,
+		unstable_fixed,
 	});
 
 	const handleDismiss = () => {
@@ -93,5 +84,3 @@ export const Menu = React.forwardRef((props: MenuProps, ref) => {
 		</React.Fragment>
 	);
 });
-
-Menu.defaultProps = defaultProps;

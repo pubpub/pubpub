@@ -25,6 +25,7 @@ export { default as Editor } from './Editor';
 export { default as FileUploadButton } from './FileUploadButton/FileUploadButton';
 export { default as Footer } from './Footer/Footer';
 export { default as FormattingBar } from './FormattingBar/FormattingBar';
+export { default as GlobalControls } from './GlobalControls';
 export { default as GridWrapper } from './GridWrapper/GridWrapper';
 export { default as Header } from './Header/Header';
 export { default as HeaderControls } from './HeaderControls';
@@ -50,6 +51,7 @@ export {
 	MenuSelectItems,
 } from './Menu';
 export { default as MinimalEditor } from './MinimalEditor/MinimalEditor';
+export { default as MobileAware, MobileAwareRenderProps } from './MobileAware';
 export { default as NavBar } from './NavBar/NavBar';
 export { default as OrderPicker } from './OrderPicker/OrderPicker';
 export { default as Overlay } from './Overlay/Overlay';

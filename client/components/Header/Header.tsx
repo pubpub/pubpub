@@ -1,22 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import { Button, AnchorButton, Intent } from '@blueprintjs/core';
+import { AnchorButton, Intent } from '@blueprintjs/core';
 
-import {
-	GridWrapper,
-	Avatar,
-	ScopeDropdown,
-	MenuButton,
-	MenuItem,
-	UserNotificationsPopover,
-	Icon,
-	HeaderControls,
-} from 'components';
+import { CommunityHeroButton } from 'types';
+import { GridWrapper, GlobalControls } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getResizedUrl } from 'utils/images';
-import { apiFetch } from 'client/utils/apiFetch';
-import { CommunityHeroButton } from 'types';
-import { useViewport } from 'client/utils/useViewport';
 
 require('./header.scss');
 
@@ -31,29 +20,7 @@ const defaultProps = {
 type Props = OwnProps & typeof defaultProps;
 
 const Header = (props: Props) => {
-	const { locationData, communityData, loginData, scopeData } = usePageContext(
-		props.previewContext,
-	);
-	const [isLoading, setIsLoading] = useState(false);
-	const handleLogout = () => {
-		apiFetch('/api/logout').then(() => {
-			window.location.href = '/';
-		});
-	};
-	const { viewportWidth } = useViewport();
-	const isMobile = viewportWidth! <= 750;
-	const handleCreatePub = () => {
-		setIsLoading(true);
-		return apiFetch
-			.post('/api/pubs', { communityId: communityData.id })
-			.then((newPub) => {
-				window.location.href = `/pub/${newPub.slug}`;
-			})
-			.catch((err) => {
-				console.error(err);
-				setIsLoading(false);
-			});
-	};
+	const { locationData, communityData, loginData } = usePageContext(props.previewContext);
 
 	const calculateComponentClasses = (hideHero) => {
 		let dynamicComponentClasses = '';
@@ -72,9 +39,6 @@ const Header = (props: Props) => {
 		}
 		if ((!isBasePubPub && !textColorChange) || (!isBasePubPub && !isLanding)) {
 			dynamicComponentClasses += ' accent-color';
-		}
-		if (isBasePubPub && locationData.path === '/') {
-			dynamicComponentClasses += ' bp3-dark';
 		}
 		if (hideHero) {
 			return dynamicComponentClasses;
@@ -156,15 +120,11 @@ const Header = (props: Props) => {
 	const backgroundStyle = calculateBackgroundStyle(hideHero);
 
 	const loggedIn = !!loginData.slug;
-	const canManage = scopeData.activePermissions.canManageCommunity;
 	const isBasePubPub = locationData.isBasePubPub;
 
 	const resizedHeaderLogo = getResizedUrl(communityData.headerLogo, 'inside', undefined, 50);
 	const resizedHeroLogo = getResizedUrl(communityData.heroLogo, 'inside', undefined, 200);
 	const resizedHeroImage = getResizedUrl(communityData.heroImage, 'inside', 600);
-	const redirectString = `?redirect=${locationData.path}${
-		locationData.queryString.length > 1 ? locationData.queryString : ''
-	}`;
 	const heroPrimaryButton: Partial<CommunityHeroButton> = communityData.heroPrimaryButton || {};
 	const heroSecondaryButton: Partial<CommunityHeroButton> =
 		communityData.heroSecondaryButton || {};
@@ -197,7 +157,7 @@ const Header = (props: Props) => {
 							</a>
 						)}
 					</div>
-					<HeaderControls isBasePubPub={locationData.isBasePubPub} loggedIn={loggedIn} />
+					<GlobalControls isBasePubPub={locationData.isBasePubPub} loggedIn={loggedIn} />
 				</GridWrapper>
 			</div>
 			{!hideHero && (

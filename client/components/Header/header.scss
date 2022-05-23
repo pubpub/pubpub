@@ -54,35 +54,6 @@ $mobile-viewport-cutoff: 750px;
 					display: block;
 				}
 			}
-			.buttons-wrapper {
-				display: flex;
-				align-items: center;
-				position: relative;
-				left: 10px;
-				.header-dashboard-button {
-					.bp3-icon-caret-down {
-						color: inherit;
-					}
-				}
-				.bp3-button {
-					padding: 0px 10px;
-				}
-			}
-			.mobile-header-buttons {
-				display: flex;
-				align-items: center;
-				.bp3-button {
-					padding: 0px 5px;
-					width: 12px;
-					height: 12px;
-					.bp3-icon {
-						color: currentColor !important;
-					}
-					.avatar-component {
-						margin-left: 5px;
-					}
-				}
-			}
 		}
 	}
 	.hero {
