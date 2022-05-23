@@ -16,6 +16,7 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 			id: { default: null },
 			class: { default: null },
 			textAlign: { default: null },
+			rtl: { default: null },
 		},
 		parseDOM: [
 			{
@@ -25,6 +26,7 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 						id: (node as Element).getAttribute('id'),
 						class: (node as Element).getAttribute('class'),
 						textAlign: (node as Element).getAttribute('data-text-align'),
+						rtl: (node as Element).getAttribute('data-rtl'),
 					};
 				},
 			},
@@ -32,12 +34,14 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 		toDOM: (node) => {
 			const isEmpty = !node.content || (Array.isArray(node.content) && !node.content.length);
 			const children = isEmpty ? ['br'] : 0;
+			console.log(node);
 			return [
 				'p',
 				{
 					class: node.attrs.class,
 					...(node.attrs.id && { id: node.attrs.id }),
-					...(node.attrs.textAlign && { 'data-text-align': node.attrs.textAlign }),
+					...(node.attrs.textAlign && { 'data-text-align': 'hello world' }),
+					...(node.attrs.rtl && { 'data-rtl': node.attrs.rtl.toString() }),
 				},
 				children,
 			] as DOMOutputSpec;
