@@ -1,4 +1,7 @@
+@import 'styles/mixins.scss';
+
 .bottom-menu-component {
+	background: var(--community-accent-dark);
 	.side-title {
 		margin: 1em 16px;
 		padding-bottom: 1em;
@@ -128,6 +131,7 @@
 		}
 	}
 }
+
 .mode-menu {
 	left: 0 !important;
 	top: unset !important;
@@ -136,6 +140,8 @@
 	padding: 0px !important;
 	width: 100%;
 	.mode-dropdown-component {
+		background: var(--community-accent-dark-faded);
+		border-top: 2px solid var(--community-accent-dark);
 		a {
 			padding: 0px !important;
 			.menu {
@@ -161,5 +167,16 @@
 				}
 			}
 		}
+	}
+}
+
+@include mobile {
+	.scope-dropdown-component.in-dashboard {
+		background: var(--community-accent-dark-faded);
+	}
+	.scope-picker-menu {
+		border-top: 2px solid var(--community-accent-dark);
+		width: 100%;
+		padding: 0px !important;
 	}
 }

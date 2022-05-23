@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
+import Color from 'color';
 
 import {
 	Header,
@@ -14,7 +15,6 @@ import {
 import { Community } from 'types';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
-import { useViewport } from 'client/utils/useViewport';
 
 import SideMenu from './SideMenu';
 import Breadcrumbs from './Breadcrumbs';
@@ -33,9 +33,14 @@ type Props = {
 };
 
 const renderCssVariablesStyle = (community: Community) => {
+	const { accentColorDark } = community;
+	const accentColorDarkFaded = Color(accentColorDark).fade(0.95).rgb().string();
 	return (
 		<style type="text/css">
-			{`:root { --community-accent-dark: ${community.accentColorDark} }`}
+			{`:root { 
+				--community-accent-dark: ${accentColorDark};
+				--community-accent-dark-faded: ${accentColorDarkFaded};
+			}`}
 		</style>
 	);
 };

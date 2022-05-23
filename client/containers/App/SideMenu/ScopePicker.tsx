@@ -2,7 +2,6 @@ import React from 'react';
 import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 import { Icon, IconName, MenuButton, ScopeDropdown } from 'components';
-import Color from 'color';
 
 require('./scopePicker.scss');
 
@@ -25,7 +24,6 @@ const ScopePicker = (props: Props) => {
 
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
 	const pubSlug = locationData.params.pubSlug;
-	const backgroundColor = Color(communityData.accentColorDark).fade(0.95).rgb().string();
 
 	let currentScopeTitle = 'Community';
 	let icon: IconName = 'office';
@@ -72,17 +70,6 @@ const ScopePicker = (props: Props) => {
 
 	return (
 		<div className="scope-picker-component">
-			{isMobile && (
-				<style
-					/* eslint-disable-next-line react/no-danger */
-					dangerouslySetInnerHTML={{
-						__html: `
-						.scope-dropdown-component { background: ${backgroundColor}; }
-						.scope-menu { border-top: 2px solid ${communityData.accentColorDark} }
-					`,
-					}}
-				/>
-			)}
 			<MenuButton
 				aria-label={!isMobile ? 'Dashboard Menu' : 'Mobile Dash Menu'}
 				buttonContent={
@@ -99,7 +86,7 @@ const ScopePicker = (props: Props) => {
 					rightIcon: 'caret-down',
 				}}
 				placement={isMobile ? 'top-start' : 'bottom-start'}
-				className="scope-menu"
+				className="scope-picker-menu"
 			>
 				<ScopeDropdown isDashboard />
 			</MenuButton>
