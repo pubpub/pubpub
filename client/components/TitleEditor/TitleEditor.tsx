@@ -1,4 +1,7 @@
-import React, { ClipboardEvent, useCallback, useEffect, useRef, HTMLAttributes } from 'react';
+import classNames from 'classnames';
+import React, { ClipboardEvent, useCallback, useEffect, useRef } from 'react';
+
+require('./titleEditor.scss');
 
 type Props = {
 	isReadOnly?: boolean;
@@ -58,7 +61,7 @@ function parseDom(html: string) {
 	return template;
 }
 
-const sharedProps = {
+const commonProps = {
 	role: 'textbox',
 	'aria-label': 'Edit Pub title',
 	tabIndex: 0,
@@ -66,7 +69,7 @@ const sharedProps = {
 };
 
 export default function TitleEditor(props: Props) {
-	const { initialValue, onChange, isReadOnly = false, ...restProps } = props;
+	const { initialValue = '', onChange, isReadOnly = false, ...restProps } = props;
 	const node = useRef<HTMLDivElement>(null);
 	const init = useRef(false);
 	const onPaste = useCallback(
@@ -122,31 +125,31 @@ export default function TitleEditor(props: Props) {
 	useEffect(() => {
 		if (init.current) return;
 		if (node.current) {
-			const value = initialValue ?? '';
-			node.current.innerHTML = value;
+			node.current.innerHTML = initialValue;
 			init.current = true;
-			onChange?.(value);
+			onChange?.(initialValue);
 		}
 	}, [initialValue, onChange]);
 
+	const sharedProps = {
+		...commonProps,
+		...restProps,
+		className: classNames('title-editor-component', restProps.className),
+		'data-placeholder': restProps.placeholder,
+	};
+
 	if (typeof window === 'undefined' || isReadOnly) {
-		return (
-			<div {...sharedProps} {...restProps}>
-				{initialValue}
-			</div>
-		);
+		return <div {...sharedProps} dangerouslySetInnerHTML={{ __html: initialValue }} />;
 	}
 
 	return (
 		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 		<div
 			{...sharedProps}
-			{...restProps}
 			ref={node}
 			onKeyDown={onKeyDown}
 			onPaste={onPaste}
 			onInput={onInput}
-			data-placeholder={restProps.placeholder}
 		/>
 	);
 }
