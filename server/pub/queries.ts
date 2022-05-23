@@ -98,7 +98,7 @@ export const updatePub = (inputValues, updatePermissions, actorId) => {
 		filteredValues.slug = slugifyString(filteredValues.slug);
 	}
 	if (filteredValues.htmlTitle) {
-		filteredValues.title = striptags(filteredValues.htmlTitle);
+		filteredValues.title = striptags(filteredValues.htmlTitle).replace(/&nbsp;/gi, ' ');
 	}
 
 	return Pub.update(filteredValues, {
