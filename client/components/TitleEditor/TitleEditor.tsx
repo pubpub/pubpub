@@ -1,11 +1,12 @@
 import React, { ClipboardEvent, useCallback, useEffect, useRef } from 'react';
 
 type Props = {
+	isReadOnly?: boolean;
 	initialValue?: string;
 	onChange?: (value: string) => void;
 };
 
-const SUPPORTED_ACCENT_TAGS = new Set(['i', 'em', 'b', 'strong']);
+const SUPPORTED_DECORATIONS = new Set(['i', 'em', 'b', 'strong']);
 
 function isChildOf(descendant: Node, ancestor: Node) {
 	let node: Node | null = descendant;
@@ -23,7 +24,7 @@ function stripAttrs(element: Element) {
 }
 
 function sanitizeElement(element: Element) {
-	if (!SUPPORTED_ACCENT_TAGS.has(element.tagName.toLowerCase())) {
+	if (!SUPPORTED_DECORATIONS.has(element.tagName.toLowerCase())) {
 		const parent = element.parentNode!;
 		if (element.textContent !== null && element.textContent.length > 0) {
 			const textNode = document.createTextNode(element.textContent ?? '');
@@ -55,8 +56,15 @@ function parseDom(html: string) {
 	return template;
 }
 
+const sharedProps = {
+	role: 'textbox',
+	'aria-label': 'Edit Pub title',
+	tabIndex: 0,
+	contentEditable: true,
+};
+
 export default function TitleEditor(props: Props) {
-	const { initialValue, onChange } = props;
+	const { initialValue, onChange, isReadOnly = false } = props;
 	const node = useRef<HTMLDivElement>(null);
 	const init = useRef(false);
 	const onPaste = useCallback(
@@ -75,9 +83,7 @@ export default function TitleEditor(props: Props) {
 			// browsers and is the easist way to support undo/redo without
 			// implementing a fully-controlled editor
 			if ('execCommand' in document) {
-				if (document.execCommand('insertHTML', false, dom.innerHTML)) {
-					pasted = true;
-				}
+				pasted = document.execCommand('insertHTML', false, dom.innerHTML);
 			}
 			// execCommand is either unsupported or the 'insertHTML' command
 			// failed, so we'll need to insert the sanitized content manually.
@@ -109,25 +115,27 @@ export default function TitleEditor(props: Props) {
 			node.current.innerHTML = '';
 		}
 		onChange?.(node.current?.innerHTML ?? '');
-	}, [node]);
+	}, [node, onChange]);
 
 	useEffect(() => {
 		if (init.current) return;
 		if (node.current) {
-			let value = initialValue ?? '';
+			const value = initialValue ?? '';
 			node.current.innerHTML = value;
 			init.current = true;
 			onChange?.(value);
 		}
 	}, [initialValue, onChange]);
 
+	if (typeof window === 'undefined' || isReadOnly) {
+		return <div {...sharedProps}>{initialValue}</div>;
+	}
+
 	return (
+		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 		<div
+			{...sharedProps}
 			ref={node}
-			role="textbox"
-			aria-label="Edit Pub title"
-			tabIndex={0}
-			contentEditable
 			onKeyDown={onKeyDown}
 			onPaste={onPaste}
 			onInput={onInput}

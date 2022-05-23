@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import TitleEditor from './TitleEditor';
 
 storiesOf('components/TitleEditor', module).add('default', () => {
-	let [rendered, setRendered] = useState('');
+	const [rendered, setRendered] = useState('');
 	return (
 		<>
 			<TitleEditor
@@ -13,7 +13,10 @@ storiesOf('components/TitleEditor', module).add('default', () => {
 				onChange={setRendered}
 			/>
 			<strong>Rendered:</strong>
-			<div dangerouslySetInnerHTML={{ __html: rendered }}></div>
+			<div
+				// eslint-disable-next-line react/no-danger
+				dangerouslySetInnerHTML={{ __html: rendered }}
+			/>
 		</>
 	);
 });
