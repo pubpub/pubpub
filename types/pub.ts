@@ -66,7 +66,7 @@ export type Pub = {
 	id: string;
 	slug: string;
 	title: string;
-	htmlTitle: string;
+	htmlTitle: null | string;
 	description?: string;
 	avatar?: string;
 	headerStyle: 'white-blocks' | 'black-blocks' | 'dark' | 'light';
