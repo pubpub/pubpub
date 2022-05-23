@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import React, { ClipboardEvent, useCallback, useEffect, useRef } from 'react';
+import { useBeforeUnload } from 'react-use';
+import React, { ClipboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 require('./titleEditor.scss');
 
@@ -71,6 +72,14 @@ export default function TitleEditor(props: Props) {
 	const { initialValue = '', onChange, isReadOnly = false, ...restProps } = props;
 	const node = useRef<HTMLDivElement>(null);
 	const init = useRef(false);
+	const [focused, setFocused] = useState(false);
+	const sharedProps = {
+		...commonProps,
+		...restProps,
+		className: classNames('title-editor-component', restProps.className),
+		'data-placeholder': restProps.placeholder,
+	};
+
 	const onPaste = useCallback(
 		(event: ClipboardEvent) => {
 			event.preventDefault();
@@ -124,8 +133,16 @@ export default function TitleEditor(props: Props) {
 		if (node.current?.textContent === '') {
 			node.current.innerHTML = '';
 		}
+	}, [node]);
+
+	const onFocus = useCallback(() => {
+		setFocused(true);
+	}, []);
+
+	const onBlur = useCallback(() => {
 		onChange?.(node.current?.innerHTML ?? '');
-	}, [node, onChange]);
+		setFocused(false);
+	}, [onChange]);
 
 	useEffect(() => {
 		if (init.current) return;
@@ -136,12 +153,10 @@ export default function TitleEditor(props: Props) {
 		}
 	}, [initialValue, onChange]);
 
-	const sharedProps = {
-		...commonProps,
-		...restProps,
-		className: classNames('title-editor-component', restProps.className),
-		'data-placeholder': restProps.placeholder,
-	};
+	useBeforeUnload(
+		() => !isReadOnly && focused && node.current?.innerHTML !== initialValue,
+		'You have unsaved changes to this Pub. Are you sure you want to navigate away?',
+	);
 
 	if (typeof window === 'undefined' || isReadOnly) {
 		return (
@@ -163,6 +178,8 @@ export default function TitleEditor(props: Props) {
 			onKeyDown={onKeyDown}
 			onPaste={onPaste}
 			onInput={onInput}
+			onFocus={onFocus}
+			onBlur={onBlur}
 		/>
 	);
 }
