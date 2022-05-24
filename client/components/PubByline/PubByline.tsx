@@ -1,8 +1,9 @@
 import React from 'react';
 
-import Byline, { BylineProps } from 'components/Byline/Byline';
+import { BylineProps } from 'components/Byline/Byline';
 import { getAllPubContributors } from 'utils/contributors';
 import { Pub } from 'types';
+import WithinCommunityByline from '../WithinCommunityByline/WithinCommunityByline';
 
 type OwnProps = {
 	pubData: Pub;
@@ -21,8 +22,8 @@ type Props = OwnPubBylineProps & typeof defaultProps;
 
 const PubByline = (props: Props) => {
 	const { pubData, hideAuthors = false, hideContributors = false } = props;
-	const authors = getAllPubContributors(pubData, hideAuthors, hideContributors);
-	return <Byline {...props} contributors={authors} />;
+	const authors = getAllPubContributors(pubData, 'contributors', hideAuthors, hideContributors);
+	return <WithinCommunityByline {...props} contributors={authors} />;
 };
 PubByline.defaultProps = defaultProps;
 export default PubByline;
