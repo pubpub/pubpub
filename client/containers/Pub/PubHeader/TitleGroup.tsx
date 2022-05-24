@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { PubByline, DialogLauncher, PubAttributionDialog, TitleEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -58,6 +58,13 @@ const TitleGroup = (props: Props) => {
 		return null;
 	};
 
+	const onTitleEditorChange = useCallback(
+		(nextHtmlTitle: string, nextTitle: string) => {
+			updatePubData({ title: nextTitle, htmlTitle: nextHtmlTitle });
+		},
+		[updatePubData],
+	);
+
 	return (
 		<div className="title-group-component">
 			{featureFlags.htmlTitles ? (
@@ -65,7 +72,7 @@ const TitleGroup = (props: Props) => {
 					<TitleEditor
 						initialValue={htmlTitle ?? title}
 						isReadOnly={!canModify}
-						onChange={(text) => updatePubData({ htmlTitle: text })}
+						onChange={onTitleEditorChange}
 						placeholder="Add a Pub title"
 					/>
 				</h1>

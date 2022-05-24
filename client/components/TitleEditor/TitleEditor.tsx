@@ -2,12 +2,15 @@ import classNames from 'classnames';
 import { useBeforeUnload } from 'react-use';
 import React, { ClipboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 
+import { ClientOnly } from 'components';
+import striptags from 'striptags';
+
 require('./titleEditor.scss');
 
 type Props = {
 	isReadOnly?: boolean;
 	initialValue?: string;
-	onChange?: (value: string) => void;
+	onChange?: (html: string, text: string) => void;
 	className?: string;
 	placeholder?: string;
 };
@@ -140,7 +143,8 @@ export default function TitleEditor(props: Props) {
 	}, []);
 
 	const onBlur = useCallback(() => {
-		onChange?.(node.current?.innerHTML ?? '');
+		const html = node.current?.innerHTML ?? '';
+		onChange?.(html, striptags(html));
 		setFocused(false);
 	}, [onChange]);
 
@@ -149,7 +153,7 @@ export default function TitleEditor(props: Props) {
 		if (node.current) {
 			node.current.innerHTML = initialValue;
 			init.current = true;
-			onChange?.(initialValue);
+			onChange?.(initialValue, striptags(initialValue));
 		}
 	}, [initialValue, onChange]);
 
@@ -158,28 +162,32 @@ export default function TitleEditor(props: Props) {
 		'You have unsaved changes to this Pub. Are you sure you want to navigate away?',
 	);
 
-	if (typeof window === 'undefined' || isReadOnly) {
-		return (
-			<div
-				{...sharedProps}
-				contentEditable={!isReadOnly}
-				// eslint-disable-next-line react/no-danger
-				dangerouslySetInnerHTML={{ __html: initialValue }}
-			/>
-		);
-	}
-
-	return (
-		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
+	const serverOrReadonlyView = (
 		<div
 			{...sharedProps}
-			contentEditable={true}
-			ref={node}
-			onKeyDown={onKeyDown}
-			onPaste={onPaste}
-			onInput={onInput}
-			onFocus={onFocus}
-			onBlur={onBlur}
+			// We need to set contentEditable={true} during SSR, otherwise
+			// the hydrated editor will be unedtiable.
+			contentEditable={!isReadOnly}
+			// eslint-disable-next-line react/no-danger
+			dangerouslySetInnerHTML={{ __html: initialValue }}
 		/>
+	);
+
+	return isReadOnly ? (
+		serverOrReadonlyView
+	) : (
+		<ClientOnly fallback={serverOrReadonlyView}>
+			{/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+			<div
+				{...sharedProps}
+				contentEditable={true}
+				ref={node}
+				onKeyDown={onKeyDown}
+				onPaste={onPaste}
+				onInput={onInput}
+				onFocus={onFocus}
+				onBlur={onBlur}
+			/>
+		</ClientOnly>
 	);
 }
