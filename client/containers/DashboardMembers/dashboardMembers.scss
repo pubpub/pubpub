@@ -13,9 +13,6 @@
 		@include mobile {
 			margin-bottom: 2em;
 			margin-top: 1em;
-			&:last-of-type {
-				margin-bottom: 100px;
-			}
 		}
 		.add-member-controls {
 			.user-autocomplete-component {
