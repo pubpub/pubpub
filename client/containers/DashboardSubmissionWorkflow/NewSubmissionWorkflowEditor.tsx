@@ -20,7 +20,7 @@ const createEmptyWorkflow = (): EditableSubmissionWorkflow => {
 		acceptedText: getEmptyDoc(),
 		declinedText: getEmptyDoc(),
 		receivedEmailText: getEmptyDoc(),
-		targetEmailAddress: '',
+		targetEmailAddresses: [],
 		enabled: false,
 		requireAbstract: false,
 		requireDescription: false,
@@ -81,6 +81,7 @@ const NewSubmissionWorkflowEditor = (props: Props) => {
 								loading={isPersisting}
 								icon="tick"
 								intent="primary"
+								className="save-changes-button"
 							>
 								Finish creating workflow
 							</Button>

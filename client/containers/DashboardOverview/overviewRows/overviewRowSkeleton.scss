@@ -67,24 +67,17 @@ $mobile-viewport-cutoff: 750px;
 		}
 		.byline {
 			font-style: italic;
+			color: $dark-grey;
 			.byline-icon svg {
 				width: 11px;
 				height: auto;
 			}
 		}
-		.byline,
 		.summary-icons {
-			font-size: 14px;
-			@include mobile {
-				font-size: 12px;
-			}
-		}
-		.summary-icons {
+			color: $medium-grey;
 			display: flex;
 			align-items: center;
 			margin-top: 4px;
-			color: $medium-grey;
-
 			> .summary-icon-pair {
 				.bp3-icon {
 					@include status-colors;
@@ -99,6 +92,19 @@ $mobile-viewport-cutoff: 750px;
 					margin-right: 15px;
 				}
 			}
+		}
+		.byline,
+		.summary-icons {
+			font-size: 14px;
+			@include mobile {
+				font-size: 12px;
+			}
+		}
+	}
+	@include mobile {
+		padding: 10px 10px;
+		.center-container {
+			margin-left: 20px;
 		}
 	}
 }

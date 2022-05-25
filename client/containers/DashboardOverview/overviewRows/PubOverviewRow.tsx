@@ -2,8 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import { AnchorButton } from '@blueprintjs/core';
 
-import { PubByline } from 'components';
-import { DefinitelyHas, Pub as BasePub } from 'types';
+import { PubByline, PubTitle } from 'components';
+import { Collection, DefinitelyHas, Pub as BasePub } from 'types';
 import { pubUrl } from 'utils/canonicalUrls';
 import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
@@ -19,7 +19,7 @@ type Props = {
 	labels?: IconLabelPair[];
 	className?: string;
 	pub: Pub;
-	inCollection?: boolean;
+	inCollection?: Collection;
 };
 
 const PubOverviewRow = (props: Props) => {
@@ -47,13 +47,13 @@ const PubOverviewRow = (props: Props) => {
 	return (
 		<OverviewRowSkeleton
 			className={classNames('pub-overview-row-component', className)}
-			href={getDashUrl({ pubSlug: pub.slug })}
-			title={pub.title}
+			title={<PubTitle pubData={pub} />}
+			href={getDashUrl({ pubSlug: pub.slug, collectionSlug: inCollection?.slug })}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
 			details={renderLabelPairs(allLabels)}
 			leftIcon={leftIconElement || 'pubDoc'}
 			rightElement={rightElement}
-			darkenRightIcons={inCollection}
+			darkenRightIcons={!!inCollection}
 		/>
 	);
 };

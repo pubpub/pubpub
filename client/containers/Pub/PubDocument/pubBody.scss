@@ -7,10 +7,10 @@ $pub-body-font-size: if-is-export(14px, 20px);
 .pub-body-component .editor.ProseMirror,
 .pub-body-styles {
 	h1#abstract:first-child {
+		color: var(--community-accent-dark);
 		text-transform: uppercase;
 		font-size: 1em;
 		font-weight: 500;
-		// border-top: 1px solid #CCC;
 		padding-top: 1em;
 		& + p {
 			border-bottom: 1px solid #ccc;
@@ -109,6 +109,17 @@ $pub-body-font-size: if-is-export(14px, 20px);
 		ul,
 		ol {
 			margin-bottom: 0em;
+		}
+	}
+	// keep OL markers inside TD elements, esp. as digits increase
+	td ol {
+		padding-left: 0;
+		list-style-position: inside;
+		li p {
+			word-break: break-word;
+			&:first-child {
+				display: inline;
+			}
 		}
 	}
 	hr {
