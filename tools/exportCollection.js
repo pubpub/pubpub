@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 import fs from 'fs';
+import fetch from 'node-fetch';
 
 import { Collection, CollectionPub } from 'server/models';
 import { getBestDownloadUrl } from 'utils/pub/downloads';
 import { createLatestPubExports } from 'server/export/queries';
 import { getPubData } from 'server/rss/queries';
-import fetch from 'node-fetch';
+
 import { promptOkay } from './utils/prompt';
+
 /** Usage: npm run tools exportCollection -- --collectionId collectionId */
 const {
 	argv: { collectionId },
