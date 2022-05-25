@@ -1,7 +1,8 @@
 import React from 'react';
-import { usePageContext } from 'utils/hooks';
+import classNames from 'classnames';
 
 import { Icon, IconName } from 'components';
+import { usePageContext } from 'utils/hooks';
 
 require('./dashboardFrame.scss');
 
@@ -12,17 +13,19 @@ type Props = {
 	details?: React.ReactNode;
 	icon?: IconName;
 	title?: React.ReactNode;
+	banner?: React.ReactNode;
 };
 
 const DashboardFrame = (props: Props) => {
-	const { className, children, controls = null, details = null, icon, title } = props;
+	const { className, children, controls = null, details = null, icon, title, banner } = props;
 	const { scopeData } = usePageContext();
 	const {
 		elements: { activeTargetType },
 	} = scopeData;
 
 	return (
-		<div className={className}>
+		<div className={classNames('dashboard-frame-component', className)}>
+			{banner}
 			<div className="dashboard-content-header">
 				<div className="dashboard-header-left">
 					<div className="title">

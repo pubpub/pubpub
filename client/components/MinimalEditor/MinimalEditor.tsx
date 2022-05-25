@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import classNames from 'classnames';
+import { NodeSpec } from 'prosemirror-model';
 
+import { DocJson } from 'types';
 import Editor, { getTextFromDoc, EditorChangeObject, OnEditFn } from 'components/Editor';
 import { FormattingBarButtonData } from '../FormattingBar/types';
 
@@ -8,8 +10,12 @@ require('./minimalEditor.scss');
 
 type Props = {
 	constrainHeight?: boolean;
+	customNodes?: Record<string, NodeSpec>;
+	debounceEditsMs?: number;
 	focusOnLoad?: boolean;
+	noMinHeight?: boolean;
 	initialContent?: any;
+	isReadOnly?: boolean;
 	isTranslucent?: boolean;
 	onEdit?: OnEditFn;
 	onContent?: ({ text: string, content: any }) => unknown;
@@ -25,13 +31,17 @@ const defaultGetButtons = (buttons) => buttons.minimalButtonSet;
 
 const MinimalEditor = (props: Props) => {
 	const {
+		customNodes,
+		debounceEditsMs = 0,
 		initialContent,
 		constrainHeight = false,
+		noMinHeight = false,
 		onEdit,
 		onContent,
 		useFormattingBar = false,
 		focusOnLoad = false,
 		placeholder,
+		isReadOnly = false,
 		isTranslucent = false,
 		getButtons = defaultGetButtons,
 	} = props;
@@ -72,7 +82,7 @@ const MinimalEditor = (props: Props) => {
 			if (onContent) {
 				const [doc] = args;
 				onContent({
-					content: doc.toJSON(),
+					content: doc.toJSON() as DocJson,
 					text: getTextFromDoc(doc),
 				});
 			}
@@ -87,6 +97,7 @@ const MinimalEditor = (props: Props) => {
 				constrainHeight && 'constrain-height',
 				isTranslucent && 'translucent',
 				useFormattingBar && 'has-formatting-bar',
+				noMinHeight && 'no-min-height',
 			)}
 		>
 			{useFormattingBar && FormattingBar && (
@@ -104,6 +115,9 @@ const MinimalEditor = (props: Props) => {
 			<div className="editor-wrapper" onClick={handleWrapperClick}>
 				<div ref={controlsContainerRef} />
 				<Editor
+					isReadOnly={isReadOnly}
+					customNodes={customNodes}
+					debounceEditsMs={debounceEditsMs}
 					initialContent={initialContent}
 					placeholder={placeholder}
 					onScrollToSelection={handleScrollToSelection}

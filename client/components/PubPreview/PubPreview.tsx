@@ -1,15 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
-import dateFormat from 'dateformat';
 
 import { Pub, Community } from 'types';
 import { getResizedUrl } from 'utils/images';
-import { getPubPublishedDate } from 'utils/pub/pubDates';
+import { getPubPublishedDateString } from 'utils/pub/pubDates';
 import { isPubPublic } from 'utils/pub/permissions';
 import { getAllPubContributors } from 'utils/contributors';
 import { communityUrl, bestPubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
-import { Icon, PreviewImage } from 'components';
+import { Icon, PreviewImage, PubTitle } from 'components';
 
 import ExpandButton from './ExpandButton';
 import ManyAuthorsByline from './ManyAuthorsByline';
@@ -60,7 +59,7 @@ const PubPreview = (props: Props) => {
 	const contentRef = useRef<HTMLDivElement>(null);
 	const resizedHeaderLogo =
 		communityData && getResizedUrl(communityData.headerLogo, 'inside', 125, 35);
-	const publishedDate = getPubPublishedDate(pubData);
+	const publishedDateString = getPubPublishedDateString(pubData);
 	const isPrivate = !isPubPublic(pubData, scopeData);
 	const showBannerImage = ['large', 'medium'].includes(size);
 	const showUpperByline = !hideByline && ['minimal'].includes(size);
@@ -98,7 +97,7 @@ const PubPreview = (props: Props) => {
 			<div className="preview-image-wrapper">
 				{showBannerImage && (
 					<a href={pubLink} title={pubData.title}>
-						<PreviewImage src={pubData.avatar} title={pubData.title} />
+						<PreviewImage src={pubData.avatar} id={pubData.id} />
 					</a>
 				)}
 			</div>
@@ -128,7 +127,7 @@ const PubPreview = (props: Props) => {
 						)}
 						<a href={pubLink} title={pubData.title}>
 							<h3 className="pub-title">
-								{pubData.title}
+								<PubTitle pubData={pubData} />
 								{isPrivate && <Icon className="lock-icon" icon="lock2" />}
 							</h3>
 						</a>
@@ -138,7 +137,7 @@ const PubPreview = (props: Props) => {
 
 					{showContributors && (
 						<ContributorAvatars
-							attributions={getAllPubContributors(pubData)}
+							attributions={getAllPubContributors(pubData, 'contributors')}
 							truncateAt={6}
 							className="contributor-avatars"
 						/>
@@ -146,10 +145,8 @@ const PubPreview = (props: Props) => {
 
 					{showDates && (
 						<div className="date-details">
-							{publishedDate ? (
-								<span className="date">
-									Published: {dateFormat(publishedDate, 'mmm dd, yyyy')}
-								</span>
+							{publishedDateString ? (
+								<span className="date">Published: {publishedDateString}</span>
 							) : (
 								<span className="date">Unpublished</span>
 							)}

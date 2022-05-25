@@ -1,24 +1,25 @@
 import React, { useEffect, useRef } from 'react';
-import Popper from 'popper.js';
+import { createPopper } from '@popperjs/core';
 
 import { ClickToCopyButton } from 'components';
 import { getLowestAncestorWithId } from 'client/utils/dom';
 import { usePageContext } from 'utils/hooks';
+import { pubUrl } from 'utils/canonicalUrls';
 
-import { usePubData } from '../../pubHooks';
+import { usePubContext } from '../../pubHooks';
 
-export type HeaderPopoverProps = {
-	locationData: any;
-	element: any;
-	mainContentRef: any;
+type Props = {
+	element: Element;
+	mainContentRef: React.MutableRefObject<null | HTMLDivElement>;
 };
 
-const LinkPopover = (props: HeaderPopoverProps) => {
-	const { element, mainContentRef, locationData } = props;
+const LinkPopover = (props: Props) => {
+	const { element, mainContentRef } = props;
 	const parent = getLowestAncestorWithId(element);
 	const popoverRef = useRef<null | HTMLDivElement>(null);
-	const pubData = usePubData();
+	const { pubData, pubBodyState } = usePubContext();
 	const {
+		communityData,
 		scopeData: {
 			activePermissions: { canManage },
 		},
@@ -27,7 +28,7 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 	useEffect(() => {
 		const popover = popoverRef.current;
 		if (parent && popover) {
-			const popperObject = new Popper(parent, popover, {
+			const popperObject = createPopper(parent, popover, {
 				placement: parent.matches('h1, h2, h3, h4, h5, h6') ? 'left' : 'left-start',
 			});
 
@@ -42,7 +43,7 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 	const unstableLink = Boolean(parent && /^r[0-9]*$/.test(parent.id));
 	const isLatestRelease = pubData.releaseNumber === pubData.releases.length;
 	const managersEnableLinksPrompt =
-		pubData.isReadOnly && isLatestRelease && unstableLink && canManage
+		pubBodyState.isReadOnly && isLatestRelease && unstableLink && canManage
 			? 'You must create a new Release to link to this block.'
 			: '';
 
@@ -56,7 +57,7 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 				className="click-to-copy"
 			>
 				<ClickToCopyButton
-					copyString={`https://${locationData.hostname}${locationData.path}#${parent?.id}`}
+					copyString={pubUrl(communityData, pubData, { hash: parent?.id })}
 					beforeCopyPrompt={managersEnableLinksPrompt}
 					disabled={unstableLink}
 				/>

@@ -1,6 +1,8 @@
 import React from 'react';
+import slowDown from 'express-slow-down';
 
 import { getPubPageContextTitle } from 'utils/pubPageTitle';
+import { getPrimaryCollection } from 'utils/collections/primary';
 import { getPdfDownloadUrl, getTextAbstract, getGoogleScholarNotes } from 'utils/pub/metadata';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import Html from 'server/Html';
@@ -31,6 +33,9 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 		loginData: { id: userId },
 	} = initialData;
 	createUserScopeVisit({ userId, communityId, pubId: pubData.id });
+	const { collectionPubs } = pubData;
+	const primaryCollection = collectionPubs && getPrimaryCollection(collectionPubs);
+	const collectionAttributions = primaryCollection?.attributions ?? [];
 	return renderToNodeStream(
 		res,
 		<Html
@@ -39,7 +44,7 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 			viewData={{ pubData }}
 			customScripts={customScripts}
 			headerComponents={generateMetaComponents({
-				attributions: pubData.attributions,
+				attributions: [...pubData.attributions, ...collectionAttributions],
 				collection: chooseCollectionForPub(pubData, initialData.locationData),
 				contextTitle: getPubPageContextTitle(pubData, initialData.communityData),
 				description: pubData.description,
@@ -73,6 +78,7 @@ const getEnrichedPubData = async ({
 		slug: pubSlug,
 		initialData,
 		releaseNumber,
+		getSubmissions: true,
 		getDraft: true,
 		getDiscussions: true,
 	});
@@ -111,7 +117,14 @@ const getEnrichedPubData = async ({
 	};
 };
 
-app.get('/pub/:pubSlug/release/:releaseNumber', async (req, res, next) => {
+const speedLimiter = slowDown({
+	windowMs: 60000, // 1 minute for requests to be kept in memory. value of 60000ms is default but expressed here for clarity
+	delayAfter: 60, // allow 60 requests per minute, then...
+	delayMs: 100, // 60th request has a 100ms delay, 7th has a 200ms delay, 8th gets 300ms, etc.
+	maxDelay: 20000, // max time of request delay will be 20secs
+});
+
+app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
@@ -136,14 +149,14 @@ app.get('/pub/:pubSlug/release/:releaseNumber', async (req, res, next) => {
 	}
 });
 
-app.get('/pub/:pubSlug/release-id/:releaseId', async (req, res, next) => {
+app.get('/pub/:pubSlug/release-id/:releaseId', speedLimiter, async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
 	try {
 		const initialData = await getInitialData(req);
 		const { pubSlug, releaseId } = req.params;
-		const pub = await getPub(pubSlug, initialData.communityData.id);
+		const pub = await getPub({ slug: pubSlug, communityId: initialData.communityData.id });
 		const releaseIndex = pub.releases.findIndex((release) => release.id === releaseId);
 		if (releaseIndex !== -1) {
 			const releaseNumber = 1 + releaseIndex;
@@ -162,7 +175,10 @@ app.get('/pub/:pubSlug/discussion-id/:discussionId', async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req);
 		const { pubSlug, discussionId } = req.params;
-		const pub = await getPub(pubSlug, initialData.communityData.id, { getDiscussions: true });
+		const pub = await getPub(
+			{ slug: pubSlug, communityId: initialData.communityData.id },
+			{ getDiscussions: true },
+		);
 		const discussion = pub.discussions.find((disc) => disc.id === discussionId);
 		if (discussion) {
 			const isDiscussionOnDraft = discussion.visibility.access !== 'public';
@@ -178,41 +194,44 @@ app.get('/pub/:pubSlug/discussion-id/:discussionId', async (req, res, next) => {
 	}
 });
 
-app.get(['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'], async (req, res, next) => {
-	if (!hostIsValid(req, 'community')) {
-		return next();
-	}
-	try {
-		const initialData = await getInitialData(req);
-		const { historyKey: historyKeyString, pubSlug } = req.params;
-		const { canViewDraft, canView } = initialData.scopeData.activePermissions;
-		const hasHistoryKey = historyKeyString !== undefined;
-		const historyKey = parseInt(historyKeyString, 10);
-		const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
-
-		if (isHistoryKeyInvalid) {
-			throw new NotFoundError();
+app.get(
+	['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'],
+	speedLimiter,
+	async (req, res, next) => {
+		if (!hostIsValid(req, 'community')) {
+			return next();
 		}
+		try {
+			const initialData = await getInitialData(req);
+			const { historyKey: historyKeyString, pubSlug } = req.params;
+			const { canViewDraft, canView } = initialData.scopeData.activePermissions;
+			const hasHistoryKey = historyKeyString !== undefined;
+			const historyKey = parseInt(historyKeyString, 10);
+			const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
 
-		if (!canViewDraft && !canView) {
-			throw new NotFoundError();
+			if (isHistoryKeyInvalid) {
+				throw new NotFoundError();
+			}
+
+			if (!canViewDraft && !canView) {
+				throw new NotFoundError();
+			}
+
+			const pubData = await Promise.all([
+				getEnrichedPubData({
+					pubSlug,
+					initialData,
+					historyKey: hasHistoryKey ? historyKey : null,
+				}),
+				getMembers(initialData),
+			]).then(([enrichedPubData, membersData]) => ({
+				...enrichedPubData,
+				membersData,
+			}));
+			const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
+			return renderPubDocument(res, pubData, initialData, customScripts);
+		} catch (err) {
+			return handleErrors(req, res, next)(err);
 		}
-
-		const pubData = await Promise.all([
-			getEnrichedPubData({
-				pubSlug,
-				initialData,
-				historyKey: hasHistoryKey ? historyKey : null,
-			}),
-			getMembers(initialData),
-		]).then(([enrichedPubData, membersData]) => ({
-			...enrichedPubData,
-			membersData,
-		}));
-		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-
-		return renderPubDocument(res, pubData, initialData, customScripts);
-	} catch (err) {
-		return handleErrors(req, res, next)(err);
-	}
-});
+	},
+);

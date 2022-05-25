@@ -6,11 +6,36 @@ const mg = mailgun.client({
 	key: process.env.MAILGUN_API_KEY!,
 });
 
+type From = { name: string; address: string };
+type Body = { text: string } | { html: string };
+
+type SendEmailOptions = {
+	from?: From;
+	to: string[];
+	subject: string;
+} & Body;
+
+const defaultFrom: From = {
+	name: 'PubPub Team',
+	address: 'hello@pubpub.org',
+};
+
+export const sendEmail = (options: SendEmailOptions) => {
+	const { from = defaultFrom, to, subject } = options;
+	const body = 'text' in options ? { text: options.text } : { html: options.html };
+	return mg.messages.create('mg.pubpub.org', {
+		from: `${from.name} <${from.address}>`,
+		to,
+		subject,
+		...body,
+	});
+};
+
 export const sendPasswordResetEmail = ({ toEmail, resetUrl }) => {
 	// TODO: We should probably indicate the community somewhere.
 	// e.g. 'We've received a request to reset your PubPub account on Responsive Science.'
 	return mg.messages.create('mg.pubpub.org', {
-		from: 'PubPub Team <hello@pubpub.org>',
+		from: 'PubPub Team <hello@mg.pubpub.org>',
 		to: [toEmail],
 		subject: 'Password Reset · PubPub',
 		text: stripIndent(`
@@ -21,5 +46,6 @@ export const sendPasswordResetEmail = ({ toEmail, resetUrl }) => {
 			Sincerely,
 			PubPub Support
 		`),
+		'h:Reply-To': 'hello@pubpub.org',
 	});
 };

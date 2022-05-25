@@ -1,7 +1,10 @@
+import { SubmissionStatus } from 'types';
+
 export type PubsQueryOrderingField =
 	| 'collectionRank'
 	| 'publishDate'
 	| 'updatedDate'
+	| 'submittedDate'
 	| 'creationDate'
 	| 'title';
 
@@ -20,6 +23,7 @@ export type PubsQuery = {
 	scopedCollectionId?: string;
 	withinPubIds?: null | string[];
 	term?: string;
+	submissionStatuses?: null | SubmissionStatus[];
 };
 
 export type PubEdgeIncludesOptions = {
@@ -40,4 +44,5 @@ export type PubGetOptions = {
 	getDiscussions?: boolean;
 	getReviews?: boolean;
 	getEdgesOptions?: PubEdgeIncludesOptions;
+	getSubmissions?: boolean;
 };

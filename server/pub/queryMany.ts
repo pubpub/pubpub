@@ -1,9 +1,10 @@
 import { QueryTypes, Op } from 'sequelize';
 import { QueryBuilder } from 'knex';
 
+import * as types from 'types';
 import { knex, sequelize, Pub } from 'server/models';
-import { buildPubOptions, sanitizePub, SanitizedPubData } from 'server/utils/queryHelpers';
-import { InitialData, PubsQuery, PubGetOptions } from 'types';
+import { buildPubOptions, sanitizePub } from 'server/utils/queryHelpers';
+import { InitialData, PubsQuery, PubGetOptions, SanitizedPubData } from 'types';
 
 const defaultColumns = {
 	pubId: 'Pubs.id',
@@ -16,7 +17,7 @@ const defaultColumns = {
 };
 
 const createColumns = (query: PubsQuery) => {
-	const { scopedCollectionId, term } = query;
+	const { scopedCollectionId, term, ordering } = query;
 	const collectionRank = scopedCollectionId
 		? knex.raw('(array_agg("scopedCollectionPub"."rank"))[1]')
 		: knex.raw('(array_agg("CollectionPubs"."rank"))[1]');
@@ -28,11 +29,15 @@ const createColumns = (query: PubsQuery) => {
 	const hasReviews =
 		typeof query.hasReviews === 'boolean' &&
 		knex.raw('array_remove(array_agg("ReviewNews"."id"), null) != Array[]::uuid[]');
+	const submittedDate =
+		ordering?.field === 'submittedDate' &&
+		knex.raw('(array_agg("Submissions"."submittedAt"))[1]');
 	return {
 		...defaultColumns,
 		collectionRank,
 		...(authorNames && { authorNames }),
 		...(hasReviews && { hasReviews }),
+		...(submittedDate && { submittedDate }),
 	};
 };
 
@@ -50,7 +55,7 @@ const createInnerWhereClause = (query: PubsQuery) => {
 };
 
 const createJoins = (query: PubsQuery) => {
-	const { scopedCollectionId, term, hasReviews } = query;
+	const { scopedCollectionId, term, hasReviews, submissionStatuses, ordering } = query;
 	return (builder: QueryBuilder) => {
 		if (scopedCollectionId) {
 			builder.innerJoin(
@@ -66,6 +71,15 @@ const createJoins = (query: PubsQuery) => {
 		builder.leftOuterJoin('Drafts', 'Pubs.draftId', 'Drafts.id');
 		if (typeof hasReviews === 'boolean') {
 			builder.leftOuterJoin('ReviewNews', 'Pubs.id', 'ReviewNews.pubId');
+		}
+		if (submissionStatuses || ordering?.field === 'submittedDate') {
+			const joinOnStatuses = submissionStatuses && {
+				'Submissions.status': knex.raw('some(?::text[])', [submissionStatuses]),
+			};
+			builder.innerJoin('Submissions', {
+				'Submissions.pubId': 'Pubs.id',
+				...joinOnStatuses,
+			});
 		}
 		if (term) {
 			builder.leftOuterJoin('PubAttributions', 'Pubs.id', 'PubAttributions.pubId');
@@ -173,8 +187,11 @@ export const queryPubIds = async (query: PubsQuery): Promise<string[]> => {
 	return results.map((r) => r.pubId);
 };
 
-export const getPubsById = (pubIds: string[], options: PubGetOptions = {}) => {
-	const pubsPromise = Pub.findAll({
+export const getPubsById = <T extends types.Pub = types.Pub>(
+	pubIds: string[],
+	options: PubGetOptions = {},
+) => {
+	const pubsPromise: Promise<types.SequelizeModel<T>[]> = Pub.findAll({
 		where: { id: { [Op.in]: pubIds } },
 		...buildPubOptions({ ...options, getMembers: true, getDraft: true }),
 	}).then((unsortedPubs) => sortPubsByListOfIds(unsortedPubs, pubIds));

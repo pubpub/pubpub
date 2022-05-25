@@ -9,8 +9,6 @@ import { getPrimaryCollection } from 'utils/collections/primary';
 import { renderJournalCitationForCitations } from 'utils/citations';
 import { getAllPubContributors } from 'utils/contributors';
 
-import { SanitizedPubData } from '../queryHelpers';
-
 const getDatePartsObject = (date) => ({
 	'date-parts': [date.getFullYear(), date.getMonth() + 1, date.getDate()],
 });
@@ -41,26 +39,55 @@ const getCollectionLevelData = (collection) => {
 	};
 };
 
+const getContributorName = (attribution: types.Attribution, index, arr, hideNonAuthors = false) =>
+	(types.isCollectionAttribution(attribution) || types.isPubAttribution(attribution)) &&
+	(hideNonAuthors ? attribution.isAuthor : true) &&
+	attribution.user
+		? { given: attribution.user.firstName, family: attribution.user.lastName }
+		: {};
+
 export const generateCitationHtml = async (
-	pubData: SanitizedPubData,
+	pubData: types.SanitizedPubData,
 	communityData: types.Community,
 ) => {
 	// TODO: We need to set the updated times properly, which are likely stored in firebase.
 	const pubIssuedDate = getPubPublishedDate(pubData);
 	const pubLink = pubUrl(communityData, pubData);
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
-	const authors = getAllPubContributors(pubData).map(({ user }) => {
-		return {
-			given: user.firstName,
-			family: user.lastName,
-		};
-	});
+	const authors = getAllPubContributors(pubData, 'author').map((contributor, index, array) =>
+		getContributorName(contributor, index, array, true),
+	);
 	const authorEntry = authors.length ? { author: authors } : {};
+
+	const editors = getAllPubContributors(pubData, 'editor').map(getContributorName);
+	const editorEntry = editors.length ? { editor: editors } : {};
+
+	const illustrators = getAllPubContributors(pubData, 'illustrator').map(getContributorName);
+	const illustratorEntry = illustrators.length ? { illustrator: illustrators } : {};
+
+	const translators = getAllPubContributors(pubData, 'Translator').map(getContributorName);
+	const translatorEntry = translators.length ? { translator: translators } : {};
+
+	const collectionEditors = getAllPubContributors(pubData, 'Series Editor').map(
+		getContributorName,
+	);
+	const collectionEditorEntry = collectionEditors.length
+		? { 'collection-editor': collectionEditors }
+		: {};
+
+	const chairs = getAllPubContributors(pubData, 'Chair').map(getContributorName);
+	const chairEntry = chairs.length ? { chair: chairs } : {};
+
 	const commonData = {
 		// @ts-expect-error ts-migrate(2783) FIXME: 'type' is specified more than once, so this usage ... Remove this comment to see the full error message
 		type: 'article-journal',
 		title: pubData.title,
 		...authorEntry,
+		...editorEntry,
+		...illustratorEntry,
+		...collectionEditorEntry,
+		...chairEntry,
+		...translatorEntry,
 		...renderJournalCitationForCitations(
 			primaryCollection?.kind,
 			communityData.citeAs,
@@ -81,28 +108,23 @@ export const generateCitationHtml = async (
 	return {
 		pub: {
 			default: pubCiteObject
-				.get({
-					format: 'string',
-					type: 'html',
-					style: `citation-${pubData.citationStyle}`,
+				.format('bibliography', {
+					format: 'html',
+					template:
+						pubData.citationStyle === 'harvard' ? 'harvard1' : pubData.citationStyle,
 					lang: 'en-US',
 				})
 				.replace(/\n/gi, ''),
 			apa: pubCiteObject
-				.get({ format: 'string', type: 'html', style: 'citation-apa', lang: 'en-US' })
+				.format('bibliography', { format: 'html', template: 'apa', lang: 'en-US' })
 				.replace(/\n/gi, ''),
 			harvard: pubCiteObject
-				.get({ format: 'string', type: 'html', style: 'citation-harvard', lang: 'en-US' })
+				.format('bibliography', { format: 'html', template: 'harvard1', lang: 'en-US' })
 				.replace(/\n/gi, ''),
 			vancouver: pubCiteObject
-				.get({ format: 'string', type: 'html', style: 'citation-vancouver', lang: 'en-US' })
+				.format('bibliography', { format: 'html', template: 'vancouver', lang: 'en-US' })
 				.replace(/\n/gi, ''),
-			bibtex: pubCiteObject.get({
-				format: 'string',
-				type: 'html',
-				style: 'bibtex',
-				lang: 'en-US',
-			}),
+			bibtex: pubCiteObject.format('bibtex'),
 		},
 	};
 };

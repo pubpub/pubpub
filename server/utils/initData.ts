@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 
-import { isProd, isDuqDuq, getAppCommit } from 'utils/environment';
 import * as types from 'types';
+import { isProd, isDuqDuq, isQubQub, getAppCommit } from 'utils/environment';
 import { getFeatureFlagsForUserAndCommunity } from 'server/featureFlag/queries';
 import { UserNotification } from 'server/models';
 
@@ -46,9 +46,11 @@ export const getInitialData = async (req, isDashboard = false): Promise<types.In
 		params: req.params,
 		query: req.query,
 		queryString: req.query ? `?${queryString.stringify(req.query)}` : '',
+		isDashboard,
 		isBasePubPub: hostname === 'www.pubpub.org',
 		isProd: isProd(),
 		isDuqDuq: isDuqDuq(),
+		isQubQub: isQubQub(),
 		appCommit: getAppCommit(),
 	};
 

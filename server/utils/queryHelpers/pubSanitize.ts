@@ -1,33 +1,9 @@
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
-import {
-	Collection,
-	CollectionPub,
-	DefinitelyHas,
-	Discussion,
-	Pub,
-	PubAttribution,
-	Release,
-} from 'types';
+import { Discussion, SanitizedPubData } from 'types';
 
 import sanitizeDiscussions from './discussionsSanitize';
 import sanitizeReviews from './reviewsSanitize';
 import { sanitizePubEdges } from './sanitizePubEdge';
-
-type CollectionPubWithAttributions = CollectionPub & {
-	collection: DefinitelyHas<Collection, 'attributions'>;
-};
-
-export type SanitizedPubData = Pub & {
-	viewHash: string | null;
-	editHash: string | null;
-	attributions: PubAttribution[];
-	discussions: Discussion[];
-	collectionPubs: CollectionPubWithAttributions[];
-	isReadOnly: boolean;
-	isRelease: boolean;
-	releases: Release[];
-	releaseNumber: number | null;
-};
 
 const sanitizeHashes = (pubData, activePermissions) => {
 	const { editHash, viewHash } = pubData;
@@ -61,7 +37,7 @@ export default (
 ): null | SanitizedPubData => {
 	const { loginData, scopeData } = initialData;
 	const { activePermissions } = scopeData;
-	const { canView, canViewDraft, canEdit, canEditDraft } = activePermissions;
+	const { canView, canViewDraft } = activePermissions;
 
 	const hasPubMemberAccess = pubData.members.some((member) => {
 		return member.userId === initialData.loginData.id;
@@ -124,12 +100,12 @@ export default (
 		...sanitizeHashes(pubData, activePermissions),
 		attributions: pubData.attributions.map(ensureUserForAttribution),
 		draft: isRelease ? null : pubData.draft,
+		submission: isRelease ? null : pubData.submission,
 		discussions,
 		edges,
 		reviews,
 		exports: getFilteredExports(pubData, isRelease),
 		collectionPubs: filteredCollectionPubs,
-		isReadOnly: isRelease || !(canEdit || canEditDraft),
 		isRelease,
 		releases: sortedReleases,
 		releaseNumber,

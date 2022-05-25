@@ -7,6 +7,7 @@ export const PageContext = React.createContext<types.PageContext>({} as types.Pa
 
 export const PendingChanges = React.createContext({
 	pendingPromise: (x) => x,
+	pendingCount: 0,
 });
 
 export const usePageContext = (previewContextObject: null | types.PageContext = null) => {

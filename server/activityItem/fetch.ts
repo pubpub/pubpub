@@ -23,6 +23,7 @@ import {
 	PubEdge,
 	Release,
 	ReviewNew,
+	Submission,
 	Thread,
 	ThreadComment,
 	User,
@@ -77,6 +78,7 @@ const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilte
 	]),
 	discussion: itemKindFilter(['pub-discussion-comment-added']),
 	pubEdge: itemKindFilter(['pub-edge-created', 'pub-edge-removed']),
+	submission: itemKindFilter(['submission-status-updated']),
 };
 
 const getWhereQueryForChildScopes = async (scope: Scope) => {
@@ -157,6 +159,7 @@ const getActivityItemAssociationIds = (
 		pub,
 		release,
 		review,
+		submission,
 		threadComment,
 		thread,
 		user,
@@ -216,6 +219,8 @@ const getActivityItemAssociationIds = (
 			item.kind === 'member-removed'
 		) {
 			user.add(item.payload.userId);
+		} else if (item.kind === 'submission-status-updated') {
+			submission.add(item.payload.submissionId);
 		} else if (
 			item.kind === 'page-created' ||
 			item.kind === 'page-updated' ||
@@ -272,6 +277,7 @@ const fetchAssociations = (
 		pub,
 		release,
 		review,
+		submission,
 		threadComment,
 		thread,
 		user,
@@ -290,6 +296,7 @@ const fetchAssociations = (
 		pub: fetchModels<types.Pub>(Pub, pub),
 		release: fetchModels<types.Release>(Release, release),
 		review: fetchModels<types.Review>(ReviewNew, review),
+		submission: fetchModels<types.Submission>(Submission, submission),
 		threadComment: fetchModels<types.ThreadComment>(ThreadComment, threadComment),
 		thread: fetchModels<types.Thread>(Thread, thread),
 		user: fetchModels<types.User>(User, user, attributesPublicUser),

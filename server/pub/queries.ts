@@ -1,3 +1,5 @@
+import striptags from 'striptags';
+
 import { Collection, Community, Pub, PubAttribution, Member } from 'server/models';
 import { setPubSearchData, deletePubSearchData } from 'server/utils/search';
 import { createCollectionPub } from 'server/collectionPub/queries';
@@ -12,6 +14,7 @@ export const createPub = async (
 		communityId,
 		collectionIds,
 		slug,
+		titleKind = 'Untitled Pub',
 		...restArgs
 	}: { communityId: string; collectionIds?: string[]; slug?: string; [key: string]: any },
 	actorId?: string,
@@ -23,7 +26,7 @@ export const createPub = async (
 
 	const newPub = await Pub.create(
 		{
-			title: `Untitled Pub on ${dateString}`,
+			title: `${titleKind} on ${dateString}`,
 			slug: newPubSlug,
 			communityId,
 			headerBackgroundColor: 'light',
@@ -94,6 +97,9 @@ export const updatePub = (inputValues, updatePermissions, actorId) => {
 	if (filteredValues.slug) {
 		filteredValues.slug = slugifyString(filteredValues.slug);
 	}
+	if (filteredValues.htmlTitle) {
+		filteredValues.title = striptags(filteredValues.htmlTitle).replace(/&nbsp;/gi, ' ');
+	}
 
 	return Pub.update(filteredValues, {
 		where: { id: inputValues.pubId },
@@ -105,12 +111,9 @@ export const updatePub = (inputValues, updatePermissions, actorId) => {
 	});
 };
 
-export const destroyPub = (pubId: string, actorId: null | string = null) => {
-	return Pub.destroy({
-		where: { id: pubId },
-		individualHooks: true,
-		actorId,
-	}).then(() => {
+export const destroyPub = async (pubId: string, actorId: null | string = null) => {
+	const pub = await Pub.findByPk(pubId);
+	return pub.destroy({ actorId }).then(() => {
 		deletePubSearchData(pubId);
 		return true;
 	});

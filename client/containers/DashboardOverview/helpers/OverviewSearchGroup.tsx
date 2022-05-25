@@ -9,21 +9,23 @@ require('./overviewSearchGroup.scss');
 
 type SearchTermCallback = (q: string) => unknown;
 
-type Props = {
-	placeholder: string;
-	onUpdateSearchTerm?: SearchTermCallback;
-	onCommitSearchTerm?: SearchTermCallback;
-	onChooseFilter?: (q: null | Partial<PubsQuery>) => unknown;
-	rightControls?: React.ReactNode;
-};
-
-type Filter = {
+export type OverviewSearchFilter = {
 	id: string;
 	title: string;
 	query: null | Partial<PubsQuery>;
 };
 
-const filters: Filter[] = [
+type Props = {
+	placeholder: string;
+	onUpdateSearchTerm?: SearchTermCallback;
+	onCommitSearchTerm?: SearchTermCallback;
+	onChooseFilter?: (q: OverviewSearchFilter) => unknown;
+	rightControls?: React.ReactNode;
+	filters?: OverviewSearchFilter[];
+	filter?: OverviewSearchFilter;
+};
+
+const defaultFilters: OverviewSearchFilter[] = [
 	{ id: 'all', title: 'All', query: null },
 	{
 		id: 'latest',
@@ -35,8 +37,15 @@ const filters: Filter[] = [
 ];
 
 const OverviewSearchGroup = (props: Props) => {
-	const { placeholder, onCommitSearchTerm, onUpdateSearchTerm, rightControls, onChooseFilter } =
-		props;
+	const {
+		placeholder,
+		onCommitSearchTerm,
+		onUpdateSearchTerm,
+		rightControls,
+		onChooseFilter,
+		filter,
+		filters = defaultFilters,
+	} = props;
 	const [isSearchFocused, setIsSearchFocused] = useState(false);
 
 	const handleChange = useCallback(
@@ -62,12 +71,16 @@ const OverviewSearchGroup = (props: Props) => {
 	const handleFilterChange = useCallback(
 		(filterId: string) => {
 			if (onChooseFilter) {
-				const filter = filters.find((f) => f.id === filterId)!;
-				onChooseFilter(filter.query);
+				const nextFilter = filters.find((f) => f.id === filterId)!;
+				onChooseFilter(nextFilter);
 			}
 		},
-		[onChooseFilter],
+		[filters, onChooseFilter],
 	);
+
+	const controlledTabsProps: Partial<React.ComponentProps<typeof Tabs>> = {
+		...(filter && { selectedTabId: filter.id }),
+	};
 
 	return (
 		<div className="overview-search-group-component">
@@ -76,9 +89,10 @@ const OverviewSearchGroup = (props: Props) => {
 					className="filter-controls"
 					id="overview-search-group-filter"
 					onChange={handleFilterChange}
+					{...controlledTabsProps}
 				>
-					{filters.map((filter) => (
-						<Tab id={filter.id} key={filter.id} title={filter.title} />
+					{filters.map((f) => (
+						<Tab id={f.id} key={f.id} title={f.title} />
 					))}
 				</Tabs>
 			)}

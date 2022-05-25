@@ -7,7 +7,7 @@ import { fromProsemirror, emitPandocJson } from '@pubpub/prosemirror-pandoc';
 import dateFormat from 'dateformat';
 
 import { DocJson } from 'types';
-import { editorSchema, getReactedDocFromJson, Note } from 'components/Editor';
+import { editorSchema, getReactedDocFromJson } from 'components/Editor';
 import { getPathToCslFileForCitationStyleKind } from 'server/utils/citations';
 import { PandocTarget } from 'utils/export/formats';
 
@@ -18,7 +18,6 @@ import { runTransforms } from './transforms';
 import {
 	getPandocNotesByHash,
 	getCslJsonForPandocNotes,
-	getHashForNote,
 	PandocNotes,
 	modifyJatsContentToIncludeUnstructuredNotes,
 } from './notes';
@@ -35,6 +34,7 @@ const getTemplatePath = (pandocTarget: string) => {
 const createPandocArgs = (
 	pandocTarget: PandocTarget,
 	pandocFlags: PandocFlag[],
+	tmpFilePath: string,
 	metadataFilePath?: string,
 	bibliographyFilePath?: string,
 ) => {
@@ -45,6 +45,7 @@ const createPandocArgs = (
 	return [
 		['-f', 'json'],
 		['-t', targetPlusFlags],
+		['-o', tmpFilePath],
 		template && [`--template=${getTemplatePath(pandocTarget)}`],
 		metadataFilePath && [`--metadata-file=${metadataFilePath}`],
 		bibliographyFilePath && [`--bibliography=${bibliographyFilePath}`],
@@ -134,10 +135,8 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: Pa
 
 const createResources = (pandocNotes: PandocNotes) => {
 	return {
-		note: (note: Pick<Note, 'unstructuredValue' | 'structuredValue'>) => {
-			const { structuredValue, unstructuredValue } = note;
-			const hash = getHashForNote({ structuredValue, unstructuredValue });
-			return pandocNotes[hash];
+		note: (id: string) => {
+			return pandocNotes[id];
 		},
 	};
 };
@@ -161,14 +160,11 @@ const reactPubDoc = (options: ExportWithPandocOptions) => {
 };
 
 const callPandoc = (pandocJson: object, args: string[]) => {
-	const pandocJsonString = JSON.stringify(pandocJson);
 	const proc = spawnSync('pandoc', args, {
-		input: pandocJsonString,
+		input: JSON.stringify(pandocJson),
 		maxBuffer: 1024 * 1024 * 25,
 	});
-	const output = proc.stdout.toString();
-	const error = proc.stderr.toString();
-	return { output, error };
+	return proc.stderr.toString();
 };
 
 type ExportWithPandocOptions = {
@@ -186,21 +182,31 @@ export const exportWithPandoc = async (options: ExportWithPandocOptions) => {
 	const metadataFile = await createYamlMetadataFile(pubMetadata, pandocTarget);
 	const bibliographyFile = await createCslJsonBibliographyFile(pandocNotes);
 	const pandocFlags = getPandocFlags(options);
-	const pandocArgs = createPandocArgs(pandocTarget, pandocFlags, metadataFile, bibliographyFile);
+	const pandocArgs = createPandocArgs(
+		pandocTarget,
+		pandocFlags,
+		tmpFile.path,
+		metadataFile,
+		bibliographyFile,
+	);
 	const preTransformedPandocAst = fromProsemirror(pubDoc, rules, {
 		prosemirrorDocWidth: 675,
 		resources: createResources(pandocNotes),
 	}).asNode();
 	const pandocAst = runTransforms(preTransformedPandocAst);
 	const pandocJson = emitPandocJson(pandocAst);
-	const { output, error } = callPandoc(pandocJson, pandocArgs);
+	const error = callPandoc(pandocJson, pandocArgs);
 	if (error) {
 		throw new Error(error);
 	}
-	const transformedOutput = modifyJatsContentToIncludeUnstructuredNotes(
-		output,
-		pandocTarget,
-		pandocNotes,
-	);
-	fs.writeFileSync(tmpFile.path, transformedOutput);
+	// At this point, pandoc has written the document to our temp file. Here
+	// we do some additional post-processing.
+	if (pandocTarget === 'jats_archiving') {
+		const pandocOutput = fs.readFileSync(tmpFile.path).toString();
+		const transformedOutput = modifyJatsContentToIncludeUnstructuredNotes(
+			pandocOutput,
+			pandocNotes,
+		);
+		fs.writeFileSync(tmpFile.path, transformedOutput);
+	}
 };

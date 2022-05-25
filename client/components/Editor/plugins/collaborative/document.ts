@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import { Schema } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { receiveTransaction, sendableSteps } from 'prosemirror-collab';
@@ -49,6 +50,8 @@ export default (
 	let view;
 	let mostRecentRemoteKey = collaborativeOptions.initialDocKey;
 	let ongoingTransaction = false;
+	let hasLoadedChangesOnce = false;
+	let listeningOn: null | firebase.database.Query = null;
 	let pendingRemoteKeyables = [];
 	/* sendCollabChanges is called only from the main Editor */
 	/* disppatchTransaction view spec paramater. sendCollabChanges */
@@ -143,7 +146,8 @@ export default (
 			}
 		});
 		pendingRemoteKeyables = [];
-		if (sendableSteps(view.state)) {
+		const sendable = sendableSteps(view.state);
+		if (sendable) {
 			sendCollabChanges(view.state);
 		}
 		return null;
@@ -160,7 +164,12 @@ export default (
 
 	const loadDocument = () => {
 		getFirebaseConnectionMonitorRef(ref).on('value', (snapshot) => {
-			if (!snapshot.val()) {
+			const isConnected = snapshot.val();
+			if (isConnected) {
+				if (hasLoadedChangesOnce) {
+					onStatusChange('connected');
+				}
+			} else {
 				onStatusChange('disconnected');
 			}
 		});
@@ -172,16 +181,14 @@ export default (
 			.once('value')
 			.then((changesSnapshot) => {
 				const snapshotVal = changesSnapshot.val() || {};
-				const allSteps = [];
-				const allStepClientIds = [];
+				const allSteps: any[] = [];
+				const allStepClientIds: any[] = [];
 				const keys = Object.keys(snapshotVal);
 
 				/* Uncompress steps and add stepClientIds */
 				Object.keys(snapshotVal).forEach((key) => {
 					const { steps, clientIds } = extractSnapshot(snapshotVal[key]);
-					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 					allSteps.push(...steps);
-					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 					allStepClientIds.push(...clientIds);
 				});
 
@@ -201,15 +208,17 @@ export default (
 				finishedLoadingTrans.setMeta('finishedLoading', true);
 				view.dispatch(finishedLoadingTrans);
 				onStatusChange('connected');
+				hasLoadedChangesOnce = true;
 
 				/* Listen to Changes */
-				return ref
+				listeningOn = ref
 					.child('changes')
 					.orderByKey()
-					.startAt(String(mostRecentRemoteKey + 1))
-					.on('child_added', (snapshot) => {
-						receiveCollabChanges(snapshot);
-					});
+					.startAt(String(mostRecentRemoteKey + 1));
+
+				return listeningOn!.on('child_added', (snapshot) => {
+					receiveCollabChanges(snapshot);
+				});
 			})
 			.catch((err) => {
 				console.error('In loadDocument Error with ', err, err.message);
@@ -240,7 +249,13 @@ export default (
 		view: (initView) => {
 			view = initView;
 			loadDocument();
-			return {};
+			return {
+				destroy: () => {
+					listeningOn?.off('child_added');
+					getFirebaseConnectionMonitorRef(ref).off('value');
+					pendingRemoteKeyables = [];
+				},
+			};
 		},
 	});
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Button, ButtonGroup, Card, Icon } from '@blueprintjs/core';
 
@@ -13,19 +13,19 @@ type Props = {
 
 const DiscussionReanchor = (props: Props) => {
 	const { discussionData } = props;
-	const { collabData, firebaseDraftRef } = usePubContext();
+	const { collabData } = usePubContext();
 	const [isActive, setIsActive] = useState(false);
 
-	const { selection } = collabData.editorChangeObject;
+	const { selection } = collabData.editorChangeObject!;
 	const { anchor } = discussionData;
 
 	const handleReanchor = () => {
-		const { view } = collabData.editorChangeObject;
-		reanchorDiscussion(view, firebaseDraftRef, discussionData.id);
+		const { view } = collabData.editorChangeObject!;
+		reanchorDiscussion(view, collabData.firebaseDraftRef, discussionData.id);
 		setIsActive(false);
 	};
-
-	const bodyElement = document.querySelector('body');
+	const [bodyElement, setBodyElement] = useState<HTMLBodyElement | null>(null);
+	useEffect(() => setBodyElement(document.querySelector('body')), []);
 
 	return (
 		<>

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-import { Scope } from 'types';
+import { Scope, MemberPermission } from 'types';
 import {
 	Collection,
 	CollectionPub,
@@ -9,6 +9,9 @@ import {
 	Pub,
 	PublicPermissions,
 	Release,
+	ReviewNew,
+	Submission,
+	SubmissionWorkflow,
 } from 'server/models';
 
 import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
@@ -29,6 +32,69 @@ const getScopeIdsObject = ({ pubId, collectionId, communityId }): Scope => {
 	return { communityId };
 };
 
+const getActiveSubmissionsCount = ({ activeCollection }) => {
+	if (activeCollection) {
+		return Submission.count({
+			where: {
+				status: 'received',
+			},
+			include: [
+				{
+					model: SubmissionWorkflow,
+					as: 'submissionWorkflow',
+					required: true,
+					where: { collectionId: activeCollection.id },
+				},
+			],
+		});
+	}
+	return 0;
+};
+
+const getActiveReviewsCount = ({ activeCommunity, activeCollection, activePub }) => {
+	if (activePub) {
+		return ReviewNew.count({ where: { status: 'open', pubId: activePub.id } });
+	}
+	if (activeCollection) {
+		return ReviewNew.count({
+			where: { status: 'open' },
+			include: [
+				{
+					model: Pub,
+					as: 'pub',
+					required: true,
+					where: { communityId: activeCommunity.id },
+					include: [
+						{
+							model: CollectionPub,
+							as: 'collectionPubs',
+							required: true,
+							where: { collectionId: activeCollection.id },
+						},
+					],
+				},
+			],
+		});
+	}
+	return ReviewNew.count({
+		where: { status: 'open' },
+		include: [
+			{ model: Pub, as: 'pub', required: true, where: { communityId: activeCommunity.id } },
+		],
+	});
+};
+
+const getActiveCounts = async (isDashboard: boolean, scopeElements) => {
+	if (isDashboard) {
+		const [reviews, submissions] = await Promise.all([
+			getActiveReviewsCount(scopeElements),
+			getActiveSubmissionsCount(scopeElements),
+		]);
+		return { reviews, submissions };
+	}
+	return { reviews: 0, submissions: 0 };
+};
+
 /* getScopeData can be called from either a route (e.g. to authenticate */
 /* whether a user has access to /pub/example), or it can be called from */
 /* an API route to verify a user's permissions. When called from a route */
@@ -47,18 +113,17 @@ export default async (scopeInputs) => {
 	const scopeElements = await getScopeElements(scopeInputs);
 	const publicPermissionsData = await getPublicPermissionsData(scopeElements);
 	const scopeMemberData = await getScopeMemberData(scopeInputs, scopeElements);
-	const activePermissions = await getActivePermissions(
-		scopeInputs,
-		scopeElements,
-		publicPermissionsData,
-		scopeMemberData,
-	);
+	const [activePermissions, activeCounts] = await Promise.all([
+		getActivePermissions(scopeInputs, scopeElements, publicPermissionsData, scopeMemberData),
+		getActiveCounts(scopeInputs.isDashboard, scopeElements),
+	]);
 
 	return {
 		elements: scopeElements,
 		optionsData: publicPermissionsData,
 		memberData: scopeMemberData,
 		activePermissions,
+		activeCounts,
 		scope: getScopeIdsObject(scopeElements.activeIds),
 	};
 };
@@ -109,6 +174,11 @@ getScopeElements = async (scopeInputs) => {
 					model: Release,
 					as: 'releases',
 					attributes: ['id', 'historyKey'],
+				},
+				{
+					model: Submission,
+					as: 'submission',
+					attributes: ['id'],
 				},
 			],
 		});
@@ -226,7 +296,7 @@ getActivePermissions = async (
 ) => {
 	const { activePub, activeCollection, activeCommunity, inactiveCollections } = scopeElements;
 	const isSuperAdmin = checkIfSuperAdmin(scopeInputs.loginId);
-	const permissionLevels = ['view', 'edit', 'manage', 'admin'];
+	const permissionLevels: MemberPermission[] = ['view', 'edit', 'manage', 'admin'];
 	let defaultPermissionIndex = -1;
 
 	[activePub, activeCollection, activeCommunity, ...inactiveCollections]
@@ -249,14 +319,19 @@ getActivePermissions = async (
 		return currLevelIndex > prev ? currLevelIndex : prev;
 	}, defaultPermissionIndex);
 
-	const canAdminCommunity =
-		isSuperAdmin ||
-		scopeMemberData.find((member) => member.communityId && member.permissions === 'admin');
+	const memberHasCommunityPermissions = (permissionLevel: MemberPermission) => {
+		return (
+			permissionLevels.includes(permissionLevel) &&
+			scopeMemberData.find(
+				(member) => member.communityId && member.permissions === permissionLevel,
+			)
+		);
+	};
 
-	const canManageCommunity =
-		isSuperAdmin ||
-		canAdminCommunity ||
-		scopeMemberData.find((member) => member.communityId && member.permissions === 'manage');
+	const canAdminCommunity = isSuperAdmin || memberHasCommunityPermissions('admin');
+	const canManageCommunity = canAdminCommunity || memberHasCommunityPermissions('manage');
+	const canEditCommunity = canManageCommunity || memberHasCommunityPermissions('edit');
+	const canViewCommunity = canEditCommunity || memberHasCommunityPermissions('view');
 
 	const booleanOr = (precedent, value) => {
 		/* Don't inherit value from null */
@@ -302,6 +377,8 @@ getActivePermissions = async (
 		activePublicPermissions.canViewDraft || activePublicPermissions.canEditDraft;
 
 	const canEdit = permissionLevelIndex > 0;
+	const canCreateReviews =
+		!activePub?.submission && (canEdit || activePublicPermissions.canCreateReviews);
 
 	return {
 		activePermission: permissionLevelIndex > -1 ? permissionLevels[permissionLevelIndex] : null,
@@ -311,7 +388,9 @@ getActivePermissions = async (
 		canAdmin: permissionLevelIndex > 2,
 		canAdminCommunity,
 		canManageCommunity,
+		canViewCommunity,
+		canEditCommunity,
 		...activePublicPermissions,
-		canCreateReviews: canEdit || activePublicPermissions.canCreateReviews,
+		canCreateReviews,
 	};
 };

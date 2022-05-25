@@ -268,7 +268,16 @@ export default (schema, props, collabDocPluginKey) => {
 				);
 			}
 
-			return {};
+			return {
+				destroy: () => {
+					const { localClientId } = collabDocPluginKey.getState(view.state);
+					const cursorsRef = props.collaborativeOptions.firebaseRef.child('cursors');
+					cursorsRef.child(localClientId).remove();
+					cursorsRef.off('child_added');
+					cursorsRef.off('child_changed');
+					cursorsRef.off('child_removed');
+				},
+			};
 		},
 		props: {
 			decorations: (editorState) => {

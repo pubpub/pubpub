@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'reakit/Button';
 
-import { Byline, GridWrapper, ContributorAvatars, Icon, ClickToCopyButton } from 'components';
+import { GridWrapper, ContributorAvatars, Icon, ClickToCopyButton } from 'components';
 import { Collection } from 'types';
 import { LayoutBlockCollectionHeader } from 'utils/layout/types';
 import { getAllCollectionContributors } from 'utils/contributors';
@@ -13,6 +13,7 @@ import {
 	getOrderedCollectionMetadataFields,
 	formattedMetadata,
 } from 'utils/collections/getMetadata';
+import WithinCommunityByline from '../WithinCommunityByline/WithinCommunityByline';
 
 require('./layoutCollectionHeader.scss');
 
@@ -42,7 +43,7 @@ const MetadataDetails = (props: Props) => {
 				const isShown = !hiddenMetadataFields.includes(name);
 				const formattedData = isShown && data && formattedMetadata(name, data);
 				if (formattedData) {
-					return <div>{formattedData}</div>;
+					return <div key={name}>{formattedData}</div>;
 				}
 				return null;
 			})}
@@ -91,7 +92,7 @@ const LayoutCollectionHeader = (props: Props) => {
 				)}
 			</ClickToCopyButton>
 		),
-		<MetadataDetails collection={collection} content={content} />,
+		<MetadataDetails collection={collection} content={content} key={3} />,
 	].filter((x) => x);
 
 	return (
@@ -99,7 +100,7 @@ const LayoutCollectionHeader = (props: Props) => {
 			<GridWrapper columnClassName="inner">
 				<h1>{collection.title}</h1>
 				{bylineContributors && !hideByline && (
-					<Byline
+					<WithinCommunityByline
 						contributors={bylineContributors}
 						renderSuffix={() => {
 							return (

@@ -19,7 +19,9 @@ require('./dashboardPages');
 require('./dashboardReview');
 require('./dashboardReviews');
 require('./dashboardSettings');
+require('./dashboardSubmissions');
 require('./dashboardCollectionLayout');
+require('./submit');
 
 /* Routes for PubPub */
 require('./communityCreate'); // Route: '/community/create'

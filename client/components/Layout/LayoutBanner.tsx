@@ -16,6 +16,19 @@ type Props = {
 
 type State = any;
 
+export const getButtonText = (
+	buttonType: 'create-pub' | 'signup' | 'link' | null,
+	customButtonText: string,
+	isLoggedIn = true,
+): string | undefined => {
+	if (!isLoggedIn && buttonType === 'create-pub') return 'Login to Create Pub';
+	if (customButtonText) return customButtonText;
+	if (isLoggedIn && buttonType === 'create-pub') return 'Create Pub';
+	if (buttonType === 'signup') return 'Create an Account';
+	if (buttonType === 'link') return 'Go to Link';
+	return undefined;
+};
+
 const createPubFailureText =
 	'Error creating a new Pub. You may want to refresh the page and try again.';
 
@@ -51,6 +64,7 @@ class LayoutBanner extends Component<Props, State> {
 
 	renderButton() {
 		const { buttonError } = this.state;
+		const isLoggedIn = !!this.props.loginData.id;
 
 		if (!this.props.content.showButton) {
 			return null;
@@ -58,23 +72,24 @@ class LayoutBanner extends Component<Props, State> {
 
 		const buttonType =
 			this.props.content.buttonType || (this.props.content.showButton && 'create-pub');
-		const buttonText =
-			(buttonType === 'create-pub' && !this.props.loginData.id && 'Login to Create Pub') ||
-			this.props.content.buttonText ||
-			(buttonType === 'create-pub' && this.props.loginData.id && 'Create Pub') ||
-			(buttonType === 'signup' && 'Create an Account') ||
-			(buttonType === 'link' && 'Go to Link');
+
+		const buttonText = getButtonText(buttonType, this.props.content.buttonText, isLoggedIn);
 		const buttonUrl =
-			(buttonType === 'link' && this.props.content.buttonUrl) ||
-			(buttonType === 'create-pub' &&
-				!this.props.loginData.id &&
-				`/login?redirect=${this.props.locationData.path}`) ||
-			(buttonType === 'signup' && '/signup');
+			buttonType === 'link'
+				? this.props.content.buttonUrl
+				: isLoggedIn && buttonType === 'create-pub'
+				? `/login?redirect=${this.props.locationData.path}`
+				: buttonType === 'signup'
+				? '/signup'
+				: undefined;
+
+		const onButtonClick =
+			(isLoggedIn && buttonType === 'create-pub' && this.createPub) || undefined;
 
 		const button = (
 			<AnchorButton
 				className="bp3-large"
-				onClick={buttonType === 'create-pub' && this.props.loginData.id && this.createPub}
+				onClick={onButtonClick}
 				loading={this.state.isLoading}
 				text={buttonText}
 				href={buttonUrl}

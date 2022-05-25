@@ -19,17 +19,18 @@ const shouldOpenBelowSelection = () => {
 };
 
 const PubInlineMenu = () => {
-	const { pubData, collabData, historyData } = usePubContext();
+	const { pubData, collabData, historyData, pubBodyState } = usePubContext();
 	const { communityData, scopeData } = usePageContext();
 	const { canView, canCreateDiscussions } = scopeData.activePermissions;
-	const selection = collabData.editorChangeObject.selection || {};
-	const selectionBoundingBox = collabData.editorChangeObject.selectionBoundingBox || {};
+	const selection = collabData.editorChangeObject!.selection || {};
+	const selectionBoundingBox: Record<string, any> =
+		collabData.editorChangeObject!.selectionBoundingBox || {};
 
 	if (
-		!collabData.editorChangeObject.selection ||
+		!collabData.editorChangeObject!.selection ||
 		selection.empty ||
-		selection.$anchorCell ||
-		collabData.editorChangeObject.selectedNode
+		(selection as any).$anchorCell ||
+		collabData.editorChangeObject!.selectedNode
 	) {
 		return null;
 	}
@@ -41,14 +42,14 @@ const PubInlineMenu = () => {
 			: selectionBoundingBox.top - 50);
 
 	const renderFormattingBar = () => {
-		if (pubData.isReadOnly) {
+		if (pubBodyState.isReadOnly) {
 			return null;
 		}
 		return (
 			<FormattingBar
 				buttons={buttons.inlineMenuButtonSet}
 				isTranslucent
-				editorChangeObject={collabData.editorChangeObject}
+				editorChangeObject={collabData.editorChangeObject!}
 				showBlockTypes={false}
 				controlsConfiguration={{ kind: 'none' }}
 			/>
@@ -61,14 +62,16 @@ const PubInlineMenu = () => {
 			style={{ position: 'absolute', top: topPosition, left: selectionBoundingBox.left }}
 		>
 			{renderFormattingBar()}
-			{(canView || canCreateDiscussions) && (
+			{(canView || canCreateDiscussions) && pubBodyState.canCreateAnchoredDiscussions && (
 				<Button
+					aria-label="Start a discussion"
+					title="Start a discussion"
 					minimal={true}
 					icon={<Icon icon="chat" />}
 					onClick={() => {
-						const view = collabData.editorChangeObject.view;
+						const view = collabData.editorChangeObject!.view;
 						setLocalHighlight(view, selection.from, selection.to, uuidv4());
-						moveToEndOfSelection(collabData.editorChangeObject.view);
+						moveToEndOfSelection(collabData.editorChangeObject!.view);
 					}}
 				/>
 			)}

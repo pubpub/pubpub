@@ -1,7 +1,8 @@
 import dateFormat from 'dateformat';
 
+import { formatDate, getLocalDateMatchingUtcCalendarDate, isValidDate } from 'utils/dates';
 import { getPrimaryCollection } from 'utils/collections/primary';
-import { getLocalDateMatchingUtcCalendarDate, isValidDate } from 'utils/dates';
+
 import { DefinitelyHas, Maybe, CollectionPub, Pub } from 'types';
 
 export const getPubLatestReleasedDate = (pub: Pub) => {
@@ -21,9 +22,6 @@ export const getPubCreatedDate = (pub: Pub) => {
 
 export const getPubPublishedDate = (pub: Pub, includeCustomPublishedAt = true) => {
 	if (pub.customPublishedAt && includeCustomPublishedAt) {
-		// This is a date string representing a time at midnight UTC for a given date.
-		// Unfortunately, that represents a time during the previous day in the Western hemisphere,
-		// which will cause this to improperly render the previous day.
 		return getLocalDateMatchingUtcCalendarDate(pub.customPublishedAt);
 	}
 	const { releases } = pub;
@@ -32,6 +30,14 @@ export const getPubPublishedDate = (pub: Pub, includeCustomPublishedAt = true) =
 		return new Date(firstRelease.createdAt);
 	}
 	return null;
+};
+
+export const getPubPublishedDateString = (pub: Pub): string | null => {
+	const publishedDate = getPubPublishedDate(pub, true);
+	let publishedDateString = '';
+	if (publishedDate) publishedDateString = formatDate(publishedDate);
+	if (publishedDate && pub.releases.length === 0) publishedDateString += ' (Not yet released)';
+	return publishedDateString || null;
 };
 
 export const getPubLatestReleaseDate = (pub: Pub, { excludeFirstRelease = false } = {}) => {

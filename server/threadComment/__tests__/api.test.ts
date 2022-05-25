@@ -135,7 +135,7 @@ it('allows guests to add to a Discussion with visibility=public', async () => {
 				}),
 			)
 			.expect(201),
-	).toMatchObject((response) => ({
+	).toMatchResultingObject((response) => ({
 		kind: 'pub-discussion-comment-added',
 		pubId: pub.id,
 		payload: {

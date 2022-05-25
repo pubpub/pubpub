@@ -11,8 +11,10 @@ import {
 	PubEdge,
 	Release,
 	ReviewNew,
+	Submission,
 	Thread,
 	ThreadComment,
+	SubmissionWorkflow,
 } from 'server/models';
 
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
@@ -554,4 +556,44 @@ export const createPubDiscussionCommentAddedActivityItem = async (
 			},
 		},
 	});
+};
+
+export const createSubmissionUpdatedActivityItem = async (
+	actorId: null | string,
+	submissionId: string,
+	oldSubmission: types.Submission,
+) => {
+	const submission: types.DefinitelyHas<types.Submission, 'pub' | 'submissionWorkflow'> =
+		await Submission.findOne({
+			where: { id: submissionId },
+			include: [
+				{
+					model: Pub,
+					as: 'pub',
+				},
+				{
+					model: SubmissionWorkflow,
+					as: 'submissionWorkflow',
+				},
+			],
+		});
+
+	if (submission.status !== oldSubmission.status) {
+		return createActivityItem({
+			actorId,
+			communityId: submission.pub.communityId,
+			collectionId: submission.submissionWorkflow.collectionId,
+			pubId: submission.pub.id,
+			kind: 'submission-status-updated' as const,
+			payload: {
+				submissionId,
+				pub: {
+					title: submission.pub.title,
+				},
+				status: { from: oldSubmission.status, to: submission.status },
+			},
+		});
+	}
+
+	return null;
 };

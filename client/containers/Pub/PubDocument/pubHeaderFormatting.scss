@@ -1,8 +1,10 @@
+@import '../PubHeader/pubHeader.scss';
+
 .pub-draft-header-component {
 	z-index: 19;
 	// .wrapper {
 	background: #f0f0f0;
-	border-bottom: 1px solid #d2d2d2;
+	border-bottom: 1px solid $header-border-color;
 	// &.fixed {
 	// 	position: fixed;
 	// 	top: 0;
@@ -46,31 +48,6 @@
 		display: flex;
 		align-items: center;
 		padding-left: 5px;
-	}
-	.collab-status {
-		&.disconnected {
-			background: #db3737;
-			color: #ffffff;
-			padding: 2px 6px;
-			border-radius: 2px;
-		}
-		&.connecting,
-		&.saving {
-			background: #d9c72b;
-			color: #ffffff;
-			padding: 2px 6px;
-			border-radius: 2px;
-		}
-		&.connected,
-		&.saved {
-			background: #22c17f;
-			color: #ffffff;
-			padding: 2px 6px;
-			border-radius: 2px;
-		}
-		text-transform: capitalize;
-		margin-right: 1em;
-		white-space: nowrap;
 	}
 	.save-version-button {
 		white-space: nowrap;

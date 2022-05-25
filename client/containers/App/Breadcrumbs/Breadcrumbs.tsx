@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import { AnchorButton, Button, Intent } from '@blueprintjs/core';
+import classNames from 'classnames';
 
 import { Avatar, Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { getDashUrl, getDashboardModes } from 'utils/dashboard';
+import { getDashUrl } from 'utils/dashboard';
 import { apiFetch } from 'client/utils/apiFetch';
 
 import CreateCollectionDialog from './CreateCollectionDialog';
 
 require('./breadcrumbs.scss');
 
-const Breadcrumbs = () => {
-	const { locationData, communityData, scopeData } = usePageContext();
+type Props = {
+	className?: string;
+};
+
+const Breadcrumbs = (props: Props) => {
+	const { className } = props;
+	const { locationData, communityData, scopeData, dashboardMenu } = usePageContext();
 	const { activeTargetType, activePub, activeCollection } = scopeData.elements;
 	const { activePermission } = scopeData.activePermissions;
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
 	const pubSlug = locationData.params.pubSlug;
-	const { mode, subMode } = getDashboardModes(locationData);
+	const { mode, subMode } = dashboardMenu.activeMode!;
 	const [newPubIsLoading, setNewPubIsLoading] = useState(false);
 	const [newCollectionIsOpen, setNewCollectionIsOpen] = useState(false);
 
@@ -92,7 +98,7 @@ const Breadcrumbs = () => {
 	};
 
 	return (
-		<div className="breadcrumbs-component">
+		<div className={classNames('breadcrumbs-component', className)}>
 			<div className="breadcrumbs-content">
 				<Avatar
 					avatar={avatar}

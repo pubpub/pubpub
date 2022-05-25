@@ -1,32 +1,31 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
-import { PubByline, DialogLauncher, PubAttributionDialog } from 'components';
+import { PubByline, DialogLauncher, PubAttributionDialog, TitleEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { getPubPublishedDate } from 'utils/pub/pubDates';
-import { formatDate } from 'utils/dates';
-import { Pub, Release } from 'types';
+import { getPubPublishedDateString } from 'utils/pub/pubDates';
+import { PatchFn, Pub, PubPageData } from 'types';
 
 import BylineEditButton from './BylineEditButton';
 import EditableHeaderText from './EditableHeaderText';
+import { usePubContext } from '../pubHooks';
 
 type Props = {
-	pubData: Pub & {
-		releases: Release[];
-		isRelease?: boolean;
-	};
-	updatePubData: (...args: any[]) => any;
+	pubData: PubPageData;
+	updatePubData: PatchFn<Pub>;
 };
 
 const TitleGroup = (props: Props) => {
 	const { pubData, updatePubData } = props;
-	const { title, description, isRelease } = pubData;
-	const { communityData, scopeData } = usePageContext();
+	const { title, htmlTitle, description, isRelease } = pubData;
+	const { communityData, scopeData, featureFlags } = usePageContext();
+	const { submissionState } = usePubContext();
+	const isUnsubmitted = submissionState?.submission.status === 'incomplete';
 	const { canManage } = scopeData.activePermissions;
-	const canModify = canManage && !isRelease;
-	const publishedDate = getPubPublishedDate(pubData);
+	const canModify = canManage && !isRelease && !isUnsubmitted;
+	const publishedDateString = getPubPublishedDateString(pubData);
 
 	const renderBylineEditor = () => {
-		if (!canManage) {
+		if (!canModify) {
 			return null;
 		}
 		return (
@@ -39,7 +38,6 @@ const TitleGroup = (props: Props) => {
 				>
 					{({ isOpen, onClose }) => (
 						<PubAttributionDialog
-							// @ts-expect-error ts-migrate(2322) FIXME: Type '{ canEdit: boolean; isOpen: any; onClose: an... Remove this comment to see the full error message
 							canEdit={true}
 							isOpen={isOpen}
 							onClose={onClose}
@@ -54,27 +52,45 @@ const TitleGroup = (props: Props) => {
 	};
 
 	const renderBylineEmptyState = () => {
-		if (canManage && !isRelease) {
+		if (canModify) {
 			return <span className="pub-header-themed-secondary">Edit byline</span>;
 		}
 		return null;
 	};
 
+	const onTitleEditorChange = useCallback(
+		(nextHtmlTitle: string, nextTitle: string) => {
+			updatePubData({ title: nextTitle, htmlTitle: nextHtmlTitle });
+		},
+		[updatePubData],
+	);
+
 	return (
 		<div className="title-group-component">
-			<EditableHeaderText
-				text={title}
-				updateText={(text) => updatePubData({ title: text })}
-				canEdit={canModify}
-				className="title"
-				placeholder="Add a Pub title"
-			/>
+			{featureFlags.htmlTitles ? (
+				<h1 className="title">
+					<TitleEditor
+						initialValue={htmlTitle ?? title}
+						isReadOnly={!canModify}
+						onChange={onTitleEditorChange}
+						placeholder="Add a Pub title"
+					/>
+				</h1>
+			) : (
+				<EditableHeaderText
+					text={title}
+					updateText={(text) => updatePubData({ title: text })}
+					canEdit={canModify}
+					className="title"
+					placeholder="Add a Pub title"
+				/>
+			)}
 			{(canModify || description) && (
 				<EditableHeaderText
 					text={description}
 					updateText={(text) => updatePubData({ description: text })}
 					canEdit={canModify}
-					tagName="h3"
+					tagName="p"
 					className="description pub-header-themed-secondary"
 					placeholder="Add a description for this Pub"
 					maxLength={280}
@@ -85,10 +101,10 @@ const TitleGroup = (props: Props) => {
 				renderSuffix={() => !isRelease && renderBylineEditor()}
 				renderEmptyState={renderBylineEmptyState}
 			/>
-			{publishedDate && (
+			{publishedDateString && (
 				<div className="published-date">
 					<span className="pub-header-themed-secondary">Published on</span>
-					<span>{formatDate(publishedDate)}</span>
+					<span>{publishedDateString}</span>
 				</div>
 			)}
 		</div>

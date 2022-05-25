@@ -2,23 +2,24 @@ import React from 'react';
 import classNames from 'classnames';
 import { AnchorButton } from '@blueprintjs/core';
 
-import { PubByline } from 'components';
-import { DefinitelyHas, Pub as BasePub } from 'types';
+import { PubByline, PubTitle } from 'components';
+import { Collection, DefinitelyHas, Pub as BasePub } from 'types';
 import { pubUrl } from 'utils/canonicalUrls';
 import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 
 import OverviewRowSkeleton from './OverviewRowSkeleton';
-import { getPubReleasedStateLabel, getScopeSummaryLabels } from './labels';
+import { IconLabelPair, renderLabelPairs, getTypicalPubLabels } from './labels';
 
 type Pub = DefinitelyHas<BasePub, 'attributions'>;
 
 type Props = {
 	leftIconElement?: React.ReactNode;
 	rightElement?: React.ReactNode;
+	labels?: IconLabelPair[];
 	className?: string;
 	pub: Pub;
-	inCollection?: boolean;
+	inCollection?: Collection;
 };
 
 const PubOverviewRow = (props: Props) => {
@@ -27,9 +28,11 @@ const PubOverviewRow = (props: Props) => {
 		className,
 		inCollection,
 		leftIconElement = null,
+		labels = null,
 		rightElement: providedRightElement,
 	} = props;
 	const { communityData } = usePageContext();
+
 	const rightElement = providedRightElement || (
 		<AnchorButton
 			minimal
@@ -38,19 +41,19 @@ const PubOverviewRow = (props: Props) => {
 			target="_blank"
 		/>
 	);
+
+	const allLabels = [...(labels || []), ...getTypicalPubLabels(pub)];
+
 	return (
 		<OverviewRowSkeleton
 			className={classNames('pub-overview-row-component', className)}
-			href={getDashUrl({ pubSlug: pub.slug })}
-			title={pub.title}
+			title={<PubTitle pubData={pub} />}
+			href={getDashUrl({ pubSlug: pub.slug, collectionSlug: inCollection?.slug })}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
-			iconLabelPairs={[
-				...getScopeSummaryLabels(pub.scopeSummary),
-				getPubReleasedStateLabel(pub),
-			]}
+			details={renderLabelPairs(allLabels)}
 			leftIcon={leftIconElement || 'pubDoc'}
 			rightElement={rightElement}
-			darkenRightIcons={inCollection}
+			darkenRightIcons={!!inCollection}
 		/>
 	);
 };

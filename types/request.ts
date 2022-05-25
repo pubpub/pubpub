@@ -1,9 +1,4 @@
-import { Community } from './community';
-import { Collection } from './collection';
-import { Pub } from './pub';
-import { Member, MemberPermission } from './member';
-import { DefinitelyHas } from './util';
-import { Scope } from './scope';
+import { Collection, Community, Scope, DefinitelyHas, Member, MemberPermission, Pub } from 'types';
 
 export type LoginData = {
 	id: string | null;
@@ -26,6 +21,8 @@ export type LocationData = {
 	isBasePubPub: boolean;
 	isProd: boolean;
 	isDuqDuq: boolean;
+	isQubQub: boolean;
+	isDashboard: boolean;
 	appCommit: string;
 };
 
@@ -57,6 +54,10 @@ export type ScopeData = {
 		activeCollection?: Collection;
 		activePub?: Pub;
 		inactiveCollections?: Collection[];
+	};
+	activeCounts: {
+		reviews: number;
+		submissions: number;
 	};
 	scope: Scope;
 	memberData: Member[];

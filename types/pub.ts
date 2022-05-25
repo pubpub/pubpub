@@ -2,7 +2,7 @@ import { NodeLabelMap } from 'components/Editor';
 import { CitationInlineStyleKind, CitationStyleKind } from 'utils/citations';
 
 import { PubAttribution } from './attribution';
-import { CollectionPub } from './collection';
+import { Collection, CollectionPub } from './collection';
 import { Community } from './community';
 import { Discussion } from './discussion';
 import { DocJson } from './doc';
@@ -10,6 +10,7 @@ import { Member } from './member';
 import { Review } from './review';
 import { InboundEdge, OutboundEdge } from './pubEdge';
 import { ScopeSummary } from './scope';
+import { Submission } from './submission';
 import { ThreadComment, Thread } from './thread';
 import { DefinitelyHas, Maybe } from './util';
 import { UserSubscription } from './userSubscription';
@@ -65,6 +66,7 @@ export type Pub = {
 	id: string;
 	slug: string;
 	title: string;
+	htmlTitle: null | string;
 	description?: string;
 	avatar?: string;
 	headerStyle: 'white-blocks' | 'black-blocks' | 'dark' | 'light';
@@ -102,6 +104,7 @@ export type Pub = {
 	draft?: Draft;
 	scopeSummaryId: null | string;
 	scopeSummary: ScopeSummary;
+	submission?: Submission;
 };
 
 export type PubDocInfo = {
@@ -121,18 +124,19 @@ export type PubPageDiscussion = DefinitelyHas<Discussion, 'anchors'> & {
 	};
 };
 
-export type PubPageData = DefinitelyHas<Omit<Pub, 'discussions'>, 'attributions'> &
+export type PubPageData = DefinitelyHas<Omit<Pub, 'discussions'>, 'collectionPubs'> &
 	PubDocInfo & {
 		collectionPubs: DefinitelyHas<CollectionPub, 'collection'>[];
 		discussions: PubPageDiscussion[];
 		viewHash: Maybe<string>;
 		editHash: Maybe<string>;
-		isReadOnly: boolean;
 		isRelease: boolean;
 		isInMaintenanceMode?: boolean;
 		firebaseToken?: string;
 		initialStructuredCitations: boolean;
 		releaseNumber: Maybe<number>;
+		submission?: DefinitelyHas<Submission, 'submissionWorkflow'>;
+		iSubmission: boolean;
 		subscription: null | UserSubscription;
 	};
 
@@ -141,9 +145,33 @@ export type PubHistoryState = {
 	latestKey: number;
 	isViewingHistory: boolean;
 	loadedIntoHistory: boolean;
-	historyDocKey: string;
-	historyDoc?: DocJson;
+	historyDocEditorKey: string;
+	historyDoc: null | DocJson;
+	latestHistoryDoc: null | DocJson;
 	outstandingRequests: number;
 	latestKeyReceivedAt: Maybe<number>;
 	timestamps: Record<string, number>;
+};
+
+export type PubDraftInfo = {
+	doc: DocJson;
+	mostRecentRemoteKey: number;
+	firstTimestamp: number;
+	latestTimestamp: number;
+	historyData: Pick<PubHistoryState, 'currentKey' | 'latestKey' | 'timestamps'>;
+};
+
+type CollectionPubWithAttributions = CollectionPub & {
+	collection: DefinitelyHas<Collection, 'attributions'>;
+};
+
+export type SanitizedPubData = Pub & {
+	viewHash: string | null;
+	editHash: string | null;
+	attributions: PubAttribution[];
+	discussions: Discussion[];
+	collectionPubs: CollectionPubWithAttributions[];
+	isRelease: boolean;
+	releases: Release[];
+	releaseNumber: number | null;
 };

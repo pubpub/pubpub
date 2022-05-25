@@ -102,12 +102,23 @@ export type LayoutBlockCollectionHeader = {
 	};
 };
 
+export type LayoutBlockSubmissionBanner = {
+	type: 'submission-banner';
+	id: string;
+	content: {
+		title: string;
+		body: DocJson;
+		submissionWorkflowId: string;
+	};
+};
+
 export type LayoutBlock =
 	| LayoutBlockBanner
 	| LayoutBlockCollectionsPages
 	| LayoutBlockHtml
 	| LayoutBlockPubs
 	| LayoutBlockText
-	| LayoutBlockCollectionHeader;
+	| LayoutBlockCollectionHeader
+	| LayoutBlockSubmissionBanner;
 
 export type CollectionLayout = LayoutOptions & { blocks: LayoutBlock[] };

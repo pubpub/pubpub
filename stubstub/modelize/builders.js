@@ -3,11 +3,20 @@ import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 
 import { createCollectionPub } from 'server/collectionPub/queries';
-import { ActivityItem, Community, Member, Release, User, UserSubscription } from 'server/models';
+import {
+	ActivityItem,
+	Community,
+	Member,
+	Release,
+	SubmissionWorkflow,
+	User,
+	UserSubscription,
+} from 'server/models';
 import { createPub } from 'server/pub/queries';
 import { createCollection } from 'server/collection/queries';
 import { createDoc } from 'server/doc/queries';
 import { createPage } from 'server/page/queries';
+import { getEmptyDoc } from 'client/components/Editor';
 
 const builders = {};
 
@@ -109,6 +118,19 @@ builders.Release = async (args) => {
 };
 
 builders.CollectionPub = createCollectionPub;
+
+builders.SubmissionWorkflow = (args) => {
+	return SubmissionWorkflow.create({
+		enabled: false,
+		instructionsText: getEmptyDoc(),
+		introText: getEmptyDoc(),
+		receivedEmailText: getEmptyDoc(),
+		acceptedText: getEmptyDoc(),
+		declinedText: getEmptyDoc(),
+		targetEmailAddresses: ['something@somewhere.com'],
+		...args,
+	});
+};
 
 builders.ActivityItem = (args) => {
 	const { applyHooks = false, ...restArgs } = args;

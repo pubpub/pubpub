@@ -1,6 +1,9 @@
+import { DocJson, Pub } from 'types';
+import { EditorChangeObject, getJSON } from 'client/components/Editor';
+
 // The "formatted download" is the file that the pub manager can upload themselves to represent the
 // pub. It's stored in pub.downloads, but it's treated as a kind of special case.
-export const getFormattedDownload = (downloads) => {
+export const getFormattedDownload = (downloads: Pub['downloads']) => {
 	if (!downloads) {
 		return null;
 	}
@@ -13,7 +16,14 @@ export const getFormattedDownload = (downloads) => {
 	}, null);
 };
 
-export const getTocHeadings = (docJson) => {
+export type PubHeading = {
+	title: string;
+	level: number;
+	href: string | null;
+	index: number;
+};
+
+const getTocHeadings = (docJson: DocJson): PubHeading[] => {
 	return docJson.content
 		.filter((item) => {
 			return item.type === 'heading' && item.attrs.level < 3;
@@ -40,4 +50,15 @@ export const getTocHeadings = (docJson) => {
 			/* Filter out empty headers */
 			return item.title;
 		});
+};
+
+export const getPubHeadings = (
+	initialDoc: DocJson,
+	editorChangeObject: null | EditorChangeObject,
+) => {
+	let docJson = initialDoc;
+	if (editorChangeObject && editorChangeObject.view) {
+		docJson = getJSON(editorChangeObject.view)!;
+	}
+	return docJson ? getTocHeadings(docJson) : [];
 };

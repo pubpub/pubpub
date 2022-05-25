@@ -2,25 +2,27 @@ import React from 'react';
 import dateFormat from 'dateformat';
 import { Menu, MenuItem, Tag } from '@blueprintjs/core';
 
-import { usePageContext } from 'utils/hooks';
-import { getPubPublishedDate, getPubLatestReleaseDate } from 'utils/pub/pubDates';
-import { formatDate } from 'utils/dates';
+import { Review, SanitizedPubData } from 'types';
+import { ContributorsList, DashboardFrame, PubHeaderBackground, PubTitle } from 'components';
 import CitationsPreview from 'containers/Pub/PubHeader/CitationsPreview';
-import { ContributorsList, DashboardFrame, PubHeaderBackground } from 'components';
-
+import { formatDate } from 'utils/dates';
 import { getAllPubContributors } from 'utils/contributors';
+import { getDashUrl } from 'utils/dashboard';
+import { getPubPublishedDateString, getPubLatestReleaseDate } from 'utils/pub/pubDates';
+import { usePageContext } from 'utils/hooks';
+
 import PubTimeline from './PubTimeline';
 
 require('./pubOverview.scss');
 
 type Props = {
-	pubData: any;
+	pubData: SanitizedPubData;
 };
 
 const PubOverview = (props: Props) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
-	const { title, description } = pubData;
+	const { description } = pubData;
 
 	const renderSection = (sectionTitle, sectionText) => {
 		return (
@@ -32,13 +34,12 @@ const PubOverview = (props: Props) => {
 	};
 
 	const renderPubDates = () => {
-		const publishedDate = getPubPublishedDate(pubData);
+		const publishedDateString = getPubPublishedDateString(pubData);
 		const latestReleaseDate = getPubLatestReleaseDate(pubData, { excludeFirstRelease: true });
-		const publishedOnString = publishedDate ? formatDate(publishedDate) : <i>Unpublished</i>;
 		return (
 			<div className="pub-dates">
 				{renderSection('Created on', formatDate(pubData.createdAt))}
-				{renderSection('Published on', publishedOnString)}
+				{renderSection('Published on', publishedDateString || <i>Unpublished</i>)}
 				{latestReleaseDate &&
 					renderSection('Last released on', formatDate(latestReleaseDate))}
 			</div>
@@ -58,8 +59,8 @@ const PubOverview = (props: Props) => {
 				{pubData.collectionPubs.map((cp, index) => {
 					return (
 						<span key={cp.id}>
-							<a href={`/dash/collection/${cp.collection.slug}`}>
-								{cp.collection.title}
+							<a href={getDashUrl({ collectionSlug: cp.collection!.slug })}>
+								{cp.collection!.title}
 							</a>
 							{index !== pubData.collectionPubs.length - 1 && <span>, </span>}
 						</span>
@@ -69,13 +70,13 @@ const PubOverview = (props: Props) => {
 		);
 	};
 
-	const renderReviews = () => {
+	const renderReviews = (reviews: Review[]) => {
 		return (
 			<div className="section list">
 				<div className="section-header">Reviews</div>
 				<Menu className="list-content">
-					{pubData.reviews
-						.sort((a, b) => a.createdAt - b.createdAt)
+					{reviews
+						.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
 						.map((review) => {
 							return (
 								<MenuItem
@@ -111,7 +112,7 @@ const PubOverview = (props: Props) => {
 		return (
 			<div className="section">
 				<div className="section-header">Contributors</div>
-				<ContributorsList attributions={getAllPubContributors(pubData)} />
+				<ContributorsList attributions={getAllPubContributors(pubData, 'contributors')} />
 			</div>
 		);
 	};
@@ -125,7 +126,9 @@ const PubOverview = (props: Props) => {
 				safetyLayer="full-height"
 			>
 				<div className="header-content">
-					<h1 className="title">{title}</h1>
+					<h1 className="title">
+						<PubTitle pubData={pubData} />
+					</h1>
 					{description && <div className="description">{description}</div>}
 					{renderPubDates()}
 				</div>
@@ -139,7 +142,7 @@ const PubOverview = (props: Props) => {
 					{pubData.doi && renderSection('DOI', pubData.doi)}
 					{renderContributors()}
 					{renderCollections()}
-					{!!pubData.reviews.length && renderReviews()}
+					{!!pubData.reviews?.length && renderReviews(pubData.reviews)}
 				</div>
 				<div className="column">
 					<PubTimeline pubData={pubData} />

@@ -16,6 +16,8 @@ import {
 	includeUserModel,
 	Draft,
 	ScopeSummary,
+	Submission,
+	SubmissionWorkflow,
 } from 'server/models';
 import { PubGetOptions } from 'types';
 
@@ -33,6 +35,7 @@ export default ({
 	getExports,
 	getDraft,
 	getDiscussions,
+	getSubmissions,
 }: PubGetOptions) => {
 	const allowUnapprovedEdges = getEdges === 'all';
 	/* Initialize values assuming all inputs are false. */
@@ -67,6 +70,7 @@ export default ({
 			'id',
 			'slug',
 			'title',
+			'htmlTitle',
 			'description',
 			'labels',
 			'avatar',
@@ -179,6 +183,11 @@ export default ({
 			getDraft && {
 				model: Draft,
 				as: 'draft',
+			},
+			getSubmissions && {
+				model: Submission,
+				as: 'submission',
+				include: [{ model: SubmissionWorkflow, as: 'submissionWorkflow' }],
 			},
 			getDiscussions && {
 				separate: true,

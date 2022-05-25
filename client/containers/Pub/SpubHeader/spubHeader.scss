@@ -1,0 +1,33 @@
+@import '../PubHeader/pubHeader.scss';
+@import './styles.scss';
+
+.spub-header-component {
+	position: relative;
+	z-index: 20;
+	background-color: $background-grey;
+
+	&:not([data-tab='instructions']) {
+		border-bottom: 1px solid $header-border-color;
+	}
+
+	.pub-header-component {
+		border-bottom: none;
+	}
+
+	.pub-header-sticky-component {
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	&.js-is-sticky,
+	&.js-is-stuck {
+		border-bottom: 1px solid $header-border-color;
+		.content-container {
+			opacity: 0;
+		}
+		.pub-header-sticky-component {
+			opacity: 1;
+			visibility: unset;
+		}
+	}
+}

@@ -1,12 +1,11 @@
 import React from 'react';
 
-import { useViewport } from 'client/utils/useViewport';
+import { MobileAware } from 'components';
 
-import { mobileViewportCutoff } from './constants';
 import LargeHeaderButton from './LargeHeaderButton';
-import SmallHeaderButton from './SmallHeaderButton';
+import SmallHeaderButton, { Props as SmallHeaderButtonProps } from './SmallHeaderButton';
 
-type Props = {
+type Props = SmallHeaderButtonProps & {
 	simpleLabel?: React.ReactNode;
 	showCaret?: boolean;
 	outerLabel?: any;
@@ -18,23 +17,27 @@ const ResponsiveHeaderButton = React.forwardRef((props: Props, ref) => {
 	const largeOnlyProps = { outerLabel, showCaret };
 	const smallOnlyProps = { labelPosition };
 
-	const { viewportWidth } = useViewport();
-
-	if (viewportWidth === null) {
-		return null;
-	}
-	if (viewportWidth > mobileViewportCutoff) {
-		return (
-			<LargeHeaderButton
-				{...sharedProps}
-				{...largeOnlyProps}
-				outerLabel={outerLabel}
-				ref={ref}
-			/>
-		);
-	}
-	// @ts-expect-error ts-migrate(2322) FIXME: Type 'ReactNode' is not assignable to type 'string... Remove this comment to see the full error message
-	return <SmallHeaderButton {...sharedProps} {...smallOnlyProps} label={simpleLabel} ref={ref} />;
+	return (
+		<MobileAware
+			ref={ref}
+			desktop={(mobileAwareProps) => (
+				<LargeHeaderButton
+					{...sharedProps}
+					{...largeOnlyProps}
+					{...mobileAwareProps}
+					outerLabel={outerLabel}
+				/>
+			)}
+			mobile={(mobileAwareProps) => (
+				<SmallHeaderButton
+					{...sharedProps}
+					{...smallOnlyProps}
+					{...mobileAwareProps}
+					label={simpleLabel}
+				/>
+			)}
+		/>
+	);
 });
 
 export default ResponsiveHeaderButton;

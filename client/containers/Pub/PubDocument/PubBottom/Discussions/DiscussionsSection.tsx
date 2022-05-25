@@ -108,6 +108,7 @@ const DiscussionsSection = (props: Props) => {
 					{userId && featureFlags.notifications && (
 						<SubscriptionButton
 							subscription={subscription}
+							// @ts-ignore TODO(ian): Make updatePubData accept PubPageData
 							onUpdateSubscription={(next) => updatePubData({ subscription: next })}
 							target={{ pubId: pubData.id }}
 							menuLabel="Follow Pub discussion"
@@ -152,7 +153,7 @@ const DiscussionsSection = (props: Props) => {
 	const createDiscussionFilter = (searchTerm) => (threads) => {
 		const hiddenDiscussionIds = isShowingAnchoredComments
 			? null
-			: getAnchoredDiscussionIds(editorChangeObject.view);
+			: getAnchoredDiscussionIds(editorChangeObject!.view);
 		const res = filterAndSortDiscussions(
 			threads,
 			isBrowsingArchive,

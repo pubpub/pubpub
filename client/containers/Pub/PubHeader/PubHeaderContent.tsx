@@ -1,19 +1,18 @@
 import React from 'react';
 
 import { ClickToCopyButton } from 'components';
-import { getPubPublishedDate } from 'utils/pub/pubDates';
-import { formatDate } from 'utils/dates';
+import { getPubPublishedDateString } from 'utils/pub/pubDates';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 import { PubPageData } from 'types';
 
+import { usePubContext } from '../pubHooks';
 import CollectionsBar from './collections/CollectionsBar';
 import DraftReleaseButtons from './DraftReleaseButtons';
 import TitleGroup from './TitleGroup';
 import UtilityButtons from './UtilityButtons';
 
 type Props = {
-	historyData: any;
 	onShowHeaderDetails: (...args: any[]) => any;
 	pubData: PubPageData;
 	pubHeadings: any[];
@@ -21,17 +20,15 @@ type Props = {
 };
 
 const PubHeaderContent = (props: Props) => {
-	const { historyData, onShowHeaderDetails, pubData, pubHeadings, updateLocalData } = props;
+	const { onShowHeaderDetails, pubData, pubHeadings, updateLocalData } = props;
 	const { doi, isInMaintenanceMode } = pubData;
 	const { communityData } = usePageContext();
-	const publishedDate = getPubPublishedDate(pubData);
+	const { submissionState, historyData } = usePubContext();
+	const publishedDateString = getPubPublishedDateString(pubData);
+	const isSubmission = !!submissionState;
 
 	const updatePubData = (newPubData) => {
 		return updateLocalData('pub', newPubData, { isImmediate: true });
-	};
-
-	const updateHistoryData = (newHistoryData) => {
-		return updateLocalData('history', newHistoryData);
 	};
 
 	const updateAndSavePubData = (newPubData) => {
@@ -50,13 +47,19 @@ const PubHeaderContent = (props: Props) => {
 	const renderTop = () => {
 		return (
 			<div className="pub-header-top-area has-bottom-hairline">
-				<CollectionsBar pubData={pubData as any} updatePubData={updatePubData} />
+				{!isSubmission && (
+					<CollectionsBar pubData={pubData as any} updatePubData={updatePubData} />
+				)}
 				<div className="basic-details">
 					<span className="metadata-pair">
-						{publishedDate && (
-							<b className="pub-header-themed-secondary">Published on</b>
+						{publishedDateString ? (
+							<>
+								<b className="pub-header-themed-secondary">Published on </b>
+								{publishedDateString}
+							</>
+						) : (
+							<i>Unpublished</i>
 						)}
-						{publishedDate ? formatDate(publishedDate) : <i>Unpublished</i>}
 					</span>
 					{doi && (
 						<span className="metadata-pair doi-pair">
@@ -92,7 +95,6 @@ const PubHeaderContent = (props: Props) => {
 					pubData={pubData}
 					historyData={historyData}
 					updatePubData={updatePubData}
-					updateHistoryData={updateHistoryData}
 				/>
 			)}
 		</div>
