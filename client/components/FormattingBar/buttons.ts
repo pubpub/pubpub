@@ -94,6 +94,20 @@ export const alignRight: FormattingBarButtonData = {
 	command: alignTextRight,
 };
 
+export const leftToRight: FormattingBarButtonData = {
+	key: 'left-to-right',
+	title: 'LTR',
+	icon: 'moon',
+	command: alignTextLeft,
+};
+
+export const rightToLeft: FormattingBarButtonData = {
+	key: 'right-to-left',
+	title: 'RTL',
+	icon: 'heart',
+	command: alignTextRight,
+};
+
 export const strong: FormattingBarButtonData = {
 	key: 'strong',
 	title: 'Bold',
@@ -300,7 +314,7 @@ export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 export const workflowButtonSet = [[heading1, heading2, strong, em, link], [simpleMedia]];
 
 export const fullButtonSet = [
-	[alignLeft, alignCenter, alignRight],
+	[alignLeft, alignCenter, alignRight, leftToRight, rightToLeft],
 	[
 		strong,
 		em,

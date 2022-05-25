@@ -34,7 +34,6 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 		toDOM: (node) => {
 			const isEmpty = !node.content || (Array.isArray(node.content) && !node.content.length);
 			const children = isEmpty ? ['br'] : 0;
-			console.log(node);
 			return [
 				'p',
 				{
