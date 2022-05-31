@@ -20,10 +20,8 @@ import buildTable from './table';
 import buildReferences from './references';
 import { PluginLoader, PluginsOptions } from '../types';
 
-const mathPluginLoader = (schema: Schema, options: PluginsOptions): Plugin => {
-	console.log(options, schema);
-	return mathPlugin;
-};
+// const mathPluginLoader = (schema: Schema, options: PluginsOptions): Plugin => mathPlugin;
+const mathPluginLoader = (): Plugin => mathPlugin;
 
 const buildGapCursor = () => {
 	return gapCursor();
