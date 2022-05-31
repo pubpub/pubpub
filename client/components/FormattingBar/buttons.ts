@@ -308,7 +308,7 @@ export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 export const workflowButtonSet = [[heading1, heading2, strong, em, link], [simpleMedia]];
 
 export const fullButtonSet = [
-	[alignLeft, alignCenter, alignRight, leftToRight, rightToLeft],
+	[alignLeft, alignCenter, alignRight, rightToLeft],
 	[
 		strong,
 		em,
