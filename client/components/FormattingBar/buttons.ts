@@ -12,6 +12,7 @@ import {
 	heading2Toggle,
 	linkToggle,
 	orderedListToggle,
+	rtlToggle,
 	strikethroughToggle,
 	strongToggle,
 	subscriptToggle,
@@ -94,18 +95,11 @@ export const alignRight: FormattingBarButtonData = {
 	command: alignTextRight,
 };
 
-export const leftToRight: FormattingBarButtonData = {
-	key: 'left-to-right',
-	title: 'LTR',
-	icon: 'moon',
-	command: alignTextLeft,
-};
-
 export const rightToLeft: FormattingBarButtonData = {
-	key: 'right-to-left',
+	key: 'toggle-right-to-left',
 	title: 'RTL',
 	icon: 'heart',
-	command: alignTextRight,
+	command: rtlToggle,
 };
 
 export const strong: FormattingBarButtonData = {
