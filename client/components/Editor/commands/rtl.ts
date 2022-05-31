@@ -8,8 +8,8 @@ type NodePos = { node: Node; pos: number };
 const directionAttr = 'rtl';
 
 // or type is attr?
-const getDirectionValue = (direction: boolean) => {
-	return direction === true ? null : true;
+const getDirectionValue = (direction: string, nodes: NodePos[]) => {
+	return [...nodes][0].node.attrs.rtl === direction ? null : direction;
 };
 
 // what nodes able to be rtl, not sure, how to check?
@@ -38,7 +38,7 @@ const orientNodes = (
 	nodes: NodePos[],
 	state: EditorState,
 	dispatch: Dispatch,
-	attr: boolean | null,
+	attr: string | null,
 ) => {
 	const { tr } = state;
 	nodes.forEach(({ pos, node }) =>
@@ -47,12 +47,11 @@ const orientNodes = (
 	dispatch(tr);
 };
 
-const createDirectionCommandSpec = (direction: boolean) => {
+const createDirectionCommandSpec = (direction: string) => {
 	return createCommandSpec((dispatch: Dispatch, state: EditorState) => {
 		const nodes = getDirectionNodes(state);
 		const canRun = true; // not sure ?
-		const directionAttrValue = getDirectionValue(direction);
-		console.log('payload: ', [...nodes][0].node.attrs);
+		const directionAttrValue = getDirectionValue(direction, nodes);
 		return {
 			isActive: false,
 			canRun,
@@ -61,4 +60,4 @@ const createDirectionCommandSpec = (direction: boolean) => {
 	});
 };
 
-export const rtlToggle = createDirectionCommandSpec(true);
+export const rtlToggle = createDirectionCommandSpec('true');
