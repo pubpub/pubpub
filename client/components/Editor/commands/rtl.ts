@@ -61,4 +61,4 @@ const createDirectionCommandSpec = (direction: string) => {
 	});
 };
 
-export const rtlToggle = createDirectionCommandSpec('rtl');
+export const rtlToggle = createDirectionCommandSpec('true');
