@@ -20,7 +20,6 @@ import {
 import { getCurrentNodeLabels, EditorChangeObject } from '../Editor';
 
 import {
-	ControlsEquation,
 	ControlsFootnoteCitation,
 	ControlsLink,
 	ControlsReference,
@@ -230,22 +229,6 @@ export const reference: FormattingBarButtonData = {
 	},
 };
 
-export const block_or_inline_equation: FormattingBarButtonData = {
-	key: 'block_equation',
-	title: 'Equation',
-	icon: 'function',
-	insertNodeType: 'block_equation',
-	controls: nodeControls(ControlsEquation, ['equation', 'block_equation']),
-};
-
-export const inline_equation: FormattingBarButtonData = {
-	key: 'equation',
-	title: 'Equation',
-	icon: 'function',
-	insertNodeType: 'equation',
-	controls: nodeControls(ControlsEquation, ['equation']),
-};
-
 export const footnote: FormattingBarButtonData = {
 	key: 'footnote',
 	title: 'Footnote',
@@ -293,8 +276,8 @@ export const simpleMedia: FormattingBarButtonData = {
 	isMedia: true,
 };
 
-export const minimalButtonSet = [[strong, em, link, block_or_inline_equation]];
-export const abstractButtonSet = [[strong, em, link, inline_equation]];
+export const minimalButtonSet = [[strong, em, link]];
+export const abstractButtonSet = [[strong, em, link]];
 export const discussionButtonSet = [[strong, em, link], [simpleMedia]];
 export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 export const workflowButtonSet = [[heading1, heading2, strong, em, link], [simpleMedia]];
@@ -313,7 +296,6 @@ export const fullButtonSet = [
 		superscript,
 		strikethrough,
 		horizontalRule,
-		block_or_inline_equation,
 		reference,
 		citation,
 		footnote,
@@ -336,7 +318,6 @@ export const layoutEditorButtonSet = [
 		superscript,
 		strikethrough,
 		horizontalRule,
-		block_or_inline_equation,
 		citation,
 		footnote,
 		table,

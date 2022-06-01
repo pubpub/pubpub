@@ -7,6 +7,9 @@ import { counter } from './reactive/counter';
 export default {
 	equation: {
 		atom: true,
+		inline: true,
+		group: 'inline math',
+		draggable: false,
 		attrs: {
 			id: { default: null },
 			value: { default: '' },
@@ -14,6 +17,19 @@ export default {
 			renderForPandoc: { default: false },
 		},
 		parseDOM: [
+			{
+				tag: 'math-inline',
+				getAttrs: (node) => {
+					if (node.getAttribute('data-node-type') !== 'math-inline') {
+						return false;
+					}
+
+					return {
+						value: node.getAttribute('data-value') || '',
+						html: node.firstChild.innerHTML || '',
+					};
+				},
+			},
 			{
 				tag: 'span',
 				getAttrs: (node) => {
@@ -30,17 +46,15 @@ export default {
 		],
 		toDOM: (node, { isReact } = { isReact: false }) => {
 			return [
-				'span',
+				'math-inline',
 				{
+					class: 'math-node',
 					'data-node-type': 'math-inline',
 					'data-value': node.attrs.value,
 				},
 				renderHtmlChildren(isReact, node.attrs.html),
 			] as DOMOutputSpec;
 		},
-		inline: true,
-		group: 'inline',
-		draggable: false,
 
 		/* These are not part of the standard Prosemirror Schema spec */
 		onInsert: (view) => {
@@ -55,6 +69,10 @@ export default {
 	block_equation: {
 		atom: true,
 		reactive: true,
+		inline: false,
+		content: 'text*',
+		code: true,
+		group: 'block math',
 		attrs: {
 			id: { default: null },
 			value: { default: '' },
@@ -66,6 +84,22 @@ export default {
 			count: counter({ useNodeLabels: true }),
 		},
 		parseDOM: [
+			{
+				tag: 'math-display',
+				getAttrs: (node) => {
+					if (node.getAttribute('data-node-type') !== 'math-block') {
+						return false;
+					}
+					const html =
+						node.querySelector('span.katex')?.outerHTML || node.firstChild.innerHTML;
+
+					return {
+						id: node.getAttribute('id') || null,
+						value: node.getAttribute('data-value') || '',
+						html: html || '',
+					};
+				},
+			},
 			{
 				tag: 'div',
 				getAttrs: (node) => {
@@ -95,9 +129,10 @@ export default {
 				) as any;
 			}
 			return [
-				'div',
+				'math-display',
 				{
 					...(node.attrs.id && { id: node.attrs.id }),
+					class: 'math-node',
 					'data-node-type': 'math-block',
 					'data-value': node.attrs.value,
 				},
@@ -110,10 +145,6 @@ export default {
 				],
 			] as DOMOutputSpec;
 		},
-
-		inline: false,
-		group: 'block',
-
 		/* These are not part of the standard Prosemirror Schema spec */
 		onInsert: (view) => {
 			const equationNode = view.state.schema.nodes.block_equation.create({

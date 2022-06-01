@@ -83,7 +83,7 @@ export default (schema) => {
 	if (schema.nodes.bullet_list) rules.push(bulletListRule(schema.nodes.bullet_list));
 	if (schema.nodes.code_block) rules.push(codeBlockRule(schema.nodes.code_block));
 	if (schema.nodes.heading) rules.push(headingRule(schema.nodes.heading, 6));
-	if (schema.nodes.math_inline) rules.push(inlineMathRule(schema.nodes.math_inline));
-	if (schema.nodes.math_display) rules.push(blockMathRule(schema.nodes.math_display));
+	if (schema.nodes.equation) rules.push(inlineMathRule(schema.nodes.equation));
+	if (schema.nodes.block_equation) rules.push(blockMathRule(schema.nodes.block_equation));
 	return inputRules({ rules });
 };
