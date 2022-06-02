@@ -5,20 +5,21 @@ import { Dispatch } from './types';
 import { createCommandSpec } from './util';
 
 type NodePos = { node: Node; pos: number };
-type RtlDirectionType = null | true;
-type RtlDirectionValue = null | true;
+
+type RtlDirection = null | true;
 type AlignableNodesResult = {
 	rtlTargetNodes: NodePos[];
-	sharedDirectionType: RtlDirectionType;
+	sharedDirectionType: RtlDirection;
 };
 const rtlAttr = 'rtl';
 
-// if the orientaion is ltr keep them that way else return true
-const wrapRtlType = (rtl: RtlDirectionType): RtlDirectionValue => (rtl === null ? null : rtl);
+// wraps all nodes with the correct rtl direction if being toggled
+const wrapRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : null);
 
-const unwrapRtlValue = (value: RtlDirectionValue): RtlDirectionType =>
-	value === null ? null : true;
+// unwraps nodes by setting all rtl value to the correct negation
+const unwrapRtlValue = (value: RtlDirection): RtlDirection => (value === null ? null : true);
 
+// sets attrs for nodes as they should be set
 const getSharedRtlType = (nodes: NodePos[]) => {
 	const directionTypes = nodes.map(({ node }) => unwrapRtlValue(node.attrs[rtlAttr]));
 	const directionTypesSet = new Set(directionTypes);
@@ -56,7 +57,7 @@ const orientNodes = (
 	nodes: NodePos[],
 	state: EditorState,
 	dispatch: Dispatch,
-	attr: RtlDirectionType,
+	attr: RtlDirection,
 ) => {
 	const { tr } = state;
 	const rtlAttrValue = wrapRtlType(attr);
@@ -67,7 +68,7 @@ const orientNodes = (
 	dispatch(tr);
 };
 
-const createRtlCommandSpec = (direction: RtlDirectionType) => {
+const createRtlCommandSpec = (direction: RtlDirection) => {
 	return createCommandSpec((dispatch: Dispatch, state: EditorState) => {
 		const { rtlTargetNodes, sharedDirectionType } = getRtlTargetNodes(state);
 		console.log(sharedDirectionType);
