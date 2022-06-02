@@ -5,59 +5,74 @@ import { Dispatch } from './types';
 import { createCommandSpec } from './util';
 
 type NodePos = { node: Node; pos: number };
-const directionAttr = 'rtl';
-
-// or type is attr?
-const getDirectionValue = (direction: string, nodes: NodePos[]) => {
-	return [...nodes][0].node.attrs.rtl === direction ? null : direction;
+type RtlDirection = true | null;
+type AlignableNodesResult = {
+	rtlTargetNodes: NodePos[];
+	sharedAlignmentType: RtlDirection;
 };
+const rtlAttr = 'rtl';
 
-// what nodes able to be rtl, not sure, how to check?
+const setRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? null : true);
+
+const unwrapRtlValue = (value: RtlDirection): RtlDirection => (value === null ? true : value);
+
+const getSharedRtlType = (nodes: NodePos[]) => {
+	const directionTypes = nodes.map(({ node }) => unwrapRtlValue(node.attrs[rtlAttr]));
+	const directionTypesSet = new Set(directionTypes);
+	if (directionTypesSet.size === 1) {
+		return [...directionTypesSet][0];
+	}
+	return null;
+};
 
 const isRtlTarget = (node: Node) => {
 	const { spec } = node.type;
-	return spec.attrs && directionAttr in spec.attrs;
+	return spec.attrs && rtlAttr in spec.attrs;
 };
 
 // nodes could be in ltr or rtl
-const getDirectionNodes = (state: EditorState): NodePos[] => {
+const getRtlTargetNodes = (state: EditorState): AlignableNodesResult => {
 	const { selection, doc } = state;
-	const alignableNodes: NodePos[] = [];
+	const rtlTargetNodes: NodePos[] = [];
 	selection.ranges.forEach(({ $from, $to }) => {
 		doc.nodesBetween($from.pos, $to.pos, (node: Node, pos: number) => {
 			if (isRtlTarget(node)) {
-				alignableNodes.push({ pos, node });
+				rtlTargetNodes.push({ pos, node });
 			}
 		});
 	});
+	const result = {
+		rtlTargetNodes,
+		sharedAlignmentType: getSharedRtlType(rtlTargetNodes),
+	};
 
-	return alignableNodes;
+	return result;
 };
 
 const orientNodes = (
 	nodes: NodePos[],
 	state: EditorState,
 	dispatch: Dispatch,
-	attr: string | null,
+	attr: RtlDirection,
 ) => {
 	const { tr } = state;
+	const rtlAttrValue = setRtlType(attr);
+
 	nodes.forEach(({ pos, node }) =>
-		tr.setNodeMarkup(pos, undefined, { ...node.attrs, [directionAttr]: attr }),
+		tr.setNodeMarkup(pos, undefined, { ...node.attrs, [rtlAttr]: rtlAttrValue }),
 	);
 	dispatch(tr);
 };
 
-const createDirectionCommandSpec = (direction: string) => {
+const createRtlCommandSpec = (direction: RtlDirection) => {
 	return createCommandSpec((dispatch: Dispatch, state: EditorState) => {
-		const nodes = getDirectionNodes(state);
-		const canRun = true; // not sure ?
-		const directionAttrValue = getDirectionValue(direction, nodes);
+		const { rtlTargetNodes, sharedAlignmentType } = getRtlTargetNodes(state);
+		const canRun = rtlTargetNodes.length > 0;
 		return {
-			isActive: false,
+			isActive: sharedAlignmentType === direction,
 			canRun,
-			run: () => orientNodes(nodes, state, dispatch, directionAttrValue),
+			run: () => orientNodes(rtlTargetNodes, state, dispatch, sharedAlignmentType),
 		};
 	});
 };
-
-export const rtlToggle = createDirectionCommandSpec('true');
+export const rtlToggle = createRtlCommandSpec(true);

@@ -40,7 +40,7 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 					class: node.attrs.class,
 					...(node.attrs.id && { id: node.attrs.id }),
 					...(node.attrs.textAlign && { 'data-text-align': node.attrs.textAlign }),
-					...(node.attrs.rtl && { 'data-rtl': node.attrs.rtl }),
+					...(node.attrs.rtl && { 'data-rtl': node.attrs.rtl.toString() }),
 				},
 				children,
 			] as DOMOutputSpec;

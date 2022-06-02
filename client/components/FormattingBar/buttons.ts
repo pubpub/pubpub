@@ -98,7 +98,7 @@ export const alignRight: FormattingBarButtonData = {
 export const rightToLeft: FormattingBarButtonData = {
 	key: 'toggle-right-to-left',
 	title: 'RTL',
-	icon: 'heart',
+	icon: 'rtl',
 	command: rtlToggle,
 };
 
