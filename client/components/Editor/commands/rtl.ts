@@ -71,7 +71,6 @@ const orientNodes = (
 const createRtlCommandSpec = (direction: RtlDirection) => {
 	return createCommandSpec((dispatch: Dispatch, state: EditorState) => {
 		const { rtlTargetNodes, sharedDirectionType } = getRtlTargetNodes(state);
-		console.log(sharedDirectionType);
 		const canRun = rtlTargetNodes.length > 0;
 		return {
 			isActive: sharedDirectionType === direction,
