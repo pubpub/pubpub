@@ -5,16 +5,19 @@ import { Dispatch } from './types';
 import { createCommandSpec } from './util';
 
 type NodePos = { node: Node; pos: number };
-type RtlDirection = true | null;
+type RtlDirectionType = null | true;
+type RtlDirectionValue = null | true;
 type AlignableNodesResult = {
 	rtlTargetNodes: NodePos[];
-	sharedAlignmentType: RtlDirection;
+	sharedDirectionType: RtlDirectionType;
 };
 const rtlAttr = 'rtl';
 
-const setRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? null : true);
+// if the orientaion is ltr keep them that way else return true
+const wrapRtlType = (rtl: RtlDirectionType): RtlDirectionValue => (rtl === null ? null : rtl);
 
-const unwrapRtlValue = (value: RtlDirection): RtlDirection => (value === null ? true : value);
+const unwrapRtlValue = (value: RtlDirectionValue): RtlDirectionType =>
+	value === null ? null : true;
 
 const getSharedRtlType = (nodes: NodePos[]) => {
 	const directionTypes = nodes.map(({ node }) => unwrapRtlValue(node.attrs[rtlAttr]));
@@ -43,7 +46,7 @@ const getRtlTargetNodes = (state: EditorState): AlignableNodesResult => {
 	});
 	const result = {
 		rtlTargetNodes,
-		sharedAlignmentType: getSharedRtlType(rtlTargetNodes),
+		sharedDirectionType: getSharedRtlType(rtlTargetNodes),
 	};
 
 	return result;
@@ -53,10 +56,10 @@ const orientNodes = (
 	nodes: NodePos[],
 	state: EditorState,
 	dispatch: Dispatch,
-	attr: RtlDirection,
+	attr: RtlDirectionType,
 ) => {
 	const { tr } = state;
-	const rtlAttrValue = setRtlType(attr);
+	const rtlAttrValue = wrapRtlType(attr);
 
 	nodes.forEach(({ pos, node }) =>
 		tr.setNodeMarkup(pos, undefined, { ...node.attrs, [rtlAttr]: rtlAttrValue }),
@@ -64,14 +67,15 @@ const orientNodes = (
 	dispatch(tr);
 };
 
-const createRtlCommandSpec = (direction: RtlDirection) => {
+const createRtlCommandSpec = (direction: RtlDirectionType) => {
 	return createCommandSpec((dispatch: Dispatch, state: EditorState) => {
-		const { rtlTargetNodes, sharedAlignmentType } = getRtlTargetNodes(state);
+		const { rtlTargetNodes, sharedDirectionType } = getRtlTargetNodes(state);
+		console.log(sharedDirectionType);
 		const canRun = rtlTargetNodes.length > 0;
 		return {
-			isActive: sharedAlignmentType === direction,
+			isActive: sharedDirectionType === direction,
 			canRun,
-			run: () => orientNodes(rtlTargetNodes, state, dispatch, sharedAlignmentType),
+			run: () => orientNodes(rtlTargetNodes, state, dispatch, sharedDirectionType),
 		};
 	});
 };
