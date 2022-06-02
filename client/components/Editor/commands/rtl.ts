@@ -13,13 +13,13 @@ type AlignableNodesResult = {
 };
 const rtlAttr = 'rtl';
 
-// wraps all nodes with the correct rtl direction if being toggled
+// wraps at least one nodes with the correct rtl direction if being toggled
 const wrapRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : null);
 
-// unwraps nodes by setting all rtl value to the correct negation
+// unwraps nodes rtl attr by setting all rtl node attrs to the correct negation
 const unwrapRtlValue = (value: RtlDirection): RtlDirection => (value === null ? null : true);
 
-// sets attrs for nodes as they should be set
+// applies unwrap to a set of all nodes from n to pos
 const getSharedRtlType = (nodes: NodePos[]) => {
 	const directionTypes = nodes.map(({ node }) => unwrapRtlValue(node.attrs[rtlAttr]));
 	const directionTypesSet = new Set(directionTypes);
@@ -34,7 +34,6 @@ const isRtlTarget = (node: Node) => {
 	return spec.attrs && rtlAttr in spec.attrs;
 };
 
-// nodes could be in ltr or rtl
 const getRtlTargetNodes = (state: EditorState): AlignableNodesResult => {
 	const { selection, doc } = state;
 	const rtlTargetNodes: NodePos[] = [];
