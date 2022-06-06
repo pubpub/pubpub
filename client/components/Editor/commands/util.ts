@@ -1,6 +1,5 @@
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { splitBlock } from 'prosemirror-commands';
 
 import {
 	CommandStateBuilder,
@@ -8,7 +7,6 @@ import {
 	CreateToggleOptions,
 	ToggleOptions,
 	CommandSpec,
-	Dispatch,
 } from './types';
 
 export const createCommandSpec = (builder: CommandStateBuilder): CommandSpec => {
@@ -26,32 +24,4 @@ export const createTypeToggle = <S extends SchemaType>(options: CreateToggleOpti
 			isActive: type && isActiveFn(toggleOptions),
 		};
 	});
-};
-
-export const splitBlockPreservingCommands = (attr: string) => {
-	return (state: EditorState, dispatch?: Dispatch) => {
-		const { $from: previousSelectionFrom } = state.selection;
-		return splitBlock(state, (tr) => {
-			if (dispatch) {
-				const targetNodePosition = tr.selection.$from.before();
-				const targetNode = tr.doc.nodeAt(targetNodePosition);
-				const sourceNode = previousSelectionFrom.node();
-				if (attr === 'textAlign') {
-					const { [attr]: textAlign } = sourceNode.attrs;
-					tr.setNodeMarkup(targetNodePosition, undefined, {
-						...targetNode?.attrs,
-						[attr]: textAlign,
-					});
-				}
-				if (attr === 'rtl') {
-					const { [attr]: rtl } = sourceNode.attrs;
-					tr.setNodeMarkup(targetNodePosition, undefined, {
-						...targetNode?.attrs,
-						[attr]: rtl,
-					});
-				}
-				dispatch(tr);
-			}
-		});
-	};
 };

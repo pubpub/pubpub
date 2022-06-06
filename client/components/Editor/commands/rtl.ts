@@ -13,13 +13,13 @@ type AlignableNodesResult = {
 };
 const rtlAttr = 'rtl';
 
-const wrapRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : null);
+const setRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : null);
 
-const unwrapRtlValue = (value: RtlDirection): RtlDirection => (value === null ? null : true);
+const setRtlValue = (value: RtlDirection): RtlDirection => (value === null ? null : true);
 
 // applies unwrap to a set of all nodes from n to pos
 const getSharedRtlType = (nodes: NodePos[]) => {
-	const directionTypes = nodes.map(({ node }) => unwrapRtlValue(node.attrs[rtlAttr]));
+	const directionTypes = nodes.map(({ node }) => setRtlValue(node.attrs[rtlAttr]));
 	const directionTypesSet = new Set(directionTypes);
 	if (directionTypesSet.size === 1) {
 		return [...directionTypesSet][0];
@@ -57,7 +57,7 @@ const orientNodes = (
 	attr: RtlDirection,
 ) => {
 	const { tr } = state;
-	const rtlAttrValue = wrapRtlType(attr);
+	const rtlAttrValue = setRtlType(attr);
 
 	nodes.forEach(({ pos, node }) =>
 		tr.setNodeMarkup(pos, undefined, { ...node.attrs, [rtlAttr]: rtlAttrValue }),

@@ -85,6 +85,7 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 			fixedId: { default: '' },
 			id: { default: '' },
 			textAlign: { default: null },
+			rtl: { default: null },
 		},
 		content: 'inline*',
 		group: 'block',
@@ -97,6 +98,7 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 					return {
 						id: (node as Element).getAttribute('id'),
 						textAlign: (node as Element).getAttribute('data-text-align'),
+						rtl: (node as Element).getAttribute('data-rtl'),
 						level,
 					};
 				},
@@ -108,6 +110,7 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 				{
 					id: node.attrs.fixedId || node.attrs.id,
 					...(node.attrs.textAlign && { 'data-text-align': node.attrs.textAlign }),
+					...(node.attrs.rtl && { 'data-rtl': node.attrs.rtl.toString() }),
 				},
 				0,
 			] as DOMOutputSpec;
