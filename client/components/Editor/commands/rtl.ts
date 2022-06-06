@@ -6,7 +6,7 @@ import { createCommandSpec } from './util';
 
 type NodePos = { node: Node; pos: number };
 
-type RtlDirection = null | true;
+type RtlDirection = null | boolean;
 
 const rtlAttr = 'rtl';
 
@@ -15,11 +15,7 @@ const setRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : n
 // applies unwrap to a set of all nodes from n to pos
 const getSharedRtlType = (nodes: NodePos[]) => {
 	const directionTypes = nodes.map(({ node }) => node.attrs[rtlAttr]);
-	const directionTypesSet = new Set(directionTypes);
-	if (directionTypesSet.size === 1) {
-		return [...directionTypesSet][0];
-	}
-	return null;
+	return directionTypes.every((type) => type === true);
 };
 
 const isRtlTarget = (node: Node) => {
@@ -48,10 +44,9 @@ const orientNodes = (
 	attr: RtlDirection,
 ) => {
 	const { tr } = state;
-	const rtlAttrValue = setRtlType(attr);
 
 	nodes.forEach(({ pos, node }) =>
-		tr.setNodeMarkup(pos, undefined, { ...node.attrs, [rtlAttr]: rtlAttrValue }),
+		tr.setNodeMarkup(pos, undefined, { ...node.attrs, [rtlAttr]: attr }),
 	);
 	dispatch(tr);
 };
@@ -60,11 +55,13 @@ const createRtlCommandSpec = (direction: RtlDirection) => {
 	return createCommandSpec((dispatch: Dispatch, state: EditorState) => {
 		const rtlTargetNodes = getRtlTargetNodes(state);
 		const sharedDirectionType = getSharedRtlType(rtlTargetNodes);
+		const sharedDirectionAttr = sharedDirectionType ? true : null;
+		const rtlAttrValue = setRtlType(sharedDirectionAttr);
 		const canRun = rtlTargetNodes.length > 0;
 		return {
-			isActive: sharedDirectionType === direction,
+			isActive: sharedDirectionAttr === direction,
 			canRun,
-			run: () => orientNodes(rtlTargetNodes, state, dispatch, sharedDirectionType),
+			run: () => orientNodes(rtlTargetNodes, state, dispatch, rtlAttrValue),
 		};
 	});
 };
