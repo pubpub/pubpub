@@ -226,7 +226,7 @@ const renderFrontMatter = ({
 							return (
 								<span className="name" key={index}>
 									{fullName}
-									{affs?.length &&
+									{affs?.length > 0 &&
 										affs.map((affiliation) => (
 											<sup>{1 + affiliations.indexOf(affiliation)}</sup>
 										))}
