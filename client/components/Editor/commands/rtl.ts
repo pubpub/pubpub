@@ -13,10 +13,8 @@ type AlignableNodesResult = {
 };
 const rtlAttr = 'rtl';
 
-// wraps at least one nodes with the correct rtl direction if being toggled
 const wrapRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : null);
 
-// unwraps nodes rtl attr by setting all rtl node attrs to the correct negation
 const unwrapRtlValue = (value: RtlDirection): RtlDirection => (value === null ? null : true);
 
 // applies unwrap to a set of all nodes from n to pos
@@ -78,4 +76,5 @@ const createRtlCommandSpec = (direction: RtlDirection) => {
 		};
 	});
 };
+
 export const rtlToggle = createRtlCommandSpec(true);
