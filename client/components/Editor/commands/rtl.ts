@@ -7,19 +7,14 @@ import { createCommandSpec } from './util';
 type NodePos = { node: Node; pos: number };
 
 type RtlDirection = null | true;
-type AlignableNodesResult = {
-	rtlTargetNodes: NodePos[];
-	sharedDirectionType: RtlDirection;
-};
+
 const rtlAttr = 'rtl';
 
 const setRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : null);
 
-const setRtlValue = (value: RtlDirection): RtlDirection => (value === null ? null : true);
-
 // applies unwrap to a set of all nodes from n to pos
 const getSharedRtlType = (nodes: NodePos[]) => {
-	const directionTypes = nodes.map(({ node }) => setRtlValue(node.attrs[rtlAttr]));
+	const directionTypes = nodes.map(({ node }) => node.attrs[rtlAttr]);
 	const directionTypesSet = new Set(directionTypes);
 	if (directionTypesSet.size === 1) {
 		return [...directionTypesSet][0];
@@ -32,7 +27,7 @@ const isRtlTarget = (node: Node) => {
 	return spec.attrs && rtlAttr in spec.attrs;
 };
 
-const getRtlTargetNodes = (state: EditorState): AlignableNodesResult => {
+const getRtlTargetNodes = (state: EditorState): NodePos[] => {
 	const { selection, doc } = state;
 	const rtlTargetNodes: NodePos[] = [];
 	selection.ranges.forEach(({ $from, $to }) => {
@@ -42,12 +37,8 @@ const getRtlTargetNodes = (state: EditorState): AlignableNodesResult => {
 			}
 		});
 	});
-	const result = {
-		rtlTargetNodes,
-		sharedDirectionType: getSharedRtlType(rtlTargetNodes),
-	};
 
-	return result;
+	return rtlTargetNodes;
 };
 
 const orientNodes = (
@@ -67,7 +58,8 @@ const orientNodes = (
 
 const createRtlCommandSpec = (direction: RtlDirection) => {
 	return createCommandSpec((dispatch: Dispatch, state: EditorState) => {
-		const { rtlTargetNodes, sharedDirectionType } = getRtlTargetNodes(state);
+		const rtlTargetNodes = getRtlTargetNodes(state);
+		const sharedDirectionType = getSharedRtlType(rtlTargetNodes);
 		const canRun = rtlTargetNodes.length > 0;
 		return {
 			isActive: sharedDirectionType === direction,
