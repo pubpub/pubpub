@@ -36,7 +36,7 @@ describe('getStepsInChangeRange', () => {
 		            "attrs": Object {
 		              "class": null,
 		              "id": null,
-                      "rtl": null,
+		              "rtl": null,
 		              "textAlign": null,
 		            },
 		            "content": Array [
@@ -60,7 +60,7 @@ describe('getStepsInChangeRange', () => {
 		            "attrs": Object {
 		              "class": null,
 		              "id": null,
-					  "rtl": null,
+		              "rtl": null,
 		              "textAlign": null,
 		            },
 		            "content": Array [
@@ -114,7 +114,7 @@ describe('getStepsInChangeRange', () => {
 		            "attrs": Object {
 		              "class": null,
 		              "id": null,
-					  "rtl": null,
+		              "rtl": null,
 		              "textAlign": null,
 		            },
 		            "content": Array [
@@ -146,7 +146,7 @@ describe('getStepsInChangeRange', () => {
 		            "attrs": Object {
 		              "class": null,
 		              "id": null,
-					  "rtl": null,
+		              "rtl": null,
 		              "textAlign": null,
 		            },
 		            "content": Array [
@@ -170,7 +170,7 @@ describe('getStepsInChangeRange', () => {
 		            "attrs": Object {
 		              "class": null,
 		              "id": null,
-					  "rtl": null,
+		              "rtl": null,
 		              "textAlign": null,
 		            },
 		            "content": Array [
@@ -201,7 +201,7 @@ describe('getStepsInChangeRange', () => {
 		            "attrs": Object {
 		              "class": null,
 		              "id": null,
-					  "rtl": null,
+		              "rtl": null,
 		              "textAlign": null,
 		            },
 		            "content": Array [
@@ -225,7 +225,7 @@ describe('getStepsInChangeRange', () => {
 		            "attrs": Object {
 		              "class": null,
 		              "id": null,
-					  "rtl": null,
+		              "rtl": null,
 		              "textAlign": null,
 		            },
 		            "content": Array [
@@ -312,7 +312,7 @@ describe('getStepsInChangeRange', () => {
 		            "attrs": Object {
 		              "class": null,
 		              "id": null,
-					  "rtl": null,
+		              "rtl": null,
 		              "textAlign": null,
 		            },
 		            "content": Array [
