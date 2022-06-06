@@ -56,8 +56,9 @@ const createRtlCommandSpec = (direction: RtlDirection) => {
 		const sharedDirectionAttr = sharedDirection ? true : null;
 		const rtlAttrValue = swapRtlAttr(sharedDirectionAttr);
 		const canRun = rtlTargetNodes.length > 0;
+		const isActive = sharedDirectionAttr === direction;
 		return {
-			isActive: sharedDirectionAttr === direction,
+			isActive,
 			canRun,
 			run: () => orientNodes(rtlTargetNodes, state, dispatch, rtlAttrValue),
 		};
