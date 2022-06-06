@@ -155,7 +155,7 @@ const renderDetails = ({ updatedDateString, publishedDateString, doi, license, p
 			{doi ? (
 				<div>
 					<strong>DOI: </strong>
-					<a href={`https://dx.doi.org/${doi}`}>{doi}</a>
+					<a href={`https://doi.org/${doi}`}>{doi}</a>
 				</div>
 			) : (
 				<div>
