@@ -36,6 +36,7 @@ export const buildSchema = (customNodes = {}, customMarks = {}, nodeOptions = {}
 	});
 
 	return new Schema({
+		// @ts-ignore [TODO Ben resolve this] Property '0' is missing in type '(string | number | { class: string; })[]' but required in type 'DOMOutputSpecArray'. from math_inline.toDOM()
 		nodes: schemaNodes,
 		marks: schemaMarks,
 		topNode: 'doc',

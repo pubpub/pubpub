@@ -138,8 +138,8 @@ export default (schema) => {
 			return true;
 		});
 	}
-	if (schema.nodes.equation) {
-		bind('Mod-Space', insertMathCmd(schema.nodes.equation));
+	if (schema.nodes.math_inline) {
+		bind('Mod-Space', insertMathCmd(schema.nodes.math_inline));
 		// modify the default keymap chain for backspace
 		bind(
 			'Backspace',
