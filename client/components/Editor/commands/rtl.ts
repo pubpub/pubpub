@@ -5,15 +5,13 @@ import { Dispatch } from './types';
 import { createCommandSpec } from './util';
 
 type NodePos = { node: Node; pos: number };
-
-type RtlDirection = null | boolean;
+type RtlDirection = null | true;
 
 const rtlAttr = 'rtl';
 
-const setRtlType = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : null);
+const swapRtlAttr = (rtl: RtlDirection): RtlDirection => (rtl === null ? true : null);
 
-// applies unwrap to a set of all nodes from n to pos
-const getSharedRtlType = (nodes: NodePos[]) => {
+const doAllNodesHaveRtlDirection = (nodes: NodePos[]) => {
 	const directionTypes = nodes.map(({ node }) => node.attrs[rtlAttr]);
 	return directionTypes.every((type) => type === true);
 };
@@ -54,9 +52,9 @@ const orientNodes = (
 const createRtlCommandSpec = (direction: RtlDirection) => {
 	return createCommandSpec((dispatch: Dispatch, state: EditorState) => {
 		const rtlTargetNodes = getRtlTargetNodes(state);
-		const sharedDirectionType = getSharedRtlType(rtlTargetNodes);
-		const sharedDirectionAttr = sharedDirectionType ? true : null;
-		const rtlAttrValue = setRtlType(sharedDirectionAttr);
+		const sharedDirection = doAllNodesHaveRtlDirection(rtlTargetNodes);
+		const sharedDirectionAttr = sharedDirection ? true : null;
+		const rtlAttrValue = swapRtlAttr(sharedDirectionAttr);
 		const canRun = rtlTargetNodes.length > 0;
 		return {
 			isActive: sharedDirectionAttr === direction,
