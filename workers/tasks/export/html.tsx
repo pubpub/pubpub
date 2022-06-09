@@ -4,7 +4,7 @@ import fs from 'fs';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
-import { DocJson } from 'types';
+import { AttributionWithUser, DocJson } from 'types';
 import { renderStatic, editorSchema } from 'components/Editor';
 
 import { NotesData, PubMetadata } from './types';
@@ -143,7 +143,7 @@ const blankIframes = (nodes) =>
 		nodes,
 	);
 
-const renderDetails = ({ updatedDateString, publishedDateString, doi, license }) => {
+const renderDetails = ({ updatedDateString, publishedDateString, doi, license, pubUrl }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
 	return (
 		<>
@@ -152,9 +152,15 @@ const renderDetails = ({ updatedDateString, publishedDateString, doi, license })
 					<strong>Updated on:</strong> {updatedDateString}
 				</div>
 			)}
-			{doi && (
+			{doi ? (
 				<div>
-					<strong>DOI:</strong> {doi}
+					<strong>DOI: </strong>
+					<a href={`https://doi.org/${doi}`}>{`https://doi.org/${doi}`}</a>
+				</div>
+			) : (
+				<div>
+					<strong>URL: </strong>
+					<a href={pubUrl}>{pubUrl}</a>
 				</div>
 			)}
 			{license && (
@@ -176,14 +182,30 @@ const renderFrontMatter = ({
 	primaryCollectionMetadata,
 	doi,
 	title,
+	pubUrl,
 	communityTitle,
 	accentColor,
 	attributions,
 	publisher,
 	license,
 }: PubMetadata) => {
+	const getAffiliations = (attr: AttributionWithUser) =>
+		!attr?.affiliation?.length
+			? []
+			: attr.affiliation
+					.split(';')
+					.map((x) => x.trim())
+					.filter(Boolean);
+
 	const affiliations = [
-		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
+		...new Set(
+			attributions
+				.reduce((all, attr) => {
+					all.push(...getAffiliations(attr));
+					return all;
+				}, [] as string[])
+				.filter(Boolean),
+		),
 	];
 	// do not put community title if this is a book
 	const pubPublisher =
@@ -206,17 +228,20 @@ const renderFrontMatter = ({
 						{attributions.map((attr, index) => {
 							const {
 								user: { fullName },
-								affiliation,
 							} = attr;
-							const affiliationNumber =
-								affiliation && affiliations.includes(affiliation)
-									? 1 + affiliations.indexOf(affiliation)
-									: null;
+							const affs = getAffiliations(attr);
 							return (
 								<span className="name" key={index}>
 									{fullName}
-									{affiliationNumber && <sup>{affiliationNumber}</sup>}
-									{index < attributions.length - 1 && ', '}
+									{affs?.length > 0 &&
+										affs.map((affiliation, affIndex) => (
+											<sup key={affIndex}>
+												{1 + affiliations.indexOf(affiliation)}
+												{affs.length > 1 &&
+													affIndex < affs.length - 1 &&
+													','}
+											</sup>
+										))}
 								</span>
 							);
 						})}
@@ -245,6 +270,7 @@ const renderFrontMatter = ({
 					updatedDateString,
 					publishedDateString,
 					doi,
+					pubUrl,
 					license,
 				})}
 			</div>

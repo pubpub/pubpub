@@ -63,6 +63,12 @@ const redirectHosts = {
 	'underlay.pubpub.org': {
 		'/pub/future': 'https://notes.knowledgefutures.org/pub/future/',
 	},
+	'research.arcadiascience.com': {
+		'/pub/publishing-round-one':
+			'https://research.arcadiascience.com/pub/perspective-publishing-round-one',
+		'/pub/publishing-round-one/release/1':
+			'https://research.arcadiascience.com/pub/perspective-publishing-round-one/release/1',
+	},
 };
 
 app.use((req, res, next) => {
