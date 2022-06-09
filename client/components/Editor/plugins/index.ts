@@ -8,6 +8,7 @@ import buildCollaborative from './collaborative';
 import buildDiscussions from './discussions';
 import buildDomEvents from './domEvents';
 import buildIds from './ids';
+import buildMathTranslations from './equationsToMath';
 import buildHeaderIds from './headerIds';
 import buildInputRules from './inputRules';
 import buildKeymap from './keymap';
@@ -35,6 +36,7 @@ const buildHistory = () => {
 export const standardPlugins = {
 	inputRules: buildInputRules,
 	headerIds: buildHeaderIds,
+	translatedMathNodes: buildMathTranslations,
 	placeholder: buildPlaceholder,
 	localHighlights: buildLocalHighlights,
 	references: buildReferences,
