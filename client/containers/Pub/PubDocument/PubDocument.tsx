@@ -60,6 +60,15 @@ const PubDocument = () => {
 				Solicit feedback
 			</button>
 		) : null;
+	const renderNav = (
+		<div style={{ width }} className="reviews">
+			<button type="button" onClick={closeSidenav}>
+				X
+			</button>
+			<div>Some header for toggling review settings</div>
+			<div>reviews are here but refernce something someone highlited</div>
+		</div>
+	);
 	return (
 		<div className="pub-document-component">
 			{(!isReadOnly || isViewingHistory) && (
@@ -110,13 +119,7 @@ const PubDocument = () => {
 						/>
 					)}
 					{renderButton}
-					<div style={{ width }} className="reviews">
-						<button type="button" onClick={closeSidenav}>
-							X
-						</button>
-						<div>Some header for toggling review settings</div>
-						<div>reviews are here but refernce something someone highlited</div>
-					</div>
+					{renderNav}
 				</div>
 			</div>
 			<PubSuspendWhileTyping delay={1000}>

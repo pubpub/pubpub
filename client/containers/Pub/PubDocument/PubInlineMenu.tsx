@@ -75,6 +75,19 @@ const PubInlineMenu = () => {
 					}}
 				/>
 			)}
+			{(canView || canCreateDiscussions) && pubBodyState.canCreateAnchoredDiscussions && (
+				<Button
+					aria-label="Request a review"
+					title="Request a review"
+					minimal={true}
+					icon={<Icon icon="hand" />}
+					onClick={() => {
+						const view = collabData.editorChangeObject!.view;
+						setLocalHighlight(view, selection.from, selection.to, uuidv4());
+						moveToEndOfSelection(collabData.editorChangeObject!.view);
+					}}
+				/>
+			)}
 			<ClickToCopyButton
 				className="click-to-copy"
 				icon="clipboard"
