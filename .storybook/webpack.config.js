@@ -3,6 +3,7 @@ const { resolve } = require('path');
 const autoprefixer = require('autoprefixer');
 
 module.exports = ({ config }) => {
+	config.output.hashFunction = 'sha256';
 	config.resolve.extensions.push('.ts', '.tsx');
 	config.module.rules[0].test = /\.(mjs|jsx?|tsx?)$/;
 	config.module.rules.push({
