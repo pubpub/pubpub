@@ -99,7 +99,7 @@ const ThreadComment = (props: Props) => {
 						{isPreview ? ': ' : ''}
 					</span>
 
-					{isPreview && renderText()}
+					{isPreview && <span className="preview-text">{renderText()}</span>}
 					{!isPreview && (
 						<span className="time">
 							{!isEditing && (
