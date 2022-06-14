@@ -68,22 +68,18 @@ const ThreadComment = (props: Props) => {
 	};
 
 	const isAuthor = loginData.id === threadCommentData.userId;
-	const handleChangeEditorObject = (editorChangeObject: EditorChangeObject) => {
-		if (isEditing) {
-			setChangeObject(editorChangeObject);
-		}
-	};
-	const renderText = (
-		key: string, // key={`${isEditing}-${threadCommentData.text}`}
-		isReadOnly: boolean, // isReadOnly={!isEditing}
-		onChange?: any,
-	) => {
+
+	const renderText = () => {
 		return (
 			<Editor
-				key={key}
-				isReadOnly={isReadOnly}
+				key={`${isEditing}-${threadCommentData.text}`}
+				isReadOnly={!isEditing}
 				initialContent={threadCommentData.content}
-				onChange={onChange}
+				onChange={(editorChangeObject) => {
+					if (isEditing) {
+						setChangeObject(editorChangeObject);
+					}
+				}}
 			/>
 		);
 	};
@@ -153,11 +149,7 @@ const ThreadComment = (props: Props) => {
 								isSmall
 							/>
 						)}
-						{renderText(
-							`${isEditing}-${threadCommentData.text}`,
-							!isEditing,
-							handleChangeEditorObject(),
-						)}
+						{renderText()}
 					</div>
 				)}
 				{isEditing && (
