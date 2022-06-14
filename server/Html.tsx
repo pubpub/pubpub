@@ -49,14 +49,16 @@ const getActiveSlugClassName = (initialData: InitialData, viewData?: any) => {
 	return '';
 };
 
-const getUserClassName = (initialData: InitialData) => {
-	if (initialData.scopeData.activePermissions.activePermission) {
-		return 'user-member';
-	}
+const getUserClassName = (initialData: InitialData): String[] => {
+	const classes: String[] = [];
 	if (initialData.loginData.id) {
-		return 'user-logged-in';
+		classes.push('user-logged-in');
 	}
-	return 'user-anonymous';
+	if (initialData.scopeData.activePermissions.activePermission) {
+		classes.push('user-member');
+		classes.push(`user-permission-${initialData.scopeData.activePermissions.activePermission}`);
+	}
+	return classes;
 };
 
 const Html = (props: Props) => {
