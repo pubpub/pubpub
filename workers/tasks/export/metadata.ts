@@ -23,8 +23,12 @@ import { PubMetadata } from './types';
 const getPrimaryCollectionMetadata = (collectionPubs: types.CollectionPub[]) => {
 	const primaryCollection = getPrimaryCollection(collectionPubs);
 	if (primaryCollection) {
-		const { metadata, title } = primaryCollection;
-		return { primaryCollectionMetadata: metadata, primaryCollectionTitle: title };
+		const { metadata, title, kind } = primaryCollection;
+		return {
+			primaryCollectionMetadata: metadata,
+			primaryCollectionTitle: title,
+			primaryCollectionKind: kind,
+		};
 	}
 	return null;
 };

@@ -176,9 +176,7 @@ const renderDetails = ({ updatedDateString, publishedDateString, doi, license, p
 };
 
 const getHeadingItems = (metadata: PubMetadata) => {
-	const { primaryCollectionMetadata, primaryCollectionTitle, publisher, communityTitle } =
-		metadata;
-	const primaryCollectionKind = primaryCollectionMetadata?.kind;
+	const { primaryCollectionKind, primaryCollectionTitle, publisher, communityTitle } = metadata;
 	if (primaryCollectionKind === 'book' || primaryCollectionKind === 'conference') {
 		// For books and conferences, prefer showing the publisher string to the Community title
 		return [publisher || communityTitle, primaryCollectionTitle];
