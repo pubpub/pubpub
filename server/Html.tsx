@@ -49,6 +49,16 @@ const getActiveSlugClassName = (initialData: InitialData, viewData?: any) => {
 	return '';
 };
 
+const getUserClassName = (initialData: InitialData) => {
+	if (initialData.scopeData.activePermissions.activePermission) {
+		return 'user-member';
+	}
+	if (initialData.loginData.id) {
+		return 'user-logged-in';
+	}
+	return 'user-anonymous';
+};
+
 const Html = (props: Props) => {
 	const { customScripts } = props;
 	const getPath = (chunkName, extension) => {
@@ -88,6 +98,7 @@ const Html = (props: Props) => {
 				className={classNames(
 					props.bodyClassPrefix && `${props.bodyClassPrefix}-body-wrapper`,
 					getActiveSlugClassName(props.initialData, props.viewData),
+					getUserClassName(props.initialData),
 				)}
 			>
 				{/* This script tag is here to prevent FOUC in Firefox: https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer */}
