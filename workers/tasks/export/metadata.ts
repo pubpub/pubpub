@@ -87,7 +87,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		citationStyle: pubData.citationStyle,
 		citationInlineStyle: pubData.citationInlineStyle,
 		nodeLabels: pubData.nodeLabels,
-		publisher: pubData.community.publishAs || pubData.communityTitle,
+		publisher: pubData.community.publishAs,
 		...getPrimaryCollectionMetadata(pubData.collectionPubs),
 		license,
 	};
