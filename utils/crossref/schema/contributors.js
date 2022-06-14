@@ -29,6 +29,7 @@ export default (attributions) => {
 						? attribution.user.lastName
 						: attribution.user.firstName,
 					affiliation: attribution.affiliation,
+					ORCID: attribution.user.orcid && `https://orcid.org/${attribution.user.orcid}`,
 				};
 				if (!personNameOutput.affiliation) {
 					delete personNameOutput.affiliation;
