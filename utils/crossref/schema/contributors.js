@@ -29,13 +29,16 @@ export default (attributions) => {
 						? attribution.user.lastName
 						: attribution.user.firstName,
 					affiliation: attribution.affiliation,
-					ORCID: attribution.user.orcid && `https://orcid.org/${attribution.user.orcid}`,
+					ORCID: `https://orcid.org/${attribution.user.orcid}`,
 				};
 				if (!personNameOutput.affiliation) {
 					delete personNameOutput.affiliation;
 				}
 				if (!personNameOutput.given_name) {
 					delete personNameOutput.given_name;
+				}
+				if (!attribution.user.orcid) {
+					delete personNameOutput.ORCID;
 				}
 				return personNameOutput;
 			}),
