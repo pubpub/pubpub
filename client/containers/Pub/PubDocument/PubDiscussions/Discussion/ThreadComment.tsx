@@ -68,21 +68,17 @@ const ThreadComment = (props: Props) => {
 	};
 
 	const isAuthor = loginData.id === threadCommentData.userId;
-
-	const renderText = () => {
+	const renderText = (key: string, isReadOnly: boolean, onChange?: any) => {
 		return (
 			<Editor
-				key={`${isEditing}-${threadCommentData.text}`}
-				isReadOnly={!isEditing}
+				key={key}
+				isReadOnly={isReadOnly}
 				initialContent={threadCommentData.content}
-				onChange={(editorChangeObject) => {
-					if (isEditing) {
-						setChangeObject(editorChangeObject);
-					}
-				}}
+				onChange={onChange}
 			/>
 		);
 	};
+
 	return (
 		<div className={classNames('thread-comment-component', isPreview && 'is-preview')}>
 			<div className="avatar-wrapper">
@@ -99,7 +95,11 @@ const ThreadComment = (props: Props) => {
 						{isPreview ? ': ' : ''}
 					</span>
 
-					{isPreview && <span className="preview-text">{renderText()}</span>}
+					{isPreview && (
+						<span className="preview-text">
+							{renderText(`preview-${threadCommentData.text}`, true)}
+						</span>
+					)}
 					{!isPreview && (
 						<span className="time">
 							{!isEditing && (
@@ -149,7 +149,15 @@ const ThreadComment = (props: Props) => {
 								isSmall
 							/>
 						)}
-						{renderText()}
+						{renderText(
+							`${isEditing}-${threadCommentData.text}`,
+							true,
+							(editorChangeObject: EditorChangeObject) => {
+								if (isEditing) {
+									setChangeObject(editorChangeObject);
+								}
+							},
+						)}
 					</div>
 				)}
 				{isEditing && (
