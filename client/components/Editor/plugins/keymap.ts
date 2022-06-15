@@ -22,7 +22,7 @@ import { undoInputRule } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
 import { mathBackspaceCmd, insertMathCmd } from '@benrbray/prosemirror-math';
 
-import { splitBlockPreservingTextAlign } from '../commands';
+import { splitBlockPreservingAttrs } from '../commands';
 
 const mac = typeof navigator !== 'undefined' ? /Mac/.test(navigator.platform) : false;
 
@@ -154,7 +154,7 @@ export default (schema) => {
 		newlineInCode,
 		createParagraphNear,
 		liftEmptyBlock,
-		splitBlockPreservingTextAlign,
+		splitBlockPreservingAttrs(['textAlign', 'rtl']),
 	);
 
 	return [keymap(keys), keymap({ ...baseKeymap, Enter: customEnterCommand })];
