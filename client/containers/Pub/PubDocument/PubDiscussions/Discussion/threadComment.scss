@@ -2,6 +2,8 @@
 
 .thread-comment-component {
 	display: flex;
+	direction: ltr;
+
 	&:not(:last-child):not(.input) {
 		margin-bottom: 1em;
 		border-bottom: 1px solid #f0f0f7;
