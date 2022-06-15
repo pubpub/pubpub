@@ -24,6 +24,12 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		font-style: 14px;
+		> .editor.ProseMirror {
+			min-height: 0px;
+			p {
+				margin-bottom: 0px;
+			}
+		}
 	}
 	.discussion-body-wrapper {
 		> .editor.ProseMirror {
