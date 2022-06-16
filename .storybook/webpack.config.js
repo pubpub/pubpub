@@ -1,6 +1,10 @@
 /* eslint-disable no-param-reassign */
 const { resolve } = require('path');
 const autoprefixer = require('autoprefixer');
+const crypto = require('crypto');
+
+const cryptoCreateHash = crypto.createHash;
+crypto.createHash = (algorithm) => cryptoCreateHash(algorithm === 'md4' ? 'sha256' : algorithm);
 
 module.exports = ({ config }) => {
 	config.output.hashFunction = 'sha256';
