@@ -156,7 +156,7 @@ const ThreadComment = (props: Props) => {
 						)}
 						{renderText(
 							`${isEditing}-${threadCommentData.text}`,
-							true,
+							!isEditing,
 							(editorChangeObject: EditorChangeObject) => {
 								if (isEditing) {
 									setChangeObject(editorChangeObject);
