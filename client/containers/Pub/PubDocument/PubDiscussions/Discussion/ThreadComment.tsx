@@ -8,6 +8,7 @@ import { FormattingBar, buttons } from 'components/FormattingBar';
 import { Avatar, Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
+import { Callback } from 'types';
 
 require('./threadComment.scss');
 
@@ -68,7 +69,11 @@ const ThreadComment = (props: Props) => {
 	};
 
 	const isAuthor = loginData.id === threadCommentData.userId;
-	const renderText = (key: string, isReadOnly: boolean, onChange?: any) => {
+	const renderText = (
+		key: string,
+		isReadOnly: boolean,
+		onChange?: Callback<EditorChangeObject>,
+	) => {
 		return (
 			<Editor
 				key={key}
