@@ -145,7 +145,6 @@ export default function TitleEditor(props: Props) {
 		const html = node.current?.innerHTML ?? '';
 		const text = node.current?.innerText ?? '';
 		onChange?.(html, text);
-		document.title = text;
 		setFocused(false);
 	}, [onChange]);
 

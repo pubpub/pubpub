@@ -95,7 +95,7 @@ export const updatePub = (inputValues, updatePermissions, actorId) => {
 	if (filteredValues.slug) {
 		filteredValues.slug = slugifyString(filteredValues.slug);
 	}
-	if (filteredValues.title) {
+	if (filteredValues.title && !filteredValues.htmlTitle) {
 		filteredValues.htmlTitle = filteredValues.title;
 	}
 
