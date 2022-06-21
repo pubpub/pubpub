@@ -79,10 +79,12 @@ const getSingleStructuredCitation = async (
 			const citationHtml = citationData.format('bibliography', {
 				template: citationStyle === 'harvard' ? 'harvard1' : citationStyle,
 				format: 'html',
+				lang: 'en-US',
 			});
 			const citationApa = citationData.format('citation', {
 				template: citationStyle === 'apa-7' ? 'apa-7' : 'apa',
 				format: 'text',
+				lang: 'en-US',
 			});
 			return {
 				html: citationHtml,
