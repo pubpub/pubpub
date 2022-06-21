@@ -26,11 +26,11 @@ export default {
 	math_inline: {
 		...inlineMathSchema,
 		group: 'inline math',
-		toDOM: () => ['math-inline', { class: 'math-node' }, 0],
+		toDOM: () => ['math-inline', { class: 'math-node' }, 0] as const,
 	},
 	math_display: {
 		...mathDisplaySchema,
 		group: 'block math',
-		toDOM: () => ['math-display', { class: 'math-node' }, 0],
+		toDOM: () => ['math-display', { class: 'math-node' }, 0] as const,
 	},
 };

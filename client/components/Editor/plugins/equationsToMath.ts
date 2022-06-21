@@ -1,5 +1,5 @@
 import { Node } from 'prosemirror-model';
-import { EditorState, Plugin } from 'prosemirror-state';
+import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 type Replacement = {
@@ -7,7 +7,13 @@ type Replacement = {
 	replacementNode: Node;
 };
 
+const equationsToMathPluginKey = new PluginKey('equations-to-math');
+
 const getEquationTranslationTransactionForState = (editorState: EditorState) => {
+	const pluginState = equationsToMathPluginKey.getState(editorState);
+	if (pluginState.hasRun) {
+		return null;
+	}
 	const transaction = editorState.tr;
 	const replacements: Replacement[] = [];
 	let mustReturnTransaction = false;
@@ -30,6 +36,7 @@ const getEquationTranslationTransactionForState = (editorState: EditorState) => 
 		}
 	});
 	if (mustReturnTransaction) {
+		transaction.setMeta(equationsToMathPluginKey, true);
 		replacements
 			.reverse()
 			.forEach(({ pos, replacementNode }) =>
@@ -45,6 +52,7 @@ export default (_, props) => {
 		return [];
 	}
 	return new Plugin({
+		key: equationsToMathPluginKey,
 		view: (editorView: EditorView) => {
 			const transaction = getEquationTranslationTransactionForState(editorView.state);
 			if (transaction) {
@@ -52,7 +60,15 @@ export default (_, props) => {
 			}
 			return {};
 		},
-		appendTransaction: (transactions, __, newState) =>
+		appendTransaction: (__, ___, newState) =>
 			getEquationTranslationTransactionForState(newState),
+		state: {
+			init: () => {
+				return { hasRun: false };
+			},
+			apply: (transaction: Transaction, { hasRun }) => {
+				return { hasRun: transaction.getMeta(equationsToMathPluginKey) || hasRun };
+			},
+		},
 	});
 };
