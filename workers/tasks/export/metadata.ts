@@ -4,6 +4,7 @@ import * as types from 'types';
 import { getPubPublishedDate, getPubUpdatedDate } from 'utils/pub/pubDates';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { renderJournalCitation } from 'utils/citations';
+import { getUrlForPub } from 'utils/pubEdge';
 import {
 	Collection,
 	CollectionPub,
@@ -22,8 +23,12 @@ import { PubMetadata } from './types';
 const getPrimaryCollectionMetadata = (collectionPubs: types.CollectionPub[]) => {
 	const primaryCollection = getPrimaryCollection(collectionPubs);
 	if (primaryCollection) {
-		const { metadata, title } = primaryCollection;
-		return { primaryCollectionMetadata: metadata, primaryCollectionTitle: title };
+		const { metadata, title, kind } = primaryCollection;
+		return {
+			primaryCollectionMetadata: metadata,
+			primaryCollectionTitle: title,
+			primaryCollectionKind: kind,
+		};
 	}
 	return null;
 };
@@ -61,6 +66,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 			},
 		],
 	});
+	const pubUrl = getUrlForPub(pubData, pubData.community);
 	const publishedDate = getPubPublishedDate(pubData);
 	const license = getLicenseForPub(pubData, pubData.community);
 	const updatedDate = getPubUpdatedDate({ pub: pubData });
@@ -71,6 +77,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 	return {
 		title: pubData.title,
 		slug: pubData.slug,
+		pubUrl,
 		doi: pubData.doi,
 		publishedDateString,
 		updatedDateString,
@@ -84,7 +91,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		citationStyle: pubData.citationStyle,
 		citationInlineStyle: pubData.citationInlineStyle,
 		nodeLabels: pubData.nodeLabels,
-		publisher: pubData.community.publishAs || pubData.communityTitle,
+		publisher: pubData.community.publishAs,
 		...getPrimaryCollectionMetadata(pubData.collectionPubs),
 		license,
 	};
