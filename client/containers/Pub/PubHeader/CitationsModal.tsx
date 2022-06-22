@@ -42,7 +42,7 @@ const CitationsModal = (props: Props) => {
 						dangerouslySetInnerHTML={{ __html: citationData.pub.default }}
 					/>
 				</div>
-				{citationStyle !== 'apa-7' && (
+				{citationStyle !== 'apa-7' && citationStyle !== 'apa' && (
 					<div className="style-wrapper">
 						<div className="style-title">APA 7th Edition</div>
 						<div
