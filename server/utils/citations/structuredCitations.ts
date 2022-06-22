@@ -75,12 +75,12 @@ const getSingleStructuredCitation = async (
 		if (citationData) {
 			const citationJson = citationData.format('data', { format: 'object' });
 			const citationHtml = citationData.format('bibliography', {
-				template: citationStyle === 'harvard' ? 'harvard1' : citationStyle,
+				template: citationStyle,
 				format: 'html',
 				lang: 'en-US',
 			});
 			const citationApa = citationData.format('citation', {
-				template: citationStyle === 'apa-7',
+				template: citationStyle === 'apa-7' ? 'apa-7' : 'apa',
 				format: 'text',
 				lang: 'en-US',
 			});
