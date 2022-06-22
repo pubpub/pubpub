@@ -34,7 +34,7 @@ export const citationStyles: CitationStyle[] = [
 		name: 'American Anthropological Association',
 		path: './citeStyles/american-anthropological-association.csl',
 	},
-	{ key: 'apa', name: 'APA 6th Edition', path: './citeStyles/apa-7th-edition.csl' },
+	{ key: 'apa', name: 'APA 6th Edition', path: './citeStyles/apa-6th-edition.csl' },
 	{
 		key: 'apa-7',
 		name: 'APA 7th Edition',
