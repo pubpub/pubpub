@@ -114,13 +114,13 @@ export const generateCitationHtml = async (
 				})
 				.replace(/\n/gi, ''),
 			apa: pubCiteObject
-				.format('bibliography', { format: 'html', template: 'apa-7' })
+				.format('bibliography', { format: 'html', template: 'apa-7', lang: 'en-US' })
 				.replace(/\n/gi, ''),
 			harvard: pubCiteObject
-				.format('bibliography', { format: 'html', template: 'harvard' })
+				.format('bibliography', { format: 'html', template: 'harvard', lang: 'en-US' })
 				.replace(/\n/gi, ''),
 			vancouver: pubCiteObject
-				.format('bibliography', { format: 'html', template: 'vancouver' })
+				.format('bibliography', { format: 'html', template: 'vancouver', lang: 'en-US' })
 				.replace(/\n/gi, ''),
 			bibtex: pubCiteObject.format('bibtex'),
 		},
