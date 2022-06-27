@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import { usePageContext } from 'utils/hooks';
 import { PubHistoryViewer } from 'components';
@@ -38,7 +38,6 @@ const PubDocument = () => {
 	const mainContentRef = useRef<null | HTMLDivElement>(null);
 	const sideContentRef = useRef(null);
 	const editorWrapperRef = useRef(null);
-	const [width, setWidth] = useState('');
 
 	usePermalinkOnMount();
 	usePubHrefs({ enabled: !isReadOnly });
@@ -48,27 +47,6 @@ const PubDocument = () => {
 	if (hidePubBody) {
 		return null;
 	}
-	const openSidenav = () => {
-		setWidth('25%');
-	};
-	const closeSidenav = () => {
-		setWidth('0%');
-	};
-	const renderButton =
-		width === '0%' ? (
-			<button type="button" onClick={openSidenav}>
-				Solicit feedback
-			</button>
-		) : null;
-	const renderNav = (
-		<div style={{ width }} className="reviews">
-			<button type="button" onClick={closeSidenav}>
-				X
-			</button>
-			<div>Some header for toggling review settings</div>
-			<div>reviews are here but refernce something someone highlited</div>
-		</div>
-	);
 	return (
 		<div className="pub-document-component">
 			{(!isReadOnly || isViewingHistory) && (
@@ -118,8 +96,6 @@ const PubDocument = () => {
 							onSetCurrentHistoryKey={historyData.setCurrentHistoryKey}
 						/>
 					)}
-					{renderButton}
-					{renderNav}
 				</div>
 			</div>
 			<PubSuspendWhileTyping delay={1000}>

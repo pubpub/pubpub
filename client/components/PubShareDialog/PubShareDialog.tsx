@@ -52,7 +52,7 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
 	const { viewHash, editHash, isRelease } = pubData;
-
+	const reviewHash = 'revy';
 	const renderHashRow = (label, hash) => {
 		const url = pubUrl(communityData, pubData, {
 			accessHash: hash,
@@ -71,10 +71,11 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	return (
 		<div className="access-hash-options">
 			<p>
-				You can grant visitors permission to view or edit the draft of this pub by sharing a
-				URL.
+				You can grant visitors permission to view, edit, or review the draft of this pub by
+				sharing a URL.
 			</p>
 			{viewHash && renderHashRow('View', viewHash)}
+			{reviewHash && renderHashRow('Review', reviewHash)}
 			{editHash && renderHashRow('Edit', editHash)}
 		</div>
 	);
