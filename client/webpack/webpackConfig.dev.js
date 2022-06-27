@@ -75,6 +75,7 @@ module.exports = {
 							sourceMap: true,
 							sourceMapContents: false,
 							includePaths: [resolve(__dirname, '../')],
+							sassOptions: { quietDeps: true },
 						},
 					},
 				],
