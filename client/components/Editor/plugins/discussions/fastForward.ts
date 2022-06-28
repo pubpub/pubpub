@@ -28,9 +28,9 @@ const getFastForwardedDiscussion = (
 
 export const createFastForwarder =
 	(draftRef: Reference) =>
-	async <S extends Schema>(
+	async (
 		discussionsById: NullableDiscussions,
-		latestDoc: Node<S>,
+		latestDoc: Node,
 		latestHistoryKey: number,
 	): Promise<Discussions> => {
 		const { schema } = latestDoc.type;
