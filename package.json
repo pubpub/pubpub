@@ -111,7 +111,7 @@
 		"lodash.pickby": "^4.6.0",
 		"lodash.throttle": "^4.1.1",
 		"mailgun.js": "^2.0.1",
-		"mudder": "^2.1.0",
+		"mudder": "^1.0.4",
 		"mutationobserver-shim": "^0.3.3",
 		"newrelic": "^5.7.0",
 		"no-slash": "^1.2.15",
