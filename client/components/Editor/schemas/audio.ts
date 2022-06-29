@@ -1,4 +1,4 @@
-import { DOMOutputSpec, DOMOutputSpecArray } from 'prosemirror-model';
+import { DOMOutputSpec } from 'prosemirror-model';
 import { pruneFalsyValues } from 'utils/arrays';
 import { withValue } from 'utils/fp';
 
