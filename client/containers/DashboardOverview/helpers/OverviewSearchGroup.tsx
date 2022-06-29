@@ -109,4 +109,5 @@ const OverviewSearchGroup = (props: Props) => {
 	);
 };
 
+export { OverviewSearchFilter };
 export default OverviewSearchGroup;
