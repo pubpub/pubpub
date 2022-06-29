@@ -1,5 +1,5 @@
 /* The fraction of the screen used for the pub margin -- converted to CSS units below */
-@use "sass:math";
+@use 'sass:math';
 
 $pub-margin-fraction: 0.04;
 /* Below this width, comments will be forced to a minimized view */
