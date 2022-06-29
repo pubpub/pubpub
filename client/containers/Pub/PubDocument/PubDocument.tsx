@@ -47,6 +47,7 @@ const PubDocument = () => {
 	if (hidePubBody) {
 		return null;
 	}
+
 	return (
 		<div className="pub-document-component">
 			{(!isReadOnly || isViewingHistory) && (
