@@ -27,7 +27,7 @@ export const getDefaultOverviewSearchFilters = (
 		{ id: 'released', title: 'Released', query: { isReleased: true } },
 		isViewMember && {
 			id: 'mine',
-			title: 'Mine',
+			title: 'My Pubs',
 			query: {
 				relatedUserIds: [userId!],
 				ordering: { field: 'creationDate', direction: 'DESC' },
