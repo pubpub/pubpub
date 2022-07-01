@@ -31,6 +31,7 @@ export { default as PasswordReset } from './PasswordReset/PasswordReset';
 export { default as Pricing } from './Pricing/Pricing';
 export { default as Legal } from './Legal/Legal';
 export { default as Pub } from './Pub/Pub';
+export { default as Review } from './Review/Review';
 export { default as Search } from './Search/Search';
 export { default as Signup } from './Signup/Signup';
 export { default as User } from './User/User';
