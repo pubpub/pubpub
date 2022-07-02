@@ -2,11 +2,11 @@ import React from 'react';
 
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { joinOxford, naivePluralize } from 'utils/strings';
-import { AttributableUser, User } from 'types';
+import { MinUser, User } from 'types';
 
 require('./byline.scss');
 
-const isFullUser = (u: AttributableUser): u is User => 'slug' in u;
+const isFullUser = (u: MinUser): u is User => 'slug' in u;
 
 export type BylineProps = {
 	ampersand?: boolean;
