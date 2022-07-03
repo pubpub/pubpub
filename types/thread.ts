@@ -1,4 +1,4 @@
-import { User } from './attribution';
+import { User } from './user';
 import { Discussion } from './discussion';
 import { Review } from './review';
 
