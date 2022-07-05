@@ -84,6 +84,7 @@ export type Pub = {
 	citationInlineStyle?: CitationInlineStyleKind;
 	viewHash?: string;
 	editHash?: string;
+	reviewHash?: string;
 	communityId: string;
 	community?: Community;
 	discussions?: Discussion[];

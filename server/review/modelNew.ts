@@ -17,7 +17,6 @@ export default (sequelize, dataTypes) => {
 			visibilityId: { type: dataTypes.UUID, allowNull: false },
 			userId: { type: dataTypes.UUID, allowNull: false },
 			pubId: { type: dataTypes.UUID },
-			hash: { type: dataTypes.STRING },
 		},
 		{
 			indexes: [
