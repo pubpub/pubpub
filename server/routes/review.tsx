@@ -7,7 +7,7 @@ import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 
-app.get(['/review/:reviewHash'], async (req, res, next) => {
+app.get(['/pub/review/:slug'], async (req, res, next) => {
 	try {
 		if (!hostIsValid(req, 'community')) {
 			return next();

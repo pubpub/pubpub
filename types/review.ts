@@ -17,5 +17,4 @@ export type Review = {
 	userId: string;
 	pubId: string;
 	pub?: Pub;
-	hash?: string;
 };

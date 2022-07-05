@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Classes, ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
 
 import {
@@ -58,32 +58,31 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
 	const { id, viewHash, editHash, reviewHash, isRelease } = pubData;
-	const updatePub = async (patch: Partial<Pub>) => {
-		await apiFetch('/api/pubs', {
-			method: 'PUT',
-			body: JSON.stringify({
-				pubId: id,
-				...patch,
-			}),
-		});
-
-		return patch.reviewHash;
-	};
-
-	const reviewLink = !reviewHash ? updatePub({ reviewHash: generateHash(8) }) : null;
-	const renderHashRow = (label, hash, isReview) => {
-		let url = '';
-		if (isReview) {
-			url = reviewUrl(communityData, pubData, {
-				reviewHash: reviewHash || reviewLink,
-				isDraft: !isRelease,
+	const [revHash] = useState(generateHash(8));
+	const updatePub = useCallback(
+		(patch: Partial<Pub>) => {
+			apiFetch('/api/pubs', {
+				method: 'PUT',
+				body: JSON.stringify({
+					pubId: id,
+					...patch,
+				}),
 			});
-		} else {
-			url = pubUrl(communityData, pubData, {
-				accessHash: hash,
-				isDraft: !isRelease,
-			});
+		},
+		[id],
+	);
+
+	useEffect(() => {
+		if (!reviewHash) {
+			updatePub({ reviewHash: revHash });
 		}
+	}, [revHash, reviewHash, updatePub]);
+
+	const renderHashRow = (label, hash) => {
+		const url = pubUrl(communityData, pubData, {
+			accessHash: hash,
+			isDraft: !isRelease,
+		});
 		return (
 			<ControlGroup className="hash-row">
 				<ClickToCopyButton minimal={false} copyString={url}>
@@ -94,15 +93,29 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 		);
 	};
 
+	const renderReviewRow = (label, hash) => {
+		const url = reviewUrl(communityData, {
+			reviewHash: hash,
+		});
+
+		return (
+			<ControlGroup className="hash-row">
+				<ClickToCopyButton minimal={false} copyString={url}>
+					Copy {label} URL
+				</ClickToCopyButton>
+				<InputGroup className="display-url" value={url} fill />
+			</ControlGroup>
+		);
+	};
 	return (
 		<div className="access-hash-options">
 			<p>
 				You can grant visitors permission to view, edit, or review the draft of this pub by
 				sharing a URL.
 			</p>
-			{viewHash && renderHashRow('View', viewHash, false)}
-			{editHash && renderHashRow('Edit', editHash, false)}
-			{renderHashRow('Review', reviewHash || reviewLink, true)}
+			{viewHash && renderHashRow('View', viewHash)}
+			{editHash && renderHashRow('Edit', editHash)}
+			{renderReviewRow('Review', reviewHash || revHash)}
 		</div>
 	);
 };

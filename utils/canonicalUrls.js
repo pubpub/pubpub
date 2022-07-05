@@ -76,14 +76,8 @@ export const doiUrl = (doi) => `https://doi.org/${doi}`;
 
 export const pageUrl = (community, page) => `${communityUrl(community)}/${page.slug}`;
 
-export const reviewUrl = (community, pub, reviewHash) => {
+export const reviewUrl = (community, hash) => {
 	const skipCommunity = community === null || isQubQub();
 	const baseCommunityUrl = skipCommunity ? '' : communityUrl(community);
-	const baseUrl = `${baseCommunityUrl}/pub/${pub.slug}`;
-	const url = queryString.stringifyUrl(
-		{ url: baseUrl, query: { review: reviewHash } },
-		{ skipNull: true },
-	);
-
-	return url;
+	return `${baseCommunityUrl}/pub/review/${hash?.reviewHash}`;
 };
