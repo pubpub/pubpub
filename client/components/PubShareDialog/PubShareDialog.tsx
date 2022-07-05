@@ -11,7 +11,10 @@ import {
 } from 'components';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { useMembersState } from 'client/utils/members/useMembers';
-import { pubUrl } from 'utils/canonicalUrls';
+import { pubUrl, reviewUrl } from 'utils/canonicalUrls';
+import { generateHash } from 'utils/hashes';
+import { Pub } from 'types';
+import { apiFetch } from 'client/utils/apiFetch';
 
 require('./pubShareDialog.scss');
 
@@ -19,6 +22,7 @@ type PubShareDialogProps = {
 	isOpen: boolean;
 	onClose: (...args: any[]) => any;
 	pubData: {
+		id: string;
 		editHash?: string;
 		viewHash?: string;
 		isRelease?: boolean;
@@ -42,8 +46,10 @@ const getHelperText = (activeTargetName, activeTargetType, canModifyMembers) => 
 
 type AccessHashOptionsProps = {
 	pubData: {
+		id: string;
 		editHash?: string;
 		viewHash?: string;
+		reviewHash?: string;
 		isRelease?: boolean;
 	};
 };
@@ -51,13 +57,33 @@ type AccessHashOptionsProps = {
 const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
-	const { viewHash, editHash, isRelease } = pubData;
-	const reviewHash = 'revy';
-	const renderHashRow = (label, hash) => {
-		const url = pubUrl(communityData, pubData, {
-			accessHash: hash,
-			isDraft: !isRelease,
+	const { id, viewHash, editHash, reviewHash, isRelease } = pubData;
+	const updatePub = async (patch: Partial<Pub>) => {
+		await apiFetch('/api/pubs', {
+			method: 'PUT',
+			body: JSON.stringify({
+				pubId: id,
+				...patch,
+			}),
 		});
+
+		return patch.reviewHash;
+	};
+
+	const reviewLink = !reviewHash ? updatePub({ reviewHash: generateHash(8) }) : null;
+	const renderHashRow = (label, hash, isReview) => {
+		let url = '';
+		if (isReview) {
+			url = reviewUrl(communityData, pubData, {
+				reviewHash: reviewHash || reviewLink,
+				isDraft: !isRelease,
+			});
+		} else {
+			url = pubUrl(communityData, pubData, {
+				accessHash: hash,
+				isDraft: !isRelease,
+			});
+		}
 		return (
 			<ControlGroup className="hash-row">
 				<ClickToCopyButton minimal={false} copyString={url}>
@@ -74,9 +100,9 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 				You can grant visitors permission to view, edit, or review the draft of this pub by
 				sharing a URL.
 			</p>
-			{viewHash && renderHashRow('View', viewHash)}
-			{reviewHash && renderHashRow('Review', reviewHash)}
-			{editHash && renderHashRow('Edit', editHash)}
+			{viewHash && renderHashRow('View', viewHash, false)}
+			{editHash && renderHashRow('Edit', editHash, false)}
+			{renderHashRow('Review', reviewHash || reviewLink, true)}
 		</div>
 	);
 };
