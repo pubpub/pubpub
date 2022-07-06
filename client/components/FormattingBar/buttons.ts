@@ -238,22 +238,6 @@ export const reference: FormattingBarButtonData = {
 	},
 };
 
-export const math: FormattingBarButtonData = {
-	key: 'math_display',
-	title: 'Math',
-	icon: 'function',
-	insertNodeType: 'math_display',
-	controls: nodeControls(ControlsMath, ['math_inline', 'math_display']),
-};
-
-export const math_inline: FormattingBarButtonData = {
-	key: 'math_inline',
-	title: 'Math',
-	icon: 'function',
-	insertNodeType: 'math_inline',
-	controls: nodeControls(ControlsMath, ['math_inline']),
-};
-
 export const footnote: FormattingBarButtonData = {
 	key: 'footnote',
 	title: 'Footnote',
@@ -284,6 +268,17 @@ export const table: FormattingBarButtonData = {
 	},
 };
 
+export const math: FormattingBarButtonData = {
+	key: 'math',
+	title: 'Math',
+	icon: 'function',
+	insertNodeType: 'math_inline',
+	controls: nodeControls(ControlsMath, ['math_inline', 'math_display'], {
+		floatingPosition: positionNearSelection,
+		showCloseButton: false,
+	}),
+};
+
 export const media: FormattingBarButtonData = {
 	key: 'media',
 	title: 'Media',
@@ -302,7 +297,7 @@ export const simpleMedia: FormattingBarButtonData = {
 };
 
 export const minimalButtonSet = [[strong, em, link, rightToLeft, math]];
-export const abstractButtonSet = [[strong, em, link, rightToLeft, math_inline]];
+export const abstractButtonSet = [[strong, em, link, rightToLeft, math]];
 export const discussionButtonSet = [[strong, em, link], [rightToLeft], [simpleMedia]];
 export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 export const workflowButtonSet = [
