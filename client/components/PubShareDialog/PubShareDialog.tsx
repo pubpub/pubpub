@@ -58,25 +58,29 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
 	const { id, viewHash, editHash, reviewHash, isRelease } = pubData;
-	const [revHash] = useState(generateHash(8));
-	const updatePub = useCallback(
-		(patch: Partial<Pub>) => {
-			apiFetch('/api/pubs', {
-				method: 'PUT',
-				body: JSON.stringify({
-					pubId: id,
-					...patch,
-				}),
-			});
-		},
-		[id],
-	);
+	const [revHash, setRevHash] = useState('');
 
-	useEffect(() => {
-		if (!reviewHash) {
-			updatePub({ reviewHash: revHash });
+	const createReviewHash = (hash: string | undefined) => {
+		if (hash) {
+			setRevHash(hash);
+			return revHash;
 		}
-	}, [revHash, reviewHash, updatePub]);
+
+		const slug = generateHash(8);
+		apiFetch('/api/pubs', {
+			method: 'PUT',
+			body: JSON.stringify({
+				pubId: id,
+				communityId: communityData.id,
+				reviewHash: slug,
+			}),
+		}).then(() => {
+			setRevHash(slug);
+		});
+		return revHash;
+	};
+	const slug = createReviewHash(reviewHash);
+	console.log(slug);
 
 	const renderHashRow = (label, hash) => {
 		const url = pubUrl(communityData, pubData, {
@@ -115,7 +119,7 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 			</p>
 			{viewHash && renderHashRow('View', viewHash)}
 			{editHash && renderHashRow('Edit', editHash)}
-			{renderReviewRow('Review', reviewHash || revHash)}
+			{renderReviewRow('Review', 'slug')}
 		</div>
 	);
 };
