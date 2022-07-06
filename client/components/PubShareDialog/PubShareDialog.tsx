@@ -57,12 +57,10 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
 	const { id, viewHash, editHash, reviewHash, isRelease } = pubData;
-	const [revHash, setRevHash] = useState('');
 
 	const createReviewHash = (hash: string | undefined) => {
 		if (hash) {
-			setRevHash(hash);
-			return revHash;
+			return hash;
 		}
 
 		const slug = generateHash(8);
@@ -73,13 +71,10 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 				communityId: communityData.id,
 				reviewHash: slug,
 			}),
-		}).then(() => {
-			setRevHash(slug);
 		});
-		return revHash;
+
+		return slug;
 	};
-	const slug = createReviewHash(reviewHash);
-	console.log(slug);
 
 	const renderHashRow = (label, hash) => {
 		const url = pubUrl(communityData, pubData, {
@@ -97,7 +92,7 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	};
 
 	const renderReviewRow = (label, hash) => {
-		const url = reviewUrl(communityData, {
+		const url = reviewUrl(communityData, pubData, {
 			reviewHash: hash,
 		});
 
@@ -118,7 +113,7 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 			</p>
 			{viewHash && renderHashRow('View', viewHash)}
 			{editHash && renderHashRow('Edit', editHash)}
-			{renderReviewRow('Review', 'slug')}
+			{renderReviewRow('Review', createReviewHash(reviewHash))}
 		</div>
 	);
 };

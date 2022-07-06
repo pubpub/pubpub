@@ -76,8 +76,8 @@ export const doiUrl = (doi) => `https://doi.org/${doi}`;
 
 export const pageUrl = (community, page) => `${communityUrl(community)}/${page.slug}`;
 
-export const reviewUrl = (community, hash) => {
+export const reviewUrl = (community, pub, hash) => {
 	const skipCommunity = community === null || isQubQub();
 	const baseCommunityUrl = skipCommunity ? '' : communityUrl(community);
-	return `${baseCommunityUrl}/pub/review/${hash?.reviewHash}`;
+	return `${baseCommunityUrl}/pub/${pub.slug}/review/${hash?.reviewHash}`;
 };
