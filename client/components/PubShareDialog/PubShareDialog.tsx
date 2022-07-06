@@ -76,44 +76,41 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 		return slug;
 	};
 
-	const renderHashRow = (label, hash) => {
-		const url = pubUrl(communityData, pubData, {
+	const renderCopyLabelComponent = (label, url) => {
+		return (
+			<ControlGroup className="hash-row">
+				<ClickToCopyButton minimal={false} copyString={url}>
+					Copy {label} URL
+				</ClickToCopyButton>
+				<InputGroup className="display-url" value={url} fill />
+			</ControlGroup>
+		);
+	};
+
+	const pubUrlFunction = (hash) =>
+		pubUrl(communityData, pubData, {
 			accessHash: hash,
 			isDraft: !isRelease,
 		});
-		return (
-			<ControlGroup className="hash-row">
-				<ClickToCopyButton minimal={false} copyString={url}>
-					Copy {label} URL
-				</ClickToCopyButton>
-				<InputGroup className="display-url" value={url} fill />
-			</ControlGroup>
-		);
-	};
-
-	const renderReviewRow = (label, hash) => {
-		const url = reviewUrl(communityData, pubData, {
+	const reviewUrlFunction = (hash) =>
+		reviewUrl(communityData, pubData, {
 			reviewHash: hash,
 		});
 
-		return (
-			<ControlGroup className="hash-row">
-				<ClickToCopyButton minimal={false} copyString={url}>
-					Copy {label} URL
-				</ClickToCopyButton>
-				<InputGroup className="display-url" value={url} fill />
-			</ControlGroup>
-		);
+	const renderRow = (label, hash, urlFunction) => {
+		const url = urlFunction(hash);
+		return renderCopyLabelComponent(label, url);
 	};
+
 	return (
 		<div className="access-hash-options">
 			<p>
 				You can grant visitors permission to view, edit, or review the draft of this pub by
 				sharing a URL.
 			</p>
-			{viewHash && renderHashRow('View', viewHash)}
-			{editHash && renderHashRow('Edit', editHash)}
-			{renderReviewRow('Review', createReviewHash(reviewHash))}
+			{viewHash && renderRow('View', viewHash, pubUrlFunction)}
+			{editHash && renderRow('Edit', editHash, reviewUrlFunction)}
+			{renderRow('Review', createReviewHash(reviewHash), renderRow)}
 		</div>
 	);
 };
