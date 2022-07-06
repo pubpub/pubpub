@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Classes, ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
 
 import {
@@ -57,24 +57,24 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
 	const { id, viewHash, editHash, reviewHash, isRelease } = pubData;
-
-	const createReviewHash = (hash: string | undefined) => {
-		if (hash) {
-			return hash;
+	const [revHash, setRevHash] = useState('');
+	useEffect(() => {
+		if (!reviewHash) {
+			console.log('this ran once');
+			const slug = generateHash(8);
+			apiFetch('/api/pubs', {
+				method: 'PUT',
+				body: JSON.stringify({
+					pubId: id,
+					communityId: communityData.id,
+					reviewHash: slug,
+				}),
+			});
+			setRevHash(slug);
+		} else {
+			setRevHash(reviewHash);
 		}
-
-		const slug = generateHash(8);
-		apiFetch('/api/pubs', {
-			method: 'PUT',
-			body: JSON.stringify({
-				pubId: id,
-				communityId: communityData.id,
-				reviewHash: slug,
-			}),
-		});
-
-		return slug;
-	};
+	}, [communityData.id, id, reviewHash]);
 
 	const renderCopyLabelComponent = (label, url) => {
 		return (
@@ -109,8 +109,8 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 				sharing a URL.
 			</p>
 			{viewHash && renderRow('View', viewHash, pubUrlFunction)}
-			{editHash && renderRow('Edit', editHash, reviewUrlFunction)}
-			{renderRow('Review', createReviewHash(reviewHash), renderRow)}
+			{editHash && renderRow('Edit', editHash, pubUrlFunction)}
+			{renderRow('Review', revHash, reviewUrlFunction)}
 		</div>
 	);
 };
