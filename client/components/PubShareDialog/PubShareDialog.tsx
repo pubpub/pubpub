@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Classes, ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
 
 import {
@@ -13,7 +13,6 @@ import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { useMembersState } from 'client/utils/members/useMembers';
 import { pubUrl, reviewUrl } from 'utils/canonicalUrls';
 import { generateHash } from 'utils/hashes';
-import { Pub } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 
 require('./pubShareDialog.scss');
