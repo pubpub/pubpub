@@ -237,24 +237,39 @@ app.get(
 );
 
 app.get(['/pub/:pubSlug/review/:reviewSlug'], async (req, res, next) => {
+	if (!hostIsValid(req, 'community')) {
+		return next();
+	}
 	try {
-		if (!hostIsValid(req, 'community')) {
-			return next();
+		const initialData = await getInitialData(req);
+		const { historyKey: historyKeyString, pubSlug } = req.params;
+		const { canViewDraft, canView } = initialData.scopeData.activePermissions;
+		const hasHistoryKey = historyKeyString !== undefined;
+		const historyKey = parseInt(historyKeyString, 10);
+		const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
+
+		if (isHistoryKeyInvalid) {
+			throw new NotFoundError();
 		}
-		const initialData = await getInitialData(req, true);
-		return renderToNodeStream(
-			res,
-			<Html
-				chunkName="Review"
-				initialData={initialData}
-				viewData={{ reviewDocument: 'Renders Fine in Storybook' }}
-				headerComponents={generateMetaComponents({
-					initialData,
-					title: `Review · Did Whitebeard Survive???`,
-				})}
-			/>,
-		);
+
+		if (!canViewDraft && !canView) {
+			throw new NotFoundError();
+		}
+
+		const pubData = await Promise.all([
+			getEnrichedPubData({
+				pubSlug,
+				initialData,
+				historyKey: hasHistoryKey ? historyKey : null,
+			}),
+			getMembers(initialData),
+		]).then(([enrichedPubData, membersData]) => ({
+			...enrichedPubData,
+			membersData,
+		}));
+		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
+		return renderPubDocument(res, pubData, initialData, customScripts);
 	} catch (err) {
-		return handleErrors(req, res, next);
+		return handleErrors(req, res, next)(err);
 	}
 });
