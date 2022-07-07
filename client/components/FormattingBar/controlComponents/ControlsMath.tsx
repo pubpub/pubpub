@@ -2,7 +2,7 @@
 import React from 'react';
 
 import { FormattingBar, FormattingBarButtonData } from 'components/FormattingBar';
-import { mathToggleKind } from 'components/Editor/commands';
+import { mathToggleKind, mathToggleLabel } from 'components/Editor/commands';
 import { EditorChangeObjectWithNode } from '../types';
 
 require('./controls.scss');
@@ -24,14 +24,14 @@ const ControlsMath = (props: Props) => {
 
 	const toggleMathLabelButton: FormattingBarButtonData = {
 		key: 'toggle-math-display-label',
-		title: 'Change display position',
+		title: 'Toggle label',
 		icon: 'function',
-		command: mathToggleKind,
+		command: mathToggleLabel,
 	};
 
 	const mathButtons: FormattingBarButtonData[] = [swapMathTypeButton];
-	if (selectedNode && selectedNode.type.name === 'math_display')
-		mathButtons.push(toggleMathLabelButton);
+	const isDisplay = selectedNode && selectedNode.type.name === 'math_display';
+	if (isDisplay) mathButtons.push(toggleMathLabelButton);
 
 	return (
 		<FormattingBar

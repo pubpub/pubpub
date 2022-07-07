@@ -20,7 +20,7 @@ import { wrapInList, splitListItem, liftListItem, sinkListItem } from 'prosemirr
 import { undo, redo } from 'prosemirror-history';
 import { undoInputRule } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
-import { mathBackspaceCmd, insertMathCmd } from '@benrbray/prosemirror-math';
+import { mathBackspaceCmd } from '@benrbray/prosemirror-math';
 
 import { splitBlockPreservingAttrs } from '../commands';
 
@@ -139,7 +139,7 @@ export default (schema) => {
 		});
 	}
 	if (schema.nodes.math_inline) {
-		bind('Mod-Space', insertMathCmd(schema.nodes.math_inline));
+		// bind('Mod-Space', insertMathCmd(schema.nodes.math_inline));
 		// modify the default keymap chain for backspace
 		bind(
 			'Backspace',

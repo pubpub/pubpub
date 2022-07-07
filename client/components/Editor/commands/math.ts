@@ -21,17 +21,27 @@ const toggleKind: Command = (state: EditorState, dispatch?: Dispatch) => {
 			swapNodeType.create({}, node.content),
 			true,
 		);
+		/*
+		console.log({ $anchor }); // from state.selection
+		transaction.setSelection(
+			NodeSelection.create(state.tr.doc, transaction.mapping.map($anchor.pos - 1)),
+		);
+		 */
+
 		dispatch(transaction);
 	}
 	return true;
 };
 
 const toggleLabel: Command = (state: EditorState, dispatch?: Dispatch) => {
-	const canRun = false;
+	const { node, $anchor } = state.selection as NodeSelection;
+	const canRun = node && node.type.name === 'math_display';
 	if (!canRun) return false;
 	if (dispatch) {
-		console.log('dispatch!');
-		// dispatch(transaction);
+		const transaction = state.tr.setNodeMarkup($anchor.pos, node.type, {
+			hideLabel: !node.attrs.hideLabel,
+		});
+		dispatch(transaction);
 	}
 	return true;
 };

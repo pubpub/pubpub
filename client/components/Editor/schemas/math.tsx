@@ -1,4 +1,6 @@
-import { DOMOutputSpec } from 'prosemirror-model';
+import { DOMOutputSpec, Node } from 'prosemirror-model';
+
+import { counter } from './reactive/counter';
 
 // don't change this object; necessary for prosmirror-math package
 const inlineMathSchema = {
@@ -32,7 +34,25 @@ export default {
 	},
 	math_display: {
 		...mathDisplaySchema,
+		reactive: true,
 		group: 'block math',
-		toDOM: () => ['math-display', { class: 'math-node' }, 0] as DOMOutputSpec,
+		attrs: {
+			id: { default: null },
+			hideLabel: { default: false },
+		},
+		reactiveAttrs: {
+			count: counter({ useNodeLabels: true }),
+		},
+		toDOM: (node: Node) =>
+			[
+				'math-display',
+				{ class: 'math-node' },
+				['span'],
+				[
+					'span',
+					{ class: 'equation-label', spellcheck: 'false' },
+					node.attrs.count ? `(${node.attrs.count})` : '',
+				],
+			] as DOMOutputSpec,
 	},
 };
