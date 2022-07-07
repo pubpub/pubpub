@@ -10,10 +10,18 @@ type Props = {
 
 const Review = (props: Props) => {
 	const { reviewDocument } = props;
-	const { scopeData } = usePageContext();
-	console.log(scopeData);
+	const {
+		scopeData: {
+			activePermissions: { canManage },
+		},
+	} = usePageContext();
 
-	return <div>{reviewDocument}</div>;
+	return (
+		<div>
+			{reviewDocument}
+			{canManage}
+		</div>
+	);
 };
 
 export default Review;

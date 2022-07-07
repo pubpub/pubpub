@@ -236,18 +236,18 @@ app.get(
 	},
 );
 
-app.get(['pub/:pubSlug/review/:reviewSlug'], async (req, res, next) => {
+app.get(['/pub/:pubSlug/review/:reviewSlug'], async (req, res, next) => {
 	try {
-		// if (!hostIsValid(req, 'community')) {
-		// 	return next();
-		// }
+		if (!hostIsValid(req, 'community')) {
+			return next();
+		}
 		const initialData = await getInitialData(req, true);
 		return renderToNodeStream(
 			res,
 			<Html
 				chunkName="Review"
 				initialData={initialData}
-				viewData={{ reviewDocument: 'b' }}
+				viewData={{ reviewDocument: 'Renders Fine in Storybook' }}
 				headerComponents={generateMetaComponents({
 					initialData,
 					title: `Review · Did Whitebeard Survive???`,
