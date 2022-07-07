@@ -14,7 +14,6 @@ import { useMembersState } from 'client/utils/members/useMembers';
 import { pubUrl, reviewUrl } from 'utils/canonicalUrls';
 import { generateHash } from 'utils/hashes';
 import { apiFetch } from 'client/utils/apiFetch';
-import { usePubContext } from 'containers/Pub/pubHooks';
 
 require('./pubShareDialog.scss');
 
@@ -49,7 +48,7 @@ type AccessHashOptionsProps = {
 		id: string;
 		editHash?: string;
 		viewHash?: string;
-		reviewHash?: string;
+		reviewSlug?: string;
 		isRelease?: boolean;
 	};
 };
@@ -57,18 +56,17 @@ type AccessHashOptionsProps = {
 const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
-	const { id, viewHash, editHash, reviewHash, isRelease } = pubData;
+	const { id, viewHash, editHash, reviewSlug, isRelease } = pubData;
 	const [revHash, setRevHash] = useState('');
-	const { updatePubData } = usePubContext();
 	useEffect(() => {
-		if (!reviewHash) {
+		if (!reviewSlug) {
 			const slug = generateHash(8);
 			apiFetch('/api/pubs', {
 				method: 'PUT',
 				body: JSON.stringify({
 					pubId: id,
 					communityId: communityData.id,
-					reviewHash: slug,
+					reviewSlug: slug,
 				}),
 			})
 				.then(() => {
@@ -78,9 +76,9 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 					console.error(err);
 				});
 		} else {
-			setRevHash(reviewHash);
+			setRevHash(reviewSlug);
 		}
-	}, [communityData.id, id, reviewHash, updatePubData]);
+	}, [communityData.id, id, reviewSlug]);
 
 	const renderCopyLabelComponent = (label, url) => {
 		return (
@@ -100,7 +98,7 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 		});
 	const reviewUrlFunction = (hash) =>
 		reviewUrl(communityData, pubData, {
-			reviewHash: hash,
+			reviewSlug: hash,
 		});
 
 	const renderRow = (label, hash, urlFunction) => {

@@ -79,5 +79,5 @@ export const pageUrl = (community, page) => `${communityUrl(community)}/${page.s
 export const reviewUrl = (community, pub, hash) => {
 	const skipCommunity = community === null || isQubQub();
 	const baseCommunityUrl = skipCommunity ? '' : communityUrl(community);
-	return `${baseCommunityUrl}/pub/${pub.slug}/review/${hash?.reviewHash}`;
+	return `${baseCommunityUrl}/pub/${pub.slug}/review/${hash?.reviewSlug}`;
 };
