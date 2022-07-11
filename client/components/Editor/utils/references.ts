@@ -15,7 +15,7 @@ export type NodeReference = {
 };
 
 const getReferenceableNodeType = (node): ReferenceableNodeType =>
-	node.type.name === 'display_math' ? 'block_equation' : node.type.name;
+	node.type.name === 'math_display' ? 'block_equation' : node.type.name;
 
 export const nodeDefaults = {
 	[ReferenceableNodeType.Image]: { icon: 'media', text: 'Image' },
