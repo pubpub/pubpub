@@ -34,6 +34,7 @@ const PubDocument = () => {
 	const { isViewingHistory } = historyData;
 	const { communityData, scopeData } = usePageContext();
 	const { canEdit, canEditDraft } = scopeData.activePermissions;
+	const { isReview } = pubData;
 	const mainContentRef = useRef<null | HTMLDivElement>(null);
 	const sideContentRef = useRef(null);
 	const editorWrapperRef = useRef(null);
@@ -95,6 +96,8 @@ const PubDocument = () => {
 							onSetCurrentHistoryKey={historyData.setCurrentHistoryKey}
 						/>
 					)}
+
+					{isReview && <div>Hello new world</div>}
 				</div>
 			</div>
 			<PubBottom

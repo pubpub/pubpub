@@ -135,6 +135,7 @@ export type PubPageData = DefinitelyHas<Omit<Pub, 'discussions'>, 'collectionPub
 		viewHash: Maybe<string>;
 		editHash: Maybe<string>;
 		isRelease: boolean;
+		isReview: boolean;
 		isInMaintenanceMode?: boolean;
 		firebaseToken?: string;
 		initialStructuredCitations: boolean;

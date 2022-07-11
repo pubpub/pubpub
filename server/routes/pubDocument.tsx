@@ -68,11 +68,13 @@ const getEnrichedPubData = async ({
 	initialData,
 	historyKey = null,
 	releaseNumber = null,
+	isReview = false,
 }: {
 	pubSlug: string;
 	initialData: InitialData;
 	historyKey?: null | number;
 	releaseNumber?: null | number;
+	isReview?: boolean;
 }) => {
 	const pubData = await getPubForRequest({
 		slug: pubSlug,
@@ -81,6 +83,7 @@ const getEnrichedPubData = async ({
 		getSubmissions: true,
 		getDraft: true,
 		getDiscussions: true,
+		isReview,
 	});
 
 	if (!pubData) {
@@ -236,7 +239,7 @@ app.get(
 	},
 );
 
-app.get(['/pub/:pubSlug/review/:reviewSlug'], async (req, res, next) => {
+app.get(['/pub/:pubSlug/review'], async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
@@ -261,6 +264,7 @@ app.get(['/pub/:pubSlug/review/:reviewSlug'], async (req, res, next) => {
 				pubSlug,
 				initialData,
 				historyKey: hasHistoryKey ? historyKey : null,
+				isReview: true,
 			}),
 			getMembers(initialData),
 		]).then(([enrichedPubData, membersData]) => ({
