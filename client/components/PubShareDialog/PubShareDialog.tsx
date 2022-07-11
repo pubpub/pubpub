@@ -46,7 +46,6 @@ type AccessHashOptionsProps = {
 		id: string;
 		editHash?: string;
 		viewHash?: string;
-		reviewSlug?: string;
 		isRelease?: boolean;
 	};
 };

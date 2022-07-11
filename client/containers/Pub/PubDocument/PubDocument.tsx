@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 import { usePageContext } from 'utils/hooks';
-import { PubHistoryViewer } from 'components';
+import { PubHistoryViewer, ReviewEditor } from 'components';
 import {
 	PubEdgeListing,
 	Filter as PubEdgeFilter,
@@ -97,7 +97,7 @@ const PubDocument = () => {
 						/>
 					)}
 
-					{isReview && <div>Hello new world</div>}
+					{isReview && <ReviewEditor />}
 				</div>
 			</div>
 			<PubBottom

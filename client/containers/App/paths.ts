@@ -30,7 +30,6 @@ import {
 	PasswordReset,
 	Pricing,
 	Pub,
-	Review,
 	Search,
 	Signup,
 	User,
@@ -166,9 +165,6 @@ export default (viewData, locationData, chunkName) => {
 		},
 		Pub: {
 			ActiveComponent: Pub,
-		},
-		Review: {
-			ActiveComponent: Review,
 		},
 		Search: {
 			ActiveComponent: Search,

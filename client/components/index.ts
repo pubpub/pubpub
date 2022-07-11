@@ -78,6 +78,7 @@ export { default as PubReleaseReviewDialog } from './PubReleaseReviewDialog/PubR
 export { default as PubShareDialog } from './PubShareDialog/PubShareDialog';
 export { default as PubThemePicker } from './PubThemePicker/PubThemePicker';
 export { default as PubTitle } from './PubTitle/PubTitle';
+export { default as ReviewEditor } from './ReviewEditor/ReviewEditor';
 export { default as ReferencesDropdown } from './ReferencesDropdown/ReferencesDropdown';
 export { default as QueryListDropdown } from './QueryListDropdown/QueryListDropdown';
 export { default as ScopeDropdown } from './ScopeDropdown/ScopeDropdown';
