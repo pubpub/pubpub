@@ -31,7 +31,6 @@ export const createPub = async (
 			headerStyle: 'dark',
 			viewHash: generateHash(8),
 			editHash: generateHash(8),
-			reviewSlug: generateHash(8),
 			draftId: draft.id,
 			...restArgs,
 		},

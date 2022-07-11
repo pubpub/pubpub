@@ -246,7 +246,7 @@ app.get(['/pub/:pubSlug/review'], async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req);
 		const { historyKey: historyKeyString, pubSlug } = req.params;
-		const { canViewDraft, canView } = initialData.scopeData.activePermissions;
+		// const { canViewDraft, canView } = initialData.scopeData.activePermissions;
 		const hasHistoryKey = historyKeyString !== undefined;
 		const historyKey = parseInt(historyKeyString, 10);
 		const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
@@ -255,9 +255,9 @@ app.get(['/pub/:pubSlug/review'], async (req, res, next) => {
 			throw new NotFoundError();
 		}
 
-		if (!canViewDraft && !canView) {
-			throw new NotFoundError();
-		}
+		// if (!canViewDraft && !canView) {
+		// 	throw new NotFoundError();
+		// }
 
 		const pubData = await Promise.all([
 			getEnrichedPubData({

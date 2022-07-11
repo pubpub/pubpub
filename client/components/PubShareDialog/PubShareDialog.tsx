@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Classes, ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
 
 import {
@@ -12,8 +12,6 @@ import {
 import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { useMembersState } from 'client/utils/members/useMembers';
 import { pubUrl, reviewUrl } from 'utils/canonicalUrls';
-import { generateHash } from 'utils/hashes';
-import { apiFetch } from 'client/utils/apiFetch';
 
 require('./pubShareDialog.scss');
 
@@ -56,29 +54,7 @@ type AccessHashOptionsProps = {
 const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
-	const { id, viewHash, editHash, reviewSlug, isRelease } = pubData;
-	const [revHash, setRevHash] = useState('');
-	useEffect(() => {
-		if (!reviewSlug) {
-			const slug = generateHash(8);
-			apiFetch('/api/pubs', {
-				method: 'PUT',
-				body: JSON.stringify({
-					pubId: id,
-					communityId: communityData.id,
-					reviewSlug: slug,
-				}),
-			})
-				.then(() => {
-					setRevHash(slug);
-				})
-				.catch((err) => {
-					console.error(err);
-				});
-		} else {
-			setRevHash(reviewSlug);
-		}
-	}, [communityData.id, id, reviewSlug]);
+	const { viewHash, editHash, isRelease } = pubData;
 
 	const renderCopyLabelComponent = (label, url) => {
 		return (
@@ -96,13 +72,9 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 			accessHash: hash,
 			isDraft: !isRelease,
 		});
-	const reviewUrlFunction = (hash) =>
-		reviewUrl(communityData, pubData, {
-			reviewSlug: hash,
-		});
 
-	const renderRow = (label, hash, urlFunction) => {
-		const url = urlFunction(hash);
+	const renderRow = (label, hash, isReview = false) => {
+		const url = isReview ? reviewUrl(communityData, pubData) : pubUrlFunction(hash);
 		return renderCopyLabelComponent(label, url);
 	};
 
@@ -112,9 +84,9 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 				You can grant visitors permission to view, edit, or review the draft of this pub by
 				sharing a URL.
 			</p>
-			{viewHash && renderRow('View', viewHash, pubUrlFunction)}
-			{editHash && renderRow('Edit', editHash, pubUrlFunction)}
-			{renderRow('Review', revHash, reviewUrlFunction)}
+			{viewHash && renderRow('View', viewHash)}
+			{editHash && renderRow('Edit', editHash)}
+			{renderRow('Review', viewHash, true)}
 		</div>
 	);
 };
