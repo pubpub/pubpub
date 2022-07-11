@@ -1,7 +1,5 @@
 import { history } from 'prosemirror-history';
 import { gapCursor } from 'prosemirror-gapcursor';
-import { Plugin } from 'prosemirror-state';
-import { mathPlugin } from '@benrbray/prosemirror-math';
 
 import { Schema } from 'prosemirror-model';
 import buildCollaborative from './collaborative';
@@ -13,6 +11,7 @@ import buildHeaderIds from './headerIds';
 import buildInputRules from './inputRules';
 import buildKeymap from './keymap';
 import buildLocalHighlights from './localHighlights';
+import buildMath from './math';
 import buildOnChange from './onChange';
 import buildPlaceholder from './placeholder';
 import buildPaste from './paste';
@@ -20,9 +19,6 @@ import buildReactive from './reactive';
 import buildTable from './table';
 import buildReferences from './references';
 import { PluginLoader, PluginsOptions } from '../types';
-
-// const mathPluginLoader = (schema: Schema, options: PluginsOptions): Plugin => mathPlugin;
-const mathPluginLoader = (): Plugin => mathPlugin;
 
 const buildGapCursor = () => {
 	return gapCursor();
@@ -51,7 +47,7 @@ export const standardPlugins = {
 	ids: buildIds,
 	reactive: buildReactive,
 	paste: buildPaste,
-	mathPlugin: mathPluginLoader,
+	mathPlugin: buildMath,
 };
 
 const getSortedPlugins = (plugins: Record<string, null | PluginLoader>): PluginLoader[] => {
