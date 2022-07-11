@@ -57,6 +57,7 @@ const PubBody = (props: Props) => {
 	}, [markLastInput]);
 
 	const handleError = useCallback((err: Error) => {
+		console.log(err.message, err.stack);
 		setEditorErrorTime(Date.now());
 		markSentryError(err);
 	}, []);

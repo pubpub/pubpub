@@ -43,17 +43,6 @@ export default {
 		reactiveAttrs: {
 			count: counter({ useNodeLabels: true }),
 		},
-		toDOM: (node: Node) =>
-			[
-				'math-display',
-				{ class: 'math-node' },
-				['span'],
-				[
-					'span',
-					{ class: 'equation-label', spellcheck: 'false' },
-					node.attrs.count ? `(${node.attrs.count})` : '',
-				],
-				0,
-			] as DOMOutputSpec,
+		toDOM: () => ['math-display', { class: 'math-node' }, 0] as DOMOutputSpec,
 	},
 };
