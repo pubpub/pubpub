@@ -53,6 +53,7 @@ export default {
 					{ class: 'equation-label', spellcheck: 'false' },
 					node.attrs.count ? `(${node.attrs.count})` : '',
 				],
+				0,
 			] as DOMOutputSpec,
 	},
 };
