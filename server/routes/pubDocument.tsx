@@ -239,41 +239,44 @@ app.get(
 	},
 );
 
-app.get(['/pub/:pubSlug/review'], async (req, res, next) => {
-	if (!hostIsValid(req, 'community')) {
-		return next();
-	}
-	try {
-		const initialData = await getInitialData(req);
-		const { historyKey: historyKeyString, pubSlug } = req.params;
-		// const { canViewDraft, canView } = initialData.scopeData.activePermissions;
-		const hasHistoryKey = historyKeyString !== undefined;
-		const historyKey = parseInt(historyKeyString, 10);
-		const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
-
-		if (isHistoryKeyInvalid) {
-			throw new NotFoundError();
+app.get(
+	['/pub/:pubSlug/review', '/pub/:pubSlug/release/:releaseNumber/review'],
+	async (req, res, next) => {
+		if (!hostIsValid(req, 'community')) {
+			return next();
 		}
+		try {
+			const initialData = await getInitialData(req);
+			const { historyKey: historyKeyString, pubSlug } = req.params;
+			// const { canViewDraft, canView } = initialData.scopeData.activePermissions;
+			const hasHistoryKey = historyKeyString !== undefined;
+			const historyKey = parseInt(historyKeyString, 10);
+			const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
 
-		// if (!canViewDraft && !canView) {
-		// 	throw new NotFoundError();
-		// }
+			if (isHistoryKeyInvalid) {
+				throw new NotFoundError();
+			}
 
-		const pubData = await Promise.all([
-			getEnrichedPubData({
-				pubSlug,
-				initialData,
-				historyKey: hasHistoryKey ? historyKey : null,
-				isReview: true,
-			}),
-			getMembers(initialData),
-		]).then(([enrichedPubData, membersData]) => ({
-			...enrichedPubData,
-			membersData,
-		}));
-		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-		return renderPubDocument(res, pubData, initialData, customScripts);
-	} catch (err) {
-		return handleErrors(req, res, next)(err);
-	}
-});
+			// if (!canViewDraft && !canView) {
+			// 	throw new NotFoundError();
+			// }
+
+			const pubData = await Promise.all([
+				getEnrichedPubData({
+					pubSlug,
+					initialData,
+					historyKey: hasHistoryKey ? historyKey : null,
+					isReview: true,
+				}),
+				getMembers(initialData),
+			]).then(([enrichedPubData, membersData]) => ({
+				...enrichedPubData,
+				membersData,
+			}));
+			const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
+			return renderPubDocument(res, pubData, initialData, customScripts);
+		} catch (err) {
+			return handleErrors(req, res, next)(err);
+		}
+	},
+);
