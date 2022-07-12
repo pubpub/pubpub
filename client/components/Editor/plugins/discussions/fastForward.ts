@@ -1,4 +1,4 @@
-import { Schema, Node } from 'prosemirror-model';
+import { Node } from 'prosemirror-model';
 import { Step } from 'prosemirror-transform';
 import firebase from 'firebase';
 
