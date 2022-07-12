@@ -14,23 +14,27 @@ type Props = {
 const ControlsMath = (props: Props) => {
 	const { editorChangeObject } = props;
 	const { selectedNode } = editorChangeObject;
+	const otherPosition = selectedNode.type.name === 'math_display' ? 'inline' : 'display';
+
+	const isDisplay = selectedNode?.type.name === 'math_display';
+	const otherVisibility = isDisplay && selectedNode.attrs.hideLabel ? 'Show' : 'Hide';
 
 	const swapMathTypeButton: FormattingBarButtonData = {
 		key: 'change-math-node-type',
 		title: 'Change display position',
+		label: `Make ${otherPosition}`,
 		icon: 'publish-function',
 		command: mathToggleKind,
 	};
-
 	const toggleMathLabelButton: FormattingBarButtonData = {
 		key: 'toggle-math-display-label',
 		title: 'Toggle label',
+		label: `${otherVisibility} label`,
 		icon: 'function',
 		command: mathToggleLabel,
 	};
 
 	const mathButtons: FormattingBarButtonData[] = [swapMathTypeButton];
-	const isDisplay = selectedNode && selectedNode.type.name === 'math_display';
 	if (isDisplay) mathButtons.push(toggleMathLabelButton);
 
 	return (
