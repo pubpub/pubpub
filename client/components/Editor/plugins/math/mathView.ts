@@ -31,10 +31,11 @@ export const mathViewOverrideWithCount = (constructor: NodeViewConstructor) => {
 				// We should have access to the `count` reactive attr if node labels
 				// for math are currently enabled
 				const { count } = oldNode.attrs;
-				// _isEditing is a property on the NodeView provided by prosemirror-math
 				const updatedNode = count ? addCountToNode(oldNode, count) : oldNode;
 				this._node = updatedNode;
+				// render the count-appended node...
 				boundRenderMath();
+				// ...but don't retain the count in the document
 				this._node = oldNode;
 			},
 		});
