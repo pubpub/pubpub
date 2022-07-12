@@ -1,6 +1,7 @@
 import { Visibility } from './visibility';
 import { Thread } from './thread';
 import { Pub } from './pub';
+import { DocJson } from './doc';
 
 export type Review = {
 	id: string;
@@ -17,4 +18,5 @@ export type Review = {
 	userId: string;
 	pubId: string;
 	pub?: Pub;
+	review?: DocJson;
 };

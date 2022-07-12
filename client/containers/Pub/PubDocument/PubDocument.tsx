@@ -97,7 +97,13 @@ const PubDocument = () => {
 						/>
 					)}
 
-					{isReview && <ReviewEditor />}
+					{isReview && (
+						<ReviewEditor
+							pubData={pubData}
+							updatePubData={updatePubData}
+							communityData={communityData}
+						/>
+					)}
 				</div>
 			</div>
 			<PubBottom

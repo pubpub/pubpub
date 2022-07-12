@@ -7,24 +7,33 @@ import { DocJson } from 'types';
 
 require('./reviewEditor.scss');
 
-const ReviewEditor = () => {
-	const [review, setReview] = useState({} as DocJson);
+type Props = {
+	pubData: any;
+	updatePubData: (...args: any[]) => any;
+	communityData: any;
+};
+
+const ReviewEditor = (props: Props) => {
+	const { pubData, updatePubData, communityData } = props;
+	const [reviewDoc, setReviewDoc] = useState({} as DocJson);
 	const [createIsLoading, setCreateIsLoading] = useState(false);
 	const [createError, setCreateError] = useState(undefined);
 
-	const cacheReviewDoc = (newReview: DocJson) => {
-		setReview(newReview);
-	};
-
 	const createReviewDoc = () => {
 		return apiFetch
-			.put('/api/review', {
-				abstract: review,
-				id: 'fails',
+			.post('/api/reviews', {
+				communityId: communityData.id,
+				pubId: pubData.id,
+				review: reviewDoc,
 			})
-			.then(() => {
+			.then((review) => {
 				setCreateIsLoading(false);
 				setCreateError(undefined);
+				updatePubData((currentPubData) => {
+					return {
+						reviews: [...currentPubData.reviews, review],
+					};
+				});
 			})
 			.catch((err) => {
 				setCreateIsLoading(false);
@@ -42,7 +51,7 @@ const ReviewEditor = () => {
 				<MinimalEditor
 					{...sharedProps}
 					getButtons={(buttons) => buttons.minimalButtonSet}
-					onEdit={(doc) => cacheReviewDoc(doc.toJSON() as DocJson)}
+					onEdit={(doc) => setReviewDoc(doc.toJSON() as DocJson)}
 					debounceEditsMs={300}
 					useFormattingBar
 					focusOnLoad={true}
