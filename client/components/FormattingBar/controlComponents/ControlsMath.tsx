@@ -34,13 +34,13 @@ const ControlsMath = (props: Props) => {
 		command: mathToggleLabel,
 	};
 
-	const mathButtons: FormattingBarButtonData[] = [swapMathTypeButton];
-	if (isDisplay) mathButtons.push(toggleMathLabelButton);
+	const mathButtons: FormattingBarButtonData[][] = [[swapMathTypeButton]];
+	if (isDisplay) mathButtons.push([toggleMathLabelButton]);
 
 	return (
 		<FormattingBar
 			editorChangeObject={editorChangeObject}
-			buttons={[mathButtons]}
+			buttons={mathButtons}
 			showBlockTypes={false}
 			isSmall
 		/>
