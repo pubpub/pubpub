@@ -119,7 +119,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 
 	if (isReview) {
 		return {
-			editorKey: 'isReview',
+			editorKey: 'review',
 			isReadOnly: true,
 			initialHistoryKey: initialDocKey,
 			initialContent: initialDoc,

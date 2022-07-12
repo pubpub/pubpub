@@ -21,6 +21,8 @@ const ReviewEditor = () => {
 				}}
 				debounceEditsMs={300}
 				useFormattingBar
+				focusOnLoad={true}
+				constrainHeight={true}
 			/>
 		</div>
 	);
