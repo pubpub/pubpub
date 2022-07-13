@@ -15,16 +15,19 @@ type Props = {
 
 const ReviewEditor = (props: Props) => {
 	const { pubData, updatePubData, communityData } = props;
+	// need to set loading on doc updates
 	const [reviewDoc, setReviewDoc] = useState({} as DocJson);
 	const [createIsLoading, setCreateIsLoading] = useState(false);
 	const [createError, setCreateError] = useState(undefined);
 
 	const createReviewDoc = () => {
+		setCreateIsLoading(true);
 		return apiFetch
 			.post('/api/reviews', {
 				communityId: communityData.id,
 				pubId: pubData.id,
 				review: reviewDoc,
+				title: 'anonymous',
 			})
 			.then((review) => {
 				setCreateIsLoading(false);
@@ -45,6 +48,7 @@ const ReviewEditor = (props: Props) => {
 		customNodes: { doc: { content: 'paragraph' } },
 		constrainHeight: true,
 	};
+
 	return (
 		<div className="review-editor">
 			<div className="review-editor-component">

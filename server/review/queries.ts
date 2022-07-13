@@ -13,14 +13,14 @@ import { createRelease } from '../release/queries';
 import { createThreadComment } from '../threadComment/queries';
 
 export const createReview = async (inputValues, userData) => {
+	const { pubId, title, releaseRequested, review, text, content } = inputValues;
 	const reviews = await ReviewNew.findAll({
 		where: {
-			pubId: inputValues.pubId,
+			pubId,
 		},
 		attributes: ['id', 'pubId', 'number'],
 		raw: true,
 	});
-
 	const maxNumber = reviews.reduce((prev, curr) => {
 		if (Number(curr.number) > prev) {
 			return Number(curr.number);
@@ -40,21 +40,19 @@ export const createReview = async (inputValues, userData) => {
 	]);
 
 	const reviewData = await ReviewNew.create({
-		title: 'Publication Request',
+		title: 'Publication Request' || title,
 		number: maxNumber + 1,
-		releaseRequested: inputValues.releaseRequested,
+		releaseRequested,
 		threadId,
 		visibilityId,
 		userId: userData.id,
-		pubId: inputValues.pubId,
+		pubId,
+		review,
 	});
 
 	await createCreatedThreadEvent(userData, threadId);
-	if (inputValues.text) {
-		await createThreadComment(
-			{ threadId, content: inputValues.content, text: inputValues.text },
-			userData,
-		);
+	if (text) {
+		await createThreadComment({ threadId, content, text }, userData);
 	}
 
 	return reviewData;

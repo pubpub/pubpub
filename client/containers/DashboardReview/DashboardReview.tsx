@@ -18,7 +18,7 @@ const DashboardReview = (props: Props) => {
 	const [isClosing, setIsClosing] = useState(false);
 	const [isReleasing, setIsReleasing] = useState(false);
 	const { loginData, scopeData, communityData } = usePageContext();
-	const { author, status, thread, releaseRequested } = localReviewData;
+	const { author, status, thread, releaseRequested, review } = localReviewData;
 	const { canAdmin } = scopeData.activePermissions;
 	const onThreadUpdate = (newThread) => {
 		setLocalReviewData({ ...localReviewData, thread: newThread });
@@ -68,6 +68,10 @@ const DashboardReview = (props: Props) => {
 
 	const isAuthor = loginData && loginData.id === author.id;
 	const canClose = isAuthor || canAdmin;
+	const reviewToRender = review ? review.content[0].content[0].text : '';
+	const renderReview = () => {
+		return <div className="review">{reviewToRender}</div>;
+	};
 	return (
 		<DashboardFrame
 			className="dashboard-review-container"
@@ -86,6 +90,7 @@ const DashboardReview = (props: Props) => {
 						<a href={`/user/${author.slug}`}>{author.fullName}</a> created this review{' '}
 						<TimeAgo {...timeAgoBaseProps} date={localReviewData.createdAt} />
 					</span>
+					<div>{renderReview}</div>
 				</React.Fragment>
 			}
 			controls={
@@ -100,6 +105,7 @@ const DashboardReview = (props: Props) => {
 				)
 			}
 		>
+			{renderReview()}
 			<Thread threadData={thread} />
 			<ThreadInput
 				parentId={localReviewData.id}
@@ -126,7 +132,6 @@ const DashboardReview = (props: Props) => {
 					</div>
 				</Callout>
 			)}
-
 			{/* <ThreadOptions /> */}
 		</DashboardFrame>
 	);
