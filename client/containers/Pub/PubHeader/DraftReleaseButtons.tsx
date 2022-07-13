@@ -3,7 +3,7 @@ import TimeAgo from 'react-timeago';
 
 import { DialogLauncher, PubReleaseDialog, PubReleaseReviewDialog } from 'components';
 import { Menu, MenuItem } from 'components/Menu';
-import { pubUrl } from 'utils/canonicalUrls';
+import { pubUrl, reviewUrl } from 'utils/canonicalUrls';
 import { formatDate } from 'utils/dates';
 import { usePageContext } from 'utils/hooks';
 
@@ -46,7 +46,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { historyData, pubData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
-	const { isRelease } = pubData;
+	const { isRelease, isReview } = pubData;
 
 	const renderForRelease = () => {
 		const { releases, releaseNumber } = pubData;
@@ -64,6 +64,15 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						}}
 					/>
 				)}
+				<ResponsiveHeaderButton
+					icon="draw"
+					tagName="a"
+					href={reviewUrl(communityData, pubData, { isRelease: true, releaseNumber })}
+					outerLabel={{
+						top: 'Create a review of this pub',
+						bottom: 'go to the review page',
+					}}
+				/>
 				<Menu
 					className="releases-menu"
 					aria-label="Choose a historical release of this Pub"
@@ -134,7 +143,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						outerLabel={{ bottom: 'view latest release', top: 'see published version' }}
 					/>
 				)}
-				{canAdmin && (
+				{canAdmin && !isReview && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
