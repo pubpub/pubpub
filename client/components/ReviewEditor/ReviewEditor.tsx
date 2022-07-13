@@ -37,6 +37,7 @@ const ReviewEditor = (props: Props) => {
 						reviews: [...currentPubData.reviews, review],
 					};
 				});
+				window.location.href = `/dash/pub/${pubData.slug}/reviews/${review.number}`;
 			})
 			.catch((err) => {
 				setCreateIsLoading(false);

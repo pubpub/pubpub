@@ -1,6 +1,6 @@
 export type MinUser = {
 	id: string;
-	slug: string;
+	slug?: string;
 	initials: string;
 	fullName: string;
 	firstName: string;
@@ -10,10 +10,10 @@ export type MinUser = {
 	orcid?: string;
 	isShadowUser?: boolean;
 	publicEmail?: string;
+	feedback?: string;
 };
 
 export type User = MinUser & {
-	slug: string;
 	bio: string;
 	location: string;
 	website: string;

@@ -38,9 +38,8 @@ export const createReview = async (inputValues, userData) => {
 			id: threadId,
 		}),
 	]);
-
 	const reviewData = await ReviewNew.create({
-		title: 'Publication Request' || title,
+		title: title || 'Publication Request',
 		number: maxNumber + 1,
 		releaseRequested,
 		threadId,
