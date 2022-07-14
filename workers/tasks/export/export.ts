@@ -14,7 +14,7 @@ import {
 	assignFileToExportById,
 } from './util';
 
-export const exportTask = async ({ exportId }, collectSubprocess) => {
+export const exportTask = async ({ exportId }) => {
 	const { pubId, format, historyKey } = await getExportById(exportId);
 	const { extension, pandocTarget, pagedTarget } = getExportFormatDetails(format);
 	const tmpFile = await getTmpFileForExtension(extension);
@@ -36,10 +36,9 @@ export const exportTask = async ({ exportId }, collectSubprocess) => {
 			pubMetadata,
 		});
 		if (pagedTarget) {
-			await exportWithPaged(staticHtml, tmpFile, collectSubprocess);
-		} else {
-			await writeToFile(staticHtml, tmpFile);
+			return exportWithPaged(staticHtml);
 		}
+		await writeToFile(staticHtml, tmpFile);
 	}
 	const url = await uploadDocument(pubId, tmpFile, extension);
 	await assignFileToExportById(exportId, url);

@@ -1,21 +1,9 @@
-import path from 'path';
-import { exec } from 'child_process';
-import { getTmpFileForExtension, writeToFile } from './util';
-
-export const exportWithPaged = async (staticHtml, tmpFile, collectSubprocess) => {
-	const tmpHtmlFile = await getTmpFileForExtension('html');
-	await writeToFile(staticHtml, tmpHtmlFile);
-	return new Promise<void>((resolve, reject) => {
-		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
-		const executable = path.join(process.env.PWD, 'node_modules', '.bin', 'pagedjs-cli');
-		collectSubprocess(
-			exec(`${executable} ${tmpHtmlFile.path} -b -o ${tmpFile.path} --noSandbox`, (err) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve();
-				}
-			}),
-		);
+export const exportWithPaged = async (staticHtml) => {
+	return fetch(`${process.env.PUBSTASH_URL}/convert?format=pdf`, {
+		method: 'POST',
+		body: staticHtml,
+		headers: {
+			'Content-Type': 'text/plain',
+		},
 	});
 };
