@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Tag, Callout, Intent } from '@blueprintjs/core';
 import TimeAgo from 'react-timeago';
 
-import { DashboardFrame, Thread, ThreadInput } from 'components';
+import { DashboardFrame, Editor, Thread, ThreadInput } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { timeAgoBaseProps } from 'utils/dates';
 import { apiFetch } from 'client/utils/apiFetch';
@@ -68,10 +68,15 @@ const DashboardReview = (props: Props) => {
 
 	const isAuthor = loginData && loginData.id === author.id;
 	const canClose = isAuthor || canAdmin;
-	const reviewToRender = review ? review.content[0].content[0].text : '';
-	const renderReview = () => {
-		return <div className="review">{reviewToRender}</div>;
+
+	const renderText = () => {
+		return <Editor key="reviewDoc" isReadOnly={true} initialContent={review} />;
 	};
+
+	const renderReview = () => {
+		return <div className="review">{renderText()} </div>;
+	};
+
 	return (
 		<DashboardFrame
 			className="dashboard-review-container"

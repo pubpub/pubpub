@@ -240,7 +240,12 @@ app.get(
 );
 
 app.get(
-	['/pub/:pubSlug/review', '/pub/:pubSlug/release/:releaseNumber/review'],
+	[
+		'/pub/:pubSlug/review',
+		'/pub/:pubSlug/draft/review',
+		'/pub/:pubSlug/release/:releaseNumber/review',
+		'/pub/:pubSlug/draft/:historyKey/review',
+	],
 	async (req, res, next) => {
 		if (!hostIsValid(req, 'community')) {
 			return next();

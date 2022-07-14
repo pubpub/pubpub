@@ -44,11 +44,6 @@ const ReviewEditor = (props: Props) => {
 			});
 	};
 
-	const sharedProps = {
-		customNodes: { doc: { content: 'paragraph' } },
-		constrainHeight: true,
-	};
-
 	const updatingReviewDoc = (doc: DocJson) => {
 		setIsLoading(true);
 		setReviewDoc(doc);
@@ -60,8 +55,7 @@ const ReviewEditor = (props: Props) => {
 		<div className="review-editor">
 			<div className="review-editor-component">
 				<MinimalEditor
-					{...sharedProps}
-					getButtons={(buttons) => buttons.minimalButtonSet}
+					getButtons={(buttons) => buttons.reviewButtonSet}
 					onEdit={(doc) => updatingReviewDoc(doc.toJSON() as DocJson)}
 					debounceEditsMs={300}
 					useFormattingBar
