@@ -15,13 +15,12 @@ type Props = {
 
 const ReviewEditor = (props: Props) => {
 	const { pubData, updatePubData, communityData } = props;
-	// need to set loading on doc updates
 	const [reviewDoc, setReviewDoc] = useState({} as DocJson);
-	const [createIsLoading, setCreateIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const [createError, setCreateError] = useState(undefined);
 
 	const createReviewDoc = () => {
-		setCreateIsLoading(true);
+		setIsLoading(true);
 		return apiFetch
 			.post('/api/reviews', {
 				communityId: communityData.id,
@@ -30,7 +29,7 @@ const ReviewEditor = (props: Props) => {
 				title: 'anonymous',
 			})
 			.then((review) => {
-				setCreateIsLoading(false);
+				setIsLoading(false);
 				setCreateError(undefined);
 				updatePubData((currentPubData) => {
 					return {
@@ -40,7 +39,7 @@ const ReviewEditor = (props: Props) => {
 				window.location.href = `/dash/pub/${pubData.slug}/reviews/${review.number}`;
 			})
 			.catch((err) => {
-				setCreateIsLoading(false);
+				setIsLoading(false);
 				setCreateError(err);
 			});
 	};
@@ -50,19 +49,26 @@ const ReviewEditor = (props: Props) => {
 		constrainHeight: true,
 	};
 
+	const updatingReviewDoc = (doc: DocJson) => {
+		setIsLoading(true);
+		setReviewDoc(doc);
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 300);
+	};
 	return (
 		<div className="review-editor">
 			<div className="review-editor-component">
 				<MinimalEditor
 					{...sharedProps}
 					getButtons={(buttons) => buttons.minimalButtonSet}
-					onEdit={(doc) => setReviewDoc(doc.toJSON() as DocJson)}
+					onEdit={(doc) => updatingReviewDoc(doc.toJSON() as DocJson)}
 					debounceEditsMs={300}
 					useFormattingBar
 					focusOnLoad={true}
 				/>
 			</div>
-			<Button onClick={createReviewDoc} loading={createIsLoading}>
+			<Button onClick={createReviewDoc} loading={isLoading}>
 				This button kinda lit
 			</Button>
 			{createError && (
