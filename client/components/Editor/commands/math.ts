@@ -21,13 +21,6 @@ const toggleKind: Command = (state: EditorState, dispatch?: Dispatch) => {
 			swapNodeType.create({}, node.content),
 			true,
 		);
-		/*
-		console.log({ $anchor }); // from state.selection
-		transaction.setSelection(
-			NodeSelection.create(state.tr.doc, transaction.mapping.map($anchor.pos - 1)),
-		);
-		 */
-
 		dispatch(transaction);
 	}
 	return true;
