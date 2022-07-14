@@ -1,5 +1,6 @@
 import { getExportFormatDetails } from 'utils/export/formats';
 import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
+import { Maybe } from 'types';
 
 import { renderStaticHtml } from './html';
 import { getPubMetadata } from './metadata';
@@ -21,6 +22,9 @@ export const exportTask = async ({ exportId }) => {
 	const pubMetadata = await getPubMetadata(pubId);
 	const { doc: pubDoc } = await getPubDraftDoc(pubId, historyKey);
 	const notesData = await getNotesData(pubMetadata, pubDoc);
+
+	let url: Maybe<string>;
+
 	if (pandocTarget) {
 		await exportWithPandoc({
 			pubDoc,
@@ -36,11 +40,14 @@ export const exportTask = async ({ exportId }) => {
 			pubMetadata,
 		});
 		if (pagedTarget) {
-			return exportWithPaged(staticHtml);
+			url = (await exportWithPaged(staticHtml)).url;
+		} else {
+			await writeToFile(staticHtml, tmpFile);
 		}
-		await writeToFile(staticHtml, tmpFile);
 	}
-	const url = await uploadDocument(pubId, tmpFile, extension);
+	if (url === undefined) {
+		url = (await uploadDocument(pubId, tmpFile, extension)) as string;
+	}
 	await assignFileToExportById(exportId, url);
 	return { url };
 };
