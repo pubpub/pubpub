@@ -69,12 +69,12 @@ const DashboardReview = (props: Props) => {
 	const isAuthor = loginData && loginData.id === author.id;
 	const canClose = isAuthor || canAdmin;
 
-	const renderText = () => {
-		return <Editor key="reviewDoc" isReadOnly={true} initialContent={review} />;
-	};
-
 	const renderReview = () => {
-		return <div className="review">{renderText()} </div>;
+		return (
+			<div className="review">
+				<Editor key="reviewDoc" isReadOnly={true} initialContent={review} />
+			</div>
+		);
 	};
 
 	return (
