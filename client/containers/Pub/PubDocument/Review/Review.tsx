@@ -50,6 +50,8 @@ const Review = (props: Props) => {
 				createReviewDoc={createReviewDoc}
 				isLoading={isLoading}
 				createError={createError}
+				pubData={pubData}
+				updatePubData={updatePubData}
 			/>
 		</div>
 	);
