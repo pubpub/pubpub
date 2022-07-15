@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 import { usePageContext } from 'utils/hooks';
-import { PubHistoryViewer, ReviewEditor } from 'components';
+import { PubHistoryViewer } from 'components';
 import {
 	PubEdgeListing,
 	Filter as PubEdgeFilter,
@@ -19,6 +19,7 @@ import PubHistoricalNotice from './PubHistoricalNotice';
 import PubInlineMenu from './PubInlineMenu';
 import PubLinkController from './PubLinkController';
 import PubMaintenanceNotice from './PubMaintenanceNotice';
+import ReviewEditor from './Review/ReviewEditor';
 
 require('./pubDocument.scss');
 
