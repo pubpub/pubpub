@@ -172,7 +172,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						)}
 					</DialogLauncher>
 				)}
-				{canCreateReviews && (
+				{canCreateReviews && !isReview && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
