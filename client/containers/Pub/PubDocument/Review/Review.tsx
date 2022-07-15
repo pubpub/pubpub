@@ -10,13 +10,12 @@ type Props = {
 	pubData: any;
 	updatePubData: (...args: any[]) => any;
 	communityData: any;
-	canEdit: boolean;
 };
 
 const Review = (props: Props) => {
-	const { pubData, updatePubData, communityData, canEdit } = props;
+	const { pubData, updatePubData, communityData } = props;
 	const [reviewDoc, setReviewDoc] = useState({} as DocJson);
-	const [reviewTitle, setReviewTitle] = useState('Untitled Review');
+	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
 	const [isLoading, setIsLoading] = useState(false);
 	const [createError, setCreateError] = useState(undefined);
 
@@ -53,8 +52,8 @@ const Review = (props: Props) => {
 				isLoading={isLoading}
 				createError={createError}
 				pubData={pubData}
-				canEdit={canEdit}
 				setReviewTitle={setReviewTitle}
+				reviewTitle={reviewTitle}
 			/>
 		</div>
 	);

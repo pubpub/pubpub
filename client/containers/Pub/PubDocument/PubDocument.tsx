@@ -103,7 +103,6 @@ const PubDocument = () => {
 							pubData={pubData}
 							updatePubData={updatePubData}
 							communityData={communityData}
-							canEdit={canEdit || canEditDraft}
 						/>
 					)}
 				</div>

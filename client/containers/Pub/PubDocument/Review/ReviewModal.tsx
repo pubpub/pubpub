@@ -9,12 +9,12 @@ type Props = {
 	isLoading: any;
 	createError: any;
 	pubData: any;
-	canEdit: boolean;
 	setReviewTitle: any;
+	reviewTitle: any;
 };
 
 const ReviewModal = (props: Props) => {
-	const { createReviewDoc, isLoading, createError, pubData, canEdit, setReviewTitle } = props;
+	const { createReviewDoc, isLoading, createError, pubData, setReviewTitle, reviewTitle } = props;
 
 	return (
 		<div>
@@ -37,8 +37,8 @@ const ReviewModal = (props: Props) => {
 						onClose={onClose}
 						pubData={pubData}
 						createReviewDoc={createReviewDoc}
-						canEdit={canEdit}
 						setReviewTitle={setReviewTitle}
+						reviewTitle={reviewTitle}
 					/>
 				)}
 			</DialogLauncher>
