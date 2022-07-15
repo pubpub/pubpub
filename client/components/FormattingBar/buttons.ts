@@ -305,6 +305,8 @@ export const minimalButtonSet = [[strong, em, link, rightToLeft, block_or_inline
 export const abstractButtonSet = [[strong, em, link, rightToLeft, inline_equation]];
 export const reviewButtonSet = [
 	[
+		heading1,
+		heading2,
 		strong,
 		em,
 		link,
