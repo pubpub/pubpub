@@ -19,7 +19,7 @@ import PubHistoricalNotice from './PubHistoricalNotice';
 import PubInlineMenu from './PubInlineMenu';
 import PubLinkController from './PubLinkController';
 import PubMaintenanceNotice from './PubMaintenanceNotice';
-import ReviewEditor from './Review/ReviewEditor';
+import Review from './Review/Review';
 
 require('./pubDocument.scss');
 
@@ -99,7 +99,7 @@ const PubDocument = () => {
 					)}
 
 					{isReview && (
-						<ReviewEditor
+						<Review
 							pubData={pubData}
 							updatePubData={updatePubData}
 							communityData={communityData}
