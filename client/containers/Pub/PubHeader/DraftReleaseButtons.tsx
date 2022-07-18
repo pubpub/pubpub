@@ -67,7 +67,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 				<ResponsiveHeaderButton
 					icon="draw"
 					tagName="a"
-					href={reviewUrl(communityData, pubData, { isRelease: true, releaseNumber })}
+					href={reviewUrl(communityData, pubData, { isRelease: true })}
 					outerLabel={{
 						top: 'Create a review of this pub',
 						bottom: 'go to the review page',

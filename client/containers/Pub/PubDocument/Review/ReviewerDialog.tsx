@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
+import { usePageContext } from 'utils/hooks';
 
 require('./reviewerDialog.scss');
 
@@ -11,7 +12,9 @@ type OwnProps = {
 	onClose: (...args: any[]) => any;
 	createReviewDoc: () => any;
 	setReviewTitle: any;
-	reviewTitle: any;
+	reviewTitle: string;
+	reviewerName: any;
+	setReviewerName: any;
 };
 
 const defaultProps = {};
@@ -19,7 +22,19 @@ const defaultProps = {};
 type Props = OwnProps & typeof defaultProps;
 
 const ReviewerDialog = (props: Props) => {
-	const { isOpen, onClose, pubData, createReviewDoc, setReviewTitle, reviewTitle } = props;
+	const {
+		isOpen,
+		onClose,
+		pubData,
+		createReviewDoc,
+		setReviewTitle,
+		reviewTitle,
+		reviewerName,
+		setReviewerName,
+	} = props;
+
+	const { scopeData } = usePageContext();
+	const { canManage } = scopeData.activePermissions;
 
 	const renderPreReviewButtons = () => {
 		return (
@@ -47,8 +62,8 @@ const ReviewerDialog = (props: Props) => {
 		>
 			<div className={Classes.DIALOG_BODY}>
 				<div className="reviewer-dialog">
-					<p>Add a title to your review?</p>
 					<div className="title-input">
+						<p>Add a title to your review?</p>
 						<InputGroup
 							defaultValue={reviewTitle}
 							onKeyDown={(evt) => {
@@ -59,6 +74,20 @@ const ReviewerDialog = (props: Props) => {
 							onBlur={(evt) => setReviewTitle(evt.target.value.trim())}
 						/>
 					</div>
+					{!canManage && (
+						<div className="title-input">
+							<p>Add your name?</p>
+							<InputGroup
+								defaultValue={reviewerName}
+								onKeyDown={(evt) => {
+									if (evt.key === 'Enter') {
+										evt.currentTarget.blur();
+									}
+								}}
+								onBlur={(evt) => setReviewerName(evt.target.value.trim())}
+							/>
+						</div>
+					)}
 					{helperTextToRender}
 				</div>
 			</div>

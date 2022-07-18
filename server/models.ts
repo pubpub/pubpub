@@ -72,6 +72,7 @@ export const Submission = sequelize.import('./submission/model');
 export const Signup = sequelize.import('./signup/model');
 export const SubmissionWorkflow = sequelize.import('./submissionWorkflow/model');
 export const ReviewNew = sequelize.import('./review/model');
+export const Reviewer = sequelize.import('./reviewer/model');
 export const Thread = sequelize.import('./thread/model');
 export const ThreadComment = sequelize.import('./threadComment/model');
 export const ThreadEvent = sequelize.import('./threadEvent/model');

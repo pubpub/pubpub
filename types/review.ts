@@ -20,3 +20,8 @@ export type Review = {
 	pub?: Pub;
 	review?: DocJson;
 };
+
+export type Reviewer = {
+	id: string;
+	name: string;
+};

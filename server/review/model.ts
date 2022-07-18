@@ -26,7 +26,7 @@ export default (sequelize, dataTypes) => {
 			],
 			classMethods: {
 				associate: (models) => {
-					const { ReviewNew, Visibility, Pub, User, Thread } = models;
+					const { ReviewNew, Reviewer, Visibility, Pub, User, Thread } = models;
 					ReviewNew.belongsTo(Thread, {
 						onDelete: 'CASCADE',
 						as: 'thread',
@@ -46,6 +46,11 @@ export default (sequelize, dataTypes) => {
 						onDelete: 'CASCADE',
 						as: 'pub',
 						foreignKey: 'pubId',
+					});
+					ReviewNew.hasMany(Reviewer, {
+						onDelete: 'CASCADE',
+						as: 'reviewer',
+						foreignKey: 'reviewId',
 					});
 				},
 			},

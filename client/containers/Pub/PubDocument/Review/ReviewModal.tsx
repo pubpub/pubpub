@@ -1,20 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, NonIdealState } from '@blueprintjs/core';
 
+import { apiFetch } from 'client/utils/apiFetch';
 import { DialogLauncher } from 'components';
+import { DocJson, Review } from 'types';
+
 import ReviewerDialog from './ReviewerDialog';
 
 type Props = {
-	createReviewDoc: () => any;
-	isLoading: any;
-	createError: any;
+	isLoading: boolean;
 	pubData: any;
-	setReviewTitle: any;
-	reviewTitle: any;
+	communityData: any;
+	updatePubData: any;
+	reviewDoc: DocJson;
+	setIsLoading: any;
 };
 
 const ReviewModal = (props: Props) => {
-	const { createReviewDoc, isLoading, createError, pubData, setReviewTitle, reviewTitle } = props;
+	const { isLoading, pubData, communityData, updatePubData, reviewDoc, setIsLoading } = props;
+	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
+	const [reviewerName, setReviewerName] = useState('anonymous');
+	const [createError, setCreateError] = useState(undefined);
+	const [newReview, setReview] = useState({} as Review);
+
+	const createReviewDoc = () => {
+		setIsLoading(true);
+		apiFetch
+			.post('/api/reviews', {
+				communityId: communityData.id,
+				pubId: pubData.id,
+				review: reviewDoc,
+				title: reviewTitle,
+			})
+			.then((review) => {
+				setReview(review);
+				updatePubData((currentPubData) => {
+					return {
+						reviews: [...currentPubData.reviews, review],
+					};
+				});
+			})
+			.catch((err) => {
+				setIsLoading(false);
+				setCreateError(err);
+			});
+
+		apiFetch
+			.post('/api/reviewer', {
+				reviewId: newReview.id,
+				name: reviewerName,
+			})
+			.then(() => {
+				setIsLoading(false);
+				window.location.href = `/dash/pub/${pubData.slug}/reviews/${newReview.number}`;
+			})
+			.catch((err) => {
+				setIsLoading(false);
+				setCreateError(err);
+			});
+	};
 
 	return (
 		<div>
@@ -39,6 +83,8 @@ const ReviewModal = (props: Props) => {
 						createReviewDoc={createReviewDoc}
 						setReviewTitle={setReviewTitle}
 						reviewTitle={reviewTitle}
+						reviewerName={reviewerName}
+						setReviewerName={setReviewerName}
 					/>
 				)}
 			</DialogLauncher>
