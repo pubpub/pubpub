@@ -3,7 +3,7 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 
 import { apiFetch } from 'client/utils/apiFetch';
 import { DialogLauncher } from 'components';
-import { DocJson, Review } from 'types';
+import { DocJson } from 'types';
 
 import ReviewerDialog from './ReviewerDialog';
 
@@ -21,7 +21,6 @@ const ReviewModal = (props: Props) => {
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
 	const [reviewerName, setReviewerName] = useState('anonymous');
 	const [createError, setCreateError] = useState(undefined);
-	const [newReview, setReview] = useState({} as Review);
 
 	const createReviewDoc = () => {
 		setIsLoading(true);
@@ -33,26 +32,22 @@ const ReviewModal = (props: Props) => {
 				title: reviewTitle,
 			})
 			.then((review) => {
-				setReview(review);
-				updatePubData((currentPubData) => {
-					return {
-						reviews: [...currentPubData.reviews, review],
-					};
-				});
-			})
-			.catch((err) => {
-				setIsLoading(false);
-				setCreateError(err);
-			});
-
-		apiFetch
-			.post('/api/reviewer', {
-				reviewId: newReview.id,
-				name: reviewerName,
-			})
-			.then(() => {
-				setIsLoading(false);
-				window.location.href = `/dash/pub/${pubData.slug}/reviews/${newReview.number}`;
+				console.log('so this is empty', review);
+				// apiFetch
+				// 	.post('/api/reviewer', {
+				// 		reviewId: review.id,
+				// 		name: reviewerName,
+				// 	})
+				// 	.catch((err) => {
+				// 		setIsLoading(false);
+				// 		setCreateError(err);
+				// 	});
+				// updatePubData((currentPubData) => {
+				// 	return {
+				// 		reviews: [...currentPubData.reviews, review],
+				// 	};
+				// });
+				// window.location.href = `/dash/pub/${pubData.slug}/reviews/${review.number}`;
 			})
 			.catch((err) => {
 				setIsLoading(false);
