@@ -16,7 +16,10 @@ const getRequestIds = (req) => {
 app.post('/api/reviews', (req, res) => {
 	const requestIds = getRequestIds(req);
 	getPermissions(requestIds)
-		.then(() => {
+		.then((permissions) => {
+			if (!permissions.create) {
+				throw new Error('Not Authorized');
+			}
 			return createReview(req.body, req.user);
 		})
 		.then((newReview) => {

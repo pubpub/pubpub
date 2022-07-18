@@ -17,6 +17,7 @@ type Props = {
 	usePortal?: boolean;
 	small?: boolean;
 	outlined?: boolean;
+	loading?: boolean;
 };
 
 const ClickToCopyButton = (props: Props) => {
@@ -33,6 +34,7 @@ const ClickToCopyButton = (props: Props) => {
 		usePortal = true,
 		small = false,
 		outlined = false,
+		loading = true,
 	} = props;
 	const [hasCopied, setHasCopied] = useState(false);
 	const [copyState, copyToClipboard] = useCopyToClipboard();
@@ -64,6 +66,7 @@ const ClickToCopyButton = (props: Props) => {
 				onClick={handleClick}
 				disabled={disabled}
 				outlined={outlined}
+				loading={loading}
 			>
 				{children}
 			</Button>

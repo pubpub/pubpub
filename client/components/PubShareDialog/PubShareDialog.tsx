@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Classes, ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
 
 import {
@@ -11,7 +11,9 @@ import {
 } from 'components';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { useMembersState } from 'client/utils/members/useMembers';
+import { apiFetch } from 'client/utils/apiFetch';
 import { pubUrl, reviewUrl } from 'utils/canonicalUrls';
+import { generateHash } from 'utils/hashes';
 
 require('./pubShareDialog.scss');
 
@@ -22,6 +24,7 @@ type PubShareDialogProps = {
 		id: string;
 		editHash?: string;
 		viewHash?: string;
+		reviewHash?: string;
 		isRelease?: boolean;
 		membersData?: {
 			members?: {}[];
@@ -46,6 +49,7 @@ type AccessHashOptionsProps = {
 		id: string;
 		editHash?: string;
 		viewHash?: string;
+		reviewHash?: string;
 		isRelease?: boolean;
 	};
 };
@@ -53,12 +57,38 @@ type AccessHashOptionsProps = {
 const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
-	const { viewHash, editHash, isRelease } = pubData;
+	const { reviewHash, viewHash, editHash, isRelease } = pubData;
+	const [isUpdatingHash, setIsUpdatingHash] = useState(false);
+	const [revHash, setRevHash] = useState('');
+
+	useEffect(() => {
+		if (!reviewHash) {
+			setIsUpdatingHash(true);
+			const slug = generateHash(8);
+			apiFetch('/api/pubs', {
+				method: 'PUT',
+				body: JSON.stringify({
+					pubId: pubData.id,
+					communityId: communityData.id,
+					reviewHash: slug,
+				}),
+			})
+				.then(() => {
+					setRevHash(slug);
+					setIsUpdatingHash(false);
+				})
+				.catch((err) => {
+					console.error(err);
+				});
+		} else {
+			setRevHash(reviewHash);
+		}
+	}, [communityData.id, pubData.id, reviewHash]);
 
 	const renderCopyLabelComponent = (label, url) => {
 		return (
 			<ControlGroup className="hash-row">
-				<ClickToCopyButton minimal={false} copyString={url}>
+				<ClickToCopyButton minimal={false} copyString={url} loading={isUpdatingHash}>
 					Copy {label} URL
 				</ClickToCopyButton>
 				<InputGroup className="display-url" value={url} fill />
@@ -71,9 +101,13 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 			accessHash: hash,
 			isDraft: !isRelease,
 		});
+	const reviewUrlFunction = (hash) =>
+		reviewUrl(communityData, pubData, {
+			reviewHash: hash,
+		});
 
-	const renderRow = (label, hash, isReview = false) => {
-		const url = isReview ? reviewUrl(communityData, pubData) : pubUrlFunction(hash);
+	const renderRow = (label, hash, urlFunction) => {
+		const url = urlFunction(hash);
 		return renderCopyLabelComponent(label, url);
 	};
 
@@ -83,9 +117,9 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 				You can grant visitors permission to view, edit, or review the draft of this pub by
 				sharing a URL.
 			</p>
-			{viewHash && renderRow('View', viewHash)}
-			{editHash && renderRow('Edit', editHash)}
-			{renderRow('Review', viewHash, true)}
+			{viewHash && renderRow('View', viewHash, pubUrlFunction)}
+			{editHash && renderRow('Edit', editHash, pubUrlFunction)}
+			{renderRow('Review', revHash, reviewUrlFunction)}
 		</div>
 	);
 };

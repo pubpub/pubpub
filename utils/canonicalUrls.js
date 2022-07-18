@@ -79,9 +79,15 @@ export const pageUrl = (community, page) => `${communityUrl(community)}/${page.s
 export const reviewUrl = (community, pub, options = {}) => {
 	const skipCommunity = community === null || isQubQub();
 	const baseCommunityUrl = skipCommunity ? '' : communityUrl(community);
-	const { isRelease, releaseNumber } = options;
+	const { isRelease, releaseNumber, reviewHash } = options;
+	let baseUrl = `${baseCommunityUrl}/pub/${pub.slug}/review`;
 	if (isRelease) {
-		return `${baseCommunityUrl}/pub/${pub.slug}/release/${releaseNumber}/review`;
+		baseUrl = `${baseCommunityUrl}/pub/${pub.slug}/release/${releaseNumber}/review`;
 	}
-	return `${baseCommunityUrl}/pub/${pub.slug}/review`;
+	const url = queryString.stringifyUrl(
+		{ url: baseUrl, query: { access: reviewHash } },
+		{ skipNull: true },
+	);
+
+	return url;
 };
