@@ -17,20 +17,29 @@ const ControlsMath = (props: Props) => {
 	const otherPosition = selectedNode.type.name === 'math_display' ? 'inline' : 'display';
 
 	const isDisplay = selectedNode?.type.name === 'math_display';
-	const otherVisibility = isDisplay && selectedNode.attrs.hideLabel ? 'Show' : 'Hide';
+	const otherVisibility =
+		isDisplay && selectedNode.attrs.hideLabel
+			? {
+					icon: 'eye-open',
+					label: 'Show',
+			  }
+			: {
+					icon: 'eye-off',
+					label: 'Hide',
+			  };
 
 	const swapMathTypeButton: FormattingBarButtonData = {
 		key: 'change-math-node-type',
 		title: 'Change display position',
 		label: `Make ${otherPosition}`,
-		icon: 'publish-function',
+		icon: 'swap-horizontal',
 		command: mathToggleKind,
 	};
 	const toggleMathLabelButton: FormattingBarButtonData = {
 		key: 'toggle-math-display-label',
 		title: 'Toggle label',
-		label: `${otherVisibility} label`,
-		icon: 'function',
+		label: `${otherVisibility.label} label`,
+		icon: otherVisibility.icon,
 		command: mathToggleLabel,
 	};
 
@@ -42,7 +51,6 @@ const ControlsMath = (props: Props) => {
 			editorChangeObject={editorChangeObject}
 			buttons={mathButtons}
 			showBlockTypes={false}
-			isSmall
 		/>
 	);
 };

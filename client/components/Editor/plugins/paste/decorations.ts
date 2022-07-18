@@ -6,7 +6,6 @@ import { Meta, PluginState } from './types';
 import { createPlaceholderWidgetElement } from './widget';
 
 type PlaceholderDecoration = Decoration;
-// type PlaceholderDecoration = Decoration<{ key: string; id: string }>;
 
 export const createPlaceholderDecoration = (
 	id: string,
