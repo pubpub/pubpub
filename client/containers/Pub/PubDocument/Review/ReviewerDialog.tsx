@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
-import { usePageContext } from 'utils/hooks';
 
 require('./reviewerDialog.scss');
 
@@ -15,6 +14,7 @@ type OwnProps = {
 	reviewTitle: string;
 	reviewerName: any;
 	setReviewerName: any;
+	canManage: boolean;
 };
 
 const defaultProps = {};
@@ -31,10 +31,8 @@ const ReviewerDialog = (props: Props) => {
 		reviewTitle,
 		reviewerName,
 		setReviewerName,
+		canManage,
 	} = props;
-
-	const { scopeData } = usePageContext();
-	const { canManage } = scopeData.activePermissions;
 
 	const renderPreReviewButtons = () => {
 		return (

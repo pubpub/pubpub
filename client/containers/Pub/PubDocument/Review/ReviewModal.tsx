@@ -14,14 +14,29 @@ type Props = {
 	updatePubData: any;
 	reviewDoc: DocJson;
 	setIsLoading: any;
+	canManage: boolean;
 };
 
 const ReviewModal = (props: Props) => {
-	const { isLoading, pubData, communityData, updatePubData, reviewDoc, setIsLoading } = props;
+	const { isLoading, pubData, communityData, updatePubData, reviewDoc, setIsLoading, canManage } =
+		props;
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
 	const [reviewerName, setReviewerName] = useState('anonymous');
 	const [createError, setCreateError] = useState(undefined);
-
+	const saveReviewerName = (review) => {
+		return (
+			canManage &&
+			apiFetch
+				.post('/api/reviewer', {
+					reviewId: review.id,
+					name: reviewerName,
+				})
+				.catch((err) => {
+					setIsLoading(false);
+					setCreateError(err);
+				})
+		);
+	};
 	const createReviewDoc = () => {
 		setIsLoading(true);
 		apiFetch
@@ -32,22 +47,13 @@ const ReviewModal = (props: Props) => {
 				title: reviewTitle,
 			})
 			.then((review) => {
-				console.log('so this is empty', review);
-				// apiFetch
-				// 	.post('/api/reviewer', {
-				// 		reviewId: review.id,
-				// 		name: reviewerName,
-				// 	})
-				// 	.catch((err) => {
-				// 		setIsLoading(false);
-				// 		setCreateError(err);
-				// 	});
-				// updatePubData((currentPubData) => {
-				// 	return {
-				// 		reviews: [...currentPubData.reviews, review],
-				// 	};
-				// });
-				// window.location.href = `/dash/pub/${pubData.slug}/reviews/${review.number}`;
+				saveReviewerName(review);
+				updatePubData((currentPubData) => {
+					return {
+						reviews: [...currentPubData.reviews, review],
+					};
+				});
+				window.location.href = `/dash/pub/${pubData.slug}/reviews/${review.number}`;
 			})
 			.catch((err) => {
 				setIsLoading(false);
@@ -80,6 +86,7 @@ const ReviewModal = (props: Props) => {
 						reviewTitle={reviewTitle}
 						reviewerName={reviewerName}
 						setReviewerName={setReviewerName}
+						canManage={canManage}
 					/>
 				)}
 			</DialogLauncher>
