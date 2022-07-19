@@ -20,20 +20,19 @@ type Props = {
 const ReviewModal = (props: Props) => {
 	const { isLoading, pubData, communityData, updatePubData, reviewDoc, setIsLoading } = props;
 	const {
-		scopeData: {
-			activePermissions: { canView, canEdit },
-		},
+		scopeData: { activePermissions },
 		loginData: { fullName },
 	} = usePageContext();
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
 	const [reviewerName, setReviewerName] = useState(fullName || 'anonymous');
 	const [createError, setCreateError] = useState(undefined);
+
 	const saveReviewerName = (review) => {
 		return apiFetch
 			.post('/api/reviewer', {
 				reviewId: review.id,
 				name: reviewerName,
-				permissions: canView,
+				permissions: activePermissions,
 			})
 			.catch((err) => {
 				setIsLoading(false);
@@ -48,7 +47,7 @@ const ReviewModal = (props: Props) => {
 				pubId: pubData.id,
 				review: reviewDoc,
 				title: reviewTitle,
-				permissions: canView,
+				permissions: activePermissions,
 			})
 			.then((review) => {
 				saveReviewerName(review);
@@ -91,7 +90,7 @@ const ReviewModal = (props: Props) => {
 						reviewTitle={reviewTitle}
 						reviewerName={reviewerName}
 						setReviewerName={setReviewerName}
-						canEdit={canEdit}
+						canEdit={activePermissions.canEdit}
 					/>
 				)}
 			</DialogLauncher>
