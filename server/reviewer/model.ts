@@ -4,7 +4,7 @@ export default (sequelize, dataTypes) => {
 		{
 			id: sequelize.idType,
 			name: { type: dataTypes.TEXT },
-			reviewId: { type: dataTypes.UUID },
+			reviewId: { type: dataTypes.UUID, allowNull: false },
 		},
 		{
 			classMethods: {
@@ -12,8 +12,8 @@ export default (sequelize, dataTypes) => {
 					const { Reviewer, ReviewNew } = models;
 					Reviewer.belongsTo(ReviewNew, {
 						onDelete: 'CASCADE',
-						as: 'reviewNew',
-						foreignKey: 'reviewNewId',
+						as: 'review',
+						foreignKey: 'reviewId',
 					});
 				},
 			},
