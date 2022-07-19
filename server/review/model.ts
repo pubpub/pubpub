@@ -15,7 +15,7 @@ export default (sequelize, dataTypes) => {
 			/* Set by Associations */
 			threadId: { type: dataTypes.UUID, allowNull: false },
 			visibilityId: { type: dataTypes.UUID, allowNull: false },
-			userId: { type: dataTypes.UUID, allowNull: false },
+			userId: { type: dataTypes.UUID },
 			pubId: { type: dataTypes.UUID },
 			review: { type: dataTypes.JSONB, allowNull: true },
 		},
@@ -41,6 +41,7 @@ export default (sequelize, dataTypes) => {
 						onDelete: 'CASCADE',
 						as: 'author',
 						foreignKey: 'userId',
+						constraints: false,
 					});
 					ReviewNew.belongsTo(Pub, {
 						onDelete: 'CASCADE',

@@ -309,7 +309,7 @@ getActivePermissions = async (
 				defaultPermissionIndex = 1;
 			}
 			if (elem.reviewHash && elem.reviewHash === scopeInputs.accessHash) {
-				defaultPermissionIndex = 1;
+				defaultPermissionIndex = 0;
 			}
 		});
 

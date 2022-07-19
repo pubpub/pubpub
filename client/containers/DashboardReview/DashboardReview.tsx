@@ -23,6 +23,18 @@ const DashboardReview = (props: Props) => {
 	const onThreadUpdate = (newThread) => {
 		setLocalReviewData({ ...localReviewData, thread: newThread });
 	};
+	const hasReviewers = localReviewData.reviewers;
+	const renderReviewers = () => {
+		return hasReviewers ? (
+			localReviewData.reviewers.map((reviewer) => {
+				return <span>{reviewer.name}</span>;
+			})
+		) : (
+			<span>
+				<a href={`/user/${author.slug}`}>{author.fullName}</a> created this review{' '}
+			</span>
+		);
+	};
 	const closeReview = async () => {
 		setIsClosing(true);
 		const result = await apiFetch('/api/reviews', {
@@ -93,6 +105,7 @@ const DashboardReview = (props: Props) => {
 					</Tag>
 					<span>
 						<a href={`/user/${author.slug}`}>{author.fullName}</a> created this review{' '}
+						{renderReviewers()}
 						<TimeAgo {...timeAgoBaseProps} date={localReviewData.createdAt} />
 					</span>
 					<div>{renderReview}</div>

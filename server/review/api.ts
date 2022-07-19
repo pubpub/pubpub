@@ -15,9 +15,13 @@ const getRequestIds = (req) => {
 
 app.post('/api/reviews', (req, res) => {
 	const requestIds = getRequestIds(req);
+	const { permissions } = req.body;
 	getPermissions(requestIds)
-		// should permissions exist on a route that can be used by anyone?
+		// how should permissions exist on a api call that can be used by anyone?
 		.then(() => {
+			if (!permissions.view) {
+				throw new Error('Not Authorized');
+			}
 			return createReview(req.body, req.user);
 		})
 		.then((newReview) => {

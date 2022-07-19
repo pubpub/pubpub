@@ -4,6 +4,7 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 import { apiFetch } from 'client/utils/apiFetch';
 import { DialogLauncher } from 'components';
 import { DocJson } from 'types';
+import { usePageContext } from 'utils/hooks';
 
 import ReviewerDialog from './ReviewerDialog';
 
@@ -14,30 +15,25 @@ type Props = {
 	updatePubData: any;
 	reviewDoc: DocJson;
 	setIsLoading: any;
-	canManage: boolean;
-	name: string | undefined;
 };
 
 const ReviewModal = (props: Props) => {
+	const { isLoading, pubData, communityData, updatePubData, reviewDoc, setIsLoading } = props;
 	const {
-		isLoading,
-		pubData,
-		communityData,
-		updatePubData,
-		reviewDoc,
-		setIsLoading,
-		canManage,
-		name,
-	} = props;
+		scopeData: {
+			activePermissions: { canView, canEdit },
+		},
+		loginData: { fullName },
+	} = usePageContext();
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
-	const [reviewerName, setReviewerName] = useState(name || 'anonymous');
+	const [reviewerName, setReviewerName] = useState(fullName || 'anonymous');
 	const [createError, setCreateError] = useState(undefined);
-
 	const saveReviewerName = (review) => {
 		return apiFetch
 			.post('/api/reviewer', {
 				reviewId: review.id,
 				name: reviewerName,
+				permissions: canView,
 			})
 			.catch((err) => {
 				setIsLoading(false);
@@ -52,6 +48,7 @@ const ReviewModal = (props: Props) => {
 				pubId: pubData.id,
 				review: reviewDoc,
 				title: reviewTitle,
+				permissions: canView,
 			})
 			.then((review) => {
 				saveReviewerName(review);
@@ -94,7 +91,7 @@ const ReviewModal = (props: Props) => {
 						reviewTitle={reviewTitle}
 						reviewerName={reviewerName}
 						setReviewerName={setReviewerName}
-						canManage={canManage}
+						canEdit={canEdit}
 					/>
 				)}
 			</DialogLauncher>
