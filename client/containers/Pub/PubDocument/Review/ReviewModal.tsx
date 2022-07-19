@@ -15,27 +15,35 @@ type Props = {
 	reviewDoc: DocJson;
 	setIsLoading: any;
 	canManage: boolean;
+	name: string | undefined;
 };
 
 const ReviewModal = (props: Props) => {
-	const { isLoading, pubData, communityData, updatePubData, reviewDoc, setIsLoading, canManage } =
-		props;
+	const {
+		isLoading,
+		pubData,
+		communityData,
+		updatePubData,
+		reviewDoc,
+		setIsLoading,
+		canManage,
+		name,
+	} = props;
+
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
-	const [reviewerName, setReviewerName] = useState('anonymous');
+	const [reviewerName, setReviewerName] = useState(name || 'anonymous');
 	const [createError, setCreateError] = useState(undefined);
+
 	const saveReviewerName = (review) => {
-		return (
-			canManage &&
-			apiFetch
-				.post('/api/reviewer', {
-					reviewId: review.id,
-					name: reviewerName,
-				})
-				.catch((err) => {
-					setIsLoading(false);
-					setCreateError(err);
-				})
-		);
+		return apiFetch
+			.post('/api/reviewer', {
+				reviewId: review.id,
+				name: reviewerName,
+			})
+			.catch((err) => {
+				setIsLoading(false);
+				setCreateError(err);
+			});
 	};
 	const createReviewDoc = () => {
 		setIsLoading(true);

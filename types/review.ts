@@ -19,6 +19,7 @@ export type Review = {
 	pubId: string;
 	pub?: Pub;
 	review?: DocJson;
+	reviewer?: Reviewer[];
 };
 
 export type Reviewer = {

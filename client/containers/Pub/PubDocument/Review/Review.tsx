@@ -14,11 +14,14 @@ type Props = {
 
 const Review = (props: Props) => {
 	const { pubData, updatePubData, communityData } = props;
-	const [reviewDoc, setReviewDoc] = useState({} as DocJson);
-
-	const [isLoading, setIsLoading] = useState(false);
-	const { scopeData } = usePageContext();
+	const {
+		scopeData,
+		loginData: { fullName },
+	} = usePageContext();
 	const { canManage } = scopeData.activePermissions;
+
+	const [reviewDoc, setReviewDoc] = useState({} as DocJson);
+	const [isLoading, setIsLoading] = useState(false);
 
 	return (
 		<div>
@@ -31,6 +34,7 @@ const Review = (props: Props) => {
 				reviewDoc={reviewDoc}
 				setIsLoading={setIsLoading}
 				canManage={canManage}
+				name={fullName}
 			/>
 		</div>
 	);
