@@ -26,6 +26,10 @@ const ReviewModal = (props: Props) => {
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
 	const [reviewerName, setReviewerName] = useState(fullName || 'anonymous');
 	const [createError, setCreateError] = useState(undefined);
+	const redirectUrl = (review) =>
+		activePermissions.canEdit
+			? `/dash/pub/${pubData.slug}/reviews/${review.number}`
+			: `/signup`;
 	const saveReviewerName = (review) => {
 		return apiFetch
 			.post('/api/reviewer', {
@@ -56,7 +60,7 @@ const ReviewModal = (props: Props) => {
 					};
 				});
 				setIsLoading(false);
-				window.location.href = `/dash/pub/${pubData.slug}/reviews/${review.number}`;
+				window.location.href = redirectUrl(review);
 			})
 			.catch((err) => {
 				setIsLoading(false);

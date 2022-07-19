@@ -14,6 +14,7 @@ import { createThreadComment } from '../threadComment/queries';
 
 export const createReview = async (inputValues, userData) => {
 	const { pubId, title, releaseRequested, review, text, content } = inputValues;
+	const userId = userData?.id || null;
 	const reviews = await ReviewNew.findAll({
 		where: {
 			pubId,
@@ -44,14 +45,16 @@ export const createReview = async (inputValues, userData) => {
 		releaseRequested,
 		threadId,
 		visibilityId,
-		userId: userData.id,
+		userId,
 		pubId,
 		review,
 	});
 
-	await createCreatedThreadEvent(userData, threadId);
-	if (text) {
-		await createThreadComment({ threadId, content, text }, userData);
+	if (userId) {
+		await createCreatedThreadEvent(userData, threadId);
+		if (text) {
+			await createThreadComment({ threadId, content, text }, userData);
+		}
 	}
 
 	return reviewData;
