@@ -76,6 +76,11 @@ const DashboardReviews = (props: Props) => {
 													<div className="number">
 														R{review.number}: {review.title}
 													</div>
+													{hasReviewers && (
+														<div className="note">
+															by {parseReviewers(reviewers)}
+														</div>
+													)}
 													<div className="title">
 														{dateFormat(
 															review.createdAt,
@@ -87,11 +92,6 @@ const DashboardReviews = (props: Props) => {
 															{review.status}
 														</Tag>
 													</div>
-													{hasReviewers && (
-														<div className="note">
-															by {parseReviewers(reviewers)}
-														</div>
-													)}
 												</div>
 											}
 										/>

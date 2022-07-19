@@ -19,10 +19,8 @@ const Review = (props: Props) => {
 		loginData: { fullName },
 	} = usePageContext();
 	const { canManage } = scopeData.activePermissions;
-
 	const [reviewDoc, setReviewDoc] = useState({} as DocJson);
 	const [isLoading, setIsLoading] = useState(false);
-
 	return (
 		<div>
 			<ReviewEditor setReviewDoc={setReviewDoc} setIsLoading={setIsLoading} />

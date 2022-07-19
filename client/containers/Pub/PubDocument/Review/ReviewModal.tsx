@@ -29,7 +29,6 @@ const ReviewModal = (props: Props) => {
 		canManage,
 		name,
 	} = props;
-
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
 	const [reviewerName, setReviewerName] = useState(name || 'anonymous');
 	const [createError, setCreateError] = useState(undefined);
