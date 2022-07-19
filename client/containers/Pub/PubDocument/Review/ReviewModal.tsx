@@ -53,6 +53,7 @@ const ReviewModal = (props: Props) => {
 						reviews: [...currentPubData.reviews, review],
 					};
 				});
+				setIsLoading(false);
 				window.location.href = `/dash/pub/${pubData.slug}/reviews/${review.number}`;
 			})
 			.catch((err) => {

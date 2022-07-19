@@ -50,6 +50,7 @@ const DashboardReviews = (props: Props) => {
 							{pub.reviews
 								.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
 								.map((review) => {
+									console.log(review);
 									const reviewUrl = getDashUrl({
 										collectionSlug: activeCollection
 											? activeCollection.slug
