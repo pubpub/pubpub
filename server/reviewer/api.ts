@@ -5,7 +5,7 @@ app.post(
 	'/api/reviewer',
 	wrap(async (req, res) => {
 		const { reviewId, name, permissions } = req.body;
-		if (!permissions.view) {
+		if (!permissions.canView) {
 			throw new Error('Not Authorized');
 		}
 		const newReviewer = await createReviewer({

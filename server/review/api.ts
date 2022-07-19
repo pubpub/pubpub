@@ -19,7 +19,7 @@ app.post('/api/reviews', (req, res) => {
 	getPermissions(requestIds)
 		// how should permissions exist on a api call that can be used by anyone?
 		.then(() => {
-			if (!permissions.view) {
+			if (!permissions.canView) {
 				throw new Error('Not Authorized');
 			}
 			return createReview(req.body, req.user);

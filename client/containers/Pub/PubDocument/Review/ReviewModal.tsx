@@ -26,7 +26,6 @@ const ReviewModal = (props: Props) => {
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
 	const [reviewerName, setReviewerName] = useState(fullName || 'anonymous');
 	const [createError, setCreateError] = useState(undefined);
-
 	const saveReviewerName = (review) => {
 		return apiFetch
 			.post('/api/reviewer', {
