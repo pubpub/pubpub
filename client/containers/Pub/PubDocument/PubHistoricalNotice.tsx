@@ -25,12 +25,12 @@ type Props = {
 const PubHistoricalNotice = (props: Props) => {
 	const { pubData, historyData } = props;
 	const { communityData } = usePageContext();
-	const { releases, releaseNumber, isRelease } = pubData;
+	const { releases, releaseNumber, isRelease, isReview } = pubData;
 	const { currentKey, latestKey, timestamps, loadedIntoHistory } = historyData;
 
 	const isHistoricalRelease = isRelease && releaseNumber !== releases.length;
 	const isHistoricalDraft = loadedIntoHistory;
-	const viewingNoun = isRelease ? `Release (#${releaseNumber})` : 'draft';
+	const viewingNoun = isRelease ? `Release (#${releaseNumber})` : isReview ? 'version' : 'draft';
 
 	const [showingChangelog, setShowingChangelog] = useState(false);
 

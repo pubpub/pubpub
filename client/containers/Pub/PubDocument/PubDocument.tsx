@@ -89,7 +89,7 @@ const PubDocument = () => {
 					/>
 				</div>
 				<div className="side-content" ref={sideContentRef}>
-					{isViewingHistory && (
+					{isViewingHistory && !isReview && (
 						<PubHistoryViewer
 							historyData={historyData}
 							pubData={pubData}
