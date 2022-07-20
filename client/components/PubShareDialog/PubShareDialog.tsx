@@ -61,37 +61,11 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { historyData } = usePubContext();
 
 	const { reviewHash, viewHash, editHash, isRelease } = pubData;
-	const [isUpdatingHash, setIsUpdatingHash] = useState(false);
-	const [revHash, setRevHash] = useState('');
-
-	useEffect(() => {
-		if (!reviewHash) {
-			setIsUpdatingHash(true);
-			const slug = generateHash(8);
-			apiFetch('/api/pubs', {
-				method: 'PUT',
-				body: JSON.stringify({
-					pubId: pubData.id,
-					communityId: communityData.id,
-					reviewHash: slug,
-				}),
-			})
-				.then(() => {
-					setRevHash(slug);
-					setIsUpdatingHash(false);
-				})
-				.catch((err) => {
-					console.error(err);
-				});
-		} else {
-			setRevHash(reviewHash);
-		}
-	}, [communityData.id, pubData.id, reviewHash]);
 
 	const renderCopyLabelComponent = (label, url) => {
 		return (
 			<ControlGroup className="hash-row">
-				<ClickToCopyButton minimal={false} copyString={url} loading={isUpdatingHash}>
+				<ClickToCopyButton minimal={false} copyString={url}>
 					Copy {label} URL
 				</ClickToCopyButton>
 				<InputGroup className="display-url" value={url} fill />
@@ -124,7 +98,7 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 			</p>
 			{viewHash && renderRow('View', viewHash, pubUrlFunction)}
 			{editHash && renderRow('Edit', editHash, pubUrlFunction)}
-			{renderRow('Review', revHash, reviewUrlFunction)}
+			{renderRow('Review', reviewHash, reviewUrlFunction)}
 		</div>
 	);
 };
