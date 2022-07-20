@@ -78,7 +78,7 @@ const DashboardReviews = (props: Props) => {
 													</div>
 													{hasReviewers && (
 														<div className="note">
-															by {parseReviewers(reviewers)}
+															by {parseReviewers(reviewers)}&nbsp;
 														</div>
 													)}
 													<div className="title">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { DocJson } from 'types';
+import { ClientOnly } from 'components';
 
 import ReviewEditor from './ReviewEditor';
 import ReviewModal from './ReviewModal';
@@ -18,7 +19,13 @@ const Review = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	return (
 		<div>
-			<ReviewEditor setReviewDoc={setReviewDoc} setIsLoading={setIsLoading} />
+			<ClientOnly>
+				<ReviewEditor
+					setReviewDoc={setReviewDoc}
+					communityData={communityData}
+					pubData={pubData}
+				/>
+			</ClientOnly>
 			<ReviewModal
 				isLoading={isLoading}
 				pubData={pubData}
