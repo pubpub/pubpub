@@ -41,7 +41,18 @@ export const pubUrl = (community, pub, options = {}) => {
 		query,
 		download,
 		hash,
+		isReview,
 	} = options;
+
+	if (isReview && historyKey && accessHash) {
+		baseUrl = `${baseCommunityUrl}/pub/${pub.slug}/review/${historyKey}`;
+		const url = queryString.stringifyUrl(
+			{ url: baseUrl, query: { access: accessHash, ...query } },
+			{ skipNull: true },
+		);
+		return url;
+	}
+
 	if (download) {
 		const downloadType = typeof download === 'string' ? `/${download}` : '';
 		baseUrl = `${baseUrl}/download${downloadType}`;
@@ -75,19 +86,3 @@ export const bestPubUrl = ({ pubData, communityData }, options = {}) => {
 export const doiUrl = (doi) => `https://doi.org/${doi}`;
 
 export const pageUrl = (community, page) => `${communityUrl(community)}/${page.slug}`;
-
-export const reviewUrl = (community, pub, options = {}) => {
-	const skipCommunity = community === null || isQubQub();
-	const baseCommunityUrl = skipCommunity ? '' : communityUrl(community);
-	const { isRelease, reviewHash } = options;
-	let baseUrl = `${baseCommunityUrl}/pub/${pub.slug}/review`;
-	if (isRelease) {
-		baseUrl = `${baseCommunityUrl}/pub/${pub.slug}/release/${pub.releaseNumber}/review`;
-	}
-	const url = queryString.stringifyUrl(
-		{ url: baseUrl, query: { access: reviewHash } },
-		{ skipNull: true },
-	);
-
-	return url;
-};

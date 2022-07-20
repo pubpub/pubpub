@@ -3,7 +3,7 @@ import TimeAgo from 'react-timeago';
 
 import { DialogLauncher, PubReleaseDialog, PubReleaseReviewDialog } from 'components';
 import { Menu, MenuItem } from 'components/Menu';
-import { pubUrl, reviewUrl } from 'utils/canonicalUrls';
+import { pubUrl } from 'utils/canonicalUrls';
 import { formatDate } from 'utils/dates';
 import { usePageContext } from 'utils/hooks';
 
@@ -49,7 +49,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { isRelease, isReview } = pubData;
 
 	const renderForRelease = () => {
-		const { releases, releaseNumber } = pubData;
+		const { releases, releaseNumber, reviewHash } = pubData;
 		const latestReleaseTimestamp = new Date(releases[releases.length - 1].createdAt).valueOf();
 		return (
 			<React.Fragment>
@@ -67,49 +67,57 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 				<ResponsiveHeaderButton
 					icon="draw"
 					tagName="a"
-					href={reviewUrl(communityData, pubData, { isRelease: true })}
+					href={pubUrl(communityData, pubData, {
+						accessHash: reviewHash,
+						historyKey: historyData.currentKey,
+						isReview: true,
+					})}
 					outerLabel={{
 						top: 'Create a review of this pub',
 						bottom: 'go to the review page',
 					}}
 				/>
-				<Menu
-					className="releases-menu"
-					aria-label="Choose a historical release of this Pub"
-					disclosure={
-						<ResponsiveHeaderButton
-							icon="history"
-							showCaret={true}
-							// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
-							outerLabel={getHistoryButtonLabelForTimestamp(
-								latestReleaseTimestamp,
-								'last released',
-							)}
-						/>
-					}
-				>
-					{releases
-						.map((release, index) => (
-							<MenuItem
-								key={release.id}
-								active={index + 1 === releaseNumber}
-								icon={index + 1 === releaseNumber ? 'tick' : 'document-share'}
-								href={pubUrl(communityData, pubData, { releaseNumber: index + 1 })}
-								className="release-menu-item"
-								text={
-									<div className="release-metadata">
-										<p className="number">{'Release #' + (index + 1)}</p>
-										<p className="timestamp">
-											{formatDate(new Date(release.createdAt), {
-												includeTime: true,
-											})}
-										</p>
-									</div>
-								}
+				{!isReview && (
+					<Menu
+						className="releases-menu"
+						aria-label="Choose a historical release of this Pub"
+						disclosure={
+							<ResponsiveHeaderButton
+								icon="history"
+								showCaret={true}
+								// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
+								outerLabel={getHistoryButtonLabelForTimestamp(
+									latestReleaseTimestamp,
+									'last released',
+								)}
 							/>
-						))
-						.reverse()}
-				</Menu>
+						}
+					>
+						{releases
+							.map((release, index) => (
+								<MenuItem
+									key={release.id}
+									active={index + 1 === releaseNumber}
+									icon={index + 1 === releaseNumber ? 'tick' : 'document-share'}
+									href={pubUrl(communityData, pubData, {
+										releaseNumber: index + 1,
+									})}
+									className="release-menu-item"
+									text={
+										<div className="release-metadata">
+											<p className="number">{'Release #' + (index + 1)}</p>
+											<p className="timestamp">
+												{formatDate(new Date(release.createdAt), {
+													includeTime: true,
+												})}
+											</p>
+										</div>
+									}
+								/>
+							))
+							.reverse()}
+					</Menu>
+				)}
 			</React.Fragment>
 		);
 	};

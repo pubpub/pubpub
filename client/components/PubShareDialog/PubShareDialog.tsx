@@ -12,8 +12,9 @@ import {
 import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { useMembersState } from 'client/utils/members/useMembers';
 import { apiFetch } from 'client/utils/apiFetch';
-import { pubUrl, reviewUrl } from 'utils/canonicalUrls';
+import { pubUrl } from 'utils/canonicalUrls';
 import { generateHash } from 'utils/hashes';
+import { usePubContext } from 'containers/Pub/pubHooks';
 
 require('./pubShareDialog.scss');
 
@@ -57,6 +58,8 @@ type AccessHashOptionsProps = {
 const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
+	const { historyData } = usePubContext();
+
 	const { reviewHash, viewHash, editHash, isRelease } = pubData;
 	const [isUpdatingHash, setIsUpdatingHash] = useState(false);
 	const [revHash, setRevHash] = useState('');
@@ -102,8 +105,10 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 			isDraft: !isRelease,
 		});
 	const reviewUrlFunction = (hash) =>
-		reviewUrl(communityData, pubData, {
-			reviewHash: hash,
+		pubUrl(communityData, pubData, {
+			accessHash: hash,
+			historyKey: historyData.currentKey,
+			isReview: true,
 		});
 
 	const renderRow = (label, hash, urlFunction) => {
