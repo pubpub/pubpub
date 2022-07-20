@@ -60,7 +60,9 @@ const PubDocument = () => {
 			<div className="pub-grid">
 				<div className="main-content" ref={mainContentRef}>
 					<PubMaintenanceNotice pubData={pubData} />
-					<PubHistoricalNotice pubData={pubData} historyData={historyData} />
+					{!isReview && (
+						<PubHistoricalNotice pubData={pubData} historyData={historyData} />
+					)}
 					<PubEdgeListing
 						className="top-pub-edges"
 						pubData={pubData}
