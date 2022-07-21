@@ -21,7 +21,7 @@ import {
 import { getCurrentNodeLabels, EditorChangeObject } from '../Editor';
 
 import {
-	ControlsEquation,
+	ControlsMath,
 	ControlsFootnoteCitation,
 	ControlsLink,
 	ControlsReference,
@@ -238,22 +238,6 @@ export const reference: FormattingBarButtonData = {
 	},
 };
 
-export const block_or_inline_equation: FormattingBarButtonData = {
-	key: 'block_equation',
-	title: 'Equation',
-	icon: 'function',
-	insertNodeType: 'block_equation',
-	controls: nodeControls(ControlsEquation, ['equation', 'block_equation']),
-};
-
-export const inline_equation: FormattingBarButtonData = {
-	key: 'equation',
-	title: 'Equation',
-	icon: 'function',
-	insertNodeType: 'equation',
-	controls: nodeControls(ControlsEquation, ['equation']),
-};
-
 export const footnote: FormattingBarButtonData = {
 	key: 'footnote',
 	title: 'Footnote',
@@ -284,6 +268,17 @@ export const table: FormattingBarButtonData = {
 	},
 };
 
+export const math: FormattingBarButtonData = {
+	key: 'math',
+	title: 'Math',
+	icon: 'function',
+	insertNodeType: 'math_inline',
+	controls: nodeControls(ControlsMath, ['math_inline', 'math_display'], {
+		floatingPosition: positionNearSelection,
+		showCloseButton: false,
+	}),
+};
+
 export const media: FormattingBarButtonData = {
 	key: 'media',
 	title: 'Media',
@@ -301,8 +296,9 @@ export const simpleMedia: FormattingBarButtonData = {
 	isMedia: true,
 };
 
-export const minimalButtonSet = [[strong, em, link, rightToLeft, block_or_inline_equation]];
-export const abstractButtonSet = [[strong, em, link, rightToLeft, inline_equation]];
+
+export const minimalButtonSet = [[strong, em, link, rightToLeft, math]];
+export const abstractButtonSet = [[strong, em, link, rightToLeft, math]];
 export const reviewButtonSet = [
 	[
 		heading1,
@@ -319,9 +315,10 @@ export const reviewButtonSet = [
 		superscript,
 		strikethrough,
 		horizontalRule,
-		block_or_inline_equation,
+		math,
 	],
 ];
+
 export const discussionButtonSet = [[strong, em, link], [rightToLeft], [simpleMedia]];
 export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 export const workflowButtonSet = [
@@ -345,7 +342,7 @@ export const fullButtonSet = [
 		superscript,
 		strikethrough,
 		horizontalRule,
-		block_or_inline_equation,
+		math,
 		reference,
 		citation,
 		footnote,
@@ -369,7 +366,7 @@ export const layoutEditorButtonSet = [
 		superscript,
 		strikethrough,
 		horizontalRule,
-		block_or_inline_equation,
+		math,
 		citation,
 		footnote,
 		table,

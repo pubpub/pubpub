@@ -68,7 +68,7 @@ const columnCommands = [
 	},
 	{
 		key: 'table-toggle-header-column',
-		title: 'Toggle column row',
+		title: 'Toggle header column',
 		icon: 'page-layout',
 		command: tableToggleHeaderColumn,
 	},
@@ -118,7 +118,6 @@ const ControlsTable = (props: Props) => {
 	const { view } = editorChangeObject;
 	const toolbar = useToolbarState({ loop: true });
 
-	// eslint-disable-next-line react/prop-types
 	const renderDisclosure = (_, { ref, ...disclosureProps }) => {
 		return (
 			<Button

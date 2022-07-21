@@ -34,6 +34,7 @@ require('./submission/api');
 require('./threadComment/api');
 require('./uploadPolicy/api');
 require('./user/api');
+require('./userDismissable/api');
 require('./userNotification/api');
 require('./userNotificationPreferences/api');
 require('./userSubscription/api');
