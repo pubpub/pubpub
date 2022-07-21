@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { MinimalEditor } from 'components';
 import { DocJson } from 'types';
@@ -28,10 +28,16 @@ const ReviewEditor = (props: Props) => {
 		debounce: 100,
 	});
 
+	setReviewDoc(review);
+
 	const updatingReviewDoc = (doc: DocJson) => {
 		setReview(doc);
 		setReviewDoc(review);
 	};
+
+	useEffect(() => {
+		setReviewDoc(review);
+	});
 
 	return (
 		<div className="review-editor">

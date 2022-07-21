@@ -104,7 +104,6 @@ const DashboardReview = (props: Props) => {
 						{status}
 					</Tag>
 					<span>
-						<a href={`/user/${author.slug}`}>{author.fullName}</a> created this review{' '}
 						{renderReviewers()}
 						<TimeAgo {...timeAgoBaseProps} date={localReviewData.createdAt} />
 					</span>
