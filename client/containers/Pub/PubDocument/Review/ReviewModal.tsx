@@ -26,9 +26,9 @@ const ReviewModal = (props: Props) => {
 	const [reviewTitle, setReviewTitle] = useState('Untilted Review');
 	const [reviewerName, setReviewerName] = useState(fullName || 'anonymous');
 	const [createError, setCreateError] = useState(undefined);
-	const redirectCondition = activePermissions.canEdit || fullName;
+	const isUser = !!(activePermissions.canEdit || fullName);
 	const redirectUrl = (review) =>
-		redirectCondition ? `/dash/pub/${pubData.slug}/reviews/${review.number}` : `/signup`;
+		isUser ? `/dash/pub/${pubData.slug}/reviews/${review.number}` : `/signup`;
 	const saveReviewerName = (review) => {
 		return apiFetch
 			.post('/api/reviewer', {
@@ -92,7 +92,7 @@ const ReviewModal = (props: Props) => {
 						reviewTitle={reviewTitle}
 						reviewerName={reviewerName}
 						setReviewerName={setReviewerName}
-						canEdit={activePermissions.canEdit}
+						isUser={isUser}
 					/>
 				)}
 			</DialogLauncher>

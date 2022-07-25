@@ -14,7 +14,7 @@ type OwnProps = {
 	reviewTitle: string;
 	reviewerName: any;
 	setReviewerName: any;
-	canEdit: boolean;
+	isUser: boolean;
 };
 
 const defaultProps = {};
@@ -31,7 +31,7 @@ const ReviewerDialog = (props: Props) => {
 		reviewTitle,
 		reviewerName,
 		setReviewerName,
-		canEdit,
+		isUser,
 	} = props;
 
 	const renderPreReviewButtons = () => {
@@ -72,7 +72,7 @@ const ReviewerDialog = (props: Props) => {
 							onBlur={(evt) => setReviewTitle(evt.target.value.trim())}
 						/>
 					</div>
-					{!canEdit && (
+					{!isUser && (
 						<div className="title-input">
 							<p>Add your name?</p>
 							<InputGroup
