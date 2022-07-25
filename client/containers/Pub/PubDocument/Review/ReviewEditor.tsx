@@ -37,7 +37,7 @@ const ReviewEditor = (props: Props) => {
 
 	useEffect(() => {
 		setReviewDoc(review);
-	});
+	}, [review, setReviewDoc]);
 
 	return (
 		<div className="review-editor">
