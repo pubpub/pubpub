@@ -296,7 +296,6 @@ export const simpleMedia: FormattingBarButtonData = {
 	isMedia: true,
 };
 
-
 export const minimalButtonSet = [[strong, em, link, rightToLeft, math]];
 export const abstractButtonSet = [[strong, em, link, rightToLeft, math]];
 export const reviewButtonSet = [
