@@ -99,7 +99,7 @@ const ReviewModal = (props: Props) => {
 
 			{createError && (
 				<NonIdealState
-					title="Something something errors"
+					title="There was an error submitting your review, login or signup to contact a community member"
 					// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
 					visual="error"
 					action={
