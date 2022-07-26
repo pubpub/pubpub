@@ -3,7 +3,7 @@ import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
 
 require('./reviewerDialog.scss');
 
-type OwnProps = {
+type Props = {
 	isOpen: boolean;
 	pubData: {
 		title: string;
@@ -16,10 +16,6 @@ type OwnProps = {
 	setReviewerName: any;
 	isUser: boolean;
 };
-
-const defaultProps = {};
-
-type Props = OwnProps & typeof defaultProps;
 
 const ReviewerDialog = (props: Props) => {
 	const {
