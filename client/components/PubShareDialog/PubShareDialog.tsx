@@ -55,23 +55,13 @@ const AccessHashOptions = (props: SharedProps) => {
 			</ControlGroup>
 		);
 	};
-
-	const pubUrlFunction = (hash) =>
-		pubUrl(communityData, pubData, {
-			accessHash: hash,
-			isDraft: !isRelease,
-		});
-	const reviewUrlFunction = (hash) =>
-		pubUrl(communityData, pubData, {
-			accessHash: hash,
-			historyKey: historyData.currentKey,
-			isReview: true,
-		});
-
-	const renderRow = (label, hash, urlFunction) => {
-		const url = urlFunction(hash);
-		return renderCopyLabelComponent(label, url);
-	};
+	const isDraft = !isRelease;
+	const createAccessUrl = (accessHash, options) =>
+		pubUrl(communityData, pubData, { accessHash, ...options });
+	const reviewAccessUrl = createAccessUrl(reviewHash, {
+		historyKey: historyData.currentKey,
+		isReview: true,
+	});
 
 	return (
 		<div className="access-hash-options">
@@ -79,9 +69,9 @@ const AccessHashOptions = (props: SharedProps) => {
 				You can grant visitors permission to view, edit, or review the draft of this Pub by
 				sharing a URL.
 			</p>
-			{viewHash && renderRow('View', viewHash, pubUrlFunction)}
-			{editHash && renderRow('Edit', editHash, pubUrlFunction)}
-			{renderRow('Review', reviewHash, reviewUrlFunction)}
+			{viewHash && renderCopyLabelComponent('View', createAccessUrl(viewHash, { isDraft }))}
+			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
+			{renderCopyLabelComponent('Review', reviewAccessUrl)}
 		</div>
 	);
 };

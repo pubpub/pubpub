@@ -79,10 +79,9 @@ const DashboardReview = (props: Props) => {
 			</div>
 		);
 	};
-
 	const renderReviewers = () => {
-		return localReviewData.reviewer ? (
-			localReviewData.reviewer.map((reviewer) => {
+		return localReviewData.reviewers ? (
+			localReviewData.reviewers.map((reviewer) => {
 				return <span>{reviewer.name}&nbsp;</span>;
 			})
 		) : isAuthor ? (

@@ -24,8 +24,10 @@ const Review = (props: Props) => {
 		loginData: { fullName },
 	} = usePageContext();
 	const [reviewTitle, setReviewTitle] = useState('Untitled Review');
-	const [reviewerName, setReviewerName] = useState(fullName || 'anonymous');
+	const [reviewerName, setReviewerName] = useState('');
 	const [createError, setCreateError] = useState(undefined);
+	const url = new URL(window.location.href);
+	const query = new URLSearchParams(url.search);
 
 	const { value: review, setValue: setReview } = useLocalStorage<DocJson>({
 		initial: () => getEmptyDoc(),
@@ -38,18 +40,7 @@ const Review = (props: Props) => {
 	const isUser = !!(activePermissions.canEdit || fullName);
 	const redirectUrl = (reviewToRedirectTo) =>
 		isUser ? `/dash/pub/${pubData.slug}/reviews/${reviewToRedirectTo.number}` : `/signup`;
-	const saveReviewerName = (reviewSubmission) => {
-		return apiFetch
-			.post('/api/reviewer', {
-				id: reviewSubmission.id,
-				name: reviewerName,
-				permissions: activePermissions,
-			})
-			.catch((err) => {
-				setIsLoading(false);
-				setCreateError(err);
-			});
-	};
+
 	const handleSubmit = () => {
 		setIsLoading(true);
 		apiFetch
@@ -58,10 +49,10 @@ const Review = (props: Props) => {
 				pubId: pubData.id,
 				reviewContent: review,
 				title: reviewTitle,
-				permissions: activePermissions,
+				accessHash: query.get('access'),
+				reviewerName,
 			})
 			.then((reviewRes) => {
-				saveReviewerName(reviewRes);
 				updatePubData((currentPubData) => {
 					return {
 						reviews: [...currentPubData.reviews, reviewRes],

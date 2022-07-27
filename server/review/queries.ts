@@ -1,6 +1,8 @@
 import uuidv4 from 'uuid/v4';
 
 import { Thread, Visibility, ReviewNew, Pub } from 'server/models';
+import { createReviewer } from 'server/reviewer/queries';
+
 import { getLatestKeyInPubDraft } from 'server/utils/firebaseAdmin';
 
 import { DocJson } from 'types';
@@ -20,10 +22,19 @@ type CreateReviewOptions = {
 	reviewContent?: DocJson;
 	text?: string;
 	content?: DocJson;
+	reviewerName?: string;
 };
 
 export const createReview = async (
-	{ pubId, title, releaseRequested, reviewContent, text, content }: CreateReviewOptions,
+	{
+		pubId,
+		title,
+		releaseRequested,
+		reviewContent,
+		text,
+		content,
+		reviewerName,
+	}: CreateReviewOptions,
 	userData,
 ) => {
 	const userId = userData?.id || null;
@@ -60,6 +71,10 @@ export const createReview = async (
 		userId,
 		pubId,
 		reviewContent,
+	});
+	await createReviewer({
+		id: reviewData.id,
+		name: userData?.fullName || reviewerName || 'anonymous',
 	});
 
 	if (userId) {
