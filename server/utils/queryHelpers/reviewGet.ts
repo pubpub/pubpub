@@ -20,7 +20,7 @@ export default async (pubSlug, reviewNumber, communityId) => {
 			...baseAuthor,
 			...baseVisibility,
 			...baseThread,
-			{ model: Reviewer, as: 'reviewer' },
+			{ model: Reviewer, as: 'reviewers' },
 		],
 	});
 

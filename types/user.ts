@@ -1,4 +1,4 @@
-export type MinUser = {
+export type MinimalUser = {
 	id: string;
 	slug?: string;
 	initials: string;
@@ -13,7 +13,7 @@ export type MinUser = {
 	feedback?: string;
 };
 
-export type User = MinUser & {
+export type User = MinimalUser & {
 	bio: string;
 	location: string;
 	website: string;

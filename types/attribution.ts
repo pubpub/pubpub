@@ -1,4 +1,4 @@
-import { MinUser, User } from './user';
+import { MinimalUser, User } from './user';
 
 export type PubAttribution = {
 	id: string;
@@ -11,7 +11,7 @@ export type PubAttribution = {
 	affiliation?: string;
 	orcid?: string;
 	userId?: string;
-	user?: MinUser;
+	user?: MinimalUser;
 	createdAt: string;
 	pubId: string;
 };
@@ -27,13 +27,13 @@ export type CollectionAttribution = {
 	affiliation?: string;
 	orcid?: string;
 	userId?: string;
-	user?: MinUser;
+	user?: MinimalUser;
 	createdAt: string;
 	collectionId: string;
 };
 
 export type Attribution = CollectionAttribution | PubAttribution;
-export type AttributionWithUser = Attribution & { user: MinUser | User };
+export type AttributionWithUser = Attribution & { user: MinimalUser | User };
 
 export const isAttributionWithUser = (
 	attribution: Attribution,

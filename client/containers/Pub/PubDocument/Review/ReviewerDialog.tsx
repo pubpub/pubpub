@@ -40,12 +40,14 @@ const ReviewerDialog = (props: Props) => {
 			</React.Fragment>
 		);
 	};
-	const helperTextToRender = (
-		<p>
-			You are about to submit a review for <b>{pubData.title}</b>.
-		</p>
-	);
 
+	const handleTitleOnBlur = (evt) => setReviewTitle(evt.target.value.trim());
+	const handleReviewerNameOnBlur = (evt) => setReviewerName(evt.target.value.trim());
+	const handleKeyDown = (evt) => {
+		if (evt.key === 'Enter') {
+			evt.currentTarget.blur();
+		}
+	};
 	return (
 		<Dialog
 			lazy={true}
@@ -60,12 +62,8 @@ const ReviewerDialog = (props: Props) => {
 						<p>Add a title to your review?</p>
 						<InputGroup
 							defaultValue={reviewTitle}
-							onKeyDown={(evt) => {
-								if (evt.key === 'Enter') {
-									evt.currentTarget.blur();
-								}
-							}}
-							onBlur={(evt) => setReviewTitle(evt.target.value.trim())}
+							onKeyDown={handleKeyDown}
+							onBlur={handleTitleOnBlur}
 						/>
 					</div>
 					{!isUser && (
@@ -73,16 +71,14 @@ const ReviewerDialog = (props: Props) => {
 							<p>Add your name?</p>
 							<InputGroup
 								defaultValue={reviewerName}
-								onKeyDown={(evt) => {
-									if (evt.key === 'Enter') {
-										evt.currentTarget.blur();
-									}
-								}}
-								onBlur={(evt) => setReviewerName(evt.target.value.trim())}
+								onKeyDown={handleKeyDown}
+								onBlur={handleReviewerNameOnBlur}
 							/>
 						</div>
 					)}
-					{helperTextToRender}
+					<p>
+						You are about to submit a review for <b>{pubData.title}</b>.
+					</p>
 				</div>
 			</div>
 			<div className={Classes.DIALOG_FOOTER}>

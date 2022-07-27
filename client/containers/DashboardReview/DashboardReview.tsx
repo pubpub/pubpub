@@ -6,11 +6,12 @@ import { DashboardFrame, Editor, Thread, ThreadInput } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { timeAgoBaseProps } from 'utils/dates';
 import { apiFetch } from 'client/utils/apiFetch';
+import { Review } from 'types';
 
 require('./dashboardReview.scss');
 
 type Props = {
-	reviewData: any;
+	reviewData: Review;
 };
 
 const DashboardReview = (props: Props) => {
@@ -18,7 +19,7 @@ const DashboardReview = (props: Props) => {
 	const [isClosing, setIsClosing] = useState(false);
 	const [isReleasing, setIsReleasing] = useState(false);
 	const { loginData, scopeData, communityData } = usePageContext();
-	const { author, status, thread, releaseRequested, review } = localReviewData;
+	const { author, status, thread, releaseRequested, reviewContent } = localReviewData;
 	const { canAdmin } = scopeData.activePermissions;
 	const onThreadUpdate = (newThread) => {
 		setLocalReviewData({ ...localReviewData, thread: newThread });
@@ -72,14 +73,13 @@ const DashboardReview = (props: Props) => {
 	const renderReview = () => {
 		return (
 			<div className="review">
-				<Editor key="reviewDoc" isReadOnly={true} initialContent={review} />
+				<Editor key="reviewDoc" isReadOnly={true} initialContent={reviewContent} />
 			</div>
 		);
 	};
 
-	const hasReviewers = localReviewData.reviewer;
 	const renderReviewers = () => {
-		return hasReviewers ? (
+		return localReviewData.reviewer ? (
 			localReviewData.reviewer.map((reviewer) => {
 				return <span>{reviewer.name}&nbsp;</span>;
 			})

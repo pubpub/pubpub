@@ -16,7 +16,7 @@ const DashboardReviews = (props: Props) => {
 	const { pubsWithReviews } = props;
 	const { scopeData } = usePageContext();
 	const { activeCollection, activeTargetType } = scopeData.elements;
-	const parseReviewers = (reviewers: Reviewer[] | undefined) => {
+	const renderReviewerByline = (reviewers: Reviewer[] | undefined) => {
 		return reviewers
 			? reviewers.map((reviewer) => {
 					return <span>{reviewer.name}</span>;
@@ -78,7 +78,8 @@ const DashboardReviews = (props: Props) => {
 													</div>
 													{hasReviewers && (
 														<div className="note">
-															by {parseReviewers(reviewers)}&nbsp;
+															by {renderReviewerByline(reviewers)}
+															&nbsp;
 														</div>
 													)}
 													<div className="title">

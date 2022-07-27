@@ -200,7 +200,12 @@ export default ({
 				separate: true,
 				model: ReviewNew,
 				as: 'reviews',
-				include: [...author, ...visibility, ...thread, { model: Reviewer, as: 'reviewer' }],
+				include: [
+					...author,
+					...visibility,
+					...thread,
+					{ model: Reviewer, as: 'reviewers' },
+				],
 			},
 			{
 				model: CrossrefDepositRecord,

@@ -3,6 +3,7 @@ import uuidv4 from 'uuid/v4';
 import { Thread, Visibility, ReviewNew, Pub } from 'server/models';
 import { getLatestKeyInPubDraft } from 'server/utils/firebaseAdmin';
 
+import { DocJson } from 'types';
 import {
 	createCreatedThreadEvent,
 	createClosedThreadEvent,
@@ -12,8 +13,19 @@ import {
 import { createRelease } from '../release/queries';
 import { createThreadComment } from '../threadComment/queries';
 
-export const createReview = async (inputValues, userData) => {
-	const { pubId, title, releaseRequested, review, text, content } = inputValues;
+type CreateReviewOptions = {
+	pubId: string;
+	title?: string;
+	releaseRequested?: boolean;
+	reviewContent?: DocJson;
+	text?: string;
+	content?: DocJson;
+};
+
+export const createReview = async (
+	{ pubId, title, releaseRequested, reviewContent, text, content }: CreateReviewOptions,
+	userData,
+) => {
 	const userId = userData?.id || null;
 	const reviews = await ReviewNew.findAll({
 		where: {
@@ -47,7 +59,7 @@ export const createReview = async (inputValues, userData) => {
 		visibilityId,
 		userId,
 		pubId,
-		review,
+		reviewContent,
 	});
 
 	if (userId) {

@@ -23,7 +23,6 @@ const managerUpdatableFields = [
 	'nodeLabels',
 	'pubEdgeListingDefaultsToCarousel',
 	'pubEdgeDescriptionVisible',
-	'reviewHash',
 ];
 
 const adminUpdatableFields = ['doi'];

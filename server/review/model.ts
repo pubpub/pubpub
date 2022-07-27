@@ -17,7 +17,7 @@ export default (sequelize, dataTypes) => {
 			visibilityId: { type: dataTypes.UUID, allowNull: false },
 			userId: { type: dataTypes.UUID },
 			pubId: { type: dataTypes.UUID },
-			review: { type: dataTypes.JSONB, allowNull: true },
+			reviewContent: { type: dataTypes.JSONB, allowNull: true },
 		},
 		{
 			indexes: [
@@ -50,7 +50,7 @@ export default (sequelize, dataTypes) => {
 					});
 					ReviewNew.hasMany(Reviewer, {
 						onDelete: 'CASCADE',
-						as: 'reviewer',
+						as: 'reviewers',
 						foreignKey: 'reviewId',
 					});
 				},
