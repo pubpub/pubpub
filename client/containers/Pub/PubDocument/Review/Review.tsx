@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { NonIdealState } from '@blueprintjs/core';
 
-import { ClientOnly } from 'components';
 import { DocJson, PubPageData, Community } from 'types';
+import { useLocalStorage } from 'client/utils/useLocalStorage';
+import { getEmptyDoc } from 'client/components/Editor';
+import { usePageContext } from 'utils/hooks';
+import { apiFetch } from 'client/utils/apiFetch';
 
 import ReviewEditor from './ReviewEditor';
 import ReviewModal from './ReviewModal';
@@ -14,26 +18,94 @@ type Props = {
 
 const Review = (props: Props) => {
 	const { pubData, updatePubData, communityData } = props;
-
-	const [reviewDoc, setReviewDoc] = useState({} as DocJson);
 	const [isLoading, setIsLoading] = useState(false);
+	const {
+		scopeData: { activePermissions },
+		loginData: { fullName },
+	} = usePageContext();
+	const [reviewTitle, setReviewTitle] = useState('Untitled Review');
+	const [reviewerName, setReviewerName] = useState(fullName || 'anonymous');
+	const [createError, setCreateError] = useState(undefined);
+
+	const { value: review, setValue: setReview } = useLocalStorage<DocJson>({
+		initial: () => getEmptyDoc(),
+		communityId: communityData.id,
+		featureName: 'new-review-editor',
+		path: [`pub-${pubData.id}`],
+		debounce: 100,
+	});
+
+	const isUser = !!(activePermissions.canEdit || fullName);
+	const redirectUrl = (reviewToRedirectTo) =>
+		isUser ? `/dash/pub/${pubData.slug}/reviews/${reviewToRedirectTo.number}` : `/signup`;
+	const saveReviewerName = (reviewSubmission) => {
+		return apiFetch
+			.post('/api/reviewer', {
+				id: reviewSubmission.id,
+				name: reviewerName,
+				permissions: activePermissions,
+			})
+			.catch((err) => {
+				setIsLoading(false);
+				setCreateError(err);
+			});
+	};
+	const handleSubmit = () => {
+		setIsLoading(true);
+		apiFetch
+			.post('/api/reviews', {
+				communityId: communityData.id,
+				pubId: pubData.id,
+				reviewContent: review,
+				title: reviewTitle,
+				permissions: activePermissions,
+			})
+			.then((reviewRes) => {
+				saveReviewerName(reviewRes);
+				updatePubData((currentPubData) => {
+					return {
+						reviews: [...currentPubData.reviews, reviewRes],
+					};
+				});
+				setIsLoading(false);
+				setReview(getEmptyDoc());
+				window.location.href = redirectUrl(reviewRes);
+			})
+			.catch((err) => {
+				setIsLoading(false);
+				setCreateError(err);
+			});
+	};
+
+	const updatingReviewDoc = (doc: DocJson) => {
+		setReview(doc);
+	};
+
 	return (
 		<div>
-			<ClientOnly>
-				<ReviewEditor
-					setReviewDoc={setReviewDoc}
-					communityData={communityData}
-					pubData={pubData}
-				/>
-			</ClientOnly>
+			<ReviewEditor setReviewDoc={updatingReviewDoc} reviewDoc={review} />
 			<ReviewModal
-				isLoading={isLoading}
 				pubData={pubData}
-				communityData={communityData}
-				updatePubData={updatePubData}
-				reviewDoc={reviewDoc}
-				setIsLoading={setIsLoading}
+				setReviewTitle={setReviewTitle}
+				reviewTitle={reviewTitle}
+				setReviewerName={setReviewerName}
+				reviewerName={reviewerName}
+				onSubmit={handleSubmit}
+				isLoading={isLoading}
+				isUser={isUser}
 			/>
+			{createError && (
+				<NonIdealState
+					title="There was an error submitting your review"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
+					visual="error"
+					action={
+						<a href="/login" className="bp3-button">
+							Login or Signup
+						</a>
+					}
+				/>
+			)}
 		</div>
 	);
 };

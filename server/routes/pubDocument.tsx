@@ -6,7 +6,7 @@ import { getPrimaryCollection } from 'utils/collections/primary';
 import { getPdfDownloadUrl, getTextAbstract, getGoogleScholarNotes } from 'utils/pub/metadata';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import Html from 'server/Html';
-import app from 'server/server';
+import app, { wrap } from 'server/server';
 import { handleErrors, NotFoundError, ForbiddenError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
@@ -258,11 +258,13 @@ app.get(
 	},
 );
 
-app.get(['/pub/:pubSlug/review/:historyKey/'], async (req, res, next) => {
-	if (!hostIsValid(req, 'community')) {
-		return next();
-	}
-	try {
+app.get(
+	['/pub/:pubSlug/review/:historyKey/'],
+	wrap(async (req, res, next) => {
+		if (!hostIsValid(req, 'community')) {
+			return next();
+		}
+
 		const initialData = await getInitialData(req);
 		const { historyKey: historyKeyString, pubSlug } = req.params;
 		const { canView } = initialData.scopeData.activePermissions;
@@ -286,7 +288,5 @@ app.get(['/pub/:pubSlug/review/:historyKey/'], async (req, res, next) => {
 		}));
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		return renderPubDocument(res, pubData, initialData, customScripts);
-	} catch (err) {
-		return handleErrors(req, res, next)(err);
-	}
-});
+	}),
+);

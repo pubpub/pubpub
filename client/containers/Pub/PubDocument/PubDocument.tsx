@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 import { usePageContext } from 'utils/hooks';
-import { PubHistoryViewer } from 'components';
+import { PubHistoryViewer, ClientOnly } from 'components';
 import {
 	PubEdgeListing,
 	Filter as PubEdgeFilter,
@@ -101,11 +101,13 @@ const PubDocument = () => {
 					)}
 
 					{isReview && (
-						<Review
-							pubData={pubData}
-							updatePubData={updatePubData}
-							communityData={communityData}
-						/>
+						<ClientOnly>
+							<Review
+								pubData={pubData}
+								updatePubData={updatePubData}
+								communityData={communityData}
+							/>
+						</ClientOnly>
 					)}
 				</div>
 			</div>

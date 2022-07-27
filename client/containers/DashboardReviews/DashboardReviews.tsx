@@ -70,6 +70,7 @@ const DashboardReviews = (props: Props) => {
 									});
 									return (
 										<MenuItem
+											key={review.id}
 											href={reviewUrl}
 											text={
 												<div className="list-row">
