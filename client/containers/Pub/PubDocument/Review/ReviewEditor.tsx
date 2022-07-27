@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 
 import { MinimalEditor } from 'components';
-import { DocJson } from 'types';
+import { DocJson, PubPageData, Community } from 'types';
 import { useLocalStorage } from 'client/utils/useLocalStorage';
 import { getEmptyDoc } from 'client/components/Editor';
 
 require('./reviewEditor.scss');
 
 type Props = {
-	setReviewDoc: any;
-	communityData: any;
-	pubData: any;
+	setReviewDoc: React.Dispatch<React.SetStateAction<DocJson>>;
+	communityData: Community;
+	pubData: PubPageData;
 };
 
 const ReviewEditor = (props: Props) => {
@@ -40,16 +40,14 @@ const ReviewEditor = (props: Props) => {
 	}, [review, setReviewDoc]);
 
 	return (
-		<div className="review-editor">
-			<div className="review-editor-component">
-				<MinimalEditor
-					getButtons={(buttons) => buttons.reviewButtonSet}
-					onEdit={(doc) => updatingReviewDoc(doc.toJSON() as DocJson)}
-					useFormattingBar
-					focusOnLoad={true}
-					initialContent={review}
-				/>
-			</div>
+		<div className="review-editor-component">
+			<MinimalEditor
+				getButtons={(buttons) => buttons.reviewButtonSet}
+				onEdit={(doc) => updatingReviewDoc(doc.toJSON() as DocJson)}
+				useFormattingBar
+				focusOnLoad={true}
+				initialContent={review}
+			/>
 		</div>
 	);
 };

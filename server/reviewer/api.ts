@@ -4,13 +4,13 @@ import { createReviewer } from './queries';
 app.post(
 	'/api/reviewer',
 	wrap(async (req, res) => {
-		const { reviewId, name, permissions } = req.body;
+		const { id, name, permissions } = req.body;
 		if (!permissions.canView) {
 			throw new Error('Not Authorized');
 		}
 		const newReviewer = await createReviewer({
 			name,
-			reviewId,
+			id,
 		});
 		return res.status(201).json(newReviewer);
 	}),

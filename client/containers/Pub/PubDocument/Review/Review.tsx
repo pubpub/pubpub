@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-import { DocJson } from 'types';
 import { ClientOnly } from 'components';
+import { DocJson, PubPageData, Community } from 'types';
 
 import ReviewEditor from './ReviewEditor';
 import ReviewModal from './ReviewModal';
 
 type Props = {
-	pubData: any;
+	pubData: PubPageData;
 	updatePubData: (...args: any[]) => any;
-	communityData: any;
+	communityData: Community;
 };
 
 const Review = (props: Props) => {

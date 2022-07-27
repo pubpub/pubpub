@@ -13,22 +13,17 @@ import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { useMembersState } from 'client/utils/members/useMembers';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePubContext } from 'containers/Pub/pubHooks';
+import { PubPageData } from 'types';
 
 require('./pubShareDialog.scss');
 
-type PubShareDialogProps = {
+type SharedProps = {
+	pubData: PubPageData;
+};
+
+type PubShareDialogProps = SharedProps & {
 	isOpen: boolean;
 	onClose: (...args: any[]) => any;
-	pubData: {
-		id: string;
-		editHash?: string;
-		viewHash?: string;
-		reviewHash?: string;
-		isRelease?: boolean;
-		membersData?: {
-			members?: {}[];
-		};
-	};
 };
 
 const getHelperText = (activeTargetName, activeTargetType, canModifyMembers) => {
@@ -43,17 +38,7 @@ const getHelperText = (activeTargetName, activeTargetType, canModifyMembers) => 
 	return `Members can collaborate on this ${activeTargetName}${containingPubsString}`;
 };
 
-type AccessHashOptionsProps = {
-	pubData: {
-		id: string;
-		editHash?: string;
-		viewHash?: string;
-		reviewHash?: string;
-		isRelease?: boolean;
-	};
-};
-
-const AccessHashOptions = (props: AccessHashOptionsProps) => {
+const AccessHashOptions = (props: SharedProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
 	const { historyData } = usePubContext();
@@ -91,7 +76,7 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	return (
 		<div className="access-hash-options">
 			<p>
-				You can grant visitors permission to view, edit, or review the draft of this pub by
+				You can grant visitors permission to view, edit, or review the draft of this Pub by
 				sharing a URL.
 			</p>
 			{viewHash && renderRow('View', viewHash, pubUrlFunction)}
@@ -101,15 +86,7 @@ const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	);
 };
 
-type MembersOptionsProps = {
-	pubData: {
-		membersData?: {
-			members?: {}[];
-		};
-	};
-};
-
-const MembersOptions = (props: MembersOptionsProps) => {
+const MembersOptions = (props: SharedProps) => {
 	const {
 		pubData: {
 			// @ts-expect-error ts-migrate(2339) FIXME: Property 'members' does not exist on type '{ membe... Remove this comment to see the full error message

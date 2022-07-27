@@ -140,6 +140,18 @@ const speedLimiter = slowDown({
 	maxDelay: 20000, // max time of request delay will be 20secs
 });
 
+const checkHistoryKey = (key) => {
+	const hasHistoryKey = key !== undefined;
+	const historyKey = parseInt(key, 10);
+	const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
+
+	if (isHistoryKeyInvalid) {
+		throw new NotFoundError();
+	}
+
+	return { historyKey, hasHistoryKey };
+};
+
 app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
@@ -221,13 +233,7 @@ app.get(
 			const initialData = await getInitialData(req);
 			const { historyKey: historyKeyString, pubSlug } = req.params;
 			const { canViewDraft, canView } = initialData.scopeData.activePermissions;
-			const hasHistoryKey = historyKeyString !== undefined;
-			const historyKey = parseInt(historyKeyString, 10);
-			const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
-
-			if (isHistoryKeyInvalid) {
-				throw new NotFoundError();
-			}
+			const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
 
 			if (!canViewDraft && !canView) {
 				throw new NotFoundError();
@@ -259,16 +265,10 @@ app.get(['/pub/:pubSlug/review/:historyKey/'], async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req);
 		const { historyKey: historyKeyString, pubSlug } = req.params;
-		const { canViewDraft, canView } = initialData.scopeData.activePermissions;
-		const hasHistoryKey = historyKeyString !== undefined;
-		const historyKey = parseInt(historyKeyString, 10);
-		const isHistoryKeyInvalid = hasHistoryKey && Number.isNaN(historyKey);
+		const { canView } = initialData.scopeData.activePermissions;
+		const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
 
-		if (isHistoryKeyInvalid) {
-			throw new NotFoundError();
-		}
-
-		if (!canViewDraft && !canView) {
+		if (!canView) {
 			throw new NotFoundError();
 		}
 

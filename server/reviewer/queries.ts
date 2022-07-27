@@ -1,12 +1,12 @@
 import { Reviewer } from 'server/models';
+import { Reviewer as ReviewerFields } from 'types';
 
-export const createReviewer = (inputValues) => {
-	return Reviewer.create({
-		reviewId: inputValues.reviewId,
-		name: inputValues.name,
-	}).then((newReviewer) => {
-		return Reviewer.findOne({
-			where: { id: newReviewer.id },
-		});
-	});
+export const createReviewer = ({ id, name }: ReviewerFields) => {
+	return Reviewer.create(
+		{
+			reviewId: id,
+			name,
+		},
+		{ returning: true },
+	);
 };

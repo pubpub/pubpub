@@ -7,6 +7,7 @@ import { usePageContext } from 'utils/hooks';
 import { timeAgoBaseProps } from 'utils/dates';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Review } from 'types';
+import { getEmptyDoc } from 'client/components/Editor';
 
 require('./dashboardReview.scss');
 
@@ -70,10 +71,11 @@ const DashboardReview = (props: Props) => {
 
 	const isAuthor = loginData && author && loginData.id === author.id;
 	const canClose = isAuthor || canAdmin;
+	const content = JSON.stringify(reviewContent) !== '{}' ? reviewContent : getEmptyDoc();
 	const renderReview = () => {
 		return (
 			<div className="review">
-				<Editor key="reviewDoc" isReadOnly={true} initialContent={reviewContent} />
+				<Editor key="reviewDoc" isReadOnly={true} initialContent={content} />
 			</div>
 		);
 	};
@@ -83,10 +85,12 @@ const DashboardReview = (props: Props) => {
 			localReviewData.reviewer.map((reviewer) => {
 				return <span>{reviewer.name}&nbsp;</span>;
 			})
-		) : (
+		) : isAuthor ? (
 			<span>
 				<a href={`/user/${author.slug}`}>{author.fullName}</a> created this review{' '}
 			</span>
+		) : (
+			''
 		);
 	};
 

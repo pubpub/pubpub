@@ -3,18 +3,18 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 
 import { apiFetch } from 'client/utils/apiFetch';
 import { DialogLauncher } from 'components';
-import { DocJson } from 'types';
+import { DocJson, PubPageData, Community } from 'types';
 import { usePageContext } from 'utils/hooks';
 
 import ReviewerDialog from './ReviewerDialog';
 
 type Props = {
 	isLoading: boolean;
-	pubData: any;
-	communityData: any;
+	pubData: PubPageData;
+	communityData: Community;
 	updatePubData: any;
 	reviewDoc: DocJson;
-	setIsLoading: any;
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ReviewModal = (props: Props) => {
@@ -32,7 +32,7 @@ const ReviewModal = (props: Props) => {
 	const saveReviewerName = (review) => {
 		return apiFetch
 			.post('/api/reviewer', {
-				reviewId: review.id,
+				id: review.id,
 				name: reviewerName,
 				permissions: activePermissions,
 			})
@@ -47,7 +47,7 @@ const ReviewModal = (props: Props) => {
 			.post('/api/reviews', {
 				communityId: communityData.id,
 				pubId: pubData.id,
-				review: reviewDoc,
+				reviewContent: reviewDoc,
 				title: reviewTitle,
 				permissions: activePermissions,
 			})
@@ -87,7 +87,7 @@ const ReviewModal = (props: Props) => {
 						isOpen={isOpen}
 						onClose={onClose}
 						pubData={pubData}
-						createReviewDoc={createReviewDoc}
+						onCreateReviewDoc={createReviewDoc}
 						setReviewTitle={setReviewTitle}
 						reviewTitle={reviewTitle}
 						reviewerName={reviewerName}
@@ -99,11 +99,11 @@ const ReviewModal = (props: Props) => {
 
 			{createError && (
 				<NonIdealState
-					title="There was an error submitting your review, login or signup to contact a community member"
+					title="There was an error submitting your review"
 					// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
 					visual="error"
 					action={
-						<a href="/login?redirect=/community/create" className="bp3-button">
+						<a href="/login" className="bp3-button">
 							Login or Signup
 						</a>
 					}

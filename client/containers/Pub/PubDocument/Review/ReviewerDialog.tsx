@@ -1,19 +1,18 @@
 import React from 'react';
 import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
+import { PubPageData } from 'types';
 
 require('./reviewerDialog.scss');
 
 type Props = {
 	isOpen: boolean;
-	pubData: {
-		title: string;
-	};
+	pubData: PubPageData;
 	onClose: (...args: any[]) => any;
-	createReviewDoc: () => any;
-	setReviewTitle: any;
+	onCreateReviewDoc: () => void;
+	setReviewTitle: React.Dispatch<React.SetStateAction<string>>;
 	reviewTitle: string;
-	reviewerName: any;
-	setReviewerName: any;
+	reviewerName: string;
+	setReviewerName: React.Dispatch<React.SetStateAction<string>>;
 	isUser: boolean;
 };
 
@@ -22,7 +21,7 @@ const ReviewerDialog = (props: Props) => {
 		isOpen,
 		onClose,
 		pubData,
-		createReviewDoc,
+		onCreateReviewDoc,
 		setReviewTitle,
 		reviewTitle,
 		reviewerName,
@@ -34,7 +33,7 @@ const ReviewerDialog = (props: Props) => {
 		return (
 			<React.Fragment>
 				<Button onClick={onClose}>Cancel</Button>
-				<Button intent="primary" onClick={createReviewDoc}>
+				<Button intent="primary" onClick={onCreateReviewDoc}>
 					Create Review
 				</Button>
 			</React.Fragment>

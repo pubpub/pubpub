@@ -73,7 +73,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						isReview: true,
 					})}
 					outerLabel={{
-						top: 'Create a review of this pub',
+						top: 'Create a review of this Pub',
 						bottom: 'go to the review page',
 					}}
 				/>
