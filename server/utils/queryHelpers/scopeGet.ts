@@ -169,6 +169,12 @@ getScopeElements = async (scopeInputs) => {
 					model: CollectionPub,
 					as: 'collectionPubs',
 					attributes: ['id', 'pubId', 'collectionId'],
+					include: [
+						{
+							model: Collection,
+							as: 'collection',
+						},
+					],
 				},
 				{
 					model: Release,

@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 import { Avatar, Icon, IconName, MenuItem } from 'components';
+import { getPrimaryCollection } from 'utils/collections/primary';
+import { Collection, Pub } from 'types';
 
 require('./scopeDropdown.scss');
 
@@ -20,6 +22,12 @@ type Props = {
 	isDashboard?: boolean;
 };
 
+const getPrimaryOrFirstCollection = (activePub: Pub | undefined): Collection | undefined => {
+	if (!activePub || !activePub.collectionPubs || activePub.collectionPubs.length === 0)
+		return undefined;
+	return getPrimaryCollection(activePub.collectionPubs) || activePub.collectionPubs[0].collection;
+};
+
 const ScopeDropdown = (props: Props) => {
 	const { isDashboard } = props;
 	const { locationData, communityData, scopeData, pageData } = usePageContext();
@@ -27,7 +35,9 @@ const ScopeDropdown = (props: Props) => {
 	const { canManageCommunity } = scopeData.activePermissions;
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
 	const pubSlug = locationData.params.pubSlug;
-
+	console.log('activePub', activePub);
+	const nonActiveDashboardCollection = getPrimaryOrFirstCollection(activePub);
+	console.log('nonactive', nonActiveDashboardCollection);
 	const scopes: Scope[] = [];
 	scopes.push({
 		type: 'Community',
@@ -54,6 +64,17 @@ const ScopeDropdown = (props: Props) => {
 			avatar: activeCollection.avatar,
 			href: getDashUrl({
 				collectionSlug,
+			}),
+		});
+	}
+	if (!activeCollection && nonActiveDashboardCollection) {
+		scopes.push({
+			type: 'Collection',
+			icon: 'collection',
+			title: nonActiveDashboardCollection.title,
+			avatar: nonActiveDashboardCollection.avatar,
+			href: getDashUrl({
+				collectionSlug: nonActiveDashboardCollection.slug,
 			}),
 		});
 	}
