@@ -40,7 +40,7 @@ const getHelperText = (activeTargetName, activeTargetType, canModifyMembers) => 
 
 const AccessHashOptions = (props: SharedProps) => {
 	const { pubData } = props;
-	const { communityData } = usePageContext();
+	const { communityData, featureFlags } = usePageContext();
 	const { historyData } = usePubContext();
 
 	const { reviewHash, viewHash, editHash, isRelease } = pubData;
@@ -71,7 +71,7 @@ const AccessHashOptions = (props: SharedProps) => {
 			</p>
 			{viewHash && renderCopyLabelComponent('View', createAccessUrl(viewHash, { isDraft }))}
 			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
-			{renderCopyLabelComponent('Review', reviewAccessUrl)}
+			{featureFlags.review && renderCopyLabelComponent('Review', reviewAccessUrl)}
 		</div>
 	);
 };
