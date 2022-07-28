@@ -35,9 +35,7 @@ const ScopeDropdown = (props: Props) => {
 	const { canManageCommunity } = scopeData.activePermissions;
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
 	const pubSlug = locationData.params.pubSlug;
-	console.log('activePub', activePub);
 	const nonActiveDashboardCollection = getPrimaryOrFirstCollection(activePub);
-	console.log('nonactive', nonActiveDashboardCollection);
 	const scopes: Scope[] = [];
 	scopes.push({
 		type: 'Community',
