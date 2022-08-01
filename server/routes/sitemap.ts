@@ -102,7 +102,7 @@ const maybeGenerateSitemapIndex = async (community) => {
 			})),
 		);
 
-	pipeline(
+	await pipeline(
 		stream.Readable.from(urls),
 		sitemapAndIndexStream,
 		createGzip(),
