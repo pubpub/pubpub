@@ -1,3 +1,5 @@
+import striptags from 'striptags';
+
 import { Collection, Community, Pub, PubAttribution, Member } from 'server/models';
 import { setPubSearchData, deletePubSearchData } from 'server/utils/search';
 import { createCollectionPub } from 'server/collectionPub/queries';
@@ -31,6 +33,7 @@ export const createPub = async (
 			headerStyle: 'dark',
 			viewHash: generateHash(8),
 			editHash: generateHash(8),
+			reviewHash: generateHash(8),
 			draftId: draft.id,
 			...restArgs,
 		},
@@ -97,6 +100,9 @@ export const updatePub = (inputValues, updatePermissions, actorId) => {
 	}
 	if (filteredValues.title && !filteredValues.htmlTitle) {
 		filteredValues.htmlTitle = filteredValues.title;
+	}
+	if (filteredValues.htmlTitle) {
+		filteredValues.title = striptags(filteredValues.htmlTitle);
 	}
 
 	return Pub.update(filteredValues, {
