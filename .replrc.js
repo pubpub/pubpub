@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { isProd } from 'utils/environment';
 import { addWorkerTask } from 'server/utils/workers';
 import { sendEmail } from 'server/utils/email';
+import { createPubPubS3Client, assetsClient } from 'server/utils/s3';
 import * as featureFlags from 'server/featureFlag/interface';
 import * as tasks from 'workers/tasks';
 import * as models from 'server/models';
@@ -45,6 +46,8 @@ const context = {
 	scope,
 	addWorkerTask,
 	sendEmail,
+	createPubPubS3Client,
+	assetsClient,
 };
 
 module.exports = {
