@@ -6,10 +6,10 @@ export const createComponentDoi = (parentPub, childPub) => {
 	return `${parentPub.doi}/${splitId(childPub)}`;
 };
 
-export default ({ community, target }) => {
+export default async ({ community, target }) => {
 	const communityPart = splitId(community);
 	const targetPart = target ? `.${splitId(target)}` : '';
 	const component = communityPart + targetPart;
 
-	return `${choosePrefixByCommunityId(community.id)}/${component}`;
+	return `${await choosePrefixByCommunityId(community.id)}/${component}`;
 };

@@ -1,3 +1,5 @@
+import { DepositTarget } from 'server/models';
+
 // Some overrides for specific communities.
 // TODO(ian): Handle this with the database instead.
 export const PUBPUB_DOI_PREFIX = '10.21428';
@@ -152,14 +154,15 @@ export const communityDoiOverrides = [
 	},
 ];
 
-export const getDoiOverrideByCommunityId = (communityId) => {
-	return communityDoiOverrides.find((override) =>
-		override.communityIds.some((id) => id === communityId),
-	);
+export const getDoiOverrideByCommunityId = async (communityId) => {
+	const doiOverride = await DepositTarget.findOne({
+		where: { communityId, service: 'crossref' },
+	});
+	return doiOverride?.doiPrefix;
 };
 
-export const choosePrefixByCommunityId = (communityId) => {
-	const matchingOverride = getDoiOverrideByCommunityId(communityId);
+export const choosePrefixByCommunityId = async (communityId) => {
+	const matchingOverride = await getDoiOverrideByCommunityId(communityId);
 	if (matchingOverride) {
 		return matchingOverride.prefix;
 	}

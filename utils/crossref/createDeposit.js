@@ -136,10 +136,10 @@ const getCollectionDoiPart = (context, doiTarget) => {
 	};
 };
 
-export const getDois = (context, doiTarget) => {
+export const getDois = async (context, doiTarget) => {
 	const { community } = context;
 	const dois = {
-		community: createDoi({ community }),
+		community: await createDoi({ community }),
 		...getPubDoiPart(context, doiTarget),
 		...getCollectionDoiPart(context, doiTarget),
 	};
@@ -163,7 +163,7 @@ const filterForMutuallyApprovedEdges = (pubEdges) => {
 	}
 };
 
-export default (
+export default async (
 	context,
 	doiTarget,
 	timestamp = new Date().getTime(),
@@ -200,7 +200,7 @@ export default (
 
 	const ctx = { ...context, pub };
 	const contextWithPubEdge = { ...ctx, pubEdge };
-	const dois = getDois(
+	const dois = await getDois(
 		pubEdge && pubEdge.relationType === RelationType.Supplement ? contextWithPubEdge : ctx,
 		doiTarget,
 	);
