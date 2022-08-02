@@ -39,11 +39,47 @@
 		}
 	}
 
+	.sticky-review-buttons {
+		display: flex;
+	}
+
 	.sticky-review-text {
 		font-weight: 500;
 		font-size: 14px;
 		line-height: 17px;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
+	}
+}
+
+@supports (display: grid) {
+	.sticky-grid {
+		width: 100%;
+		.main-content {
+			grid-area: title;
+		}
+		.side-content {
+			grid-area: review;
+		}
+	}
+	@include pub-full-view {
+		.pub-header-sticky-component  {
+			.side-content {
+				.header-title {
+					display: block;
+					font-weight: 600;
+					font-size: 16px;
+					margin-bottom: 10px;
+				}
+			}
+		}
+	}
+
+	@include pub-compact-view {
+		.pub-grid {
+			.side-content > * {
+				display: none;
+			}
+		}
 	}
 }

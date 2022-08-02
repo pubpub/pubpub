@@ -44,17 +44,19 @@ const PubHeaderSticky = () => {
 
 	const renderPubHeaderReviewSticky = () => {
 		return (
-			<>
-				<div className="sticky-title">{pubData.title}</div>
-				<div className="sticky-buttons">
-					<div className="sticky-review-text">review</div>
-					<Button
-						minimal={true}
-						onClick={() => window.scrollTo({ left: 0, top: 0, behavior: 'auto' })}
-						icon={<Icon icon="expand-all" />}
-					/>
+			<div className="pub-grid">
+				<div className="sticky-title main-content">{pubData.title}</div>
+				<div className="side-content">
+					<div className="sticky-buttons sticky-review-buttons">
+						<div className="sticky-review-text">review</div>
+						<Button
+							minimal={true}
+							onClick={() => window.scrollTo({ left: 0, top: 0, behavior: 'auto' })}
+							icon={<Icon icon="expand-all" />}
+						/>
+					</div>
 				</div>
-			</>
+			</div>
 		);
 	};
 
