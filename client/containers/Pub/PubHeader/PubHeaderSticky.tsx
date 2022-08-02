@@ -47,21 +47,7 @@ const PubHeaderSticky = () => {
 			<>
 				<div className="sticky-title">{pubData.title}</div>
 				<div className="sticky-buttons">
-					<PubToc limitHeight>
-						{({ ref, ...disclosureProps }) => (
-							<>
-								<Button
-									minimal={true}
-									{...disclosureProps}
-									elementRef={ref as any}
-									className="contents-button"
-								>
-									Review
-								</Button>
-								<span className="dot">·</span>
-							</>
-						)}
-					</PubToc>
+					<b>REVIEW</b>
 					<Button
 						minimal={true}
 						onClick={() => window.scrollTo({ left: 0, top: 0, behavior: 'auto' })}
