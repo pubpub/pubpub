@@ -52,18 +52,37 @@
 	}
 }
 
-@supports (display: grid) {
+/* This selector is a IE 10+ kludge */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
 	.sticky-grid {
 		width: 100%;
 		.main-content {
-			grid-area: title;
+			max-width: $pub-max-width;
+			margin: 0 auto;
 		}
 		.side-content {
-			grid-area: review;
+			max-width: $pub-max-width;
+			margin: 0 auto;
+		}
+	}
+}
+
+@supports (display: grid) {
+	.sticky-grid {
+		@include has-grid('. pub . comments .');
+		width: 100%;
+		.main-content {
+			grid-area: pub;
+		}
+		.side-content {
+			grid-area: comments;
 		}
 	}
 	@include pub-full-view {
-		.pub-header-sticky-component  {
+		.pub-document-component {
+			.pub-columns {
+				margin-top: 3em;
+			}
 			.side-content {
 				.header-title {
 					display: block;
@@ -76,10 +95,18 @@
 	}
 
 	@include pub-compact-view {
-		.pub-grid {
+		.sticky-grid {
 			.side-content > * {
 				display: none;
 			}
+		}
+	}
+}
+
+@media print {
+	#pub-old-container {
+		.container.pub {
+			max-width: 100%;
 		}
 	}
 }

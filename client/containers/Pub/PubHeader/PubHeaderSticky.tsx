@@ -44,7 +44,7 @@ const PubHeaderSticky = () => {
 
 	const renderPubHeaderReviewSticky = () => {
 		return (
-			<div className="pub-grid">
+			<div className="sticky-grid">
 				<div className="sticky-title main-content">{pubData.title}</div>
 				<div className="side-content">
 					<div className="sticky-buttons sticky-review-buttons">
