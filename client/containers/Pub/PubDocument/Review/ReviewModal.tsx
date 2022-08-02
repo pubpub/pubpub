@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '@blueprintjs/core';
 import Color from 'color';
 
 import { DialogLauncher } from 'components';
-import { PubPageData } from 'types';
+import { Community, PubPageData } from 'types';
 
 import ReviewerDialog from './ReviewerDialog';
 
@@ -19,7 +19,7 @@ type Props = {
 	setReviewerName: React.Dispatch<React.SetStateAction<string>>;
 	reviewerName: string;
 	onSubmit: any;
-	lighterAccentColor: string;
+	communityData: Community;
 };
 
 const ReviewModal = (props: Props) => {
@@ -32,9 +32,14 @@ const ReviewModal = (props: Props) => {
 		setReviewerName,
 		reviewerName,
 		onSubmit,
-		lighterAccentColor,
+		communityData,
 	} = props;
-
+	const [hover, setHover] = useState(false);
+	const lighterAccentColor = useMemo(
+		() => Color(communityData.accentColorDark).alpha(0.4),
+		[communityData.accentColorDark],
+	);
+	const bgColor = !hover ? lighterAccentColor : communityData.accentColorDark;
 	return (
 		<div className="review-modal">
 			<DialogLauncher
@@ -45,7 +50,10 @@ const ReviewModal = (props: Props) => {
 						minimal={true}
 						loading={isLoading}
 						className="review-submission-button"
-						style={{ background: lighterAccentColor }}
+						style={{ background: bgColor }}
+						intent="primary"
+						onMouseEnter={() => setHover(true)}
+						onMouseLeave={() => setHover(false)}
 					>
 						Submit Review
 					</Button>

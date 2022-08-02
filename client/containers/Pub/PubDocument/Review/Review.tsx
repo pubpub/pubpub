@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
-import Color from 'color';
 
 import { useSticky } from 'client/utils/useSticky';
 import { DocJson, PubPageData, Community } from 'types';
@@ -82,11 +81,6 @@ const Review = (props: Props) => {
 		offset: 37,
 	});
 
-	const lighterAccentColor = useMemo(
-		() => Color(communityData.accentColorDark).alpha(0.4),
-		[communityData.accentColorDark],
-	);
-
 	return (
 		<div className="review-component">
 			<div className="review-border">
@@ -100,7 +94,7 @@ const Review = (props: Props) => {
 					onSubmit={handleSubmit}
 					isLoading={isLoading}
 					isUser={isUser}
-					lighterAccentColor={lighterAccentColor}
+					communityData={communityData}
 				/>
 				{createError && (
 					<NonIdealState
