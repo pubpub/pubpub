@@ -3,8 +3,6 @@ import React from 'react';
 import { MinimalEditor } from 'components';
 import { DocJson } from 'types';
 
-require('./reviewEditor.scss');
-
 type Props = {
 	setReviewDoc: (doc: DocJson) => void;
 	reviewDoc: DocJson;
