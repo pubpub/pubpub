@@ -19,6 +19,7 @@ const ReviewEditor = (props: Props) => {
 				useFormattingBar
 				focusOnLoad={true}
 				initialContent={reviewDoc}
+				placeholder="Compose your review here..."
 			/>
 		</div>
 	);

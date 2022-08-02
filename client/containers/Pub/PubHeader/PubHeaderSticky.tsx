@@ -47,7 +47,7 @@ const PubHeaderSticky = () => {
 			<>
 				<div className="sticky-title">{pubData.title}</div>
 				<div className="sticky-buttons">
-					<b>REVIEW</b>
+					<div className="sticky-review-text">review</div>
 					<Button
 						minimal={true}
 						onClick={() => window.scrollTo({ left: 0, top: 0, behavior: 'auto' })}
