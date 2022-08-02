@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
+import { useSticky } from 'client/utils/useSticky';
 import { DocJson, PubPageData, Community } from 'types';
 import { useLocalStorage } from 'client/utils/useLocalStorage';
 import { getEmptyDoc } from 'client/components/Editor';
@@ -9,6 +10,8 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 import ReviewEditor from './ReviewEditor';
 import ReviewModal from './ReviewModal';
+
+require('./review.scss');
 
 type Props = {
 	pubData: PubPageData;
@@ -72,8 +75,14 @@ const Review = (props: Props) => {
 		setReview(doc);
 	};
 
+	useSticky({
+		target: '.review-component',
+		isActive: true,
+		offset: 37,
+	});
+
 	return (
-		<div>
+		<div className="review-component">
 			<ReviewEditor setReviewDoc={updatingReviewDoc} reviewDoc={review} />
 			<ReviewModal
 				pubData={pubData}
