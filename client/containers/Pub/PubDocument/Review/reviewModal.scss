@@ -1,0 +1,15 @@
+.review-modal {
+	.bp3-button {
+		background: var(--community-accent-dark);
+		color: white;
+		.bp3-icon {
+			color: white;
+		}
+	}
+	.bp3-button:hover {
+		color: var(--community-accent-dark-faded);
+		.bp3-icon {
+			color: var(--community-accent-dark-faded);
+		}
+	}
+}

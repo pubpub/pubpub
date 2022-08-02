@@ -1,3 +1,11 @@
 .review-component {
-	max-width: fit-content;
+	padding-bottom: 50px;
+	width: fit-content;
+
+	.review-border {
+		border-style: solid;
+		border-color: #dddddd;
+		padding: 18px;
+		border-bottom: none;
+	}
 }

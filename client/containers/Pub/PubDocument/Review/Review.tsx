@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
+import Color from 'color';
 
 import { useSticky } from 'client/utils/useSticky';
 import { DocJson, PubPageData, Community } from 'types';
@@ -81,31 +82,39 @@ const Review = (props: Props) => {
 		offset: 37,
 	});
 
+	const lighterAccentColor = useMemo(
+		() => Color(communityData.accentColorDark).alpha(0.4),
+		[communityData.accentColorDark],
+	);
+
 	return (
 		<div className="review-component">
-			<ReviewEditor setReviewDoc={updatingReviewDoc} reviewDoc={review} />
-			<ReviewModal
-				pubData={pubData}
-				setReviewTitle={setReviewTitle}
-				reviewTitle={reviewTitle}
-				setReviewerName={setReviewerName}
-				reviewerName={reviewerName}
-				onSubmit={handleSubmit}
-				isLoading={isLoading}
-				isUser={isUser}
-			/>
-			{createError && (
-				<NonIdealState
-					title="There was an error submitting your review"
-					// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
-					visual="error"
-					action={
-						<a href="/login" className="bp3-button">
-							Login or Signup
-						</a>
-					}
+			<div className="review-border">
+				<ReviewEditor setReviewDoc={updatingReviewDoc} reviewDoc={review} />
+				<ReviewModal
+					pubData={pubData}
+					setReviewTitle={setReviewTitle}
+					reviewTitle={reviewTitle}
+					setReviewerName={setReviewerName}
+					reviewerName={reviewerName}
+					onSubmit={handleSubmit}
+					isLoading={isLoading}
+					isUser={isUser}
+					lighterAccentColor={lighterAccentColor}
 				/>
-			)}
+				{createError && (
+					<NonIdealState
+						title="There was an error submitting your review"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
+						visual="error"
+						action={
+							<a href="/login" className="bp3-button">
+								Login or Signup
+							</a>
+						}
+					/>
+				)}
+			</div>
 		</div>
 	);
 };

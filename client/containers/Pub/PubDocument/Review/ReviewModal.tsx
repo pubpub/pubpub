@@ -1,10 +1,13 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
+import Color from 'color';
 
 import { DialogLauncher } from 'components';
 import { PubPageData } from 'types';
 
 import ReviewerDialog from './ReviewerDialog';
+
+require('./reviewModal.scss');
 
 type Props = {
 	isLoading: boolean;
@@ -16,6 +19,7 @@ type Props = {
 	setReviewerName: React.Dispatch<React.SetStateAction<string>>;
 	reviewerName: string;
 	onSubmit: any;
+	lighterAccentColor: string;
 };
 
 const ReviewModal = (props: Props) => {
@@ -28,10 +32,11 @@ const ReviewModal = (props: Props) => {
 		setReviewerName,
 		reviewerName,
 		onSubmit,
+		lighterAccentColor,
 	} = props;
 
 	return (
-		<div>
+		<div className="review-modal">
 			<DialogLauncher
 				renderLauncherElement={({ openDialog }) => (
 					<Button
@@ -39,6 +44,8 @@ const ReviewModal = (props: Props) => {
 						onClick={openDialog}
 						minimal={true}
 						loading={isLoading}
+						className="review-submission-button"
+						style={{ background: lighterAccentColor }}
 					>
 						Submit Review
 					</Button>
