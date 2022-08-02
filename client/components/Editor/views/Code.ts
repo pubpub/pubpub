@@ -90,10 +90,11 @@ export default class CodeBlockView {
 
 	maybeEscape(unit, dir) {
 		const { state } = this.cm;
-		let { main } = state.selection;
+		const { main } = state.selection;
 		if (!main.empty) return false;
-		if (unit === 'line') main = state.doc.lineAt(main.head);
-		if (dir < 0 ? main.from > 0 : main.to < state.doc.length) return false;
+		let tempMain: any;
+		if (unit === 'line') tempMain = state.doc.lineAt(main.head);
+		if (dir < 0 ? tempMain.from > 0 : tempMain.to < state.doc.length) return false;
 		const targetPos = this.getPos() + (dir < 0 ? 0 : this.node.nodeSize);
 		const selection = Selection.near(this.view.state.doc.resolve(targetPos), dir);
 		const tr = this.view.state.tr.setSelection(selection).scrollIntoView();
@@ -103,22 +104,22 @@ export default class CodeBlockView {
 	}
 
 	update(node) {
-		if (node.type != this.node.type) return false;
+		if (node.type !== this.node.type) return false;
 		this.node = node;
 		if (this.updating) return true;
-		let newText = node.textContent,
-			curText = this.cm.state.doc.toString();
-		if (newText != curText) {
-			let start = 0,
-				curEnd = curText.length,
-				newEnd = newText.length;
-			while (start < curEnd && curText.charCodeAt(start) == newText.charCodeAt(start)) {
+		const newText = node.textContent;
+		const curText = this.cm.state.doc.toString();
+		if (newText !== curText) {
+			let start = 0;
+			let curEnd = curText.length;
+			let newEnd = newText.length;
+			while (start < curEnd && curText.charCodeAt(start) === newText.charCodeAt(start)) {
 				++start;
 			}
 			while (
 				curEnd > start &&
 				newEnd > start &&
-				curText.charCodeAt(curEnd - 1) == newText.charCodeAt(newEnd - 1)
+				curText.charCodeAt(curEnd - 1) === newText.charCodeAt(newEnd - 1)
 			) {
 				curEnd--;
 				newEnd--;
@@ -139,6 +140,7 @@ export default class CodeBlockView {
 	selectNode() {
 		this.cm.focus();
 	}
+
 	stopEvent() {
 		return true;
 	}
@@ -149,13 +151,13 @@ import { keymap } from 'prosemirror-keymap';
 function arrowHandler(dir) {
 	return (state, dispatch, view) => {
 		if (state.selection.empty && view.endOfTextblock(dir)) {
-			let side = dir == 'left' || dir == 'up' ? -1 : 1;
-			let $head = state.selection.$head;
-			let nextPos = Selection.near(
+			const side = dir === 'left' || dir === 'up' ? -1 : 1;
+			const $head = state.selection.$head;
+			const nextPos = Selection.near(
 				state.doc.resolve(side > 0 ? $head.after() : $head.before()),
 				side,
 			);
-			if (nextPos.$head && nextPos.$head.parent.type.name == 'code_block') {
+			if (nextPos.$head && nextPos.$head.parent.type.name === 'code_block') {
 				dispatch(state.tr.setSelection(nextPos));
 				return true;
 			}
