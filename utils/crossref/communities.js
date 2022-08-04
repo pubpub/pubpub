@@ -153,18 +153,3 @@ export const communityDoiOverrides = [
 		key: 'ARCADIASCIENCE',
 	},
 ];
-
-export const getDoiOverrideByCommunityId = async (communityId) => {
-	const doiOverride = await DepositTarget.findOne({
-		where: { communityId, service: 'crossref' },
-	});
-	return doiOverride?.doiPrefix;
-};
-
-export const choosePrefixByCommunityId = async (communityId) => {
-	const matchingOverride = await getDoiOverrideByCommunityId(communityId);
-	if (matchingOverride) {
-		return matchingOverride.prefix;
-	}
-	return PUBPUB_DOI_PREFIX;
-};

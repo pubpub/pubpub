@@ -71,9 +71,6 @@ export default (sequelize, dataTypes) => {
 			editHash: { type: dataTypes.STRING },
 			premiumLicenseFlag: { type: dataTypes.BOOLEAN, defaultValue: false },
 			defaultPubCollections: { type: dataTypes.JSONB },
-			doiPrefix: { type: dataTypes.STRING },
-			crossrefLoginId: { type: dataTypes.STRING },
-			crossrefLoginPassword: { type: dataTypes.STRING },
 
 			/* Set by Associations */
 			organizationId: { type: dataTypes.UUID },

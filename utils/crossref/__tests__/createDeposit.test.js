@@ -339,4 +339,10 @@ describe('createDeposit', () => {
 				.crossrefComponentType,
 		);
 	});
+
+	it('uses a DepositTarget to produce a doi prefix', () => {
+		const depositTarget = { doiPrefix: 'abc' };
+		const { deposit } = createDeposit({ pub, depositTarget }, 'pub');
+		expect(deposit.dois.pub.split('/')[0]).toEqual(depositTarget.doiPrefix);
+	});
 });

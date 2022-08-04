@@ -1,22 +1,18 @@
+import { Button, Callout, FormGroup, InputGroup } from '@blueprintjs/core';
 import React, { Component } from 'react';
-import { FormGroup, Button, InputGroup, Callout } from '@blueprintjs/core';
 
-import {
-	choosePrefixByCommunityId,
-	managedDoiPrefixes,
-	PUBPUB_DOI_PREFIX,
-} from 'utils/crossref/communities';
 import { apiFetch } from 'client/utils/apiFetch';
+import { AssignDoi } from 'components';
+import { DepositTarget } from 'types';
+import { getPrimaryCollection } from 'utils/collections/primary';
 import { getSchemaForKind } from 'utils/collections/schemas';
+import { managedDoiPrefixes, PUBPUB_DOI_PREFIX } from 'utils/crossref/communities';
 import { isDoi } from 'utils/crossref/parseDoi';
 import {
-	RelationType,
 	findParentEdgeByRelationTypes,
+	RelationType,
 	relationTypeDefinitions,
 } from 'utils/pubEdge/relations';
-
-import { AssignDoi } from 'components';
-import { getPrimaryCollection } from 'utils/collections/primary';
 
 require('./doi.scss');
 
@@ -25,11 +21,11 @@ type Props = {
 	communityData: any;
 	pubData: any;
 	updatePubData: (...args: any[]) => any;
+	depositTarget?: DepositTarget;
 };
 
-const extractDoiSuffix = (doi, community) => {
-	const prefix = choosePrefixByCommunityId(community.id);
-
+const extractDoiSuffix = (doi: string, depositTarget?: DepositTarget) => {
+	const prefix = depositTarget?.doiPrefix ?? PUBPUB_DOI_PREFIX;
 	return doi.replace(`${prefix}/`, '');
 };
 
@@ -40,7 +36,7 @@ class Doi extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			doiSuffix: extractDoiSuffix(props.pubData.doi || '', props.communityData),
+			doiSuffix: (props.pubData.doi || '').split('/')[0],
 			error: false,
 			justSetDoi: false,
 			deleting: false,
@@ -56,7 +52,7 @@ class Doi extends Component<Props, State> {
 	}
 
 	getDoiPrefix() {
-		return choosePrefixByCommunityId(this.props.communityData.id);
+		return this.props.depositTarget?.doiPrefix ?? PUBPUB_DOI_PREFIX;
 	}
 
 	getFullDoi() {
@@ -162,7 +158,7 @@ class Doi extends Component<Props, State> {
 			});
 			this.setState({
 				[pendingStateKey]: false,
-				doiSuffix: extractDoiSuffix(response.doi, communityData),
+				doiSuffix: extractDoiSuffix(response.doi, this.props.depositTarget),
 				error: false,
 				success: true,
 			});
@@ -207,7 +203,7 @@ class Doi extends Component<Props, State> {
 
 			this.setState({
 				generating: false,
-				doiSuffix: extractDoiSuffix(response.dois.pub, communityData),
+				doiSuffix: extractDoiSuffix(response.dois.pub, this.props.depositTarget),
 				error: false,
 				success: false,
 			});
@@ -223,7 +219,7 @@ class Doi extends Component<Props, State> {
 	async handleUpdateDoiClick() {
 		const { pubData, communityData } = this.props;
 		const doi = this.getFullDoi();
-		const currentDoiSuffix = extractDoiSuffix(pubData.doi || '', communityData);
+		const currentDoiSuffix = extractDoiSuffix(pubData.doi || '', this.props.depositTarget);
 		this.updateDoi(doi, 'updating', currentDoiSuffix);
 	}
 

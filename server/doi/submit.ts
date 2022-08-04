@@ -1,14 +1,13 @@
-import { DepositTarget } from 'server/models';
-import { Readable } from 'stream';
 import request from 'request-promise';
+import { Readable } from 'stream';
 import xmlbuilder from 'xmlbuilder';
 
-const getDoiLogin = async (communityId) => {
-	const doiOverride = await DepositTarget.findOne({
-		where: { communityId, service: 'crossref' },
-	});
-	if (doiOverride) {
-		const { username, password } = doiOverride;
+import { getCommunityDepositTarget } from 'server/depositTarget/queries';
+
+const getDoiLogin = async (communityId: string) => {
+	const depositTarget = await getCommunityDepositTarget(communityId);
+	if (depositTarget) {
+		const { username, password } = depositTarget;
 		return {
 			login: username,
 			password: password,
@@ -20,7 +19,11 @@ const getDoiLogin = async (communityId) => {
 	};
 };
 
-export const submitDoiData = async (json, timestamp, communityId) => {
+export const submitDoiData = async (
+	json: Record<string, object>,
+	timestamp: number,
+	communityId: string,
+) => {
 	const { DOI_SUBMISSION_URL } = process.env;
 	const { login, password } = await getDoiLogin(communityId);
 	const xmlObject = xmlbuilder.create(json, { headless: true }).end({ pretty: true });

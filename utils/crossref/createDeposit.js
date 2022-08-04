@@ -111,14 +111,7 @@ const getPubDoiPart = (context, doiTarget) => {
 
 		doi = createComponentDoi(parentPub, pub);
 	} else {
-		doi =
-			pub.doi ||
-			createDoi({
-				community,
-				collection,
-				target: pub,
-				pubEdge,
-			});
+		doi = pub.doi || createDoi(community, pub);
 	}
 
 	return { pub: doi };
@@ -129,17 +122,17 @@ const getCollectionDoiPart = (context, doiTarget) => {
 	const doi =
 		collection &&
 		(getCollectionDoi(collection) ||
-			(doiTarget === 'collection' && createDoi({ community, target: collection })));
+			(doiTarget === 'collection' && createDoi(community, collection)));
 
 	return {
 		collection: doi,
 	};
 };
 
-export const getDois = async (context, doiTarget) => {
+export const getDois = (context, doiTarget, depositTarget) => {
 	const { community } = context;
 	const dois = {
-		community: await createDoi({ community }),
+		community: createDoi(community, undefined, depositTarget),
 		...getPubDoiPart(context, doiTarget),
 		...getCollectionDoiPart(context, doiTarget),
 	};
@@ -166,6 +159,7 @@ const filterForMutuallyApprovedEdges = (pubEdges) => {
 export default async (
 	context,
 	doiTarget,
+	depositTarget,
 	timestamp = new Date().getTime(),
 	includeRelationships = true,
 ) => {
@@ -200,9 +194,10 @@ export default async (
 
 	const ctx = { ...context, pub };
 	const contextWithPubEdge = { ...ctx, pubEdge };
-	const dois = await getDois(
+	const dois = getDois(
 		pubEdge && pubEdge.relationType === RelationType.Supplement ? contextWithPubEdge : ctx,
 		doiTarget,
+		depositTarget,
 	);
 	const deposit = removeEmptyKeys(
 		doiBatch({
