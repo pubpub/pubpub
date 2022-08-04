@@ -12,6 +12,7 @@ import PubDetails from './details';
 import PubHeaderContent from './PubHeaderContent';
 import SmallHeaderButton from './SmallHeaderButton';
 import PubHeaderSticky from './PubHeaderSticky';
+import ReviewHeaderSticky from '../PubDocument/Review/ReviewHeaderSticky';
 
 require('./pubHeader.scss');
 
@@ -101,7 +102,13 @@ const PubHeader = (props: Props) => {
 				)}
 				<ToggleDetailsButton showingDetails={showingDetails} onClick={toggleDetails} />
 			</GridWrapper>
-			{sticky && <PubHeaderSticky />}
+			{!pubData.isReview && sticky ? (
+				<PubHeaderSticky />
+			) : (
+				<div className="review-sticky-component">
+					<ReviewHeaderSticky />
+				</div>
+			)}
 		</PubHeaderBackground>
 	);
 };

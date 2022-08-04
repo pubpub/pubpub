@@ -10,59 +10,32 @@ require('./pubHeaderSticky.scss');
 
 const PubHeaderSticky = () => {
 	const { pubData } = usePubContext();
-	const { isReview } = pubData;
-
-	const renderPubHeaderSticky = () => {
-		return (
-			<>
-				<div className="sticky-title">{pubData.title}</div>
-				<div className="sticky-buttons">
-					<PubToc limitHeight>
-						{({ ref, ...disclosureProps }) => (
-							<>
-								<Button
-									minimal={true}
-									{...disclosureProps}
-									elementRef={ref as any}
-									className="contents-button"
-								>
-									Contents
-								</Button>
-								<span className="dot">·</span>
-							</>
-						)}
-					</PubToc>
-					<Button
-						minimal={true}
-						onClick={() => window.scrollTo({ left: 0, top: 0, behavior: 'auto' })}
-						icon={<Icon icon="double-chevron-up" />}
-					/>
-				</div>
-			</>
-		);
-	};
-
-	const renderPubHeaderReviewSticky = () => {
-		return (
-			<div className="sticky-grid">
-				<div className="sticky-title main-content">{pubData.title}</div>
-				<div className="side-content">
-					<div className="sticky-buttons sticky-review-buttons">
-						<div className="sticky-review-text">review</div>
-						<Button
-							minimal={true}
-							onClick={() => window.scrollTo({ left: 0, top: 0, behavior: 'auto' })}
-							icon={<Icon icon="expand-all" />}
-						/>
-					</div>
-				</div>
-			</div>
-		);
-	};
 
 	return (
 		<div className="pub-header-sticky-component">
-			{isReview ? renderPubHeaderReviewSticky() : renderPubHeaderSticky()}
+			<div className="sticky-title">{pubData.title}</div>
+			<div className="sticky-buttons">
+				<PubToc limitHeight>
+					{({ ref, ...disclosureProps }) => (
+						<>
+							<Button
+								minimal={true}
+								{...disclosureProps}
+								elementRef={ref as any}
+								className="contents-button"
+							>
+								Contents
+							</Button>
+							<span className="dot">·</span>
+						</>
+					)}
+				</PubToc>
+				<Button
+					minimal={true}
+					onClick={() => window.scrollTo({ left: 0, top: 0, behavior: 'auto' })}
+					icon={<Icon icon="double-chevron-up" />}
+				/>
+			</div>
 		</div>
 	);
 };
