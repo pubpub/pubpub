@@ -156,7 +156,7 @@ const filterForMutuallyApprovedEdges = (pubEdges) => {
 	}
 };
 
-export default async (
+export default (
 	context,
 	doiTarget,
 	depositTarget,
