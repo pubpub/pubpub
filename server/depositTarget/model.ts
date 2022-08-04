@@ -10,5 +10,6 @@ export default (sequelize, dataTypes) => {
 		},
 		username: { type: dataTypes.STRING },
 		password: { type: dataTypes.STRING },
+		passwordInitVec: { type: dataTypes.TEXT },
 	});
 };

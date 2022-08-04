@@ -5,4 +5,5 @@ export type DepositTarget = {
 	service: 'crossref' | 'datacite';
 	username: string;
 	password: string;
+	passwordInitVec: string;
 };
