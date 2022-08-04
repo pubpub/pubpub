@@ -12,7 +12,7 @@ import PubDetails from './details';
 import PubHeaderContent from './PubHeaderContent';
 import SmallHeaderButton from './SmallHeaderButton';
 import PubHeaderSticky from './PubHeaderSticky';
-import ReviewHeaderSticky from '../PubDocument/Review/ReviewHeaderSticky';
+import ReviewHeaderSticky from './ReviewHeaderSticky';
 
 require('./pubHeader.scss');
 
