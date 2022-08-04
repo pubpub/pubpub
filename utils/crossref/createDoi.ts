@@ -8,11 +8,7 @@ export const createComponentDoi = (parentPub: Pub, childPub: Pub) => {
 	return `${parentPub.doi}/${getFirstUuidComponent(childPub.id)}`;
 };
 
-export default async (
-	community: Community,
-	target?: Pub | Collection,
-	depositTarget?: DepositTarget,
-) => {
+export default (community: Community, target?: Pub | Collection, depositTarget?: DepositTarget) => {
 	const communityDoiPart = getFirstUuidComponent(community.id);
 	const targetDoiPart = target ? `.${getFirstUuidComponent(target.id)}` : '';
 	const doiSuffix = communityDoiPart + targetDoiPart;

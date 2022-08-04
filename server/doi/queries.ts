@@ -178,10 +178,11 @@ export const setDoiData = async (
 };
 
 export const generateDoi = async ({ communityId, collectionId, pubId }, target) => {
-	const [community, collection, pub] = await Promise.all([
+	const [community, collection, pub, depositTarget] = await Promise.all([
 		findCommunity(communityId),
 		collectionId && findCollection(collectionId),
 		pubId && findPub(pubId),
+		getCommunityDepositTarget(communityId),
 	]);
 
 	return getDois(
@@ -191,5 +192,6 @@ export const generateDoi = async ({ communityId, collectionId, pubId }, target) 
 			collection,
 		},
 		target,
+		depositTarget,
 	);
 };
