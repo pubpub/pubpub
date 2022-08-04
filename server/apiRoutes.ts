@@ -5,6 +5,7 @@ require('./collectionPub/api');
 require('./community/api');
 require('./communityServices/api');
 require('./customScript/api');
+require('./dev/api');
 require('./discussion/api');
 require('./doi/api');
 require('./editor/api');

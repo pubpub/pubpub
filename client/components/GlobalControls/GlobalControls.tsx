@@ -1,7 +1,14 @@
 import React from 'react';
 
-import { ScopeDropdown, Menu, UserNotificationsPopover } from 'components';
+import {
+	ScopeDropdown,
+	Menu,
+	UserNotificationsPopover,
+	DevCommunitySwitcherMenu,
+} from 'components';
 import { usePageContext } from 'utils/hooks';
+import { isDevelopment } from 'utils/environment';
+import { pubPubIcons } from 'client/utils/icons';
 
 import UserMenu from './UserMenu';
 import LoginButton from './LoginButton';
@@ -90,6 +97,18 @@ const GlobalControls = (props: Props) => {
 		if (isBasePubPub) {
 			return (
 				<>
+					{isDevelopment() && (
+						<DevCommunitySwitcherMenu
+							disclosure={
+								<GlobalControlsButton
+									mobileOrDesktop={{
+										icon: pubPubIcons.community,
+										rightIcon: 'chevron-down',
+									}}
+								/>
+							}
+						/>
+					)}
 					<GlobalControlsButton href="/explore" mobileOrDesktop={{ text: 'Explore' }} />
 					<GlobalControlsButton href="/pricing" mobileOrDesktop={{ text: 'Pricing' }} />
 					<GlobalControlsButton href="/about" mobileOrDesktop={{ text: 'About' }} />

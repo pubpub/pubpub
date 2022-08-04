@@ -3,7 +3,11 @@ import classNames from 'classnames';
 
 import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
-import { Avatar, Icon, IconName, MenuItem } from 'components';
+import { isDevelopment } from 'utils/environment';
+import { pubPubIcons } from 'client/utils/icons';
+import { Avatar, Icon, IconName, MenuItem, DevCommunitySwitcherMenuItems } from 'components';
+
+import { MenuItemDivider } from '../Menu';
 
 require('./scopeDropdown.scss');
 
@@ -74,6 +78,14 @@ const ScopeDropdown = (props: Props) => {
 		<div className={classNames('scope-dropdown-component', isDashboard && 'in-dashboard')}>
 			{isDashboard && <div className="intro">Select Scope:</div>}
 			<div className="scopes">
+				{isDevelopment() && (
+					<>
+						<MenuItem text="Switch Community..." icon={pubPubIcons.community}>
+							<DevCommunitySwitcherMenuItems />
+						</MenuItem>
+						<MenuItemDivider />
+					</>
+				)}
 				{scopes.map((scope, index) => {
 					return (
 						<MenuItem
