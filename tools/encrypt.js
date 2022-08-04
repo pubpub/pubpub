@@ -1,11 +1,16 @@
+/* eslint-disable global-require */
 import { randomBytes } from 'crypto';
+
 import { aes256Encrypt, aes256Decrypt } from '../utils/crypto';
 
 try {
 	require('../config.js');
-} catch {}
+} catch {
+	console.log('Using environment for AES_ENCRYPTION_KEY');
+}
 
 const { argv } = require('yargs');
+
 const text = argv._[0];
 const decrypt = argv.decrypt ?? false;
 const initVec = argv['init-vec'];

@@ -1,5 +1,3 @@
-import { DepositTarget } from 'server/models';
-
 // Some overrides for specific communities.
 // TODO(ian): Handle this with the database instead.
 export const PUBPUB_DOI_PREFIX = '10.21428';

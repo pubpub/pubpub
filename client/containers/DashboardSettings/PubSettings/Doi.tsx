@@ -217,7 +217,7 @@ class Doi extends Component<Props, State> {
 	}
 
 	async handleUpdateDoiClick() {
-		const { pubData, communityData } = this.props;
+		const { pubData } = this.props;
 		const doi = this.getFullDoi();
 		const currentDoiSuffix = extractDoiSuffix(pubData.doi || '', this.props.depositTarget);
 		this.updateDoi(doi, 'updating', currentDoiSuffix);
