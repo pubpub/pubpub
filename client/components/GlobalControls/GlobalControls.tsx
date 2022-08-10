@@ -97,18 +97,6 @@ const GlobalControls = (props: Props) => {
 		if (isBasePubPub) {
 			return (
 				<>
-					{isDevelopment() && (
-						<DevCommunitySwitcherMenu
-							disclosure={
-								<GlobalControlsButton
-									mobileOrDesktop={{
-										icon: pubPubIcons.community,
-										rightIcon: 'chevron-down',
-									}}
-								/>
-							}
-						/>
-					)}
 					<GlobalControlsButton href="/explore" mobileOrDesktop={{ text: 'Explore' }} />
 					<GlobalControlsButton href="/pricing" mobileOrDesktop={{ text: 'Pricing' }} />
 					<GlobalControlsButton href="/about" mobileOrDesktop={{ text: 'About' }} />
@@ -128,6 +116,18 @@ const GlobalControls = (props: Props) => {
 
 	return (
 		<div className="global-controls-component">
+			{isDevelopment() && (
+				<DevCommunitySwitcherMenu
+					disclosure={
+						<GlobalControlsButton
+							mobileOrDesktop={{
+								icon: pubPubIcons.community,
+								rightIcon: 'caret-down',
+							}}
+						/>
+					}
+				/>
+			)}
 			{renderItemsVisibleFromCommunity()}
 			{renderBasePubPubLinks()}
 			{renderUserMenuOrLogin()}
