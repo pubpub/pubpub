@@ -5,7 +5,6 @@ require('./collectionPub/api');
 require('./community/api');
 require('./communityServices/api');
 require('./customScript/api');
-require('./dev/api');
 require('./discussion/api');
 require('./doi/api');
 require('./editor/api');
@@ -40,3 +39,8 @@ require('./userNotification/api');
 require('./userNotificationPreferences/api');
 require('./userSubscription/api');
 require('./workerTask/api');
+
+if (process.env.NODE_ENV === 'development') {
+	// eslint-disable-next-line global-require
+	require('./dev/api');
+}
