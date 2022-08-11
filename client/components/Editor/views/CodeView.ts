@@ -1,6 +1,7 @@
 import { EditorView as CodeMirror, keymap as cmKeymap, drawSelection } from '@codemirror/view';
 import { EditorView } from 'prosemirror-view';
-import { TextSelection } from 'prosemirror-state';
+import { TextSelection, Selection } from 'prosemirror-state';
+import { Node } from 'prosemirror-model';
 import { javascript } from '@codemirror/lang-javascript';
 import { defaultKeymap } from '@codemirror/commands';
 import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
@@ -13,7 +14,7 @@ export default class CodeBlockView {
 	private cm: CodeMirror;
 	private getPos: any;
 	private view: EditorView;
-	private dom: HTMLElement;
+	dom: HTMLElement;
 	private updating: boolean;
 	constructor(node, view, getPos) {
 		// Store for later
@@ -53,7 +54,12 @@ export default class CodeBlockView {
 		if (update.docChanged || !this.view.state.selection.eq(selection)) {
 			const tr = this.view.state.tr.setSelection(selection);
 			update.changes.iterChanges((fromA, toA, fromB, toB, text) => {
-				tr.replaceWith(offset + fromA, offset + toA, schema.text(text.toString()));
+				console.log({ fromA, toA, fromB, toB, text });
+				tr.replaceWith(
+					offset + fromA,
+					offset + toA,
+					this.view.state.schema.text(text.toString()),
+				);
 				offset += toB - fromB - (toA - fromA);
 			});
 			this.view.dispatch(tr);
@@ -61,6 +67,7 @@ export default class CodeBlockView {
 	}
 
 	setSelection(anchor, head) {
+		console.log({ head, anchor });
 		this.cm.focus();
 		this.updating = true;
 		this.cm.dispatch({ selection: { anchor, head } });
@@ -94,6 +101,7 @@ export default class CodeBlockView {
 		if (!main.empty) return false;
 		let tempMain: any;
 		if (unit === 'line') tempMain = state.doc.lineAt(main.head);
+		tempMain = tempMain || main;
 		if (dir < 0 ? tempMain.from > 0 : tempMain.to < state.doc.length) return false;
 		const targetPos = this.getPos() + (dir < 0 ? 0 : this.node.nodeSize);
 		const selection = Selection.near(this.view.state.doc.resolve(targetPos), dir);
@@ -145,30 +153,3 @@ export default class CodeBlockView {
 		return true;
 	}
 }
-
-import { keymap } from 'prosemirror-keymap';
-
-function arrowHandler(dir) {
-	return (state, dispatch, view) => {
-		if (state.selection.empty && view.endOfTextblock(dir)) {
-			const side = dir === 'left' || dir === 'up' ? -1 : 1;
-			const $head = state.selection.$head;
-			const nextPos = Selection.near(
-				state.doc.resolve(side > 0 ? $head.after() : $head.before()),
-				side,
-			);
-			if (nextPos.$head && nextPos.$head.parent.type.name === 'code_block') {
-				dispatch(state.tr.setSelection(nextPos));
-				return true;
-			}
-		}
-		return false;
-	};
-}
-
-const arrowHandlers = keymap({
-	ArrowLeft: arrowHandler('left'),
-	ArrowRight: arrowHandler('right'),
-	ArrowUp: arrowHandler('up'),
-	ArrowDown: arrowHandler('down'),
-});
