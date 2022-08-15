@@ -18,7 +18,7 @@ const PasswordReset = (props: Props) => {
 	const [password, setPassword] = useState('');
 	const [showConfirmation, setShowConfirmation] = useState(false);
 	const [postIsLoading, setPostIsLoading] = useState(false);
-	const [postError, setPostError] = useState(undefined);
+	const [postErrorText, setPostErrorText] = useState<string>('');
 	const [putIsLoading, setPutIsLoading] = useState(false);
 	const [putError, setPutError] = useState(undefined);
 	const { passwordResetData } = props;
@@ -46,10 +46,10 @@ const PasswordReset = (props: Props) => {
 				setPostIsLoading(false);
 				setShowConfirmation(true);
 			})
-			.catch(() => {
+			.catch((err) => {
 				setPostIsLoading(false);
-				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '"Error"' is not assignable to pa... Remove this comment to see the full error message
-				setPostError('Error');
+				const errorText = typeof err === 'string' && err ? err : 'Error resetting password';
+				setPostErrorText(errorText);
 			});
 	};
 
@@ -96,7 +96,7 @@ const PasswordReset = (props: Props) => {
 							value={email}
 							onChange={onEmailChange}
 						/>
-						<InputField error={postError && 'Error Resetting Password'}>
+						<InputField error={postErrorText}>
 							<Button
 								name="create"
 								type="submit"
