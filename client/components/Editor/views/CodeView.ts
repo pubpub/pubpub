@@ -1,7 +1,7 @@
 import { EditorView as CodeMirror, keymap as cmKeymap, drawSelection } from '@codemirror/view';
 import { EditorView } from 'prosemirror-view';
 import { TextSelection, Selection } from 'prosemirror-state';
-import { Node } from 'prosemirror-model';
+import { Node, Fragment } from 'prosemirror-model';
 import { javascript } from '@codemirror/lang-javascript';
 import { defaultKeymap } from '@codemirror/commands';
 import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
@@ -16,13 +16,11 @@ export default class CodeBlockView {
 	private view: EditorView;
 	dom: HTMLElement;
 	private updating: boolean;
-	constructor(node, view, getPos) {
-		// Store for later
+	constructor(node: Node, view: EditorView, getPos) {
 		this.node = node;
 		this.view = view;
 		this.getPos = getPos;
 
-		// Create a CodeMirror instance
 		this.cm = new CodeMirror({
 			doc: this.node.textContent || undefined,
 			extensions: [
@@ -34,9 +32,7 @@ export default class CodeBlockView {
 			],
 		});
 
-		// The editor's outer node is our DOM representation
 		this.dom = this.cm.dom;
-
 		// This flag is used to avoid an update loop between the outer and
 		// inner editor
 		this.updating = false;
@@ -53,21 +49,22 @@ export default class CodeBlockView {
 		);
 		if (update.docChanged || !this.view.state.selection.eq(selection)) {
 			const tr = this.view.state.tr.setSelection(selection);
-			update.changes.iterChanges((fromA, toA, fromB, toB, text) => {
-				console.log({ fromA, toA, fromB, toB, text });
-				tr.replaceWith(
-					offset + fromA,
-					offset + toA,
-					this.view.state.schema.text(text.toString()),
-				);
-				offset += toB - fromB - (toA - fromA);
-			});
+			update.changes.iterChanges(
+				(fromA: number, toA: number, fromB: number, toB: number, text: Text) => {
+					const textText = text.toString();
+					tr.replaceWith(
+						offset + fromA,
+						offset + toA,
+						textText ? this.view.state.schema.text(textText) : Fragment.empty,
+					);
+					offset += toB - fromB - (toA - fromA);
+				},
+			);
 			this.view.dispatch(tr);
 		}
 	}
 
 	setSelection(anchor, head) {
-		console.log({ head, anchor });
 		this.cm.focus();
 		this.updating = true;
 		this.cm.dispatch({ selection: { anchor, head } });
@@ -95,7 +92,7 @@ export default class CodeBlockView {
 		];
 	}
 
-	maybeEscape(unit, dir) {
+	maybeEscape(unit: 'line' | 'char', dir: -1 | 1) {
 		const { state } = this.cm;
 		const { main } = state.selection;
 		if (!main.empty) return false;
@@ -111,7 +108,7 @@ export default class CodeBlockView {
 		return true;
 	}
 
-	update(node) {
+	update(node: Node) {
 		if (node.type !== this.node.type) return false;
 		this.node = node;
 		if (this.updating) return true;

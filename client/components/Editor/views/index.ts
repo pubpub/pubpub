@@ -7,5 +7,4 @@ export default {
 	footnote: (node, view) => new NotePopover(node, view, 'value'),
 	reference: (node, view) => new ReferenceView(node, view),
 	code_block: (node, view, getPos) => new CodeView(node, view, getPos),
-	code: (node, view, getPos) => new CodeView(node, view, getPos),
 };
