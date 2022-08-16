@@ -15,7 +15,9 @@ type Scope = {
 	iconSize?: number;
 	title: string;
 	avatar: undefined | string;
+	slug: string;
 	href: string;
+	showSettings: boolean;
 };
 
 type Props = {
@@ -41,7 +43,7 @@ const ScopeDropdown = (props: Props) => {
 	const { isDashboard } = props;
 	const { locationData, communityData, scopeData, pageData } = usePageContext();
 	const { activeCollection, activePub } = scopeData.elements;
-	const { canManageCommunity } = scopeData.activePermissions;
+	const { canManageCommunity, canManage } = scopeData.activePermissions;
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
 	const pubSlug = locationData.params.pubSlug;
 	const nonActiveDashboardCollectionPub = getPrimaryOrFirstCollectionPub(
@@ -54,7 +56,9 @@ const ScopeDropdown = (props: Props) => {
 		icon: 'office',
 		title: communityData.title,
 		avatar: communityData.avatar,
+		slug: '',
 		href: getDashUrl({}),
+		showSettings: canManageCommunity,
 	});
 	if (pageData && canManageCommunity && !isDashboard) {
 		scopes.push({
@@ -63,7 +67,9 @@ const ScopeDropdown = (props: Props) => {
 			iconSize: 12,
 			title: pageData.title,
 			avatar: pageData.avatar,
+			slug: pageData.slug || 'home',
 			href: getDashUrl({ mode: 'pages', subMode: pageData.slug || 'home' }),
+			showSettings: canManageCommunity,
 		});
 	}
 	if (activeCollection) {
@@ -72,21 +78,24 @@ const ScopeDropdown = (props: Props) => {
 			icon: 'collection',
 			title: activeCollection.title,
 			avatar: activeCollection.avatar,
+			slug: collectionSlug,
 			href: getDashUrl({
 				collectionSlug,
 			}),
+			showSettings: canManageCommunity,
 		});
 	}
 	if (!activeCollection && nonActiveDashboardCollectionPub) {
-		console.log('nonActive', nonActiveDashboardCollectionPub);
 		scopes.push({
 			type: 'Collection',
 			icon: 'collection',
 			title: nonActiveDashboardCollectionPub.title,
 			avatar: nonActiveDashboardCollectionPub.avatar,
+			slug: nonActiveDashboardCollectionPub.slug,
 			href: getDashUrl({
 				collectionSlug: nonActiveDashboardCollectionPub.slug,
 			}),
+			showSettings: canManageCommunity,
 		});
 	}
 	if (activePub) {
@@ -95,10 +104,12 @@ const ScopeDropdown = (props: Props) => {
 			icon: 'pubDoc',
 			title: activePub.title,
 			avatar: activePub.avatar,
+			slug: pubSlug,
 			href: getDashUrl({
 				collectionSlug,
 				pubSlug,
 			}),
+			showSettings: canManage,
 		});
 	}
 
@@ -113,19 +124,52 @@ const ScopeDropdown = (props: Props) => {
 							key={scope.type}
 							text={
 								<div className={`scope-item item-${index}`}>
-									<div className="top">
-										<Icon icon={scope.icon} iconSize={scope.iconSize || 10} />
-										{scope.type}
+									<div className="content">
+										<div className="top">
+											<Icon
+												icon={scope.icon}
+												iconSize={scope.iconSize || 10}
+											/>
+											{scope.type}
+										</div>
+										<div className="bottom">
+											<Avatar
+												avatar={scope.avatar}
+												initials={scope.title[0]}
+												width={18}
+												isBlock={true}
+											/>
+											{scope.title}
+										</div>
 									</div>
-									<div className="bottom">
-										<Avatar
-											avatar={scope.avatar}
-											initials={scope.title[0]}
-											width={18}
-											isBlock={true}
-										/>
-										{scope.title}
-									</div>
+									{scope.showSettings && scope.type !== 'Page' && (
+										<div className="settings">
+											<a href={`${scope.href}/settings`}>
+												<Icon icon="cog" iconSize={12} />
+											</a>
+											<a href={`${scope.href}/members`}>
+												<Icon icon="people" iconSize={12} />
+											</a>
+											<a href={`${scope.href}/impact`}>
+												<Icon icon="dashboard" iconSize={12} />
+											</a>
+											{scope.type === 'Collection' && (
+												<a href={`/${scope.href}/layout`}>
+													<Icon icon="page-layout" iconSize={12} />
+												</a>
+											)}
+											<a href={`/${scope.slug}`}>
+												<Icon icon="globe" iconSize={12} />
+											</a>
+										</div>
+									)}
+									{scope.showSettings && scope.type === 'Page' && (
+										<div className="settings">
+											<a href={`/${scope.slug}`}>
+												<Icon icon="globe" iconSize={12} />
+											</a>
+										</div>
+									)}
 								</div>
 							}
 						/>
