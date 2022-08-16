@@ -126,6 +126,10 @@ class Doi extends Component<Props, State> {
 		return pubData.releases.length === 0;
 	}
 
+	disabledDueToUnmanagedPrefix() {
+		return this.props.depositTarget && !this.props.depositTarget.password;
+	}
+
 	handleDeposit(doi) {
 		const { updatePubData } = this.props;
 
@@ -307,6 +311,12 @@ class Doi extends Component<Props, State> {
 		return (
 			<>
 				{!pubData.doi && <p>A DOI can be set for each Pub by admins of this community.</p>}
+				{this.disabledDueToUnmanagedPrefix() && (
+					<Callout intent="warning">
+						Ths Pub cannot be deposited to Crossref because this Community's DOI prefix
+						is not managed by PubPub.
+					</Callout>
+				)}
 				{pubData.doi &&
 					!pubData.crossrefDepositRecordId &&
 					!this.disabledDueToNoReleases() && (
@@ -387,7 +397,9 @@ class Doi extends Component<Props, State> {
 						pubData={this.props.pubData}
 						target="pub"
 						disabled={
-							this.disabledDueToParentWithoutDoi() || this.disabledDueToNoReleases()
+							this.disabledDueToParentWithoutDoi() ||
+							this.disabledDueToNoReleases() ||
+							this.disabledDueToUnmanagedPrefix()
 						}
 					/>
 				</FormGroup>
