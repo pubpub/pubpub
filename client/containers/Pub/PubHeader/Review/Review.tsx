@@ -1,79 +1,25 @@
-import React, { useState } from 'react';
-import { NonIdealState } from '@blueprintjs/core';
+import React, { useMemo, useState } from 'react';
+import { NonIdealState, Button } from '@blueprintjs/core';
+import Color from 'color';
 
 import { useSticky } from 'client/utils/useSticky';
-import { DocJson, PubPageData, Community } from 'types';
-import { useLocalStorage } from 'client/utils/useLocalStorage';
-import { getEmptyDoc } from 'client/components/Editor';
-import { usePageContext } from 'utils/hooks';
-import { apiFetch } from 'client/utils/apiFetch';
+import { DocJson, Community } from 'types';
 
 import ReviewEditor from './ReviewEditor';
-import ReviewModal from './ReviewModal';
 
 require('./review.scss');
 
 type Props = {
-	pubData: PubPageData;
-	updatePubData: (...args: any[]) => any;
 	communityData: Community;
+	onSubmit: any;
+	isLoading: boolean;
+	createError: boolean;
+	review: DocJson;
+	updateReview: (doc: DocJson) => void;
 };
 
 const Review = (props: Props) => {
-	const { pubData, updatePubData, communityData } = props;
-	const [isLoading, setIsLoading] = useState(false);
-	const {
-		scopeData: { activePermissions },
-		loginData: { fullName },
-	} = usePageContext();
-	const [reviewTitle, setReviewTitle] = useState('Untitled Review');
-	const [reviewerName, setReviewerName] = useState('');
-	const [createError, setCreateError] = useState(undefined);
-	const url = new URL(window.location.href);
-	const query = new URLSearchParams(url.search);
-
-	const { value: review, setValue: setReview } = useLocalStorage<DocJson>({
-		initial: () => getEmptyDoc(),
-		communityId: communityData.id,
-		featureName: 'new-review-editor',
-		path: [`pub-${pubData.id}`],
-		debounce: 100,
-	});
-
-	const isUser = !!(activePermissions.canEdit || fullName);
-	const redirectUrl = (reviewToRedirectTo) =>
-		isUser ? `/dash/pub/${pubData.slug}/reviews/${reviewToRedirectTo.number}` : `/signup`;
-
-	const handleSubmit = () => {
-		setIsLoading(true);
-		apiFetch
-			.post('/api/reviews', {
-				communityId: communityData.id,
-				pubId: pubData.id,
-				reviewContent: review,
-				title: reviewTitle,
-				accessHash: query.get('access'),
-				reviewerName,
-			})
-			.then((reviewRes) => {
-				updatePubData((currentPubData) => {
-					return {
-						reviews: [...currentPubData.reviews, reviewRes],
-					};
-				});
-				setIsLoading(false);
-				setReview(getEmptyDoc());
-				window.location.href = redirectUrl(reviewRes);
-			})
-			.catch((err) => {
-				setIsLoading(false);
-				setCreateError(err);
-			});
-	};
-
-	const updatingReviewDoc = (doc: DocJson) => {
-		setReview(doc);
-	};
+	const { communityData, onSubmit, isLoading, createError, review, updateReview } = props;
 
 	useSticky({
 		target: '.review-component',
@@ -81,21 +27,30 @@ const Review = (props: Props) => {
 		offset: 37,
 	});
 
+	const [hover, setHover] = useState(false);
+	const lighterAccentColor = useMemo(
+		() => Color(communityData.accentColorDark).alpha(0.4),
+		[communityData.accentColorDark],
+	);
+	const bgColor = !hover ? lighterAccentColor : communityData.accentColorDark;
+
 	return (
 		<div className="review-component">
 			<div className="review-border">
-				<ReviewEditor setReviewDoc={updatingReviewDoc} reviewDoc={review} />
-				<ReviewModal
-					pubData={pubData}
-					setReviewTitle={setReviewTitle}
-					reviewTitle={reviewTitle}
-					setReviewerName={setReviewerName}
-					reviewerName={reviewerName}
-					onSubmit={handleSubmit}
-					isLoading={isLoading}
-					isUser={isUser}
-					communityData={communityData}
-				/>
+				<ReviewEditor setReviewDoc={updateReview} reviewDoc={review} />
+				<Button
+					icon="document-share"
+					onClick={onSubmit}
+					minimal={true}
+					loading={isLoading}
+					className="review-submission-button"
+					style={{ background: bgColor }}
+					intent="primary"
+					onMouseEnter={() => setHover(true)}
+					onMouseLeave={() => setHover(false)}
+				>
+					Submit Review
+				</Button>
 				{createError && (
 					<NonIdealState
 						title="There was an error submitting your review"

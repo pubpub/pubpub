@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import classNames from 'classnames';
 
-import { GridWrapper, PubHeaderBackground } from 'components';
+import { GridWrapper, PubHeaderBackground, ClientOnly } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { useSticky } from 'client/utils/useSticky';
 import { useViewport } from 'client/utils/useViewport';
@@ -106,7 +106,9 @@ const PubHeader = (props: Props) => {
 				<PubHeaderSticky />
 			) : (
 				<div className="review-sticky-component">
-					<ReviewHeaderSticky />
+					<ClientOnly>
+						<ReviewHeaderSticky />
+					</ClientOnly>
 				</div>
 			)}
 		</PubHeaderBackground>
