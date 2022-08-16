@@ -10,14 +10,16 @@ const getDoiLogin = async (communityId: string) => {
 	const depositTarget = await getCommunityDepositTarget(communityId);
 	if (depositTarget) {
 		const { username, password, passwordInitVec } = depositTarget;
-		return {
-			login: username,
-			password: aes256Decrypt(
-				password,
-				expect(process.env.AES_ENCRYPTION_KEY),
-				passwordInitVec,
-			),
-		};
+		if (username && password && passwordInitVec) {
+			return {
+				login: username,
+				password: aes256Decrypt(
+					password,
+					expect(process.env.AES_ENCRYPTION_KEY),
+					passwordInitVec,
+				),
+			};
+		}
 	}
 	return {
 		login: process.env.DOI_LOGIN_ID,

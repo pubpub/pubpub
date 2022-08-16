@@ -6,7 +6,7 @@ import { AssignDoi } from 'components';
 import { DepositTarget } from 'types';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { getSchemaForKind } from 'utils/collections/schemas';
-import { managedDoiPrefixes, PUBPUB_DOI_PREFIX } from 'utils/crossref/communities';
+import { PUBPUB_DOI_PREFIX } from 'utils/crossref/communities';
 import { isDoi } from 'utils/crossref/parseDoi';
 import {
 	findParentEdgeByRelationTypes,
@@ -236,7 +236,7 @@ class Doi extends Component<Props, State> {
 			!(justSetDoi || pubData.crossrefDepositRecordId) &&
 			// the Pub is not a supplement to another work
 			// and the community has a custom, hardcoded DOI prefix
-			managedDoiPrefixes.includes(doiPrefix) &&
+			this.props.depositTarget &&
 			doiPrefix !== PUBPUB_DOI_PREFIX
 		);
 	}

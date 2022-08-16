@@ -1,6 +1,10 @@
-import { createCipheriv, createDecipheriv } from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 
-export const aes256Encrypt = (text: string, key: string, initVec: string) => {
+export const aes256Encrypt = (
+	text: string,
+	key: string,
+	initVec: string = randomBytes(16).toString('hex'),
+) => {
 	const cipher = createCipheriv(
 		'aes-256-cbc',
 		Buffer.from(key, 'hex'),

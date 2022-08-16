@@ -1,6 +1,4 @@
 /* eslint-disable global-require */
-import { randomBytes } from 'crypto';
-
 import { aes256Encrypt, aes256Decrypt } from '../utils/crypto';
 
 try {
@@ -30,7 +28,5 @@ if (decrypt) {
 	}
 	process.stdout.write(aes256Decrypt(text, key, initVec));
 } else {
-	process.stdout.write(
-		JSON.stringify(aes256Encrypt(text, key, initVec || randomBytes(16).toString('hex'))),
-	);
+	process.stdout.write(JSON.stringify(aes256Encrypt(text, key, initVec)));
 }
