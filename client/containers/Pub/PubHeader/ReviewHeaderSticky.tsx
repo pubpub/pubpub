@@ -80,42 +80,40 @@ const ReviewHeaderSticky = () => {
 
 	return (
 		<div className="review-header-sticky-component">
-			<div className="sticky-grid">
-				<div className="sticky-title main-content">{pubData.title}</div>
-				<div className="side-content">
-					<div className="sticky-buttons sticky-review-buttons">
-						<div className="sticky-review-text">review</div>
-						<ReviewerDialog
-							isOpen={visible}
-							onClose={() => setVisible(false)}
-							pubData={pubData}
-							onCreateReviewDoc={handleSubmit}
-							setReviewTitle={setReviewTitle}
-							reviewTitle={reviewTitle}
-							reviewerName={reviewerName}
-							setReviewerName={setReviewerName}
-							isUser={isUser}
-						/>
-						<Popover
-							aria-label="Notifications"
-							placement="bottom-start"
-							className="review-popover"
-							content={
-								<Review
-									communityData={communityData}
-									onSubmit={() => setVisible(true)}
-									isLoading={isLoading}
-									createError={createError}
-									review={review}
-									updateReview={updatingReviewDoc}
-								/>
-							}
-							preventBodyScroll={false}
-							unstable_fixed
-						>
-							<Button minimal={true} icon={<Icon icon="expand-all" />} />
-						</Popover>
-					</div>
+			<div className="sticky-title">{pubData.title}</div>
+			<div className="side-content">
+				<div className="sticky-buttons">
+					<div className="sticky-review-text">review</div>
+					<ReviewerDialog
+						isOpen={visible}
+						onClose={() => setVisible(false)}
+						pubData={pubData}
+						onCreateReviewDoc={handleSubmit}
+						setReviewTitle={setReviewTitle}
+						reviewTitle={reviewTitle}
+						reviewerName={reviewerName}
+						setReviewerName={setReviewerName}
+						isUser={isUser}
+					/>
+					<Popover
+						aria-label="Notifications"
+						placement="bottom-start"
+						className="review-popover"
+						content={
+							<Review
+								communityData={communityData}
+								onSubmit={() => setVisible(true)}
+								isLoading={isLoading}
+								createError={createError}
+								review={review}
+								updateReview={updatingReviewDoc}
+							/>
+						}
+						preventBodyScroll={false}
+						unstable_fixed
+					>
+						<Button minimal={true} icon={<Icon icon="expand-all" />} />
+					</Popover>
 				</div>
 			</div>
 		</div>
