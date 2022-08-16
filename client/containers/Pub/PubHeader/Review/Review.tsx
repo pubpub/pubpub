@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { NonIdealState, Button } from '@blueprintjs/core';
+import { NonIdealState, Button, Card, Elevation } from '@blueprintjs/core';
 import Color from 'color';
 
 import { useSticky } from 'client/utils/useSticky';
@@ -35,36 +35,40 @@ const Review = (props: Props) => {
 	const bgColor = !hover ? lighterAccentColor : communityData.accentColorDark;
 
 	return (
-		<div className="review-component">
-			<div className="review-border">
-				<ReviewEditor setReviewDoc={updateReview} reviewDoc={review} />
-				<Button
-					icon="document-share"
-					onClick={onSubmit}
-					minimal={true}
-					loading={isLoading}
-					className="review-submission-button"
-					style={{ background: bgColor }}
-					intent="primary"
-					onMouseEnter={() => setHover(true)}
-					onMouseLeave={() => setHover(false)}
-				>
-					Submit Review
-				</Button>
-				{createError && (
-					<NonIdealState
-						title="There was an error submitting your review"
-						// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
-						visual="error"
-						action={
-							<a href="/login" className="bp3-button">
-								Login or Signup
-							</a>
-						}
-					/>
-				)}
+		<Card interactive={true} elevation={Elevation.TWO}>
+			<div className="review-component">
+				<div className="review-border">
+					<ReviewEditor setReviewDoc={updateReview} reviewDoc={review} />
+				</div>
+				<div className="review-button">
+					<Button
+						icon="document-share"
+						onClick={onSubmit}
+						minimal={true}
+						loading={isLoading}
+						className="review-submission-button"
+						style={{ background: bgColor }}
+						intent="primary"
+						onMouseEnter={() => setHover(true)}
+						onMouseLeave={() => setHover(false)}
+					>
+						Submit Review
+					</Button>
+					{createError && (
+						<NonIdealState
+							title="There was an error submitting your review"
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
+							visual="error"
+							action={
+								<a href="/login" className="bp3-button">
+									Login or Signup
+								</a>
+							}
+						/>
+					)}
+				</div>
 			</div>
-		</div>
+		</Card>
 	);
 };
 

@@ -1,10 +1,26 @@
 .review-component {
-	padding-bottom: 50px;
-
+	max-width: fit-content;
+	
+	.review-button {
+		padding-top: 18px;
+	}
+	.review-submission-button {
+		.bp3-button {
+			color: white;
+			.bp3-icon {
+				color: white !important;
+			}
+		}
+		.bp3-button:hover {
+			color: white;
+			.bp3-icon {
+				color: white !important;
+			}
+		}
+	}
 	.review-border {
 		border-style: solid;
 		border-color: #dddddd;
 		padding: 18px;
-		border-bottom: none;
 	}
 }
