@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 import { Avatar, Icon, IconName, MenuItem } from 'components';
-import { getPrimaryCollection } from 'utils/collections/primary';
+import { getPrimaryCollectionPub } from 'utils/collections/primary';
 import { Collection, Pub } from 'types';
 
 require('./scopeDropdown.scss');
@@ -22,10 +22,19 @@ type Props = {
 	isDashboard?: boolean;
 };
 
-const getPrimaryOrFirstCollection = (activePub: Pub | undefined): Collection | undefined => {
+const getPrimaryOrFirstCollectionPub = (
+	activePub: Pub | undefined,
+	communityData,
+): Collection | undefined => {
 	if (!activePub || !activePub.collectionPubs || activePub.collectionPubs.length === 0)
 		return undefined;
-	return getPrimaryCollection(activePub.collectionPubs) || activePub.collectionPubs[0].collection;
+	const primaryOrFirstCollectionPub =
+		getPrimaryCollectionPub(activePub.collectionPubs) || activePub.collectionPubs[0];
+	const collection = communityData.collections.find(
+		(availableCollection: Collection) =>
+			primaryOrFirstCollectionPub.collectionId === availableCollection.id,
+	);
+	return collection;
 };
 
 const ScopeDropdown = (props: Props) => {
@@ -35,7 +44,10 @@ const ScopeDropdown = (props: Props) => {
 	const { canManageCommunity } = scopeData.activePermissions;
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
 	const pubSlug = locationData.params.pubSlug;
-	const nonActiveDashboardCollection = getPrimaryOrFirstCollection(activePub);
+	const nonActiveDashboardCollectionPub = getPrimaryOrFirstCollectionPub(
+		activePub,
+		communityData,
+	);
 	const scopes: Scope[] = [];
 	scopes.push({
 		type: 'Community',
@@ -65,14 +77,15 @@ const ScopeDropdown = (props: Props) => {
 			}),
 		});
 	}
-	if (!activeCollection && nonActiveDashboardCollection) {
+	if (!activeCollection && nonActiveDashboardCollectionPub) {
+		console.log('nonActive', nonActiveDashboardCollectionPub);
 		scopes.push({
 			type: 'Collection',
 			icon: 'collection',
-			title: nonActiveDashboardCollection.title,
-			avatar: nonActiveDashboardCollection.avatar,
+			title: nonActiveDashboardCollectionPub.title,
+			avatar: nonActiveDashboardCollectionPub.avatar,
 			href: getDashUrl({
-				collectionSlug: nonActiveDashboardCollection.slug,
+				collectionSlug: nonActiveDashboardCollectionPub.slug,
 			}),
 		});
 	}
