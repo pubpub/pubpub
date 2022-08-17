@@ -341,9 +341,10 @@ describe('createDeposit', () => {
 		);
 	});
 
-	it('uses a DepositTarget to produce a doi prefix', () => {
+	it.only('uses a DepositTarget to produce a doi prefix', () => {
 		const depositTarget = { doiPrefix: 'abc' };
-		const { deposit } = createDeposit({ pub }, 'pub', depositTarget);
-		expect(deposit.dois.pub.split('/')[0]).toEqual(depositTarget.doiPrefix);
+		const { doi, ...pubWithouDoi } = pub;
+		const { dois } = createDeposit({ pub: pubWithouDoi }, 'pub', depositTarget);
+		expect(dois.pub.split('/')[0]).toEqual(depositTarget.doiPrefix);
 	});
 });
