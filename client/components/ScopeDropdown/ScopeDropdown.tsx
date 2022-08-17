@@ -24,6 +24,22 @@ type Props = {
 	isDashboard?: boolean;
 };
 
+const canManageCollection = (
+	communityCollections: any[],
+	availableCollection: Collection,
+	loggedInUserId: string | null,
+): boolean => {
+	return !!communityCollections.find(
+		(collection) =>
+			collection.id === availableCollection.id &&
+			collection.members.find(
+				(member) =>
+					member.id === loggedInUserId &&
+					(member.permissions === 'manage' || member.permissions === 'admin'),
+			),
+	);
+};
+
 const getPrimaryOrFirstCollectionPub = (
 	activePub: Pub | undefined,
 	communityData,
@@ -41,7 +57,7 @@ const getPrimaryOrFirstCollectionPub = (
 
 const ScopeDropdown = (props: Props) => {
 	const { isDashboard } = props;
-	const { locationData, communityData, scopeData, pageData } = usePageContext();
+	const { loginData, locationData, communityData, scopeData, pageData } = usePageContext();
 	const { activeCollection, activePub } = scopeData.elements;
 	const { canManageCommunity, canManage } = scopeData.activePermissions;
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
@@ -82,7 +98,9 @@ const ScopeDropdown = (props: Props) => {
 			href: getDashUrl({
 				collectionSlug,
 			}),
-			showSettings: canManageCommunity,
+			showSettings:
+				canManageCommunity ||
+				canManageCollection(communityData.collections, activeCollection, loginData.id),
 		});
 	}
 	if (!activeCollection && nonActiveDashboardCollectionPub) {
@@ -95,7 +113,13 @@ const ScopeDropdown = (props: Props) => {
 			href: getDashUrl({
 				collectionSlug: nonActiveDashboardCollectionPub.slug,
 			}),
-			showSettings: canManageCommunity,
+			showSettings:
+				canManageCommunity ||
+				canManageCollection(
+					communityData.collections,
+					nonActiveDashboardCollectionPub,
+					loginData.id,
+				),
 		});
 	}
 	if (activePub) {
