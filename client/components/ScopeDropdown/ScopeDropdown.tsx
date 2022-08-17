@@ -34,7 +34,7 @@ const canManageCollection = (
 			collection.id === availableCollection.id &&
 			collection.members.find(
 				(member) =>
-					member.id === loggedInUserId &&
+					member.userId === loggedInUserId &&
 					(member.permissions === 'manage' || member.permissions === 'admin'),
 			),
 	);
