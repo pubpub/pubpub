@@ -14,10 +14,11 @@ import pubHasPreprint from './data/pubHasPreprint';
 import makeCollectionPub from './data/makeCollectionPub';
 import { book, issue, conference } from './data/collections';
 
-const createDeposit = (context, target) =>
+const createDeposit = (context, target, depositTarget) =>
 	createDepositPartial(
 		{ ...context, community },
 		target,
+		depositTarget,
 		new Date('2019-04-11T19:02:15.577Z').getTime(),
 	);
 
@@ -342,7 +343,7 @@ describe('createDeposit', () => {
 
 	it('uses a DepositTarget to produce a doi prefix', () => {
 		const depositTarget = { doiPrefix: 'abc' };
-		const { deposit } = createDeposit({ pub, depositTarget }, 'pub');
+		const { deposit } = createDeposit({ pub }, 'pub', depositTarget);
 		expect(deposit.dois.pub.split('/')[0]).toEqual(depositTarget.doiPrefix);
 	});
 });

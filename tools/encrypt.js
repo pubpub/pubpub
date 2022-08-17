@@ -1,4 +1,4 @@
-/* eslint-disable global-require */
+/* eslint-disable global-require, no-console */
 import { aes256Encrypt, aes256Decrypt } from '../utils/crypto';
 
 try {
