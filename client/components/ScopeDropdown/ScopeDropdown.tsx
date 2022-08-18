@@ -42,7 +42,7 @@ const canManageCollection = (
 	);
 };
 
-const getPrimaryOrFirstCollectionPub = (
+const getPrimaryOrFirstCollection = (
 	activePub: Pub | undefined,
 	communityData,
 ): Collection | undefined => {
@@ -65,10 +65,7 @@ const ScopeDropdown = (props: Props) => {
 	const { canManageCommunity, canManage } = scopeData.activePermissions;
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
 	const pubSlug = locationData.params.pubSlug;
-	const nonActiveDashboardCollectionPub = getPrimaryOrFirstCollectionPub(
-		activePub,
-		communityData,
-	);
+	const nonActiveDashboardCollectionPub = getPrimaryOrFirstCollection(activePub, communityData);
 	const scopes: Scope[] = [];
 	scopes.push({
 		type: 'Community',
