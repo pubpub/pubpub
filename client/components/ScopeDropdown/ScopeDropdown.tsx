@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 
 import { getDashUrl } from 'utils/dashboard';
@@ -65,7 +65,10 @@ const ScopeDropdown = (props: Props) => {
 	const { canManageCommunity, canManage } = scopeData.activePermissions;
 	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
 	const pubSlug = locationData.params.pubSlug;
-	const nonActiveDashboardCollectionPub = getPrimaryOrFirstCollection(activePub, communityData);
+	const nonActiveDashboardCollectionPub = useMemo(
+		() => getPrimaryOrFirstCollection(activePub, communityData),
+		[activePub, communityData],
+	);
 	const scopes: Scope[] = [];
 	scopes.push({
 		type: 'Community',
