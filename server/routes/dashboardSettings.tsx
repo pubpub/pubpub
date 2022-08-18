@@ -11,7 +11,7 @@ import { getCommunityDepositTarget } from 'server/depositTarget/queries';
 
 const getSettingsData = async (pubSlug, initialData) => {
 	const baseSettingsData = {
-		depositTarget: getCommunityDepositTarget(initialData.communityData.id),
+		depositTarget: await getCommunityDepositTarget(initialData.communityData.id),
 	};
 	if (pubSlug) {
 		return {

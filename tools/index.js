@@ -21,6 +21,7 @@ const commandFiles = {
 	backfillActivity: './activityItem/allCommunities',
 	backfillCommunityActivity: './activityItem/singleCommunityCli',
 	backfillCheckpoints: './backfillCheckpoints',
+	backfillDepositTargets: './backfillDepositTargets',
 	backup: './backup/backup',
 	branchMaintenance: './branchMaintenance',
 	bulkimport: '../workers/tasks/import/bulk/cli',
