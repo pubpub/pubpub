@@ -21,6 +21,7 @@ import {
 import { getCurrentNodeLabels, EditorChangeObject } from '../Editor';
 
 import {
+	ControlsCodeBlock,
 	ControlsMath,
 	ControlsFootnoteCitation,
 	ControlsLink,
@@ -50,6 +51,7 @@ const nodeControls = (
 	const indicatedTypes = Array.isArray(indicatedNodeType)
 		? indicatedNodeType
 		: [indicatedNodeType];
+	console.log('nodecontrols: ', indicatedTypes);
 	return {
 		showCloseButton: true,
 		enterKeyTriggers: true,
@@ -182,6 +184,38 @@ export const code: FormattingBarButtonData = {
 	command: codeToggle,
 };
 
+export const codeBlock: FormattingBarButtonData = {
+	key: 'code-block',
+	title: 'Code Block',
+	icon: 'code-block',
+	insertNodeType: 'code_block',
+	controls: nodeControls(ControlsCodeBlock, 'code_block', {
+		floatingPosition: positionNearSelection,
+		showCloseButton: false,
+	}),
+};
+
+// below, hoping to simplify formatting bar for only inline button
+/*
+export const codeBlock: FormattingBarButtonData = {
+	key: 'code-block',
+	title: 'Code Block',
+	icon: 'code-block',
+	command: ,
+};
+*/
+
+export const math: FormattingBarButtonData = {
+	key: 'math',
+	title: 'Math',
+	icon: 'function',
+	insertNodeType: 'math_inline',
+	controls: nodeControls(ControlsMath, ['math_inline', 'math_display'], {
+		floatingPosition: positionNearSelection,
+		showCloseButton: false,
+	}),
+};
+
 export const subscript: FormattingBarButtonData = {
 	key: 'subscript',
 	title: 'Subscript',
@@ -268,17 +302,6 @@ export const table: FormattingBarButtonData = {
 	},
 };
 
-export const math: FormattingBarButtonData = {
-	key: 'math',
-	title: 'Math',
-	icon: 'function',
-	insertNodeType: 'math_inline',
-	controls: nodeControls(ControlsMath, ['math_inline', 'math_display'], {
-		floatingPosition: positionNearSelection,
-		showCloseButton: false,
-	}),
-};
-
 export const media: FormattingBarButtonData = {
 	key: 'media',
 	title: 'Media',
@@ -310,6 +333,7 @@ export const reviewButtonSet = [
 		numberedList,
 		blockquote,
 		code,
+		codeBlock,
 		subscript,
 		superscript,
 		strikethrough,
@@ -337,6 +361,7 @@ export const fullButtonSet = [
 		numberedList,
 		blockquote,
 		code,
+		codeBlock,
 		subscript,
 		superscript,
 		strikethrough,
@@ -361,6 +386,7 @@ export const layoutEditorButtonSet = [
 		numberedList,
 		blockquote,
 		code,
+		codeBlock,
 		subscript,
 		superscript,
 		strikethrough,
