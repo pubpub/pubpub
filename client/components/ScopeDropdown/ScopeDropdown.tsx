@@ -5,6 +5,7 @@ import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 import { Avatar, Icon, IconName, MenuItem } from 'components';
 import { getPrimaryCollectionPub } from 'utils/collections/primary';
+import { sortByRank } from 'utils/rank';
 import { Collection, Pub } from 'types';
 import { pubPubIcons } from 'client/utils/icons';
 
@@ -49,8 +50,7 @@ const getPrimaryOrFirstCollectionPub = (
 		return undefined;
 	const primaryOrFirstCollectionPub =
 		getPrimaryCollectionPub(activePub.collectionPubs) ||
-		activePub.collectionPubs.sort((a, b) => (a.pubRank > b.pubRank ? 1 : -1))[0];
-	console.log(primaryOrFirstCollectionPub);
+		sortByRank(activePub.collectionPubs, 'pubRank')[0];
 	const collection = communityData.collections.find(
 		(availableCollection: Collection) =>
 			primaryOrFirstCollectionPub.collectionId === availableCollection.id,
