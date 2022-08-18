@@ -15,7 +15,7 @@ type Scope = {
 	iconSize?: number;
 	title: string;
 	avatar: undefined | string;
-	slug: string;
+	slug?: string;
 	href: string;
 	showSettings: boolean;
 };
@@ -72,7 +72,6 @@ const ScopeDropdown = (props: Props) => {
 		icon: 'office',
 		title: communityData.title,
 		avatar: communityData.avatar,
-		slug: '',
 		href: getDashUrl({}),
 		showSettings: canManageCommunity,
 	});
@@ -128,7 +127,7 @@ const ScopeDropdown = (props: Props) => {
 			icon: 'pubDoc',
 			title: activePub.title,
 			avatar: activePub.avatar,
-			slug: pubSlug,
+			slug: `pub/${pubSlug}`,
 			href: getDashUrl({
 				collectionSlug,
 				pubSlug,
@@ -168,28 +167,52 @@ const ScopeDropdown = (props: Props) => {
 									</div>
 									{scope.showSettings && scope.type !== 'Page' && (
 										<div className="settings">
-											<a href={`${scope.href}/settings`}>
+											<a
+												href={getDashUrl({
+													collectionSlug,
+													pubSlug,
+													mode: 'settings',
+												})}
+											>
 												<Icon icon="cog" iconSize={12} />
 											</a>
-											<a href={`${scope.href}/members`}>
+											<a
+												href={getDashUrl({
+													collectionSlug,
+													pubSlug,
+													mode: 'members',
+												})}
+											>
 												<Icon icon="people" iconSize={12} />
 											</a>
-											<a href={`${scope.href}/impact`}>
+											<a
+												href={getDashUrl({
+													collectionSlug,
+													pubSlug,
+													mode: 'impact',
+												})}
+											>
 												<Icon icon="dashboard" iconSize={12} />
 											</a>
 											{scope.type === 'Collection' && (
-												<a href={`/${scope.href}/layout`}>
+												<a
+													href={getDashUrl({
+														collectionSlug,
+														pubSlug,
+														mode: 'layout',
+													})}
+												>
 													<Icon icon="page-layout" iconSize={12} />
 												</a>
 											)}
-											<a href={`/${scope.slug}`}>
+											<a href={`/${scope.slug || '/'}`}>
 												<Icon icon="globe" iconSize={12} />
 											</a>
 										</div>
 									)}
 									{scope.showSettings && scope.type === 'Page' && (
 										<div className="settings">
-											<a href={`/${scope.slug}`}>
+											<a href={`/${scope.slug || '/'}`}>
 												<Icon icon="globe" iconSize={12} />
 											</a>
 										</div>
