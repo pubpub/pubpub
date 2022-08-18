@@ -6,6 +6,7 @@ import { usePageContext } from 'utils/hooks';
 import { Avatar, Icon, IconName, MenuItem } from 'components';
 import { getPrimaryCollectionPub } from 'utils/collections/primary';
 import { Collection, Pub } from 'types';
+import { pubPubIcons } from 'client/utils/icons';
 
 require('./scopeDropdown.scss');
 
@@ -69,7 +70,7 @@ const ScopeDropdown = (props: Props) => {
 	const scopes: Scope[] = [];
 	scopes.push({
 		type: 'Community',
-		icon: 'office',
+		icon: pubPubIcons.community,
 		title: communityData.title,
 		avatar: communityData.avatar,
 		href: getDashUrl({}),
@@ -78,7 +79,7 @@ const ScopeDropdown = (props: Props) => {
 	if (pageData && canManageCommunity && !isDashboard) {
 		scopes.push({
 			type: 'Page',
-			icon: 'page-layout',
+			icon: pubPubIcons.page,
 			iconSize: 12,
 			title: pageData.title,
 			avatar: pageData.avatar,
@@ -90,7 +91,7 @@ const ScopeDropdown = (props: Props) => {
 	if (activeCollection) {
 		scopes.push({
 			type: 'Collection',
-			icon: 'collection',
+			icon: pubPubIcons.collection,
 			title: activeCollection.title,
 			avatar: activeCollection.avatar,
 			slug: collectionSlug,
@@ -105,7 +106,7 @@ const ScopeDropdown = (props: Props) => {
 	if (!activeCollection && nonActiveDashboardCollectionPub) {
 		scopes.push({
 			type: 'Collection',
-			icon: 'collection',
+			icon: pubPubIcons.collection,
 			title: nonActiveDashboardCollectionPub.title,
 			avatar: nonActiveDashboardCollectionPub.avatar,
 			slug: nonActiveDashboardCollectionPub.slug,
@@ -124,7 +125,7 @@ const ScopeDropdown = (props: Props) => {
 	if (activePub) {
 		scopes.push({
 			type: 'Pub',
-			icon: 'pubDoc',
+			icon: pubPubIcons.pub,
 			title: activePub.title,
 			avatar: activePub.avatar,
 			slug: `pub/${pubSlug}`,
@@ -174,7 +175,7 @@ const ScopeDropdown = (props: Props) => {
 													mode: 'settings',
 												})}
 											>
-												<Icon icon="cog" iconSize={12} />
+												<Icon icon={pubPubIcons.settings} iconSize={12} />
 											</a>
 											<a
 												href={getDashUrl({
@@ -183,7 +184,7 @@ const ScopeDropdown = (props: Props) => {
 													mode: 'members',
 												})}
 											>
-												<Icon icon="people" iconSize={12} />
+												<Icon icon={pubPubIcons.member} iconSize={12} />
 											</a>
 											<a
 												href={getDashUrl({
@@ -192,7 +193,7 @@ const ScopeDropdown = (props: Props) => {
 													mode: 'impact',
 												})}
 											>
-												<Icon icon="dashboard" iconSize={12} />
+												<Icon icon={pubPubIcons.impact} iconSize={12} />
 											</a>
 											{scope.type === 'Collection' && (
 												<a
@@ -202,7 +203,7 @@ const ScopeDropdown = (props: Props) => {
 														mode: 'layout',
 													})}
 												>
-													<Icon icon="page-layout" iconSize={12} />
+													<Icon icon={pubPubIcons.layout} iconSize={12} />
 												</a>
 											)}
 											<a href={`/${scope.slug || '/'}`}>
