@@ -219,7 +219,9 @@ const ScopeDropdown = (props: Props) => {
 											)}
 											<a
 												href={`/${
-													(scope.slugs && 'pub/' + scope.slugs.pubSlug) ||
+													(scope.slugs &&
+														scope.slugs.pubSlug &&
+														'pub/' + scope.slugs.pubSlug) ||
 													(scope.slugs && scope.slugs.collectionSlug)
 												}`}
 											>
