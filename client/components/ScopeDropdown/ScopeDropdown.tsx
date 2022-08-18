@@ -48,7 +48,9 @@ const getPrimaryOrFirstCollectionPub = (
 	if (!activePub || !activePub.collectionPubs || activePub.collectionPubs.length === 0)
 		return undefined;
 	const primaryOrFirstCollectionPub =
-		getPrimaryCollectionPub(activePub.collectionPubs) || activePub.collectionPubs[0];
+		getPrimaryCollectionPub(activePub.collectionPubs) ||
+		activePub.collectionPubs.sort((a, b) => (a.pubRank > b.pubRank ? 1 : -1))[0];
+	console.log(primaryOrFirstCollectionPub);
 	const collection = communityData.collections.find(
 		(availableCollection: Collection) =>
 			primaryOrFirstCollectionPub.collectionId === availableCollection.id,

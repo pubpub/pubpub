@@ -168,7 +168,7 @@ getScopeElements = async (scopeInputs) => {
 				{
 					model: CollectionPub,
 					as: 'collectionPubs',
-					attributes: ['id', 'pubId', 'collectionId'],
+					attributes: ['id', 'pubId', 'collectionId', 'pubRank'],
 				},
 				{
 					model: Release,
