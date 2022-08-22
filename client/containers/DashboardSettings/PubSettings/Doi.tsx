@@ -35,8 +35,10 @@ class Doi extends Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 
+		const [, doiSuffix] = (props.pubData.doi || '').split('/');
+
 		this.state = {
-			doiSuffix: (props.pubData.doi || '').split('/')[0],
+			doiSuffix,
 			error: false,
 			justSetDoi: false,
 			deleting: false,
@@ -316,13 +318,14 @@ class Doi extends Component<Props, State> {
 				{!pubData.doi && <p>A DOI can be set for each Pub by admins of this community.</p>}
 				{this.disabledDueToUnmanagedPrefix() && (
 					<Callout intent="warning">
-						Ths Pub cannot be deposited to Crossref because this Community's DOI prefix
-						is not managed by PubPub.
+						This Pub cannot be deposited to Crossref via PubPub because there is no
+						Crossref account connected to PubPub for this Community.
 					</Callout>
 				)}
 				{pubData.doi &&
 					!pubData.crossrefDepositRecordId &&
-					!this.disabledDueToNoReleases() && (
+					!this.disabledDueToNoReleases() &&
+					!this.disabledDueToUnmanagedPrefix() && (
 						<Callout intent="warning">
 							A DOI has been assigned to this Pub, but it has not yet been deposited
 							to Crossref.

@@ -32,7 +32,7 @@ async function main() {
 					}),
 				);
 			} else {
-				promises.push(baseDepositTarget);
+				promises.push(DepositTarget.create(baseDepositTarget));
 			}
 		}
 	}
