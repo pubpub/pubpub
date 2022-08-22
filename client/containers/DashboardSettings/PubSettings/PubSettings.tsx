@@ -114,7 +114,7 @@ const PubSettings = (props: Props) => {
 					<InputField label="Title" error={!pubData.title ? 'Required' : null}>
 						<TitleEditor
 							className="bp3-input"
-							initialValue={pubData.htmlTitle}
+							initialValue={pubData.htmlTitle ?? undefined}
 							onInput={(nextHtmlTitle, nextTitle) =>
 								updatePubData({ htmlTitle: nextHtmlTitle, title: nextTitle })
 							}
