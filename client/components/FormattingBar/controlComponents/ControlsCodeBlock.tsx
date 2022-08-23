@@ -13,11 +13,7 @@ type Props = {
 };
 
 const ControlsCodeBlock = (props: Props) => {
-	console.log('building');
 	const { editorChangeObject } = props;
-	const { selectedNode } = editorChangeObject;
-	console.log({ editorChangeObject, selectedNode }); // find out where we get to pass/use nodeView instance setting variables
-
 	const chooseLanguageButton: FormattingBarButtonData = {
 		key: 'change-math-node-type',
 		title: 'Change language highlighting',

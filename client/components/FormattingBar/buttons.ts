@@ -51,7 +51,6 @@ const nodeControls = (
 	const indicatedTypes = Array.isArray(indicatedNodeType)
 		? indicatedNodeType
 		: [indicatedNodeType];
-	console.log('nodecontrols: ', indicatedTypes);
 	return {
 		showCloseButton: true,
 		enterKeyTriggers: true,
@@ -67,7 +66,7 @@ const nodeControls = (
 	};
 };
 
-const showOrTriggerTable = (editorChangeObject) => {
+const showOrTriggerTable = (editorChangeObject: EditorChangeObject): boolean => {
 	const { selectionInTable, selection } = editorChangeObject;
 	return (
 		selectionInTable &&
@@ -184,26 +183,46 @@ export const code: FormattingBarButtonData = {
 	command: codeToggle,
 };
 
+const isInCodeBlock = (editorChangeObject: EditorChangeObject): boolean => {
+	if (!editorChangeObject.view) return false;
+	const state = editorChangeObject.view.state;
+	const { $head, $anchor } = state.selection;
+	for (let d = $head.depth; d > 0; d--) if ($head.node(d).type.name === 'code_block') return true;
+	for (let d = $anchor.depth; d > 0; d--)
+		if ($anchor.node(d).type.name === 'code_block') return true;
+	return false;
+};
+
 export const codeBlock: FormattingBarButtonData = {
 	key: 'code-block',
 	title: 'Code Block',
 	icon: 'code-block',
 	insertNodeType: 'code_block',
-	controls: nodeControls(ControlsCodeBlock, 'code_block', {
+	controls: {
+		captureFocusOnMount: false,
+		component: ControlsCodeBlock,
+		trigger: triggerOnClick,
+		show: isInCodeBlock,
+		indicate: isInCodeBlock,
 		floatingPosition: positionNearSelection,
 		showCloseButton: false,
-	}),
+	},
 };
 
-// below, hoping to simplify formatting bar for only inline button
-/*
-export const codeBlock: FormattingBarButtonData = {
-	key: 'code-block',
-	title: 'Code Block',
-	icon: 'code-block',
-	command: ,
+export const table: FormattingBarButtonData = {
+	key: 'table',
+	title: 'Table',
+	icon: 'th',
+	insertNodeType: 'table',
+	controls: {
+		captureFocusOnMount: false,
+		indicate: ({ selectionInTable }) => selectionInTable,
+		show: showOrTriggerTable,
+		trigger: showOrTriggerTable,
+		floatingPosition: positionNearSelection,
+		component: ControlsTable,
+	},
 };
-*/
 
 export const math: FormattingBarButtonData = {
 	key: 'math',
@@ -285,21 +304,6 @@ export const horizontalRule: FormattingBarButtonData = {
 	title: 'Horizontal Line',
 	insertNodeType: 'horizontal_rule',
 	icon: 'minus',
-};
-
-export const table: FormattingBarButtonData = {
-	key: 'table',
-	title: 'Table',
-	icon: 'th',
-	insertNodeType: 'table',
-	controls: {
-		captureFocusOnMount: false,
-		indicate: ({ selectionInTable }) => selectionInTable,
-		show: showOrTriggerTable,
-		trigger: showOrTriggerTable,
-		floatingPosition: positionNearSelection,
-		component: ControlsTable,
-	},
 };
 
 export const media: FormattingBarButtonData = {
