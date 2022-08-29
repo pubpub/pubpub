@@ -82,7 +82,7 @@ const ReviewHeaderSticky = () => {
 		<div className="review-header-sticky-component">
 			<div className="sticky-title">{pubData.title}</div>
 			<div className="side-content">
-				<div className="sticky-buttons">
+				<div className="sticky-buttons sticky-review-buttons">
 					<div className="sticky-review-text">review</div>
 					<ReviewerDialog
 						isOpen={visible}
@@ -97,7 +97,7 @@ const ReviewHeaderSticky = () => {
 					/>
 					<Popover
 						aria-label="Notifications"
-						placement="bottom-start"
+						placement="bottom"
 						className="review-popover"
 						content={
 							<Review
