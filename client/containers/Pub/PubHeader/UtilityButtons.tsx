@@ -2,6 +2,7 @@ import React from 'react';
 
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
+import { pubUrl } from 'utils/canonicalUrls';
 import { DialogLauncher, PubThemePicker, PubShareDialog, PopoverButton } from 'components';
 
 import { Callback, PatchFn, PubPageData } from 'types';
@@ -10,6 +11,8 @@ import Download from './Download';
 import PubToc from './PubToc';
 import SmallHeaderButton from './SmallHeaderButton';
 import Social from './Social';
+import ReviewSettings from './ReviewSettings';
+import { usePubContext } from '../pubHooks';
 
 type Props = {
 	onShowHeaderDetails: Callback;
@@ -20,7 +23,8 @@ type Props = {
 const UtilityButtons = (props: Props) => {
 	const { onShowHeaderDetails, pubData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
-	const { isRelease, membersData } = pubData;
+	const { historyData } = usePubContext();
+	const { isRelease, membersData, reviewHash } = pubData;
 	const { canManage } = scopeData.activePermissions;
 	return (
 		<div className="utility-buttons-component">
@@ -91,6 +95,40 @@ const UtilityButtons = (props: Props) => {
 			<PubToc>
 				<SmallHeaderButton label="Contents" labelPosition="left" icon="toc" />
 			</PubToc>
+			{membersData && (
+				<DialogLauncher
+					renderLauncherElement={({ openDialog }) => (
+						<SmallHeaderButton
+							label="review settings"
+							labelPosition="left"
+							icon="edit"
+							className="members-button"
+							onClick={openDialog}
+						/>
+					)}
+				>
+					{({ isOpen, onClose }) => (
+						<ReviewSettings
+							isOpen={isOpen}
+							onClose={onClose}
+							pubData={pubData}
+							updatePubData={updatePubData}
+						/>
+					)}
+				</DialogLauncher>
+			)}
+			{!membersData && (
+				<SmallHeaderButton
+					label="Review"
+					labelPosition="left"
+					icon="draw"
+					href={pubUrl(communityData, pubData, {
+						accessHash: reviewHash,
+						historyKey: historyData.currentKey,
+						isReview: true,
+					})}
+				/>
+			)}
 		</div>
 	);
 };

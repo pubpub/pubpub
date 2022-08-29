@@ -103,13 +103,7 @@ const PubReleaseReviewDialog = (props: Props) => {
 	};
 
 	return (
-		<Dialog
-			lazy={true}
-			title="Request Publication"
-			onClose={onClose}
-			isOpen={isOpen}
-			className="pub-release-review-dialog-component"
-		>
+		<div title="Request Publication" className="pub-release-review-dialog-component">
 			<div className={Classes.DIALOG_BODY}>
 				{!createdReview && (
 					<React.Fragment>
@@ -133,7 +127,7 @@ const PubReleaseReviewDialog = (props: Props) => {
 					{!createdReview && renderPreReviewButtons()}
 				</div>
 			</div>
-		</Dialog>
+		</div>
 	);
 };
 PubReleaseReviewDialog.defaultProps = defaultProps;

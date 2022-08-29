@@ -1,7 +1,7 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 
-import { DialogLauncher, PubReleaseDialog, PubReleaseReviewDialog } from 'components';
+import { DialogLauncher, PubReleaseDialog } from 'components';
 import { Menu, MenuItem } from 'components/Menu';
 import { pubUrl } from 'utils/canonicalUrls';
 import { formatDate } from 'utils/dates';
@@ -45,7 +45,7 @@ const getCanCreateRelease = (latestRelease, latestKey) => {
 const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { historyData, pubData, updatePubData } = props;
 	const { communityData, scopeData, featureFlags } = usePageContext();
-	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
+	const { canView, canViewDraft, canAdmin } = scopeData.activePermissions;
 	const { isRelease, isReview } = pubData;
 
 	const renderForRelease = () => {
@@ -178,31 +178,6 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 										};
 									})
 								}
-							/>
-						)}
-					</DialogLauncher>
-				)}
-				{canCreateReviews && !isReview && (
-					<DialogLauncher
-						renderLauncherElement={({ openDialog }) => (
-							<ResponsiveHeaderButton
-								disabled={!canRelease}
-								icon="social-media"
-								onClick={openDialog}
-								label={{
-									bottom: 'Create a Release Review',
-									top: 'Request Publication',
-								}}
-							/>
-						)}
-					>
-						{({ isOpen, onClose, key }) => (
-							<PubReleaseReviewDialog
-								key={key}
-								isOpen={isOpen}
-								onClose={onClose}
-								pubData={pubData}
-								updatePubData={updatePubData}
 							/>
 						)}
 					</DialogLauncher>
