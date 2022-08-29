@@ -1,0 +1,55 @@
+.review-settings-component.bp3-dialog {
+	width: 1000px;
+	max-width: 90vw;
+	max-height: 90vh;
+	display: flex;
+	flex-direction: column;
+
+	.content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.bp3-dialog-body {
+		display: flex;
+		overflow: hidden;
+		margin: 10px;
+	}
+
+	.pane {
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		flex-basis: 50%;
+		padding: 10px;
+		.pane-title {
+			font-weight: bold;
+			font-size: 1.2em;
+			margin-bottom: 4px;
+		}
+		.pane-content {
+			overflow: auto;
+		}
+		&:first-child:last-child {
+			flex-basis: 100%;
+		}
+	}
+
+	.hash-row {
+		margin-bottom: 10px;
+		.bp3-button {
+			display: flex;
+			justify-content: flex-start;
+			width: 160px;
+		}
+	}
+
+	@media screen and (max-width: 800px) {
+		.bp3-dialog-body {
+			flex-direction: column-reverse;
+			.pane {
+				flex-basis: unset;
+			}
+		}
+	}
+}

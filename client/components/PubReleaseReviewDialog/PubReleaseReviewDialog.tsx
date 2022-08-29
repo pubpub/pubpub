@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AnchorButton, Button, Callout, Classes } from '@blueprintjs/core';
+import { AnchorButton, Button, Callout } from '@blueprintjs/core';
 
 import { MinimalEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -76,10 +76,15 @@ const PubReleaseReviewDialog = (props: Props) => {
 	const renderPreReviewButtons = () => {
 		return (
 			<React.Fragment>
-				<Button disabled={isCreatingReview} onClick={onClose}>
+				<Button disabled={isCreatingReview} onClick={onClose} className="release-buttons">
 					Cancel
 				</Button>
-				<Button loading={isCreatingReview} intent="primary" onClick={handleCreateRelease}>
+				<Button
+					loading={isCreatingReview}
+					intent="primary"
+					onClick={handleCreateRelease}
+					className="release-buttons"
+				>
 					Create Review
 				</Button>
 			</React.Fragment>
@@ -103,7 +108,7 @@ const PubReleaseReviewDialog = (props: Props) => {
 
 	return (
 		<div title="Request Publication" className="pub-release-review-dialog-component">
-			<div className={Classes.DIALOG_BODY}>
+			<div>
 				{!createdReview && (
 					<React.Fragment>
 						<p>
@@ -120,8 +125,8 @@ const PubReleaseReviewDialog = (props: Props) => {
 				)}
 				{renderReviewResult()}
 			</div>
-			<div className={Classes.DIALOG_FOOTER}>
-				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+			<div>
+				<div>
 					{createdReview && renderPostReviewButtons()}
 					{!createdReview && renderPreReviewButtons()}
 				</div>

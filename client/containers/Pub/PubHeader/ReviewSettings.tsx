@@ -1,5 +1,5 @@
-import React from 'react';
-import { ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
+import React, { useState } from 'react';
+import { ControlGroup, Dialog, Divider, InputGroup, Checkbox } from '@blueprintjs/core';
 
 import {
 	ClickToCopyButton,
@@ -11,6 +11,8 @@ import { usePageContext } from 'utils/hooks';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { PatchFn, PubPageData } from 'types';
+
+require('./reviewSettings.scss');
 
 type SharedProps = {
 	pubData: PubPageData;
@@ -67,12 +69,17 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 	const { canCreateReviews } = scopeData.activePermissions;
 	const { viewHash, editHash, isReview } = pubData;
 	const hasHash = !!(viewHash || editHash);
+	const [checked, setChecked] = useState<boolean>(false);
+	const handlePublicReview = () => {
+		// set a field on review to public
+		setChecked(!checked);
+	};
 
 	return (
 		<Dialog
 			lazy={true}
-			title="Share Pub"
-			className="pub-share-dialog-component"
+			title="Review Settings"
+			className="review-settings-component"
 			isOpen={isOpen}
 			onClose={onClose}
 		>
@@ -82,7 +89,6 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 						<div>
 							{hasHash && (
 								<React.Fragment>
-									<Divider />
 									<div className="pane">
 										<h6 className="pane-title">Share a URL</h6>
 										<AccessHashOptions pubData={pubData} />
@@ -90,10 +96,11 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 								</React.Fragment>
 							)}
 						</div>
+						<Divider />
 						<div>
 							{canCreateReviews && !isReview && (
-								<div>
-									<h6>Request Publication</h6>
+								<div className="pane">
+									<h6 className="pane-title">Request Publication</h6>
 									<PubReleaseReviewDialog
 										onClose={onClose}
 										pubData={pubData}
@@ -102,8 +109,18 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 								</div>
 							)}
 						</div>
-						<div>
-							<h6>Allow released pubs to be reviewed?</h6>
+						<Divider />
+						<div className="pane">
+							<h6 className="pane-title">Open reviews</h6>
+							<p>
+								You can allow visitors to the releaseed verion of this Pub to review
+								it.
+							</p>
+							<Checkbox
+								label="Enabled "
+								checked={checked}
+								onChange={handlePublicReview}
+							/>
 						</div>
 					</div>
 				</PendingChangesProvider>
