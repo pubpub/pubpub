@@ -1,5 +1,5 @@
 import React from 'react';
-import { Classes, ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
+import { ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
 
 import {
 	ClickToCopyButton,
@@ -95,7 +95,6 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 								<div>
 									<h6>Request Publication</h6>
 									<PubReleaseReviewDialog
-										isOpen={isOpen}
 										onClose={onClose}
 										pubData={pubData}
 										updatePubData={updatePubData}

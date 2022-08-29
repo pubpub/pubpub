@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AnchorButton, Button, Callout, Classes, Dialog } from '@blueprintjs/core';
+import { AnchorButton, Button, Callout, Classes } from '@blueprintjs/core';
 
 import { MinimalEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -8,7 +8,6 @@ import { apiFetch } from 'client/utils/apiFetch';
 require('./pubReleaseReviewDialog.scss');
 
 type OwnProps = {
-	isOpen: boolean;
 	pubData: {
 		id?: string;
 		releases?: {}[];
@@ -23,7 +22,7 @@ const defaultProps = {};
 type Props = OwnProps & typeof defaultProps;
 
 const PubReleaseReviewDialog = (props: Props) => {
-	const { isOpen, onClose, pubData, updatePubData } = props;
+	const { onClose, pubData, updatePubData } = props;
 	const { communityData } = usePageContext();
 	const [noteData, setNoteData] = useState({});
 	const [isCreatingReview, setIsCreatingReview] = useState(false);
