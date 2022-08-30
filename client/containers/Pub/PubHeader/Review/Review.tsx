@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { NonIdealState, Button, Card, Elevation } from '@blueprintjs/core';
+import { Button, Card, Elevation } from '@blueprintjs/core';
 import Color from 'color';
 
 import { useSticky } from 'client/utils/useSticky';
@@ -13,13 +13,12 @@ type Props = {
 	communityData: Community;
 	onSubmit: any;
 	isLoading: boolean;
-	createError: boolean;
 	review: DocJson;
 	updateReview: (doc: DocJson) => void;
 };
 
 const Review = (props: Props) => {
-	const { communityData, onSubmit, isLoading, createError, review, updateReview } = props;
+	const { communityData, onSubmit, isLoading, review, updateReview } = props;
 
 	useSticky({
 		target: '.review-component',
@@ -54,19 +53,6 @@ const Review = (props: Props) => {
 					>
 						Submit Review
 					</Button>
-
-					{createError && (
-						<NonIdealState
-							title="There was an error submitting your review"
-							// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
-							visual="error"
-							action={
-								<a href="/login" className="bp3-button">
-									Login or Signup
-								</a>
-							}
-						/>
-					)}
 				</div>
 			</div>
 		</Card>

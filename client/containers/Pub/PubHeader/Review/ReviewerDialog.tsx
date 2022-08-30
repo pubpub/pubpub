@@ -15,6 +15,7 @@ type Props = {
 	setReviewerName: React.Dispatch<React.SetStateAction<string>>;
 	isUser: boolean;
 	createdReview: boolean;
+	createError: any;
 };
 
 const ReviewerDialog = (props: Props) => {
@@ -29,6 +30,7 @@ const ReviewerDialog = (props: Props) => {
 		setReviewerName,
 		isUser,
 		createdReview,
+		createError,
 	} = props;
 
 	const renderPreReviewButtons = () => {
@@ -87,6 +89,13 @@ const ReviewerDialog = (props: Props) => {
 				{createdReview && (
 					<Callout intent="success" title="Created Review!">
 						Your review was successfully submitted!
+					</Callout>
+				)}
+			</div>
+			<div className="callout">
+				{createError && (
+					<Callout intent="danger" title="There was an error submitting your review">
+						Your review was not successfully submitted!
 					</Callout>
 				)}
 			</div>

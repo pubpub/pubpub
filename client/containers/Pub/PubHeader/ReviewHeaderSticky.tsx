@@ -25,7 +25,7 @@ const ReviewHeaderSticky = () => {
 	const [visible, setVisible] = useState(false);
 	const [reviewTitle, setReviewTitle] = useState('Untitled Review');
 	const [reviewerName, setReviewerName] = useState('');
-	const [createError, setCreateError] = useState(false);
+	const [createError, setCreateError] = useState(undefined);
 	const [isLoading, setIsLoading] = useState(false);
 	const [createdReview, setCreatedReview] = useState(false);
 
@@ -58,9 +58,6 @@ const ReviewHeaderSticky = () => {
 				reviewerName,
 			})
 			.then((reviewRes) => {
-				setIsLoading(false);
-				setReview(getEmptyDoc());
-				setCreatedReview(true);
 				updatePubData((currentPubData) => {
 					return currentPubData.reviews
 						? {
@@ -70,6 +67,11 @@ const ReviewHeaderSticky = () => {
 								reviews: [reviewRes],
 						  };
 				});
+				setIsLoading(false);
+				setReview(getEmptyDoc());
+				setCreateError(undefined);
+
+				setCreatedReview(true);
 			})
 			.catch((err) => {
 				setIsLoading(false);
@@ -95,6 +97,7 @@ const ReviewHeaderSticky = () => {
 							setReviewerName={setReviewerName}
 							isUser={isUser}
 							createdReview={createdReview}
+							createError={createError}
 						/>
 						<Popover
 							aria-label="Notifications"
@@ -105,7 +108,6 @@ const ReviewHeaderSticky = () => {
 									communityData={communityData}
 									onSubmit={() => setVisible(true)}
 									isLoading={isLoading}
-									createError={createError}
 									review={review}
 									updateReview={updatingReviewDoc}
 								/>
