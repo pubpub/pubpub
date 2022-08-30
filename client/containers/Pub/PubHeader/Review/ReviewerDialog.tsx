@@ -18,6 +18,8 @@ type Props = {
 	activePermissions: ScopeData['activePermissions'];
 	fullName: string | undefined;
 	memberData: Member[];
+	reviewPath: string;
+	pubPath: string;
 };
 
 const ReviewerDialog = (props: Props) => {
@@ -35,6 +37,8 @@ const ReviewerDialog = (props: Props) => {
 		activePermissions,
 		fullName,
 		memberData,
+		pubPath,
+		reviewPath,
 	} = props;
 	const { canManage } = activePermissions;
 	const isUser = !!(activePermissions.canEdit || fullName);
@@ -96,9 +100,13 @@ const ReviewerDialog = (props: Props) => {
 					<Callout intent="success" title="Created Review!">
 						Your review was successfully submitted!
 						<div>
-							<AnchorButton minimal={true}>Return to Pub</AnchorButton>
+							<AnchorButton minimal={true} intent="success" href={pubPath}>
+								Return to Pub
+							</AnchorButton>
 							{canManage && isMember && (
-								<AnchorButton minimal={true}>Go to Review</AnchorButton>
+								<AnchorButton minimal={true} intent="success" href={reviewPath}>
+									Go to Review
+								</AnchorButton>
 							)}
 						</div>
 					</Callout>

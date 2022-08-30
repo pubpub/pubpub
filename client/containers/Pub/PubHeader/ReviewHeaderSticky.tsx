@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
+import { pubUrl } from 'utils/canonicalUrls';
 import { Icon } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 import { useLocalStorage } from 'client/utils/useLocalStorage';
@@ -29,6 +30,7 @@ const ReviewHeaderSticky = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [createdReview, setCreatedReview] = useState(false);
 	const [showReview, setShowReview] = useState(false);
+	const [reviewNumber, setReviewNumber] = useState(0);
 
 	// creates a docjoson object in local store, provides state handlers as well
 	const { value: review, setValue: setReview } = useLocalStorage<DocJson>({
@@ -67,9 +69,8 @@ const ReviewHeaderSticky = () => {
 						  };
 				});
 				setIsLoading(false);
+				setReviewNumber(reviewRes.number);
 				setReview(getEmptyDoc());
-				setCreateError(undefined);
-
 				setCreatedReview(true);
 			})
 			.catch((err) => {
@@ -87,7 +88,8 @@ const ReviewHeaderSticky = () => {
 			updateReview={updatingReviewDoc}
 		/>
 	);
-
+	const reviewPath = `/dash/pub/${pubData.slug}/reviews/${reviewNumber}`;
+	const pubPath = pubUrl(communityData, pubData);
 	return (
 		<div className="review-header-sticky-component container pub">
 			<div className="sticky-section">
@@ -98,7 +100,10 @@ const ReviewHeaderSticky = () => {
 						<div className="sticky-review-text">review</div>
 						<ReviewerDialog
 							isOpen={visible}
-							onClose={() => setVisible(false)}
+							onClose={() => {
+								setCreatedReview(false);
+								setVisible(false);
+							}}
 							pubData={pubData}
 							onCreateReviewDoc={handleSubmit}
 							setReviewTitle={setReviewTitle}
@@ -110,6 +115,8 @@ const ReviewHeaderSticky = () => {
 							activePermissions={activePermissions}
 							fullName={fullName}
 							memberData={memberData}
+							pubPath={pubPath}
+							reviewPath={reviewPath}
 						/>
 
 						<Button
