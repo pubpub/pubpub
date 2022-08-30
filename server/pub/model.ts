@@ -54,6 +54,11 @@ export default (sequelize, dataTypes) => {
 				defaultValue: true,
 				allowNull: false,
 			},
+			canReviewRelease: {
+				type: dataTypes.BOOLEAN,
+				defaultValue: false,
+				allowNull: false,
+			},
 
 			/* Set by Associations */
 			draftId: { type: dataTypes.UUID, allowNull: false },

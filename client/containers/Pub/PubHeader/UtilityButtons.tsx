@@ -24,8 +24,10 @@ const UtilityButtons = (props: Props) => {
 	const { onShowHeaderDetails, pubData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { historyData } = usePubContext();
-	const { isRelease, membersData, reviewHash } = pubData;
+	const { isRelease, membersData, reviewHash, canReviewRelease } = pubData;
 	const { canManage } = scopeData.activePermissions;
+	console.log(canReviewRelease);
+
 	return (
 		<div className="utility-buttons-component">
 			<SmallHeaderButton
@@ -117,18 +119,16 @@ const UtilityButtons = (props: Props) => {
 					)}
 				</DialogLauncher>
 			)}
-			{!membersData && (
-				<SmallHeaderButton
-					label="Review"
-					labelPosition="left"
-					icon="draw"
-					href={pubUrl(communityData, pubData, {
-						accessHash: reviewHash,
-						historyKey: historyData.currentKey,
-						isReview: true,
-					})}
-				/>
-			)}
+			<SmallHeaderButton
+				label="Review"
+				labelPosition="left"
+				icon="draw"
+				href={pubUrl(communityData, pubData, {
+					accessHash: reviewHash,
+					historyKey: historyData.currentKey,
+					isReview: true,
+				})}
+			/>
 		</div>
 	);
 };

@@ -144,6 +144,7 @@ export type PubPageData = DefinitelyHas<Omit<Pub, 'discussions'>, 'collectionPub
 		submission?: DefinitelyHas<Submission, 'submissionWorkflow'>;
 		iSubmission: boolean;
 		subscription: null | UserSubscription;
+		canReviewRelease: boolean;
 	};
 
 export type PubHistoryState = {
