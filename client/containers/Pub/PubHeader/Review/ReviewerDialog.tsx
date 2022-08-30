@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Callout, Classes, Dialog, InputGroup } from '@blueprintjs/core';
-import { PubPageData } from 'types';
+import { AnchorButton, Callout, Classes, Dialog, InputGroup } from '@blueprintjs/core';
+import { PubPageData, ScopeData, Member } from 'types';
 
 require('./reviewerDialog.scss');
 
@@ -13,9 +13,11 @@ type Props = {
 	reviewTitle: string;
 	reviewerName: string;
 	setReviewerName: React.Dispatch<React.SetStateAction<string>>;
-	isUser: boolean;
 	createdReview: boolean;
 	createError: any;
+	activePermissions: ScopeData['activePermissions'];
+	fullName: string | undefined;
+	memberData: Member[];
 };
 
 const ReviewerDialog = (props: Props) => {
@@ -28,18 +30,22 @@ const ReviewerDialog = (props: Props) => {
 		reviewTitle,
 		reviewerName,
 		setReviewerName,
-		isUser,
 		createdReview,
 		createError,
+		activePermissions,
+		fullName,
+		memberData,
 	} = props;
-
+	const { canManage } = activePermissions;
+	const isUser = !!(activePermissions.canEdit || fullName);
+	const isMember = memberData.length > 0;
 	const renderPreReviewButtons = () => {
 		return (
 			<React.Fragment>
-				<Button onClick={onClose}>Cancel</Button>
-				<Button intent="primary" onClick={onCreateReviewDoc}>
+				<AnchorButton onClick={onClose}>Cancel</AnchorButton>
+				<AnchorButton intent="primary" onClick={onCreateReviewDoc}>
 					Create Review
-				</Button>
+				</AnchorButton>
 			</React.Fragment>
 		);
 	};
@@ -89,6 +95,12 @@ const ReviewerDialog = (props: Props) => {
 				{createdReview && (
 					<Callout intent="success" title="Created Review!">
 						Your review was successfully submitted!
+						<div>
+							<AnchorButton minimal={true}>Return to Pub</AnchorButton>
+							{canManage && isMember && (
+								<AnchorButton minimal={true}>Go to Review</AnchorButton>
+							)}
+						</div>
 					</Callout>
 				)}
 			</div>

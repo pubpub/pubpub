@@ -18,7 +18,7 @@ const ReviewHeaderSticky = () => {
 	const { pubData, updatePubData } = usePubContext();
 	const {
 		communityData,
-		scopeData: { activePermissions },
+		scopeData: { activePermissions, memberData },
 		loginData: { fullName },
 	} = usePageContext();
 
@@ -28,8 +28,6 @@ const ReviewHeaderSticky = () => {
 	const [createError, setCreateError] = useState(undefined);
 	const [isLoading, setIsLoading] = useState(false);
 	const [createdReview, setCreatedReview] = useState(false);
-
-	const isUser = !!(activePermissions.canEdit || fullName);
 
 	// creates a docjoson object in local store, provides state handlers as well
 	const { value: review, setValue: setReview } = useLocalStorage<DocJson>({
@@ -95,9 +93,11 @@ const ReviewHeaderSticky = () => {
 							reviewTitle={reviewTitle}
 							reviewerName={reviewerName}
 							setReviewerName={setReviewerName}
-							isUser={isUser}
 							createdReview={createdReview}
 							createError={createError}
+							activePermissions={activePermissions}
+							fullName={fullName}
+							memberData={memberData}
 						/>
 						<Popover
 							aria-label="Notifications"
