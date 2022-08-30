@@ -54,6 +54,7 @@ const Review = (props: Props) => {
 					>
 						Submit Review
 					</Button>
+
 					{createError && (
 						<NonIdealState
 							title="There was an error submitting your review"

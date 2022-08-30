@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
+import { Button, Callout, Classes, Dialog, InputGroup } from '@blueprintjs/core';
 import { PubPageData } from 'types';
 
 require('./reviewerDialog.scss');
@@ -14,6 +14,7 @@ type Props = {
 	reviewerName: string;
 	setReviewerName: React.Dispatch<React.SetStateAction<string>>;
 	isUser: boolean;
+	createdReview: boolean;
 };
 
 const ReviewerDialog = (props: Props) => {
@@ -27,6 +28,7 @@ const ReviewerDialog = (props: Props) => {
 		reviewerName,
 		setReviewerName,
 		isUser,
+		createdReview,
 	} = props;
 
 	const renderPreReviewButtons = () => {
@@ -53,35 +55,40 @@ const ReviewerDialog = (props: Props) => {
 			title="Create Review"
 			onClose={onClose}
 			isOpen={isOpen}
-			className="pub-release-review-dialog-component"
+			className="reviewer-dialog"
 		>
 			<div className={Classes.DIALOG_BODY}>
-				<div className="reviewer-dialog">
+				<div className="title-input">
+					<p>Add a title to your review?</p>
+					<InputGroup
+						defaultValue={reviewTitle}
+						onKeyDown={handleKeyDown}
+						onBlur={handleTitleOnBlur}
+					/>
+				</div>
+				{!isUser && (
 					<div className="title-input">
-						<p>Add a title to your review?</p>
+						<p>Add your name?</p>
 						<InputGroup
-							defaultValue={reviewTitle}
+							defaultValue={reviewerName}
 							onKeyDown={handleKeyDown}
-							onBlur={handleTitleOnBlur}
+							onBlur={handleReviewerNameOnBlur}
 						/>
 					</div>
-					{!isUser && (
-						<div className="title-input">
-							<p>Add your name?</p>
-							<InputGroup
-								defaultValue={reviewerName}
-								onKeyDown={handleKeyDown}
-								onBlur={handleReviewerNameOnBlur}
-							/>
-						</div>
-					)}
-					<p>
-						You are about to submit a review for <b>{pubData.title}</b>.
-					</p>
-				</div>
+				)}
+				<p>
+					You are about to submit a review for <b>{pubData.title}</b>.
+				</p>
 			</div>
 			<div className={Classes.DIALOG_FOOTER}>
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>{renderPreReviewButtons()}</div>
+			</div>
+			<div className="callout">
+				{createdReview && (
+					<Callout intent="success" title="Created Review!">
+						Your review was successfully submitted!
+					</Callout>
+				)}
 			</div>
 		</Dialog>
 	);
