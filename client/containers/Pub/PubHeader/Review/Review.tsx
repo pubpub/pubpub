@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { Button, Card, Elevation } from '@blueprintjs/core';
 import Color from 'color';
 
-import { useSticky } from 'client/utils/useSticky';
 import { DocJson, Community } from 'types';
 
 import ReviewEditor from './ReviewEditor';
@@ -20,12 +19,6 @@ type Props = {
 const Review = (props: Props) => {
 	const { communityData, onSubmit, isLoading, review, updateReview } = props;
 
-	useSticky({
-		target: '.review-component',
-		isActive: true,
-		offset: 37,
-	});
-
 	const [hover, setHover] = useState(false);
 	const lighterAccentColor = useMemo(
 		() => Color(communityData.accentColorDark).alpha(0.4),
@@ -34,8 +27,8 @@ const Review = (props: Props) => {
 	const bgColor = !hover ? lighterAccentColor : communityData.accentColorDark;
 
 	return (
-		<Card interactive={true} elevation={Elevation.TWO}>
-			<div className="review-component">
+		<div className="review-component">
+			<Card interactive={true} elevation={Elevation.TWO}>
 				<div className="review-border">
 					<ReviewEditor setReviewDoc={updateReview} reviewDoc={review} />
 				</div>
@@ -54,8 +47,8 @@ const Review = (props: Props) => {
 						Submit Review
 					</Button>
 				</div>
-			</div>
-		</Card>
+			</Card>
+		</div>
 	);
 };
 

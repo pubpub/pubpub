@@ -2,14 +2,21 @@
 @import '../pub.scss';
 
 .review-header-sticky-component {
-	position: absolute;
 	bottom: 0px;
 	line-height: 37px;
-	width: 100%;
-	// max-width: $pub-max-width;
 	transition: 0.2s linear opacity;
-	display: flex;
+
 	color: inherit;
+
+	.sticky-section {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		padding: 0 25px;
+		.side-content {
+			position: relative;
+		}
+	}
 
 	.sticky-title {
 		overflow: hidden;
@@ -46,33 +53,5 @@
 		line-height: 17px;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-	}
-}
-
-/* This selector is a IE 10+ kludge */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-	.sticky-grid {
-		width: 100%;
-		.main-content {
-			max-width: $pub-max-width;
-			margin: 0 auto;
-		}
-		.side-content {
-			max-width: $pub-max-width;
-			margin: 0 auto;
-		}
-	}
-}
-
-@supports (display: grid) {
-	.sticky-grid {
-		@include has-grid('. title . review .');
-		width: 100%;
-		.main-content {
-			grid-area: title;
-		}
-		.side-content {
-			grid-area: review;
-		}
 	}
 }
