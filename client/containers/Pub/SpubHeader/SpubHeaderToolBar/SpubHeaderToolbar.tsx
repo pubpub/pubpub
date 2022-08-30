@@ -64,7 +64,8 @@ const SpubHeaderToolbar = (props: Props) => {
 
 	const isSaving = pendingCount > 0;
 	const savingText = isSaving ? <em>Saving</em> : null;
-	const showSubmitButton = submission.status === 'incomplete' && selectedTab !== 'instructions';
+	const showSubmitButton =
+		submission.status && submission.status === 'incomplete' && selectedTab !== 'instructions';
 
 	const renderSubmitButton = () => {
 		const sharedProps = {
