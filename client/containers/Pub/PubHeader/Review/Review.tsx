@@ -26,11 +26,16 @@ const Review = (props: Props) => {
 		() => Color(communityData.accentColorDark).alpha(0.4),
 		[communityData.accentColorDark],
 	);
-	const bgColor = !hover ? lighterAccentColor : communityData.accentColorDark;
+	const bgColor = isEmptyDoc(review as DocJson)
+		? 'lightgray'
+		: !hover
+		? lighterAccentColor
+		: communityData.accentColorDark;
+
 	return (
 		<div className="review-component">
 			<Card interactive={true} elevation={Elevation.TWO}>
-				<div className="review-border">
+				<div className="review-border" style={{ borderColor: bgColor }}>
 					<ReviewEditor setReviewDoc={updateReview} reviewDoc={review} />
 				</div>
 				<div className="review-button">

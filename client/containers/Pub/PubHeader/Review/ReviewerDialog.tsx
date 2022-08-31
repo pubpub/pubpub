@@ -43,16 +43,6 @@ const ReviewerDialog = (props: Props) => {
 	const { canManage } = activePermissions;
 	const isUser = !!(activePermissions.canEdit || fullName);
 	const isMember = memberData.length > 0;
-	const renderPreReviewButtons = () => {
-		return (
-			<React.Fragment>
-				<AnchorButton onClick={onClose}>Cancel</AnchorButton>
-				<AnchorButton intent="primary" onClick={onCreateReviewDoc}>
-					Create Review
-				</AnchorButton>
-			</React.Fragment>
-		);
-	};
 
 	const handleTitleOnBlur = (evt) => setReviewTitle(evt.target.value.trim());
 	const handleReviewerNameOnBlur = (evt) => setReviewerName(evt.target.value.trim());
@@ -89,28 +79,39 @@ const ReviewerDialog = (props: Props) => {
 					</p>
 				</div>
 				<div className={Classes.DIALOG_FOOTER}>
-					<div className={Classes.DIALOG_FOOTER_ACTIONS}>{renderPreReviewButtons()}</div>
+					<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+						<AnchorButton onClick={onClose}>Cancel</AnchorButton>
+						<AnchorButton intent="primary" onClick={onCreateReviewDoc}>
+							Create Review
+						</AnchorButton>
+					</div>
 				</div>
 			</React.Fragment>
 		);
 	};
 
 	const renderSuccess = () => {
-		<div className="callout">
-			<Callout intent="success" title="Created Review!">
-				Your review was successfully submitted!
-				<div>
-					<AnchorButton minimal={true} href={pubPath}>
-						Return to Pub
-					</AnchorButton>
-					{canManage && isMember && (
-						<AnchorButton minimal={true} intent="primary" href={reviewPath}>
-							Go to Review
-						</AnchorButton>
-					)}
+		return (
+			<React.Fragment>
+				<div className={Classes.DIALOG_BODY}>
+					<div className="callout">
+						<Callout intent="success" title="Created Review!">
+							Your review was successfully submitted!
+						</Callout>
+					</div>
 				</div>
-			</Callout>
-		</div>;
+				<div className={Classes.DIALOG_FOOTER}>
+					<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+						<AnchorButton href={pubPath}>Return to Pub</AnchorButton>
+						{canManage && isMember && (
+							<AnchorButton intent="primary" href={reviewPath}>
+								Go to Review
+							</AnchorButton>
+						)}
+					</div>
+				</div>
+			</React.Fragment>
+		);
 	};
 
 	return (
