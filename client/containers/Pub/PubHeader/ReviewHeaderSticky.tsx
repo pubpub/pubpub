@@ -30,7 +30,7 @@ const ReviewHeaderSticky = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
 	const [createdReview, setCreatedReview] = useState(false);
-	const [showReview, setShowReview] = useState(false);
+	const [showReview, setShowReview] = useState(true);
 	const [reviewNumber, setReviewNumber] = useState(0);
 	const [saved, setSaved] = useState(false);
 
