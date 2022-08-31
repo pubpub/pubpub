@@ -1,23 +1,10 @@
 .review-component {
-	max-width: fit-content;
 	position: absolute;
 	right: 0;
 	top: 100%;
 
 	.review-button {
 		padding-top: 18px;
-		.bp3-button {
-			color: white;
-			.bp3-icon {
-				color: white !important;
-			}
-		}
-		.bp3-button:hover {
-			color: white;
-			.bp3-icon {
-				color: white !important;
-			}
-		}
 		.bp3-button-text {
 			color: white;
 		}
