@@ -3,6 +3,7 @@ import { Button, Card, Elevation } from '@blueprintjs/core';
 import Color from 'color';
 
 import { DocJson, Community } from 'types';
+import { isEmptyDoc } from 'client/components/Editor';
 
 import ReviewEditor from './ReviewEditor';
 
@@ -20,12 +21,12 @@ const Review = (props: Props) => {
 	const { communityData, onSubmit, isLoading, review, updateReview } = props;
 
 	const [hover, setHover] = useState(false);
+
 	const lighterAccentColor = useMemo(
 		() => Color(communityData.accentColorDark).alpha(0.4),
 		[communityData.accentColorDark],
 	);
 	const bgColor = !hover ? lighterAccentColor : communityData.accentColorDark;
-
 	return (
 		<div className="review-component">
 			<Card interactive={true} elevation={Elevation.TWO}>
@@ -41,6 +42,7 @@ const Review = (props: Props) => {
 						className="review-submission-button"
 						style={{ background: bgColor }}
 						intent="primary"
+						disabled={isEmptyDoc(review as DocJson)}
 						onMouseEnter={() => setHover(true)}
 						onMouseLeave={() => setHover(false)}
 					>
