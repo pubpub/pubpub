@@ -28,6 +28,7 @@ const ReviewHeaderSticky = () => {
 	const [reviewerName, setReviewerName] = useState('');
 	const [createError, setCreateError] = useState(undefined);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
 	const [createdReview, setCreatedReview] = useState(false);
 	const [showReview, setShowReview] = useState(false);
 	const [reviewNumber, setReviewNumber] = useState(0);
@@ -44,10 +45,10 @@ const ReviewHeaderSticky = () => {
 
 	const updatingReviewDoc = (doc: DocJson) => {
 		setReview(doc);
-		setIsLoading(true);
+		setIsSaving(true);
 		setTimeout(() => {
 			setSaved(true);
-			setIsLoading(false);
+			setIsSaving(false);
 		}, 1000);
 	};
 
@@ -104,12 +105,12 @@ const ReviewHeaderSticky = () => {
 					{showReview && renderReview()}
 					<div className="sticky-buttons">
 						<div className="sticky-review-text">review</div>
-						{isLoading && (
+						{isSaving && (
 							<div className="saving-text">
 								<em>Saving...</em>
 							</div>
 						)}
-						{saved && !isLoading && <em className="saving-text">Saved</em>}
+						{saved && !isSaving && <em className="saving-text">Saved</em>}
 						<ReviewerDialog
 							isOpen={visible}
 							onClose={() => {
