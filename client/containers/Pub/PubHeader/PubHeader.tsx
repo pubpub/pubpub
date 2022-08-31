@@ -105,11 +105,9 @@ const PubHeader = (props: Props) => {
 			{!pubData.isReview && sticky ? (
 				<PubHeaderSticky />
 			) : (
-				// <div className="review-sticky-component container pub">
 				<ClientOnly>
 					<ReviewHeaderSticky />
 				</ClientOnly>
-				// </div>
 			)}
 		</PubHeaderBackground>
 	);

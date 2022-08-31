@@ -31,10 +31,11 @@ const ReviewHeaderSticky = () => {
 	const [createdReview, setCreatedReview] = useState(false);
 	const [showReview, setShowReview] = useState(false);
 	const [reviewNumber, setReviewNumber] = useState(0);
+	const [saved, setSaved] = useState(false);
 
 	// creates a docjoson object in local store, provides state handlers as well
 	const { value: review, setValue: setReview } = useLocalStorage<DocJson>({
-		initial: () => getEmptyDoc(),
+		initial: getEmptyDoc,
 		communityId: communityData.id,
 		featureName: 'new-review-editor',
 		path: [`pub-${pubData.id}`],
@@ -43,6 +44,11 @@ const ReviewHeaderSticky = () => {
 
 	const updatingReviewDoc = (doc: DocJson) => {
 		setReview(doc);
+		setIsLoading(true);
+		setTimeout(() => {
+			setSaved(true);
+			setIsLoading(false);
+		}, 1000);
 	};
 
 	const url = new URL(window.location.href);
@@ -98,6 +104,12 @@ const ReviewHeaderSticky = () => {
 					{showReview && renderReview()}
 					<div className="sticky-buttons">
 						<div className="sticky-review-text">review</div>
+						{isLoading && (
+							<div className="saving-text">
+								<em>Saving...</em>
+							</div>
+						)}
+						{saved && !isLoading && <em className="saving-text">Saved</em>}
 						<ReviewerDialog
 							isOpen={visible}
 							onClose={() => {
@@ -120,7 +132,7 @@ const ReviewHeaderSticky = () => {
 						/>
 
 						<Button
-							minimal={true}
+							minimal
 							icon={<Icon icon="expand-all" />}
 							onClick={() => setShowReview(!showReview)}
 						/>
