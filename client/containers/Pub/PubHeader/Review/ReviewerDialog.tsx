@@ -61,6 +61,58 @@ const ReviewerDialog = (props: Props) => {
 			evt.currentTarget.blur();
 		}
 	};
+
+	const renderDialog = () => {
+		return (
+			<React.Fragment>
+				<div className={Classes.DIALOG_BODY}>
+					<div className="title-input">
+						<p>Add a title to your review?</p>
+						<InputGroup
+							defaultValue={reviewTitle}
+							onKeyDown={handleKeyDown}
+							onBlur={handleTitleOnBlur}
+						/>
+					</div>
+					{!isUser && (
+						<div className="title-input">
+							<p>Add your name?</p>
+							<InputGroup
+								defaultValue={reviewerName}
+								onKeyDown={handleKeyDown}
+								onBlur={handleReviewerNameOnBlur}
+							/>
+						</div>
+					)}
+					<p>
+						You are about to submit a review for <b>{pubData.title}</b>.
+					</p>
+				</div>
+				<div className={Classes.DIALOG_FOOTER}>
+					<div className={Classes.DIALOG_FOOTER_ACTIONS}>{renderPreReviewButtons()}</div>
+				</div>
+			</React.Fragment>
+		);
+	};
+
+	const renderSuccess = () => {
+		<div className="callout">
+			<Callout intent="success" title="Created Review!">
+				Your review was successfully submitted!
+				<div>
+					<AnchorButton minimal={true} href={pubPath}>
+						Return to Pub
+					</AnchorButton>
+					{canManage && isMember && (
+						<AnchorButton minimal={true} intent="primary" href={reviewPath}>
+							Go to Review
+						</AnchorButton>
+					)}
+				</div>
+			</Callout>
+		</div>;
+	};
+
 	return (
 		<Dialog
 			lazy={true}
@@ -69,49 +121,8 @@ const ReviewerDialog = (props: Props) => {
 			isOpen={isOpen}
 			className="reviewer-dialog"
 		>
-			<div className={Classes.DIALOG_BODY}>
-				<div className="title-input">
-					<p>Add a title to your review?</p>
-					<InputGroup
-						defaultValue={reviewTitle}
-						onKeyDown={handleKeyDown}
-						onBlur={handleTitleOnBlur}
-					/>
-				</div>
-				{!isUser && (
-					<div className="title-input">
-						<p>Add your name?</p>
-						<InputGroup
-							defaultValue={reviewerName}
-							onKeyDown={handleKeyDown}
-							onBlur={handleReviewerNameOnBlur}
-						/>
-					</div>
-				)}
-				<p>
-					You are about to submit a review for <b>{pubData.title}</b>.
-				</p>
-			</div>
-			<div className={Classes.DIALOG_FOOTER}>
-				<div className={Classes.DIALOG_FOOTER_ACTIONS}>{renderPreReviewButtons()}</div>
-			</div>
-			<div className="callout">
-				{createdReview && (
-					<Callout intent="success" title="Created Review!">
-						Your review was successfully submitted!
-						<div>
-							<AnchorButton minimal={true} intent="success" href={pubPath}>
-								Return to Pub
-							</AnchorButton>
-							{canManage && isMember && (
-								<AnchorButton minimal={true} intent="success" href={reviewPath}>
-									Go to Review
-								</AnchorButton>
-							)}
-						</div>
-					</Callout>
-				)}
-			</div>
+			{createdReview ? renderSuccess() : renderDialog()}
+
 			<div className="callout">
 				{createError && (
 					<Callout intent="danger" title="There was an error submitting your review">
