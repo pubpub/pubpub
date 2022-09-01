@@ -31,7 +31,7 @@ const User = (props: Props) => {
 	const authoredPubs = communityPubs.filter((pub) => {
 		const collaborators = pub.attributions || [];
 		const isAuthor = collaborators.reduce((prev, curr) => {
-			if (curr.user.id === loginData.id && curr.isAuthor) {
+			if (curr.isAuthor) {
 				return true;
 			}
 			return prev;
