@@ -73,7 +73,7 @@ export const getInitialData = async (req, isDashboard = false): Promise<types.In
 				favicon: `https://${locationData.hostname}/favicon.png`,
 				avatar: `https://${locationData.hostname}/static/logo.png`,
 				headerLogo:
-					locationData.path === '/' ? '/static/logo.png' : '/static/logoBlack.svg',
+					locationData.path === '/' ? '/static/pubpub-logo-option-1.png' : '/static/logoBlack.svg',
 				hideHero: true,
 				accentColorLight: '#ffffff',
 				accentColorDark: '#112233',
