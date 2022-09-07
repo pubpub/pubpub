@@ -18,6 +18,7 @@ import {
 	mapFacetDefinitions,
 	mapFacetDefinitionsToCascadedInstances,
 	ScopeKind,
+	SingleScopeId,
 } from 'facets';
 import {
 	CascadedFacetsByKind,
@@ -161,9 +162,7 @@ export const fetchFacetsForScopeIds = async <FacetNames extends FacetName>(
 	return fetchFacetsForResolvedScopeIds(resolvedScopeIds, facetNames ?? ALL_FACET_NAMES);
 };
 
-const resolveFacetSourceScope = (
-	scope: types.SingleScopeId | FacetSourceScope,
-): FacetSourceScope => {
+const resolveFacetSourceScope = (scope: SingleScopeId | FacetSourceScope): FacetSourceScope => {
 	if ('kind' in scope) {
 		return scope;
 	}
@@ -171,7 +170,7 @@ const resolveFacetSourceScope = (
 };
 
 export const fetchFacetsForScope = async <FacetNames extends FacetName>(
-	scope: types.SingleScopeId | FacetSourceScope,
+	scope: SingleScopeId | FacetSourceScope,
 	facetNames?: FacetNames[],
 ): Promise<types.DefinitelyHas<CascadedFacetsByKind, FacetNames>> => {
 	const { kind, id } = resolveFacetSourceScope(scope);
