@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
-import Color from 'color';
 
 import {
 	Header,
@@ -13,7 +12,6 @@ import {
 	MobileAware,
 	FacetsStateProvider,
 } from 'components';
-import { Community } from 'types';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
 
