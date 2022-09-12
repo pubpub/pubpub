@@ -101,18 +101,19 @@ const ReviewHeaderSticky = () => {
 	);
 	const reviewPath = `/dash/pub/${pubData.slug}/reviews/${reviewNumber}`;
 	const isMember = memberData.length > 0;
-
-	const pubPath =
-		canManage && isMember
-			? pubUrl(communityData, pubData)
-			: pubUrl(communityData, pubData, { pubData: { viewHash } });
+	const userFilter = canManage && isMember;
+	const pubPath = userFilter
+		? pubUrl(communityData, pubData)
+		: pubUrl(communityData, pubData, { accessHash: viewHash });
 	const isUser = !!(canEdit || fullName);
 	const reviewerFooterButtons = (
 		<React.Fragment>
 			<AnchorButton href={pubPath}>Return to Pub</AnchorButton>
-			<AnchorButton intent="primary" href={reviewPath}>
-				Go to Review
-			</AnchorButton>
+			{userFilter && (
+				<AnchorButton intent="primary" href={reviewPath}>
+					Go to Review
+				</AnchorButton>
+			)}
 		</React.Fragment>
 	);
 	return (

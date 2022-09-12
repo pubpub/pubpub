@@ -16,7 +16,7 @@ type Props = {
 	createdReview: boolean;
 	createError: any;
 	isUser: boolean;
-	reviewerFooterButtons: any;
+	reviewerFooterButtons: React.ReactNode;
 };
 
 const ReviewerDialog = (props: Props) => {
@@ -92,7 +92,7 @@ const ReviewerDialog = (props: Props) => {
 					</div>
 				</div>
 				<div className={Classes.DIALOG_FOOTER}>
-					<div className={Classes.DIALOG_FOOTER_ACTIONS}>{reviewerFooterButtons()}</div>
+					<div className={Classes.DIALOG_FOOTER_ACTIONS}>{reviewerFooterButtons}</div>
 				</div>
 			</React.Fragment>
 		);
