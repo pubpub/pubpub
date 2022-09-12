@@ -31,7 +31,11 @@ import {
 	ControlsTable,
 } from './controlComponents';
 import MediaButton from './FormattingBarMediaButton';
-import { positionNearSelection, positionNearLink } from './controls/positioning';
+import {
+	positionNearSelection,
+	positionNearLink,
+	positionNearParent,
+} from './controls/positioning';
 import {
 	FormattingBarButtonData,
 	FormattingBarButtonDataControls,
@@ -186,8 +190,7 @@ export const code: FormattingBarButtonData = {
 const isInCodeBlock = (editorChangeObject: EditorChangeObject): boolean => {
 	if (!editorChangeObject.view) return false;
 	const state = editorChangeObject.view.state;
-	const { $head, $anchor } = state.selection;
-	for (let d = $head.depth; d > 0; d--) if ($head.node(d).type.name === 'code_block') return true;
+	const { $anchor } = state.selection;
 	for (let d = $anchor.depth; d > 0; d--)
 		if ($anchor.node(d).type.name === 'code_block') return true;
 	return false;
@@ -204,7 +207,7 @@ export const codeBlock: FormattingBarButtonData = {
 		trigger: triggerOnClick,
 		show: isInCodeBlock,
 		indicate: isInCodeBlock,
-		floatingPosition: positionNearSelection,
+		floatingPosition: positionNearParent,
 		showCloseButton: false,
 	},
 };
