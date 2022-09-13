@@ -5,7 +5,7 @@ import { Button } from 'reakit';
 type Props = {
 	color: string;
 	label: React.ReactNode;
-	onClick?: (...args: any[]) => any;
+	onClick?: () => unknown;
 	selected?: boolean;
 };
 

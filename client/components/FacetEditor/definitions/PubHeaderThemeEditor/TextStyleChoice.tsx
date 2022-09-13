@@ -4,14 +4,15 @@ import { Button } from 'reakit';
 
 import { PubHeaderBackground } from 'components';
 import { CascadedFacetType, PubHeaderTheme } from 'facets';
+import { Community } from 'types';
 
 type Props = {
 	className?: string;
-	communityData: any;
+	communityData: Community;
 	label: React.ReactNode;
-	onClick: (...args: any[]) => any;
+	onClick: () => unknown;
 	selected?: boolean;
-	style?: any;
+	style?: React.CSSProperties;
 	pubHeaderTheme: CascadedFacetType<typeof PubHeaderTheme>;
 };
 
