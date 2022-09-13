@@ -1,9 +1,5 @@
-import { TypeOfFacetProp, License as LicenseFacet } from 'facets';
-
-export type LicenseKind = TypeOfFacetProp<typeof LicenseFacet['props']['kind']>;
-
-export type LicenseDetails<Kind extends LicenseKind = LicenseKind> = {
-	kind: Kind;
+export type License = {
+	slug: string;
 	full: string;
 	short: string;
 	version: string | null;
@@ -11,10 +7,6 @@ export type LicenseDetails<Kind extends LicenseKind = LicenseKind> = {
 	requiresPremium?: true;
 };
 
-export type RenderedLicense = {
-	kind: LicenseKind;
-	full: string;
-	short: string;
-	summary: string | null;
-	link: string | null;
+export type RenderedLicense = License & {
+	summary?: string;
 };
