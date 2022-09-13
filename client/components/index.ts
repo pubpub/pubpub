@@ -60,7 +60,7 @@ export {
 	MenuSelectItems,
 } from './Menu';
 export { default as MinimalEditor } from './MinimalEditor/MinimalEditor';
-export { default as MobileAware, MobileAwareRenderProps, ForceMobileAware } from './MobileAware';
+export { default as MobileAware, MobileAwareRenderProps } from './MobileAware';
 export { default as NavBar } from './NavBar/NavBar';
 export { default as NavBuilder } from './NavBuilder/NavBuilder';
 export { default as OrderPicker } from './OrderPicker/OrderPicker';
@@ -92,7 +92,6 @@ export { default as ReferencesDropdown } from './ReferencesDropdown/ReferencesDr
 export { default as QueryListDropdown } from './QueryListDropdown/QueryListDropdown';
 export { default as ScopeDropdown } from './ScopeDropdown/ScopeDropdown';
 export { default as SettingsSection } from './SettingsSection/SettingsSection';
-export { default as SettingsSectionOld } from './SettingsSectionOld/SettingsSection';
 export { default as SharingCard } from './SharingCard/SharingCard';
 export { default as SimpleEditor } from './SimpleEditor/SimpleEditor';
 export { default as SliderInput } from './SliderInput/SliderInput';
