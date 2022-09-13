@@ -1,8 +1,10 @@
-import React, { useRef, useCallback } from 'react';
-import { DOMSerializer, Node } from 'prosemirror-model';
-import { editorSchema, getDocForHtmlString, isEmptyDocNode } from 'components/Editor';
+import { editorSchema, getDocForHtmlString, isEmptyDocNode, renderStatic } from 'components/Editor';
+import { Node } from 'prosemirror-model';
+import React, { useCallback, useRef } from 'react';
+import { renderToString } from 'react-dom/server';
 
 import { MinimalEditor } from 'components';
+import { usePubContext } from 'containers/Pub/pubHooks';
 
 type Props = {
 	initialHtmlString: string;
@@ -11,6 +13,10 @@ type Props = {
 };
 
 const SimpleEditor = (props: Props) => {
+	const {
+		noteManager,
+		pubData: { nodeLabels },
+	} = usePubContext();
 	const { onChange, placeholder, initialHtmlString } = props;
 	const initialDoc = useRef<{ [key: string]: any }>();
 
@@ -25,11 +31,15 @@ const SimpleEditor = (props: Props) => {
 				onChange('');
 				return;
 			}
-			const serializer = DOMSerializer.fromSchema(schema);
-			const domFragment = serializer.serializeFragment(doc.content);
-			const wrapper = document.createElement('div');
-			wrapper.appendChild(domFragment);
-			onChange(wrapper.innerHTML);
+			const html = renderToString(
+				React.createElement(
+					React.Fragment,
+					{},
+					...renderStatic({ schema, doc: doc.toJSON(), nodeLabels, noteManager }),
+				),
+			);
+
+			onChange(html);
 		},
 		[onChange],
 	);
