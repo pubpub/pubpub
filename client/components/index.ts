@@ -26,6 +26,7 @@ export { default as DownloadChooser } from './DownloadChooser/DownloadChooser';
 export { DragDropListing, DragDropOrdering, DragHandle } from './DragDropListing';
 export { default as DropdownButton } from './DropdownButton/DropdownButton';
 export { default as Editor } from './Editor';
+export { default as FacetEditor } from './FacetEditor';
 export {
 	default as FacetsStateProvider,
 	FacetsState,
@@ -46,7 +47,6 @@ export { default as Layout } from './Layout/Layout';
 export { default as LayoutEditor } from './LayoutEditor/LayoutEditor';
 export { default as LegalBanner } from './LegalBanner/LegalBanner';
 export { default as LengthIndicator } from './LengthIndicator/LengthIndicator';
-export { default as LicenseSelect } from './LicenseSelect/LicenseSelect';
 export { default as LinkedPageSelect } from './LinkedPageSelect/LinkedPageSelect';
 export { default as InheritedMembersBlock } from './Members/InheritedMembersBlock';
 export { default as MemberRow } from './Members/MemberRow';
@@ -60,8 +60,9 @@ export {
 	MenuSelectItems,
 } from './Menu';
 export { default as MinimalEditor } from './MinimalEditor/MinimalEditor';
-export { default as MobileAware, MobileAwareRenderProps } from './MobileAware';
+export { default as MobileAware, MobileAwareRenderProps, ForceMobileAware } from './MobileAware';
 export { default as NavBar } from './NavBar/NavBar';
+export { default as NavBuilder } from './NavBuilder/NavBuilder';
 export { default as OrderPicker } from './OrderPicker/OrderPicker';
 export { default as Overlay } from './Overlay/Overlay';
 export { default as PagePreview } from './PagePreview/PagePreview';
@@ -86,12 +87,12 @@ export { default as PubPreview } from './PubPreview/PubPreview';
 export { default as PubReleaseDialog } from './PubReleaseDialog/PubReleaseDialog';
 export { default as PubReleaseReviewDialog } from './PubReleaseReviewDialog/PubReleaseReviewDialog';
 export { default as PubShareDialog } from './PubShareDialog/PubShareDialog';
-export { default as PubThemePicker } from './PubThemePicker/PubThemePicker';
 export { default as PubTitle } from './PubTitle/PubTitle';
 export { default as ReferencesDropdown } from './ReferencesDropdown/ReferencesDropdown';
 export { default as QueryListDropdown } from './QueryListDropdown/QueryListDropdown';
 export { default as ScopeDropdown } from './ScopeDropdown/ScopeDropdown';
 export { default as SettingsSection } from './SettingsSection/SettingsSection';
+export { default as SettingsSectionOld } from './SettingsSectionOld/SettingsSection';
 export { default as SharingCard } from './SharingCard/SharingCard';
 export { default as SimpleEditor } from './SimpleEditor/SimpleEditor';
 export { default as SliderInput } from './SliderInput/SliderInput';
