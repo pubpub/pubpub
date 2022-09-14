@@ -1,35 +1,65 @@
-/* eslint-disable react/no-danger */
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
+import { Button } from '@blueprintjs/core';
 
-// import { setLanguage } from 'components/Editor/views/CodeView
-import { FormattingBar, FormattingBarButtonData } from 'components/FormattingBar';
-import { mathToggleKind } from 'components/Editor/commands';
+import { codeSetLanguage } from 'components/Editor/commands';
+
 import { EditorChangeObjectWithNode } from '../types';
+import CommandMenu from '../CommandMenu';
 
 require('./controls.scss');
 
 type Props = {
 	editorChangeObject: EditorChangeObjectWithNode;
+	onClose: () => unknown;
 };
 
+const buttonCommands = [
+	{
+		key: 'set-javascript',
+		title: 'javascript',
+		icon: '',
+		command: codeSetLanguage,
+	},
+];
+
 const ControlsCodeBlock = (props: Props) => {
-	const { editorChangeObject } = props;
-	const chooseLanguageButton: FormattingBarButtonData = {
-		key: 'change-math-node-type',
-		title: 'Change language highlighting',
-		label: 'Choose language highlighting',
-		icon: 'swap-horizontal',
-		command: mathToggleKind,
+	const { editorChangeObject, onClose } = props;
+	const { view } = editorChangeObject;
+	const toolbar = useToolbarState({ loop: true });
+	const renderDisclosure = (_, { ref, ...disclosureProps }) => {
+		return (
+			<Button
+				rightIcon="caret-down"
+				elementRef={ref}
+				minimal
+				icon="translate"
+				text="Select Language"
+				{...disclosureProps}
+			/>
+		);
 	};
 
-	const codeButtons: FormattingBarButtonData[][] = [[chooseLanguageButton]];
+	useEffect(() => {
+		if (view) {
+			view.dom.addEventListener('keydown', onClose);
+			return () => view.dom.removeEventListener('keydown', onClose);
+		}
+		return () => {};
+	}, [view, onClose]);
 
 	return (
-		<FormattingBar
-			editorChangeObject={editorChangeObject}
-			buttons={codeButtons}
-			showBlockTypes={false}
-		/>
+		<Toolbar {...toolbar} aria-label="code option dropdown">
+			<ToolbarItem
+				aria-label="code options"
+				as={CommandMenu as any}
+				disclosure={renderDisclosure}
+				commands={[buttonCommands]}
+				editorChangeObject={editorChangeObject}
+				markActiveItems={false}
+				{...toolbar}
+			/>
+		</Toolbar>
 	);
 };
 
