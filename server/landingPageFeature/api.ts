@@ -1,7 +1,8 @@
 import app, { wrap } from 'server/server';
-import { ForbiddenError } from 'server/utils/errors';
+import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 
 import { canModifyLandingPageFeatures } from './permissions';
+import { getProposedFeature } from './propose';
 import {
 	createLandingPageFeature,
 	destroyLandingPageFeature,
@@ -11,15 +12,17 @@ import {
 app.post(
 	'/api/landingPageFeature',
 	wrap(async (req, res) => {
-		const {
-			landingPageFeature: { pubId, communityId, rank },
-		} = req.body;
+		const { proposal, proposalKind, rank } = req.body;
 		const canCreate = await canModifyLandingPageFeatures({ userId: req.user?.id });
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}
-		const newFeature = await createLandingPageFeature({ pubId, communityId, rank });
-		return res.status(201).send(newFeature);
+		const proposalResult = await getProposedFeature({ proposal, proposalKind });
+		if (proposalResult) {
+			const newFeature = await createLandingPageFeature({ ...proposalResult, rank });
+			return res.status(201).send(newFeature);
+		}
+		throw new NotFoundError();
 	}),
 );
 

@@ -18,6 +18,21 @@ export default (sequelize, dataTypes) => {
 					unique: true,
 				},
 			],
+			classMethods: {
+				associate: (models) => {
+					const { Pub, Community, LandingPageFeature } = models;
+					LandingPageFeature.belongsTo(Pub, {
+						onDelete: 'CASCADE',
+						as: 'pub',
+						foreignKey: 'pubId',
+					});
+					LandingPageFeature.belongsTo(Community, {
+						onDelete: 'CASCADE',
+						as: 'community',
+						foreignKey: 'communityId',
+					});
+				},
+			},
 		},
 	);
 };

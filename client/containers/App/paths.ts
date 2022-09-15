@@ -181,6 +181,7 @@ export default (viewData, locationData, chunkName) => {
 			ActiveComponent: SuperAdminDashboard,
 			hideNav: true,
 			hideFooter: true,
+			hideHeader: true,
 		},
 		User: {
 			ActiveComponent: User,

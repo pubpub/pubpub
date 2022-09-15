@@ -1,5 +1,24 @@
 import * as types from 'types';
-import { LandingPageFeature } from 'server/models';
+import { Community, LandingPageFeature, Pub } from 'server/models';
+import { splitArrayOn } from 'utils/arrays';
+import { buildPubOptions } from 'server/utils/queryHelpers';
+
+const landingPageFeatureIncludes = [
+	{ model: Pub, as: 'pub', ...buildPubOptions({ getCommunity: true }) },
+	{ model: Community, as: 'community' },
+];
+
+export const getLandingPageFeatures = async (): Promise<types.LandingPageFeatures> => {
+	const features: types.LandingPageFeature[] = await LandingPageFeature.findAll({
+		include: landingPageFeatureIncludes,
+		order: [['rank', 'ASC']],
+	});
+	const [pubFeatures, communityFeatures] = splitArrayOn(features, (f) => !!f.pub);
+	return {
+		pub: pubFeatures as types.LandingPagePubFeature[],
+		community: communityFeatures as types.LandingPageCommunityFeature[],
+	};
+};
 
 type CreateLandingPageFeatureOptions = {
 	pubId?: string;
@@ -12,7 +31,10 @@ export const createLandingPageFeature = async (
 ): Promise<types.LandingPageFeature> => {
 	const { pubId, communityId, rank } = options;
 	const newFeature = await LandingPageFeature.create({ pubId, communityId, rank });
-	return newFeature;
+	return LandingPageFeature.findOne({
+		where: { id: newFeature.id },
+		include: landingPageFeatureIncludes,
+	});
 };
 
 type UpdateLandingPageFeatureOptions = {

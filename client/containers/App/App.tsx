@@ -51,7 +51,7 @@ const App = (props: Props) => {
 	const { communityData, locationData } = pageContextProps;
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
-	const { ActiveComponent, hideNav, hideFooter, isDashboard } = pathObject;
+	const { ActiveComponent, hideNav, hideFooter, hideHeader, isDashboard } = pathObject;
 
 	// Our debugging lifeline
 	if (typeof window !== 'undefined') {
@@ -61,6 +61,7 @@ const App = (props: Props) => {
 
 	const showNav = !hideNav && !communityData.hideNav && !isDashboard;
 	const showFooter = !hideFooter && !isDashboard;
+	const showHeader = !hideHeader;
 	return (
 		<PageContext.Provider value={pageContextProps}>
 			<RKProvider>
@@ -72,7 +73,7 @@ const App = (props: Props) => {
 					)}
 					<SkipLink targetId="main-content">Skip to main content</SkipLink>
 					<LegalBanner />
-					<Header />
+					{showHeader && <Header />}
 					{showNav && <NavBar />}
 					{isDashboard && (
 						<MobileAware

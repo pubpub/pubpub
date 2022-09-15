@@ -5,6 +5,7 @@ import app from 'server/server';
 import { ForbiddenError, handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
+import { getLandingPageFeatures } from 'server/landingPageFeature/queries';
 
 app.get('/superadmin', async (req, res, next) => {
 	try {
@@ -12,12 +13,13 @@ app.get('/superadmin', async (req, res, next) => {
 		if (!initialData.scopeData.activePermissions.isSuperAdmin) {
 			throw new ForbiddenError();
 		}
+		const landingPageFeatures = await getLandingPageFeatures();
 		return renderToNodeStream(
 			res,
 			<Html
 				chunkName="SuperAdminDashboard"
 				initialData={initialData}
-				viewData={{}}
+				viewData={{ landingPageFeatures }}
 				headerComponents={generateMetaComponents({
 					initialData,
 					title: 'SuperAdmin · PubPub',
