@@ -2,7 +2,7 @@ import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
 
 import { GridWrapper } from 'components';
-import { DefinitelyHas, LandingPageFeature } from 'types';
+import { LandingPageFeatures } from 'types';
 
 import LandingPageFeaturesType from './LandingPageFeatures';
 import Spam from './Spam';
@@ -10,7 +10,7 @@ import Spam from './Spam';
 require('./superAdminDashboard.scss');
 
 type Props = {
-	landingPageFeatures: DefinitelyHas<LandingPageFeature, 'pub' | 'community'>[];
+	landingPageFeatures: LandingPageFeatures;
 };
 
 const SuperAdminDashboard = (props: Props) => {
