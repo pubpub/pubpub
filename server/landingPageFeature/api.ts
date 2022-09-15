@@ -10,7 +10,7 @@ import {
 } from './queries';
 
 app.post(
-	'/api/landingPageFeature',
+	'/api/landingPageFeatures',
 	wrap(async (req, res) => {
 		const { proposal, proposalKind, rank } = req.body;
 		const canCreate = await canModifyLandingPageFeatures({ userId: req.user?.id });
@@ -27,7 +27,7 @@ app.post(
 );
 
 app.put(
-	'/api/landingPageFeature',
+	'/api/landingPageFeatures',
 	wrap(async (req, res) => {
 		const {
 			landingPageFeature: { id, rank },
@@ -42,7 +42,7 @@ app.put(
 );
 
 app.delete(
-	'/api/landingPageFeature',
+	'/api/landingPageFeatures',
 	wrap(async (req, res) => {
 		const {
 			landingPageFeature: { id },

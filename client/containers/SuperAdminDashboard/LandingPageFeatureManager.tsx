@@ -23,7 +23,7 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 
 	const handleAddFeature = useCallback(async () => {
 		try {
-			const newFeature = await apiFetch.post('/api/landingPageFeature', {
+			const newFeature = await apiFetch.post('/api/landingPageFeatures', {
 				proposal: featureInputValue,
 				proposalKind: kind,
 				rank: findRankInRankedList(features, 0),
@@ -40,7 +40,7 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 		async (featureId: string) => {
 			setFeatures(features.filter((f) => f.id !== featureId));
 			try {
-				await apiFetch.delete('/api/landingPageFeature', {
+				await apiFetch.delete('/api/landingPageFeatures', {
 					landingPageFeature: {
 						id: featureId,
 					},
@@ -64,7 +64,7 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 				reorderedToIndex,
 			);
 			try {
-				await apiFetch.put('/api/landingPageFeature', {
+				await apiFetch.put('/api/landingPageFeatures', {
 					landingPageFeature: {
 						id: reorderedFeature.id,
 						rank,
