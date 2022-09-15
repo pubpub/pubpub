@@ -183,7 +183,7 @@ $leftColumnWidth: 20%;
 				}
 			}
 		}
-		.title-popovers{
+		.title-popovers {
 			display: flex;
 			flex-direction: row;
 			width: 20%;
@@ -195,7 +195,7 @@ $leftColumnWidth: 20%;
 					height: 60px;
 					border-radius: 40px;
 					border: 1px solid white;
-					margin-left:-20px;
+					margin-left: -20px;
 					transition: margin-left 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
 				}
 				img:hover {
@@ -375,7 +375,7 @@ $leftColumnWidth: 20%;
 							}
 							.color-overlay {
 								position: absolute;
-								background-color: rgba(0,0,0,0.6);
+								background-color: rgba(0, 0, 0, 0.6);
 								width: 800px;
 								height: 200px;
 								border-radius: 6px;
@@ -455,7 +455,7 @@ $leftColumnWidth: 20%;
 							}
 							&:hover {
 								.color-overlay {
-									background-color: rgba(0,0,0,0.4);
+									background-color: rgba(0, 0, 0, 0.4);
 								}
 								.info {
 									color: #fff;
@@ -672,7 +672,7 @@ $leftColumnWidth: 20%;
 					flex-direction: row;
 					justify-content: space-between;
 					.custom-callout-button-2 {
-						background-color: rgba(0,0,0,0);
+						background-color: rgba(0, 0, 0, 0);
 						color: #fff;
 						border-color: #fff;
 						&:hover {
