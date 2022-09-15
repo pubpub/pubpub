@@ -8,6 +8,7 @@ export * from './depositTarget';
 export * from './discussion';
 export * from './doc';
 export * from './featureFlag';
+export * from './landingPageFeature';
 export * from './license';
 export * from './member';
 export * from './page';
