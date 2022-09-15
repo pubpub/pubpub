@@ -10,7 +10,7 @@ import { getLandingPageFeatures } from 'server/landingPageFeature/queries';
 app.get('/superadmin', async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req);
-		if (!initialData.scopeData.activePermissions.isSuperAdmin) {
+		if (!initialData.loginData.isSuperAdmin) {
 			throw new ForbiddenError();
 		}
 		const landingPageFeatures = await getLandingPageFeatures();

@@ -52,16 +52,6 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 		[features],
 	);
 
-	const handleInputKeyDown = useCallback(
-		(e: any) => {
-			setInputHasError(false);
-			if (e.key === 'Enter') {
-				handleAddFeature();
-			}
-		},
-		[handleAddFeature],
-	);
-
 	const handleReorderFeatures = useCallback(
 		async (
 			nextFeatures: LandingPageFeatureOfKind<Kind>[],
@@ -69,11 +59,15 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 			reorderedToIndex: number,
 		) => {
 			setFeatures(nextFeatures);
+			const rank = findRankInRankedList(
+				nextFeatures.filter((f) => f.id !== reorderedFeature.id),
+				reorderedToIndex,
+			);
 			try {
 				await apiFetch.put('/api/landingPageFeature', {
 					landingPageFeature: {
 						id: reorderedFeature.id,
-						rank: findRankInRankedList(nextFeatures, reorderedToIndex),
+						rank,
 					},
 				});
 			} catch (_) {
@@ -83,6 +77,16 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 		// Wants type Kind as a dep
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[features],
+	);
+
+	const handleInputKeyDown = useCallback(
+		(e: any) => {
+			setInputHasError(false);
+			if (e.key === 'Enter') {
+				handleAddFeature();
+			}
+		},
+		[handleAddFeature],
 	);
 
 	const renderFeatureFrame = (feature: LandingPageFeatureOfKind<Kind>, dragHandleProps: any) => {

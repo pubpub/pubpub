@@ -38,6 +38,7 @@ export const getInitialData = async (req, isDashboard = false): Promise<types.In
 		avatar: user.avatar,
 		title: user.title,
 		gdprConsent: user.gdprConsent,
+		isSuperAdmin: user.isSuperAdmin,
 	};
 
 	const shouldForceBasePubPub = !!(isDevelopment() && process.env.FORCE_BASE_PUBPUB);
@@ -73,7 +74,9 @@ export const getInitialData = async (req, isDashboard = false): Promise<types.In
 				favicon: `https://${locationData.hostname}/favicon.png`,
 				avatar: `https://${locationData.hostname}/static/logo.png`,
 				headerLogo:
-					locationData.path === '/' ? '/static/pubpub-logo-option-1.png' : '/static/logoBlack.svg',
+					locationData.path === '/'
+						? '/static/pubpub-logo-option-1.png'
+						: '/static/logoBlack.svg',
 				hideHero: true,
 				accentColorLight: '#ffffff',
 				accentColorDark: '#112233',
