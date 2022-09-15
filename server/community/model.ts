@@ -71,7 +71,6 @@ export default (sequelize, dataTypes) => {
 			editHash: { type: dataTypes.STRING },
 			premiumLicenseFlag: { type: dataTypes.BOOLEAN, defaultValue: false },
 			defaultPubCollections: { type: dataTypes.JSONB },
-			spamTagId: { type: dataTypes.UUID },
 
 			/* Set by Associations */
 			organizationId: { type: dataTypes.UUID },
@@ -87,7 +86,6 @@ export default (sequelize, dataTypes) => {
 						Page,
 						Pub,
 						ScopeSummary,
-						SpamTag,
 					} = models;
 					Community.belongsTo(Organization, {
 						onDelete: 'CASCADE',
@@ -117,10 +115,6 @@ export default (sequelize, dataTypes) => {
 					Community.belongsTo(ScopeSummary, {
 						as: 'scopeSummary',
 						foreignKey: 'scopeSummaryId',
-					});
-					Community.belongsTo(SpamTag, {
-						as: 'spamTag',
-						foreignKey: 'spamTagId',
 					});
 				},
 			},
