@@ -4,7 +4,7 @@ import { splitArrayOn } from 'utils/arrays';
 import { buildPubOptions } from 'server/utils/queryHelpers';
 
 const landingPageFeatureIncludes = [
-	{ model: Pub, as: 'pub', ...buildPubOptions({ getCommunity: true }) },
+	{ model: Pub, as: 'pub', ...buildPubOptions({ getCommunity: true, getCollections: true }) },
 	{ model: Community, as: 'community' },
 ];
 
@@ -14,8 +14,11 @@ export const getLandingPageFeatures = async (): Promise<types.LandingPageFeature
 		order: [['rank', 'ASC']],
 	});
 	const [pubFeatures, communityFeatures] = splitArrayOn(features, (f) => !!f.pub);
+	const sanitizedPubFeatures = pubFeatures.filter(
+		(feature) => feature.pub?.releases?.length! > 0,
+	);
 	return {
-		pub: pubFeatures as types.LandingPagePubFeature[],
+		pub: sanitizedPubFeatures as types.LandingPagePubFeature[],
 		community: communityFeatures as types.LandingPageCommunityFeature[],
 	};
 };

@@ -7,7 +7,7 @@ export type LandingPageFeature = {
 	rank: string;
 	createdAt: string;
 	updatedAt: string;
-	pub?: null | DefinitelyHas<Pub, 'community'>;
+	pub?: null | DefinitelyHas<Pub, 'attributions' | 'collectionPubs' | 'community' | 'releases'>;
 	community?: null | Community;
 };
 

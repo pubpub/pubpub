@@ -1,7 +1,57 @@
-import React from 'react';
-import { Icon } from 'components';
+import React, { useMemo } from 'react';
+
+import { Icon, PubByline, PubTitle } from 'components';
+import { LandingPageFeatures, Pub } from 'types';
+import { getPrimaryCollection } from 'utils/collections/primary';
+import { getPubPublishedDate } from 'utils/pub/pubDates';
+import { formatDate } from 'utils/dates';
+import { collectionUrl, communityUrl } from 'utils/canonicalUrls';
 
 require('./landing.scss');
+
+type Props = {
+	featuredItems: LandingPageFeatures;
+};
+
+type FlattenedPub = {
+	pub: Pub;
+	title: React.ReactNode;
+	community: {
+		title: string;
+		url: string;
+	};
+	primaryCollection: null | {
+		title: string;
+		url: string;
+	};
+	publishedDate: null | string;
+	byline: React.ReactNode;
+};
+
+const getFlattenedPubsFromFeaturedItems = (featuredItems: LandingPageFeatures): FlattenedPub[] => {
+	return featuredItems.pub.map((feature) => {
+		const { pub } = feature;
+		const { community } = pub;
+		const primaryCollection = getPrimaryCollection(pub.collectionPubs);
+		const publishedDate = getPubPublishedDate(pub);
+		return {
+			pub,
+			publishedDate: publishedDate ? formatDate(publishedDate) : null,
+			byline: <PubByline pubData={pub} />,
+			title: <PubTitle pubData={pub} shouldUseHtmlTitle />,
+			community: {
+				title: community.title,
+				url: communityUrl(community),
+			},
+			primaryCollection: primaryCollection
+				? {
+						title: primaryCollection.title,
+						url: collectionUrl(community, primaryCollection),
+				  }
+				: null,
+		};
+	});
+};
 
 const features = [
 	{
@@ -18,99 +68,8 @@ const features = [
 		icon: 'comment',
 		title: 'Discussions & Annotations',
 		desc: 'Host public and private discussions with your readers and community, whether in your classroom or across the world.',
-	}
+	},
 ] as const;
-
-const pubs = [
-	{
-		title: 'Nonverbal Overload: A Theoretical Argument for the Causes of Zoom Fatigue',
-		date: 'Feb 24, 2021',
-		authors: 'Jeremy N. Bailenson',
-		image: '/static/landing/_landing_pub1.png',
-		url: 'https://doi.org/10.1037/tmb0000030',
-		desc: '',
-		doi: 'https://doi.org/10.1037/tmb0000030',
-		collection: 'Volume 2, Issue 1',
-		community: 'Technology, Mind & Behaviour'
-	},
-	{
-		title: 'Tasting the History of Wine',
-		date: 'Dec 03, 2021',
-		authors: 'Charles Ludington and Ann-Sophie Barwich',
-		image: '/static/landing/_landing_pub2.png',
-		url: 'https://doi.org/10.52750/673571',
-		desc: 'A long description about wines from all over the world, to test the rendering of such a very long sentence which is not the best way to write sentences.',
-		doi: 'https://doi.org/10.1037/tmb0000030',
-		collection: '',
-		community: 'Fermentology'
-	},
-	{
-		title: 'Science for the Post-Normal Age',
-		date: 'May 14, 2020',
-		authors: 'Silvio O. Funtowicz and Jerome R. Ravetz ',
-		image: '/static/landing/_landing_pub3.png',
-		url: 'https://doi.org/10.52750/673571',
-		desc: 'Republished with a new foreword',
-		doi: 'https://doi.org/10.1037/tmb0000030',
-		collection: 'Duly Noted',
-		community: 'Common Place'
-	},
-	{
-		title: 'Yeezy Taught Me',
-		date: 'Nov 09, 2021',
-		authors: 'Arthur Boston',
-		image: '/static/landing/_landing_pub4.png',
-		url: 'https://doi.org/10.52750/673571',
-		desc: '',
-		doi: 'https://doi.org/10.1037/tmb0000030',
-		collection: 'Dialogues',
-		community: 'Common Place'
-	},
-	{
-		title: 'A Seat at the Table: Special Considerations for Women and Underrepresented Groups in Academic Entrepreneurship',
-		date: 'Feb 25, 2022',
-		authors: 'Linda Fleisher and Alexandra Marquez',
-		image: '/static/landing/_landing_pub1.png',
-		url: 'https://doi.org/10.21428/b2e239dc.618b909b',
-		desc: '',
-		doi: 'https://doi.org/10.21428/b2e239dc.618b909b',
-		collection: 'Academic Entrepreneurship for Medical & Health Sciences',
-		community: 'Academic Entrepreneurship'
-	},
-	{
-		title: 'Women of the Beat Generation',
-		date: 'Dec 14, 2021',
-		authors: 'Mary Paniccia Carden and Robert F. Barsky',
-		image: '/static/landing/_landing_pub2.png',
-		url: 'https://bandy-collection.pubpub.org/pub/o9gbzhf1/release/1',
-		desc: '',
-		doi: '',
-		collection: 'Collection Conversations',
-		community: 'W.T. Bandy Center for Baudelaire and Modern French Studies'
-	},
-	{
-		title: 'Differential Privacy and the 2020 US Census',
-		date: 'Jan 24, 2022',
-		authors: 'Simson Garfinkle',
-		image: '/static/landing/_landing_pub7.png',
-		url: 'https://doi.org/10.21428/2c646de5.7ec6ab93',
-		desc: '',
-		doi: 'https://doi.org/10.21428/2c646de5.7ec6ab93',
-		collection: 'Winter 2022',
-		community: 'MIT Case Studies in Social and Ethical Responsibilities of Computing'
-	},
-	{
-		title: 'Quare(-in) the Mainstream: Deconstructing New Media in Lil Nas X’s MONTERO',
-		date: 'Jul 12, 2022',
-		authors: 'Emily Thomas',
-		image: '/static/landing/_landing_pub8.png',
-		url: 'https://doi.org/10.21428/66f840a4.75cc622c',
-		desc: '',
-		doi: 'https://doi.org/10.21428/66f840a4.75cc622c',
-		collection: 'New Queer Cinema',
-		community: 'Sonic Scope'
-	}
-];
 
 const communities = [
 	{
@@ -120,10 +79,16 @@ const communities = [
 		type: 'Journals',
 		category: 'Science',
 		link: 'https://hdsr.mitpress.mit.edu',
-	}
+	},
 ];
 
-const Landing = () => {
+const Landing = (props: Props) => {
+	const { featuredItems } = props;
+	const flattenedPubs = useMemo(
+		() => getFlattenedPubsFromFeaturedItems(featuredItems),
+		[featuredItems],
+	);
+
 	const featureGrid = features.map((feature) => {
 		return (
 			<div className="feature" key={feature.icon}>
@@ -136,46 +101,58 @@ const Landing = () => {
 		);
 	});
 
-	const pubList = pubs.map((pub) => {
+	const pubList = flattenedPubs.map((flat) => {
+		const { title, pub, community, primaryCollection, byline, publishedDate } = flat;
+		const { description, headerBackgroundImage } = pub;
 		return (
-			<div className="pub" key={pub.url}>
+			<div className="pub" key={pub.id}>
 				<div className="slab">
-					<img className="image-bg" src={pub.image}/>
-					<div className="color-overlay"></div>
+					{headerBackgroundImage && (
+						<img className="image-bg" src={headerBackgroundImage} alt="" />
+					)}
+					<div className="color-overlay" />
 					<div className="info">
 						<div className="title-box">
-							<Icon icon="pubDoc" className="icon"/>
-							<div className="pub-title">{pub.title}</div>
+							<Icon icon="pubDoc" className="icon" />
+							<div className="pub-title">{title}</div>
 						</div>
-						<div className="desc">{pub.desc}</div>
-						<div className="authors">{'by ' + pub.authors}</div>
-						<div className="date-box">
-							<Icon icon="globe" className="icon"/>
-							<div className="date">{pub.date}</div>
-						</div>
+						{description && <div className="desc">{description}</div>}
+						<div className="authors">{byline}</div>
+						{publishedDate && (
+							<div className="date-box">
+								<Icon icon="globe" className="icon" />
+								<div className="date">{publishedDate}</div>
+							</div>
+						)}
 					</div>
 				</div>
 				<div className="meta">
+					{primaryCollection && (
+						<div className="item">
+							<div className="icon-title">
+								<Icon icon="collection" className="icon" />
+								<div className="meta-title">Collection</div>
+							</div>
+							<div className="name">{primaryCollection.title}</div>
+							<a className="more" href={primaryCollection.url}>
+								See more from this Collection
+							</a>
+						</div>
+					)}
 					<div className="item">
 						<div className="icon-title">
-							<Icon icon="collection" className="icon"/>
-							<div className="meta-title">collection</div>
+							<Icon icon="office" className="icon" />
+							<div className="meta-title">Community</div>
 						</div>
-						<div className="name">{pub.collection}</div>
-						<a className="more" href="">See more from this collection</a>
-					</div>
-					<div className="item">
-						<div className="icon-title">
-							<Icon icon="office" className="icon"/>
-							<div className="meta-title">community</div>
-						</div>
-						<div className="name">{pub.community}</div>
-						<a className="more" href="">Visit community homepage</a>
+						<div className="name">{community.title}</div>
+						<a className="more" href={community.url}>
+							Visit Community homepage
+						</a>
 					</div>
 				</div>
 			</div>
-		)
-	})
+		);
+	});
 
 	return (
 		<div id="landing-container">
@@ -190,10 +167,12 @@ const Landing = () => {
 				<div className="titles">
 					<h1>PubPub</h1>
 					<h2>an open-source, community-led, end-to-end</h2>
-					<div className="subtitle-1">publishing platform <span className="smaller">for</span></div>
+					<div className="subtitle-1">
+						publishing platform <span className="smaller">for</span>
+					</div>
 					<div className="video-text-container">
 						<video className="bg-video" autoPlay loop muted>
-							<source src="/static/landing/test-vid-1.mp4" type="video/mp4"/>
+							<source src="/static/landing/test-vid-1.mp4" type="video/mp4" />
 						</video>
 						<p className="subtitle-2">knowledge communities</p>
 					</div>
@@ -202,30 +181,20 @@ const Landing = () => {
 					</a>
 				</div>
 				<div className="title-popovers">
-					<div className="popover" >
-						<img
-							src="/static/landing/_landing_popover1.png"
-						/>
+					<div className="popover">
+						<img src="/static/landing/_landing_popover1.png" />
 					</div>
-					<div className="popover" >
-						<img
-							src="/static/landing/_landing_popover2.png"
-						/>
-						<img
-							src="/static/landing/_landing_popover3.png"
-						/>
-						<img
-							src="/static/landing/_landing_popover4.png"
-						/>
+					<div className="popover">
+						<img src="/static/landing/_landing_popover2.png" />
+						<img src="/static/landing/_landing_popover3.png" />
+						<img src="/static/landing/_landing_popover4.png" />
 					</div>
 				</div>
 			</div>
 			{/* END Jumbotron */}
 			{/* BEGIN Main; content */}
 			<div id="main">
-
-				<div className="icon-border">
-				</div>
+				<div className="icon-border" />
 				{/* BEGIN Callout Repeat Block */}
 				<div className="callout-repeat">
 					<div className="text-blocks">
@@ -242,25 +211,30 @@ const Landing = () => {
 					<div className="container">
 						<div className="box-item">
 							<div className="title">mission</div>
-							<p>As a product of the Knowledge Futures Group, PubPub is open and accessible to all. That means a free, robust version of PubPub will always be available, operating under a non-profit, sustainable business model.</p>
+							<p>
+								As a product of the Knowledge Futures Group, PubPub is open and
+								accessible to all. That means a free, robust version of PubPub will
+								always be available, operating under a non-profit, sustainable
+								business model.
+							</p>
 						</div>
 						<div className="box-item">
 							<div className="title">open & community led</div>
 							<div className="buttons">
 								<a href="" className="button">
-									<Icon icon="git-repo" className="icon"/>
+									<Icon icon="git-repo" className="icon" />
 									<p>Github</p>
 								</a>
 								<a href="" className="button">
-									<Icon icon="map" className="icon"/>
+									<Icon icon="map" className="icon" />
 									<p>Roadmap</p>
 								</a>
 								<a href="" className="button">
-									<Icon icon="comment" className="icon"/>
+									<Icon icon="comment" className="icon" />
 									<p>Forum</p>
 								</a>
 								<a href="" className="button">
-									<Icon icon="office" className="icon"/>
+									<Icon icon="office" className="icon" />
 									<p>KFG community</p>
 								</a>
 							</div>
@@ -271,17 +245,14 @@ const Landing = () => {
 				<div className="publist-box">
 					<div className="container">
 						<div className="title">featured pubs</div>
-						<div className="row pub-list">
-							{pubList}
-						</div>
+						<div className="row pub-list">{pubList}</div>
 					</div>
 				</div>
 
 				<div className="communities-box">
 					<div className="container">
 						<div className="title">featured communities</div>
-						<div className="featured-space">
-						</div>
+						<div className="featured-space" />
 						<div className="callout-repeat">
 							<div className="text-blocks">
 								<p>feeling inspired?</p>

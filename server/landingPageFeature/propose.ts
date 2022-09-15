@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 
 import { Community, Pub } from 'server/models';
+import { buildPubOptions } from 'server/utils/queryHelpers';
 import { parseUrl } from 'utils/urls';
 
 type GetProposedFeatureOptions = {
@@ -55,8 +56,8 @@ export const getProposedFeature = async (
 	const { proposal, proposalKind } = options;
 	if (proposalKind === 'pub') {
 		const pubQuery = await extractPubQuery(proposal);
-		const pub = await Pub.findOne({ where: pubQuery });
-		if (pub) {
+		const pub = await Pub.findOne({ where: pubQuery, ...buildPubOptions({}) });
+		if (pub && pub.releases.length > 0) {
 			return { pubId: pub.id };
 		}
 	} else if (proposalKind === 'community') {
