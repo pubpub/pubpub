@@ -10,3 +10,4 @@ export { plainDoc, imageDoc, fullDoc } from './dataDocs';
 export { default as overviewData } from './dataOverview';
 export { default as scopeData } from './dataScope';
 export { minimalPub } from './dataMinimalPub';
+export { default as landingPageFeaturedItemsData } from './dataLandingPageFeaturedItems';

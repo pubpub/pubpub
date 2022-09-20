@@ -1,8 +1,8 @@
 import { Signup } from 'server/models';
-import { checkIfSuperAdmin } from 'server/utils/queryHelpers/scopeGet';
+import { isUserSuperAdmin } from './queries';
 
 export const getPermissions = async ({ userId, submittedUserId, email, hash }) => {
-	const isSuperAdmin = checkIfSuperAdmin(userId);
+	const isSuperAdmin = await isUserSuperAdmin(userId);
 	const signUpData = await Signup.findOne({
 		where: { hash, email },
 		attributes: ['email', 'hash', 'completed'],
