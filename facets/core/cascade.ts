@@ -27,8 +27,8 @@ function cascadeProp<Prop extends FacetProp>(
 			value,
 		};
 	}
-	if (cascadeStrategy === 'extend') {
-		type PropWithCascade = Prop & { cascade: 'extend' };
+	if (cascadeStrategy === 'concat') {
+		type PropWithCascade = Prop & { cascade: 'concat' };
 		const value: PropCascadeResult<PropWithCascade> = sources
 			.map((s) => (s.value ?? []) as any[])
 			.reduce((a, b) => [...a, ...b], []);
