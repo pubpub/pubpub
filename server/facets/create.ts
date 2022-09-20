@@ -28,7 +28,7 @@ const getSequelizePropsDefinition = (props: FacetProps) => {
 	return columns;
 };
 
-export const ingestFacets = (sequelize: Sequelize) => {
+export const createSequelizeModelsFromFacetDefinitions = (sequelize: Sequelize) => {
 	const FacetBinding = sequelize.import('./models/facetBinding') as any;
 	const modelsByName: Record<string, any> = {};
 	Object.values(ALL_FACET_DEFINITIONS).forEach((facet) => {
