@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
 import { Button } from '@blueprintjs/core';
 
-import { codeSetLanguage } from 'components/Editor/commands';
+import { setLanguageCommandBuilder } from 'components/Editor/commands';
+import { languages } from 'components/Editor/utils';
 
 import { EditorChangeObjectWithNode } from '../types';
 import CommandMenu from '../CommandMenu';
@@ -14,14 +15,11 @@ type Props = {
 	onClose: () => unknown;
 };
 
-const buttonCommands = [
-	{
-		key: 'set-javascript',
-		title: 'javascript',
-		icon: '',
-		command: codeSetLanguage,
-	},
-];
+const buttonCommands = languages.map((language) => ({
+	key: `set-${language}`,
+	title: language,
+	command: setLanguageCommandBuilder(language),
+}));
 
 const ControlsCodeBlock = (props: Props) => {
 	const { editorChangeObject, onClose } = props;

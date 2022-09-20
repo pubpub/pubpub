@@ -1,37 +1,43 @@
 import { EditorView as CodeMirror, keymap as cmKeymap, drawSelection } from '@codemirror/view';
+import { EditorState as CodeMirrorState, Compartment } from '@codemirror/state';
 import { EditorView } from 'prosemirror-view';
 import { TextSelection, Selection } from 'prosemirror-state';
 import { Node, Fragment } from 'prosemirror-model';
-import { javascript } from '@codemirror/lang-javascript';
 import { defaultKeymap } from '@codemirror/commands';
 import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
-
 import { exitCode } from 'prosemirror-commands';
 import { undo, redo } from 'prosemirror-history';
+
+import { languageModes } from '../utils';
+
+const languageMode = new Compartment();
 
 export default class CodeBlockView {
 	private node: Node;
 	private cm: CodeMirror;
 	private getPos: any;
 	private view: EditorView;
+	private currentLanguage: string;
 	dom: HTMLElement;
 	private updating: boolean;
 	constructor(node: Node, view: EditorView, getPos) {
 		this.node = node;
 		this.view = view;
 		this.getPos = getPos;
-
-		this.cm = new CodeMirror({
+		const { language = 'javascript' } = this.node.attrs;
+		this.currentLanguage = language;
+		const selectedSyntax = language in languageModes ? languageModes[language] : null;
+		const state = CodeMirrorState.create({
 			doc: this.node.textContent || undefined,
 			extensions: [
 				cmKeymap.of([...this.codeMirrorKeymap(), ...defaultKeymap]),
 				drawSelection(),
 				syntaxHighlighting(defaultHighlightStyle),
-				javascript(),
+				...(selectedSyntax ? [languageMode.of(selectedSyntax())] : []),
 				CodeMirror.updateListener.of((update) => this.forwardUpdate(update)),
 			],
 		});
-
+		this.cm = new CodeMirror({ state });
 		this.dom = this.cm.dom;
 		// This flag is used to avoid an update loop between the outer and
 		// inner editor
@@ -112,6 +118,13 @@ export default class CodeBlockView {
 		if (node.type !== this.node.type) return false;
 		this.node = node;
 		if (this.updating) return true;
+		const newLanguage = node.attrs.language;
+		if (newLanguage !== this.currentLanguage) {
+			this.currentLanguage = newLanguage;
+			this.cm.dispatch({
+				effects: languageMode.reconfigure(languageModes[newLanguage]()),
+			});
+		}
 		const newText = node.textContent;
 		const curText = this.cm.state.doc.toString();
 		if (newText !== curText) {
