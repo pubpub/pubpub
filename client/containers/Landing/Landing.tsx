@@ -53,34 +53,34 @@ const getFlattenedPubsFromFeaturedItems = (featuredItems: LandingPageFeatures): 
 	});
 };
 
-// const features = [
-// 	{
-// 		icon: 'badge',
-// 		title: 'DOI Support',
-// 		desc: 'Generate CrossRef DOIs for your documents in one click.',
-// 	},
-// 	{
-// 		icon: 'shield',
-// 		title: 'Submissions & Review',
-// 		desc: 'Manage submissions and peer review directly on PubPub.',
-// 	},
-// 	{
-// 		icon: 'comment',
-// 		title: 'Discussions & Annotations',
-// 		desc: 'Host public and private discussions with your readers and community, whether in your classroom or across the world.',
-// 	},
-// ] as const;
+const features = [
+	{
+		icon: 'badge',
+		title: 'DOI Support',
+		desc: 'Generate CrossRef DOIs for your documents in one click.',
+	},
+	{
+		icon: 'shield',
+		title: 'Submissions & Review',
+		desc: 'Manage submissions and peer review directly on PubPub.',
+	},
+	{
+		icon: 'comment',
+		title: 'Discussions & Annotations',
+		desc: 'Host public and private discussions with your readers and community, whether in your classroom or across the world.',
+	},
+] as const;
 
-// const communities = [
-// 	{
-// 		name: 'Harvard Data Science Review',
-// 		description: 'A microscopic, telescopic & kaleidoscopic view of data science.',
-// 		logo: '/static/landing/hdsr.png',
-// 		type: 'Journals',
-// 		category: 'Science',
-// 		link: 'https://hdsr.mitpress.mit.edu',
-// 	},
-// ];
+const communities = [
+	{
+		name: 'Harvard Data Science Review',
+		description: 'A microscopic, telescopic & kaleidoscopic view of data science.',
+		logo: '/static/landing/hdsr.png',
+		type: 'Journals',
+		category: 'Science',
+		link: 'https://hdsr.mitpress.mit.edu',
+	},
+];
 
 const Landing = (props: Props) => {
 	const { featuredItems } = props;
@@ -89,17 +89,17 @@ const Landing = (props: Props) => {
 		[featuredItems],
 	);
 
-	// const featureGrid = features.map((feature) => {
-	// 	return (
-	// 		<div className="feature" key={feature.icon}>
-	// 			<Icon icon={feature.icon} className="icon" />
-	// 			<div className="description">
-	// 				<h4>{feature.title}</h4>
-	// 				<p>{feature.desc}</p>
-	// 			</div>
-	// 		</div>
-	// 	);
-	// });
+	const featureGrid = features.map((feature) => {
+		return (
+			<div className="feature" key={feature.icon}>
+				<Icon icon={feature.icon} className="icon" />
+				<div className="description">
+					<h4>{feature.title}</h4>
+					<p>{feature.desc}</p>
+				</div>
+			</div>
+		);
+	});
 
 	const pubList = flattenedPubs.map((flat) => {
 		const { title, pub, community, primaryCollection, byline, publishedDate } = flat;
@@ -181,14 +181,14 @@ const Landing = (props: Props) => {
 					</a>
 				</div>
 				<div className="title-popovers">
-					{/* <div className="popover">
+					<div className="popover">
 						<img src="/static/landing/_landing_popover1.png" />
 					</div>
 					<div className="popover">
 						<img src="/static/landing/_landing_popover2.png" />
 						<img src="/static/landing/_landing_popover3.png" />
 						<img src="/static/landing/_landing_popover4.png" />
-					</div> */}
+					</div>
 				</div>
 			</div>
 			{/* END Jumbotron */}
@@ -221,7 +221,7 @@ const Landing = (props: Props) => {
 						<div className="box-item">
 							<div className="title">open & community led</div>
 							<div className="buttons">
-								{/* <a href="" className="button">
+								<a href="" className="button">
 									<Icon icon="git-repo" className="icon" />
 									<p>Github</p>
 								</a>
@@ -236,7 +236,7 @@ const Landing = (props: Props) => {
 								<a href="" className="button">
 									<Icon icon="office" className="icon" />
 									<p>KFG community</p>
-								</a> */}
+								</a>
 							</div>
 						</div>
 					</div>
@@ -270,7 +270,7 @@ const Landing = (props: Props) => {
 						<div className="title">pubpub is trusted by</div>
 						<div className="links">
 							<div className="row">
-								{/* <a href="" className="logo-link">
+								<a href="" className="logo-link">
 									<img src="/static/landing/logos/apa.png" />
 								</a>
 								<a href="" className="logo-link">
@@ -281,10 +281,10 @@ const Landing = (props: Props) => {
 								</a>
 								<a href="" className="logo-link">
 									<img src="/static/landing/logos/crimrxiv.png" />
-								</a> */}
+								</a>
 							</div>
 							<div className="row">
-								{/* <a href="" className="logo-link">
+								<a href="" className="logo-link">
 									<img src="/static/landing/logos/africarxiv.png" />
 								</a>
 								<a href="" className="logo-link">
@@ -292,7 +292,7 @@ const Landing = (props: Props) => {
 								</a>
 								<a href="" className="logo-link">
 									<img src="/static/landing/logos/mediastudies.png" />
-								</a> */}
+								</a>
 								<div className="more">
 									and <span>4000+</span> other communities all over the world
 								</div>
