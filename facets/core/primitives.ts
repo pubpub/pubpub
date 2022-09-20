@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { FacetPropType, propType } from './propType';
 
 export const string = propType({
-	name: 'varchar',
+	name: 'string',
 	schema: z.string(),
 	postgresType: 'text',
 });
