@@ -226,7 +226,7 @@
 		"local-repl": "^4.0.0",
 		"mini-css-extract-plugin": "^0.7.0",
 		"mockdate": "^3.0.2",
-		"nodemon": "^1.18.10",
+		"nodemon": "^2.0.20",
 		"normalize.css": "^8.0.1",
 		"pegjs": "^0.10.0",
 		"postcss-loader": "^3.0.0",
