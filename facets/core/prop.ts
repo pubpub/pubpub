@@ -1,6 +1,6 @@
 import { FacetPropType, NullableTypeOfPropType, TypeOfFacetPropType } from './propType';
 
-type IsNeverNull<T> = null extends T ? false : true;
+type IsNeverNull<T> = Extract<T, null> extends never ? true : false;
 
 export type AvailableCascadeStrategyForPropType<PropType extends FacetPropType> =
 	// Any prop type can use the `overwrite` strategy
