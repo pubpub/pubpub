@@ -1,0 +1,61 @@
+@import 'styles/variables.scss';
+@import '../pub.scss';
+
+.review-header-sticky-component {
+	bottom: 0;
+	line-height: 37px;
+	transition: 0.2s linear opacity;
+
+	color: inherit;
+
+	.sticky-section {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		padding: 0 25px;
+		.side-content {
+			position: relative;
+		}
+	}
+
+	.sticky-title {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		flex: 1 1 auto;
+		font-family: $header-font;
+		font-size: 18px;
+		padding-right: 2em;
+	}
+
+	.sticky-buttons {
+		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		.bp3-button,
+		.bp3-icon {
+			color: inherit;
+		}
+
+		.dot {
+			padding: 0 0.3em;
+			height: 24px;
+			line-height: 24px;
+			display: block;
+		}
+	}
+
+	.sticky-review-text {
+		font-weight: 500;
+		font-size: 14px;
+		line-height: 17px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.saving-text {
+		padding: 4px;
+	}
+}
