@@ -6,6 +6,7 @@ export default (sequelize, dataTypes) => {
 			communityId: { type: dataTypes.UUID, allowNull: true },
 			pubId: { type: dataTypes.UUID, allowNull: true },
 			rank: { type: dataTypes.TEXT, allowNull: false },
+			payload: { type: dataTypes.JSONB, allowNull: true },
 		},
 		{
 			indexes: [

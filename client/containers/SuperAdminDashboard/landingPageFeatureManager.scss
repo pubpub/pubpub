@@ -51,12 +51,22 @@
 	}
 
 	.landing-page-community-feature {
+		display: flex;
+		align-items: center;
 		font-size: 1.2em;
 		font-weight: 600;
-		a {
-			text-decoration: none;
-			&:hover {
-				text-decoration: underline;
+		justify-content: space-between;
+		.title-group {
+			display: flex;
+			align-items: center;
+			a {
+				text-decoration: none;
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+			.bp3-tag {
+				margin-left: 4px;
 			}
 		}
 	}

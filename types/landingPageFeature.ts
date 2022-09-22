@@ -1,4 +1,4 @@
-import { Community, DefinitelyHas, Pub } from 'types';
+import { Community, DefinitelyHas, DocJson, Pub } from 'types';
 
 export type LandingPageFeature = {
 	id: string;
@@ -9,12 +9,23 @@ export type LandingPageFeature = {
 	updatedAt: string;
 	pub?: null | DefinitelyHas<Pub, 'attributions' | 'collectionPubs' | 'community' | 'releases'>;
 	community?: null | Community;
+	payload: null | Record<string, any>;
 };
 
 export type LandingPageFeatureKind = 'pub' | 'community';
 
 export type LandingPagePubFeature = DefinitelyHas<LandingPageFeature, 'pub'>;
+
 export type LandingPageCommunityFeature = DefinitelyHas<LandingPageFeature, 'community'>;
+
+export type ValidLandingPageCommunityFeature = LandingPageCommunityFeature & {
+	payload: {
+		imageUrl: string;
+		quote: DocJson;
+		highlights: DocJson;
+		backgroundColor?: null | string;
+	};
+};
 
 export type LandingPageFeatureOfKind<Kind extends LandingPageFeatureKind> = Kind extends 'pub'
 	? LandingPagePubFeature
@@ -22,7 +33,9 @@ export type LandingPageFeatureOfKind<Kind extends LandingPageFeatureKind> = Kind
 	? LandingPageCommunityFeature
 	: never;
 
-export type LandingPageFeatures = {
+export type LandingPageFeatures<Validated extends boolean = true> = {
 	pub: LandingPagePubFeature[];
-	community: LandingPageCommunityFeature[];
+	community: (Validated extends true
+		? ValidLandingPageCommunityFeature
+		: LandingPageCommunityFeature)[];
 };

@@ -13,7 +13,7 @@ app.get('/superadmin', async (req, res, next) => {
 		if (!initialData.loginData.isSuperAdmin) {
 			throw new ForbiddenError();
 		}
-		const landingPageFeatures = await getLandingPageFeatures();
+		const landingPageFeatures = await getLandingPageFeatures({ onlyValidItems: false });
 		return renderToNodeStream(
 			res,
 			<Html

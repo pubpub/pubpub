@@ -2,18 +2,19 @@ import React from 'react';
 
 import { SettingsSection } from 'components';
 import { pubUrl, communityUrl } from 'utils/canonicalUrls';
-import { LandingPageFeatureOfKind, LandingPageFeatures as LandingPageFeaturesType } from 'types';
+import { LandingPageFeatures as LandingPageFeaturesType } from 'types';
 
-import LandingPageFeatureManager from './LandingPageFeatureManager';
+import LandingPageFeatureManager, { RenderFeatureProps } from './LandingPageFeatureManager';
+import FeaturedCommunityItem from './FeaturedCommunityItem';
 
 type Props = {
-	features: LandingPageFeaturesType;
+	features: LandingPageFeaturesType<false>;
 };
 
 const LandingPageFeatures = (props: Props) => {
 	const { features } = props;
 
-	const renderPubFeature = (feature: LandingPageFeatureOfKind<'pub'>) => {
+	const renderPubFeature = ({ feature }: RenderFeatureProps<'pub'>) => {
 		const { pub } = feature;
 		const { community } = pub;
 		return (
@@ -28,13 +29,11 @@ const LandingPageFeatures = (props: Props) => {
 		);
 	};
 
-	const renderCommunityFeature = (feature: LandingPageFeatureOfKind<'community'>) => {
-		const { community } = feature;
-		return (
-			<div className="landing-page-community-feature">
-				<a href={communityUrl(community)}>{community.title}</a>
-			</div>
-		);
+	const renderCommunityFeature = ({
+		feature,
+		onUpdateFeature,
+	}: RenderFeatureProps<'community'>) => {
+		return <FeaturedCommunityItem feature={feature} onUpdateFeature={onUpdateFeature} />;
 	};
 
 	return (

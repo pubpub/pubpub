@@ -30,13 +30,13 @@ app.put(
 	'/api/landingPageFeatures',
 	wrap(async (req, res) => {
 		const {
-			landingPageFeature: { id, rank },
+			landingPageFeature: { id, rank, payload },
 		} = req.body;
 		const canUpdate = await canModifyLandingPageFeatures({ userId: req.user?.id });
 		if (!canUpdate) {
 			throw new ForbiddenError();
 		}
-		await updateLandingPageFeature({ id, rank });
+		await updateLandingPageFeature({ id, rank, payload });
 		return res.status(200).send({});
 	}),
 );

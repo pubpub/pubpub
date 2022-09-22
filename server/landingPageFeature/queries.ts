@@ -2,13 +2,21 @@ import * as types from 'types';
 import { Community, LandingPageFeature, Pub } from 'server/models';
 import { splitArrayOn } from 'utils/arrays';
 import { buildPubOptions } from 'server/utils/queryHelpers';
+import { validateCommunityLandingPageFeature } from 'utils/landingPage/validate';
 
 const landingPageFeatureIncludes = [
 	{ model: Pub, as: 'pub', ...buildPubOptions({ getCommunity: true, getCollections: true }) },
 	{ model: Community, as: 'community' },
 ];
 
-export const getLandingPageFeatures = async (): Promise<types.LandingPageFeatures> => {
+type GetLandingPageFeaturesOptions<Validated extends boolean> = {
+	onlyValidItems?: Validated;
+};
+
+export const getLandingPageFeatures = async <Validated extends boolean = true>(
+	options: GetLandingPageFeaturesOptions<Validated> = {},
+): Promise<types.LandingPageFeatures<Validated>> => {
+	const { onlyValidItems = true } = options;
 	const features: types.LandingPageFeature[] = await LandingPageFeature.findAll({
 		include: landingPageFeatureIncludes,
 		order: [['rank', 'ASC']],
@@ -17,9 +25,14 @@ export const getLandingPageFeatures = async (): Promise<types.LandingPageFeature
 	const sanitizedPubFeatures = pubFeatures.filter(
 		(feature) => feature.pub?.releases?.length! > 0,
 	);
+	const validatedCommunityFeatures = onlyValidItems
+		? communityFeatures.filter((feature) => validateCommunityLandingPageFeature(feature as any))
+		: communityFeatures;
 	return {
 		pub: sanitizedPubFeatures as types.LandingPagePubFeature[],
-		community: communityFeatures as types.LandingPageCommunityFeature[],
+		community: validatedCommunityFeatures as (Validated extends true
+			? types.ValidLandingPageCommunityFeature
+			: types.LandingPageCommunityFeature)[],
 	};
 };
 
@@ -42,12 +55,13 @@ export const createLandingPageFeature = async (
 
 type UpdateLandingPageFeatureOptions = {
 	id: string;
-	rank: string;
+	rank?: string;
+	payload?: Record<string, any>;
 };
 
 export const updateLandingPageFeature = async (options: UpdateLandingPageFeatureOptions) => {
-	const { id, rank } = options;
-	await LandingPageFeature.update({ rank }, { where: { id }, limit: 1 });
+	const { id, rank, payload } = options;
+	await LandingPageFeature.update({ rank, payload }, { where: { id }, limit: 1 });
 };
 
 type destroyLandingPageFeatureOptions = {

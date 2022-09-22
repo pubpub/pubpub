@@ -43,6 +43,7 @@ export const isValidEmailList = (emailList: string[]) =>
 export const validate = <Rec extends AnyRecord>(
 	rec: Rec,
 	validator: RecordValidator<Rec>,
+	requireFullRecord = false,
 ): ValidationResult<Rec> => {
 	const validatedFields = Object.entries(rec).reduce(
 		(partial: Partial<ValidatedFields<Rec>>, [key, value]) => {
@@ -57,8 +58,11 @@ export const validate = <Rec extends AnyRecord>(
 		},
 		{},
 	) as ValidatedFields<Rec>;
+	const isValidated = requireFullRecord
+		? Object.keys(validator).every((key) => validatedFields[key])
+		: !Object.values(validatedFields).some((val) => !val);
 	return {
 		validatedFields,
-		isValidated: !Object.values(validatedFields).some((val) => !val),
+		isValidated,
 	};
 };

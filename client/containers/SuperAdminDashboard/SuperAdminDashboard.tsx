@@ -10,7 +10,7 @@ import Spam from './Spam';
 require('./superAdminDashboard.scss');
 
 type Props = {
-	landingPageFeatures: LandingPageFeatures;
+	landingPageFeatures: LandingPageFeatures<false>;
 };
 
 const SuperAdminDashboard = (props: Props) => {

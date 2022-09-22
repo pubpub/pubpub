@@ -8,10 +8,15 @@ import { findRankInRankedList } from 'utils/rank';
 
 require('./landingPageFeatureManager.scss');
 
+export type RenderFeatureProps<Kind extends LandingPageFeatureKind> = {
+	feature: LandingPageFeatureOfKind<Kind>;
+	onUpdateFeature: (feature: LandingPageFeatureOfKind<Kind>) => unknown;
+};
+
 type Props<Kind extends LandingPageFeatureKind> = {
 	kind: Kind;
 	initialFeatures: LandingPageFeatureOfKind<Kind>[];
-	renderFeature: (f: LandingPageFeatureOfKind<Kind>) => React.ReactNode;
+	renderFeature: (props: RenderFeatureProps<Kind>) => React.ReactNode;
 	placeholder: string;
 };
 
@@ -35,6 +40,19 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 			setFeatureInputValue('');
 		}
 	}, [featureInputValue, kind, features]);
+
+	const handleUpdateFeature = useCallback((nextFeature: LandingPageFeatureOfKind<Kind>) => {
+		setFeatures((currentFeatures) => {
+			return currentFeatures.map((f) => {
+				if (f.id === nextFeature.id) {
+					return nextFeature;
+				}
+				return f;
+			});
+		});
+		// Wants type Kind as a dep
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleRemoveFeature = useCallback(
 		async (featureId: string) => {
@@ -97,7 +115,9 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 						<Icon icon="drag-handle-vertical" />
 					</span>
 				)}
-				<div className="feature-content">{renderFeature(feature)}</div>
+				<div className="feature-content">
+					{renderFeature({ feature, onUpdateFeature: handleUpdateFeature })}
+				</div>
 				<Button
 					className="close-button"
 					minimal
