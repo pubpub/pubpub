@@ -3,7 +3,7 @@ import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
 import { Button } from '@blueprintjs/core';
 
 import { setLanguageCommandBuilder } from 'components/Editor/commands';
-import { languages } from 'components/Editor/utils';
+import { languageModes, languageNames } from 'components/Editor/utils';
 
 import { EditorChangeObjectWithNode } from '../types';
 import CommandMenu from '../CommandMenu';
@@ -15,10 +15,10 @@ type Props = {
 	onClose: () => unknown;
 };
 
-const buttonCommands = languages.map((language) => ({
-	key: `set-${language}`,
-	title: language,
-	command: setLanguageCommandBuilder(language),
+const buttonCommands = languageNames.map((languageName) => ({
+	key: `set-${languageName}`,
+	title: languageModes[languageName].label,
+	command: setLanguageCommandBuilder(languageName),
 }));
 
 const ControlsCodeBlock = (props: Props) => {

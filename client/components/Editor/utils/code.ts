@@ -1,35 +1,58 @@
-import { javascript } from '@codemirror/lang-javascript';
-import { markdown } from '@codemirror/lang-markdown';
-import { html } from '@codemirror/lang-html';
-import { sql } from '@codemirror/lang-sql';
-import { python } from '@codemirror/lang-python';
-import { cpp } from '@codemirror/lang-cpp';
-import { java } from '@codemirror/lang-java';
-import { php } from '@codemirror/lang-php';
-import { css } from '@codemirror/lang-css';
-
-export const languageModes = {
-	javascript,
-	markdown,
-	html,
-	sql,
-	python,
-	cpp,
-	java,
-	php,
-	css,
-};
-
-export const languages = [
-	'html',
+// TODO ask Eric about how to combine the below types into one type
+export const languageNames = [
 	'javascript',
 	'markdown',
+	'html',
 	'sql',
 	'python',
 	'cpp',
 	'java',
-	'css',
 	'php',
+	'css',
 ] as const;
 
-export type LanguageName = typeof languages[number];
+export type LanguageName = typeof languageNames[number];
+
+type ModeSpec = {
+	label: string;
+	importMode: any; // TODO how should this be typed?
+};
+
+export const languageModes: Record<LanguageName, ModeSpec> = {
+	javascript: {
+		label: 'javascript',
+		importMode: () => import('@codemirror/lang-javascript'),
+	},
+	markdown: {
+		label: 'markdown',
+		importMode: () => import('@codemirror/lang-markdown'),
+	},
+	html: {
+		label: 'html',
+		importMode: () => import('@codemirror/lang-html'),
+	},
+	sql: {
+		label: 'sql',
+		importMode: () => import('@codemirror/lang-sql'),
+	},
+	python: {
+		label: 'python',
+		importMode: () => import('@codemirror/lang-python'),
+	},
+	cpp: {
+		label: 'c++',
+		importMode: () => import('@codemirror/lang-cpp'),
+	},
+	java: {
+		label: 'java',
+		importMode: () => import('@codemirror/lang-java'),
+	},
+	php: {
+		label: 'php',
+		importMode: () => import('@codemirror/lang-php'),
+	},
+	css: {
+		label: 'css',
+		importMode: () => import('@codemirror/lang-css'),
+	},
+};

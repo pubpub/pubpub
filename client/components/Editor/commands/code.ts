@@ -1,6 +1,6 @@
 import { EditorState } from 'prosemirror-state';
 
-import { languages, LanguageName } from '../utils';
+import { LanguageName } from '../utils';
 import { createCommandSpec } from './util';
 import { Dispatch } from './types';
 
@@ -31,5 +31,3 @@ export const setLanguageCommandBuilder = (language: LanguageName) =>
 		canRun: setLanguage(language)(state),
 		isActive: false,
 	}));
-
-export const languageSetters = languages.map(setLanguageCommandBuilder);
