@@ -124,7 +124,7 @@ export default class CodeBlockView {
 		if (node.type !== this.node.type) return false;
 		this.node = node;
 		if (this.updating) return true;
-		const newLanguageName = node.attrs.languageName;
+		const newLanguageName = node.attrs.language;
 		if (newLanguageName !== this.currentLanguageName) {
 			languageModes[newLanguageName].importMode().then((languageMode) => {
 				this.cm.dispatch({
