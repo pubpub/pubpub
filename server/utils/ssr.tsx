@@ -72,6 +72,14 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	const avatar = image || initialData.communityData.avatar;
 	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
 	let outputComponents: any[] = [];
+
+	if(collection){
+		title = collection.title ?? title
+		attributions = collection.attributions ?? attributions
+		doi = collection.doi ?? collection.metadata?.doi ?? doi
+		publishedAt = collection.metadata?.publishedAt ?? publishedAt
+	}
+
 	if (!initialData.locationData.isBasePubPub) {
 		outputComponents = [
 			...outputComponents,
@@ -118,7 +126,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			<meta
 				key="u2"
 				property="og:type"
-				content={url.indexOf('/pub/') > -1 ? 'article' : 'website'}
+				content={collection?.kind === 'book' ? 'book' : (url.indexOf('/pub/') > -1 ? 'article' : 'website')}
 			/>,
 		];
 	}
