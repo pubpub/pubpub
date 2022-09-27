@@ -12,6 +12,7 @@
     "utils/**/*",
     "workers/**/*",
     "facets/**/*",
+		"deposit/**/*"
   ],
   "exclude": [
     "../**/__tests__/**/*",
