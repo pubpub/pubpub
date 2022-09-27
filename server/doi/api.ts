@@ -1,3 +1,4 @@
+import { createDeposit } from 'deposit/datacite';
 import { Release } from 'server/models';
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
@@ -122,5 +123,18 @@ app.get(
 		return res.status(200).json({
 			dois: await generateDoi({ communityId, collectionId, pubId }, target),
 		});
+	}),
+);
+
+app.get(
+	'/api/dataciteTest',
+	wrap(async (_, res) => {
+		let xml: any;
+		try {
+			xml = await createDeposit();
+		} catch (error) {
+			return res.status(404).json({ error: (error as Error).toString() });
+		}
+		return res.status(200).json({ xml });
 	}),
 );
