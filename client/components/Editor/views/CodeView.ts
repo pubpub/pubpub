@@ -1,41 +1,57 @@
 import { EditorView as CodeMirror, keymap as cmKeymap, drawSelection } from '@codemirror/view';
+import { Compartment } from '@codemirror/state';
 import { EditorView } from 'prosemirror-view';
 import { TextSelection, Selection } from 'prosemirror-state';
 import { Node, Fragment } from 'prosemirror-model';
-import { javascript } from '@codemirror/lang-javascript';
 import { defaultKeymap } from '@codemirror/commands';
 import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
-
 import { exitCode } from 'prosemirror-commands';
 import { undo, redo } from 'prosemirror-history';
+
+import { languageModes, LanguageName } from '../utils';
+
+const activeLanguageMode = new Compartment();
+
+const loadAndDispatchLanguageMode = (languageName: LanguageName, dispatch) => {
+	const languageMode =
+		languageName in languageModes ? languageModes[languageName].importMode() : null;
+	languageMode?.then((lm) =>
+		dispatch({
+			effects: activeLanguageMode.reconfigure(lm[languageName]()),
+		}),
+	);
+};
 
 export default class CodeBlockView {
 	private node: Node;
 	private cm: CodeMirror;
 	private getPos: any;
 	private view: EditorView;
+	private currentLanguageName: LanguageName;
 	dom: HTMLElement;
 	private updating: boolean;
 	constructor(node: Node, view: EditorView, getPos) {
 		this.node = node;
 		this.view = view;
 		this.getPos = getPos;
-
+		const { language: languageName } = this.node.attrs;
 		this.cm = new CodeMirror({
 			doc: this.node.textContent || undefined,
 			extensions: [
 				cmKeymap.of([...this.codeMirrorKeymap(), ...defaultKeymap]),
 				drawSelection(),
 				syntaxHighlighting(defaultHighlightStyle),
-				javascript(),
+				activeLanguageMode.of([]),
 				CodeMirror.updateListener.of((update) => this.forwardUpdate(update)),
 			],
 		});
-
 		this.dom = this.cm.dom;
 		// This flag is used to avoid an update loop between the outer and
 		// inner editor
 		this.updating = false;
+		// now that dom has been synchronously set, apply language syntax highlighting
+		this.currentLanguageName = languageName;
+		loadAndDispatchLanguageMode(this.currentLanguageName, this.cm.dispatch);
 	}
 
 	forwardUpdate(update) {
@@ -112,6 +128,11 @@ export default class CodeBlockView {
 		if (node.type !== this.node.type) return false;
 		this.node = node;
 		if (this.updating) return true;
+		const newLanguageName = node.attrs.language;
+		if (newLanguageName !== this.currentLanguageName) {
+			loadAndDispatchLanguageMode(newLanguageName, this.cm.dispatch);
+			this.currentLanguageName = newLanguageName;
+		}
 		const newText = node.textContent;
 		const curText = this.cm.state.doc.toString();
 		if (newText !== curText) {
