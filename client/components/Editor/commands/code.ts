@@ -1,15 +1,8 @@
 import { EditorState } from 'prosemirror-state';
 
-import { LanguageName } from '../utils';
+import { LanguageName, isInCodeBlock } from '../utils';
 import { createCommandSpec } from './util';
 import { Dispatch } from './types';
-
-const isInCodeBlock = (state: EditorState): boolean => {
-	const { $anchor } = state.selection;
-	for (let d = $anchor.depth; d > 0; d--)
-		if ($anchor.node(d).type.name === 'code_block') return true;
-	return false;
-};
 
 const setLanguage = (language: LanguageName) => (state: EditorState, dispatch?: Dispatch) => {
 	const canRun = isInCodeBlock(state);

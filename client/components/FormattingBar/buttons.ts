@@ -19,7 +19,7 @@ import {
 	superscriptToggle,
 } from '../Editor/commands';
 import { getCurrentNodeLabels, EditorChangeObject } from '../Editor';
-
+import { isInCodeBlock } from '../Editor/utils';
 import {
 	ControlsCodeBlock,
 	ControlsMath,
@@ -187,13 +187,10 @@ export const code: FormattingBarButtonData = {
 	command: codeToggle,
 };
 
-const isInCodeBlock = (editorChangeObject: EditorChangeObject): boolean => {
+const showOrIndicate = (editorChangeObject: EditorChangeObject): boolean => {
 	if (!editorChangeObject.view) return false;
 	const state = editorChangeObject.view.state;
-	const { $anchor } = state.selection;
-	for (let d = $anchor.depth; d > 0; d--)
-		if ($anchor.node(d).type.name === 'code_block') return true;
-	return false;
+	return isInCodeBlock(state);
 };
 
 export const codeBlock: FormattingBarButtonData = {
@@ -205,8 +202,8 @@ export const codeBlock: FormattingBarButtonData = {
 		captureFocusOnMount: false,
 		component: ControlsCodeBlock,
 		trigger: triggerOnClick,
-		show: isInCodeBlock,
-		indicate: isInCodeBlock,
+		show: showOrIndicate,
+		indicate: showOrIndicate,
 		floatingPosition: positionNearParent,
 		showCloseButton: false,
 	},

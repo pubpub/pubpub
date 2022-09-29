@@ -1,24 +1,13 @@
-// TODO ask Eric about how to combine the below types into one type
-export const languageNames = [
-	'javascript',
-	'markdown',
-	'html',
-	'sql',
-	'python',
-	'cpp',
-	'java',
-	'php',
-	'css',
-] as const;
+import { EditorState } from 'prosemirror-state';
 
-export type LanguageName = typeof languageNames[number];
-
-type ModeSpec = {
-	label: string;
-	importMode: any; // TODO how should this be typed?
+export const isInCodeBlock = (state: EditorState): boolean => {
+	const { $anchor } = state.selection;
+	for (let d = $anchor.depth; d > 0; d--)
+		if ($anchor.node(d).type.name === 'code_block') return true;
+	return false;
 };
 
-export const languageModes: Record<LanguageName, ModeSpec> = {
+export const languageModes = {
 	javascript: {
 		label: 'javascript',
 		importMode: () => import('@codemirror/lang-javascript'),
@@ -56,3 +45,6 @@ export const languageModes: Record<LanguageName, ModeSpec> = {
 		importMode: () => import('@codemirror/lang-css'),
 	},
 };
+
+export type LanguageName = keyof typeof languageModes;
+export const languageNames = Object.keys(languageModes) as LanguageName[];

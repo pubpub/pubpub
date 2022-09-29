@@ -12,6 +12,16 @@ import { languageModes, LanguageName } from '../utils';
 
 const activeLanguageMode = new Compartment();
 
+const loadAndDispatchLanguageMode = (languageName: LanguageName, dispatch) => {
+	const languageMode =
+		languageName in languageModes ? languageModes[languageName].importMode() : null;
+	languageMode?.then((lm) =>
+		dispatch({
+			effects: activeLanguageMode.reconfigure(lm[languageName]()),
+		}),
+	);
+};
+
 export default class CodeBlockView {
 	private node: Node;
 	private cm: CodeMirror;
@@ -41,13 +51,7 @@ export default class CodeBlockView {
 		this.updating = false;
 		// now that dom has been synchronously set, apply language syntax highlighting
 		this.currentLanguageName = languageName;
-		const languageMode =
-			languageName in languageModes ? languageModes[languageName].importMode() : null;
-		languageMode?.then((lm) =>
-			this.cm.dispatch({
-				effects: activeLanguageMode.reconfigure(lm[languageName]()),
-			}),
-		);
+		loadAndDispatchLanguageMode(this.currentLanguageName, this.cm.dispatch);
 	}
 
 	forwardUpdate(update) {
@@ -126,11 +130,7 @@ export default class CodeBlockView {
 		if (this.updating) return true;
 		const newLanguageName = node.attrs.language;
 		if (newLanguageName !== this.currentLanguageName) {
-			languageModes[newLanguageName].importMode().then((languageMode) => {
-				this.cm.dispatch({
-					effects: activeLanguageMode.reconfigure(languageMode[newLanguageName]()),
-				});
-			});
+			loadAndDispatchLanguageMode(newLanguageName, this.cm.dispatch);
 			this.currentLanguageName = newLanguageName;
 		}
 		const newText = node.textContent;
