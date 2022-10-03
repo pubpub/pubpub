@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { NonIdealState, Button, Card, Elevation } from '@blueprintjs/core';
+import { Button, Card, Elevation } from '@blueprintjs/core';
 import Color from 'color';
 
-import { useSticky } from 'client/utils/useSticky';
 import { DocJson, Community } from 'types';
+import { isEmptyDoc } from 'client/components/Editor';
 
 import ReviewEditor from './ReviewEditor';
 
@@ -13,31 +13,29 @@ type Props = {
 	communityData: Community;
 	onSubmit: any;
 	isLoading: boolean;
-	createError: boolean;
 	review: DocJson;
 	updateReview: (doc: DocJson) => void;
 };
 
 const Review = (props: Props) => {
-	const { communityData, onSubmit, isLoading, createError, review, updateReview } = props;
-
-	useSticky({
-		target: '.review-component',
-		isActive: true,
-		offset: 37,
-	});
+	const { communityData, onSubmit, isLoading, review, updateReview } = props;
 
 	const [hover, setHover] = useState(false);
+
 	const lighterAccentColor = useMemo(
 		() => Color(communityData.accentColorDark).alpha(0.4),
 		[communityData.accentColorDark],
 	);
-	const bgColor = !hover ? lighterAccentColor : communityData.accentColorDark;
+	const bgColor = isEmptyDoc(review as DocJson)
+		? 'lightgray'
+		: !hover
+		? lighterAccentColor
+		: communityData.accentColorDark;
 
 	return (
-		<Card interactive={true} elevation={Elevation.TWO}>
-			<div className="review-component">
-				<div className="review-border">
+		<div className="review-component">
+			<Card interactive={true} elevation={Elevation.TWO}>
+				<div className="review-border" style={{ borderColor: bgColor }}>
 					<ReviewEditor setReviewDoc={updateReview} reviewDoc={review} />
 				</div>
 				<div className="review-button">
@@ -49,26 +47,15 @@ const Review = (props: Props) => {
 						className="review-submission-button"
 						style={{ background: bgColor }}
 						intent="primary"
+						disabled={isEmptyDoc(review as DocJson)}
 						onMouseEnter={() => setHover(true)}
 						onMouseLeave={() => setHover(false)}
 					>
 						Submit Review
 					</Button>
-					{createError && (
-						<NonIdealState
-							title="There was an error submitting your review"
-							// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
-							visual="error"
-							action={
-								<a href="/login" className="bp3-button">
-									Login or Signup
-								</a>
-							}
-						/>
-					)}
 				</div>
-			</div>
-		</Card>
+			</Card>
+		</div>
 	);
 };
 

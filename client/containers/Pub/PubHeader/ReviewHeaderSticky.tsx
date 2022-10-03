@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, AnchorButton } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
-import { Icon, Popover } from 'components';
+import { pubUrl } from 'utils/canonicalUrls';
+import { Icon } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 import { useLocalStorage } from 'client/utils/useLocalStorage';
 import { getEmptyDoc } from 'client/components/Editor';
@@ -18,23 +19,28 @@ const ReviewHeaderSticky = () => {
 	const { pubData, updatePubData } = usePubContext();
 	const {
 		communityData,
-		scopeData: { activePermissions },
+		scopeData: {
+			activePermissions: { canManage, canEdit },
+			memberData,
+		},
 		loginData: { fullName },
 	} = usePageContext();
+	const { viewHash } = pubData;
 
 	const [visible, setVisible] = useState(false);
 	const [reviewTitle, setReviewTitle] = useState('Untitled Review');
 	const [reviewerName, setReviewerName] = useState('');
-	const [createError, setCreateError] = useState(false);
+	const [createError, setCreateError] = useState(undefined);
 	const [isLoading, setIsLoading] = useState(false);
-
-	const isUser = !!(activePermissions.canEdit || fullName);
-	const redirectUrl = (reviewToRedirectTo) =>
-		isUser ? `/dash/pub/${pubData.slug}/reviews/${reviewToRedirectTo.number}` : `/signup`;
+	const [isSaving, setIsSaving] = useState(false);
+	const [createdReview, setCreatedReview] = useState(false);
+	const [showReview, setShowReview] = useState(true);
+	const [reviewNumber, setReviewNumber] = useState(0);
+	const [saved, setSaved] = useState(false);
 
 	// creates a docjoson object in local store, provides state handlers as well
 	const { value: review, setValue: setReview } = useLocalStorage<DocJson>({
-		initial: () => getEmptyDoc(),
+		initial: getEmptyDoc,
 		communityId: communityData.id,
 		featureName: 'new-review-editor',
 		path: [`pub-${pubData.id}`],
@@ -43,6 +49,11 @@ const ReviewHeaderSticky = () => {
 
 	const updatingReviewDoc = (doc: DocJson) => {
 		setReview(doc);
+		setIsSaving(true);
+		setTimeout(() => {
+			setSaved(true);
+			setIsSaving(false);
+		}, 1000);
 	};
 
 	const url = new URL(window.location.href);
@@ -69,8 +80,9 @@ const ReviewHeaderSticky = () => {
 						  };
 				});
 				setIsLoading(false);
+				setReviewNumber(reviewRes.number);
 				setReview(getEmptyDoc());
-				window.location.href = redirectUrl(reviewRes);
+				setCreatedReview(true);
 			})
 			.catch((err) => {
 				setIsLoading(false);
@@ -78,42 +90,70 @@ const ReviewHeaderSticky = () => {
 			});
 	};
 
+	const renderReview = () => (
+		<Review
+			communityData={communityData}
+			onSubmit={() => setVisible(true)}
+			isLoading={isLoading}
+			review={review}
+			updateReview={updatingReviewDoc}
+		/>
+	);
+	const reviewPath = `/dash/pub/${pubData.slug}/reviews/${reviewNumber}`;
+	const isMember = memberData.length > 0;
+	const userFilter = canManage && isMember;
+	const pubPath = userFilter
+		? pubUrl(communityData, pubData)
+		: pubUrl(communityData, pubData, { accessHash: viewHash });
+	const isUser = !!(canEdit || fullName);
+	const reviewerFooterButtons = (
+		<React.Fragment>
+			<AnchorButton href={pubPath}>Return to Pub</AnchorButton>
+			{userFilter && (
+				<AnchorButton intent="primary" href={reviewPath}>
+					Go to Review
+				</AnchorButton>
+			)}
+		</React.Fragment>
+	);
 	return (
-		<div className="review-header-sticky-component">
-			<div className="sticky-title">{pubData.title}</div>
-			<div className="side-content">
-				<div className="sticky-buttons sticky-review-buttons">
-					<div className="sticky-review-text">review</div>
-					<ReviewerDialog
-						isOpen={visible}
-						onClose={() => setVisible(false)}
-						pubData={pubData}
-						onCreateReviewDoc={handleSubmit}
-						setReviewTitle={setReviewTitle}
-						reviewTitle={reviewTitle}
-						reviewerName={reviewerName}
-						setReviewerName={setReviewerName}
-						isUser={isUser}
-					/>
-					<Popover
-						aria-label="Notifications"
-						placement="bottom"
-						className="review-popover"
-						content={
-							<Review
-								communityData={communityData}
-								onSubmit={() => setVisible(true)}
-								isLoading={isLoading}
-								createError={createError}
-								review={review}
-								updateReview={updatingReviewDoc}
-							/>
-						}
-						preventBodyScroll={false}
-						unstable_fixed
-					>
-						<Button minimal={true} icon={<Icon icon="expand-all" />} />
-					</Popover>
+		<div className="review-header-sticky-component container pub">
+			<div className="sticky-section">
+				<div className="sticky-title">{pubData.title}</div>
+				<div className="side-content">
+					{showReview && renderReview()}
+					<div className="sticky-buttons">
+						<div className="sticky-review-text">review</div>
+						{isSaving && (
+							<div className="saving-text">
+								<em>Saving...</em>
+							</div>
+						)}
+						{saved && !isSaving && <em className="saving-text">Saved</em>}
+						<ReviewerDialog
+							isOpen={visible}
+							onClose={() => {
+								setCreatedReview(false);
+								setVisible(false);
+							}}
+							pubData={pubData}
+							onCreateReviewDoc={handleSubmit}
+							setReviewTitle={setReviewTitle}
+							reviewTitle={reviewTitle}
+							reviewerName={reviewerName}
+							setReviewerName={setReviewerName}
+							createdReview={createdReview}
+							createError={createError}
+							isUser={isUser}
+							reviewerFooterButtons={reviewerFooterButtons}
+						/>
+
+						<Button
+							minimal
+							icon={<Icon icon="expand-all" />}
+							onClick={() => setShowReview(!showReview)}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

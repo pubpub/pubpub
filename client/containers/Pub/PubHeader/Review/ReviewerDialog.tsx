@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Classes, Dialog, InputGroup } from '@blueprintjs/core';
+import { AnchorButton, Callout, Classes, Dialog, InputGroup } from '@blueprintjs/core';
 import { PubPageData } from 'types';
 
 require('./reviewerDialog.scss');
@@ -13,7 +13,10 @@ type Props = {
 	reviewTitle: string;
 	reviewerName: string;
 	setReviewerName: React.Dispatch<React.SetStateAction<string>>;
+	createdReview: boolean;
+	createError: any;
 	isUser: boolean;
+	reviewerFooterButtons: React.ReactNode;
 };
 
 const ReviewerDialog = (props: Props) => {
@@ -26,19 +29,11 @@ const ReviewerDialog = (props: Props) => {
 		reviewTitle,
 		reviewerName,
 		setReviewerName,
+		createdReview,
+		createError,
 		isUser,
+		reviewerFooterButtons,
 	} = props;
-
-	const renderPreReviewButtons = () => {
-		return (
-			<React.Fragment>
-				<Button onClick={onClose}>Cancel</Button>
-				<Button intent="primary" onClick={onCreateReviewDoc}>
-					Create Review
-				</Button>
-			</React.Fragment>
-		);
-	};
 
 	const handleTitleOnBlur = (evt) => setReviewTitle(evt.target.value.trim());
 	const handleReviewerNameOnBlur = (evt) => setReviewerName(evt.target.value.trim());
@@ -47,16 +42,11 @@ const ReviewerDialog = (props: Props) => {
 			evt.currentTarget.blur();
 		}
 	};
-	return (
-		<Dialog
-			lazy={true}
-			title="Create Review"
-			onClose={onClose}
-			isOpen={isOpen}
-			className="pub-release-review-dialog-component"
-		>
-			<div className={Classes.DIALOG_BODY}>
-				<div className="reviewer-dialog">
+
+	const renderDialog = () => {
+		return (
+			<React.Fragment>
+				<div className={Classes.DIALOG_BODY}>
 					<div className="title-input">
 						<p>Add a title to your review?</p>
 						<InputGroup
@@ -79,9 +69,51 @@ const ReviewerDialog = (props: Props) => {
 						You are about to submit a review for <b>{pubData.title}</b>.
 					</p>
 				</div>
-			</div>
-			<div className={Classes.DIALOG_FOOTER}>
-				<div className={Classes.DIALOG_FOOTER_ACTIONS}>{renderPreReviewButtons()}</div>
+				<div className={Classes.DIALOG_FOOTER}>
+					<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+						<AnchorButton onClick={onClose}>Cancel</AnchorButton>
+						<AnchorButton intent="primary" onClick={onCreateReviewDoc}>
+							Create Review
+						</AnchorButton>
+					</div>
+				</div>
+			</React.Fragment>
+		);
+	};
+
+	const renderSuccess = () => {
+		return (
+			<React.Fragment>
+				<div className={Classes.DIALOG_BODY}>
+					<div className="callout">
+						<Callout intent="success" title="Created Review!">
+							Your review was successfully submitted!
+						</Callout>
+					</div>
+				</div>
+				<div className={Classes.DIALOG_FOOTER}>
+					<div className={Classes.DIALOG_FOOTER_ACTIONS}>{reviewerFooterButtons}</div>
+				</div>
+			</React.Fragment>
+		);
+	};
+
+	return (
+		<Dialog
+			lazy={true}
+			title="Create Review"
+			onClose={onClose}
+			isOpen={isOpen}
+			className="reviewer-dialog"
+		>
+			{createdReview ? renderSuccess() : renderDialog()}
+
+			<div className="callout">
+				{createError && (
+					<Callout intent="danger" title="There was an error submitting your review">
+						Your review was not successfully submitted!
+					</Callout>
+				)}
 			</div>
 		</Dialog>
 	);

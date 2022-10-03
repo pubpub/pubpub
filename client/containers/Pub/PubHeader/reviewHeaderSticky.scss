@@ -2,14 +2,21 @@
 @import '../pub.scss';
 
 .review-header-sticky-component {
-	position: absolute;
-	bottom: 0px;
+	bottom: 0;
 	line-height: 37px;
-	width: 100%;
-	max-width: $pub-max-width;
 	transition: 0.2s linear opacity;
-	display: flex;
+
 	color: inherit;
+
+	.sticky-section {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		padding: 0 25px;
+		.side-content {
+			position: relative;
+		}
+	}
 
 	.sticky-title {
 		overflow: hidden;
@@ -25,6 +32,7 @@
 		white-space: nowrap;
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 
 		.bp3-button,
 		.bp3-icon {
@@ -32,15 +40,11 @@
 		}
 
 		.dot {
-			padding: 0em 0.3em;
+			padding: 0 0.3em;
 			height: 24px;
 			line-height: 24px;
 			display: block;
 		}
-	}
-
-	.sticky-review-buttons {
-		display: flex;
 	}
 
 	.sticky-review-text {
@@ -50,63 +54,8 @@
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
 	}
+
+	.saving-text {
+		padding: 4px;
+	}
 }
-
-// /* This selector is a IE 10+ kludge */
-// @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-// 	.sticky-grid {
-// 		width: 100%;
-// 		.main-content {
-// 			max-width: $pub-max-width;
-// 			margin: 0 auto;
-// 		}
-// 		.side-content {
-// 			max-width: $pub-max-width;
-// 			margin: 0 auto;
-// 		}
-// 	}
-// }
-
-// @supports (display: grid) {
-// 	.sticky-grid {
-// 		@include has-grid('. title . review .');
-// 		width: 100%;
-// 		.main-content {
-// 			grid-area: title;
-// 		}
-// 		.side-content {
-// 			grid-area: review;
-// 		}
-// 	}
-// 	@include pub-full-view {
-// 		.pub-document-component {
-// 			.pub-columns {
-// 				margin-top: 3em;
-// 			}
-// 			.side-content {
-// 				.header-title {
-// 					display: block;
-// 					font-weight: 600;
-// 					font-size: 16px;
-// 					margin-bottom: 10px;
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	@include pub-compact-view {
-// 		.sticky-grid {
-// 			.side-content > * {
-// 				display: none;
-// 			}
-// 		}
-// 	}
-// }
-
-// @media print {
-// 	#pub-old-container {
-// 		.container.pub {
-// 			max-width: 100%;
-// 		}
-// 	}
-// }

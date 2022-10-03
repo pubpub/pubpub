@@ -54,10 +54,9 @@ export default (sequelize, dataTypes) => {
 				defaultValue: true,
 				allowNull: false,
 			},
-			canReviewRelease: {
-				type: dataTypes.BOOLEAN,
-				defaultValue: false,
-				allowNull: false,
+			facetsMigratedAt: {
+				type: dataTypes.DATE,
+				allowNull: true,
 			},
 
 			/* Set by Associations */
