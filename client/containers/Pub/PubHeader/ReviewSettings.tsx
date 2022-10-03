@@ -11,6 +11,7 @@ import { usePageContext } from 'utils/hooks';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { PatchFn, PubPageData } from 'types';
+import { apiFetch } from 'client/utils/apiFetch';
 
 require('./reviewSettings.scss');
 
@@ -70,35 +71,35 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 	const { viewHash, editHash, isReview, canReviewRelease } = pubData;
 	const hasHash = !!(viewHash || editHash);
 	const [checked, setChecked] = useState<boolean>(canReviewRelease);
-	const handlePublicReview = () => {
-		// set a field on review to public
-		apiFetch('/api/pubs', {
-			method: 'POST',
-			body: JSON.stringify({
-				communityId: communityData.id,
-				pubId: pubData.id,
-				// @ts-expect-error ts-migrate(2339) FIXME: Property 'content' does not exist on type '{}'.
-				content: noteData.content,
-				// @ts-expect-error ts-migrate(2339) FIXME: Property 'text' does not exist on type '{}'.
-				text: noteData.text,
-				releaseRequested: true,
-			}),
-		})
-			.then(() => {
-				setError(null);
-				setChecked(!checked);
-				setIsCreatingReview(false);
-				updatePubData(() => {
-					return {
-						canReviewRelease: checked,
-					};
-				});
-			})
-			.catch((err) => {
-				setError(err);
-				setIsCreatingReview(false);
-			});
-	};
+	// const handlePublicReview = () => {
+	// 	// set a field on review to public
+	// 	apiFetch('/api/pubs', {
+	// 		method: 'POST',
+	// 		body: JSON.stringify({
+	// 			communityId: communityData.id,
+	// 			pubId: pubData.id,
+	// 			// @ts-expect-error ts-migrate(2339) FIXME: Property 'content' does not exist on type '{}'.
+	// 			content: noteData.content,
+	// 			// @ts-expect-error ts-migrate(2339) FIXME: Property 'text' does not exist on type '{}'.
+	// 			text: noteData.text,
+	// 			releaseRequested: true,
+	// 		}),
+	// 	})
+	// 		.then(() => {
+	// 			setError(null);
+	// 			setChecked(!checked);
+	// 			setIsCreatingReview(false);
+	// 			updatePubData(() => {
+	// 				return {
+	// 					canReviewRelease: checked,
+	// 				};
+	// 			});
+	// 		})
+	// 		.catch((err) => {
+	// 			setError(err);
+	// 			setIsCreatingReview(false);
+	// 		});
+	// };
 
 	return (
 		<Dialog
@@ -141,11 +142,7 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 								You can allow visitors to the releaseed verion of this Pub to review
 								it.
 							</p>
-							<Checkbox
-								label="Enabled "
-								checked={checked}
-								onChange={handlePublicReview}
-							/>
+							<Checkbox label="Enabled " checked={checked} onChange={() => {}} />
 						</div>
 					</div>
 				</PendingChangesProvider>
