@@ -1,20 +1,50 @@
 /* @jsx x */
 import { x, renderXml } from '@pubpub/deposit-utils/datacite';
+import { Pub } from 'server/models';
+import { buildPubOptions } from 'server/utils/queryHelpers';
+import * as types from 'types';
+import { expect } from 'utils/assert';
+import { getDois } from 'utils/crossref/createDeposit';
+import { getPubPublishedDate } from 'utils/pub/pubDates';
 
 // import { Pub } from 'types';
 
-export function createDeposit() {
+type CreateDepositIds = { communityId: string } & ({ collectionId: string } | { pubId: string });
+
+const findPub = (pubId: string): Promise<types.Pub> =>
+	Pub.findOne({
+		where: { id: pubId },
+		...buildPubOptions({
+			getEdgesOptions: {
+				// Include Pub for both inbound and outbound pub connections
+				// since we do a lot of downstream processing with pubEdges.
+				includePub: true,
+				includeCommunityForPubs: true,
+			},
+		}),
+	});
+
+export async function xcreateDeposit(ids: CreateDepositIds) {
+	if (!('pubId' in ids)) {
+		throw new Error();
+	}
+	const pub = await findPub(ids.pubId);
+	const dois = getDois(
+		pubEdge && pubEdge.relationType === RelationType.Supplement ? contextWithPubEdge : ctx,
+		doiTarget,
+		depositTarget,
+	);
 	return renderXml(
 		<resource xmlns="http://datacite.org/schema/kernel-4">
-			<descriptions>
-				<description xml:lang="en-US" descriptionType="Abstract">
-					A description
-				</description>
-			</descriptions>
+			{pub.description && (
+				<descriptions>
+					<description xml:lang="en-US" descriptionType="Abstract">
+						{pub.description}
+					</description>
+				</descriptions>
+			)}
 			<titles>
-				<title>
-					Water Deficiency Correlates to Increased Senescense in All Plant Species
-				</title>
+				<title>{pub.title}</title>
 			</titles>
 			<creators>
 				<creator>
@@ -23,7 +53,7 @@ export function createDeposit() {
 			</creators>
 			<identifier identifierType="DOI">10.507/8675309</identifier>
 			<publisher>MIT Press</publisher>
-			<publicationYear>2011</publicationYear>
+			<publicationYear>{expect(getPubPublishedDate(pub)).getFullYear()}</publicationYear>
 			<resourceType resourceTypeGeneral="Journal">Some additional text</resourceType>
 			<relatedItems>
 				<relatedItem relatedItemType="Book" relationType="IsCitedBy">

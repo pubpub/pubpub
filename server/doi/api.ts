@@ -127,11 +127,22 @@ app.get(
 );
 
 app.get(
-	'/api/dataciteTest',
-	wrap(async (_, res) => {
+	'/api/depositTest',
+	wrap(async (req, res) => {
 		let xml: any;
+		const user = req.user || {};
+		const { communityId, collectionId, pubId, target } = req.query;
+		const requestIds = {
+			userId: user.id,
+			communityId,
+			collectionId: collectionId || null,
+			pubId: pubId || null,
+		};
+
+		await assertUserAuthorized(target, requestIds);
+
 		try {
-			xml = await createDeposit();
+			xml = await createDeposit({ communityId, collectionId, pubId });
 		} catch (error) {
 			return res.status(404).json({ error: (error as Error).toString() });
 		}
