@@ -11,7 +11,6 @@ import { usePageContext } from 'utils/hooks';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { PatchFn, PubPageData } from 'types';
-import { apiFetch } from 'client/utils/apiFetch';
 
 require('./reviewSettings.scss');
 
@@ -70,7 +69,8 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 	const { canCreateReviews } = scopeData.activePermissions;
 	const { viewHash, editHash, isReview, canReviewRelease } = pubData;
 	const hasHash = !!(viewHash || editHash);
-	const [checked, setChecked] = useState<boolean>(canReviewRelease);
+	const [checked] = useState<boolean>(canReviewRelease);
+	// setChecked
 	// const handlePublicReview = () => {
 	// 	// set a field on review to public
 	// 	apiFetch('/api/pubs', {

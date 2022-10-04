@@ -45,7 +45,7 @@ const getCanCreateRelease = (latestRelease, latestKey) => {
 const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { historyData, pubData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
-	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
+	const { canView, canViewDraft, canAdmin } = scopeData.activePermissions;
 	const { isRelease, isReview } = pubData;
 
 	const renderForRelease = () => {
