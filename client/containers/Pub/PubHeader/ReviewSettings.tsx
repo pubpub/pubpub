@@ -70,7 +70,6 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 	const { viewHash, editHash, isReview, canReviewRelease } = pubData;
 	const hasHash = !!(viewHash || editHash);
 	const [checked] = useState<boolean>(canReviewRelease);
-	// setChecked
 	// const handlePublicReview = () => {
 	// 	// set a field on review to public
 	// 	apiFetch('/api/pubs', {
