@@ -23,7 +23,7 @@ export type ValidLandingPageCommunityFeature = LandingPageCommunityFeature & {
 		imageUrl: string;
 		quote: DocJson;
 		highlights: DocJson;
-		backgroundColor?: null | string;
+		backgroundColor?: string | undefined;
 	};
 };
 

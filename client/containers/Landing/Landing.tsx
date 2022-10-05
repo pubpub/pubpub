@@ -1,11 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Icon, PubByline, PubTitle } from 'components';
-import { LandingPageFeatures, Pub } from 'types';
+import { LandingPageFeatures, Community, Pub, DocJson } from 'types';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { formatDate } from 'utils/dates';
-import { collectionUrl, communityUrl } from 'utils/canonicalUrls';
+import { collectionUrl, communityUrl, pubUrl } from 'utils/canonicalUrls';
+import { Tab, Tabs, TabId } from "@blueprintjs/core";
+import { getTextFromDoc, jsonToNode } from 'components/Editor';
+
 
 require('./landing.scss');
 
@@ -19,6 +22,8 @@ type FlattenedPub = {
 	community: {
 		title: string;
 		url: string;
+		accentColorDark: string;
+		accentColorLight: string;
 	};
 	primaryCollection: null | {
 		title: string;
@@ -27,6 +32,37 @@ type FlattenedPub = {
 	publishedDate: null | string;
 	byline: React.ReactNode;
 };
+
+type FlattenedCommunity = {
+	community: Community;
+	title: string;
+	since: string;
+	url: string;
+	meta: {
+		backgroundColor: string | undefined;
+		imageUrl: string;
+		highlights: DocJson;
+		quote: DocJson;
+	}
+};
+
+const getFlattedCommunitiesFromFeaturedItems = (featuredItems: LandingPageFeatures): FlattenedCommunity[] => {
+	return featuredItems.community.map((feature) => {
+		const { community } = feature;
+		return {
+			community,
+			title: community.title,
+			since: 'June 2022',
+			url: communityUrl(community),
+			meta: {
+				backgroundColor: feature.payload.backgroundColor,
+				imageUrl: feature.payload.imageUrl,
+				highlights: feature.payload.highlights,
+				quote: feature.payload.quote,
+			}
+		}
+	});
+}
 
 const getFlattenedPubsFromFeaturedItems = (featuredItems: LandingPageFeatures): FlattenedPub[] => {
 	return featuredItems.pub.map((feature) => {
@@ -42,6 +78,8 @@ const getFlattenedPubsFromFeaturedItems = (featuredItems: LandingPageFeatures): 
 			community: {
 				title: community.title,
 				url: communityUrl(community),
+				accentColorDark: community.accentColorDark,
+				accentColorLight: community.accentColorLight
 			},
 			primaryCollection: primaryCollection
 				? {
@@ -52,6 +90,7 @@ const getFlattenedPubsFromFeaturedItems = (featuredItems: LandingPageFeatures): 
 		};
 	});
 };
+
 
 const features = [
 	{
@@ -69,18 +108,37 @@ const features = [
 		title: 'Discussions & Annotations',
 		desc: 'Host public and private discussions with your readers and community, whether in your classroom or across the world.',
 	},
-] as const;
-
-const communities = [
 	{
-		name: 'Harvard Data Science Review',
-		description: 'A microscopic, telescopic & kaleidoscopic view of data science.',
-		logo: '/static/landing/hdsr.png',
-		type: 'Journals',
-		category: 'Science',
-		link: 'https://hdsr.mitpress.mit.edu',
+		icon: 'page-layout',
+		title: 'Easily Customizable Layouts',
+		desc: 'Create your custom site without writing a line of code.',
 	},
-];
+	{
+		icon: 'book',
+		title: 'Collection Metadata',
+		desc: 'Include article & collection-level metadata for easier organization of content and improved discovery.',
+	},
+	{
+		icon: 'people',
+		title: 'Access Control',
+		desc: 'Allow anyone to access your content, or just the people you choose.',
+	},
+	{
+		icon: 'grouped-bar-chart',
+		title: 'Impact Measurement',
+		desc: 'Learn about the people visiting your community with a full suite of privacy-respecting analytics.',
+	},
+	{
+		icon: 'graph',
+		title: 'Content Connections',
+		desc: 'Add typed relationships — reviews, commentary, supplement, etc. — to your content and deposit them to Crossref.',
+	},
+	{
+		icon: 'export',
+		title: 'Document Export',
+		desc: 'Export your work to PDF, Word, Markdown, LaTeX, JATS XML, and more.',
+	},
+] as const;
 
 const Landing = (props: Props) => {
 	const { featuredItems } = props;
@@ -88,6 +146,18 @@ const Landing = (props: Props) => {
 		() => getFlattenedPubsFromFeaturedItems(featuredItems),
 		[featuredItems],
 	);
+
+	const flattenedCommunities = useMemo(
+		() => getFlattedCommunitiesFromFeaturedItems(featuredItems),
+		[featuredItems],
+	);
+	const [communityTabId, setTabId] = useState<number>(1);
+	const [featuredCommunityColor, setFeaturedCommunityColor] = useState<string   |undefined>(flattenedCommunities[0].meta.backgroundColor);
+
+	const handleCommunityTabChange = (communityTabId:number, targetColor:string) => {
+		setTabId(communityTabId);
+		setFeaturedCommunityColor(flattenedCommunities[communityTabId-1].meta.backgroundColor);
+	}
 
 	const featureGrid = features.map((feature) => {
 		return (
@@ -101,6 +171,65 @@ const Landing = (props: Props) => {
 		);
 	});
 
+	const communitiesBlock = () => {
+		const communityTabs = () => flattenedCommunities.map((flat, index) => {
+			const highlightsList = () => {
+				return (
+					<ul>
+						{getTextFromDoc(jsonToNode(flat.meta.highlights)).split("#").map((highlight) => {
+							return <li>{highlight}</li>
+						})}
+					</ul>
+				);
+			};
+			const panel = () => {
+				return (
+					<div className="panel-inner">
+						<div className="img-highlights">
+							<img className="community-image" src={flat.meta.imageUrl} alt={"Community Image"} />
+							<div className="highlights">
+								<div className="header">
+									<Icon icon="badge" className="icon" />
+									<span>Highlights</span>
+								</div>
+								{highlightsList()}
+							</div>
+						</div>
+						<div className="quote">
+							<Icon icon="citation" className="icon" />
+							<div className="text">{getTextFromDoc(jsonToNode(flat.meta.quote))}</div>
+						</div>
+						<div className="info">
+							<Icon icon="link" className="icon" />
+							<div className="text">
+								<a href={flat.url}>{flat.url}</a>
+								<p>on PubPub since {flat.since}</p>
+							</div>
+						</div>
+					</div>
+				)
+			}
+			const tabtitle = () => {
+				return (
+					<div className="tab-title">
+							<Icon icon="office" className="icon" />
+							<div className="name">{flat.title}</div>
+							<Icon icon="chevron-right" className="icon arrow" />
+					</div>
+				)
+			}
+			return (
+				<Tab id={index+1} title={tabtitle()} panel={panel()} panelClassName="panel" />
+			)
+		});
+
+		return (
+			<Tabs className="community-block" defaultSelectedTabId={communityTabId} vertical large onChange={handleCommunityTabChange}>
+				{communityTabs()}
+			</Tabs>
+		)
+	}
+
 	const pubList = flattenedPubs.map((flat) => {
 		const { title, pub, community, primaryCollection, byline, publishedDate } = flat;
 		const { description, headerBackgroundImage } = pub;
@@ -108,12 +237,15 @@ const Landing = (props: Props) => {
 			<div className="pub" key={pub.id}>
 				<div className="slab">
 					{headerBackgroundImage && (
-						<img className="image-bg" src={headerBackgroundImage} alt="" />
+						<div>
+							<img className="image-bg" src={headerBackgroundImage} alt="" />
+							<div className="color-overlay" />
+						</div>
 					)}
-					<div className="color-overlay" />
+					{!headerBackgroundImage && <div className="color-bg" style={{backgroundColor: community.accentColorDark}} />}
 					<div className="info">
 						<div className="title-box">
-							<Icon icon="pubDoc" className="icon" />
+							<Icon icon="pubDoc" className="icon pub-icon" />
 							<div className="pub-title">{title}</div>
 						</div>
 						{description && <div className="desc">{description}</div>}
@@ -249,17 +381,26 @@ const Landing = (props: Props) => {
 					</div>
 				</div>
 
-				<div className="communities-box">
+				<div className="featurelist-box">
+					<div className="container">
+						<div className="title">features of pubpub</div>
+						<div className="feature-grid">{featureGrid}</div>
+					</div>
+				</div>
+
+				<div className="communities-box" style={{backgroundColor: featuredCommunityColor}}>
 					<div className="container">
 						<div className="title">featured communities</div>
-						<div className="featured-space" />
+						<div className="featured-space">
+								{communitiesBlock()}
+						</div>
 						<div className="callout-repeat">
 							<div className="text-blocks">
 								<p>feeling inspired?</p>
 								<p>create your own community now!</p>
 							</div>
 							<a href="/community/create" className="custom-callout-button-2">
-								Start creating now...
+								Start here...
 							</a>
 						</div>
 					</div>
