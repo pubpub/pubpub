@@ -61,13 +61,13 @@ const ReviewHashFunction = (props: SharedProps) => {
 	);
 };
 
-const renderReviewerRequest = () => {
-	return <div>Where is the contributors pabel</div>;
-};
+// const renderReviewerRequest = () => {
+// 	return <div>Where is the contributors pabel</div>;
+// };
 
-const renderFeedBackType = () => {
-	return <div>Where is the contributors pabel</div>;
-};
+// const renderFeedBackType = () => {
+// 	return <div>Where is the contributors pabel</div>;
+// };
 
 const ReviewSettings = (props: PubShareDialogProps) => {
 	const { isOpen, onClose, pubData, updatePubData, communityData } = props;
