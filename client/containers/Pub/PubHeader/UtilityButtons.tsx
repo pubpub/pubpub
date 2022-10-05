@@ -24,9 +24,8 @@ const UtilityButtons = (props: Props) => {
 	const { onShowHeaderDetails, pubData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { historyData } = usePubContext();
-	const { isRelease, membersData, reviewHash, canReviewRelease } = pubData;
+	const { isRelease, membersData, reviewHash } = pubData;
 	const { canManage } = scopeData.activePermissions;
-	console.log(canReviewRelease);
 
 	return (
 		<div className="utility-buttons-component">
@@ -101,7 +100,7 @@ const UtilityButtons = (props: Props) => {
 				<DialogLauncher
 					renderLauncherElement={({ openDialog }) => (
 						<SmallHeaderButton
-							label="review settings"
+							label="feedback settings"
 							labelPosition="left"
 							icon="edit"
 							className="members-button"
@@ -114,6 +113,7 @@ const UtilityButtons = (props: Props) => {
 							isOpen={isOpen}
 							onClose={onClose}
 							pubData={pubData}
+							communityData={communityData}
 							updatePubData={updatePubData}
 						/>
 					)}

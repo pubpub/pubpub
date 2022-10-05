@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { ControlGroup, Dialog, Divider, InputGroup, Checkbox } from '@blueprintjs/core';
+import { ControlGroup, Dialog, Divider, InputGroup, Checkbox, Classes } from '@blueprintjs/core';
 
 import {
 	ClickToCopyButton,
 	MenuConfigProvider,
 	PendingChangesProvider,
 	PubReleaseReviewDialog,
+	PubAttributionEditor,
 } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePubContext } from 'containers/Pub/pubHooks';
-import { PatchFn, PubPageData } from 'types';
+import { PatchFn, PubPageData, Community } from 'types';
 
 require('./reviewSettings.scss');
 
 type SharedProps = {
 	pubData: PubPageData;
+	communityData: Community;
 };
 
 type PubShareDialogProps = SharedProps & {
@@ -24,12 +26,11 @@ type PubShareDialogProps = SharedProps & {
 	updatePubData: PatchFn<PubPageData>;
 };
 
-const AccessHashOptions = (props: SharedProps) => {
-	const { pubData } = props;
-	const { communityData, featureFlags } = usePageContext();
-
+// use this to make buttons with special links general
+const ReviewHashFunction = (props: SharedProps) => {
+	const { pubData, communityData } = props;
+	const { featureFlags } = usePageContext();
 	const { historyData } = usePubContext();
-
 	const { reviewHash } = pubData;
 
 	const renderCopyLabelComponent = (label, url) => {
@@ -43,10 +44,8 @@ const AccessHashOptions = (props: SharedProps) => {
 		);
 	};
 
-	const createAccessUrl = (accessHash, options) =>
-		pubUrl(communityData, pubData, { accessHash, ...options });
-
-	const reviewAccessUrl = createAccessUrl(reviewHash, {
+	const reviewAccessUrl = pubUrl(communityData, pubData, {
+		accessHash: reviewHash,
 		historyKey: historyData.currentKey,
 		isReview: true,
 	});
@@ -62,13 +61,20 @@ const AccessHashOptions = (props: SharedProps) => {
 	);
 };
 
+const renderReviewerRequest = () => {
+	return <div>Where is the contributors pabel</div>;
+};
+
+const renderFeedBackType = () => {
+	return <div>Where is the contributors pabel</div>;
+};
+
 const ReviewSettings = (props: PubShareDialogProps) => {
-	const { isOpen, onClose, pubData, updatePubData } = props;
+	const { isOpen, onClose, pubData, updatePubData, communityData } = props;
 	const { scopeData } = usePageContext();
 
 	const { canCreateReviews } = scopeData.activePermissions;
-	const { viewHash, editHash, isReview, canReviewRelease } = pubData;
-	const hasHash = !!(viewHash || editHash);
+	const { isReview, canReviewRelease } = pubData;
 	const [checked] = useState<boolean>(canReviewRelease);
 	// const handlePublicReview = () => {
 	// 	// set a field on review to public
@@ -103,47 +109,54 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 	return (
 		<Dialog
 			lazy={true}
-			title="Review Settings"
+			title="Feedback Settings"
 			className="review-settings-component"
 			isOpen={isOpen}
 			onClose={onClose}
 		>
 			<MenuConfigProvider config={{ usePortal: false }}>
 				<PendingChangesProvider>
-					<div>
-						<div>
-							{hasHash && (
-								<React.Fragment>
-									<div className="pane">
-										<h6 className="pane-title">Share a URL</h6>
-										<AccessHashOptions pubData={pubData} />
-									</div>
-								</React.Fragment>
-							)}
-						</div>
-						<Divider />
-						<div>
-							{canCreateReviews && !isReview && (
-								<div className="pane">
-									<h6 className="pane-title">Request Publication</h6>
-									<PubReleaseReviewDialog
-										onClose={onClose}
-										pubData={pubData}
-										updatePubData={updatePubData}
-									/>
-								</div>
-							)}
-						</div>
-						<Divider />
-						<div className="pane">
-							<h6 className="pane-title">Open reviews</h6>
-							<p>
-								You can allow visitors to the releaseed verion of this Pub to review
-								it.
-							</p>
-							<Checkbox label="Enabled " checked={checked} onChange={() => {}} />
+					<div className="pane">
+						<h6 className="pane-title">Share a URL</h6>
+						<ReviewHashFunction pubData={pubData} communityData={communityData} />
+					</div>
+					<Divider />
+					<div className="pane">
+						<h6 className="pane-title">Add a Reviewer</h6>
+						<div className={Classes.DIALOG_BODY}>
+							<PubAttributionEditor
+								canEdit={true}
+								communityData={communityData}
+								pubData={pubData}
+								updatePubData={() => {}}
+							/>
 						</div>
 					</div>
+					<Divider />
+					<div className="pane">
+						<h6 className="pane-title">Open Pub To:</h6>
+						Reviews
+						<p>
+							You can allow visitors to the releaseed verion of this Pub to review it.
+						</p>
+						<Checkbox label="Enabled " checked={checked} onChange={() => {}} />
+						Comments
+						<p>
+							You can allow visitors to the releaseed verion of this Pub to review it.
+						</p>
+						<Checkbox label="Enabled " checked={checked} onChange={() => {}} />
+					</div>
+					<Divider />
+					{canCreateReviews && !isReview && (
+						<div className="pane">
+							<h6 className="pane-title">Request Publication</h6>
+							<PubReleaseReviewDialog
+								onClose={onClose}
+								pubData={pubData}
+								updatePubData={updatePubData}
+							/>
+						</div>
+					)}
 				</PendingChangesProvider>
 			</MenuConfigProvider>
 		</Dialog>

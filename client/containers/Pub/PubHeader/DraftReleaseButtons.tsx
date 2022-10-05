@@ -46,7 +46,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { historyData, pubData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { canView, canViewDraft, canAdmin } = scopeData.activePermissions;
-	const { isRelease, isReview } = pubData;
+	const { isRelease, isReview, reviewHash } = pubData;
 
 	const renderForRelease = () => {
 		const { releases, releaseNumber } = pubData;
@@ -105,6 +105,19 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 							.reverse()}
 					</Menu>
 				)}
+				<ResponsiveHeaderButton
+					icon="draw"
+					tagName="a"
+					href={pubUrl(communityData, pubData, {
+						accessHash: reviewHash,
+						historyKey: historyData.currentKey,
+						isReview: true,
+					})}
+					outerLabel={{
+						top: 'Create a review of this Pub',
+						bottom: 'go to the review page',
+					}}
+				/>
 			</React.Fragment>
 		);
 	};
