@@ -5,11 +5,11 @@ import {
 	CascadedFacetsByKind,
 	mapFacetDefinitions,
 } from 'facets';
-import { ScopeId } from 'types';
+import { Scope } from 'types';
 import { FacetsState, FacetState } from './types';
 
 export type CreateStateOptions = {
-	currentScope: FacetSourceScope | ScopeId;
+	currentScope: FacetSourceScope | Scope;
 	cascadeResults: CascadedFacetsByKind;
 };
 
@@ -24,13 +24,13 @@ function createInitialFacetState<Def extends FacetDefinition>(
 		latestAndPossiblyInvalidCascadeResult: initialCascadeResult,
 		persistableChanges: {},
 		invalidProps: {},
-		hasInvalidChanges: true,
+		hasInvalidChanges: false,
 		hasPersistableChanges: false,
 		isPersisting: false,
 	};
 }
 
-const getFacetSourceScope = (scope: ScopeId): FacetSourceScope => {
+const getFacetSourceScope = (scope: Scope): FacetSourceScope => {
 	if ('pubId' in scope) {
 		return { kind: 'pub', id: scope.pubId };
 	}

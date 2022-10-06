@@ -1,12 +1,4 @@
-import {
-	Collection,
-	Community,
-	DefinitelyHas,
-	Member,
-	MemberPermission,
-	Pub,
-	ScopeId,
-} from 'types';
+import { Collection, Community, DefinitelyHas, Member, MemberPermission, Pub, Scope } from 'types';
 import { CascadedFacetsByKind } from 'facets';
 
 import { UserDismissableKey } from 'utils/userDismissable';
@@ -72,7 +64,7 @@ export type ScopeData = {
 		reviews: number;
 		submissions: number;
 	};
-	scope: ScopeId;
+	scope: Scope;
 	memberData: Member[];
 	facets?: CascadedFacetsByKind;
 };
