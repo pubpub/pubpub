@@ -8,9 +8,9 @@ export type AvailableCascadeStrategyForPropType<PropType extends FacetPropType> 
 	// Only props that are objects can object-merge during cascade" {...a, ...b}
 	| (TypeOfFacetPropType<PropType> extends Record<string, any> ? 'merge' : never)
 	// Only props that are arrays can array-merge during cascasde: [...a, ...b]
-	| (TypeOfFacetPropType<PropType> extends any[] ? 'extend' : never);
+	| (TypeOfFacetPropType<PropType> extends any[] ? 'concat' : never);
 
-export type CascadeStrategy = 'overwrite' | 'merge' | 'extend';
+export type CascadeStrategy = 'overwrite' | 'merge' | 'concat';
 
 export type FacetPropOptions<
 	// The PropType of the prop.
