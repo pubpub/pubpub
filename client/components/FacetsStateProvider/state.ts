@@ -24,7 +24,7 @@ function createInitialFacetState<Def extends FacetDefinition>(
 		latestAndPossiblyInvalidCascadeResult: initialCascadeResult,
 		persistableChanges: {},
 		invalidProps: {},
-		hasInvalidChanges: true,
+		hasInvalidChanges: false,
 		hasPersistableChanges: false,
 		isPersisting: false,
 	};
