@@ -1,3 +1,5 @@
+import { isProd } from 'utils/environment';
+
 require('./activityItem/api');
 require('./collectionAttribution/api');
 require('./collection/api');
@@ -41,7 +43,7 @@ require('./userNotificationPreferences/api');
 require('./userSubscription/api');
 require('./workerTask/api');
 
-if (process.env.NODE_ENV !== 'production') {
+if (!isProd()) {
 	// eslint-disable-next-line global-require
 	require('./dev/api');
 }
