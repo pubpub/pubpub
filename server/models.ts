@@ -2,7 +2,7 @@
 import Sequelize from 'sequelize';
 import knexJs from 'knex';
 
-import { ingestFacets } from './facets/ingest';
+import { createSequelizeModelsFromFacetDefinitions } from './facets/create';
 
 // @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
 const useSSL = process.env.DATABASE_URL.indexOf('localhost') === -1;
@@ -85,7 +85,7 @@ export const Visibility = sequelize.import('./visibility/model');
 export const VisibilityUser = sequelize.import('./visibilityUser/model');
 export const WorkerTask = sequelize.import('./workerTask/model');
 
-export const { facetModels, FacetBinding } = ingestFacets(sequelize);
+export const { facetModels, FacetBinding } = createSequelizeModelsFromFacetDefinitions(sequelize);
 
 export const attributesPublicUser = [
 	'id',
