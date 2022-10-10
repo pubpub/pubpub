@@ -74,7 +74,7 @@ const AccessHashOptions = (props: SharedProps) => {
 			{viewHash && renderCopyLabelComponent('View', createAccessUrl(viewHash, { isDraft }))}
 			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
 			{featureFlags.reviews && renderCopyLabelComponent('Review', reviewAccessUrl)}
-			{renderCopyLabelComponent('Comment', reviewAccessUrl)}
+			{commentHash && renderCopyLabelComponent('Comment', commentUrl)}
 		</div>
 	);
 };
