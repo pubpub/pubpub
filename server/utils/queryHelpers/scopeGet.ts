@@ -305,7 +305,6 @@ getActivePermissions = async (
 	const isSuperAdmin = checkIfSuperAdmin(scopeInputs.loginId);
 	const permissionLevels: MemberPermission[] = ['view', 'edit', 'manage', 'admin'];
 	let defaultPermissionIndex = -1;
-
 	[activePub, activeCollection, activeCommunity, ...inactiveCollections]
 		.filter((elem) => !!elem)
 		.forEach((elem) => {
@@ -316,6 +315,9 @@ getActivePermissions = async (
 				defaultPermissionIndex = 1;
 			}
 			if (elem.reviewHash && elem.reviewHash === scopeInputs.accessHash) {
+				defaultPermissionIndex = 0;
+			}
+			if (elem.commentHash && elem.commentHash === scopeInputs.accessHash) {
 				defaultPermissionIndex = 0;
 			}
 		});

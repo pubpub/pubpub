@@ -103,6 +103,17 @@ const getEnrichedPubData = async ({
 		pubData.reviewHash = reviewHash;
 	}
 
+	if (!pubData.commentHash) {
+		const commentHash = generateHash(8);
+		Pub.update(
+			{ commentHash },
+			{
+				where: { id: pubData.id },
+			},
+		);
+		pubData.commentHash = commentHash;
+	}
+
 	const { isRelease } = pubData;
 
 	const getDocInfo = async () => {

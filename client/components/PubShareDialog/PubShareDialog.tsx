@@ -43,7 +43,7 @@ const AccessHashOptions = (props: SharedProps) => {
 	const { communityData, featureFlags } = usePageContext();
 	const { historyData } = usePubContext();
 
-	const { reviewHash, viewHash, editHash, isRelease } = pubData;
+	const { commentHash, reviewHash, viewHash, editHash, isRelease } = pubData;
 
 	const renderCopyLabelComponent = (label, url) => {
 		return (
@@ -62,6 +62,8 @@ const AccessHashOptions = (props: SharedProps) => {
 		historyKey: historyData.currentKey,
 		isReview: true,
 	});
+	const commentUrl =
+		'this should pass a key from a draft or release and allow ppl to make comments whoever has it. ';
 
 	return (
 		<div className="access-hash-options">
@@ -72,6 +74,7 @@ const AccessHashOptions = (props: SharedProps) => {
 			{viewHash && renderCopyLabelComponent('View', createAccessUrl(viewHash, { isDraft }))}
 			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
 			{featureFlags.reviews && renderCopyLabelComponent('Review', reviewAccessUrl)}
+			{renderCopyLabelComponent('Comment', reviewAccessUrl)}
 		</div>
 	);
 };
