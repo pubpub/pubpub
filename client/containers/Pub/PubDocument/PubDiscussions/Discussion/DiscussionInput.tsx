@@ -121,6 +121,8 @@ const DiscussionInput = (props: Props) => {
 	const redirectString = `?redirect=${locationData.path}${
 		locationData.queryString.length > 1 ? locationData.queryString : ''
 	}`;
+	// this is where we check for commentHash
+	const canComment = isLoggedIn
 	return (
 		<div className="thread-comment-component input">
 			<div className="avatar-wrapper">

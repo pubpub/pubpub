@@ -35,11 +35,11 @@ export default (
 	initialData,
 	releaseNumber: number | null = null,
 	isReview: boolean = false,
+	isAVisitingCommenter: boolean = false,
 ): null | SanitizedPubData => {
 	const { loginData, scopeData } = initialData;
 	const { activePermissions } = scopeData;
 	const { canView, canViewDraft } = activePermissions;
-
 	const hasPubMemberAccess = pubData.members.some((member) => {
 		return member.userId === initialData.loginData.id;
 	});
@@ -77,7 +77,6 @@ export default (
 			return null;
 		}
 	}
-
 	// TODO(ian): completely unsure why we can't just the `order` parameter within the `include`
 	// object for the query made above, but it doesn't seem to work.
 	const sortedReleases = pubData.releases
@@ -109,6 +108,7 @@ export default (
 		collectionPubs: filteredCollectionPubs,
 		isRelease,
 		isReview,
+		isAVisitingCommenter,
 		releases: sortedReleases,
 		releaseNumber,
 	};

@@ -71,12 +71,14 @@ const getEnrichedPubData = async ({
 	historyKey = null,
 	releaseNumber = null,
 	isReview = false,
+	isAVisitingCommenter = false,
 }: {
 	pubSlug: string;
 	initialData: InitialData;
 	historyKey?: null | number;
 	releaseNumber?: null | number;
 	isReview?: boolean;
+	isAVisitingCommenter?: boolean;
 }) => {
 	const pubData = await getPubForRequest({
 		slug: pubSlug,
@@ -86,6 +88,7 @@ const getEnrichedPubData = async ({
 		getDraft: true,
 		getDiscussions: true,
 		isReview,
+		isAVisitingCommenter,
 	});
 
 	if (!pubData) {
