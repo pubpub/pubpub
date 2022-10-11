@@ -102,9 +102,14 @@ export default class CodeBlockView {
 					return true;
 				},
 			},
-			{ key: 'Ctrl-z', mac: 'Cmd-z', run: () => undo(view.state, view.dispatch) },
-			{ key: 'Shift-Ctrl-z', mac: 'Shift-Cmd-z', run: () => redo(view.state, view.dispatch) },
-			{ key: 'Ctrl-y', mac: 'Cmd-y', run: () => redo(view.state, view.dispatch) },
+			{
+				key: 'Mod-z',
+				run: () => undo(view.state, view.dispatch),
+			},
+			{
+				key: 'Shift-Mod-z',
+				run: () => redo(view.state, view.dispatch),
+			},
 		];
 	}
 
