@@ -61,8 +61,7 @@ const AccessHashOptions = (props: SharedProps) => {
 		historyKey: historyData.currentKey,
 		isReview: true,
 	});
-	// do you want the latest release or any release?
-	// do you want the current draft or any darft
+
 	return (
 		<div className="access-hash-options">
 			<p>
@@ -73,10 +72,16 @@ const AccessHashOptions = (props: SharedProps) => {
 			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
 			{featureFlags.reviews && renderCopyLabelComponent('Review', reviewAccessUrl)}
 			{commentHash &&
-				renderCopyLabelComponent('Comment', createAccessUrl(commentHash, { isDraft }))}
-
-			{pubData.releases.length &&
-				renderCopyLabelComponent('Comment', createAccessUrl(commentHash, {}))}
+				renderCopyLabelComponent(
+					'Comment on Draft',
+					createAccessUrl(commentHash, { isComment: true, isDraft }),
+				)}
+			{commentHash &&
+				pubData.releases.length > 0 &&
+				renderCopyLabelComponent(
+					'Comment on Release',
+					createAccessUrl(commentHash, { isComment: true, releaseId: 2 }),
+				)}
 		</div>
 	);
 };
