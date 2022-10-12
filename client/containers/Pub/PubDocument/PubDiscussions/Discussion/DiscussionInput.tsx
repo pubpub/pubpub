@@ -51,6 +51,8 @@ const DiscussionInput = (props: Props) => {
 		}
 	}, [isNewThread, inputView, didFocus, isPubBottomInput]);
 
+	// create quewry access handlers for submitting post to discussion
+
 	const handlePostThreadComment = async () => {
 		setIsLoading(true);
 		const outputData = await apiFetch('/api/threadComment', {
@@ -122,12 +124,13 @@ const DiscussionInput = (props: Props) => {
 		locationData.queryString.length > 1 ? locationData.queryString : ''
 	}`;
 	// this is where we check for commentHash
+	const canComment = isLoggedIn || pubData.isAVisitingCommenter;
 	return (
 		<div className="thread-comment-component input">
 			<div className="avatar-wrapper">
 				<Avatar width={18} initials={loginData.initials} avatar={loginData.avatar} />
 			</div>
-			{!isLoggedIn && (
+			{!isLoggedIn && !pubData.isAVisitingCommenter && (
 				<React.Fragment>
 					<AnchorButton
 						className="discussion-primary-button"
@@ -147,7 +150,7 @@ const DiscussionInput = (props: Props) => {
 					)}
 				</React.Fragment>
 			)}
-			{isLoggedIn && !isNewThread && !didFocus && (
+			{canComment && !isNewThread && !didFocus && (
 				<input
 					type="text"
 					className="simple-input"
@@ -157,7 +160,7 @@ const DiscussionInput = (props: Props) => {
 					}}
 				/>
 			)}
-			{isLoggedIn && (isNewThread || didFocus) && (
+			{canComment && (isNewThread || didFocus) && (
 				<div className="content-wrapper">
 					<div className="discussion-body-wrapper editable">
 						<FormattingBar

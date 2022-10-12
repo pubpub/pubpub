@@ -273,7 +273,7 @@ app.get(
 );
 
 app.get(
-	['/pub/:pubSlug/review/:historyKey/'],
+	['/pub/:pubSlug/comment/:historyKey/'],
 	wrap(async (req, res, next) => {
 		if (!hostIsValid(req, 'community')) {
 			return next();
@@ -293,7 +293,7 @@ app.get(
 				pubSlug,
 				initialData,
 				historyKey: hasHistoryKey ? historyKey : null,
-				isReview: true,
+				isAVisitingCommenter: true,
 			}),
 			getMembers(initialData),
 		]).then(([enrichedPubData, membersData]) => ({
