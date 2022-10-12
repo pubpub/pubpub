@@ -46,7 +46,7 @@ export const pubUrl = (community, pub, options = {}) => {
 	} = options;
 
 	if (isReview && historyKey && accessHash) {
-		baseUrl = `${baseCommunityUrl}/pub/${pub.slug}/review/${historyKey}`;
+		baseUrl = `${baseUrl}/review/${historyKey}`;
 		const url = queryString.stringifyUrl(
 			{ url: baseUrl, query: { access: accessHash, ...query } },
 			{ skipNull: true },
@@ -54,8 +54,8 @@ export const pubUrl = (community, pub, options = {}) => {
 		return url;
 	}
 
-	if (isComment && historyKey && accessHash) {
-		baseUrl = `${baseCommunityUrl}/pub/${pub.slug}/comment/${historyKey}`;
+	if (isComment && accessHash && historyKey) {
+		baseUrl = `${baseUrl}/comment/${historyKey}`;
 		const url = queryString.stringifyUrl(
 			{ url: baseUrl, query: { access: accessHash, ...query } },
 			{ skipNull: true },
@@ -64,8 +64,7 @@ export const pubUrl = (community, pub, options = {}) => {
 	}
 
 	if (isComment && accessHash && releaseId !== undefined) {
-		baseUrl = `${baseCommunityUrl}/pub/${pub.slug}/comment/release/${releaseNumber}`;
-		console.log(releaseId);
+		baseUrl = `${baseUrl}/comment/release/${releaseId}`;
 		const url = queryString.stringifyUrl(
 			{ url: baseUrl, query: { access: accessHash, ...query } },
 			{ skipNull: true },
