@@ -52,7 +52,12 @@ const DiscussionInput = (props: Props) => {
 	}, [isNewThread, inputView, didFocus, isPubBottomInput]);
 
 	// create quewry access handlers for submitting post to discussion
-
+	// do not know why i have to check here but not in ReviewHeaderSticky
+	if (typeof window !== 'undefined') {
+		const url = new URL(window.location.href);
+		const query = new URLSearchParams(url.search);
+		console.log('Query this URL for this', query.get('access'));
+	}
 	const handlePostThreadComment = async () => {
 		setIsLoading(true);
 		const outputData = await apiFetch('/api/threadComment', {

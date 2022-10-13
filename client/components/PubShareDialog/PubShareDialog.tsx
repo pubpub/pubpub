@@ -73,7 +73,7 @@ const AccessHashOptions = (props: SharedProps) => {
 			{featureFlags.reviews && renderCopyLabelComponent('Review', reviewAccessUrl)}
 			{commentHash &&
 				renderCopyLabelComponent(
-					'Comment on Release',
+					'Comment on Draft',
 					createAccessUrl(commentHash, {
 						isComment: true,
 						historyKey: historyData.currentKey,

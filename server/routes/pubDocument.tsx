@@ -273,7 +273,40 @@ app.get(
 );
 
 app.get(
-	['/pub/:pubSlug/comment/:historyKey/'],
+	['/pub/:pubSlug/review/:historyKey/'],
+	wrap(async (req, res, next) => {
+		if (!hostIsValid(req, 'community')) {
+			return next();
+		}
+
+		const initialData = await getInitialData(req);
+		const { historyKey: historyKeyString, pubSlug } = req.params;
+		const { canView } = initialData.scopeData.activePermissions;
+		const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
+
+		if (!canView) {
+			throw new NotFoundError();
+		}
+
+		const pubData = await Promise.all([
+			getEnrichedPubData({
+				pubSlug,
+				initialData,
+				historyKey: hasHistoryKey ? historyKey : null,
+				isAVisitingCommenter: true,
+			}),
+			getMembers(initialData),
+		]).then(([enrichedPubData, membersData]) => ({
+			...enrichedPubData,
+			membersData,
+		}));
+		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
+		return renderPubDocument(res, pubData, initialData, customScripts);
+	}),
+);
+
+app.get(
+	['/pub/:pubSlug/comment/:historyKey/', '/pub/:pubSlug/release/:releaseNumber'],
 	wrap(async (req, res, next) => {
 		if (!hostIsValid(req, 'community')) {
 			return next();
