@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { ForbiddenError } from 'server/utils/errors';
 import {
+	Commenter,
 	Discussion,
 	DiscussionAnchor,
 	Thread,
@@ -13,6 +14,7 @@ import {
 import { getReadableDateInYear } from 'utils/dates';
 import { createDiscussionAnchor } from 'server/discussionAnchor/queries';
 import { VisibilityAccess } from 'types';
+import { createCommenter } from '../commenter/queries';
 
 const findDiscussionWithUser = (id) =>
 	Discussion.findOne({
@@ -21,6 +23,7 @@ const findDiscussionWithUser = (id) =>
 		},
 		include: [
 			includeUserModel({ as: 'author' }),
+			{ model: Commenter, as: 'commenters' },
 			{ model: DiscussionAnchor, as: 'anchors' },
 			{
 				model: Visibility,
@@ -34,7 +37,10 @@ const findDiscussionWithUser = (id) =>
 					{
 						model: ThreadComment,
 						as: 'comments',
-						include: [includeUserModel({ as: 'author' })],
+						include: [
+							includeUserModel({ as: 'author' }),
+							{ model: Commenter, as: 'commenter' },
+						],
 					},
 					{
 						model: ThreadEvent,
@@ -61,9 +67,10 @@ type CreateDiscussionOpts = {
 		from: number;
 		to: number;
 	};
+	commenterName?: string;
 };
 
-export const createDiscussion = async (options: CreateDiscussionOpts, userId: string) => {
+export const createDiscussion = async (options: CreateDiscussionOpts, userData) => {
 	const {
 		pubId,
 		discussionId,
@@ -73,8 +80,9 @@ export const createDiscussion = async (options: CreateDiscussionOpts, userId: st
 		historyKey,
 		visibilityAccess,
 		initAnchorData,
+		commenterName,
 	} = options;
-
+	const userId = userData?.id || null;
 	const discussions = await Discussion.findAll({
 		where: { pubId },
 		attributes: ['id', 'pubId', 'number'],
@@ -105,11 +113,18 @@ export const createDiscussion = async (options: CreateDiscussionOpts, userId: st
 		pubId,
 	});
 
+	const newCommenter = await createCommenter({
+		discussionId: newDiscussion.id,
+		threadId: newThread.id,
+		name: userData?.fullName || commenterName || 'anonymous',
+	});
+
 	await ThreadComment.create({
 		text,
 		content,
 		userId,
 		threadId: newThread.id,
+		commenterId: newCommenter.id,
 	});
 
 	if (initAnchorData) {

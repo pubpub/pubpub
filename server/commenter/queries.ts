@@ -1,10 +1,11 @@
-import { Reviewer } from 'server/models';
-import { Reviewer as ReviewerFields } from 'types';
+import { Commenter } from 'server/models';
+import { Commenter as CommenterFields } from 'types';
 
-export const createReviewer = ({ id, name }: ReviewerFields) => {
-	return Reviewer.create(
+export const createCommenter = ({ discussionId, name, threadId }: CommenterFields) => {
+	return Commenter.create(
 		{
-			reviewId: id,
+			discussionId,
+			threadId,
 			name,
 		},
 		{ returning: true },

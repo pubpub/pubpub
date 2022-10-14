@@ -10,7 +10,7 @@ export default (sequelize, dataTypes) => {
 			/* Set by Associations */
 			threadId: { type: dataTypes.UUID, allowNull: false },
 			visibilityId: { type: dataTypes.UUID, allowNull: false },
-			userId: { type: dataTypes.UUID, allowNull: false },
+			userId: { type: dataTypes.UUID },
 			anchorId: { type: dataTypes.UUID },
 			pubId: { type: dataTypes.UUID },
 		},
@@ -21,7 +21,15 @@ export default (sequelize, dataTypes) => {
 			],
 			classMethods: {
 				associate: (models) => {
-					const { Discussion, DiscussionAnchor, Visibility, Pub, User, Thread } = models;
+					const {
+						Commenter,
+						Discussion,
+						DiscussionAnchor,
+						Visibility,
+						Pub,
+						User,
+						Thread,
+					} = models;
 					Discussion.belongsTo(Thread, {
 						onDelete: 'CASCADE',
 						as: 'thread',
@@ -45,6 +53,11 @@ export default (sequelize, dataTypes) => {
 					Discussion.hasMany(DiscussionAnchor, {
 						onDelete: 'CASCADE',
 						as: 'anchors',
+						foreignKey: 'discussionId',
+					});
+					Discussion.hasMany(Commenter, {
+						onDelete: 'CASCADE',
+						as: 'commenters',
 						foreignKey: 'discussionId',
 					});
 				},

@@ -26,8 +26,7 @@ app.post(
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}
-		console.log('api call to create discussion');
-		const newDiscussion = await createDiscussion(req.body, req.user.id);
+		const newDiscussion = await createDiscussion(req.body, req.user);
 		return res.status(201).json(newDiscussion);
 	}),
 );

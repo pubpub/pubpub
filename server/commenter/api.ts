@@ -1,5 +1,5 @@
 import app, { wrap } from 'server/server';
-import { createReviewer } from './queries';
+import { createCommenter } from './queries';
 import { getPermissions } from './permissions';
 
 const getRequestIds = (req) => {
@@ -8,22 +8,24 @@ const getRequestIds = (req) => {
 		userId: user.id,
 		pubId: req.body.pubId,
 		communityId: req.body.communityId,
+		commentAccessHash: req.body.commentAccessHash,
 	};
 };
 
 app.post(
-	'/api/reviewer',
+	'/api/commenter',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
-		const { id, name, accessHash } = req.body;
-		getPermissions(requestIds, accessHash)
+		const { discussionId, name, threadId } = req.body;
+		getPermissions(requestIds)
 			.then((permissions) => {
 				if (!permissions.create) {
 					throw new Error('Not Authorized');
 				}
-				return createReviewer({
+				return createCommenter({
+					discussionId,
 					name,
-					id,
+					threadId,
 				});
 			})
 			.then((newReview) => {

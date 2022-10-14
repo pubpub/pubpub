@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AnchorButton, Button, Intent, InputGroup } from '@blueprintjs/core';
 
 import Editor, {
@@ -50,6 +50,7 @@ const DiscussionInput = (props: Props) => {
 	const [didFocus, setDidFocus] = useState(false);
 	const [editorKey, setEditorKey] = useState(Date.now());
 	const [commentAccessHash, setCommentAccessHash] = useState<string | null>();
+	const [commenterName, setCommenterName] = useState('anonymous');
 	const isNewThread = !discussionData.number;
 	const inputView = changeObject?.view;
 
@@ -80,6 +81,7 @@ const DiscussionInput = (props: Props) => {
 				content: getJSON(changeObject?.view),
 				text: getText(changeObject?.view) || '',
 				commentAccessHash,
+				commenterName,
 			}),
 		});
 
@@ -121,6 +123,7 @@ const DiscussionInput = (props: Props) => {
 				visibilityAccess:
 					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
 				commentAccessHash,
+				commenterName,
 			}),
 		});
 		console.log('did this fin');
@@ -144,26 +147,33 @@ const DiscussionInput = (props: Props) => {
 	// this is where we check for commentHash
 	const canComment = isLoggedIn || pubData.isAVisitingCommenter;
 	const isUser = !!(canEdit || loginData.fullName);
+
+	const handleCommenterNameOnBlur = (evt) => {
+		if (evt.key === 'Enter') {
+			evt.currentTarget.blur();
+		}
+	};
+	const handleInputChange = useCallback(
+		(e) => {
+			setCommenterName(e.target.value);
+		},
+		[setCommenterName],
+	);
 	const renderUserNameInput = () => {
 		return (
 			!isUser &&
 			pubData.isAVisitingCommenter && (
-				<div>
+				<div className="simple-input">
 					<p>Add your name?</p>
 					<InputGroup
-						defaultValue="anonymous"
-						onKeyDown={(evt) => {
-							console.log(evt);
-						}}
-						onBlur={(evt) => {
-							console.log(evt);
-						}}
+						value={commenterName}
+						onChange={handleInputChange}
+						onBlur={handleCommenterNameOnBlur}
 					/>
 				</div>
 			)
 		);
 	};
-
 	return (
 		<div className="thread-comment-component input">
 			<div className="avatar-wrapper">
@@ -217,6 +227,7 @@ const DiscussionInput = (props: Props) => {
 								setChangeObject(editorChangeObject);
 							}}
 						/>
+						<div>{renderUserNameInput()}</div>
 					</div>
 					<Button
 						className="discussion-primary-button"
@@ -240,7 +251,6 @@ const DiscussionInput = (props: Props) => {
 							}}
 						/>
 					)}
-					{renderUserNameInput()}
 				</div>
 			)}
 		</div>
