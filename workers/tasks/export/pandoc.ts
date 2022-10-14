@@ -12,7 +12,7 @@ import { getPathToCslFileForCitationStyleKind } from 'server/utils/citations';
 import { PandocTarget } from 'utils/export/formats';
 
 import { rules } from '../import/rules';
-import { getTmpFileForExtension } from './util';
+import { getAffiliations, getTmpFileForExtension } from './util';
 import { NotesData, PubMetadata, PandocFlag } from './types';
 import { runTransforms } from './transforms';
 import {
@@ -83,6 +83,7 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: Pa
 				...(attr.user.firstName && { 'given-names': attr.user.firstName }),
 				...(publicEmail && { email: publicEmail }),
 				...(attr.user.orcid && { orcid: attr.user.orcid }),
+				...(attr.affiliation && { affiliation: getAffiliations(attr) }),
 			};
 		}
 		return attr.user.fullName;

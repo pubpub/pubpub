@@ -5,6 +5,7 @@ import crypto from 'crypto';
 
 import { Export } from 'server/models';
 import { generateHash } from 'utils/hashes';
+import { AttributionWithUser } from 'types';
 
 tmp.setGracefulCleanup();
 
@@ -56,3 +57,11 @@ export const digestCitation = (unstructuredValue, structuredValue) =>
 		.update(structuredValue)
 		.digest('base64')
 		.substring(0, 10);
+
+export const getAffiliations = (attr: AttributionWithUser) =>
+	!attr?.affiliation?.length
+		? []
+		: attr.affiliation
+				.split(';')
+				.map((x) => x.trim())
+				.filter(Boolean);
