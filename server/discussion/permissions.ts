@@ -11,14 +11,12 @@ export const getCreatePermission = async ({
 	visibilityAccess,
 	commentAccessHash,
 }) => {
-	console.log('comment access hash', commentAccessHash);
-	if (!userId || !commentAccessHash) {
+	if (!userId && !commentAccessHash) {
 		return false;
 	}
 
 	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
 	const hasAccessHash = pub?.commentHash === commentAccessHash;
-	console.log('hasAccessHash', hasAccessHash);
 	const scopeData = await getScope({
 		communityId,
 		pubId,
@@ -28,7 +26,6 @@ export const getCreatePermission = async ({
 
 	const { canView, canCreateDiscussions } = scopeData.activePermissions;
 	const nonMembersVisibility = visibilityAccess && visibilityAccess !== 'members';
-	console.log(canView || (canCreateDiscussions && nonMembersVisibility) || hasAccessHash);
 	return canView || (canCreateDiscussions && nonMembersVisibility) || hasAccessHash;
 };
 

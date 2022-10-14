@@ -148,10 +148,10 @@ const DiscussionInput = (props: Props) => {
 		return (
 			!isUser &&
 			pubData.isAVisitingCommenter && (
-				<div className="title-input">
+				<div>
 					<p>Add your name?</p>
 					<InputGroup
-						defaultValue="commenter"
+						defaultValue="anonymous"
 						onKeyDown={(evt) => {
 							console.log(evt);
 						}}
