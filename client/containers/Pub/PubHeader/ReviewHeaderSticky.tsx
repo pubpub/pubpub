@@ -66,7 +66,7 @@ const ReviewHeaderSticky = () => {
 				pubId: pubData.id,
 				reviewContent: review,
 				title: reviewTitle,
-				accessHash: query.get('access'),
+				reviewAccessHash: query.get('access'),
 				reviewerName,
 			})
 			.then((reviewRes) => {

@@ -14,8 +14,12 @@ const sanitizeHashes = (pubData, activePermissions) => {
 	};
 };
 
-const filterDiscussionsByDraftOrRelease = (discussions: Discussion[], isRelease: boolean) => {
-	const shownVisibilityAccess = isRelease ? 'public' : 'members';
+const filterDiscussionsByDraftOrRelease = (
+	discussions: Discussion[],
+	isRelease: boolean,
+	isAVisitingCommenter: boolean,
+) => {
+	const shownVisibilityAccess = isRelease || isAVisitingCommenter ? 'public' : 'members';
 	return discussions.filter(
 		(discussion) => discussion.visibility.access === shownVisibilityAccess,
 	);
@@ -86,7 +90,7 @@ export default (
 	const discussions =
 		pubData.discussions &&
 		sanitizeDiscussions(
-			filterDiscussionsByDraftOrRelease(pubData.discussions, isRelease),
+			filterDiscussionsByDraftOrRelease(pubData.discussions, isRelease, isAVisitingCommenter),
 			activePermissions,
 			loginData.id,
 		);

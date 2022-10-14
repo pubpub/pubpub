@@ -42,6 +42,7 @@ const DiscussionInput = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [didFocus, setDidFocus] = useState(false);
 	const [editorKey, setEditorKey] = useState(Date.now());
+	const [commentAccessHash, setCommentAccessHash] = useState<URLSearchParams>();
 	const isNewThread = !discussionData.number;
 	const inputView = changeObject?.view;
 
@@ -49,15 +50,16 @@ const DiscussionInput = (props: Props) => {
 		if (!isPubBottomInput && (isNewThread || didFocus) && inputView) {
 			inputView.focus();
 		}
+
+		// create quewry access handlers for submitting post to discussion
+		// do not know why i have to check here but not in ReviewHeaderSticky
+		if (typeof window !== 'undefined') {
+			const url = new URL(window.location.href);
+			const query = new URLSearchParams(url.search);
+			setCommentAccessHash(query);
+		}
 	}, [isNewThread, inputView, didFocus, isPubBottomInput]);
 
-	// create quewry access handlers for submitting post to discussion
-	// do not know why i have to check here but not in ReviewHeaderSticky
-	if (typeof window !== 'undefined') {
-		const url = new URL(window.location.href);
-		const query = new URLSearchParams(url.search);
-		console.log('Query this URL for this', query.get('access'));
-	}
 	const handlePostThreadComment = async () => {
 		setIsLoading(true);
 		const outputData = await apiFetch('/api/threadComment', {
@@ -70,6 +72,7 @@ const DiscussionInput = (props: Props) => {
 				communityId: communityData.id,
 				content: getJSON(changeObject?.view),
 				text: getText(changeObject?.view) || '',
+				commentHash: commentAccessHash,
 			}),
 		});
 
@@ -108,7 +111,9 @@ const DiscussionInput = (props: Props) => {
 				content: getJSON(changeObject?.view),
 				text: getText(changeObject?.view) || '',
 				initAnchorData,
-				visibilityAccess: pubData.isRelease ? 'public' : 'members',
+				visibilityAccess:
+					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
+				commentHash: commentAccessHash,
 			}),
 		});
 
@@ -135,7 +140,7 @@ const DiscussionInput = (props: Props) => {
 			<div className="avatar-wrapper">
 				<Avatar width={18} initials={loginData.initials} avatar={loginData.avatar} />
 			</div>
-			{!isLoggedIn && !pubData.isAVisitingCommenter && (
+			{!canComment && (
 				<React.Fragment>
 					<AnchorButton
 						className="discussion-primary-button"

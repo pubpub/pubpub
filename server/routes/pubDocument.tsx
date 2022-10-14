@@ -306,7 +306,7 @@ app.get(
 );
 
 app.get(
-	['/pub/:pubSlug/comment/:historyKey/', '/pub/:pubSlug/release/:releaseNumber'],
+	['/pub/:pubSlug/comment/:historyKey/'],
 	wrap(async (req, res, next) => {
 		if (!hostIsValid(req, 'community')) {
 			return next();

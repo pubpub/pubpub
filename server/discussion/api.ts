@@ -14,6 +14,7 @@ const getRequestIds = (req) => {
 		communityId: req.body.communityId,
 		accessHash: req.body.accessHash,
 		visibilityAccess: req.body.visibilityAccess,
+		commentAccessHash: req.body.commentHash,
 	};
 };
 
