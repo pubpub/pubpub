@@ -37,10 +37,7 @@ const findDiscussionWithUser = (id) =>
 					{
 						model: ThreadComment,
 						as: 'comments',
-						include: [
-							includeUserModel({ as: 'author' }),
-							{ model: Commenter, as: 'commenter' },
-						],
+						include: [includeUserModel({ as: 'author' })],
 					},
 					{
 						model: ThreadEvent,

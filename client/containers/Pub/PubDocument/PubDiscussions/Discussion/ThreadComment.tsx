@@ -32,7 +32,6 @@ const ThreadComment = (props: Props) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [changeObject, setChangeObject] = useState<null | EditorChangeObject>(null);
 	const [isLoadingEdit, setIsLoadingEdit] = useState(false);
-
 	const handlePutThreadComment = (threadCommentUpdates) => {
 		return apiFetch('/api/threadComment', {
 			method: 'PUT',
@@ -83,20 +82,21 @@ const ThreadComment = (props: Props) => {
 			/>
 		);
 	};
-
+	const commenterName = discussionData.commenters[0]?.name;
+	console.log(commenterName);
 	return (
 		<div className={classNames('thread-comment-component', isPreview && 'is-preview')}>
 			<div className="avatar-wrapper">
 				<Avatar
 					width={18}
-					initials={threadCommentData.author.initials}
-					avatar={threadCommentData.author.avatar}
+					initials={threadCommentData.author?.initials}
+					avatar={threadCommentData.author?.avatar}
 				/>
 			</div>
 			<div className="content-wrapper">
 				<div className="item-header">
 					<span className="name">
-						{threadCommentData.author.fullName}
+						{threadCommentData.author?.fullName || commenterName}
 						{isPreview ? ': ' : ''}
 					</span>
 
