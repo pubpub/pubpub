@@ -49,7 +49,7 @@ const DiscussionInput = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [didFocus, setDidFocus] = useState(false);
 	const [editorKey, setEditorKey] = useState(Date.now());
-	const [commentAccessHash, setCommentAccessHash] = useState<URLSearchParams>();
+	const [commentAccessHash, setCommentAccessHash] = useState<string | null>();
 	const isNewThread = !discussionData.number;
 	const inputView = changeObject?.view;
 
@@ -63,7 +63,7 @@ const DiscussionInput = (props: Props) => {
 		if (typeof window !== 'undefined') {
 			const url = new URL(window.location.href);
 			const query = new URLSearchParams(url.search);
-			setCommentAccessHash(query);
+			setCommentAccessHash(query.get('access'));
 		}
 	}, [isNewThread, inputView, didFocus, isPubBottomInput]);
 

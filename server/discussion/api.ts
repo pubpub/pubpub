@@ -22,6 +22,7 @@ app.post(
 	'/api/discussions',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
+
 		const canCreate = await getCreatePermission(requestIds);
 		console.log('i can make this', canCreate);
 		if (!canCreate) {
