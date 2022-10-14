@@ -10,7 +10,7 @@ const getRequestIds = (req) => {
 		communityId: req.body.communityId,
 		pubId: req.body.pubId,
 		reviewId: req.body.reviewId || null,
-		reviewAccessHash: req.body.accessHash,
+		reviewAccessHash: req.body.reviewAccessHash,
 	};
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AnchorButton, Button, Intent } from '@blueprintjs/core';
+import { AnchorButton, Button, Intent, InputGroup } from '@blueprintjs/core';
 
 import Editor, {
 	getText,
@@ -36,7 +36,14 @@ type Props = OwnProps & typeof defaultProps;
 const DiscussionInput = (props: Props) => {
 	const { discussionData, isPubBottomInput } = props;
 	const { pubData, historyData, collabData, updateLocalData } = usePubContext();
-	const { loginData, locationData, communityData } = usePageContext();
+	const {
+		loginData,
+		locationData,
+		communityData,
+		scopeData: {
+			activePermissions: { canEdit },
+		},
+	} = usePageContext();
 	const pubView = collabData.editorChangeObject!.view;
 	const [changeObject, setChangeObject] = useState<any>();
 	const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +79,7 @@ const DiscussionInput = (props: Props) => {
 				communityId: communityData.id,
 				content: getJSON(changeObject?.view),
 				text: getText(changeObject?.view) || '',
-				commentHash: commentAccessHash,
+				commentAccessHash,
 			}),
 		});
 
@@ -113,10 +120,10 @@ const DiscussionInput = (props: Props) => {
 				initAnchorData,
 				visibilityAccess:
 					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
-				commentHash: commentAccessHash,
+				commentAccessHash,
 			}),
 		});
-
+		console.log('did this fin');
 		updateLocalData('pub', {
 			discussions: [...pubData.discussions, outputData],
 		});
@@ -133,8 +140,30 @@ const DiscussionInput = (props: Props) => {
 	const redirectString = `?redirect=${locationData.path}${
 		locationData.queryString.length > 1 ? locationData.queryString : ''
 	}`;
+
 	// this is where we check for commentHash
 	const canComment = isLoggedIn || pubData.isAVisitingCommenter;
+	const isUser = !!(canEdit || loginData.fullName);
+	const renderUserNameInput = () => {
+		return (
+			!isUser &&
+			pubData.isAVisitingCommenter && (
+				<div className="title-input">
+					<p>Add your name?</p>
+					<InputGroup
+						defaultValue="commenter"
+						onKeyDown={(evt) => {
+							console.log(evt);
+						}}
+						onBlur={(evt) => {
+							console.log(evt);
+						}}
+					/>
+				</div>
+			)
+		);
+	};
+
 	return (
 		<div className="thread-comment-component input">
 			<div className="avatar-wrapper">
@@ -161,14 +190,17 @@ const DiscussionInput = (props: Props) => {
 				</React.Fragment>
 			)}
 			{canComment && !isNewThread && !didFocus && (
-				<input
-					type="text"
-					className="simple-input"
-					placeholder="Add a reply..."
-					onFocus={() => {
-						setDidFocus(true);
-					}}
-				/>
+				<div>
+					<input
+						type="text"
+						className="simple-input"
+						placeholder="Add a reply..."
+						onFocus={() => {
+							setDidFocus(true);
+						}}
+					/>
+					{renderUserNameInput()}
+				</div>
 			)}
 			{canComment && (isNewThread || didFocus) && (
 				<div className="content-wrapper">
@@ -208,6 +240,7 @@ const DiscussionInput = (props: Props) => {
 							}}
 						/>
 					)}
+					{renderUserNameInput()}
 				</div>
 			)}
 		</div>

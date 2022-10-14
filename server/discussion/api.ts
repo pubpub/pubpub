@@ -23,9 +23,12 @@ app.post(
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 		const canCreate = await getCreatePermission(requestIds);
+		console.log('i can make this', canCreate);
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}
+		console.log('api call to create discussion');
+
 		const newDiscussion = await createDiscussion(req.body, req.user.id);
 		return res.status(201).json(newDiscussion);
 	}),

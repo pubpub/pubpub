@@ -293,7 +293,7 @@ app.get(
 				pubSlug,
 				initialData,
 				historyKey: hasHistoryKey ? historyKey : null,
-				isAVisitingCommenter: true,
+				isReview: true,
 			}),
 			getMembers(initialData),
 		]).then(([enrichedPubData, membersData]) => ({

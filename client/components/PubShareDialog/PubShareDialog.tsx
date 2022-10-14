@@ -79,12 +79,6 @@ const AccessHashOptions = (props: SharedProps) => {
 						historyKey: historyData.currentKey,
 					}),
 				)}
-			{commentHash &&
-				pubData.releases.length > 0 &&
-				renderCopyLabelComponent(
-					'Comment on Release',
-					createAccessUrl(commentHash, { isComment: true, releaseId: 2 }),
-				)}
 		</div>
 	);
 };

@@ -46,7 +46,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { historyData, pubData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
-	const { isRelease, isReview } = pubData;
+	const { isRelease, isReview, isAVisitingCommenter } = pubData;
 
 	const renderForRelease = () => {
 		const { releases, releaseNumber } = pubData;
@@ -64,7 +64,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						}}
 					/>
 				)}
-				{!isReview && (
+				{!isAVisitingCommenter && !isReview && (
 					<Menu
 						className="releases-menu"
 						aria-label="Choose a historical release of this Pub"
@@ -138,7 +138,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						outerLabel={{ bottom: 'view latest release', top: 'see published version' }}
 					/>
 				)}
-				{canAdmin && !isReview && (
+				{canAdmin && !isReview && isAVisitingCommenter && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
@@ -167,7 +167,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						)}
 					</DialogLauncher>
 				)}
-				{canCreateReviews && !isReview && (
+				{canCreateReviews && !isReview && !isAVisitingCommenter && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
