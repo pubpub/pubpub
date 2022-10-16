@@ -1,4 +1,5 @@
-import { Discussion, Thread, ThreadComment, ReviewNew, Visibility } from 'server/models';
+import { Discussion, Pub, Thread, ThreadComment, ReviewNew, Visibility } from 'server/models';
+import * as types from 'types';
 import { getScope } from 'server/utils/queryHelpers';
 
 const userEditableFields = ['text', 'content'];
@@ -34,11 +35,13 @@ export const getPermissions = async ({
 	pubId,
 	communityId,
 	accessHash,
+	commentAccessHash,
 }) => {
-	if (!userId) {
+	if (!userId && !commentAccessHash) {
 		return {};
 	}
-
+	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
+	const hasAccessHash = pub?.commentHash === commentAccessHash;
 	const [scopeData, discussionData, reviewData, threadData, threadCommentData] =
 		await Promise.all([
 			getScope({
@@ -66,7 +69,7 @@ export const getPermissions = async ({
 	const userCreatedComment = threadCommentData && threadCommentData.userId === userId;
 
 	return {
-		create: !threadData.isLocked && (canView || canInteractWithParent),
+		create: !threadData.isLocked && (canView || canInteractWithParent || hasAccessHash),
 		update: (canAdmin || !!userCreatedComment) && userEditableFields,
 	};
 };

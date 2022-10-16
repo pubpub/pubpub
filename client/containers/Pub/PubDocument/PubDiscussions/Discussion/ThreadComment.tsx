@@ -83,7 +83,8 @@ const ThreadComment = (props: Props) => {
 		);
 	};
 	const commenterName = discussionData.commenters[0]?.name;
-	console.log(commenterName);
+	console.log(discussionData);
+
 	return (
 		<div className={classNames('thread-comment-component', isPreview && 'is-preview')}>
 			<div className="avatar-wrapper">

@@ -1,9 +1,9 @@
-import { ThreadComment, includeUserModel } from 'server/models';
+import { ThreadComment, includeUserModel, Commenter } from 'server/models';
 
 const findThreadCommentWithUser = (id) =>
 	ThreadComment.findOne({
 		where: { id },
-		include: [includeUserModel({ as: 'author' })],
+		include: [includeUserModel({ as: 'author' }), { model: Commenter, as: 'commenters' }],
 	});
 
 export const createThreadComment = async (inputValues, user) => {

@@ -4,7 +4,7 @@ export default (sequelize, dataTypes) => {
 		{
 			id: sequelize.idType,
 			name: { type: dataTypes.TEXT },
-			discussionId: { type: dataTypes.UUID, allowNull: false },
+			discussionId: { type: dataTypes.UUID },
 			threadId: { type: dataTypes.UUID, allowNull: false },
 		},
 		{

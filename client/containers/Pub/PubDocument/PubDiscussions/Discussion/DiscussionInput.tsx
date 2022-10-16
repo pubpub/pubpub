@@ -67,7 +67,6 @@ const DiscussionInput = (props: Props) => {
 			setCommentAccessHash(query.get('access'));
 		}
 	}, [isNewThread, inputView, didFocus, isPubBottomInput]);
-
 	const handlePostThreadComment = async () => {
 		setIsLoading(true);
 		const outputData = await apiFetch('/api/threadComment', {
@@ -126,7 +125,6 @@ const DiscussionInput = (props: Props) => {
 				commenterName,
 			}),
 		});
-		console.log('did this fin');
 		updateLocalData('pub', {
 			discussions: [...pubData.discussions, outputData],
 		});

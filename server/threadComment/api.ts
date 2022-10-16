@@ -14,6 +14,7 @@ const getRequestIds = (req) => {
 		pubId: req.body.pubId,
 		communityId: req.body.communityId,
 		accessHash: req.body.accessHash,
+		commentAccessHash: req.body.commentAccessHash,
 	};
 };
 

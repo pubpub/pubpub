@@ -30,7 +30,7 @@ export type Discussion = {
 };
 
 export type Commenter = {
-	discussionId: string;
+	discussionId?: string;
 	threadId: string;
 	name: string;
 };
