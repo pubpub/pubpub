@@ -45,6 +45,11 @@ export default (sequelize, dataTypes) => {
 						as: 'author',
 						foreignKey: 'userId',
 					});
+					Discussion.belongs(Commenter, {
+						onDelete: 'CASCADE',
+						as: 'commenters',
+						foreignKey: 'discussionId',
+					});
 					Discussion.belongsTo(Pub, {
 						onDelete: 'CASCADE',
 						as: 'pub',
@@ -53,11 +58,6 @@ export default (sequelize, dataTypes) => {
 					Discussion.hasMany(DiscussionAnchor, {
 						onDelete: 'CASCADE',
 						as: 'anchors',
-						foreignKey: 'discussionId',
-					});
-					Discussion.hasMany(Commenter, {
-						onDelete: 'CASCADE',
-						as: 'commenters',
 						foreignKey: 'discussionId',
 					});
 				},

@@ -11,7 +11,7 @@ export default (sequelize, dataTypes) => {
 			classMethods: {
 				associate: (models) => {
 					const { Commenter, Discussion } = models;
-					Commenter.belongsTo(Discussion, {
+					Commenter.hasMany(Discussion, {
 						onDelete: 'CASCADE',
 						as: 'discussion',
 						foreignKey: 'discussionId',
