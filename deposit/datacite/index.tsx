@@ -1,17 +1,22 @@
 /* @jsx x */
 import { x, renderXml } from '@pubpub/deposit-utils/datacite';
-import { Pub } from 'server/models';
+import { preparePubForDeposit } from 'deposit/utils';
+import { getCommunityDepositTarget } from 'server/depositTarget/queries';
+import { Collection, Community, DepositTarget, Pub } from 'server/models';
 import { buildPubOptions } from 'server/utils/queryHelpers';
 import * as types from 'types';
-import { expect } from 'utils/assert';
+import { assert, expect } from 'utils/assert';
 import { getDois } from 'utils/crossref/createDeposit';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
-
-// import { Pub } from 'types';
+import { RelationType } from 'utils/pubEdge';
 
 type CreateDepositIds = { communityId: string } & ({ collectionId: string } | { pubId: string });
+type DepositContext = { community: types.Community } & (
+	| { collection: types.Collection }
+	| { pub: types.PubWithConnections }
+);
 
-const findPub = (pubId: string): Promise<types.Pub> =>
+const findPub = (pubId: string): Promise<types.PubWithConnections> =>
 	Pub.findOne({
 		where: { id: pubId },
 		...buildPubOptions({
@@ -22,17 +27,33 @@ const findPub = (pubId: string): Promise<types.Pub> =>
 				includeCommunityForPubs: true,
 			},
 		}),
-	});
+	}).then((pub) => pub.get({ plain: true }));
 
-export async function xcreateDeposit(ids: CreateDepositIds) {
-	if (!('pubId' in ids)) {
-		throw new Error();
+async function getDepositContext(ids: CreateDepositIds): Promise<DepositContext> {
+	const communityPromise: Promise<types.Community> = Community.findOne({
+		where: { id: ids.communityId },
+	});
+	if ('collectionId' in ids) {
+		const [community, collection] = await Promise.all([
+			communityPromise,
+			Collection.findOne({ where: { id: ids.collectionId } }) as Promise<types.Collection>,
+		]);
+		return { community, collection };
 	}
-	const pub = await findPub(ids.pubId);
+	const [community, pub] = await Promise.all([communityPromise, findPub(ids.pubId)]);
+	return { community, pub };
+}
+
+export async function createDeposit(ids: CreateDepositIds) {
+	const context = await getDepositContext(ids);
+	assert('pub' in context);
+	const { pub, pubEdge } = preparePubForDeposit(context.pub, true);
 	const dois = getDois(
-		pubEdge && pubEdge.relationType === RelationType.Supplement ? contextWithPubEdge : ctx,
-		doiTarget,
-		depositTarget,
+		pubEdge && pubEdge.relationType === RelationType.Supplement
+			? { ...context, pubEdge }
+			: context,
+		'pub',
+		getCommunityDepositTarget(ids.communityId, 'datacite'),
 	);
 	return renderXml(
 		<resource xmlns="http://datacite.org/schema/kernel-4">
@@ -43,6 +64,9 @@ export async function xcreateDeposit(ids: CreateDepositIds) {
 					</description>
 				</descriptions>
 			)}
+			<subjects>
+				<subject schemeURI=""></subject>
+			</subjects>
 			<titles>
 				<title>{pub.title}</title>
 			</titles>
@@ -51,9 +75,12 @@ export async function xcreateDeposit(ids: CreateDepositIds) {
 					<creatorName>Eric McDaniel</creatorName>
 				</creator>
 			</creators>
-			<identifier identifierType="DOI">10.507/8675309</identifier>
+			<identifier identifierType="DOI">{dois.pub}</identifier>
 			<publisher>MIT Press</publisher>
 			<publicationYear>{expect(getPubPublishedDate(pub)).getFullYear()}</publicationYear>
+			<dates>
+				<date dateType="Accepted"></date>
+			</dates>
 			<resourceType resourceTypeGeneral="Journal">Some additional text</resourceType>
 			<relatedItems>
 				<relatedItem relatedItemType="Book" relationType="IsCitedBy">

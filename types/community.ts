@@ -68,5 +68,5 @@ export type Community = {
 	scopeSummaryId: null | string;
 	scopeSummary?: ScopeSummary;
 	footerLogoLink?: string;
-	depositTarget?: DepositTarget;
+	depositTargets?: DepositTarget[];
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { PubPageData } from 'types';
 
@@ -24,6 +24,19 @@ const SomePubHeader = () => {
 
 const Pub = (props: Props) => {
 	const { pubData } = props;
+	useEffect(() => {
+		const url = new URL('/api/depositTest', window.location.origin);
+		url.searchParams.set('communityId', pubData.communityId);
+		url.searchParams.set('pubId', pubData.id);
+		url.searchParams.set('target', 'pub');
+		fetch(url.toString(), {
+			method: 'GET',
+		})
+			.then((response) => {
+				return response.text();
+			})
+			.then(console.log);
+	}, []);
 	return (
 		<div id="pub-container">
 			<PubSuspendWhileTypingProvider>
