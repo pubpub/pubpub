@@ -96,6 +96,8 @@ export type Pub = {
 	submission?: Submission;
 };
 
+export type PubWithConnections = DefinitelyHas<Pub, 'inboundEdges' | 'outboundEdges'>;
+
 export type PubDocInfo = {
 	initialDoc: DocJson;
 	initialDocKey: number;

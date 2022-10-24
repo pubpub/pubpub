@@ -142,7 +142,9 @@ app.get(
 		await assertUserAuthorized(target, requestIds);
 
 		try {
-			xml = await createDeposit({ communityId, collectionId, pubId });
+			xml = await createDeposit(
+				pubId ? { communityId, pubId } : { communityId, collectionId },
+			);
 		} catch (error) {
 			return res.status(404).json({ error: (error as Error).toString() });
 		}

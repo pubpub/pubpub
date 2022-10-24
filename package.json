@@ -84,6 +84,7 @@
 		"@types/lodash.omit": "^4.5.6",
 		"@types/lodash.pick": "^4.4.6",
 		"@types/lodash.pickby": "^4.6.6",
+		"@types/node": "^18.11.4",
 		"@types/react-dom": "^17.0.9",
 		"@types/styled-components": "^5.1.12",
 		"algoliasearch": "^4.2.0",
