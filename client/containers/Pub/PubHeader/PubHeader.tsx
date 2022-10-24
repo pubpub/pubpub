@@ -102,7 +102,7 @@ const PubHeader = (props: Props) => {
 				)}
 				<ToggleDetailsButton showingDetails={showingDetails} onClick={toggleDetails} />
 			</GridWrapper>
-			{!pubData.isReview && sticky ? (
+			{!pubData.isReviewingPub && sticky ? (
 				<PubHeaderSticky />
 			) : (
 				<ClientOnly>
