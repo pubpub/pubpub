@@ -156,6 +156,7 @@ const FormattingBar = (props: Props) => {
 					<React.Fragment>
 						<ToolbarItem
 							as={BlockTypeSelector}
+							key="test"
 							isSmall={isSmall}
 							editorChangeObject={editorChangeObject}
 							{...toolbar}

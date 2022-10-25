@@ -142,9 +142,6 @@ export default (schema: Schema) => {
 	if (schema.nodes.paragraph) {
 		bind('Shift-Ctrl-0', setBlockType(schema.nodes.paragraph));
 	}
-	if (schema.nodes.code_block) {
-		bind('Shift-Ctrl-\\', setBlockType(schema.nodes.code_block));
-	}
 	if (schema.nodes.heading) {
 		for (let index = 1; index <= 6; index += 1) {
 			bind(`Shift-Ctrl-${index}`, setBlockType(schema.nodes.heading, { level: index }));
@@ -169,6 +166,7 @@ export default (schema: Schema) => {
 		);
 	}
 	if (schema.nodes.code_block) {
+		bind('Shift-Ctrl-\\', setBlockType(schema.nodes.code_block));
 		bind('ArrowLeft', arrowHandler('left'));
 		bind('ArrowRight', arrowHandler('right'));
 		bind('ArrowDown', arrowHandler('down'));

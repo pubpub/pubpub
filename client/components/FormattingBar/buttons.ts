@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+	codeBlockToggle,
 	alignTextCenter,
 	alignTextLeft,
 	alignTextRight,
@@ -187,7 +188,7 @@ export const code: FormattingBarButtonData = {
 	command: codeToggle,
 };
 
-const showOrIndicate = (editorChangeObject: EditorChangeObject): boolean => {
+const showOrIndicateCodeBlock = (editorChangeObject: EditorChangeObject): boolean => {
 	if (!editorChangeObject.view) return false;
 	const state = editorChangeObject.view.state;
 	return isInCodeBlock(state);
@@ -197,13 +198,13 @@ export const codeBlock: FormattingBarButtonData = {
 	key: 'code-block',
 	title: 'Code Block',
 	icon: 'code-block',
-	insertNodeType: 'code_block',
+	command: codeBlockToggle,
 	controls: {
 		captureFocusOnMount: false,
 		component: ControlsCodeBlock,
 		trigger: triggerOnClick,
-		show: showOrIndicate,
-		indicate: showOrIndicate,
+		show: showOrIndicateCodeBlock,
+		indicate: showOrIndicateCodeBlock,
 		floatingPosition: positionNearParent,
 		showCloseButton: false,
 	},
