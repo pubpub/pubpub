@@ -1,22 +1,31 @@
-/* @jsx x */
-import { x, renderXml } from '@pubpub/deposit-utils/datacite';
+/** @jsx x */
+/** @jsxFrag null */
+import { renderXml, x } from '@pubpub/deposit-utils/datacite';
 import { preparePubForDeposit } from 'deposit/utils';
 import { getCommunityDepositTarget } from 'server/depositTarget/queries';
-import { Collection, Community, DepositTarget, Pub } from 'server/models';
+import { Collection, Community, Doc, Pub } from 'server/models';
 import { buildPubOptions } from 'server/utils/queryHelpers';
 import * as types from 'types';
 import { assert, expect } from 'utils/assert';
 import { getDois } from 'utils/crossref/createDeposit';
+import { getLicenseForPub } from 'utils/licenses';
+import { getTextAbstract, getWordAndCharacterCountsFromDoc } from 'utils/pub/metadata';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { RelationType } from 'utils/pubEdge';
+import { editorSchema } from 'components/Editor';
+import { Node } from 'prosemirror-model';
+
+type ThePubINeed = types.PubWithConnections & {
+	collectionPubs: types.DefinitelyHas<types.CollectionPub, 'collection'>[];
+};
 
 type CreateDepositIds = { communityId: string } & ({ collectionId: string } | { pubId: string });
-type DepositContext = { community: types.Community } & (
+type CreateDepositContext = { community: types.Community } & (
 	| { collection: types.Collection }
-	| { pub: types.PubWithConnections }
+	| { pub: ThePubINeed }
 );
 
-const findPub = (pubId: string): Promise<types.PubWithConnections> =>
+const findPub = (pubId: string): Promise<ThePubINeed> =>
 	Pub.findOne({
 		where: { id: pubId },
 		...buildPubOptions({
@@ -26,10 +35,11 @@ const findPub = (pubId: string): Promise<types.PubWithConnections> =>
 				includePub: true,
 				includeCommunityForPubs: true,
 			},
+			getCollections: true,
 		}),
 	}).then((pub) => pub.get({ plain: true }));
 
-async function getDepositContext(ids: CreateDepositIds): Promise<DepositContext> {
+async function getCreateDepositContext(ids: CreateDepositIds): Promise<CreateDepositContext> {
 	const communityPromise: Promise<types.Community> = Community.findOne({
 		where: { id: ids.communityId },
 	});
@@ -45,7 +55,7 @@ async function getDepositContext(ids: CreateDepositIds): Promise<DepositContext>
 }
 
 export async function createDeposit(ids: CreateDepositIds) {
-	const context = await getDepositContext(ids);
+	const context = await getCreateDepositContext(ids);
 	assert('pub' in context);
 	const { pub, pubEdge } = preparePubForDeposit(context.pub, true);
 	const dois = getDois(
@@ -55,45 +65,110 @@ export async function createDeposit(ids: CreateDepositIds) {
 		'pub',
 		getCommunityDepositTarget(ids.communityId, 'datacite'),
 	);
+	const release = pub.releases[pub.releases.length - 1];
+	const releaseDoc = await Doc.findOne({ where: { id: release.docId } });
+	const abstract = getTextAbstract(releaseDoc.content);
+	const creators = pub.attributions.filter((attribution) => attribution.isAuthor);
+	const contributors = pub.attributions.filter((attribution) => !attribution.isAuthor);
+	const license = getLicenseForPub(pub, context.community);
+	const [wordCount] = getWordAndCharacterCountsFromDoc(
+		Node.fromJSON(editorSchema, releaseDoc.content),
+	);
 	return renderXml(
 		<resource xmlns="http://datacite.org/schema/kernel-4">
-			{pub.description && (
-				<descriptions>
-					<description xml:lang="en-US" descriptionType="Abstract">
+			<resourceType resourceTypeGeneral="Journal">Some additional text</resourceType>
+			<descriptions>
+				{pub.description ? (
+					<description xml:lang="en-US" descriptionType="Other">
 						{pub.description}
 					</description>
-				</descriptions>
-			)}
+				) : undefined}
+				{abstract.length > 0 ? (
+					<description xml:lang="en-US" descriptionType="Abstract">
+						{abstract}
+					</description>
+				) : undefined}
+			</descriptions>
 			<subjects>
 				<subject schemeURI=""></subject>
 			</subjects>
 			<titles>
-				<title>{pub.title}</title>
+				<title xml:lang="en-US">{pub.title}</title>
 			</titles>
 			<creators>
-				<creator>
-					<creatorName>Eric McDaniel</creatorName>
-				</creator>
+				{creators.map((attribution) => {
+					return (
+						<creator>
+							<creatorName>
+								{attribution.user?.fullName ?? attribution.name}
+							</creatorName>
+							{attribution.affiliation ? (
+								// @ts-expect-error
+								<affiliation>{attribution.affiliation}</affiliation>
+							) : undefined}
+							{attribution.orcid ? (
+								// @ts-expect-error
+								<nameIdentifier
+									nameIdentifierScheme="ORCID"
+									schemeURI="https://orcid.org"
+								>
+									{attribution.orcid}
+									{/* @ts-expect-error */}
+								</nameIdentifier>
+							) : undefined}
+							{attribution.user ? (
+								<>
+									{/* @ts-expect-error */}
+									<givenName>{attribution.user.firstName}</givenName>
+									{/* @ts-expect-error */}
+									<familyName>{attribution.user.lastName}</familyName>
+								</>
+							) : undefined}
+						</creator>
+					);
+				})}
 			</creators>
+			<contributors>
+				{contributors.map((attribution) => {
+					return (
+						<contributor contributorType="Editor">
+							<contributorName xml:lang="en-US">
+								{attribution.user?.fullName ?? attribution.name}
+							</contributorName>
+							{attribution.user ? (
+								<>
+									{/* @ts-expect-error */}
+									<givenName>{attribution.user.firstName}</givenName>
+									{/* @ts-expect-error */}
+									<familyName>{attribution.user.lastName}</familyName>
+								</>
+							) : undefined}
+						</contributor>
+					);
+				})}
+			</contributors>
 			<identifier identifierType="DOI">{dois.pub}</identifier>
-			<publisher>MIT Press</publisher>
+			<publisher>PubPub</publisher>
 			<publicationYear>{expect(getPubPublishedDate(pub)).getFullYear()}</publicationYear>
 			<dates>
-				<date dateType="Accepted"></date>
+				<date dateType="Available">
+					{getPubPublishedDate(pub)!.toISOString().slice(0, 10)}
+				</date>
+				{pub.releases.length > 0 ? (
+					<date dateType="Updated">
+						{(release.createdAt as unknown as Date).toISOString().slice(0, 10)}
+					</date>
+				) : undefined}
 			</dates>
-			<resourceType resourceTypeGeneral="Journal">Some additional text</resourceType>
-			<relatedItems>
-				<relatedItem relatedItemType="Book" relationType="IsCitedBy">
-					<publicationYear>2011</publicationYear>
-				</relatedItem>
-			</relatedItems>
-			<contributors>
-				<contributor contributorType="Editor">
-					<contributorName xml:lang="en-US" nameType="Personal">
-						Eric McDaniel
-					</contributorName>
-				</contributor>
-			</contributors>
+			<relatedItems></relatedItems>
+			<rightsList>
+				<rights xml:lang="en-US" rightsURI={license.link ?? undefined}>
+					{license.full}
+				</rights>
+			</rightsList>
+			<sizes>
+				<size>${wordCount} words</size>
+			</sizes>
 		</resource>,
 		// false,
 	);

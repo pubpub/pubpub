@@ -1,3 +1,5 @@
+import { License } from 'types';
+
 enum ResourceKind {
 	Book = 'Book',
 	BookChapter = 'BookChapter',
@@ -68,6 +70,8 @@ export type Resource = {
 	 * When the resource was made public.
 	 */
 	timestamp: number;
+
+	license: License;
 
 	attributions: ResourceAttribution[];
 
