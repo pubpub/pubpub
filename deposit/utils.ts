@@ -1,4 +1,4 @@
-import { DefinitelyHas, Pub, PubEdge } from 'types';
+import { DefinitelyHas, Maybe, Pub, PubEdge } from 'types';
 import { RelationType } from 'utils/pubEdge';
 import { findParentEdgeByRelationTypes } from 'utils/pubEdge/relations';
 
@@ -17,14 +17,12 @@ function filterForMutuallyApprovedEdges(pubEdges: PubEdge[]) {
 	}
 }
 
-export function preparePubForDeposit(
-	pub: DefinitelyHas<Pub, 'inboundEdges' | 'outboundEdges'>,
-	includeRelationships: boolean,
-) {
+export function preparePubForDeposit<
+	T extends DefinitelyHas<Pub, 'inboundEdges' | 'outboundEdges'>,
+>(pub: T, includeRelationships: boolean): { pub: T; pubEdge: Maybe<PubEdge> } {
 	pub = structuredClone(pub);
 	// Remove unapproved PubEdges for RelationTypes that require bidirectional
 	// approval.
-	console.log(pub.inboundEdges);
 	filterForMutuallyApprovedEdges(pub.inboundEdges);
 	filterForMutuallyApprovedEdges(pub.outboundEdges);
 
@@ -34,7 +32,7 @@ export function preparePubForDeposit(
 		RelationType.Supplement,
 		RelationType.Review,
 		RelationType.Rejoinder,
-	]);
+	]) as Maybe<PubEdge>;
 
 	if (!includeRelationships) {
 		pub.inboundEdges = [];
