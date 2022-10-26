@@ -115,12 +115,10 @@ export default class CodeBlockView {
 
 	maybeEscape(unit: 'line' | 'char', dir: -1 | 1) {
 		const { state } = this.cm;
-		const { main } = state.selection;
-		if (!main.empty) return false;
-		let tempMain: any;
-		if (unit === 'line') tempMain = state.doc.lineAt(main.head);
-		tempMain = tempMain || main;
-		if (dir < 0 ? tempMain.from > 0 : tempMain.to < state.doc.length) return false;
+		const stateMain = state.selection.main;
+		if (!stateMain.empty) return false;
+		const main = (unit === 'line' && state.doc.lineAt(stateMain.head)) || stateMain;
+		if (dir < 0 ? main.from > 0 : main.to < state.doc.length) return false;
 		const targetPos = this.getPos() + (dir < 0 ? 0 : this.node.nodeSize);
 		const selection = Selection.near(this.view.state.doc.resolve(targetPos), dir);
 		const tr = this.view.state.tr.setSelection(selection).scrollIntoView();
