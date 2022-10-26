@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
 import { Button } from '@blueprintjs/core';
 
@@ -6,7 +6,6 @@ import { setLanguageCommandBuilder, codeBlockToggle } from 'components/Editor/co
 import { languageModes, languageNames } from 'components/Editor/utils';
 
 import { EditorChangeObjectWithNode } from '../types';
-import { useCommandStates } from '../hooks/useCommandStates';
 import CommandMenu from '../CommandMenu';
 
 require('./controls.scss');
@@ -26,12 +25,7 @@ const ControlsCodeBlock = (props: Props) => {
 	const { editorChangeObject, onClose } = props;
 	const { view } = editorChangeObject;
 	const toolbar = useToolbarState({ loop: true });
-	const arrArrLiftToPCommand = useCommandStates({
-		commands: [[{ key: 'lifttop', title: 'lifttptitle', command: codeBlockToggle }]],
-		view,
-		state: view?.state,
-	});
-	const liftCommand = arrArrLiftToPCommand[0][0];
+	const runnableToggle = useMemo(() => codeBlockToggle(view)(view.state), [view]);
 	const renderDisclosure = (_, { ref, ...disclosureProps }) => {
 		return (
 			<div>
@@ -45,12 +39,12 @@ const ControlsCodeBlock = (props: Props) => {
 				/>
 				<Button
 					onClick={() => {
-						liftCommand.commandState?.run();
+						runnableToggle.run();
 						view.focus();
 					}}
-					icon="eye-open"
+					icon="disable"
 					minimal
-					text="Un-code"
+					text="un-code"
 				/>
 			</div>
 		);
