@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
 import { Button } from '@blueprintjs/core';
 
@@ -25,7 +25,6 @@ const ControlsCodeBlock = (props: Props) => {
 	const { editorChangeObject, onClose } = props;
 	const { view } = editorChangeObject;
 	const toolbar = useToolbarState({ loop: true });
-	const runnableToggle = useMemo(() => codeBlockToggle(view)(view.state), [view]);
 	const renderDisclosure = (_, { ref, ...disclosureProps }) => {
 		return (
 			<div>
@@ -38,10 +37,7 @@ const ControlsCodeBlock = (props: Props) => {
 					{...disclosureProps}
 				/>
 				<Button
-					onClick={() => {
-						runnableToggle.run();
-						view.focus();
-					}}
+					onClick={codeBlockToggle(view)(view.state).run}
 					icon="disable"
 					minimal
 					text="un-code"
