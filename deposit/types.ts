@@ -1,6 +1,6 @@
 import { License } from 'types';
 
-enum ResourceKind {
+export enum ResourceKind {
 	Book = 'Book',
 	BookChapter = 'BookChapter',
 	Journal = 'Journal',
@@ -9,7 +9,7 @@ enum ResourceKind {
 	ConferenceProceeding = 'ConferenceProceeding',
 }
 
-enum ResourceRelationKind {
+export enum ResourceRelationKind {
 	Comment = 'Comment',
 	Commentary = 'Commentary',
 	Preprint = 'Preprint',
@@ -21,25 +21,25 @@ enum ResourceRelationKind {
 	Version = 'Version',
 }
 
-type ResourceRelation = {
+export type ResourceRelation = {
 	resource: Resource;
 	kind: ResourceRelationKind;
 };
 
-enum ResourceAttributionKind {
+export enum ResourceAttributionKind {
 	Creator = 'Creator',
 	Editor = 'Editor',
 	Translator = 'Translator',
 	Chair = 'Chair',
 }
 
-type ResourceContributor = {
+export type ResourceContributor = {
 	id: string;
 	name: string;
 	orcid?: string;
 };
 
-type ResourceAttribution = {
+export type ResourceAttribution = {
 	kind?: ResourceAttributionKind | string;
 	contributor: ResourceContributor;
 	affiliation?: string;
@@ -67,7 +67,7 @@ export type Resource = {
 	url: string;
 
 	/**
-	 * When the resource was made public.
+	 * When the resource was last updated.
 	 */
 	timestamp: number;
 

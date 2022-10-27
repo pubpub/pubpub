@@ -22,6 +22,7 @@ export type Collection = {
 	attributions?: CollectionAttribution[];
 	layout: CollectionLayout;
 	createdAt: string;
+	updatedAt: string;
 	scopeSummaryId: null | string;
 	scopeSummary?: ScopeSummary;
 };

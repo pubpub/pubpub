@@ -15,17 +15,18 @@ import { RelationType } from 'utils/pubEdge';
 import { editorSchema } from 'components/Editor';
 import { Node } from 'prosemirror-model';
 
-type ThePubINeed = types.PubWithConnections & {
+type DepositableCollection = types.Collection;
+type DepositablePub = types.PubWithConnections & {
 	collectionPubs: types.DefinitelyHas<types.CollectionPub, 'collection'>[];
 };
 
 type CreateDepositIds = { communityId: string } & ({ collectionId: string } | { pubId: string });
 type CreateDepositContext = { community: types.Community } & (
 	| { collection: types.Collection }
-	| { pub: ThePubINeed }
+	| { pub: DepositablePub }
 );
 
-const findPub = (pubId: string): Promise<ThePubINeed> =>
+const findPub = (pubId: string): Promise<DepositablePub> =>
 	Pub.findOne({
 		where: { id: pubId },
 		...buildPubOptions({
