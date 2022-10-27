@@ -58,10 +58,24 @@ export const digestCitation = (unstructuredValue, structuredValue) =>
 		.digest('base64')
 		.substring(0, 10);
 
-export const getAffiliations = (attr: AttributionWithUser) =>
-	!attr?.affiliation?.length
+export const getAffiliations = (attribution: AttributionWithUser) =>
+	!attribution?.affiliation?.length
 		? []
-		: attr.affiliation
+		: attribution.affiliation
 				.split(';')
 				.map((x) => x.trim())
 				.filter(Boolean);
+
+export const getDedupedAffliations = (attributions: AttributionWithUser[]) => {
+	const affiliations = [
+		...new Set(
+			attributions
+				.reduce((all, attr) => {
+					all.push(...getAffiliations(attr));
+					return all;
+				}, [] as string[])
+				.filter(Boolean),
+		),
+	];
+	return affiliations;
+};

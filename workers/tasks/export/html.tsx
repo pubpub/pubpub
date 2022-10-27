@@ -7,10 +7,11 @@ import ReactDOMServer from 'react-dom/server';
 import { DocJson } from 'types';
 import { renderStatic, editorSchema } from 'components/Editor';
 import { intersperse, unique } from 'utils/arrays';
+import { getDedupedAffliations, digestCitation, getAffiliations } from './util';
 import { renderNotesForListing } from '../../../utils/notes';
 
 import { NotesData, PubMetadata } from './types';
-import { digestCitation, getAffiliations } from './util';
+
 import SimpleNotesList from './SimpleNotesList';
 
 const nonExportableNodeTypes = ['discussion'];
@@ -203,16 +204,8 @@ const renderFrontMatter = (metadata: PubMetadata) => {
 		license,
 	} = metadata;
 
-	const affiliations = [
-		...new Set(
-			attributions
-				.reduce((all, attr) => {
-					all.push(...getAffiliations(attr));
-					return all;
-				}, [] as string[])
-				.filter(Boolean),
-		),
-	];
+	const affiliations = getDedupedAffliations(attributions);
+
 	return (
 		<section className="cover">
 			<h3 className="top-heading-items">{renderHeadingItems(metadata)}</h3>
