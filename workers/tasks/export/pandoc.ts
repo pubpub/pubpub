@@ -73,6 +73,7 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: Pa
 		doi,
 		citationStyle,
 		license,
+		pubUrl,
 	} = pubMetadata;
 	const cslFile = getPathToCslFileForCitationStyleKind(citationStyle);
 	const dedupedAffiliations = getDedupedAffliations(attributions);
@@ -123,6 +124,7 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: Pa
 			...(license.link && { link: license.link }),
 		},
 		affiliation: formattedAffiliations,
+		uri: pubUrl,
 		...(primaryCollectionMetadata && {
 			article: {
 				...(primaryCollectionMetadata.issue && { issue: primaryCollectionMetadata.issue }),
