@@ -60,9 +60,7 @@ const ControlsCodeBlock = (props: Props) => {
 				aria-label="code options"
 				as={CommandMenu as any}
 				disclosure={renderDisclosure}
-				commands={[
-					[...buttonCommands, { key: 'oops', title: 'whoops', command: codeBlockToggle }],
-				]}
+				commands={[buttonCommands]}
 				editorChangeObject={editorChangeObject}
 				markActiveItems={false}
 				{...toolbar}
