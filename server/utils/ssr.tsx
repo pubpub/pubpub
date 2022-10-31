@@ -96,8 +96,8 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			/>,
 			<meta key="t3" name="twitter:title" content={titleWithContext} />,
 			<meta key="t4" name="twitter:image:alt" content={titleWithContext} />,
-			<meta key="t5" name="citation_title" content={collection ? collection.title : title} />,
-			<meta key="t6" name="dc.title" content={collection ? collection.title : title} />,
+			<meta key="t5" name="citation_title" content={collection?.title ?? title} />,
+			<meta key="t6" name="dc.title" content={collection?.title ?? title} />,
 		];
 	}
 
@@ -300,24 +300,14 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		];
 	}
 
-	if (doi || collection?.metadata?.doi) {
+	const finalDoi = doi || collection?.metadata?.doi;
+
+	if (finalDoi) {
 		outputComponents = [
 			...outputComponents,
-			<meta
-				key="doi1"
-				name="citation_doi"
-				content={`doi:${doi || collection?.metadata?.doi}`}
-			/>,
-			<meta
-				key="doi2"
-				property="dc.identifier"
-				content={`doi:${doi || collection?.metadata?.doi}`}
-			/>,
-			<meta
-				key="doi3"
-				property="prism.doi"
-				content={`doi:${doi || collection?.metadata?.doi}`}
-			/>,
+			<meta key="doi1" name="citation_doi" content={`doi:${finalDoi}`} />,
+			<meta key="doi2" property="dc.identifier" content={`doi:${finalDoi}`} />,
+			<meta key="doi3" property="prism.doi" content={`doi:${finalDoi}`} />,
 		];
 	}
 	if (notes) {
