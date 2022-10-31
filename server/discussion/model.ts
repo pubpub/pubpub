@@ -45,9 +45,9 @@ export default (sequelize, dataTypes) => {
 						as: 'author',
 						foreignKey: 'userId',
 					});
-					Discussion.belongs(Commenter, {
+					Discussion.belongsTo(Commenter, {
 						onDelete: 'CASCADE',
-						as: 'commenters',
+						as: 'commenter',
 						foreignKey: 'discussionId',
 					});
 					Discussion.belongsTo(Pub, {
