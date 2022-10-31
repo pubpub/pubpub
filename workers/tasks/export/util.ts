@@ -70,10 +70,7 @@ export const getDedupedAffliations = (attributions: AttributionWithUser[]) => {
 	const affiliations = [
 		...new Set(
 			attributions
-				.reduce((all, attr) => {
-					all.push(...getAffiliations(attr));
-					return all;
-				}, [] as string[])
+				.reduce((all, attr) => all.concat(getAffiliations(attr)), [] as string[])
 				.filter(Boolean),
 		),
 	];
