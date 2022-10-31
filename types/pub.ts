@@ -138,14 +138,13 @@ export type PubPageData = DefinitelyHas<Omit<Pub, 'discussions'>, 'collectionPub
 		reviewHash: Maybe<string>;
 		commentHash: Maybe<string>;
 		isRelease: boolean;
-		isReview: boolean;
+		isReviewingPub: boolean;
 		isAVisitingCommenter: boolean;
 		isInMaintenanceMode?: boolean;
 		firebaseToken?: string;
 		initialStructuredCitations: boolean;
 		releaseNumber: Maybe<number>;
 		submission?: DefinitelyHas<Submission, 'submissionWorkflow'>;
-		iSubmission: boolean;
 		subscription: null | UserSubscription;
 	};
 
@@ -183,7 +182,6 @@ export type SanitizedPubData = Pub & {
 	discussions: Discussion[];
 	collectionPubs: CollectionPubWithAttributions[];
 	isRelease: boolean;
-	isReview: boolean;
 	isAVisitingCommenter: boolean;
 	releases: Release[];
 	releaseNumber: number | null;

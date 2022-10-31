@@ -70,14 +70,12 @@ const getEnrichedPubData = async ({
 	initialData,
 	historyKey = null,
 	releaseNumber = null,
-	isReview = false,
 	isAVisitingCommenter = false,
 }: {
 	pubSlug: string;
 	initialData: InitialData;
 	historyKey?: null | number;
 	releaseNumber?: null | number;
-	isReview?: boolean;
 	isAVisitingCommenter?: boolean;
 }) => {
 	const pubData = await getPubForRequest({
@@ -87,7 +85,6 @@ const getEnrichedPubData = async ({
 		getSubmissions: true,
 		getDraft: true,
 		getDiscussions: true,
-		isReview,
 		isAVisitingCommenter,
 	});
 
@@ -293,12 +290,12 @@ app.get(
 				pubSlug,
 				initialData,
 				historyKey: hasHistoryKey ? historyKey : null,
-				isReview: true,
 			}),
 			getMembers(initialData),
 		]).then(([enrichedPubData, membersData]) => ({
 			...enrichedPubData,
 			membersData,
+			isReviewingPub: true,
 		}));
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		return renderPubDocument(res, pubData, initialData, customScripts);

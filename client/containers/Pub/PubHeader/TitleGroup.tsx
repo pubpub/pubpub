@@ -16,13 +16,14 @@ type Props = {
 
 const TitleGroup = (props: Props) => {
 	const { pubData, updatePubData } = props;
-	const { title, htmlTitle, description, isRelease, isReview, isAVisitingCommenter } = pubData;
+	const { title, htmlTitle, description, isRelease, isReviewingPub, isAVisitingCommenter } =
+		pubData;
 	const { communityData, scopeData, featureFlags } = usePageContext();
 	const { submissionState } = usePubContext();
 	const isUnsubmitted = submissionState?.submission.status === 'incomplete';
 	const { canManage } = scopeData.activePermissions;
 	const canModify =
-		canManage && !isRelease && !isUnsubmitted && !isReview && !isAVisitingCommenter;
+		canManage && !isRelease && !isUnsubmitted && !isReviewingPub && !isAVisitingCommenter;
 	const publishedDateString = getPubPublishedDateString(pubData);
 
 	const renderBylineEditor = () => {
