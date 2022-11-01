@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import uuidv4 from 'uuid/v4';
 import { Button } from '@blueprintjs/core';
-import { EditorState } from 'prosemirror-state';
 
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
@@ -30,7 +29,7 @@ const PubInlineMenu = () => {
 			selection.empty ||
 			(selection as any).$anchorCell ||
 			collabData.editorChangeObject!.selectedNode ||
-			isDescendantOf('code_block', collabData.editorChangeObject! as any as EditorState)
+			isDescendantOf('code_block', collabData.editorChangeObject!.selection)
 		);
 	}, [collabData.editorChangeObject, selection]);
 	const selectionBoundingBox: Record<string, any> =
