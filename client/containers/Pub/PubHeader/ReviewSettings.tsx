@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ControlGroup, Dialog, Divider, InputGroup, Checkbox, Classes } from '@blueprintjs/core';
+import { ControlGroup, Dialog, InputGroup, Checkbox, Classes, Tabs, Tab } from '@blueprintjs/core';
 
 import {
 	ClickToCopyButton,
@@ -74,37 +74,78 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 	const { scopeData } = usePageContext();
 
 	const { canCreateReviews } = scopeData.activePermissions;
-	const { isReview, canReviewRelease } = pubData;
+	const { isReviewingPub, canReviewRelease } = pubData;
 	const [checked] = useState<boolean>(canReviewRelease);
-	// const handlePublicReview = () => {
-	// 	// set a field on review to public
-	// 	apiFetch('/api/pubs', {
-	// 		method: 'POST',
-	// 		body: JSON.stringify({
-	// 			communityId: communityData.id,
-	// 			pubId: pubData.id,
-	// 			// @ts-expect-error ts-migrate(2339) FIXME: Property 'content' does not exist on type '{}'.
-	// 			content: noteData.content,
-	// 			// @ts-expect-error ts-migrate(2339) FIXME: Property 'text' does not exist on type '{}'.
-	// 			text: noteData.text,
-	// 			releaseRequested: true,
-	// 		}),
-	// 	})
-	// 		.then(() => {
-	// 			setError(null);
-	// 			setChecked(!checked);
-	// 			setIsCreatingReview(false);
-	// 			updatePubData(() => {
-	// 				return {
-	// 					canReviewRelease: checked,
-	// 				};
-	// 			});
-	// 		})
-	// 		.catch((err) => {
-	// 			setError(err);
-	// 			setIsCreatingReview(false);
-	// 		});
-	// };
+
+	function renderShare() {
+		return (
+			<div className="pane">
+				<h6 className="pane-title">Share a URL</h6>
+				<ReviewHashFunction pubData={pubData} communityData={communityData} />
+			</div>
+		);
+	}
+
+	function renderAccess() {
+		return (
+			<div className="pane">
+				<h6 className="pane-title">Open Pub To:</h6>
+				Reviews
+				<p>You can allow visitors to the releaseed verion of this Pub to review it.</p>
+				<Checkbox label="Enabled " checked={checked} onChange={() => {}} />
+				Comments
+				<p>You can allow visitors to the releaseed verion of this Pub to review it.</p>
+				<Checkbox label="Enabled " checked={checked} onChange={() => {}} />
+			</div>
+		);
+	}
+
+	function renderAddReviewer() {
+		return (
+			<div className="pane">
+				<h6 className="pane-title">Add a Reviewer</h6>
+				<div>
+					<PubAttributionEditor
+						canEdit={true}
+						communityData={communityData}
+						pubData={pubData}
+						updatePubData={() => {}}
+					/>
+				</div>
+			</div>
+		);
+	}
+
+	function renderRequestPublication() {
+		return canCreateReviews && !isReviewingPub ? (
+			<div className="pane">
+				<h6 className="pane-title">Request Publication</h6>
+				<PubReleaseReviewDialog
+					onClose={onClose}
+					pubData={pubData}
+					updatePubData={updatePubData}
+				/>
+			</div>
+		) : (
+			<div />
+		);
+	}
+
+	const renderTabs = () => {
+		return (
+			<Tabs id="review-tabs">
+				<Tab id="share" title="Share" panel={renderShare()} />
+				<Tab id="access" title="Access" panel={renderAccess()} />
+				<Tab id="reviewrs" title="Add Reviewer" panel={renderAddReviewer()} />
+				<Tab
+					id="publication"
+					title="Request Publication"
+					panel={renderRequestPublication()}
+				/>
+				<Tabs.Expander />
+			</Tabs>
+		);
+	};
 
 	return (
 		<Dialog
@@ -116,47 +157,7 @@ const ReviewSettings = (props: PubShareDialogProps) => {
 		>
 			<MenuConfigProvider config={{ usePortal: false }}>
 				<PendingChangesProvider>
-					<div className="pane">
-						<h6 className="pane-title">Share a URL</h6>
-						<ReviewHashFunction pubData={pubData} communityData={communityData} />
-					</div>
-					<Divider />
-					<div className="pane">
-						<h6 className="pane-title">Add a Reviewer</h6>
-						<div className={Classes.DIALOG_BODY}>
-							<PubAttributionEditor
-								canEdit={true}
-								communityData={communityData}
-								pubData={pubData}
-								updatePubData={() => {}}
-							/>
-						</div>
-					</div>
-					<Divider />
-					<div className="pane">
-						<h6 className="pane-title">Open Pub To:</h6>
-						Reviews
-						<p>
-							You can allow visitors to the releaseed verion of this Pub to review it.
-						</p>
-						<Checkbox label="Enabled " checked={checked} onChange={() => {}} />
-						Comments
-						<p>
-							You can allow visitors to the releaseed verion of this Pub to review it.
-						</p>
-						<Checkbox label="Enabled " checked={checked} onChange={() => {}} />
-					</div>
-					<Divider />
-					{canCreateReviews && !isReview && (
-						<div className="pane">
-							<h6 className="pane-title">Request Publication</h6>
-							<PubReleaseReviewDialog
-								onClose={onClose}
-								pubData={pubData}
-								updatePubData={updatePubData}
-							/>
-						</div>
-					)}
+					<div className={Classes.DIALOG_BODY}>{renderTabs()}</div>
 				</PendingChangesProvider>
 			</MenuConfigProvider>
 		</Dialog>
