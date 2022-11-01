@@ -6,11 +6,11 @@ import {
 	languageLoaders,
 	legacyLanguageLoaders,
 } from 'prosemirror-codemirror-block';
-
 import { EditorView } from 'prosemirror-view';
 import { Node } from 'prosemirror-model';
+import { Classes } from '@blueprintjs/core';
 
-export const myCreateSelect = (
+const createSelect = (
 	settings: CodeBlockSettings,
 	dom: HTMLElement,
 	node: Node,
@@ -19,10 +19,14 @@ export const myCreateSelect = (
 ) => {
 	if (!settings.languageLoaders) return () => {};
 	const wrapper = document.createElement('div');
-	wrapper.className = 'bp3-html-select codeblock-select-wrapper';
+	wrapper.classList.add(Classes.HTML_SELECT, 'codeblock-select-wrapper');
 	const select = document.createElement('select');
 	const carets = document.createElement('span');
-	carets.className = 'bp3-icon bp3-icon-double-caret-vertical';
+	carets.classList.add(
+		Classes.ICON,
+		Classes.ICON_LARGE,
+		'bp3-icon bp3-icon-double-caret-vertical',
+	);
 	wrapper.append(select);
 	wrapper.append(carets);
 	select.className = 'codeblock-select';
@@ -62,7 +66,7 @@ export default (schema) => {
 		return [
 			codeMirrorBlockPlugin({
 				...defaultSettings,
-				createSelect: myCreateSelect,
+				createSelect,
 				languageLoaders: { ...languageLoaders, ...legacyLanguageLoaders },
 				undo,
 				redo,
