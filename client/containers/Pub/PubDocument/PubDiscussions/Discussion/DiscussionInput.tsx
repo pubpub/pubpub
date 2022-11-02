@@ -67,8 +67,11 @@ const DiscussionInput = (props: Props) => {
 			setCommentAccessHash(query.get('access'));
 		}
 	}, [isNewThread, inputView, didFocus, isPubBottomInput]);
-	const handlePostThreadComment = async () => {
+
+	const handleThreadPost = async () => {
 		setIsLoading(true);
+		const initAnchorData = getLocalHighlightText(pubView, discussionData.id);
+
 		const outputData = await apiFetch('/api/threadComment', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -81,6 +84,14 @@ const DiscussionInput = (props: Props) => {
 				text: getText(changeObject?.view) || '',
 				commentAccessHash,
 				commenterName,
+				// discussion kv
+				discussionId: discussionData.id,
+				historyKey: historyData.currentKey,
+				initAnchorData,
+				visibilityAccess:
+					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
+				// new kv
+				isNewThread,
 			}),
 		});
 
@@ -99,35 +110,11 @@ const DiscussionInput = (props: Props) => {
 			}),
 		});
 
-		if (isPubBottomInput) {
-			setIsLoading(false);
-			setEditorKey(Date.now());
-		}
-	};
-
-	const handlePostDiscussion = async () => {
-		setIsLoading(true);
-		const initAnchorData = getLocalHighlightText(pubView, discussionData.id);
-		const outputData = await apiFetch('/api/discussions', {
-			method: 'POST',
-			body: JSON.stringify({
-				accessHash: locationData.query.access,
-				discussionId: discussionData.id,
-				pubId: pubData.id,
-				historyKey: historyData.currentKey,
-				communityId: communityData.id,
-				content: getJSON(changeObject?.view),
-				text: getText(changeObject?.view) || '',
-				initAnchorData,
-				visibilityAccess:
-					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
-				commentAccessHash,
-				commenterName,
-			}),
-		});
-		updateLocalData('pub', {
-			discussions: [...pubData.discussions, outputData],
-		});
+		// ! pretty the above will have the same outcome
+		// ! but for now lets comment this here to remind
+		// updateLocalData('pub', {
+		// 	discussions: [...pubData.discussions, outputData],
+		// });
 
 		if (isPubBottomInput) {
 			setIsLoading(false);
@@ -136,6 +123,21 @@ const DiscussionInput = (props: Props) => {
 			convertLocalHighlightToDiscussion(pubView, outputData.id);
 		}
 	};
+
+	// * creates a new disccussion/thread/thread comment
+	// ? figure out what things below are doing for discussions
+	// const handlePostDiscussion = async () => {
+	// 	const outputData = await apiFetch('/api/discussions', {
+	// 		method: 'POST',
+	// 		body: JSON.stringify({
+	// 			discussionId: discussionData.id,
+	// 			historyKey: historyData.currentKey,
+	// 			initAnchorData,
+	// 			visibilityAccess:
+	// 				pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
+	// 		}),
+	// 	});
+	// };
 
 	const isLoggedIn = loginData.id;
 	const redirectString = `?redirect=${locationData.path}${
@@ -236,7 +238,7 @@ const DiscussionInput = (props: Props) => {
 							!getText(changeObject?.view) &&
 							!getTopLevelImages(changeObject?.view).length
 						}
-						onClick={isNewThread ? handlePostDiscussion : handlePostThreadComment}
+						onClick={handleThreadPost}
 						small={true}
 					/>
 					{isNewThread && !isPubBottomInput && (
