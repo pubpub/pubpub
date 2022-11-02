@@ -71,10 +71,10 @@ const DiscussionInput = (props: Props) => {
 	const handleThreadPost = async () => {
 		setIsLoading(true);
 		const initAnchorData = getLocalHighlightText(pubView, discussionData.id);
-
 		const outputData = await apiFetch('/api/threadComment', {
 			method: 'POST',
 			body: JSON.stringify({
+				// common
 				accessHash: locationData.query.access,
 				parentId: discussionData.id,
 				threadId: discussionData.thread.id,

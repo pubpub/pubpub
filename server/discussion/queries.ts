@@ -23,7 +23,7 @@ const findDiscussionWithUser = (id) =>
 		},
 		include: [
 			includeUserModel({ as: 'author' }),
-			{ model: Commenter, as: 'commenters' },
+			{ model: Commenter, as: 'commenter' },
 			{ model: DiscussionAnchor, as: 'anchors' },
 			{
 				model: Visibility,

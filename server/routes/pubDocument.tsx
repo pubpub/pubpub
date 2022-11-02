@@ -92,6 +92,7 @@ const getEnrichedPubData = async ({
 		throw new ForbiddenError();
 	}
 
+	// ! ill get rid of both of these soon enough
 	if (!pubData.reviewHash) {
 		const reviewHash = generateHash(8);
 		Pub.update(

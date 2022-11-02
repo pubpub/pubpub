@@ -200,7 +200,7 @@ export default ({
 					...anchors,
 					...visibility,
 					...thread,
-					{ model: Commenter, as: 'commenters' },
+					{ model: Commenter, as: 'commenter' },
 				],
 			},
 			{
