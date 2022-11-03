@@ -84,13 +84,13 @@ const DiscussionInput = (props: Props) => {
 				text: getText(changeObject?.view) || '',
 				commentAccessHash,
 				commenterName,
-				// discussion kv
+				// discussion
 				discussionId: discussionData.id,
 				historyKey: historyData.currentKey,
 				initAnchorData,
 				visibilityAccess:
 					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
-				// new kv
+				// check
 				isNewThread,
 			}),
 		});
@@ -124,27 +124,11 @@ const DiscussionInput = (props: Props) => {
 		}
 	};
 
-	// * creates a new disccussion/thread/thread comment
-	// ? figure out what things below are doing for discussions
-	// const handlePostDiscussion = async () => {
-	// 	const outputData = await apiFetch('/api/discussions', {
-	// 		method: 'POST',
-	// 		body: JSON.stringify({
-	// 			discussionId: discussionData.id,
-	// 			historyKey: historyData.currentKey,
-	// 			initAnchorData,
-	// 			visibilityAccess:
-	// 				pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
-	// 		}),
-	// 	});
-	// };
-
 	const isLoggedIn = loginData.id;
 	const redirectString = `?redirect=${locationData.path}${
 		locationData.queryString.length > 1 ? locationData.queryString : ''
 	}`;
 
-	// this is where we check for commentHash
 	const canComment = isLoggedIn || pubData.isAVisitingCommenter;
 	const isUser = !!(canEdit || loginData.fullName);
 
