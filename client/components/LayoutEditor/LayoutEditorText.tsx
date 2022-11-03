@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Node } from 'prosemirror-model';
 
 import { GridWrapper } from 'components';

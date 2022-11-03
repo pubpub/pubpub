@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { generateHash } from 'utils/hashes';
 import { LayoutBlock } from 'utils/layout/types';
@@ -8,6 +8,8 @@ type ChangeHandler = (newLayout: LayoutBlock[]) => unknown;
 
 export const useLayout = (initialLayout: LayoutBlock[], onChange: ChangeHandler) => {
 	const [layout, setLayout] = useState(initialLayout);
+
+	useEffect(() => void onChange(layout), [layout, onChange]);
 
 	const onUpdateLayout = useCallback((fn: LayoutUpdateFn) => {
 		setLayout((currentLayout) => fn([...currentLayout]));
