@@ -20,7 +20,7 @@ export default (sequelize, dataTypes) => {
 						foreignKey: 'userId',
 					});
 					ThreadComment.belongsTo(Commenter, {
-						ThreadComment: 'CASCADE',
+						onDelete: 'CASCADE',
 						as: 'commenter',
 						foreignKey: 'commenterId',
 					});

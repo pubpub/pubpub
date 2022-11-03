@@ -1,11 +1,9 @@
 import { Commenter } from 'server/models';
-import { Commenter as CommenterFields } from 'types';
+import * as types from 'types';
 
-export const createCommenter = (props: CommenterFields) => {
-	return Commenter.create(
-		{
-			...props,
-		},
-		{ returning: true },
-	);
+export const createCommenter = (props: Pick<types.Commenter, 'name'>): Promise<types.Commenter> => {
+	const { name } = props;
+	return Commenter.create({
+		name,
+	});
 };

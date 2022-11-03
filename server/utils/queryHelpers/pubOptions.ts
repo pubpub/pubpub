@@ -2,7 +2,6 @@ import {
 	Collection,
 	CollectionAttribution,
 	CollectionPub,
-	Commenter,
 	Community,
 	CrossrefDepositRecord,
 	Export,
@@ -195,13 +194,7 @@ export default ({
 				separate: true,
 				model: Discussion,
 				as: 'discussions',
-				include: [
-					...author,
-					...anchors,
-					...visibility,
-					...thread,
-					{ model: Commenter, as: 'commenter' },
-				],
+				include: [...author, ...anchors, ...visibility, ...thread],
 			},
 			{
 				separate: true,

@@ -4,14 +4,12 @@ export default (sequelize, dataTypes) => {
 		{
 			id: sequelize.idType,
 			name: { type: dataTypes.TEXT },
-			discussionId: { type: dataTypes.UUID },
-			threadId: { type: dataTypes.UUID, allowNull: false },
 		},
 		{
 			classMethods: {
 				associate: (models) => {
-					const { Commenter, Discussion } = models;
-					Commenter.hasMany(Discussion, {
+					const { Commenter, ThreadComment } = models;
+					Commenter.hasMany(ThreadComment, {
 						onDelete: 'CASCADE',
 						as: 'discussion',
 						foreignKey: 'discussionId',

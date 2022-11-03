@@ -28,9 +28,3 @@ export type Discussion = {
 	thread?: Thread;
 	pub?: Pub;
 };
-
-export type Commenter = {
-	discussionId?: string;
-	threadId: string;
-	name: string;
-};

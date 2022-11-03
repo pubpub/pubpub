@@ -13,8 +13,8 @@ import {
 } from 'server/models';
 import { getReadableDateInYear } from 'utils/dates';
 import { createDiscussionAnchor } from 'server/discussionAnchor/queries';
-import { VisibilityAccess } from 'types';
-import { createCommenter } from '../commenter/queries';
+import { createThreadWithComment } from 'server/thread/queries';
+import { VisibilityAccess, DocJson } from 'types';
 
 const findDiscussionWithUser = (id) =>
 	Discussion.findOne({
@@ -54,7 +54,7 @@ type CreateDiscussionOpts = {
 	discussionId?: string;
 	title?: string;
 	text: string;
-	content: {};
+	content: DocJson;
 	historyKey: number;
 	visibilityAccess: 'members' | 'public';
 	initAnchorData: {
@@ -65,9 +65,10 @@ type CreateDiscussionOpts = {
 		to: number;
 	};
 	commenterName?: string;
-};
+	userId?: string;
+} & ({ userId: string } | { commenterName: string });
 
-export const createDiscussion = async (options: CreateDiscussionOpts, userData) => {
+export const createDiscussion = async (options: CreateDiscussionOpts) => {
 	const {
 		pubId,
 		discussionId,
@@ -78,8 +79,10 @@ export const createDiscussion = async (options: CreateDiscussionOpts, userData) 
 		visibilityAccess,
 		initAnchorData,
 		commenterName,
+		userId,
 	} = options;
-	const userId = userData?.id || null;
+	const user = userId || null;
+	const commenter = commenterName || null;
 	const discussions = await Discussion.findAll({
 		where: { pubId },
 		attributes: ['id', 'pubId', 'number'],
@@ -98,30 +101,22 @@ export const createDiscussion = async (options: CreateDiscussionOpts, userData) 
 	const dateString = getReadableDateInYear(new Date());
 	const generatedTitle = `New Discussion on ${dateString}`;
 
-	const newThread = await Thread.create({});
+	const { threadId } = await createThreadWithComment({
+		text,
+		content,
+		commenterName: commenter,
+		userId: user,
+	});
+
 	const newVisibility = await Visibility.create({ access: visibilityAccess });
 	const newDiscussion = await Discussion.create({
 		id: discussionId,
 		title: title || generatedTitle,
 		number: maxThreadNumber + 1,
-		threadId: newThread.id,
+		threadId,
 		visibilityId: newVisibility.id,
 		userId,
 		pubId,
-	});
-
-	const newCommenter = await createCommenter({
-		discussionId: newDiscussion.id,
-		threadId: newThread.id,
-		name: userData?.fullName || commenterName || 'anonymous',
-	});
-
-	await ThreadComment.create({
-		text,
-		content,
-		userId,
-		threadId: newThread.id,
-		commenterId: newCommenter.id,
 	});
 
 	if (initAnchorData) {

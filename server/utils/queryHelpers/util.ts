@@ -1,4 +1,11 @@
-import { Thread, ThreadComment, ThreadEvent, Visibility, includeUserModel } from 'server/models';
+import {
+	Thread,
+	ThreadComment,
+	ThreadEvent,
+	Visibility,
+	includeUserModel,
+	Commenter,
+} from 'server/models';
 
 export const stripFalsyIdsFromQuery = (whereQueryObject) => {
 	// @ts-expect-error ts-migrate(2339) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
@@ -55,7 +62,10 @@ export const baseThread = [
 				include: [includeUserModel({ as: 'author' })],
 			},
 			{
-				model: ThreadEvent,
+				
+				
+				
+				eadEvent,
 				as: 'events',
 				include: [includeUserModel({ as: 'user' })],
 			},

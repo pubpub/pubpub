@@ -68,13 +68,11 @@ const DiscussionInput = (props: Props) => {
 		}
 	}, [isNewThread, inputView, didFocus, isPubBottomInput]);
 
-	const handleThreadPost = async () => {
+	const handlePostThreadComment = async () => {
 		setIsLoading(true);
-		const initAnchorData = getLocalHighlightText(pubView, discussionData.id);
 		const outputData = await apiFetch('/api/threadComment', {
 			method: 'POST',
 			body: JSON.stringify({
-				// common
 				accessHash: locationData.query.access,
 				parentId: discussionData.id,
 				threadId: discussionData.thread.id,
@@ -84,14 +82,6 @@ const DiscussionInput = (props: Props) => {
 				text: getText(changeObject?.view) || '',
 				commentAccessHash,
 				commenterName,
-				// discussion
-				discussionId: discussionData.id,
-				historyKey: historyData.currentKey,
-				initAnchorData,
-				visibilityAccess:
-					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
-				// check
-				isNewThread,
 			}),
 		});
 
@@ -110,11 +100,35 @@ const DiscussionInput = (props: Props) => {
 			}),
 		});
 
-		// ! pretty the above will have the same outcome
-		// ! but for now lets comment this here to remind
-		// updateLocalData('pub', {
-		// 	discussions: [...pubData.discussions, outputData],
-		// });
+		if (isPubBottomInput) {
+			setIsLoading(false);
+			setEditorKey(Date.now());
+		}
+	};
+
+	const handlePostDiscussion = async () => {
+		setIsLoading(true);
+		const initAnchorData = getLocalHighlightText(pubView, discussionData.id);
+		const outputData = await apiFetch('/api/discussions', {
+			method: 'POST',
+			body: JSON.stringify({
+				accessHash: locationData.query.access,
+				discussionId: discussionData.id,
+				pubId: pubData.id,
+				historyKey: historyData.currentKey,
+				communityId: communityData.id,
+				content: getJSON(changeObject?.view),
+				text: getText(changeObject?.view) || '',
+				initAnchorData,
+				visibilityAccess:
+					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
+				commentAccessHash,
+				commenterName,
+			}),
+		});
+		updateLocalData('pub', {
+			discussions: [...pubData.discussions, outputData],
+		});
 
 		if (isPubBottomInput) {
 			setIsLoading(false);
@@ -129,6 +143,7 @@ const DiscussionInput = (props: Props) => {
 		locationData.queryString.length > 1 ? locationData.queryString : ''
 	}`;
 
+	// this is where we check for commentHash
 	const canComment = isLoggedIn || pubData.isAVisitingCommenter;
 	const isUser = !!(canEdit || loginData.fullName);
 
@@ -222,7 +237,7 @@ const DiscussionInput = (props: Props) => {
 							!getText(changeObject?.view) &&
 							!getTopLevelImages(changeObject?.view).length
 						}
-						onClick={handleThreadPost}
+						onClick={isNewThread ? handlePostDiscussion : handlePostThreadComment}
 						small={true}
 					/>
 					{isNewThread && !isPubBottomInput && (

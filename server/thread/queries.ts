@@ -1,6 +1,7 @@
 import * as types from 'types';
-import { Discussion, Pub, ReviewNew, Visibility } from 'server/models';
+import { Discussion, Pub, ReviewNew, Visibility, Thread, ThreadComment } from 'server/models';
 import { filterUsersAcceptedByVisibility } from 'server/visibility/queries';
+import { createCommenter } from '../commenter/queries';
 
 type FilterUsersOptions = {
 	userIds: string[];
@@ -62,4 +63,31 @@ export const canUserSeeThread = async (options: CanUserSeeThreadOptions): Promis
 	const { userId, threadId } = options;
 	const [maybeUserId] = await filterUsersWhoCanSeeThread({ threadId, userIds: [userId] });
 	return maybeUserId === userId;
+};
+
+type CreateThreadWithCommentOptions = {
+	text: string;
+	content: types.DocJson;
+	userId: null | string;
+	commenterName: null | string;
+};
+
+export const createThreadWithComment = async (options: CreateThreadWithCommentOptions) => {
+	const { text, content, userId, commenterName } = options;
+
+	const newThread = await Thread.create({});
+	const newCommenter = commenterName && (await createCommenter({ name: commenterName }));
+	const userIdOrCommenterId = newCommenter ? { commenterId: newCommenter.id } : { userId };
+
+	const threadComment = await ThreadComment.create({
+		text,
+		content,
+		threadId: newThread.id,
+		...userIdOrCommenterId,
+	});
+
+	return {
+		threadId: newThread.id,
+		threadCommentId: threadComment.id,
+	};
 };

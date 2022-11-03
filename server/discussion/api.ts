@@ -13,7 +13,7 @@ const getRequestIds = (req) => {
 		pubId: req.body.pubId,
 		communityId: req.body.communityId,
 		accessHash: req.body.accessHash,
-		0: req.body.visibilityAccess,
+		visibilityAccess: req.body.visibilityAccess,
 		commentAccessHash: req.body.commentAccessHash,
 	};
 };
@@ -26,7 +26,7 @@ app.post(
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}
-		const newDiscussion = await createDiscussion(req.body, req.user);
+		const newDiscussion = await createDiscussion(req.body);
 		return res.status(201).json(newDiscussion);
 	}),
 );
