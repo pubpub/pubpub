@@ -30,6 +30,8 @@ export const usePersistableState = <T>(
 				.catch((err) => setError(err))
 				.finally(() => setIsPersisting(false));
 		},
+		// "Missing dependency: T"
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[persistedState],
 	);
 
