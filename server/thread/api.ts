@@ -1,49 +1,10 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
+import { Request } from 'server/utils/discussions/types';
+
 import { getCreatePermissions } from './permissions';
 import { createDiscussion } from '../discussion/queries';
 import { createThreadComment } from '../threadComment/queries';
-
-type SharedThreadProperties = {
-	accessHash;
-	user;
-	body: {
-		parentId: string;
-		threadId: string;
-		pubId: string;
-		communityId: string;
-		content: string;
-		text: string;
-		commentAccessHash: string;
-		commenterName: string;
-		isNewThread: boolean;
-		accessHash: string;
-	};
-};
-
-export type NewDiscussion = SharedThreadProperties & {
-	body: { discussionId?; historyKey?; initAnchorData?; visibilityAccess? };
-};
-
-export type NewThreadComment = SharedThreadProperties & {
-	body: { threadCommentId?: string | null };
-};
-
-export type Request = NewDiscussion & NewThreadComment;
-
-export type RequestIds = {
-	user: any;
-	parentId: any;
-	threadId: any;
-	threadCommentId: string | null;
-	pubId: any;
-	communityId: any;
-	accessHash: any;
-	commentAccessHash: any;
-	visibilityAccess: any;
-	discussionId: any;
-	isNewThread: boolean;
-};
 
 const getRequestIds = (req: Request) => {
 	const user = req.user || {};

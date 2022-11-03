@@ -8,7 +8,6 @@ import {
 	userEditableFields,
 } from 'server/utils/discussions/getMatchingObject';
 
-
 export const getPermissions = async ({
 	userId,
 	parentId,
