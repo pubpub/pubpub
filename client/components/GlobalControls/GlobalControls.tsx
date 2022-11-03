@@ -48,7 +48,7 @@ const GlobalControls = (props: Props) => {
 			<Menu
 				aria-label="Dashboard menu"
 				placement="bottom-end"
-				menuStyle={{ zIndex: 20 }}
+				menuStyle={{ zIndex: 20, left: '30px' }}
 				disclosure={
 					<GlobalControlsButton
 						mobile={{ icon: 'settings' }}
