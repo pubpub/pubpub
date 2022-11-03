@@ -59,13 +59,13 @@ export const baseThread = [
 			{
 				model: ThreadComment,
 				as: 'comments',
-				include: [includeUserModel({ as: 'author' })],
+				include: [
+					includeUserModel({ as: 'author' }),
+					{ model: Commenter, as: 'commenter' },
+				],
 			},
 			{
-				
-				
-				
-				eadEvent,
+				model: ThreadEvent,
 				as: 'events',
 				include: [includeUserModel({ as: 'user' })],
 			},
