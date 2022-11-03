@@ -83,7 +83,6 @@ const ThreadComment = (props: Props) => {
 		);
 	};
 	const commenterName = discussionData.commenters[0]?.name;
-	console.log(discussionData);
 
 	return (
 		<div className={classNames('thread-comment-component', isPreview && 'is-preview')}>

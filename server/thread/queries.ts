@@ -79,6 +79,8 @@ export const createThreadWithComment = async (options: CreateThreadWithCommentOp
 	const newCommenter = commenterName && (await createCommenter({ name: commenterName }));
 	const userIdOrCommenterId = newCommenter ? { commenterId: newCommenter.id } : { userId };
 
+	const commenter = newCommenter && 'id' in newCommenter ? newCommenter : null;
+
 	const threadComment = await ThreadComment.create({
 		text,
 		content,
@@ -89,5 +91,6 @@ export const createThreadWithComment = async (options: CreateThreadWithCommentOp
 	return {
 		threadId: newThread.id,
 		threadCommentId: threadComment.id,
+		commenterId: commenter?.id,
 	};
 };

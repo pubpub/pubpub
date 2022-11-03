@@ -72,6 +72,7 @@ export const baseThread = [
 		],
 	},
 ];
+
 export const baseVisibility = [
 	{
 		model: Visibility,
