@@ -31,6 +31,9 @@ const AccentStyle = function (props) {
 		minimalAction: baseMinimalAction,
 	} = generateColors(accentColorDark);
 
+	const accentColorDarkFaded30 = Color(accentColorDark).whiten(0.5).rgb().string();
+	const accentColorDarkFaded = Color(accentColorDark).fade(0.95).rgb().string();
+
 	const headerAccentColor = generateColors(
 		headerColorType === 'light' ? accentColorLight : accentColorDark,
 	);
@@ -49,9 +52,17 @@ const AccentStyle = function (props) {
 	} 100%);`;
 
 	return (
-		<style
-			dangerouslySetInnerHTML={{
-				__html: `
+		<>
+			<style type="text/css">
+				{`:root { 
+			--community-accent-dark: ${accentColorDark};
+			--community-accent-dark-faded-30: ${accentColorDarkFaded30};
+			--community-accent-dark-faded: ${accentColorDarkFaded};
+		}`}
+			</style>
+			<style
+				dangerouslySetInnerHTML={{
+					__html: `
 			.accent-background { background-color: ${baseColor}; }
 			.accent-color { color: ${baseText}; }
 			.accent-background.header-component, .accent-background.nav-bar-component, .accent-background.footer-component, .accent-background.nav-item-background, .accent-background.image-wrapper{ background-color: ${
@@ -96,8 +107,9 @@ const AccentStyle = function (props) {
 					: ''
 			}
 		`,
-			}}
-		/>
+				}}
+			/>
+		</>
 	);
 };
 

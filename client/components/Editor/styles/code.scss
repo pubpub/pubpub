@@ -1,0 +1,17 @@
+.codeblock-select-wrapper {
+	position: absolute;
+	left: 0;
+	top: 100%;
+	z-index: 100;
+	opacity: 0;
+	transition: all 0.3s ease;
+}
+
+.codeblock-root {
+	font-size: 18px;
+	position: relative;
+}
+
+.codeblock-root:hover .codeblock-select-wrapper {
+	opacity: 1;
+}

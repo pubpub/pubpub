@@ -1,5 +1,7 @@
 import { DOMOutputSpec, Node } from 'prosemirror-model';
-import katex from 'katex';
+
+import { renderToKatexString } from 'utils/katex';
+import { ReferenceableNodeType } from '../types';
 
 import { counter } from './reactive/counter';
 
@@ -27,11 +29,16 @@ const mathDisplaySchema = {
 	],
 };
 
+const getMathNodeAttrs = (mathNode) => ({
+	class: 'math-node',
+	...(mathNode.attrs?.id && { id: mathNode.attrs.id }),
+});
+
 const renderStaticMath = (mathNode: Node, tagName: string, displayMode: boolean) => {
 	const { attrs, textContent } = mathNode;
 	const count = attrs?.count;
 	const textContentWithCount = count ? `${textContent} \\tag{${count}}` : textContent;
-	const renderedKatex = katex.renderToString(textContentWithCount, {
+	const renderedKatex = renderToKatexString(textContentWithCount, {
 		displayMode,
 		throwOnError: false,
 		globalGroup: true,
@@ -39,7 +46,7 @@ const renderStaticMath = (mathNode: Node, tagName: string, displayMode: boolean)
 	return [
 		tagName,
 		{
-			class: 'math-node',
+			...getMathNodeAttrs(mathNode),
 			dangerouslySetInnerHTML: { __html: renderedKatex },
 		},
 	] as any;
@@ -49,12 +56,10 @@ export default {
 	math_inline: {
 		...inlineMathSchema,
 		group: 'inline',
-		toDOM: (node: Node, { isReact } = { isReact: false }) => {
-			if (isReact) {
-				return renderStaticMath(node, 'math-inline', false);
-			}
-			return ['math-inline', { class: 'math-node' }, 0] as DOMOutputSpec;
-		},
+		toDOM: (node: Node, { isReact } = { isReact: false }) =>
+			isReact
+				? renderStaticMath(node, 'math-inline', false)
+				: (['math-inline', { class: 'math-node' }, 0] as DOMOutputSpec),
 	},
 	math_display: {
 		...mathDisplaySchema,
@@ -65,13 +70,12 @@ export default {
 			hideLabel: { default: false },
 		},
 		reactiveAttrs: {
-			count: counter({ useNodeLabels: true }),
+			count: counter({ useNodeLabels: true, counterType: ReferenceableNodeType.Math }),
 		},
 		toDOM: (node: Node, { isReact } = { isReact: false }) => {
-			if (isReact) {
-				return renderStaticMath(node, 'div', true);
-			}
-			return ['math-display', { class: 'math-node' }, 0] as DOMOutputSpec;
+			return isReact
+				? renderStaticMath(node, 'div', true)
+				: (['math-display', getMathNodeAttrs(node), 0] as DOMOutputSpec);
 		},
 	},
 };

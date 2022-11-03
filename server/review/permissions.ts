@@ -1,9 +1,14 @@
+import { Pub } from 'server/models';
+import * as types from 'types';
 import { getScope } from 'server/utils/queryHelpers';
 
-export const getPermissions = async ({ userId, communityId, pubId }) => {
-	if (!userId || !communityId || !pubId) {
+export const getPermissions = async ({ userId, communityId, pubId }, accessHash) => {
+	if (!communityId || !pubId) {
 		return {};
 	}
+
+	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
+	const hasAccessHash = pub?.reviewHash === accessHash;
 	const scopeData = await getScope({
 		communityId,
 		pubId,
@@ -13,7 +18,6 @@ export const getPermissions = async ({ userId, communityId, pubId }) => {
 	if (!scopeData.elements.activePub) {
 		return {};
 	}
-
 	const { canAdmin, canCreateReviews, canManage } = scopeData.activePermissions;
 
 	let editProps = [];
@@ -23,7 +27,7 @@ export const getPermissions = async ({ userId, communityId, pubId }) => {
 	}
 
 	return {
-		create: canCreateReviews,
+		create: canCreateReviews || hasAccessHash,
 		createRelease: canAdmin,
 		update: editProps,
 		destroy: canManage,

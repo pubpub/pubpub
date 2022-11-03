@@ -12,12 +12,11 @@ import { getPathToCslFileForCitationStyleKind } from 'server/utils/citations';
 import { PandocTarget } from 'utils/export/formats';
 
 import { rules } from '../import/rules';
-import { getTmpFileForExtension } from './util';
+import { getAffiliations, getDedupedAffliations, getTmpFileForExtension } from './util';
 import { NotesData, PubMetadata, PandocFlag } from './types';
 import { runTransforms } from './transforms';
 import {
-	getPandocNotesByHash,
-	getCslJsonForPandocNotes,
+	getPandocNotesById,
 	PandocNotes,
 	modifyJatsContentToIncludeUnstructuredNotes,
 } from './notes';
@@ -55,8 +54,8 @@ const createPandocArgs = (
 		.reduce((acc, next) => [...acc, ...next], []);
 };
 
-const createCslJsonBibliographyFile = async (pandocNotes: PandocNotes) => {
-	const cslJson = getCslJsonForPandocNotes(pandocNotes);
+const createCslJsonBibliographyFile = async (notes: PandocNotes) => {
+	const cslJson = Object.values(notes).map((note) => note.cslJson);
 	const file = await getTmpFileForExtension('json');
 	fs.writeFileSync(file.path, JSON.stringify(cslJson));
 	return file.path;
@@ -74,16 +73,25 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: Pa
 		doi,
 		citationStyle,
 		license,
+		pubUrl,
 	} = pubMetadata;
 	const cslFile = getPathToCslFileForCitationStyleKind(citationStyle);
+	const dedupedAffiliations = getDedupedAffliations(attributions);
+	const formattedAffiliations = dedupedAffiliations.map((aff, affIndex) => {
+		return { id: affIndex, organization: aff };
+	});
 	const formattedAttributions = attributions.map((attr) => {
 		if (pandocTarget === 'jats_archiving') {
 			const publicEmail = 'publicEmail' in attr.user ? attr.user.publicEmail : null;
+			const affiliationIds = getAffiliations(attr).map((aff) => {
+				return dedupedAffiliations.indexOf(aff);
+			});
 			return {
 				...(attr.user.lastName && { surname: attr.user.lastName }),
 				...(attr.user.firstName && { 'given-names': attr.user.firstName }),
 				...(publicEmail && { email: publicEmail }),
 				...(attr.user.orcid && { orcid: attr.user.orcid }),
+				...(attr.affiliation && { affiliation: affiliationIds }),
 			};
 		}
 		return attr.user.fullName;
@@ -115,6 +123,8 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: Pa
 			type: license.short,
 			...(license.link && { link: license.link }),
 		},
+		affiliation: formattedAffiliations,
+		uri: pubUrl,
 		...(primaryCollectionMetadata && {
 			article: {
 				...(primaryCollectionMetadata.issue && { issue: primaryCollectionMetadata.issue }),
@@ -164,7 +174,7 @@ const callPandoc = (pandocJson: object, args: string[]) => {
 		input: JSON.stringify(pandocJson),
 		maxBuffer: 1024 * 1024 * 25,
 	});
-	return proc.stderr.toString();
+	return { error: proc.stderr.toString(), success: proc.status === 0 };
 };
 
 type ExportWithPandocOptions = {
@@ -177,7 +187,7 @@ type ExportWithPandocOptions = {
 
 export const exportWithPandoc = async (options: ExportWithPandocOptions) => {
 	const { pandocTarget, pubMetadata, tmpFile, notesData } = options;
-	const pandocNotes = getPandocNotesByHash(notesData);
+	const pandocNotes = getPandocNotesById(notesData);
 	const pubDoc = reactPubDoc(options);
 	const metadataFile = await createYamlMetadataFile(pubMetadata, pandocTarget);
 	const bibliographyFile = await createCslJsonBibliographyFile(pandocNotes);
@@ -195,8 +205,8 @@ export const exportWithPandoc = async (options: ExportWithPandocOptions) => {
 	}).asNode();
 	const pandocAst = runTransforms(preTransformedPandocAst);
 	const pandocJson = emitPandocJson(pandocAst);
-	const error = callPandoc(pandocJson, pandocArgs);
-	if (error) {
+	const { error, success } = callPandoc(pandocJson, pandocArgs);
+	if (!success) {
 		throw new Error(error);
 	}
 	// At this point, pandoc has written the document to our temp file. Here

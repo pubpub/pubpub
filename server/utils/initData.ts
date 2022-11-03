@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 
 import * as types from 'types';
-import { isProd, isDuqDuq, isQubQub, getAppCommit } from 'utils/environment';
+import { isProd, isDuqDuq, isQubQub, getAppCommit, isDevelopment } from 'utils/environment';
 import { getFeatureFlagsForUserAndCommunity } from 'server/featureFlag/queries';
 import { UserNotification } from 'server/models';
 
@@ -23,9 +23,17 @@ const getNotificationData = async (
 	return { hasNotifications: false, hasUnreadNotifications: false };
 };
 
-export const getInitialData = async (req, isDashboard = false): Promise<types.InitialData> => {
-	const hostname = req.hostname;
+type GetInitialDataOptions = {
+	isDashboard?: boolean;
+	includeFacets?: boolean;
+};
 
+export const getInitialData = async (
+	req,
+	options: GetInitialDataOptions = {},
+): Promise<types.InitialData> => {
+	const hostname = req.hostname;
+	const { isDashboard = false, includeFacets = isDashboard } = options;
 	/* Gather user data */
 	const user = req.user || {};
 	const loginData = {
@@ -40,6 +48,8 @@ export const getInitialData = async (req, isDashboard = false): Promise<types.In
 		gdprConsent: user.gdprConsent,
 	};
 
+	const shouldForceBasePubPub = !!(isDevelopment() && process.env.FORCE_BASE_PUBPUB);
+
 	/* Gather location data */
 	const locationData = {
 		hostname: req.hostname,
@@ -48,7 +58,7 @@ export const getInitialData = async (req, isDashboard = false): Promise<types.In
 		query: req.query,
 		queryString: req.query ? `?${queryString.stringify(req.query)}` : '',
 		isDashboard,
-		isBasePubPub: hostname === 'www.pubpub.org',
+		isBasePubPub: shouldForceBasePubPub || hostname === 'www.pubpub.org',
 		isProd: isProd(),
 		isDuqDuq: isDuqDuq(),
 		isQubQub: isQubQub(),
@@ -112,6 +122,7 @@ export const getInitialData = async (req, isDashboard = false): Promise<types.In
 		/* eslint-disable-next-line no-param-reassign */
 		communityData.domain = req.headers.localhost;
 	}
+
 	const [scopeData, featureFlags, initialNotificationsData, dismissedUserDismissables] =
 		await Promise.all([
 			getScope({
@@ -122,6 +133,7 @@ export const getInitialData = async (req, isDashboard = false): Promise<types.In
 				accessHash: locationData.query.access,
 				loginId: loginData.id,
 				isDashboard,
+				includeFacets,
 			}),
 			getFeatureFlagsForUserAndCommunity(loginData.id, communityData.id),
 			getNotificationData(user.id),

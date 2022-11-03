@@ -41,6 +41,7 @@ export default (sequelize, dataTypes) => {
 			citationInlineStyle: { type: dataTypes.TEXT, defaultValue: 'count' },
 			viewHash: { type: dataTypes.STRING },
 			editHash: { type: dataTypes.STRING },
+			reviewHash: { type: dataTypes.STRING },
 			nodeLabels: { type: dataTypes.JSONB },
 
 			pubEdgeListingDefaultsToCarousel: {
@@ -52,6 +53,10 @@ export default (sequelize, dataTypes) => {
 				type: dataTypes.BOOLEAN,
 				defaultValue: true,
 				allowNull: false,
+			},
+			facetsMigratedAt: {
+				type: dataTypes.DATE,
+				allowNull: true,
 			},
 
 			/* Set by Associations */

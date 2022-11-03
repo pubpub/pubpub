@@ -2,12 +2,13 @@ import React from 'react';
 import TimeAgo from 'react-timeago';
 
 import { DialogLauncher, PubReleaseDialog, PubReleaseReviewDialog } from 'components';
+import { PatchFn, PubPageData } from 'types';
 import { Menu, MenuItem } from 'components/Menu';
 import { pubUrl } from 'utils/canonicalUrls';
 import { formatDate } from 'utils/dates';
 import { usePageContext } from 'utils/hooks';
 
-import { PatchFn, PubPageData } from 'types';
+import { usePubContext } from '../pubHooks';
 import ResponsiveHeaderButton from './ResponsiveHeaderButton';
 
 require('./draftReleaseButtons.scss');
@@ -45,8 +46,10 @@ const getCanCreateRelease = (latestRelease, latestKey) => {
 const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { historyData, pubData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
+	const { submissionState } = usePubContext();
 	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
-	const { isRelease } = pubData;
+	const { isRelease, isReviewingPub } = pubData;
+	const shouldShowReleaseReviewButton = canCreateReviews && !isReviewingPub && !submissionState;
 
 	const renderForRelease = () => {
 		const { releases, releaseNumber } = pubData;
@@ -64,43 +67,47 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						}}
 					/>
 				)}
-				<Menu
-					className="releases-menu"
-					aria-label="Choose a historical release of this Pub"
-					disclosure={
-						<ResponsiveHeaderButton
-							icon="history"
-							showCaret={true}
-							// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
-							outerLabel={getHistoryButtonLabelForTimestamp(
-								latestReleaseTimestamp,
-								'last released',
-							)}
-						/>
-					}
-				>
-					{releases
-						.map((release, index) => (
-							<MenuItem
-								key={release.id}
-								active={index + 1 === releaseNumber}
-								icon={index + 1 === releaseNumber ? 'tick' : 'document-share'}
-								href={pubUrl(communityData, pubData, { releaseNumber: index + 1 })}
-								className="release-menu-item"
-								text={
-									<div className="release-metadata">
-										<p className="number">{'Release #' + (index + 1)}</p>
-										<p className="timestamp">
-											{formatDate(new Date(release.createdAt), {
-												includeTime: true,
-											})}
-										</p>
-									</div>
-								}
+				{!isReviewingPub && (
+					<Menu
+						className="releases-menu"
+						aria-label="Choose a historical release of this Pub"
+						disclosure={
+							<ResponsiveHeaderButton
+								icon="history"
+								showCaret={true}
+								// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
+								outerLabel={getHistoryButtonLabelForTimestamp(
+									latestReleaseTimestamp,
+									'last released',
+								)}
 							/>
-						))
-						.reverse()}
-				</Menu>
+						}
+					>
+						{releases
+							.map((release, index) => (
+								<MenuItem
+									key={release.id}
+									active={index + 1 === releaseNumber}
+									icon={index + 1 === releaseNumber ? 'tick' : 'document-share'}
+									href={pubUrl(communityData, pubData, {
+										releaseNumber: index + 1,
+									})}
+									className="release-menu-item"
+									text={
+										<div className="release-metadata">
+											<p className="number">{'Release #' + (index + 1)}</p>
+											<p className="timestamp">
+												{formatDate(new Date(release.createdAt), {
+													includeTime: true,
+												})}
+											</p>
+										</div>
+									}
+								/>
+							))
+							.reverse()}
+					</Menu>
+				)}
 			</React.Fragment>
 		);
 	};
@@ -134,7 +141,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						outerLabel={{ bottom: 'view latest release', top: 'see published version' }}
 					/>
 				)}
-				{canAdmin && (
+				{canAdmin && !isReviewingPub && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
@@ -163,7 +170,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						)}
 					</DialogLauncher>
 				)}
-				{canCreateReviews && (
+				{shouldShowReleaseReviewButton && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton

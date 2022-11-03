@@ -5,8 +5,10 @@ import { useDebouncedCallback } from 'use-debounce/lib';
 
 import { Editor } from 'components';
 import discussionSchema from 'components/Editor/schemas/discussion';
+import malformedDocPlugin from 'client/components/Editor/plugins/malformedDoc';
 import { EditorChangeObject, CollaborativeEditorStatus } from 'client/components/Editor';
 
+import { useFacetsQuery } from 'client/utils/useFacets';
 import { usePubContext } from '../pubHooks';
 import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
 import PubErrorAlert from './PubErrorAlert';
@@ -29,7 +31,6 @@ const PubBody = (props: Props) => {
 	const {
 		noteManager,
 		updateCollabData,
-		pubData: { nodeLabels },
 		historyData: { setLatestHistoryKey },
 		collabData: { status, firebaseDraftRef, localCollabUser },
 		pubBodyState: {
@@ -45,6 +46,7 @@ const PubBody = (props: Props) => {
 	const [editorErrorTime, setEditorErrorTime] = useState<number | null>(null);
 	const [lastSavedTime, setLastSavedTime] = useState<number | null>(null);
 	const { markLastInput } = useContext(PubSuspendWhileTypingContext);
+	const nodeLabels = useFacetsQuery((F) => F.NodeLabels);
 
 	useBeforeUnload(
 		(status === 'saving' || status === 'disconnected') && !editorErrorTime,
@@ -106,6 +108,7 @@ const PubBody = (props: Props) => {
 				onError={handleError}
 				discussionsOptions={discussionOptions}
 				collaborativeOptions={collaborativeOptions}
+				customPlugins={{ malformedDocPlugin }}
 			/>
 			<PubErrorAlert
 				pubErrorOccurredAt={editorErrorTime}

@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
 import classNames from 'classnames';
 
-import { GridWrapper, PubHeaderBackground } from 'components';
+import { GridWrapper, PubHeaderBackground, ClientOnly } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { useSticky } from 'client/utils/useSticky';
 import { useViewport } from 'client/utils/useViewport';
+import { useFacetsQuery } from 'client/utils/useFacets';
 
 import { usePubContext } from '../pubHooks';
 import { mobileViewportCutoff } from './constants';
@@ -12,6 +13,7 @@ import PubDetails from './details';
 import PubHeaderContent from './PubHeaderContent';
 import SmallHeaderButton from './SmallHeaderButton';
 import PubHeaderSticky from './PubHeaderSticky';
+import ReviewHeaderSticky from './ReviewHeaderSticky';
 
 require('./pubHeader.scss');
 
@@ -46,6 +48,7 @@ const PubHeader = (props: Props) => {
 	const [showingDetails, setShowingDetails] = useState(false);
 	const [fixedHeight, setFixedHeight] = useState<number | null>(null);
 	const { viewportWidth } = useViewport();
+	const pubHeaderTheme = useFacetsQuery((F) => F.PubHeaderTheme);
 
 	const isMobile = viewportWidth && viewportWidth <= mobileViewportCutoff;
 
@@ -73,10 +76,24 @@ const PubHeader = (props: Props) => {
 		setShowingDetails(!showingDetails);
 	};
 
+	const renderStickyPart = () => {
+		if (sticky) {
+			if (pubData.isReviewingPub) {
+				return (
+					<ClientOnly>
+						<ReviewHeaderSticky />
+					</ClientOnly>
+				);
+			}
+			return <PubHeaderSticky />;
+		}
+		return null;
+	};
+
 	return (
 		<PubHeaderBackground
 			className={classNames('pub-header-component', showingDetails && 'showing-details')}
-			pubData={pubData}
+			pubHeaderTheme={pubHeaderTheme}
 			communityData={communityData}
 			ref={headerRef}
 			style={fixedHeight && showingDetails ? { height: fixedHeight } : {}}
@@ -101,7 +118,7 @@ const PubHeader = (props: Props) => {
 				)}
 				<ToggleDetailsButton showingDetails={showingDetails} onClick={toggleDetails} />
 			</GridWrapper>
-			{sticky && <PubHeaderSticky />}
+			{renderStickyPart()}
 		</PubHeaderBackground>
 	);
 };

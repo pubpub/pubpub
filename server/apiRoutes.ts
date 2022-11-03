@@ -9,6 +9,7 @@ require('./discussion/api');
 require('./doi/api');
 require('./editor/api');
 require('./export/api');
+require('./facets/api');
 require('./import/api');
 require('./layout/api');
 require('./logout/api');
@@ -24,6 +25,7 @@ require('./pubEdgeProposal/api');
 require('./pubHistory/api');
 require('./release/api');
 require('./review/api');
+require('./reviewer/api');
 require('./rss/api');
 require('./search/api');
 require('./signup/api');
@@ -38,3 +40,8 @@ require('./userNotification/api');
 require('./userNotificationPreferences/api');
 require('./userSubscription/api');
 require('./workerTask/api');
+
+if (process.env.NODE_ENV !== 'production') {
+	// eslint-disable-next-line global-require
+	require('./dev/api');
+}

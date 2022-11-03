@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import { Export } from 'server/models';
 import { assetsClient } from 'server/utils/s3';
 import { generateHash } from 'utils/hashes';
+import { AttributionWithUser } from 'types';
 
 tmp.setGracefulCleanup();
 
@@ -41,3 +42,22 @@ export const digestCitation = (unstructuredValue, structuredValue) =>
 		.update(structuredValue)
 		.digest('base64')
 		.substring(0, 10);
+
+export const getAffiliations = (attribution: AttributionWithUser) =>
+	!attribution?.affiliation?.length
+		? []
+		: attribution.affiliation
+				.split(';')
+				.map((x) => x.trim())
+				.filter(Boolean);
+
+export const getDedupedAffliations = (attributions: AttributionWithUser[]) => {
+	const affiliations = [
+		...new Set(
+			attributions
+				.reduce((all, attr) => all.concat(getAffiliations(attr)), [] as string[])
+				.filter(Boolean),
+		),
+	];
+	return affiliations;
+};

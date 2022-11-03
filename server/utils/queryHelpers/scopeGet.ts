@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-import { Scope, MemberPermission } from 'types';
+import { ScopeId, MemberPermission, ScopeData } from 'types';
 import {
 	Collection,
 	CollectionPub,
@@ -14,6 +14,8 @@ import {
 	SubmissionWorkflow,
 } from 'server/models';
 
+import { FacetsError } from 'facets';
+import { fetchFacetsForScope } from 'server/facets';
 import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
 import { getCollection } from './collectionGet';
 
@@ -22,7 +24,7 @@ let getPublicPermissionsData;
 let getScopeMemberData;
 let getActivePermissions;
 
-const getScopeIdsObject = ({ pubId, collectionId, communityId }): Scope => {
+const getScopeIdsObject = ({ pubId, collectionId, communityId }): ScopeId => {
 	if (pubId) {
 		return { pubId, communityId };
 	}
@@ -95,6 +97,18 @@ const getActiveCounts = async (isDashboard: boolean, scopeElements) => {
 	return { reviews: 0, submissions: 0 };
 };
 
+const getFacets = async (includeFacets: boolean, scopeElements: ScopeData['elements']) => {
+	if (includeFacets) {
+		const { activeTarget, activeTargetType } = scopeElements;
+		if (activeTargetType === 'organization') {
+			throw new FacetsError('No such thing as an organization');
+		}
+		const facets = await fetchFacetsForScope({ kind: activeTargetType, id: activeTarget.id });
+		return { facets };
+	}
+	return null;
+};
+
 /* getScopeData can be called from either a route (e.g. to authenticate */
 /* whether a user has access to /pub/example), or it can be called from */
 /* an API route to verify a user's permissions. When called from a route */
@@ -111,6 +125,7 @@ export default async (scopeInputs) => {
 		}
 	*/
 	const scopeElements = await getScopeElements(scopeInputs);
+	const facets = await getFacets(scopeInputs.includeFacets, scopeElements);
 	const publicPermissionsData = await getPublicPermissionsData(scopeElements);
 	const scopeMemberData = await getScopeMemberData(scopeInputs, scopeElements);
 	const [activePermissions, activeCounts] = await Promise.all([
@@ -125,6 +140,7 @@ export default async (scopeInputs) => {
 		activePermissions,
 		activeCounts,
 		scope: getScopeIdsObject(scopeElements.activeIds),
+		...facets,
 	};
 };
 
@@ -168,7 +184,14 @@ getScopeElements = async (scopeInputs) => {
 				{
 					model: CollectionPub,
 					as: 'collectionPubs',
-					attributes: ['id', 'pubId', 'collectionId'],
+					attributes: ['id', 'pubId', 'collectionId', 'pubRank'],
+					include: [
+						{
+							model: Collection,
+							as: 'collection',
+							attributes: ['kind', 'isPublic'],
+						},
+					],
 				},
 				{
 					model: Release,
@@ -308,6 +331,9 @@ getActivePermissions = async (
 			if (elem.editHash && elem.editHash === scopeInputs.accessHash) {
 				defaultPermissionIndex = 1;
 			}
+			if (elem.reviewHash && elem.reviewHash === scopeInputs.accessHash) {
+				defaultPermissionIndex = 0;
+			}
 		});
 
 	if (isSuperAdmin) {
@@ -377,8 +403,7 @@ getActivePermissions = async (
 		activePublicPermissions.canViewDraft || activePublicPermissions.canEditDraft;
 
 	const canEdit = permissionLevelIndex > 0;
-	const canCreateReviews =
-		!activePub?.submission && (canEdit || activePublicPermissions.canCreateReviews);
+	const canCreateReviews = canEdit || activePublicPermissions.canCreateReviews;
 
 	return {
 		activePermission: permissionLevelIndex > -1 ? permissionLevels[permissionLevelIndex] : null,

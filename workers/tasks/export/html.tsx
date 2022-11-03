@@ -4,12 +4,14 @@ import fs from 'fs';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
-import { AttributionWithUser, DocJson } from 'types';
+import { DocJson } from 'types';
 import { renderStatic, editorSchema } from 'components/Editor';
-
 import { intersperse, unique } from 'utils/arrays';
+import { getDedupedAffliations, digestCitation, getAffiliations } from './util';
+import { renderNotesForListing } from '../../../utils/notes';
+
 import { NotesData, PubMetadata } from './types';
-import { digestCitation } from './util';
+
 import SimpleNotesList from './SimpleNotesList';
 
 const nonExportableNodeTypes = ['discussion'];
@@ -202,24 +204,8 @@ const renderFrontMatter = (metadata: PubMetadata) => {
 		license,
 	} = metadata;
 
-	const getAffiliations = (attr: AttributionWithUser) =>
-		!attr?.affiliation?.length
-			? []
-			: attr.affiliation
-					.split(';')
-					.map((x) => x.trim())
-					.filter(Boolean);
+	const affiliations = getDedupedAffliations(attributions);
 
-	const affiliations = [
-		...new Set(
-			attributions
-				.reduce((all, attr) => {
-					all.push(...getAffiliations(attr));
-					return all;
-				}, [] as string[])
-				.filter(Boolean),
-		),
-	];
 	return (
 		<section className="cover">
 			<h3 className="top-heading-items">{renderHeadingItems(metadata)}</h3>
@@ -290,8 +276,16 @@ type RenderStaticHtmlOptions = {
 
 export const renderStaticHtml = async (options: RenderStaticHtmlOptions) => {
 	const { pubDoc, pubMetadata, notesData } = options;
-	const { title, nodeLabels } = pubMetadata;
-	const { footnotes, citations, noteManager } = notesData;
+	const { title, nodeLabels, citationInlineStyle } = pubMetadata;
+	const { footnotes, citations, noteManager, renderedStructuredValues } = notesData;
+
+	const renderedNotes = renderNotesForListing({
+		footnotes,
+		citations,
+		citationInlineStyle,
+		renderedStructuredValues,
+	});
+
 	const renderableNodes = [filterNonExportableNodes, addHrefsToNotes, blankIframes]
 		.filter((x): x is (nodes: any) => any => !!x)
 		.reduce((nodes, fn) => fn(nodes), pubDoc.content);
@@ -321,12 +315,12 @@ export const renderStaticHtml = async (options: RenderStaticHtmlOptions) => {
 						<div className="pub-notes">
 							<SimpleNotesList
 								title="Footnotes"
-								notes={footnotes}
+								notes={renderedNotes.footnotes}
 								getLinkage={(_, index) => getFootnoteLinkage(index)}
 							/>
 							<SimpleNotesList
 								title="References"
-								notes={citations}
+								notes={renderedNotes.citations}
 								getLinkage={(note) =>
 									getCitationLinkage(note.unstructuredValue, note.structuredValue)
 								}

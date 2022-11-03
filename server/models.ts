@@ -1,11 +1,8 @@
 /* eslint-disable global-require */
-import path from 'path';
 import Sequelize from 'sequelize';
 import knexJs from 'knex';
 
-if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
-	require(path.join(process.cwd(), 'config.js'));
-}
+import { createSequelizeModelsFromFacetDefinitions } from './facets/create';
 
 // @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
 const useSSL = process.env.DATABASE_URL.indexOf('localhost') === -1;
@@ -46,6 +43,7 @@ export const Community = sequelize.import('./community/model');
 export const CommunityAdmin = sequelize.import('./communityAdmin/model');
 export const CrossrefDepositRecord = sequelize.import('./crossrefDepositRecord/model');
 export const CustomScript = sequelize.import('./customScript/model');
+export const DepositTarget = sequelize.import('./depositTarget/model');
 export const Discussion = sequelize.import('./discussion/model');
 export const DiscussionAnchor = sequelize.import('./discussionAnchor/model');
 export const Doc = sequelize.import('./doc/model');
@@ -66,13 +64,13 @@ export const PubManager = sequelize.import('./pubManager/model');
 export const PubVersion = sequelize.import('./pubVersion/model');
 export const PublicPermissions = sequelize.import('./publicPermissions/model');
 export const Release = sequelize.import('./release/model');
-export const Review = sequelize.import('./review/model');
 export const ReviewEvent = sequelize.import('./reviewEvent/model');
 export const ScopeSummary = sequelize.import('./scopeSummary/model');
 export const Submission = sequelize.import('./submission/model');
 export const Signup = sequelize.import('./signup/model');
 export const SubmissionWorkflow = sequelize.import('./submissionWorkflow/model');
-export const ReviewNew = sequelize.import('./review/modelNew');
+export const ReviewNew = sequelize.import('./review/model');
+export const Reviewer = sequelize.import('./reviewer/model');
 export const Thread = sequelize.import('./thread/model');
 export const ThreadComment = sequelize.import('./threadComment/model');
 export const ThreadEvent = sequelize.import('./threadEvent/model');
@@ -86,6 +84,8 @@ export const ActivityItem = sequelize.import('./activityItem/model');
 export const Visibility = sequelize.import('./visibility/model');
 export const VisibilityUser = sequelize.import('./visibilityUser/model');
 export const WorkerTask = sequelize.import('./workerTask/model');
+
+export const { facetModels, FacetBinding } = createSequelizeModelsFromFacetDefinitions(sequelize);
 
 export const attributesPublicUser = [
 	'id',
