@@ -1,31 +1,13 @@
-import { Discussion, Pub, Thread, ThreadComment, ReviewNew, Visibility } from 'server/models';
+import { Pub, Thread, ThreadComment } from 'server/models';
 import * as types from 'types';
 import { getScope } from 'server/utils/queryHelpers';
+import {
+	getMatchingDiscussion,
+	getMatchingReview,
+	canUserInteractWithParent,
+	userEditableFields,
+} from 'server/utils/discussions/getMatchingObject';
 
-const userEditableFields = ['text', 'content'];
-
-const getMatchingDiscussion = (id, threadId, pubId) =>
-	Discussion.findOne({
-		where: { id, threadId, pubId },
-		include: [{ model: Visibility, as: 'visibility' }],
-	});
-
-const getMatchingReview = (id, threadId, pubId) =>
-	ReviewNew.findOne({
-		where: { id, threadId, pubId },
-		include: [{ model: Visibility, as: 'visibility' }],
-	});
-
-const canUserInteractWithParent = (parent, canView) => {
-	const { visibility } = parent;
-	if (visibility.access === 'public') {
-		return true;
-	}
-	if (visibility.access === 'members') {
-		return canView;
-	}
-	return false;
-};
 
 export const getPermissions = async ({
 	userId,

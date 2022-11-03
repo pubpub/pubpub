@@ -1,42 +1,54 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
-
-// ? is calling permissions from other routes
-// ? bad if you use the same queries for the route 🤔
-import { getPermissions } from './permissions';
+import { getCreatePermissions } from './permissions';
 import { createDiscussion } from '../discussion/queries';
+import { createThreadComment } from '../threadComment/queries';
 
 type SharedThreadProperties = {
 	accessHash;
 	user;
 	body: {
-		parentId;
-		threadId;
-		pubId;
-		communityId;
-		content;
-		text;
-		commentAccessHash;
-		commenterName;
+		parentId: string;
+		threadId: string;
+		pubId: string;
+		communityId: string;
+		content: string;
+		text: string;
+		commentAccessHash: string;
+		commenterName: string;
 		isNewThread: boolean;
-		accessHash;
+		accessHash: string;
 	};
 };
 
-type NewDiscussion = SharedThreadProperties & {
+export type NewDiscussion = SharedThreadProperties & {
 	body: { discussionId?; historyKey?; initAnchorData?; visibilityAccess? };
 };
 
-type NewThreadComment = SharedThreadProperties & {
+export type NewThreadComment = SharedThreadProperties & {
 	body: { threadCommentId?: string | null };
 };
 
-export type Response = NewDiscussion & NewThreadComment;
+export type Request = NewDiscussion & NewThreadComment;
 
-const getRequestIds = (req: Response) => {
+export type RequestIds = {
+	user: any;
+	parentId: any;
+	threadId: any;
+	threadCommentId: string | null;
+	pubId: any;
+	communityId: any;
+	accessHash: any;
+	commentAccessHash: any;
+	visibilityAccess: any;
+	discussionId: any;
+	isNewThread: boolean;
+};
+
+const getRequestIds = (req: Request) => {
 	const user = req.user || {};
 	return {
-		userId: user.id,
+		user,
 		parentId: req.body.parentId,
 		threadId: req.body.threadId,
 		threadCommentId: req.body.threadCommentId || null,
@@ -54,13 +66,14 @@ app.post(
 	'/api/thread',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
-		const permissions = await getPermissions(requestIds);
+		const permissions = await getCreatePermissions(requestIds);
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
+		const newComment = requestIds.isNewThread
+			? await createDiscussion
+			: await createThreadComment;
 
-		const newDiscussion = await createDiscussion(req.body, req.user);
-		const newThreadComment = await createThreadComment(req.body, req.user);
-		return res.status(201).json(newThreadComment);
+		return res.status(201).json(newComment);
 	}),
 );
