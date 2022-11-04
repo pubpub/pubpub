@@ -72,25 +72,41 @@ type CreateThreadWithCommentOptions = {
 	commenterName: null | string;
 };
 
-export const createThreadWithComment = async (options: CreateThreadWithCommentOptions) => {
+export const creatThreadCommentWithUserOrCommenter = async (
+	options: CreateThreadWithCommentOptions,
+	threadId: string,
+) => {
 	const { text, content, userId, commenterName } = options;
-
-	const newThread = await Thread.create({});
 	const newCommenter = commenterName && (await createCommenter({ name: commenterName }));
 	const userIdOrCommenterId = newCommenter ? { commenterId: newCommenter.id } : { userId };
-
 	const commenter = newCommenter && 'id' in newCommenter ? newCommenter : null;
-
+	console.log(userIdOrCommenterId);
 	const threadComment = await ThreadComment.create({
 		text,
 		content,
-		threadId: newThread.id,
+		threadId,
 		...userIdOrCommenterId,
 	});
 
+	return { threadCommentId: threadComment.id, commenterId: commenter?.id };
+};
+
+export const createNewThreadWithComment = async (options: CreateThreadWithCommentOptions) => {
+	const { text, content, userId, commenterName } = options;
+
+	const newThread = await Thread.create({});
+	const { threadCommentId, commenterId } = await creatThreadCommentWithUserOrCommenter(
+		{
+			text,
+			content,
+			userId,
+			commenterName,
+		},
+		newThread.id,
+	);
 	return {
 		threadId: newThread.id,
-		threadCommentId: threadComment.id,
-		commenterId: commenter?.id,
+		threadCommentId,
+		commenterId,
 	};
 };

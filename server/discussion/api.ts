@@ -26,7 +26,9 @@ app.post(
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}
-		const newDiscussion = await createDiscussion(req.body);
+		const userId = (req.user?.id as string) || null;
+		const options = { ...req.body, userId };
+		const newDiscussion = await createDiscussion(options);
 		return res.status(201).json(newDiscussion);
 	}),
 );

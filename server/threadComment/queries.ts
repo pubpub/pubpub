@@ -1,4 +1,6 @@
+import { creatThreadCommentWithUserOrCommenter } from 'server/thread/queries';
 import { ThreadComment, includeUserModel, Commenter } from 'server/models';
+import { DocJson } from 'types';
 
 const findThreadCommentWithUser = (id) =>
 	ThreadComment.findOne({
@@ -6,15 +8,31 @@ const findThreadCommentWithUser = (id) =>
 		include: [includeUserModel({ as: 'author' }), { model: Commenter, as: 'commenter' }],
 	});
 
-export const createThreadComment = async (inputValues, user) => {
-	const newThreadComment = await ThreadComment.create({
-		text: inputValues.text,
-		content: inputValues.content,
-		userId: user.id,
-		threadId: inputValues.threadId,
-	});
+export type CreateThreadOptions = {
+	pubId: string;
+	discussionId?: string;
+	title?: string;
+	text: string;
+	content: DocJson;
+	historyKey: number;
+	visibilityAccess: 'members' | 'public';
+	threadId: string;
+	commenterName?: string;
+	userId?: string;
+} & ({ userId: string } | { commenterName: string });
 
-	const threadCommentWithUser = await findThreadCommentWithUser(newThreadComment.id);
+export const createThreadComment = async (options: CreateThreadOptions) => {
+	const { text, content, commenterName, threadId, userId } = options;
+
+	const user = userId || null;
+	const commenter = commenterName || null;
+
+	const { threadCommentId } = await creatThreadCommentWithUserOrCommenter(
+		{ text, content, userId: user, commenterName: commenter },
+		threadId,
+	);
+
+	const threadCommentWithUser = await findThreadCommentWithUser(threadCommentId);
 	return threadCommentWithUser;
 };
 

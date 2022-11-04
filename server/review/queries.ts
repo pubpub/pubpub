@@ -13,7 +13,7 @@ import {
 	createReleasedEvent,
 } from '../threadEvent/queries';
 import { createRelease } from '../release/queries';
-import { createThreadComment } from '../threadComment/queries';
+import { createThreadComment, CreateThreadOptions } from '../threadComment/queries';
 
 type CreateReviewOptions = {
 	pubId: string;
@@ -76,11 +76,16 @@ export const createReview = async (
 		id: reviewData.id,
 		name: userData?.fullName || reviewerName || 'anonymous',
 	});
-
 	if (userId) {
 		await createCreatedThreadEvent(userData, threadId);
 		if (text) {
-			await createThreadComment({ threadId, content, text }, userData);
+			const options = {
+				text,
+				content,
+				threadId,
+				userId,
+			} as CreateThreadOptions;
+			await createThreadComment(options);
 		}
 	}
 

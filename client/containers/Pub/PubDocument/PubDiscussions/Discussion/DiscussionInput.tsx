@@ -50,7 +50,7 @@ const DiscussionInput = (props: Props) => {
 	const [didFocus, setDidFocus] = useState(false);
 	const [editorKey, setEditorKey] = useState(Date.now());
 	const [commentAccessHash, setCommentAccessHash] = useState<string | null>();
-	const [commenterName, setCommenterName] = useState('anonymous');
+	const [commenterName, setCommenterName] = useState('');
 	const isNewThread = !discussionData.number;
 	const inputView = changeObject?.view;
 

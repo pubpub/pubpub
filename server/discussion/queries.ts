@@ -13,7 +13,7 @@ import {
 } from 'server/models';
 import { getReadableDateInYear } from 'utils/dates';
 import { createDiscussionAnchor } from 'server/discussionAnchor/queries';
-import { createThreadWithComment } from 'server/thread/queries';
+import { createNewThreadWithComment } from 'server/thread/queries';
 import { VisibilityAccess, DocJson } from 'types';
 
 const findDiscussionWithUser = (id) =>
@@ -103,7 +103,7 @@ export const createDiscussion = async (options: CreateDiscussionOpts) => {
 	const dateString = getReadableDateInYear(new Date());
 	const generatedTitle = `New Discussion on ${dateString}`;
 
-	const { threadId, commenterId } = await createThreadWithComment({
+	const { threadId, commenterId } = await createNewThreadWithComment({
 		text,
 		content,
 		commenterName: commenter,

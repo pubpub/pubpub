@@ -26,7 +26,9 @@ app.post(
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
-		const newThreadComment = await createThreadComment(req.body, req.user);
+		const userId = (req.user?.id as string) || null;
+		const options = { ...req.body, userId };
+		const newThreadComment = await createThreadComment(options);
 		return res.status(201).json(newThreadComment);
 	}),
 );
