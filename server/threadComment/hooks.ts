@@ -31,16 +31,16 @@ const createActivityItem = async (threadComment: types.ThreadComment) => {
 	}
 };
 
-// ThreadComment.afterCreate(async (threadComment: types.ThreadComment) => {
-// 	const { userId, threadId } = threadComment;
-// 	const userNotificationPreferences = await getOrCreateUserNotificationPreferences(userId);
-// 	if (userNotificationPreferences.subscribeToThreadsAsCommenter) {
-// 		await setUserSubscriptionStatus({
-// 			userId,
-// 			threadId,
-// 			setAutomatically: true,
-// 			status: 'unchanged',
-// 		});
-// 	}
-// 	defer(() => createActivityItem(threadComment));
-// });
+ThreadComment.afterCreate(async (threadComment: types.ThreadComment) => {
+	const { userId, threadId } = threadComment;
+	const userNotificationPreferences = await getOrCreateUserNotificationPreferences(userId);
+	if (userNotificationPreferences.subscribeToThreadsAsCommenter) {
+		await setUserSubscriptionStatus({
+			userId,
+			threadId,
+			setAutomatically: true,
+			status: 'unchanged',
+		});
+	}
+	defer(() => createActivityItem(threadComment));
+});

@@ -168,6 +168,7 @@ const DiscussionInput = (props: Props) => {
 						value={commenterName}
 						onChange={handleInputChange}
 						onBlur={handleCommenterNameOnBlur}
+						placeholder="anonymous"
 					/>
 				</div>
 			)
