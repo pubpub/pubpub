@@ -81,8 +81,10 @@ export const createDiscussion = async (options: CreateDiscussionOpts) => {
 		commenterName,
 		userId,
 	} = options;
+
 	const user = userId || null;
 	const commenter = commenterName || null;
+
 	const discussions = await Discussion.findAll({
 		where: { pubId },
 		attributes: ['id', 'pubId', 'number'],
@@ -101,7 +103,7 @@ export const createDiscussion = async (options: CreateDiscussionOpts) => {
 	const dateString = getReadableDateInYear(new Date());
 	const generatedTitle = `New Discussion on ${dateString}`;
 
-	const { threadId } = await createThreadWithComment({
+	const { threadId, commenterId } = await createThreadWithComment({
 		text,
 		content,
 		commenterName: commenter,
@@ -117,6 +119,7 @@ export const createDiscussion = async (options: CreateDiscussionOpts) => {
 		visibilityId: newVisibility.id,
 		userId,
 		pubId,
+		commenterId,
 	});
 
 	if (initAnchorData) {
