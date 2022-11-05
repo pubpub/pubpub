@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
+import { Classes } from '@blueprintjs/core';
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
@@ -71,24 +72,50 @@ const AccentStyle = function (props) {
 			.accent-color.header-component, .accent-color.nav-bar-component, .accent-color.footer-component, .accent-color.nav-item { color: ${
 				useHeaderTextAccent ? navAccentColor : headerAccentColor.text
 			}; }
-			.bp3-button.bp3-intent-primary:not(.bp3-outlined) { background-color: ${baseAction}; color: ${baseText}; }
-			.bp3-button.bp3-intent-primary:not(.bp3-outlined):hover:not(.bp3-disabled) { background-color: ${baseHover}; color: ${baseText}; }
-			.bp3-button.bp3-intent-primary:not(.bp3-outlined):active:not(.bp3-disabled), .bp3-button.bp3-intent-primary.bp3-active:not(.bp3-disabled) { background-color: ${baseColor}; color: ${baseText}; }
+			.${Classes.BUTTON}.${Classes.INTENT_PRIMARY}:not(.${
+						Classes.OUTLINED
+					}) { background-color: ${baseAction}; color: ${baseText}; }
+			.${Classes.BUTTON}.${Classes.INTENT_PRIMARY}:not(.${Classes.OUTLINED}):hover:not(.${
+						Classes.DISABLED
+					}) { background-color: ${baseHover}; color: ${baseText}; }
+			.${Classes.BUTTON}.${Classes.INTENT_PRIMARY}:not(.${Classes.OUTLINED}):active:not(.${
+						Classes.DISABLED
+					}), .${Classes.BUTTON}.${Classes.INTENT_PRIMARY}.${Classes.ACTIVE}:not(.${
+						Classes.DISABLED
+					}) { background-color: ${baseColor}; color: ${baseText}; }
 
-			.bp3-button.bp3-intent-primary.bp3-outlined { border-color: ${baseColor}; color: ${baseColor}; }
-			.bp3-button.bp3-intent-primary.bp3-outlined:hover:not(.bp3-disabled) { background-color: ${baseMinimal}; color: ${baseColor}; }
-			.bp3-button.bp3-intent-primary.bp3-outlined:active:not(.bp3-disabled), .bp3-button.bp3-intent-primary.bp3-active:not(.bp3-disabled) { background-color: ${baseMinimalAction}; color: ${baseColor}; }
+			.${Classes.BUTTON}.${Classes.INTENT_PRIMARY}.${
+						Classes.OUTLINED
+					} { border-color: ${baseColor}; color: ${baseColor}; }
+			.${Classes.BUTTON}.${Classes.INTENT_PRIMARY}.${Classes.OUTLINED}:hover:not(.${
+						Classes.DISABLED
+					}) { background-color: ${baseMinimal}; color: ${baseColor}; }
+			.${Classes.BUTTON}.${Classes.INTENT_PRIMARY}.${Classes.OUTLINED}:active:not(.${
+						Classes.DISABLED
+					}), .${Classes.BUTTON}.${Classes.INTENT_PRIMARY}.${Classes.ACTIVE}:not(.${
+						Classes.DISABLED
+					}) { background-color: ${baseMinimalAction}; color: ${baseColor}; }
 
 
-			.bp3-tag.bp3-intent-primary { background: ${baseColor}; color: ${baseText}; }
-			.bp3-tag.bp3-minimal.bp3-intent-primary { background-color: ${baseMinimal}; color: inherit; }
-			.accent-color .bp3-button:not([class*="bp3-intent-"]), .accent-color .bp3-button[class*="bp3-icon-"]::before { color: inherit; }
+			.${Classes.TAG}.${Classes.INTENT_PRIMARY} { background: ${baseColor}; color: ${baseText}; }
+			.${Classes.TAG}.${Classes.MINIMAL}.${
+						Classes.INTENT_PRIMARY
+					} { background-color: ${baseMinimal}; color: inherit; }
+			.accent-color .${Classes.BUTTON}:not([class*="${Classes.INTENT_PRIMARY}"]),
+			.accent-color .${Classes.BUTTON}:not([class*="${Classes.INTENT_SUCCESS}"]),
+			.accent-color .${Classes.BUTTON}:not([class*="${Classes.INTENT_WARNING}"]),
+			.accent-color .${Classes.BUTTON}:not([class*="${Classes.INTENT_DANGER}"]),
+			.accent-color .${Classes.BUTTON}[class*="${Classes.ICON}"]::before { color: inherit; }
 			.accent-color a, .accent-color a:hover { color: inherit; }
-			.bp3-tab[aria-selected="true"], .bp3-tab:not([aria-selected="true"]):hover { box-shadow: inset 0 -3px 0 ${baseMinimal}; }
-			.bp3-tab[aria-selected="true"] { box-shadow: inset 0 -3px 0 ${baseColor}; }
+			.${Classes.TAB}[aria-selected="true"], .${
+						Classes.TAB
+					}:not([aria-selected="true"]):hover { box-shadow: inset 0 -3px 0 ${baseMinimal}; }
+			.${Classes.TAB}[aria-selected="true"] { box-shadow: inset 0 -3px 0 ${baseColor}; }
 			.thread:hover:after { background-color: ${baseColor}; }
-			.bp3-slider-progress.bp3-intent-primary, .bp3-dark .bp3-slider-progress.bp3-intent-primary { background: ${baseColor}; }
-			.bp3-slider-handle .bp3-slider-label { background: ${baseColor}; color: ${baseText}; }
+			.${Classes.SLIDER_PROGRESS}.${Classes.INTENT_PRIMARY}, .${Classes.DARK} .${
+						Classes.SLIDER_PROGRESS
+					}.${Classes.INTENT_PRIMARY} { background: ${baseColor}; }
+			.${Classes.SLIDER_HANDLE} .${Classes.SLIDER_LABEL} { background: ${baseColor}; color: ${baseText}; }
 			.highlight-dot-wrapper .highlight-dot { background-color: ${baseColor}; }
 
 			.changelog-callout { background: ${baseMinimal} !important; }

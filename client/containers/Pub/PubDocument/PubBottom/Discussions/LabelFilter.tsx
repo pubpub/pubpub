@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Classes, Popover, PopoverInteractionKind, Position, Tooltip } from "@blueprintjs/core";
+import {
+	Icon as BlueprintIcon,
+	Button,
+	ButtonGroup,
+	Classes,
+	Popover,
+	PopoverInteractionKind,
+	Position,
+	Tooltip,
+} from '@blueprintjs/core';
 import uuidv4 from 'uuid/v4';
 
 import Icon from 'components/Icon/Icon';
@@ -184,7 +193,11 @@ class LabelFilter extends Component<Props, State> {
 											>
 												{this.props.selectedLabels.indexOf(label.id) >
 													-1 && (
-													<span className="bp3-icon-standard bp3-icon-small-tick" />
+													<BlueprintIcon
+														className={Classes.ICON_STANDARD}
+														icon="small-tick"
+														tagName="span"
+													/>
 												)}
 											</div>
 											<div className="title">{label.title}</div>
@@ -205,10 +218,12 @@ class LabelFilter extends Component<Props, State> {
 												tooltipClassName={Classes.DARK}
 												position={Position.TOP}
 											>
-												<span
-													className={`bp3-icon-standard bp3-icon-endorsed ${
+												<BlueprintIcon
+													icon="endorsed"
+													className={`${Classes.ICON_STANDARD} ${
 														label.publicApply ? '' : 'active'
 													}`}
+													tagName="span"
 												/>
 											</Tooltip>
 										</div>
@@ -302,16 +317,13 @@ class LabelFilter extends Component<Props, State> {
 										position={Position.TOP}
 									>
 										<Button
+											icon="endorsed"
+											minimal
 											onClick={handlePublicApplyToggle}
-											className={`${Classes.MINIMAL} bp3-icon-endorsed `
-												label.publicApply ? '' : 'active'
-											}`}
+											className={label.publicApply ? '' : 'active'}
 										/>
 									</Tooltip>
-									<Button
-										onClick={handleLabelRemove}
-										className="bp3-icon-trash bp3-minimal"
-									/>
+									<Button onClick={handleLabelRemove} icon="trash" minimal />
 								</div>
 							);
 						})}

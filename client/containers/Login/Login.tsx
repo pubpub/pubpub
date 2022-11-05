@@ -63,7 +63,7 @@ const Login = () => {
 
 	return (
 		<div id="login-container">
-			<GridWrapper containerClassName="small" columnClassName={Classes.ELEVATION}>
+			<GridWrapper containerClassName="small">
 				{!loginData.id && (
 					<div>
 						<h1>Login</h1>

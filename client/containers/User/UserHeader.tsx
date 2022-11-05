@@ -1,4 +1,4 @@
-import { Classes } from "@blueprintjs/core";
+import { Classes } from '@blueprintjs/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
@@ -87,7 +87,7 @@ const UserHeader = function (props) {
 							return (
 								<a
 									key={`link-${link.id}`}
-									className={`${Classes.BUTTON} ${Classes.MINIMAL} `
+									className={`${Classes.BUTTON} ${Classes.MINIMAL} ${
 										!link.href ? 'no-click' : ''
 									}`}
 									href={link.href}

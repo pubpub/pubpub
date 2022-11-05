@@ -1,3 +1,4 @@
+import { Classes } from '@blueprintjs/core';
 import { DOMSerializer, Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { createPopper } from '@popperjs/core';
@@ -49,7 +50,7 @@ class NotePopover {
 		const linkedUnstructured = linkifyHtml(unstructuredValue);
 		tooltip.setAttribute('id', this.notePopoverId);
 		tooltip.setAttribute('role', 'tooltip');
-		tooltip.classList.add('note-popover-component', 'bp3-elevation-2');
+		tooltip.classList.add('note-popover-component', Classes.ELEVATION_2);
 		tooltip.innerHTML = `
             ${citation ? normalizePopoverString(linkedStructured) : ''}
             ${unstructuredValue ? normalizePopoverString(linkedUnstructured) : ''}
