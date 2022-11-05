@@ -1,10 +1,12 @@
+import { Classes } from "@blueprintjs/core";
+
 export default (styleType, accentColor) => {
 	/* White Blocks */
 	if (styleType === 'white-blocks') {
 		const whiteBlocksPrefix = '.pub-header-component.new .wrapper.white-blocks';
 		return `
-			${whiteBlocksPrefix} .header-collection .bp3-tag {
-				border: 1px solid ${accentColor};
+			${whiteBlocksPrefix` .header-collection .${Classes.TAG} {
+				border: 1px solid `accentColor};
 				color: ${accentColor};
 				border-radius: 0px;
 			}

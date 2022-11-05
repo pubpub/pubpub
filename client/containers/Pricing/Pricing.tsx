@@ -1,3 +1,4 @@
+import { Classes } from '@blueprintjs/core';
 import React from 'react';
 import { GridWrapper } from 'components';
 
@@ -16,7 +17,7 @@ const Pricing = () => {
 					two ways for users to support PubPub.
 				</p>
 				<div className="pricing-tiers">
-					<div className="option bp3-card bp3-elevation-1">
+					<div className={`option ${Classes.CARD} ${Classes.ELEVATION_1}`}>
 						<h2>KFG Membership</h2>
 						<p>
 							PubPub is built by the{' '}
@@ -33,12 +34,12 @@ const Pricing = () => {
 						</p>
 						<a
 							href="https://knowledgefutures.org/membership"
-							className="bp3-button bp3-large bp3-intent-primary"
+							className={`${Classes.BUTTON} ${Classes.LARGE} ${Classes.INTENT_PRIMARY}`}
 						>
 							Join us
 						</a>
 					</div>
-					<div className="option bp3-card bp3-elevation-1">
+					<div className={`option ${Classes.CARD} ${Classes.ELEVATION_1}`}>
 						<h2>Community Services</h2>
 						<p>
 							For groups that want personalized support we offer production, training,
@@ -90,7 +91,7 @@ const Pricing = () => {
 							href="/community-services"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="bp3-button bp3-large bp3-intent-primary"
+							className={`${Classes.BUTTON} ${Classes.LARGE} ${Classes.INTENT_PRIMARY}`}
 						>
 							Learn more
 						</a>
