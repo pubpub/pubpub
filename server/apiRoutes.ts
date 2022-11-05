@@ -2,7 +2,6 @@ require('./activityItem/api');
 require('./collectionAttribution/api');
 require('./collection/api');
 require('./collectionPub/api');
-require('./commenter/api');
 require('./community/api');
 require('./communityServices/api');
 require('./customScript/api');
