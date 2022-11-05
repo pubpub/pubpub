@@ -5,7 +5,7 @@ import { createReviewer } from 'server/reviewer/queries';
 
 import { getLatestKeyInPubDraft } from 'server/utils/firebaseAdmin';
 
-import { DocJson } from 'types';
+import { DocJson, User } from 'types';
 import {
 	createCreatedThreadEvent,
 	createClosedThreadEvent,
@@ -23,20 +23,19 @@ type CreateReviewOptions = {
 	text?: string;
 	content?: DocJson;
 	reviewerName?: string;
+	userData: User;
 };
 
-export const createReview = async (
-	{
-		pubId,
-		title,
-		releaseRequested,
-		reviewContent,
-		text,
-		content,
-		reviewerName,
-	}: CreateReviewOptions,
+export const createReview = async ({
+	pubId,
+	title,
+	releaseRequested,
+	reviewContent,
+	text,
+	content,
+	reviewerName,
 	userData,
-) => {
+}: CreateReviewOptions) => {
 	const userId = userData?.id || null;
 	const reviews = await ReviewNew.findAll({
 		where: {

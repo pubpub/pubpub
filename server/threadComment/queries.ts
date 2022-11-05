@@ -9,13 +9,8 @@ const findThreadCommentWithUser = (id) =>
 	});
 
 export type CreateThreadOptions = {
-	pubId: string;
-	discussionId?: string;
-	title?: string;
 	text: string;
 	content: DocJson;
-	historyKey: number;
-	visibilityAccess: 'members' | 'public';
 	threadId: string;
 	commenterName?: string;
 	userId?: string;
