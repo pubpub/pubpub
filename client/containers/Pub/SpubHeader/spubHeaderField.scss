@@ -52,13 +52,13 @@
 		}
 	}
 
-	.bp3-tag-input {
+	.#{$bp-namespace}-tag-input {
 		&,
-		&.bp3-active {
+		&.#{$bp-namespace}-active {
 			background: inherit;
 			box-shadow: none;
 		}
-		.bp3-tag-input-values {
+		.#{$bp-namespace}-tag-input-values {
 			@include input-with-border();
 			> * {
 				margin-bottom: 4px;

@@ -8,10 +8,10 @@
 		padding-left: 50px;
 		letter-spacing: 0.5px;
 		display: flex !important;
-		:first-child.bp3-icon {
+		:first-child.#{$bp-namespace}-icon {
 			margin-top: -13px;
 		}
-		.bp3-button-text {
+		.#{$bp-namespace}-button-text {
 			flex: 1 1 auto;
 			padding-left: 8px;
 		}

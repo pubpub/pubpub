@@ -31,7 +31,7 @@
 	}
 }
 
-html:not(.bp3-focus-disabled) {
+html:not(.#{$bp-namespace}-focus-disabled) {
 	.expand-button-component:focus {
 		.icon-container {
 			display: flex;

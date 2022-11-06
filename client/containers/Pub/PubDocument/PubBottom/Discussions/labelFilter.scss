@@ -3,10 +3,10 @@
 	.action-button {
 		float: right;
 	}
-	.bp3-menu-header {
+	.#{$bp-namespace}-menu-header {
 		margin-bottom: 15px;
 	}
-	.bp3-fill {
+	.#{$bp-namespace}-fill {
 		margin-bottom: 10px;
 	}
 	li {
@@ -40,14 +40,14 @@
 			width: 30px;
 			margin-right: 10px;
 		}
-		.bp3-icon-small-tick {
+		.#{$bp-namespace}-icon-small-tick {
 			&:before {
 				color: white;
 			}
 		}
 	}
 	.title,
-	.bp3-input {
+	.#{$bp-namespace}-input {
 		// vertical-align: middle;
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -56,7 +56,7 @@
 		pointer-events: none;
 		opacity: 0.75;
 	}
-	.bp3-icon-endorsed {
+	.#{$bp-namespace}-icon-endorsed {
 		&:before {
 			opacity: 0.25;
 		}
@@ -67,7 +67,7 @@
 		}
 	}
 }
-.bp3-popover.color-select-popover {
+.#{$bp-namespace}-popover.color-select-popover {
 	.color-select-menu {
 		width: 150px;
 		min-width: 150px;
@@ -84,7 +84,7 @@
 			}
 		}
 	}
-	.bp3-popover-arrow {
+	.#{$bp-namespace}-popover-arrow {
 		display: block;
 	}
 }

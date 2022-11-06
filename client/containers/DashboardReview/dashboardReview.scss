@@ -5,7 +5,7 @@
 			text-decoration: underline;
 		}
 	}
-	.bp3-tag.bp3-minimal {
+	.#{$bp-namespace}-tag.#{$bp-namespace}-minimal {
 		text-transform: capitalize;
 		margin-right: 1em;
 		&.open,

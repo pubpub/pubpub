@@ -9,7 +9,7 @@
 	.buttons {
 		padding-top: 1em;
 	}
-	.bp3-button {
+	.#{$bp-namespace}-button {
 		margin: 0em 0.5em;
 	}
 }

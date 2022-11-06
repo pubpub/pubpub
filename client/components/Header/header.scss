@@ -10,7 +10,7 @@
 	&.preview {
 		z-index: 0;
 	}
-	&.bp3-dark {
+	&.#{$bp-namespace}-dark {
 		a {
 			color: #fff;
 		}
@@ -105,7 +105,7 @@
 					&:first-child {
 						margin-top: 0px;
 					}
-					.bp3-button {
+					.#{$bp-namespace}-button {
 						margin-right: 1em;
 					}
 				}

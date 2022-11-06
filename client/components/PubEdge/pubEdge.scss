@@ -205,7 +205,7 @@
 		display: inline;
 		margin-left: 4px;
 		margin-right: 4px;
-		.bp3-input {
+		.#{$bp-namespace}-input {
 			font-size: 1em;
 		}
 	}

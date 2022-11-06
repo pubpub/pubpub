@@ -41,13 +41,13 @@
 		.target-email-input {
 			display: flex;
 			max-width: 800px;
-			> .bp3-tag-input {
+			> .#{$bp-namespace}-tag-input {
 				flex: 1 0 50%;
 				margin-right: 10px;
 			}
 			@include mobile {
 				flex-direction: column;
-				> .bp3-input-group {
+				> .#{$bp-namespace}-input-group {
 					margin-bottom: 10px;
 					margin-right: 0px;
 				}

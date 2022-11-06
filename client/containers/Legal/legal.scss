@@ -6,7 +6,7 @@
 	}
 
 	.legal-settings {
-		.bp3-card {
+		.#{$bp-namespace}-card {
 			margin-bottom: 15px;
 		}
 	}

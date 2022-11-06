@@ -10,7 +10,7 @@
 		position: absolute;
 		top: 0;
 		right: 0;
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			transform: rotate(45deg);
 		}
 	}
@@ -58,7 +58,7 @@
 		.actions {
 			white-space: nowrap;
 		}
-		.bp3-button {
+		.#{$bp-namespace}-button {
 			min-height: 17px;
 		}
 	}

@@ -1,6 +1,6 @@
 .user-autocomplete-component {
 	width: 100%;
-	.bp3-popover-target {
+	.#{$bp-namespace}-popover-target {
 		width: 100%;
 	}
 }
@@ -9,7 +9,7 @@
 	.autocomplete-name {
 		padding: 0em 1em;
 	}
-	.bp3-menu-item {
+	.#{$bp-namespace}-menu-item {
 		display: flex;
 		align-content: center;
 		align-items: center;

@@ -1,6 +1,6 @@
 .create-page-dialog-component {
 	// Specificity hack
-	&.bp3-dialog {
+	&.#{$bp-namespace}-dialog {
 		padding-bottom: 0px;
 	}
 

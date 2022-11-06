@@ -1,6 +1,6 @@
 .label-list-component {
 	margin-bottom: 5px;
-	.bp3-tag {
+	.#{$bp-namespace}-tag {
 		margin: 0px 3px 3px 0px;
 		min-height: 16px;
 		padding: 2px 6px;

@@ -13,7 +13,7 @@
 		align-items: center;
 	}
 
-	.bp3-tab {
+	.#{$bp-namespace}-tab {
 		min-width: 200px;
 		font-size: 14px;
 		font-weight: 500;
@@ -33,7 +33,7 @@
 				opacity: 0.75;
 			}
 		}
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			padding: 0 6px 2px 0;
 		}
 		&:nth-child(n + 3) {
@@ -45,7 +45,7 @@
 		}
 	}
 
-	.bp3-tab-indicator-wrapper .bp3-tab-indicator {
+	.#{$bp-namespace}-tab-indicator-wrapper .#{$bp-namespace}-tab-indicator {
 		height: 2px;
 		background-color: var(--community-accent-dark);
 	}
@@ -54,7 +54,7 @@
 		display: flex;
 		font-weight: 500;
 
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			@include status-colors;
 			margin-right: 4px;
 			transform: translateY(0.5px);

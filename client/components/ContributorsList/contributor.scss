@@ -41,7 +41,7 @@
 		align-items: center;
 		margin-top: 3px;
 		font-size: 12px;
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			margin-right: 3px;
 		}
 	}

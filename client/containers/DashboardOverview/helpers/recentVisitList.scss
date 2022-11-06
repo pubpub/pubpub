@@ -5,7 +5,7 @@
 	.entry {
 		display: flex;
 		align-items: flex-start;
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			margin-top: 2px;
 			color: $light-grey;
 		}

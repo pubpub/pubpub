@@ -21,12 +21,12 @@ $icon-container-size-mobile: 28px;
 		transition: 0.1s all ease-out;
 		background-color: var(--community-accent-dark);
 		border-color: var(--community-accent-dark);
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			opacity: 1;
 		}
 	}
 
-	.bp3-icon {
+	.#{$bp-namespace}-icon {
 		opacity: 0.5;
 		position: relative;
 		z-index: 1;

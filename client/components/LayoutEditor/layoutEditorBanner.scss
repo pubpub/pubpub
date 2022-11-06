@@ -10,7 +10,7 @@
 		.image-options {
 			width: 66px;
 			margin: 0px;
-			.bp3-button {
+			.#{$bp-namespace}-button {
 				display: inline-block;
 			}
 		}
@@ -36,10 +36,10 @@
 				font-weight: 500;
 				letter-spacing: 1px;
 			}
-			h2 + .bp3-button {
+			h2 + .#{$bp-namespace}-button {
 				margin-top: 1em;
 			}
-			.bp3-button {
+			.#{$bp-namespace}-button {
 				padding: 10px 40px;
 				line-height: 30px;
 			}

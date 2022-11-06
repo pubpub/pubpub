@@ -8,7 +8,7 @@
 		justify-content: space-between;
 		align-items: center;
 	}
-	.bp3-input-group {
+	.#{$bp-namespace}-input-group {
 		margin-top: 0.25em;
 	}
 	.left {
@@ -25,7 +25,7 @@
 			}
 		}
 		.confirm {
-			.bp3-checkbox {
+			.#{$bp-namespace}-checkbox {
 				margin-top: 0.5em;
 			}
 			font-size: 12px;

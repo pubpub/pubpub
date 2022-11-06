@@ -15,7 +15,7 @@
 		margin-bottom: 2em;
 		border: 1px solid #ccc;
 	}
-	// div is a specificity hack against an aggressive selection of .bp3-form-group in settingsSection.scss
+	// div is a specificity hack against an aggressive selection of .#{$bp-namespace}-form-group in settingsSection.scss
 	div.block-header {
 		display: flex;
 		// align-items: flex-end;
@@ -28,10 +28,10 @@
 		.input-field-component,
 		.image-upload-component,
 		.dropdown-grouping,
-		> .bp3-form-group {
+		> .#{$bp-namespace}-form-group {
 			margin: 0em 0.5em;
 		}
-		.input-field-component .bp3-control.bp3-checkbox {
+		.input-field-component .#{$bp-namespace}-control.#{$bp-namespace}-checkbox {
 			display: inline-block;
 			margin-right: 2em;
 			margin: 0.5em 2em 0px 0px;
@@ -113,7 +113,7 @@
 		}
 	}
 	.layout-editor-collection-header-component {
-		.bp3-form-content {
+		.#{$bp-namespace}-form-content {
 			margin-left: 6px;
 		}
 	}
@@ -152,29 +152,29 @@
 	.block-content {
 		transition: 100ms opacity;
 	}
-	.bp3-popover-content {
+	.#{$bp-namespace}-popover-content {
 		font-size: 14px;
 		font-weight: 400;
 	}
 }
 
-.bp3-card.layout-editor-pubs_limit-pubs-component {
+.#{$bp-namespace}-card.layout-editor-pubs_limit-pubs-component {
 	width: 300px;
 	user-select: none;
 	padding: 10px;
-	.bp3-control:last-child {
+	.#{$bp-namespace}-control:last-child {
 		margin-bottom: 0;
 	}
-	.bp3-control input {
-		// .bp3-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
+	.#{$bp-namespace}-control input {
+		// .#{$bp-namespace}-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
 		opacity: 1;
 	}
 }
 
-.bp3-card.layout-editor-pubs_preview-elements-component {
+.#{$bp-namespace}-card.layout-editor-pubs_preview-elements-component {
 	user-select: none;
 	padding: 10px;
-	.bp3-control:last-child {
+	.#{$bp-namespace}-control:last-child {
 		margin-bottom: 0;
 	}
 }

@@ -10,8 +10,8 @@
 		opacity: 1;
 	}
 
-	.bp3-spinner,
-	.bp3-icon {
+	.#{$bp-namespace}-spinner,
+	.#{$bp-namespace}-icon {
 		margin-right: 6px;
 	}
 }

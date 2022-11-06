@@ -1,10 +1,10 @@
 .sort-list-component {
 	padding: 1em;
 	min-width: 250px;
-	.bp3-menu-header {
+	.#{$bp-namespace}-menu-header {
 		margin-bottom: 15px;
 	}
-	.bp3-menu-item {
+	.#{$bp-namespace}-menu-item {
 		display: flex;
 		align-items: center;
 	}

@@ -6,17 +6,17 @@
 
 	.review-button {
 		padding-top: 18px;
-		.bp3-button {
-			.bp3-icon {
+		.#{$bp-namespace}-button {
+			.#{$bp-namespace}-icon {
 				color: white !important;
 			}
 			&:hover {
-				.bp3-icon {
+				.#{$bp-namespace}-icon {
 					color: white !important;
 				}
 			}
 		}
-		.bp3-button-text {
+		.#{$bp-namespace}-button-text {
 			color: white;
 		}
 	}

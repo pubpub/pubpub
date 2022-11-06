@@ -19,11 +19,11 @@
 		flex-grow: 1;
 		flex-shrink: 1;
 		.avatar-component,
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			margin-right: 0.5em;
 			flex-shrink: 0;
 		}
-		.bp3-icon-people {
+		.#{$bp-namespace}-icon-people {
 			font-size: 14px;
 			margin-right: 2px;
 		}
@@ -39,7 +39,7 @@
 		display: flex;
 		align-items: center;
 	}
-	.bp3-control {
+	.#{$bp-namespace}-control {
 		margin-bottom: 0px;
 	}
 	&.add {

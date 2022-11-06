@@ -19,7 +19,7 @@
 		display: block;
 		flex-shrink: 0;
 	}
-	.bp3-callout {
+	.#{$bp-namespace}-callout {
 		margin-top: 15px;
 	}
 }

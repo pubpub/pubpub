@@ -14,7 +14,7 @@
 		background: #f7f7f7;
 		border: 1px solid #ddd;
 		padding: 10px;
-		.bp3-tag {
+		.#{$bp-namespace}-tag {
 			text-transform: capitalize;
 			&.open,
 			&.closed,
@@ -32,7 +32,7 @@
 			}
 		}
 	}
-	.bp3-non-ideal-state {
+	.#{$bp-namespace}-non-ideal-state {
 		margin: 2em 0em;
 	}
 
@@ -57,7 +57,7 @@
 		.note {
 			opacity: 0.8;
 		}
-		.bp3-tag {
+		.#{$bp-namespace}-tag {
 			margin-right: 0.5em;
 		}
 	}

@@ -28,29 +28,29 @@
 		height: unset;
 	}
 
-	.bp3-slider {
-		.bp3-slider-track {
+	.#{$bp-namespace}-slider {
+		.#{$bp-namespace}-slider-track {
 			background: rgba(255, 255, 255, 0.2);
 		}
-		.bp3-slider-progress:not(:last-child) {
+		.#{$bp-namespace}-slider-progress:not(:last-child) {
 			background: white;
 		}
-		.bp3-slider-handle:focus {
+		.#{$bp-namespace}-slider-handle:focus {
 			outline: 1.5px solid white;
 		}
 	}
 
-	.bp3-spinner {
-		.bp3-spinner-track {
+	.#{$bp-namespace}-spinner {
+		.#{$bp-namespace}-spinner-track {
 			stroke: white;
 		}
 	}
 
-	.bp3-tabs {
+	.#{$bp-namespace}-tabs {
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		.bp3-tab {
+		.#{$bp-namespace}-tab {
 			&[aria-selected='true'] {
 				color: white;
 				&:hover {
@@ -65,10 +65,10 @@
 				}
 			}
 		}
-		.bp3-tab-indicator {
+		.#{$bp-namespace}-tab-indicator {
 			background: white;
 		}
-		.bp3-tab-panel {
+		.#{$bp-namespace}-tab-panel {
 			flex-grow: 1;
 			margin-top: 9px;
 		}
@@ -102,7 +102,7 @@
 		height: 100%;
 		overflow: hidden;
 		& > *:not(:last-child) {
-			label.bp3-control {
+			label.#{$bp-namespace}-control {
 				margin-bottom: 0;
 			}
 			margin-bottom: 9px;
@@ -132,7 +132,7 @@
 			display: flex;
 			flex-grow: 1;
 		}
-		.bp3-control.bp3-disabled {
+		.#{$bp-namespace}-control.#{$bp-namespace}-disabled {
 			color: rgba(white, 0.6);
 		}
 	}
@@ -198,10 +198,10 @@
 		display: flex;
 		align-items: center;
 		width: 100%;
-		.bp3-button.label-type-menu {
+		.#{$bp-namespace}-button.label-type-menu {
 			margin-right: 5px;
 		}
-		.bp3-input-group {
+		.#{$bp-namespace}-input-group {
 			flex-grow: 1;
 		}
 	}
@@ -214,7 +214,7 @@
 
 	.source-control {
 		.controls {
-			.bp3-input-group {
+			.#{$bp-namespace}-input-group {
 				width: 100%;
 			}
 		}

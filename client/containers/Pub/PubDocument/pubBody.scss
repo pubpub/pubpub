@@ -182,7 +182,7 @@ $pub-body-font-size: if-is-export(14px, 20px);
 	.editor.ProseMirror {
 		min-height: 150px;
 	}
-	.bp3-callout.working-draft {
+	.#{$bp-namespace}-callout.working-draft {
 		display: flex;
 		align-items: center;
 		span {

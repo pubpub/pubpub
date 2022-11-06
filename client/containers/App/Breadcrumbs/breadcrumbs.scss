@@ -42,7 +42,7 @@
 			overflow: hidden;
 			display: flex;
 			align-items: baseline;
-			.bp3-icon {
+			.#{$bp-namespace}-icon {
 				margin-right: 5px;
 				opacity: 0.5;
 			}
@@ -71,7 +71,7 @@
 	}
 	.breadcrumb-actions {
 		flex: 0 0 auto;
-		.bp3-button {
+		.#{$bp-namespace}-button {
 			margin-left: 15px;
 		}
 	}

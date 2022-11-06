@@ -32,7 +32,7 @@
 		opacity: 0.85;
 		margin-top: 1em;
 	}
-	&.bp3-skeleton {
+	&.#{$bp-namespace}-skeleton {
 		padding: 0em;
 		.logo {
 			width: calc(95% - 1em);

@@ -126,9 +126,9 @@
 			margin-left: -5px;
 		}
 
-		.bp3-button,
-		.bp3-button:hover,
-		.bp3-icon,
+		.#{$bp-namespace}-button,
+		.#{$bp-namespace}-button:hover,
+		.#{$bp-namespace}-icon,
 		a {
 			color: inherit;
 		}

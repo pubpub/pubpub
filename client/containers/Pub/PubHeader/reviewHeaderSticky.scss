@@ -34,8 +34,8 @@
 		align-items: center;
 		justify-content: space-between;
 
-		.bp3-button,
-		.bp3-icon {
+		.#{$bp-namespace}-button,
+		.#{$bp-namespace}-icon {
 			color: inherit;
 		}
 

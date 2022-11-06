@@ -6,8 +6,8 @@
 	.dropdowns {
 		display: flex;
 
-		// Added .bp3-form-group to increase selector specificity.
-		> .bp3-form-group.input-field-component {
+		// Added .#{$bp-namespace}-form-group to increase selector specificity.
+		> .#{$bp-namespace}-form-group.input-field-component {
 			margin-right: 36px;
 		}
 	}

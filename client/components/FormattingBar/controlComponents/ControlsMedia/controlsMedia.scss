@@ -1,6 +1,6 @@
 .controls-media-component {
 	.caption-alt-tabs {
-		> .bp3-tab-panel {
+		> .#{$bp-namespace}-tab-panel {
 			height: 100%;
 			overflow-y: hidden;
 		}

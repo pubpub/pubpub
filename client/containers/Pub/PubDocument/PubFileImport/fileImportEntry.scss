@@ -36,10 +36,10 @@
 		white-space: nowrap;
 		font-style: italic;
 		color: #999;
-		.bp3-progress-bar {
+		.#{$bp-namespace}-progress-bar {
 			width: 100px;
 		}
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			margin-right: 2px;
 		}
 	}

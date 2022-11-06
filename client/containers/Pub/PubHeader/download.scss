@@ -2,7 +2,7 @@
 	.formatted-button {
 		margin-bottom: 1em;
 	}
-	.bp3-menu-item-label {
+	.#{$bp-namespace}-menu-item-label {
 		min-width: 20px;
 	}
 }

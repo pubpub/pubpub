@@ -14,8 +14,8 @@
 	}
 
 	&.dark {
-		.bp3-spinner {
-			.bp3-spinner-track {
+		.#{$bp-namespace}-spinner {
+			.#{$bp-namespace}-spinner-track {
 				stroke: white;
 			}
 		}

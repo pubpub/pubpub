@@ -28,7 +28,7 @@
 		font-weight: 600;
 		text-transform: capitalize;
 	}
-	.bp3-icon {
+	.#{$bp-namespace}-icon {
 		border-radius: 16px;
 		margin-top: 10px;
 	}

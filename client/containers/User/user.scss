@@ -3,11 +3,11 @@
 	.content .row {
 		margin: 1em 0em;
 	}
-	.bp3-non-ideal-state {
+	.#{$bp-namespace}-non-ideal-state {
 		margin: 2em auto;
 	}
 	.external-pubs-wrapper {
-		.bp3-button {
+		.#{$bp-namespace}-button {
 			float: right;
 			margin-left: 1em;
 		}

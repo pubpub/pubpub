@@ -21,13 +21,13 @@
 	.spacer {
 		flex: 1 1 auto;
 	}
-	.bp3-callout {
+	.#{$bp-namespace}-callout {
 		display: inline;
 	}
 	// .left-section {
 	// 	flex-grow: 1;
 	// 	flex-shrink: 1;
-	// 	.bp3-callout {
+	// 	.#{$bp-namespace}-callout {
 	// 		display: inline;
 	// 	}
 	// }

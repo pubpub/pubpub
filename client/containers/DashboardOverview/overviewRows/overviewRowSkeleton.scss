@@ -37,11 +37,11 @@ $mobile-viewport-cutoff: 750px;
 
 	.right-element {
 		display: flex;
-		.bp3-icon {
+		.#{$bp-namespace}-icon {
 			color: $light-grey;
 		}
 		&.darker {
-			.bp3-icon {
+			.#{$bp-namespace}-icon {
 				color: $medium-grey;
 			}
 		}
@@ -79,7 +79,7 @@ $mobile-viewport-cutoff: 750px;
 			align-items: center;
 			margin-top: 4px;
 			> .summary-icon-pair {
-				.bp3-icon {
+				.#{$bp-namespace}-icon {
 					@include status-colors;
 				}
 				display: flex;
