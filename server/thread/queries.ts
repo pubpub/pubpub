@@ -92,8 +92,8 @@ export const creatThreadCommentWithUserOrCommenter = async (
 
 export const createNewThreadWithComment = async (options: CreateThreadWithCommentOptions) => {
 	const { text, content, userId, commenterName } = options;
-
 	const newThread = await Thread.create({});
+
 	const { threadCommentId, commenterId } = await creatThreadCommentWithUserOrCommenter(
 		{
 			text,
