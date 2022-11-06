@@ -46,7 +46,7 @@
 		}
 	}
 	#content {
-		.#{$bp-namespace}-button {
+		.#{vendor.bp-namespace}-button {
 			margin-bottom: 2em;
 		}
 		.features {
@@ -54,7 +54,7 @@
 		}
 	}
 	#independent {
-		a.#{$bp-namespace}-button {
+		a.#{vendor.bp-namespace}-button {
 			margin-top: 0;
 		}
 		h3.pricing {
@@ -80,7 +80,7 @@
 					margin: 0.5em 0;
 				}
 			}
-			a.#{$bp-namespace}-button {
+			a.#{vendor.bp-namespace}-button {
 				margin-top: 1em;
 				background-color: #b2e2bd;
 				color: #14411e;

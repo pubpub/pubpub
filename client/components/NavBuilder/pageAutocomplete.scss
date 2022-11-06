@@ -4,10 +4,10 @@
 	.input {
 		width: 100%;
 	}
-	.#{$bp-namespace}-popover-target {
+	.#{vendor.bp-namespace}-popover-target {
 		width: 100%;
 	}
-	.#{$bp-namespace}-input-action {
+	.#{vendor.bp-namespace}-input-action {
 		padding: 0px 5px;
 		opacity: 0.6;
 	}
@@ -16,7 +16,7 @@
 	.autocomplete-name {
 		padding: 0em 1em;
 	}
-	.#{$bp-namespace}-menu-item {
+	.#{vendor.bp-namespace}-menu-item {
 		display: flex;
 		align-content: center;
 		align-items: center;

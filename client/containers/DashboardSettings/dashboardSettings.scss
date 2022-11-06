@@ -8,11 +8,11 @@
 		margin-top: 3em;
 		@include mobile {
 			margin-top: 2em;
-			label .#{$bp-namespace}-popover-target {
+			label .#{vendor.bp-namespace}-popover-target {
 				margin-left: 5px;
 				padding-bottom: 3px;
 				opacity: 0.5;
-				.#{$bp-namespace}-icon-info-sign svg {
+				.#{vendor.bp-namespace}-icon-info-sign svg {
 					height: 12px;
 					width: 12px;
 				}
@@ -35,10 +35,10 @@
 		opacity: 0.5;
 		pointer-events: none;
 	}
-	.#{$bp-namespace}-card {
+	.#{vendor.bp-namespace}-card {
 		margin-bottom: 15px;
 	}
-	.settings-section-component .#{$bp-namespace}-label .#{$bp-namespace}-popover-wrapper {
+	.settings-section-component .#{vendor.bp-namespace}-label .#{vendor.bp-namespace}-popover-wrapper {
 		display: inline-block;
 	}
 	.custom-css-tooltip-target {

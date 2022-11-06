@@ -1,6 +1,6 @@
 @use 'styles/vendor.scss';
 
-.pub-menu-item-component.#{$bp-namespace}-menu-item {
+.pub-menu-item-component.#{vendor.bp-namespace}-menu-item {
 	display: flex;
 	cursor: pointer;
 	max-width: 600px;

@@ -5,13 +5,13 @@
 	position: relative;
 	top: -175px;
 	text-align: center;
-	.#{$bp-namespace}-intent-primary {
+	.#{vendor.bp-namespace}-intent-primary {
 		-webkit-appearance: none;
 	}
 	input {
 		display: none;
 	}
-	.#{$bp-namespace}-button-text {
+	.#{vendor.bp-namespace}-button-text {
 		div:first-child {
 			font-size: 1.25em;
 			padding: 3px 0px 7px;

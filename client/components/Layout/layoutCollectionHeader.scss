@@ -76,7 +76,7 @@ $mobile-viewport-cutoff: 500px;
 		.collection-kind {
 			display: flex;
 			align-items: center;
-			.#{$bp-namespace}-icon {
+			.#{vendor.bp-namespace}-icon {
 				color: #555;
 				margin-right: 4px;
 			}

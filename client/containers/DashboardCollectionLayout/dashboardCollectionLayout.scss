@@ -1,7 +1,7 @@
 @use 'styles/vendor.scss';
 
 .dashboard-collection-layout-container {
-	.#{$bp-namespace}-radio.page-select {
+	.#{vendor.bp-namespace}-radio.page-select {
 		display: flex;
 		align-items: center;
 	}

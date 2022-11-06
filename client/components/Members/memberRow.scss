@@ -47,7 +47,7 @@
 	}
 }
 
-.#{$bp-namespace}-menu.member-permission-select {
+.#{vendor.bp-namespace}-menu.member-permission-select {
 	padding: 1em;
 	@include mobile {
 		padding: 0.5em;

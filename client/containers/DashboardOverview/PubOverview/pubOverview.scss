@@ -120,10 +120,10 @@ $outer-padding: 26px;
 			border: 1px solid #ddd;
 			padding: 10px;
 		}
-		.#{$bp-namespace}-non-ideal-state {
+		.#{vendor.bp-namespace}-non-ideal-state {
 			margin: 2em 0em;
 		}
-		.#{$bp-namespace}-tag {
+		.#{vendor.bp-namespace}-tag {
 			text-transform: capitalize;
 			&.open,
 			&.closed,
@@ -161,7 +161,7 @@ $outer-padding: 26px;
 			.note {
 				opacity: 0.8;
 			}
-			.#{$bp-namespace}-tag {
+			.#{vendor.bp-namespace}-tag {
 				margin-right: 0.5em;
 			}
 		}

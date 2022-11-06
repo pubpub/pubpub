@@ -10,7 +10,7 @@
 		justify-content: space-between;
 		align-items: center;
 	}
-	.#{$bp-namespace}-input-group {
+	.#{vendor.bp-namespace}-input-group {
 		margin-top: 0.25em;
 	}
 	.left {
@@ -27,7 +27,7 @@
 			}
 		}
 		.confirm {
-			.#{$bp-namespace}-checkbox {
+			.#{vendor.bp-namespace}-checkbox {
 				margin-top: 0.5em;
 			}
 			font-size: 12px;

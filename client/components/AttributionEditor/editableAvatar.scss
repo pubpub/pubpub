@@ -19,7 +19,7 @@
 			color: white;
 			background-color: rgba(black, 0.5);
 			opacity: 0;
-			.#{$bp-namespace}-icon {
+			.#{vendor.bp-namespace}-icon {
 				color: inherit;
 			}
 			&.no-image {

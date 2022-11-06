@@ -4,7 +4,7 @@
 	display: flex;
 	align-items: center;
 
-	.#{$bp-namespace}-checkbox {
+	.#{vendor.bp-namespace}-checkbox {
 		margin-bottom: 0;
 	}
 }

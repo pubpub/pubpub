@@ -21,7 +21,7 @@
 		display: block;
 		flex-shrink: 0;
 	}
-	.#{$bp-namespace}-callout {
+	.#{vendor.bp-namespace}-callout {
 		margin-top: 15px;
 	}
 }

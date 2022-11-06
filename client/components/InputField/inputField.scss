@@ -5,7 +5,7 @@
 		min-height: 56px;
 		resize: vertical;
 	}
-	&.#{$bp-namespace}-form-group label.#{$bp-namespace}-label {
+	&.#{vendor.bp-namespace}-form-group label.#{vendor.bp-namespace}-label {
 		margin-bottom: 0px;
 	}
 	.color-input-component {

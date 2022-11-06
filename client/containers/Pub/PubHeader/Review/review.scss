@@ -8,17 +8,17 @@
 
 	.review-button {
 		padding-top: 18px;
-		.#{$bp-namespace}-button {
-			.#{$bp-namespace}-icon {
+		.#{vendor.bp-namespace}-button {
+			.#{vendor.bp-namespace}-icon {
 				color: white !important;
 			}
 			&:hover {
-				.#{$bp-namespace}-icon {
+				.#{vendor.bp-namespace}-icon {
 					color: white !important;
 				}
 			}
 		}
-		.#{$bp-namespace}-button-text {
+		.#{vendor.bp-namespace}-button-text {
 			color: white;
 		}
 	}

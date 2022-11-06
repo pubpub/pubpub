@@ -69,7 +69,7 @@ $small-viewport-cutoff: 720px;
 		}
 	}
 	.legal-buttons {
-		.#{$bp-namespace}-button {
+		.#{vendor.bp-namespace}-button {
 			padding: 0;
 			flex-shrink: 0;
 			min-width: 120px;

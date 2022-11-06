@@ -90,7 +90,7 @@ $bottom-menu-height: 50px;
 				}
 				padding: 15px;
 				padding-left: 25px;
-				.#{$bp-namespace}-icon {
+				.#{vendor.bp-namespace}-icon {
 					color: #fff;
 					margin-top: 0px;
 				}
@@ -119,7 +119,7 @@ $bottom-menu-height: 50px;
 				color: #fff;
 				text-transform: capitalize;
 			}
-			.#{$bp-namespace}-icon {
+			.#{vendor.bp-namespace}-icon {
 				color: #fff;
 			}
 			[data-icon='caret-down'] {

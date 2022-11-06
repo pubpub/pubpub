@@ -3,7 +3,7 @@
 @import '../overviewStyles.scss';
 
 .community-items-component {
-	.#{$bp-namespace}-non-ideal-state {
+	.#{vendor.bp-namespace}-non-ideal-state {
 		margin-top: $empty-state-margin-top;
 	}
 }

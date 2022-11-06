@@ -23,10 +23,10 @@
 				font-weight: 500;
 				letter-spacing: 1px;
 			}
-			h2 + .#{$bp-namespace}-button {
+			h2 + .#{vendor.bp-namespace}-button {
 				margin-top: 1em;
 			}
-			.#{$bp-namespace}-button {
+			.#{vendor.bp-namespace}-button {
 				padding: 10px 40px;
 				line-height: 30px;
 			}

@@ -38,7 +38,7 @@ $element-spacing: 10px;
 		align-items: flex-start;
 		padding: 15px;
 		overflow: hidden;
-		.#{$bp-namespace}-icon {
+		.#{vendor.bp-namespace}-icon {
 			margin-top: 2px;
 		}
 		.text {
@@ -56,7 +56,7 @@ $element-spacing: 10px;
 		.collection-creation-controls {
 			display: flex;
 			flex-direction: column-reverse;
-			.#{$bp-namespace}-control-group {
+			.#{vendor.bp-namespace}-control-group {
 				display: flex;
 				flex-direction: column;
 				.collection-title-input {

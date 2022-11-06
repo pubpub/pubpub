@@ -12,8 +12,8 @@
 		opacity: 1;
 	}
 
-	.#{$bp-namespace}-spinner,
-	.#{$bp-namespace}-icon {
+	.#{vendor.bp-namespace}-spinner,
+	.#{vendor.bp-namespace}-icon {
 		margin-right: 6px;
 	}
 }

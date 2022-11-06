@@ -28,8 +28,8 @@ $mobile-viewport-cutoff: 500px;
 	}
 }
 
-.user-notifications-button.#{$bp-namespace}-button {
-	.#{$bp-namespace}-icon {
+.user-notifications-button.#{vendor.bp-namespace}-button {
+	.#{vendor.bp-namespace}-icon {
 		// There is a truly terrible selector overriding this in Blueprint
 		color: currentColor !important;
 	}
@@ -39,7 +39,7 @@ $mobile-viewport-cutoff: 500px;
 	}
 }
 
-.user-notifications-component.#{$bp-namespace}-card {
+.user-notifications-component.#{vendor.bp-namespace}-card {
 	width: 420px;
 	padding: 0;
 	overflow: hidden;
@@ -82,9 +82,9 @@ $mobile-viewport-cutoff: 500px;
 		.header-content {
 			display: flex;
 
-			.#{$bp-namespace}-button {
+			.#{vendor.bp-namespace}-button {
 				color: inherit;
-				.#{$bp-namespace}-icon {
+				.#{vendor.bp-namespace}-icon {
 					color: inherit;
 				}
 			}

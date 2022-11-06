@@ -9,12 +9,12 @@
 		width: 18px;
 		margin-right: 10px;
 		border-radius: 2px;
-		.#{$bp-namespace}-icon-tick {
+		.#{vendor.bp-namespace}-icon-tick {
 			padding: 2px;
 			color: white;
 		}
 	}
-	.#{$bp-namespace}-icon-endorsed {
+	.#{vendor.bp-namespace}-icon-endorsed {
 		margin-left: 10px;
 		opacity: 0.25;
 		&.active {

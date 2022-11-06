@@ -5,7 +5,7 @@
 		font-family: 'Courier', monospace;
 	}
 
-	.#{$bp-namespace}-callout {
+	.#{vendor.bp-namespace}-callout {
 		margin-bottom: 20px;
 
 		&:not(:first-child) {
@@ -16,7 +16,7 @@
 	> .doi {
 		max-width: 416px;
 
-		.#{$bp-namespace}-input-group {
+		.#{vendor.bp-namespace}-input-group {
 			font-family: 'Courier', monospace;
 			font-size: 14px;
 			margin-bottom: 12px;
@@ -36,7 +36,7 @@
 			}
 		}
 
-		.#{$bp-namespace}-button {
+		.#{vendor.bp-namespace}-button {
 			margin-right: 8px;
 		}
 	}

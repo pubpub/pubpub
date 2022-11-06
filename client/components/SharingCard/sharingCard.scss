@@ -21,11 +21,11 @@
 		flex-grow: 1;
 		flex-shrink: 1;
 		.avatar-component,
-		.#{$bp-namespace}-icon {
+		.#{vendor.bp-namespace}-icon {
 			margin-right: 0.5em;
 			flex-shrink: 0;
 		}
-		.#{$bp-namespace}-icon-people {
+		.#{vendor.bp-namespace}-icon-people {
 			font-size: 14px;
 			margin-right: 2px;
 		}
@@ -41,7 +41,7 @@
 		display: flex;
 		align-items: center;
 	}
-	.#{$bp-namespace}-control {
+	.#{vendor.bp-namespace}-control {
 		margin-bottom: 0px;
 	}
 	&.add {

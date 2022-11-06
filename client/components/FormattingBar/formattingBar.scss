@@ -1,17 +1,17 @@
 @use 'styles/vendor.scss';
 
 @mixin white-buttons {
-	.#{$bp-namespace}-button,
-	.#{$bp-namespace}-button:hover {
+	.#{vendor.bp-namespace}-button,
+	.#{vendor.bp-namespace}-button:hover {
 		color: white !important;
-		.#{$bp-namespace}-icon {
+		.#{vendor.bp-namespace}-icon {
 			color: white !important;
 		}
-		&.#{$bp-namespace}-disabled {
+		&.#{vendor.bp-namespace}-disabled {
 			opacity: 0.5;
 		}
 	}
-	.#{$bp-namespace}-button.#{$bp-namespace}-active {
+	.#{vendor.bp-namespace}-button.#{vendor.bp-namespace}-active {
 		background: rgba(255, 255, 255, 0.2);
 	}
 }
@@ -47,7 +47,7 @@
 		position: relative;
 		padding-top: 5px;
 		padding-bottom: 5px;
-		.#{$bp-namespace}-button {
+		.#{vendor.bp-namespace}-button {
 			display: flex;
 			line-height: 1;
 			min-width: auto;
@@ -63,14 +63,14 @@
 			height: 2px;
 		}
 		&.open {
-			.#{$bp-namespace}-button {
+			.#{vendor.bp-namespace}-button {
 				&:hover {
 					background: none;
 				}
 			}
 			@include white-buttons();
 			&:not(.detached) {
-				.#{$bp-namespace}-button {
+				.#{vendor.bp-namespace}-button {
 					border-bottom-left-radius: 0;
 					border-bottom-right-radius: 0;
 				}
@@ -78,14 +78,14 @@
 		}
 		&.has-label {
 			&.open {
-				.#{$bp-namespace}-button {
+				.#{vendor.bp-namespace}-button {
 					color: white;
 				}
 			}
-			.#{$bp-namespace}-button {
+			.#{vendor.bp-namespace}-button {
 				display: inline-flex;
 				align-items: center;
-				.#{$bp-namespace}-icon {
+				.#{vendor.bp-namespace}-icon {
 					margin-left: -2px;
 					margin-right: 5px;
 				}
@@ -112,7 +112,7 @@
 			.formatting-bar-button {
 				padding-top: 2px;
 				padding-bottom: 2px;
-				.#{$bp-namespace}-button {
+				.#{vendor.bp-namespace}-button {
 					padding: 5px 10px;
 				}
 			}
@@ -180,7 +180,7 @@
 		flex-shrink: 0;
 		padding-left: 5px;
 	}
-	*:focus:not(:disabled):not(.#{$bp-namespace}-tab) {
+	*:focus:not(:disabled):not(.#{vendor.bp-namespace}-tab) {
 		outline: none;
 		box-shadow: inset 0px 0px 0px 2px white !important;
 	}

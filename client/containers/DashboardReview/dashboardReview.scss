@@ -7,7 +7,7 @@
 			text-decoration: underline;
 		}
 	}
-	.#{$bp-namespace}-tag.#{$bp-namespace}-minimal {
+	.#{vendor.bp-namespace}-tag.#{vendor.bp-namespace}-minimal {
 		text-transform: capitalize;
 		margin-right: 1em;
 		&.open,

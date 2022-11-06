@@ -84,7 +84,7 @@
 		text-transform: uppercase;
 		text-decoration: inherit;
 		// font-weight: 500;
-		.#{$bp-namespace}-icon {
+		.#{vendor.bp-namespace}-icon {
 			font-size: 14px;
 			margin-left: 0.25em;
 			position: relative;
@@ -97,13 +97,13 @@
 	}
 }
 .nav-bar-popover {
-	.#{$bp-namespace}-icon-lock2 {
+	.#{vendor.bp-namespace}-icon-lock2 {
 		font-size: 14px;
 		padding-right: 0.15em;
 		position: relative;
 		top: -1px;
 	}
-	.#{$bp-namespace}-icon-share {
+	.#{vendor.bp-namespace}-icon-share {
 		padding: 3px;
 		opacity: 0.7;
 	}
