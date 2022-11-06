@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .controls-media-component {
 	.caption-alt-tabs {
 		> .#{$bp-namespace}-tab-panel {

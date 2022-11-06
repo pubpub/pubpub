@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .create-page-dialog-component {
 	// Specificity hack
 	&.#{$bp-namespace}-dialog {

@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .pub-share-dialog-component.#{$bp-namespace}-dialog {
 	width: 1000px;
 	max-width: 90vw;

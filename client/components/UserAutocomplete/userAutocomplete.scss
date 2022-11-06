@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .user-autocomplete-component {
 	width: 100%;
 	.#{$bp-namespace}-popover-target {

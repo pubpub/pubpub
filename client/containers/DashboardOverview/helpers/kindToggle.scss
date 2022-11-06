@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 @import '../overviewStyles.scss';
 
 .kind-toggle-component[type='checkbox'] {

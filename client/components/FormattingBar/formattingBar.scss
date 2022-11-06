@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 @mixin white-buttons {
 	.#{$bp-namespace}-button,
 	.#{$bp-namespace}-button:hover {

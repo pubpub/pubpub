@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .label-list-component {
 	margin-bottom: 5px;
 	.#{$bp-namespace}-tag {

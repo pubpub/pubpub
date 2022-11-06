@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .citations-modal-component {
 	&.#{$bp-namespace}-dialog {
 		// specificity hack

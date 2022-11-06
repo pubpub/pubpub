@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .pub-release-dialog-component {
 	.#{$bp-namespace}-callout {
 		margin-bottom: 10px;

@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .dashboard-collection-layout-container {
 	.#{$bp-namespace}-radio.page-select {
 		display: flex;

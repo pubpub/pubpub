@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .new-edge-input-component {
 	.#{$bp-namespace}-popover-target {
 		width: 100%;

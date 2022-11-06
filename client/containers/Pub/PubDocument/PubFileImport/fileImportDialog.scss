@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 $drop-area-bkg: rgba(138, 155, 168, 0.15);
 
 @mixin fix-button {

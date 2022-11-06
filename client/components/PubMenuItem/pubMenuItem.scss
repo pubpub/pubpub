@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .pub-menu-item-component.#{$bp-namespace}-menu-item {
 	display: flex;
 	cursor: pointer;

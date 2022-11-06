@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 @mixin text-fields {
 	input[type='text'] {
 		border-radius: 2px;

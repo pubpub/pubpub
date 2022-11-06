@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 @mixin button-colors {
 	.#{$bp-namespace}-button.#{$bp-namespace}-minimal {
 		color: currentColor;

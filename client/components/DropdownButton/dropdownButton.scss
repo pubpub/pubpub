@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 .dropdown-button {
 	.#{$bp-namespace}-icon {
 		vertical-align: top;
