@@ -21,7 +21,19 @@ app.post('/api/reviews', (req, res) => {
 			if (!permissions.create) {
 				throw new Error('Not Authorized');
 			}
-			return createReview(req.body, req.user);
+			const { pubId, title, releaseRequested, reviewContent, text, content, reviewerName } =
+				req.body;
+
+			return createReview({
+				pubId,
+				title,
+				releaseRequested,
+				reviewContent,
+				text,
+				content,
+				reviewerName,
+				userData: req.user,
+			});
 		})
 		.then((newReview) => {
 			return res.status(201).json(newReview);
