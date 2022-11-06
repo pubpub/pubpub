@@ -60,7 +60,7 @@ export default (styleType, accentColor) => {
 				color: ${accentColor};
 				border-radius: 0px;
 			}
-			${blackBlocksPrefix} .collection-browser-component .${Classes.BUTTON} ${Classes.ICON} {
+			${blackBlocksPrefix} .collection-browser-component .${Classes.BUTTON} .${Classes.ICON} {
 				color: inherit;
 			}
 			${blackBlocksPrefix} .authors, ${blackBlocksPrefix} .authors a {
@@ -71,7 +71,7 @@ export default (styleType, accentColor) => {
 				border: 0px solid white;
 				boxShadow: 0px 2px 8px rgba(255, 255, 255, 0.2);
 			}
-			${blackBlocksPrefix} .action-button-component ${Classes.ICON} {
+			${blackBlocksPrefix} .action-button-component .${Classes.ICON} {
 				color: ${accentColor};
 			}
 			${blackBlocksPrefix} .action-button-component .${Classes.BUTTON} {
