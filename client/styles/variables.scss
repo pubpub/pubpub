@@ -1,3 +1,4 @@
+@use 'vendor';
 @function if-is-export($export, $default) {
 	@if (variable-exists('PUBPUB_EXPORT')) {
 		@return $export;
@@ -5,7 +6,7 @@
 	@return $default;
 }
 
-$bp-namespace: "bp3";
+$bp-namespace: vendor.bp-namespace;
 
 $cjk-body-font: source-han-serif-tc, source-han-serif-korean, source-han-serif-japanese,
 	source-han-serif-sc;
