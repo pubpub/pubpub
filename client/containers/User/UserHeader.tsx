@@ -1,8 +1,8 @@
-import { Classes } from '@blueprintjs/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
 import Icon from 'components/Icon/Icon';
+import { Classes } from '@blueprintjs/core';
 
 require('./userHeader.scss');
 

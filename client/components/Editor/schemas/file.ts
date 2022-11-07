@@ -1,5 +1,6 @@
 import { Classes } from '@blueprintjs/core';
 import { DOMOutputSpec } from 'prosemirror-model';
+
 import { renderHtmlChildren } from '../utils/renderHtml';
 
 const getExtension = (attrs) => {

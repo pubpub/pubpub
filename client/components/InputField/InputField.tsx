@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-for */
-import { Classes } from '@blueprintjs/core';
 import React from 'react';
+import { Classes } from '@blueprintjs/core';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 

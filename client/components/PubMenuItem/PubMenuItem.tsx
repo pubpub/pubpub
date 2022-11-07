@@ -1,7 +1,7 @@
-import { Classes } from '@blueprintjs/core';
 import React from 'react';
 import classNames from 'classnames';
 import { Button } from 'reakit/Button';
+import { Classes } from '@blueprintjs/core';
 
 import { Byline, PreviewImage } from 'components';
 
