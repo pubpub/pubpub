@@ -214,10 +214,10 @@ const ScopeDropdown = (props: Props) => {
 										)}
 										<a
 											href={`/${
-												(scope.slugs &&
-													scope.slugs.pubSlug &&
-													'pub/' + scope.slugs.pubSlug) ||
-												(scope.slugs && scope.slugs.collectionSlug)
+												(scope.slugs?.pubSlug &&
+													`pub/${scope.slugs.pubSlug}`) ||
+												scope.slugs?.collectionSlug ||
+												''
 											}`}
 										>
 											<Icon icon="globe" iconSize={12} />
