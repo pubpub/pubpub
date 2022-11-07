@@ -7,14 +7,14 @@
 	margin-top: 25px;
 	margin-bottom: 25px;
 
-	.#{vendor.bp-namespace}-callout {
+	.#{vendor.$bp-namespace}-callout {
 		padding-top: 15px;
 		padding-bottom: 15px;
 
-		&.#{vendor.bp-namespace}-callout-icon {
+		&.#{vendor.$bp-namespace}-callout-icon {
 			padding-left: 45px;
 
-			.#{vendor.bp-namespace}-icon:first-child {
+			.#{vendor.$bp-namespace}-icon:first-child {
 				left: 15px;
 				top: 15px;
 			}

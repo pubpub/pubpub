@@ -1,7 +1,7 @@
 @use 'styles/vendor.scss';
 
 .citations-modal-component {
-	&.#{vendor.bp-namespace}-dialog {
+	&.#{vendor.$bp-namespace}-dialog {
 		// specificity hack
 		width: 50vw;
 	}

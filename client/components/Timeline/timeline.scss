@@ -26,7 +26,7 @@ $controls-margin: 5px;
 				width: $small-bubble-diameter;
 				height: $small-bubble-diameter;
 				border-radius: #{$small-bubble-diameter * 0.5};
-				.#{vendor.bp-namespace}-icon {
+				.#{vendor.$bp-namespace}-icon {
 					color: inherit;
 				}
 			}

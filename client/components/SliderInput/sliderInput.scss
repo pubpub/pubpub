@@ -3,7 +3,7 @@
 .slider-input-component {
 	display: flex;
 	align-items: center;
-	.#{vendor.bp-namespace}-input-group {
+	.#{vendor.$bp-namespace}-input-group {
 		margin-left: 15px;
 		width: 50px;
 		display: flex;

@@ -1,7 +1,7 @@
 @use 'styles/vendor.scss';
 
 .label-with-info-component {
-	.#{vendor.bp-namespace}-icon-info-sign {
+	.#{vendor.$bp-namespace}-icon-info-sign {
 		padding-left: 5px;
 		padding-bottom: 3px;
 		opacity: 0.5;

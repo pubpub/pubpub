@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 @import 'styles/mixins.scss';
 @import 'client/containers/App/BottomMenu/bottomMenu.scss';
 
@@ -15,11 +17,11 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 }
 
 .dashboard-settings-frame-component {
-	.#{vendor.bp-namespace}-tabs.dashboard-settings-frame-tabs {
-		.#{vendor.bp-namespace}-tab-indicator-wrapper .#{vendor.bp-namespace}-tab-indicator {
+	.#{vendor.$bp-namespace}-tabs.dashboard-settings-frame-tabs {
+		.#{vendor.$bp-namespace}-tab-indicator-wrapper .#{vendor.$bp-namespace}-tab-indicator {
 			background-color: var(--community-accent-dark);
 		}
-		.#{vendor.bp-namespace}-tab.dashboard-settings-frame-tab {
+		.#{vendor.$bp-namespace}-tab.dashboard-settings-frame-tab {
 			display: flex;
 			align-items: center;
 			padding: 6px 0;
@@ -37,8 +39,8 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 		}
 	}
 
-	.#{vendor.bp-namespace}-button.dashboard-settings-frame-menu {
-		.#{vendor.bp-namespace}-button-text {
+	.#{vendor.$bp-namespace}-button.dashboard-settings-frame-menu {
+		.#{vendor.$bp-namespace}-button-text {
 			flex-grow: 1;
 		}
 	}
@@ -50,7 +52,7 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		z-index: 8; // Seems to be needed to stay on top of .#{vendor.bp-namespace}-button-group .#{vendor.bp-namespace}-button.#{vendor.bp-namespace}-active
+		z-index: 8; // Seems to be needed to stay on top of .#{vendor.$bp-namespace}-button-group .#{vendor.$bp-namespace}-button.#{vendor.$bp-namespace}-active
 		&.js-is-sticky {
 			box-shadow: $gentle-shadow;
 		}
@@ -75,11 +77,11 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 			& > * {
 				// Thicken up the dropdown and the button a little
 				height: 100%;
-				.#{vendor.bp-namespace}-button {
+				.#{vendor.$bp-namespace}-button {
 					height: 100%;
 				}
 			}
-			.#{vendor.bp-namespace}-button {
+			.#{vendor.$bp-namespace}-button {
 				background-color: white;
 			}
 			.autosave-indicator-component {
@@ -118,7 +120,7 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 }
 
 .dashboard-settings-frame-component__tabs-menu {
-	.#{vendor.bp-namespace}-menu-item {
+	.#{vendor.$bp-namespace}-menu-item {
 		align-items: center;
 	}
 }

@@ -1,6 +1,6 @@
 @use 'styles/vendor.scss';
 
-.#{vendor.bp-namespace}-icon.color {
+.#{vendor.$bp-namespace}-icon.color {
 	&[data-icon='twitter'] {
 		color: #1da1f2;
 	}

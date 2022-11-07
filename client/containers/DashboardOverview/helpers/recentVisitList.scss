@@ -7,7 +7,7 @@
 	.entry {
 		display: flex;
 		align-items: flex-start;
-		.#{vendor.bp-namespace}-icon {
+		.#{vendor.$bp-namespace}-icon {
 			margin-top: 2px;
 			color: $light-grey;
 		}

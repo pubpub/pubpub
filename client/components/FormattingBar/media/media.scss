@@ -23,7 +23,7 @@
 			.drag-message {
 				text-align: center;
 			}
-			.#{vendor.bp-namespace}-icon {
+			.#{vendor.$bp-namespace}-icon {
 				color: #666;
 				margin-bottom: 0.5em;
 			}
@@ -61,10 +61,10 @@
 			}
 		}
 	}
-	.#{vendor.bp-namespace}-menu {
+	.#{vendor.$bp-namespace}-menu {
 		min-width: auto;
 	}
-	.#{vendor.bp-namespace}-menu-item {
+	.#{vendor.$bp-namespace}-menu-item {
 		padding-right: 1em;
 		align-items: center;
 	}

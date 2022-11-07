@@ -22,7 +22,7 @@
 	.title-and-spinner {
 		display: flex;
 		align-items: center;
-		.#{vendor.bp-namespace}-spinner {
+		.#{vendor.$bp-namespace}-spinner {
 			opacity: 0;
 			transition: 0.1s ease-out opacity;
 			margin-left: 5px;
@@ -31,7 +31,7 @@
 
 	&.loading {
 		.title-and-spinner {
-			.#{vendor.bp-namespace}-spinner {
+			.#{vendor.$bp-namespace}-spinner {
 				opacity: 1;
 			}
 		}
@@ -41,18 +41,18 @@
 		display: flex;
 		justify-content: space-evenly;
 		margin-bottom: 5px;
-		.#{vendor.bp-namespace}-popover-wrapper {
+		.#{vendor.$bp-namespace}-popover-wrapper {
 			flex: unset;
 		}
 	}
 
-	.#{vendor.bp-namespace}-slider {
+	.#{vendor.$bp-namespace}-slider {
 		margin-bottom: 40px;
-		.#{vendor.bp-namespace}-slider-label {
+		.#{vendor.$bp-namespace}-slider-label {
 			white-space: nowrap;
 		}
-		.#{vendor.bp-namespace}-slider-axis {
-			& > .#{vendor.bp-namespace}-slider-label {
+		.#{vendor.$bp-namespace}-slider-axis {
+			& > .#{vendor.$bp-namespace}-slider-label {
 				transform: translate(0, 20px);
 				&:first-child {
 					left: 0;
@@ -68,7 +68,7 @@
 		}
 	}
 
-	ul.#{vendor.bp-namespace}-menu {
+	ul.#{vendor.$bp-namespace}-menu {
 		position: relative;
 		overflow: auto;
 		border-radius: 4px;

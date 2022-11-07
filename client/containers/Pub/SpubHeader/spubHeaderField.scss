@@ -54,13 +54,13 @@
 		}
 	}
 
-	.#{vendor.bp-namespace}-tag-input {
+	.#{vendor.$bp-namespace}-tag-input {
 		&,
-		&.#{vendor.bp-namespace}-active {
+		&.#{vendor.$bp-namespace}-active {
 			background: inherit;
 			box-shadow: none;
 		}
-		.#{vendor.bp-namespace}-tag-input-values {
+		.#{vendor.$bp-namespace}-tag-input-values {
 			@include input-with-border();
 			> * {
 				margin-bottom: 4px;

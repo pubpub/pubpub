@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 @import 'styles/variables.scss';
 @import '../pub.scss';
 
@@ -34,8 +36,8 @@
 		align-items: center;
 		justify-content: space-between;
 
-		.#{vendor.bp-namespace}-button,
-		.#{vendor.bp-namespace}-icon {
+		.#{vendor.$bp-namespace}-button,
+		.#{vendor.$bp-namespace}-icon {
 			color: inherit;
 		}
 

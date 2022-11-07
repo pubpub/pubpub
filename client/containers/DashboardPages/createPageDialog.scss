@@ -2,7 +2,7 @@
 
 .create-page-dialog-component {
 	// Specificity hack
-	&.#{vendor.bp-namespace}-dialog {
+	&.#{vendor.$bp-namespace}-dialog {
 		padding-bottom: 0px;
 	}
 

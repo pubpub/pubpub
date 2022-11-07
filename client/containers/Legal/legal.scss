@@ -1,3 +1,5 @@
+@use 'styles/vendor.scss';
+
 @import 'styles/variables.scss';
 
 #legal-container {
@@ -6,7 +8,7 @@
 	}
 
 	.legal-settings {
-		.#{vendor.bp-namespace}-card {
+		.#{vendor.$bp-namespace}-card {
 			margin-bottom: 15px;
 		}
 	}

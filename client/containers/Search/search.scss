@@ -19,20 +19,20 @@
 			text-decoration: none;
 		}
 	}
-	.#{vendor.bp-namespace}-input-group input {
+	.#{vendor.$bp-namespace}-input-group input {
 		margin-bottom: 1em;
 		font-size: 35px;
 		font-weight: 200;
 		height: 70px;
 		line-height: 70px;
 	}
-	.#{vendor.bp-namespace}-input-action {
+	.#{vendor.$bp-namespace}-input-action {
 		margin-top: 7px;
 	}
-	.#{vendor.bp-namespace}-tabs {
+	.#{vendor.$bp-namespace}-tabs {
 		border-bottom: 1px solid #ccc;
 	}
-	.#{vendor.bp-namespace}-spinner {
+	.#{vendor.$bp-namespace}-spinner {
 		width: 35px;
 		margin: 13px;
 	}

@@ -1,7 +1,7 @@
 @use 'styles/vendor.scss';
 
 .copyright-selection-picker-component {
-	.#{vendor.bp-namespace}-numeric-input {
+	.#{vendor.$bp-namespace}-numeric-input {
 		display: inline-flex;
 	}
 }

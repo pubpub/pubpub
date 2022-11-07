@@ -3,7 +3,7 @@
 @import '../DashboardOverview/overviewStyles.scss';
 
 .submission-items-component {
-	.#{vendor.bp-namespace}-non-ideal-state {
+	.#{vendor.$bp-namespace}-non-ideal-state {
 		margin-top: $empty-state-margin-top;
 	}
 }

@@ -25,7 +25,7 @@ $transition-duration: 100ms;
 		padding: 12px;
 		transition: box-shadow $transition-duration, color $transition-duration;
 
-		.#{vendor.bp-namespace}-icon.search-icon {
+		.#{vendor.$bp-namespace}-icon.search-icon {
 			transition: color $transition-duration;
 			> svg {
 				fill: $accent-color;
@@ -64,7 +64,7 @@ $transition-duration: 100ms;
 			padding-left: 0;
 			padding-right: 0;
 			padding-bottom: 10px;
-			.#{vendor.bp-namespace}-icon.search-icon {
+			.#{vendor.$bp-namespace}-icon.search-icon {
 				margin-top: -5px;
 				margin-left: 9px;
 				> svg {

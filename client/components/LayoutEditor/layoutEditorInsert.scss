@@ -12,7 +12,7 @@
 		left: 0;
 		top: calc(50% - 1px);
 	}
-	.#{vendor.bp-namespace}-menu {
+	.#{vendor.$bp-namespace}-menu {
 		h6 svg {
 			float: right;
 			opacity: 0.5;

@@ -6,7 +6,7 @@
 	@return $default;
 }
 
-$bp-namespace: vendor.bp-namespace;
+$bp-namespace: vendor.$bp-namespace;
 
 $cjk-body-font: source-han-serif-tc, source-han-serif-korean, source-han-serif-japanese,
 	source-han-serif-sc;

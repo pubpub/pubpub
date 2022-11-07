@@ -30,29 +30,29 @@
 		height: unset;
 	}
 
-	.#{vendor.bp-namespace}-slider {
-		.#{vendor.bp-namespace}-slider-track {
+	.#{vendor.$bp-namespace}-slider {
+		.#{vendor.$bp-namespace}-slider-track {
 			background: rgba(255, 255, 255, 0.2);
 		}
-		.#{vendor.bp-namespace}-slider-progress:not(:last-child) {
+		.#{vendor.$bp-namespace}-slider-progress:not(:last-child) {
 			background: white;
 		}
-		.#{vendor.bp-namespace}-slider-handle:focus {
+		.#{vendor.$bp-namespace}-slider-handle:focus {
 			outline: 1.5px solid white;
 		}
 	}
 
-	.#{vendor.bp-namespace}-spinner {
-		.#{vendor.bp-namespace}-spinner-track {
+	.#{vendor.$bp-namespace}-spinner {
+		.#{vendor.$bp-namespace}-spinner-track {
 			stroke: white;
 		}
 	}
 
-	.#{vendor.bp-namespace}-tabs {
+	.#{vendor.$bp-namespace}-tabs {
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		.#{vendor.bp-namespace}-tab {
+		.#{vendor.$bp-namespace}-tab {
 			&[aria-selected='true'] {
 				color: white;
 				&:hover {
@@ -67,10 +67,10 @@
 				}
 			}
 		}
-		.#{vendor.bp-namespace}-tab-indicator {
+		.#{vendor.$bp-namespace}-tab-indicator {
 			background: white;
 		}
-		.#{vendor.bp-namespace}-tab-panel {
+		.#{vendor.$bp-namespace}-tab-panel {
 			flex-grow: 1;
 			margin-top: 9px;
 		}
@@ -104,7 +104,7 @@
 		height: 100%;
 		overflow: hidden;
 		& > *:not(:last-child) {
-			label.#{vendor.bp-namespace}-control {
+			label.#{vendor.$bp-namespace}-control {
 				margin-bottom: 0;
 			}
 			margin-bottom: 9px;
@@ -134,7 +134,7 @@
 			display: flex;
 			flex-grow: 1;
 		}
-		.#{vendor.bp-namespace}-control.#{vendor.bp-namespace}-disabled {
+		.#{vendor.$bp-namespace}-control.#{vendor.$bp-namespace}-disabled {
 			color: rgba(white, 0.6);
 		}
 	}
@@ -200,10 +200,10 @@
 		display: flex;
 		align-items: center;
 		width: 100%;
-		.#{vendor.bp-namespace}-button.label-type-menu {
+		.#{vendor.$bp-namespace}-button.label-type-menu {
 			margin-right: 5px;
 		}
-		.#{vendor.bp-namespace}-input-group {
+		.#{vendor.$bp-namespace}-input-group {
 			flex-grow: 1;
 		}
 	}
@@ -216,7 +216,7 @@
 
 	.source-control {
 		.controls {
-			.#{vendor.bp-namespace}-input-group {
+			.#{vendor.$bp-namespace}-input-group {
 				width: 100%;
 			}
 		}

@@ -3,10 +3,10 @@
 .sort-list-component {
 	padding: 1em;
 	min-width: 250px;
-	.#{vendor.bp-namespace}-menu-header {
+	.#{vendor.$bp-namespace}-menu-header {
 		margin-bottom: 15px;
 	}
-	.#{vendor.bp-namespace}-menu-item {
+	.#{vendor.$bp-namespace}-menu-item {
 		display: flex;
 		align-items: center;
 	}

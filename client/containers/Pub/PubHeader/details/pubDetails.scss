@@ -128,9 +128,9 @@
 			margin-left: -5px;
 		}
 
-		.#{vendor.bp-namespace}-button,
-		.#{vendor.bp-namespace}-button:hover,
-		.#{vendor.bp-namespace}-icon,
+		.#{vendor.$bp-namespace}-button,
+		.#{vendor.$bp-namespace}-button:hover,
+		.#{vendor.$bp-namespace}-icon,
 		a {
 			color: inherit;
 		}

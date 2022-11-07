@@ -17,7 +17,7 @@
 		margin-bottom: 2em;
 		border: 1px solid #ccc;
 	}
-	// div is a specificity hack against an aggressive selection of .#{vendor.bp-namespace}-form-group in settingsSection.scss
+	// div is a specificity hack against an aggressive selection of .#{vendor.$bp-namespace}-form-group in settingsSection.scss
 	div.block-header {
 		display: flex;
 		// align-items: flex-end;
@@ -30,10 +30,10 @@
 		.input-field-component,
 		.image-upload-component,
 		.dropdown-grouping,
-		> .#{vendor.bp-namespace}-form-group {
+		> .#{vendor.$bp-namespace}-form-group {
 			margin: 0em 0.5em;
 		}
-		.input-field-component .#{vendor.bp-namespace}-control.#{vendor.bp-namespace}-checkbox {
+		.input-field-component .#{vendor.$bp-namespace}-control.#{vendor.$bp-namespace}-checkbox {
 			display: inline-block;
 			margin-right: 2em;
 			margin: 0.5em 2em 0px 0px;
@@ -115,7 +115,7 @@
 		}
 	}
 	.layout-editor-collection-header-component {
-		.#{vendor.bp-namespace}-form-content {
+		.#{vendor.$bp-namespace}-form-content {
 			margin-left: 6px;
 		}
 	}
@@ -154,29 +154,29 @@
 	.block-content {
 		transition: 100ms opacity;
 	}
-	.#{vendor.bp-namespace}-popover-content {
+	.#{vendor.$bp-namespace}-popover-content {
 		font-size: 14px;
 		font-weight: 400;
 	}
 }
 
-.#{vendor.bp-namespace}-card.layout-editor-pubs_limit-pubs-component {
+.#{vendor.$bp-namespace}-card.layout-editor-pubs_limit-pubs-component {
 	width: 300px;
 	user-select: none;
 	padding: 10px;
-	.#{vendor.bp-namespace}-control:last-child {
+	.#{vendor.$bp-namespace}-control:last-child {
 		margin-bottom: 0;
 	}
-	.#{vendor.bp-namespace}-control input {
-		// .#{vendor.bp-namespace}-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
+	.#{vendor.$bp-namespace}-control input {
+		// .#{vendor.$bp-namespace}-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
 		opacity: 1;
 	}
 }
 
-.#{vendor.bp-namespace}-card.layout-editor-pubs_preview-elements-component {
+.#{vendor.$bp-namespace}-card.layout-editor-pubs_preview-elements-component {
 	user-select: none;
 	padding: 10px;
-	.#{vendor.bp-namespace}-control:last-child {
+	.#{vendor.$bp-namespace}-control:last-child {
 		margin-bottom: 0;
 	}
 }

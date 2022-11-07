@@ -5,11 +5,11 @@
 	.content .row {
 		margin: 1em 0em;
 	}
-	.#{vendor.bp-namespace}-non-ideal-state {
+	.#{vendor.$bp-namespace}-non-ideal-state {
 		margin: 2em auto;
 	}
 	.external-pubs-wrapper {
-		.#{vendor.bp-namespace}-button {
+		.#{vendor.$bp-namespace}-button {
 			float: right;
 			margin-left: 1em;
 		}
