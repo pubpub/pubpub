@@ -1,4 +1,35 @@
-import { DOMOutputSpec, NodeSpec } from 'prosemirror-model';
+import React from 'react';
+import { DOMOutputSpec, NodeSpec, Node } from 'prosemirror-model';
+import { fromLezer } from 'hast-util-from-lezer';
+import { toHtml } from 'hast-util-to-html';
+import type { LRParser } from '@lezer/lr';
+import { parser as javascriptParser } from '@lezer/javascript';
+
+export const Parsers = React.createContext<Record<string, LRParser>>({});
+
+export interface CodeProps {
+	language?: string;
+	source: string;
+}
+
+const renderStaticCode = (node: Node) => {
+	console.log({ node });
+	const parsers = {
+		javascript: javascriptParser,
+	};
+	const parser = parsers[node.attrs.lang];
+	const tree = parser.parse(node.textContent);
+	const root = fromLezer(node.textContent, tree);
+	const content = toHtml(tree);
+	console.log({ root, content }, 'hetuh');
+	const renderedCode = '<div>testCodeStufff</div>';
+	return [
+		'div',
+		{
+			dangerouslySetInnerHTML: { __html: renderedCode },
+		},
+	] as any;
+};
 
 export const baseNodes: { [key: string]: NodeSpec } = {
 	doc: {
@@ -212,13 +243,15 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 				preserveWhitespace: 'full',
 			},
 		],
-		toDOM: (node) => {
-			return [
-				'pre',
-				{ ...(node.attrs.id && { id: node.attrs.id }) },
-				['code', 0],
-			] as DOMOutputSpec;
-		},
+		toDOM: (node: Node, { isReact } = { isReact: false }) =>
+			isReact
+				? renderStaticCode(node)
+				: renderStaticCode(node) ||
+				  ([
+						'pre',
+						{ ...(node.attrs.id && { id: node.attrs.id }) },
+						['code', 0],
+				  ] as DOMOutputSpec),
 	},
 	text: {
 		inline: true,
