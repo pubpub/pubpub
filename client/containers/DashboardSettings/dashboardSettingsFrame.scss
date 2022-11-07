@@ -52,7 +52,7 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		z-index: 8; // Seems to be needed to stay on top of .#{vendor.$bp-namespace}-button-group .#{vendor.$bp-namespace}-button.#{vendor.$bp-namespace}-active
+		z-index: 8; // Seems to be needed to stay on top of .bp[#]-button-group .bp[#]-button.bp[#]-active
 		&.js-is-sticky {
 			box-shadow: $gentle-shadow;
 		}

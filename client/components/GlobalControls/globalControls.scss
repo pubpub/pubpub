@@ -20,7 +20,7 @@
 	}
 }
 
-// AccentStyle.tsx provides a very specific color selector for buttons under .#{vendor.$bp-namespace}-dark
+// AccentStyle.tsx provides a very specific color selector for buttons under .bp[#]-dark
 // so we need to be even more specific about overriding it here.
 .#{vendor.$bp-namespace}-dark {
 	.global-controls-component {

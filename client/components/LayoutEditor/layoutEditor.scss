@@ -17,7 +17,7 @@
 		margin-bottom: 2em;
 		border: 1px solid #ccc;
 	}
-	// div is a specificity hack against an aggressive selection of .#{vendor.$bp-namespace}-form-group in settingsSection.scss
+	// div is a specificity hack against an aggressive selection of .bp[#]-form-group in settingsSection.scss
 	div.block-header {
 		display: flex;
 		// align-items: flex-end;
@@ -168,7 +168,7 @@
 		margin-bottom: 0;
 	}
 	.#{vendor.$bp-namespace}-control input {
-		// .#{vendor.$bp-namespace}-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
+		// .bp[#]-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
 		opacity: 1;
 	}
 }
