@@ -208,7 +208,8 @@ $off-black: #333;
 				inset 0 0 0 1px rgba(247, 252, 255, 0.54);
 			background-color: rgba(0, 0, 0, 0.35);
 		}
-		&.#{vendor.$bp-namespace}-editable-text-placeholder > .#{vendor.$bp-namespace}-editable-text-content,
+		&.#{vendor.$bp-namespace}-editable-text-placeholder
+			> .#{vendor.$bp-namespace}-editable-text-content,
 		::placeholder {
 			color: inherit;
 			opacity: 0.75;

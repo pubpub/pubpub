@@ -40,7 +40,9 @@
 	.#{vendor.$bp-namespace}-card {
 		margin-bottom: 15px;
 	}
-	.settings-section-component .#{vendor.$bp-namespace}-label .#{vendor.$bp-namespace}-popover-wrapper {
+	.settings-section-component
+		.#{vendor.$bp-namespace}-label
+		.#{vendor.$bp-namespace}-popover-wrapper {
 		display: inline-block;
 	}
 	.custom-css-tooltip-target {

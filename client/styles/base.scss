@@ -103,11 +103,14 @@ a {
 
 // Blueprint overrides
 
-.#{vendor.$bp-namespace}-control.#{vendor.$bp-namespace}-checkbox input:checked ~ .#{vendor.$bp-namespace}-control-indicator:before {
+.#{vendor.$bp-namespace}-control.#{vendor.$bp-namespace}-checkbox
+	input:checked
+	~ .#{vendor.$bp-namespace}-control-indicator:before {
 	background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 0 0-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0 0 12 5z' fill='rgba(255,255,255,1)'/%3E%3C/svg%3E");
 }
 
-.#{vendor.$bp-namespace}-menu .#{vendor.$bp-namespace}-menu-item.#{vendor.$bp-namespace}-active.#{vendor.$bp-namespace}-intent-primary {
+.#{vendor.$bp-namespace}-menu
+	.#{vendor.$bp-namespace}-menu-item.#{vendor.$bp-namespace}-active.#{vendor.$bp-namespace}-intent-primary {
 	/* This code is specified beause intent-primary */
 	/* is being applied for some reason */
 	background-color: rgba(132, 132, 132, 0.3);

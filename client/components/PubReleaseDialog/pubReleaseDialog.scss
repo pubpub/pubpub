@@ -23,7 +23,8 @@
 			max-height: 24px;
 			margin-left: 10px;
 		}
-		.#{vendor.$bp-namespace}-input-group.#{vendor.$bp-namespace}-disabled .#{vendor.$bp-namespace}-input {
+		.#{vendor.$bp-namespace}-input-group.#{vendor.$bp-namespace}-disabled
+			.#{vendor.$bp-namespace}-input {
 			background: white;
 			color: inherit;
 			cursor: text;
