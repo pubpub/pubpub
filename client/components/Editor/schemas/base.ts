@@ -1,11 +1,7 @@
-import React from 'react';
 import { DOMOutputSpec, NodeSpec, Node } from 'prosemirror-model';
 import { fromLezer } from 'hast-util-from-lezer';
 import { toHtml } from 'hast-util-to-html';
-import type { LRParser } from '@lezer/lr';
 import { parser as javascriptParser } from '@lezer/javascript';
-
-export const Parsers = React.createContext<Record<string, LRParser>>({});
 
 export interface CodeProps {
 	language?: string;
@@ -21,7 +17,7 @@ const renderStaticCode = (node: Node) => {
 	const tree = parser.parse(node.textContent);
 	const root = fromLezer(node.textContent, tree);
 	const content = toHtml(tree);
-	console.log({ root, content }, 'hetuh');
+	console.log({ root, content }, 'another reset');
 	const renderedCode = '<div>testCodeStufff</div>';
 	return [
 		'div',
