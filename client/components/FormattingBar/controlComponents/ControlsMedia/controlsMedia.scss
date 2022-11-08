@@ -1,8 +1,10 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .controls-media-component {
 	.caption-alt-tabs {
-		> .#{vendor.$bp-namespace}-tab-panel {
+		> .#{$bp}-tab-panel {
 			height: 100%;
 			overflow-y: hidden;
 		}

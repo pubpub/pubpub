@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import '../DashboardOverview/overviewStyles.scss';
 
 .activity-filters-component {
@@ -28,7 +30,7 @@
 		border: 1px solid #aaa;
 		box-sizing: border-box;
 
-		.#{vendor.$bp-namespace}-icon {
+		.#{$bp}-icon {
 			margin-right: 4px;
 			margin-top: 1px;
 		}

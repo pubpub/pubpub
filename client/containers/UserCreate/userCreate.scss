@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 #user-create-container {
 	.container {
 		padding: 2em 0em;
@@ -8,7 +10,7 @@
 		margin-top: 40px;
 		font-size: 1.25em;
 	}
-	.#{vendor.$bp-namespace}-non-ideal-state {
+	.#{$bp}-non-ideal-state {
 		padding-top: 2em;
 		.success p {
 			font-size: 1em;
@@ -19,15 +21,15 @@
 	.confirm-password {
 		display: none !important;
 	}
-	.#{vendor.$bp-namespace}-button-group {
+	.#{$bp}-button-group {
 		display: block;
 	}
-	.#{vendor.$bp-namespace}-button.expandable
-		.#{vendor.$bp-namespace}-icon:first-child:last-child {
+	.#{$bp}-button.expandable
+		.#{$bp}-icon:first-child:last-child {
 		margin: 0px 5px 0px 0px;
 	}
-	.#{vendor.$bp-namespace}-callout {
-		.#{vendor.$bp-namespace}-label {
+	.#{$bp}-callout {
+		.#{$bp}-label {
 			font-weight: bold;
 		}
 		.notice {

@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 #pricing-container {
 	background-repeat: repeat;
 	background-position: center center;
@@ -46,7 +48,7 @@
 		}
 	}
 	#content {
-		.#{vendor.$bp-namespace}-button {
+		.#{$bp}-button {
 			margin-bottom: 2em;
 		}
 		.features {
@@ -54,7 +56,7 @@
 		}
 	}
 	#independent {
-		a.#{vendor.$bp-namespace}-button {
+		a.#{$bp}-button {
 			margin-top: 0;
 		}
 		h3.pricing {
@@ -80,7 +82,7 @@
 					margin: 0.5em 0;
 				}
 			}
-			a.#{vendor.$bp-namespace}-button {
+			a.#{$bp}-button {
 				margin-top: 1em;
 				background-color: #b2e2bd;
 				color: #14411e;

@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import 'styles/variables.scss';
 @import 'styles/mixins.scss';
 
@@ -38,12 +40,12 @@ $hover-background: #f9f9f9;
 			text-align: left;
 			width: 26px;
 			flex: 0 0 auto;
-			.#{vendor.$bp-namespace}-icon {
+			.#{$bp}-icon {
 				opacity: 0.5;
 				margin-top: -1px;
 			}
 			&.opened {
-				.#{vendor.$bp-namespace}-icon {
+				.#{$bp}-icon {
 					transform: rotate(90deg);
 				}
 			}
@@ -85,7 +87,7 @@ $hover-background: #f9f9f9;
 			margin-right: 6px;
 		}
 
-		.#{vendor.$bp-namespace}-icon {
+		.#{$bp}-icon {
 			opacity: 0.5;
 		}
 	}
@@ -123,7 +125,7 @@ $hover-background: #f9f9f9;
 				flex-direction: row-reverse;
 				font-size: 12px;
 				padding-top: 5px;
-				.#{vendor.$bp-namespace}-button {
+				.#{$bp}-button {
 					margin-right: 0px;
 					margin-left: 10px;
 					font-size: 12px;

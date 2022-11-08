@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .discussions-release-dialog-component {
 	.discussions-listing {
 		background: white;
@@ -12,7 +14,7 @@
 		align-items: center;
 		margin: 0;
 
-		.#{vendor.$bp-namespace}-checkbox {
+		.#{$bp}-checkbox {
 			margin: 0 10px;
 		}
 
@@ -26,7 +28,7 @@
 		}
 	}
 
-	.#{vendor.$bp-namespace}-callout {
+	.#{$bp}-callout {
 		margin-top: 10px;
 	}
 }

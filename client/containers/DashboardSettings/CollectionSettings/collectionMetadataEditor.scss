@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .dashboard-content_collection-metadata-editor {
 	display: flex;
 	flex-direction: column;
@@ -21,7 +23,7 @@
 		display: block;
 		flex-shrink: 0;
 	}
-	.#{vendor.$bp-namespace}-callout {
+	.#{$bp}-callout {
 		margin-top: 15px;
 	}
 }

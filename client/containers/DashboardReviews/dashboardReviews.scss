@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .dashboard-reviews-container {
 	.pub-title {
 		font-weight: 600;
@@ -16,7 +18,7 @@
 		background: #f7f7f7;
 		border: 1px solid #ddd;
 		padding: 10px;
-		.#{vendor.$bp-namespace}-tag {
+		.#{$bp}-tag {
 			text-transform: capitalize;
 			&.open,
 			&.closed,
@@ -34,7 +36,7 @@
 			}
 		}
 	}
-	.#{vendor.$bp-namespace}-non-ideal-state {
+	.#{$bp}-non-ideal-state {
 		margin: 2em 0em;
 	}
 
@@ -59,7 +61,7 @@
 		.note {
 			opacity: 0.8;
 		}
-		.#{vendor.$bp-namespace}-tag {
+		.#{$bp}-tag {
 			margin-right: 0.5em;
 		}
 	}

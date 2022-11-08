@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import 'styles/mixins.scss';
 @import 'client/containers/App/BottomMenu/bottomMenu.scss';
 
@@ -17,11 +19,11 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 }
 
 .dashboard-settings-frame-component {
-	.#{vendor.$bp-namespace}-tabs.dashboard-settings-frame-tabs {
-		.#{vendor.$bp-namespace}-tab-indicator-wrapper .#{vendor.$bp-namespace}-tab-indicator {
+	.#{$bp}-tabs.dashboard-settings-frame-tabs {
+		.#{$bp}-tab-indicator-wrapper .#{$bp}-tab-indicator {
 			background-color: var(--community-accent-dark);
 		}
-		.#{vendor.$bp-namespace}-tab.dashboard-settings-frame-tab {
+		.#{$bp}-tab.dashboard-settings-frame-tab {
 			display: flex;
 			align-items: center;
 			padding: 6px 0;
@@ -39,8 +41,8 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 		}
 	}
 
-	.#{vendor.$bp-namespace}-button.dashboard-settings-frame-menu {
-		.#{vendor.$bp-namespace}-button-text {
+	.#{$bp}-button.dashboard-settings-frame-menu {
+		.#{$bp}-button-text {
 			flex-grow: 1;
 		}
 	}
@@ -77,11 +79,11 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 			& > * {
 				// Thicken up the dropdown and the button a little
 				height: 100%;
-				.#{vendor.$bp-namespace}-button {
+				.#{$bp}-button {
 					height: 100%;
 				}
 			}
-			.#{vendor.$bp-namespace}-button {
+			.#{$bp}-button {
 				background-color: white;
 			}
 			.autosave-indicator-component {
@@ -120,7 +122,7 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 }
 
 .dashboard-settings-frame-component__tabs-menu {
-	.#{vendor.$bp-namespace}-menu-item {
+	.#{$bp}-menu-item {
 		align-items: center;
 	}
 }

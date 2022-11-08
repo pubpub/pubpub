@@ -1,10 +1,12 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .node-label-editor-component {
 	display: flex;
 	align-items: center;
 
-	.#{vendor.$bp-namespace}-checkbox {
+	.#{$bp}-checkbox {
 		margin-bottom: 0;
 	}
 }

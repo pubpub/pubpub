@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import 'styles/variables.scss';
 @import 'containers/DashboardOverview/overviewStyles.scss';
 
@@ -15,7 +17,7 @@
 		align-items: center;
 	}
 
-	.#{vendor.$bp-namespace}-tab {
+	.#{$bp}-tab {
 		min-width: 200px;
 		font-size: 14px;
 		font-weight: 500;
@@ -35,7 +37,7 @@
 				opacity: 0.75;
 			}
 		}
-		.#{vendor.$bp-namespace}-icon {
+		.#{$bp}-icon {
 			padding: 0 6px 2px 0;
 		}
 		&:nth-child(n + 3) {
@@ -47,7 +49,7 @@
 		}
 	}
 
-	.#{vendor.$bp-namespace}-tab-indicator-wrapper .#{vendor.$bp-namespace}-tab-indicator {
+	.#{$bp}-tab-indicator-wrapper .#{$bp}-tab-indicator {
 		height: 2px;
 		background-color: var(--community-accent-dark);
 	}
@@ -56,7 +58,7 @@
 		display: flex;
 		font-weight: 500;
 
-		.#{vendor.$bp-namespace}-icon {
+		.#{$bp}-icon {
 			@include status-colors;
 			margin-right: 4px;
 			transform: translateY(0.5px);

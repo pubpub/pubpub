@@ -1,6 +1,8 @@
 @use 'styles/vendor.scss';
 
-.pub-attribution-dialog-component.#{vendor.$bp-namespace}-dialog {
+$bp: vendor.$bp-namespace;
+
+.pub-attribution-dialog-component.#{$bp}-dialog {
 	max-width: 90vw;
 	width: 1000px;
 }

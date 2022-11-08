@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import 'styles/variables.scss';
 @import 'styles/mixins.scss';
 
@@ -12,7 +14,7 @@
 	&.preview {
 		z-index: 0;
 	}
-	&.#{vendor.$bp-namespace}-dark {
+	&.#{$bp}-dark {
 		a {
 			color: #fff;
 		}
@@ -107,7 +109,7 @@
 					&:first-child {
 						margin-top: 0px;
 					}
-					.#{vendor.$bp-namespace}-button {
+					.#{$bp}-button {
 						margin-right: 1em;
 					}
 				}

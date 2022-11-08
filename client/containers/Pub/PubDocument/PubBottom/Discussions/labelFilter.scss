@@ -1,14 +1,16 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .label-filter-component {
 	min-width: 250px;
 	.action-button {
 		float: right;
 	}
-	.#{vendor.$bp-namespace}-menu-header {
+	.#{$bp}-menu-header {
 		margin-bottom: 15px;
 	}
-	.#{vendor.$bp-namespace}-fill {
+	.#{$bp}-fill {
 		margin-bottom: 10px;
 	}
 	li {
@@ -42,14 +44,14 @@
 			width: 30px;
 			margin-right: 10px;
 		}
-		.#{vendor.$bp-namespace}-icon-small-tick {
+		.#{$bp}-icon-small-tick {
 			&:before {
 				color: white;
 			}
 		}
 	}
 	.title,
-	.#{vendor.$bp-namespace}-input {
+	.#{$bp}-input {
 		// vertical-align: middle;
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -58,7 +60,7 @@
 		pointer-events: none;
 		opacity: 0.75;
 	}
-	.#{vendor.$bp-namespace}-icon-endorsed {
+	.#{$bp}-icon-endorsed {
 		&:before {
 			opacity: 0.25;
 		}
@@ -69,7 +71,7 @@
 		}
 	}
 }
-.#{vendor.$bp-namespace}-popover.color-select-popover {
+.#{$bp}-popover.color-select-popover {
 	.color-select-menu {
 		width: 150px;
 		min-width: 150px;
@@ -86,7 +88,7 @@
 			}
 		}
 	}
-	.#{vendor.$bp-namespace}-popover-arrow {
+	.#{$bp}-popover-arrow {
 		display: block;
 	}
 }

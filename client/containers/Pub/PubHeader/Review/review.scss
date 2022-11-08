@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .review-component {
 	position: absolute;
 	right: 0;
@@ -8,17 +10,17 @@
 
 	.review-button {
 		padding-top: 18px;
-		.#{vendor.$bp-namespace}-button {
-			.#{vendor.$bp-namespace}-icon {
+		.#{$bp}-button {
+			.#{$bp}-icon {
 				color: white !important;
 			}
 			&:hover {
-				.#{vendor.$bp-namespace}-icon {
+				.#{$bp}-icon {
 					color: white !important;
 				}
 			}
 		}
-		.#{vendor.$bp-namespace}-button-text {
+		.#{$bp}-button-text {
 			color: white;
 		}
 	}

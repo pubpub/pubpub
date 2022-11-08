@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import '../../containers/DashboardOverview/overviewStyles.scss';
 
 .scope-dropdown-component {
@@ -21,7 +23,7 @@
 			opacity: 0.5;
 			display: flex;
 			align-items: baseline;
-			.#{vendor.$bp-namespace}-icon {
+			.#{$bp}-icon {
 				margin-right: 20px;
 			}
 		}

@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import '../overviewStyles.scss';
 
 .overview-section-component {
@@ -24,7 +26,7 @@
 			margin-bottom: 10px;
 		}
 
-		.#{vendor.$bp-namespace}-icon {
+		.#{$bp}-icon {
 			margin-right: 8px;
 			color: $light-grey;
 		}

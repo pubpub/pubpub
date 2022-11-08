@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .dashboard-review-container {
 	.details a {
 		text-decoration: none;
@@ -7,7 +9,7 @@
 			text-decoration: underline;
 		}
 	}
-	.#{vendor.$bp-namespace}-tag.#{vendor.$bp-namespace}-minimal {
+	.#{$bp}-tag.#{$bp}-minimal {
 		text-transform: capitalize;
 		margin-right: 1em;
 		&.open,

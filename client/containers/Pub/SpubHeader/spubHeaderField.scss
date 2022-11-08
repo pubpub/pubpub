@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import './styles.scss';
 
 @mixin input-with-border {
@@ -54,13 +56,13 @@
 		}
 	}
 
-	.#{vendor.$bp-namespace}-tag-input {
+	.#{$bp}-tag-input {
 		&,
-		&.#{vendor.$bp-namespace}-active {
+		&.#{$bp}-active {
 			background: inherit;
 			box-shadow: none;
 		}
-		.#{vendor.$bp-namespace}-tag-input-values {
+		.#{$bp}-tag-input-values {
 			@include input-with-border();
 			> * {
 				margin-bottom: 4px;

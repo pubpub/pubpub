@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import '../themes.scss';
 @import 'styles/variables.scss';
 
@@ -128,9 +130,9 @@
 			margin-left: -5px;
 		}
 
-		.#{vendor.$bp-namespace}-button,
-		.#{vendor.$bp-namespace}-button:hover,
-		.#{vendor.$bp-namespace}-icon,
+		.#{$bp}-button,
+		.#{$bp}-button:hover,
+		.#{$bp}-icon,
 		a {
 			color: inherit;
 		}

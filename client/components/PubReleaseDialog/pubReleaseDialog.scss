@@ -1,7 +1,9 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .pub-release-dialog-component {
-	.#{vendor.$bp-namespace}-callout {
+	.#{$bp}-callout {
 		margin-bottom: 10px;
 		.release-date {
 			font-size: 12px;
@@ -18,13 +20,13 @@
 		margin-bottom: 5px;
 	}
 	.url-select {
-		.#{vendor.$bp-namespace}-button {
+		.#{$bp}-button {
 			min-height: 24px;
 			max-height: 24px;
 			margin-left: 10px;
 		}
-		.#{vendor.$bp-namespace}-input-group.#{vendor.$bp-namespace}-disabled
-			.#{vendor.$bp-namespace}-input {
+		.#{$bp}-input-group.#{$bp}-disabled
+			.#{$bp}-input {
 			background: white;
 			color: inherit;
 			cursor: text;

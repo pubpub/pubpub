@@ -1,14 +1,16 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .dashboard-custom-scripts-container {
 	.loading-indicator {
 		display: flex;
 		align-items: center;
-		.#{vendor.$bp-namespace}-spinner {
+		.#{$bp}-spinner {
 			margin-right: 4px;
 		}
 	}
-	.#{vendor.$bp-namespace}-tab-panel {
+	.#{$bp}-tab-panel {
 		height: calc(100vh - 300px);
 	}
 	.callout-text {

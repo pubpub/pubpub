@@ -1,9 +1,11 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .image-upload-component {
 	margin-bottom: 15px;
 	.upload-button,
-	.upload-button.#{vendor.$bp-namespace}-disabled,
+	.upload-button.#{$bp}-disabled,
 	.image-wrapper {
 		display: inline-flex;
 		margin-top: 0.5em;
@@ -13,11 +15,11 @@
 			opacity: 0.75;
 		}
 	}
-	.upload-button.#{vendor.$bp-namespace}-minimal,
-	.upload-button.#{vendor.$bp-namespace}-minimal.#{vendor.$bp-namespace}-disabled {
+	.upload-button.#{$bp}-minimal,
+	.upload-button.#{$bp}-minimal.#{$bp}-disabled {
 		background-color: #f0f0f0;
 		position: relative;
-		.#{vendor.$bp-namespace}-icon {
+		.#{$bp}-icon {
 			position: absolute;
 			top: 0;
 			left: 5px;
@@ -46,7 +48,7 @@
 		margin: 0em 0.5em;
 		display: inline-block;
 		width: 30px;
-		.#{vendor.$bp-namespace}-button {
+		.#{$bp}-button {
 			display: block;
 			min-width: 20px;
 			min-height: 20px;

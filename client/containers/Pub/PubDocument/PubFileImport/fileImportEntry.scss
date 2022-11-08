@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .file-import-entry {
 	display: flex;
 	align-items: center;
@@ -38,10 +40,10 @@
 		white-space: nowrap;
 		font-style: italic;
 		color: #999;
-		.#{vendor.$bp-namespace}-progress-bar {
+		.#{$bp}-progress-bar {
 			width: 100px;
 		}
-		.#{vendor.$bp-namespace}-icon {
+		.#{$bp}-icon {
 			margin-right: 2px;
 		}
 	}

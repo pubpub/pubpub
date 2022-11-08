@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import 'styles/mixins.scss';
 
 .dashboard-settings-container-nope {
@@ -10,11 +12,11 @@
 		margin-top: 3em;
 		@include mobile {
 			margin-top: 2em;
-			label .#{vendor.$bp-namespace}-popover-target {
+			label .#{$bp}-popover-target {
 				margin-left: 5px;
 				padding-bottom: 3px;
 				opacity: 0.5;
-				.#{vendor.$bp-namespace}-icon-info-sign svg {
+				.#{$bp}-icon-info-sign svg {
 					height: 12px;
 					width: 12px;
 				}
@@ -37,12 +39,12 @@
 		opacity: 0.5;
 		pointer-events: none;
 	}
-	.#{vendor.$bp-namespace}-card {
+	.#{$bp}-card {
 		margin-bottom: 15px;
 	}
 	.settings-section-component
-		.#{vendor.$bp-namespace}-label
-		.#{vendor.$bp-namespace}-popover-wrapper {
+		.#{$bp}-label
+		.#{$bp}-popover-wrapper {
 		display: inline-block;
 	}
 	.custom-css-tooltip-target {

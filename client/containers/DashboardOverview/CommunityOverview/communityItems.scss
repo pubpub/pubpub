@@ -1,9 +1,11 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import '../overviewStyles.scss';
 
 .community-items-component {
-	.#{vendor.$bp-namespace}-non-ideal-state {
+	.#{$bp}-non-ideal-state {
 		margin-top: $empty-state-margin-top;
 	}
 }

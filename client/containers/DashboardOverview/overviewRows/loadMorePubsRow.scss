@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .load-more-pubs-row-component {
 	display: flex;
 	align-items: center;
@@ -16,8 +18,8 @@
 	}
 
 	&.dark {
-		.#{vendor.$bp-namespace}-spinner {
-			.#{vendor.$bp-namespace}-spinner-track {
+		.#{$bp}-spinner {
+			.#{$bp}-spinner-track {
 				stroke: white;
 			}
 		}

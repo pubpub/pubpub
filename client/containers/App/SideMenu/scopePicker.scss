@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 @import 'styles/mixins.scss';
 
 .scope-picker-component {
@@ -10,10 +12,10 @@
 		padding-left: 50px;
 		letter-spacing: 0.5px;
 		display: flex !important;
-		:first-child.#{vendor.$bp-namespace}-icon {
+		:first-child.#{$bp}-icon {
 			margin-top: -13px;
 		}
-		.#{vendor.$bp-namespace}-button-text {
+		.#{$bp}-button-text {
 			flex: 1 1 auto;
 			padding-left: 8px;
 		}

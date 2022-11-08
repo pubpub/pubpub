@@ -1,5 +1,7 @@
 @use 'styles/vendor.scss';
 
+$bp: vendor.$bp-namespace;
+
 .editable-avatar-component {
 	position: relative;
 	.avatar-button {
@@ -19,7 +21,7 @@
 			color: white;
 			background-color: rgba(black, 0.5);
 			opacity: 0;
-			.#{vendor.$bp-namespace}-icon {
+			.#{$bp}-icon {
 				color: inherit;
 			}
 			&.no-image {
