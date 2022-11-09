@@ -1,17 +1,17 @@
 @use 'styles/vendor';
 
-@import '../PubHeader/pubHeader';
-@import 'shared';
+@use '../PubHeader/pubHeader';
+@use 'shared';
 
-$bp: vendor.$bp-namespace;
+pubHeader.$bp: vendor.$bp-namespace;
 
 .spub-header-component {
 	position: relative;
 	z-index: 20;
-	background-color: $background-grey;
+	background-color: shared.$background-grey;
 
 	&:not([data-tab='instructions']) {
-		border-bottom: 1px solid $header-border-color;
+		border-bottom: 1px solid pubHeader.$header-border-color;
 	}
 
 	.pub-header-component {
@@ -25,7 +25,7 @@ $bp: vendor.$bp-namespace;
 
 	&.js-is-sticky,
 	&.js-is-stuck {
-		border-bottom: 1px solid $header-border-color;
+		border-bottom: 1px solid pubHeader.$header-border-color;
 		.content-container {
 			opacity: 0;
 		}

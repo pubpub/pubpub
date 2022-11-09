@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 $bottom-menu-height: 50px;
 
@@ -176,7 +176,7 @@ $bottom-menu-height: 50px;
 	}
 }
 
-@include mobile {
+@include mixins.mobile {
 	.scope-dropdown-component.in-dashboard {
 		background: var(--community-accent-dark-faded);
 	}

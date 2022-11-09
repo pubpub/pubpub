@@ -2,9 +2,9 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
+@use 'styles/mixins';
 
-@import 'shared';
+@use 'shared';
 
 .submission-workflow-editor-component {
 	.step-content {
@@ -14,7 +14,7 @@ $bp: vendor.$bp-namespace;
 			margin: 10px 0;
 			font-size: 20px;
 			font-weight: 500;
-			@include mobile {
+			@include mixins.mobile {
 				margin-bottom: 0px;
 				margin-top: 25px;
 			}
@@ -49,7 +49,7 @@ $bp: vendor.$bp-namespace;
 				flex: 1 0 50%;
 				margin-right: 10px;
 			}
-			@include mobile {
+			@include mixins.mobile {
 				flex-direction: column;
 				> .#{$bp}-input-group {
 					margin-bottom: 10px;
@@ -58,7 +58,7 @@ $bp: vendor.$bp-namespace;
 			}
 		}
 	}
-	@include mobile {
+	@include mixins.mobile {
 		.submission-workflow-step-picker-component {
 			.label {
 				flex-direction: column;

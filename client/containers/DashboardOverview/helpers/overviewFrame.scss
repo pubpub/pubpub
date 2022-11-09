@@ -1,4 +1,4 @@
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 .overview-frame-component {
 	display: grid;
@@ -13,7 +13,7 @@
 	& > .secondary {
 		grid-area: secondary;
 	}
-	@include mobile {
+	@include mixins.mobile {
 		display: block;
 		margin-bottom: 40px;
 	}

@@ -1,14 +1,14 @@
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 $component-prefix: 'mobile-aware-component';
 
-@include desktop {
+@include mixins.desktop {
 	.#{$component-prefix}__mobile {
 		display: none !important;
 	}
 }
 
-@include mobile {
+@include mixins.mobile {
 	.#{$component-prefix}__desktop {
 		display: none !important;
 	}

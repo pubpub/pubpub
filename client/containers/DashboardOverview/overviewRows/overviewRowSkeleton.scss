@@ -2,12 +2,12 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../overviewStyles';
+@use '../overviewStyles';
 
-$mobile-viewport-cutoff: 750px;
+overviewStyles.$mobile-viewport-cutoff: 750px;
 
 @mixin mobile {
-	@media only screen and (max-width: $mobile-viewport-cutoff) {
+	@media only screen and (max-width: overviewStyles.$mobile-viewport-cutoff) {
 		@content;
 	}
 }
@@ -22,7 +22,7 @@ $mobile-viewport-cutoff: 750px;
 	margin-top: -1px;
 
 	&.with-border {
-		border: 1px solid $row-border-color;
+		border: 1px solid overviewStyles.$row-border-color;
 		border-left: none;
 		border-right: none;
 	}
@@ -36,17 +36,17 @@ $mobile-viewport-cutoff: 750px;
 	}
 
 	.left-icon {
-		color: $light-grey;
+		color: overviewStyles.$light-grey;
 	}
 
 	.right-element {
 		display: flex;
 		.#{$bp}-icon {
-			color: $light-grey;
+			color: overviewStyles.$light-grey;
 		}
 		&.darker {
 			.#{$bp}-icon {
-				color: $medium-grey;
+				color: overviewStyles.$medium-grey;
 			}
 		}
 	}
@@ -71,20 +71,20 @@ $mobile-viewport-cutoff: 750px;
 		}
 		.byline {
 			font-style: italic;
-			color: $dark-grey;
+			color: overviewStyles.$dark-grey;
 			.byline-icon svg {
 				width: 11px;
 				height: auto;
 			}
 		}
 		.summary-icons {
-			color: $medium-grey;
+			color: overviewStyles.$medium-grey;
 			display: flex;
 			align-items: center;
 			margin-top: 4px;
 			> .summary-icon-pair {
 				.#{$bp}-icon {
-					@include status-colors;
+					@include overviewStyles.status-colors;
 				}
 				display: flex;
 				align-items: center;

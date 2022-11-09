@@ -2,10 +2,10 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../overviewStyles';
+@use '../overviewStyles';
 
 .community-items-component {
 	.#{$bp}-non-ideal-state {
-		margin-top: $empty-state-margin-top;
+		margin-top: overviewStyles.$empty-state-margin-top;
 	}
 }

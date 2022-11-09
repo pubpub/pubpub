@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 /**** Variables and Mixins ****/
 $textColorLight: #fff9e9;
 $textColorDark: #2c3654;
@@ -92,7 +94,7 @@ $leftColumnWidth: 20%;
 		.container {
 			@for $i from 1 through 12 {
 				> div:nth-child(#{$i}) {
-					-ms-grid-row: ceil($i * 0.5);
+					-ms-grid-row: math.ceil($i * 0.5);
 				}
 			}
 			display: -ms-grid;

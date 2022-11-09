@@ -2,8 +2,9 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables';
-@import 'styles/mixins';
+@use 'sass:color';
+@use 'styles/variables';
+@use 'styles/mixins';
 
 $hover-background: #f9f9f9;
 
@@ -12,9 +13,9 @@ $hover-background: #f9f9f9;
 
 	&.selected {
 		.inner {
-			background: darken($hover-background, 10%);
+			background: color.adjust($hover-background, $lightness: -10%);
 			&:hover {
-				background: darken($hover-background, 15%);
+				background: color.adjust($hover-background, $lightness: -15%);
 			}
 		}
 	}
@@ -109,7 +110,7 @@ $hover-background: #f9f9f9;
 			left: -26px;
 		}
 	}
-	@include mobile {
+	@include mixins.mobile {
 		.inner {
 			flex-direction: column;
 			align-items: flex-start;

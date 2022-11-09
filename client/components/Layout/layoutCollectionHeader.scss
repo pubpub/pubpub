@@ -1,5 +1,5 @@
 @use 'styles/vendor';
-@import 'styles/variables';
+@use 'styles/variables';
 
 $bp: vendor.$bp-namespace;
 
@@ -28,7 +28,7 @@ $mobile-viewport-cutoff: 500px;
 	}
 
 	h1 {
-		font-family: $header-font;
+		font-family: variables.$header-font;
 		font-weight: 400;
 		@include mobile {
 			font-size: 24px;

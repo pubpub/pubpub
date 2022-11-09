@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 .member-row-component {
 	display: flex;
@@ -11,7 +11,7 @@ $bp: vendor.$bp-namespace;
 		margin-top: 2em;
 		padding-top: 2em;
 		border-top: 1px solid #e0e0e0;
-		@include mobile {
+		@include mixins.mobile {
 			margin-top: 1em;
 			padding-top: 1em;
 		}
@@ -36,7 +36,7 @@ $bp: vendor.$bp-namespace;
 		.added {
 			flex: 1 1 auto;
 		}
-		@include mobile {
+		@include mixins.mobile {
 			.added,
 			.pending-tag {
 				font-size: 12px;
@@ -53,7 +53,7 @@ $bp: vendor.$bp-namespace;
 
 .#{$bp}-menu.member-permission-select {
 	padding: 1em;
-	@include mobile {
+	@include mixins.mobile {
 		padding: 0.5em;
 		width: 75%;
 		div.picker-column {

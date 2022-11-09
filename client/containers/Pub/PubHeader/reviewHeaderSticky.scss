@@ -2,8 +2,8 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables';
-@import '../pub';
+@use 'styles/variables';
+@use '../pub';
 
 .review-header-sticky-component {
 	bottom: 0;
@@ -27,7 +27,7 @@ $bp: vendor.$bp-namespace;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		flex: 1 1 auto;
-		font-family: $header-font;
+		font-family: variables.$header-font;
 		font-size: 18px;
 		padding-right: 2em;
 	}

@@ -2,8 +2,8 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
-@import 'client/containers/App/BottomMenu/bottomMenu';
+@use 'styles/mixins';
+@use '../App/BottomMenu/bottomMenu';
 
 $gentle-shadow: 0 4px 2px -2px rgba(black, 0.1);
 $gentle-shadow-upside-down: 0 -4px 2px -2px rgba(black, 0.1);
@@ -13,17 +13,17 @@ $mobile-sticky-controls-height: 60px;
 $mobile-sticky-controls-offset: 50px; // height of bottom menu
 
 @mixin problematically-small-desktop {
-	@include mobile(1125px) {
+	@include mixins.mobile(1125px) {
 		@content;
 	}
 }
 
 .dashboard-settings-frame-component {
-	.#{$bp}-tabs.dashboard-settings-frame-tabs {
-		.#{$bp}-tab-indicator-wrapper .#{$bp}-tab-indicator {
+	.#{bottomMenu.$bp}-tabs.dashboard-settings-frame-tabs {
+		.#{bottomMenu.$bp}-tab-indicator-wrapper .#{bottomMenu.$bp}-tab-indicator {
 			background-color: var(--community-accent-dark);
 		}
-		.#{$bp}-tab.dashboard-settings-frame-tab {
+		.#{bottomMenu.$bp}-tab.dashboard-settings-frame-tab {
 			display: flex;
 			align-items: center;
 			padding: 6px 0;
@@ -34,15 +34,15 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 				@include problematically-small-desktop {
 					display: none;
 				}
-				@include mobile {
+				@include mixins.mobile {
 					display: flex;
 				}
 			}
 		}
 	}
 
-	.#{$bp}-button.dashboard-settings-frame-menu {
-		.#{$bp}-button-text {
+	.#{bottomMenu.$bp}-button.dashboard-settings-frame-menu {
+		.#{bottomMenu.$bp}-button-text {
 			flex-grow: 1;
 		}
 	}
@@ -65,13 +65,13 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 				margin-left: 10px;
 			}
 		}
-		@include mobile {
+		@include mixins.mobile {
 			position: fixed;
 			border: none;
 			width: 100%;
 			margin: 0;
 			left: 0;
-			bottom: $bottom-menu-height;
+			bottom: bottomMenu.$bottom-menu-height;
 			height: $mobile-sticky-controls-height;
 			padding: $mobile-sticky-controls-padding;
 			box-shadow: $gentle-shadow-upside-down;
@@ -79,11 +79,11 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 			& > * {
 				// Thicken up the dropdown and the button a little
 				height: 100%;
-				.#{$bp}-button {
+				.#{bottomMenu.$bp}-button {
 					height: 100%;
 				}
 			}
-			.#{$bp}-button {
+			.#{bottomMenu.$bp}-button {
 				background-color: white;
 			}
 			.autosave-indicator-component {
@@ -108,13 +108,13 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 	.dashboard-settings-frame-tab-panel {
 		margin-top: 2em;
 
-		@include mobile {
+		@include mixins.mobile {
 			margin-top: 1em;
 		}
 
 		.settings-section-component:not(:last-child) {
 			margin-bottom: 3em;
-			@include mobile {
+			@include mixins.mobile {
 				margin-bottom: 2em;
 			}
 		}
@@ -122,7 +122,7 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 }
 
 .dashboard-settings-frame-component__tabs-menu {
-	.#{$bp}-menu-item {
+	.#{bottomMenu.$bp}-menu-item {
 		align-items: center;
 	}
 }

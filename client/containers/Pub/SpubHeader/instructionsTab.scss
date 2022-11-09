@@ -1,10 +1,10 @@
-@import 'styles/variables';
+@use 'styles/variables';
 
 .instructions-tab-component {
 	margin-top: 15px;
 
 	h1 {
-		font-family: $header-font;
+		font-family: variables.$header-font;
 		font-size: 40px;
 		font-weight: 400;
 		line-height: 56px;

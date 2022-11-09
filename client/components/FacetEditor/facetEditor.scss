@@ -1,4 +1,4 @@
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 $gentle-shadow: 0 4px 2px -2px rgba(black, 0.1);
 $gentler-shadow: 0 4px 2px -2px rgba(black, 0.05);
@@ -8,7 +8,7 @@ $spacing: 15px;
 .facet-editor-component {
 	&.self-contained {
 		width: 375px;
-		@include mobile {
+		@include mixins.mobile {
 			width: 350px;
 		}
 	}

@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../overviewStyles';
+@use '../overviewStyles';
 
 .recent-visit-list-component {
 	padding: 0;
@@ -11,7 +11,7 @@ $bp: vendor.$bp-namespace;
 		align-items: flex-start;
 		.#{$bp}-icon {
 			margin-top: 2px;
-			color: $light-grey;
+			color: overviewStyles.$light-grey;
 		}
 		.label {
 			margin-left: 10px;

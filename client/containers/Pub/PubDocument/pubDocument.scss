@@ -1,4 +1,4 @@
-@import '../pub';
+@use '../pub';
 
 .pub-document-component {
 	display: flex;
@@ -27,11 +27,11 @@
 	.pub-grid {
 		width: 100%;
 		.main-content {
-			max-width: $pub-max-width;
+			max-width: pub.$pub-max-width;
 			margin: 0 auto;
 		}
 		.side-content {
-			max-width: $pub-max-width;
+			max-width: pub.$pub-max-width;
 			margin: 0 auto;
 		}
 	}
@@ -39,7 +39,7 @@
 
 @supports (display: grid) {
 	.pub-grid {
-		@include has-grid('. pub . comments .');
+		@include pub.has-grid('. pub . comments .');
 		width: 100%;
 		.main-content {
 			grid-area: pub;
@@ -48,7 +48,7 @@
 			grid-area: comments;
 		}
 	}
-	@include pub-full-view {
+	@include pub.pub-full-view {
 		.pub-document-component {
 			.pub-columns {
 				margin-top: 3em;
@@ -64,7 +64,7 @@
 		}
 	}
 
-	@include pub-compact-view {
+	@include pub.pub-compact-view {
 		.pub-grid {
 			.side-content > * {
 				display: none;

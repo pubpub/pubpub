@@ -2,8 +2,8 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables';
-@import 'styles/mixins';
+@use 'styles/variables';
+@use 'styles/mixins';
 
 .header-component {
 	background-size: cover;
@@ -126,7 +126,7 @@ $bp: vendor.$bp-namespace;
 	}
 }
 
-@include mobile {
+@include mixins.mobile {
 	.header-component {
 		.hide-on-mobile {
 			display: none !important;

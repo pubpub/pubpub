@@ -1,5 +1,5 @@
-@import 'styles/variables';
-@import '../../../pub';
+@use 'styles/variables';
+@use '../../../pub';
 
 @mixin expanded {
 	position: relative;
@@ -22,7 +22,7 @@
 }
 
 .discussion-group-component {
-	font-family: $base-font;
+	font-family: variables.$base-font;
 	position: absolute;
 	&.active {
 		background: white;
@@ -46,7 +46,7 @@
 	&.expanded {
 		@include expanded;
 	}
-	@include pub-compact-view {
+	@include pub.pub-compact-view {
 		.expand-button {
 			display: none;
 		}

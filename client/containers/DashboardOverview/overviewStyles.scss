@@ -1,4 +1,4 @@
-@import 'styles/colors';
+@use 'styles/colors';
 
 $mobile-viewport-cutoff: 750px;
 
@@ -25,10 +25,10 @@ $empty-state-margin-top: 75px;
 }
 
 $status-color-map: (
-	'received': $gold4,
+	'received': colors.$gold4,
 	//#F0B726
-	'accepted': $green2,
+	'accepted': colors.$green2,
 	//#1C6E42
-	'declined': $red2,
+	'declined': colors.$red2,
 	//#AC2F33
 );

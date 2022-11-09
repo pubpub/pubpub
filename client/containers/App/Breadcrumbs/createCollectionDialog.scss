@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 $element-spacing: 10px;
 
@@ -56,7 +56,7 @@ $element-spacing: 10px;
 			}
 		}
 	}
-	@include mobile {
+	@include mixins.mobile {
 		.collection-creation-controls {
 			display: flex;
 			flex-direction: column-reverse;

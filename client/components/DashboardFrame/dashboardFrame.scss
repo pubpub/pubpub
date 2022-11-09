@@ -2,10 +2,10 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 .dashboard-frame-component {
-	@include mobile {
+	@include mixins.mobile {
 		margin-bottom: 60px; // Clear the BottomMenu
 	}
 
@@ -17,7 +17,7 @@ $bp: vendor.$bp-namespace;
 			.title {
 				display: flex;
 				align-items: center;
-				@include mobile {
+				@include mixins.mobile {
 					font-size: 20px;
 				}
 				.target-type {
@@ -43,7 +43,7 @@ $bp: vendor.$bp-namespace;
 			flex: 0 0 auto;
 			.controls {
 				display: flex;
-				@include mobile {
+				@include mixins.mobile {
 					flex-wrap: wrap;
 					max-width: 100vw;
 					.#{$bp}-form-group {
@@ -53,7 +53,7 @@ $bp: vendor.$bp-namespace;
 			}
 			.#{$bp}-button {
 				margin-left: 1em;
-				@include mobile {
+				@include mixins.mobile {
 					font-size: 12px;
 					margin-right: 3px;
 					margin-left: 0px;
@@ -63,11 +63,11 @@ $bp: vendor.$bp-namespace;
 				z-index: unset;
 				margin-left: auto;
 			}
-			@include mobile {
+			@include mixins.mobile {
 				margin-top: 10px;
 			}
 		}
-		@include mobile {
+		@include mixins.mobile {
 			margin-top: 20px;
 			margin-bottom: 5px;
 			align-items: flex-start;

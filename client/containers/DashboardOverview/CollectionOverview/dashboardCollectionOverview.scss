@@ -2,8 +2,8 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../overviewStyles';
-@import 'styles/variables';
+@use '../overviewStyles';
+@use 'styles/variables';
 
 .primary-collection-swap-popover {
 	max-width: 300px;
@@ -13,15 +13,15 @@ $bp: vendor.$bp-namespace;
 }
 
 .collection-overview-row-is-dragging {
-	border: 1px solid $row-border-color !important;
+	border: 1px solid overviewStyles.$row-border-color !important;
 	border-radius: 4px;
 	background: white;
-	box-shadow: $gentle-shadow;
+	box-shadow: overviewStyles.$gentle-shadow;
 }
 
 .dashboard-collection-overview-container {
 	.collection-empty-state {
-		margin-top: $empty-state-margin-top;
+		margin-top: overviewStyles.$empty-state-margin-top;
 	}
 
 	.view-submissions-button {

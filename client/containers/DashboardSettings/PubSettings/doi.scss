@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables';
+@use 'styles/variables';
 
 .pub-settings-container_doi-component {
 	a.doi-link {
@@ -29,7 +29,7 @@ $bp: vendor.$bp-namespace;
 			height: 30px;
 
 			::placeholder {
-				font-family: $base-font;
+				font-family: variables.$base-font;
 			}
 
 			.doi-prefix {

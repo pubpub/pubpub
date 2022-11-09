@@ -1,10 +1,10 @@
-@import 'styles/mixins';
+@use 'styles/mixins';
 
-@import 'shared';
+@use 'shared';
 
 .email-preview-component {
-	@include box;
-	background: $light-background;
+	@include shared.box;
+	background: shared.$light-background;
 	font-family: monospace;
 
 	> .address-header {
@@ -13,8 +13,8 @@
 		flex-direction: column;
 		align-items: start;
 		padding: 10px;
-		border-bottom: 1px solid $border-color;
-		@include mobile {
+		border-bottom: 1px solid shared.$border-color;
+		@include mixins.mobile {
 			flex-wrap: wrap;
 			span {
 				margin-right: 10px;
@@ -28,7 +28,7 @@
 			> .label {
 				margin-right: 5px;
 			}
-			@include mobile {
+			@include mixins.mobile {
 				margin-top: 5px;
 				font-size: 12px;
 				margin-left: 0px;

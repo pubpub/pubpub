@@ -1,9 +1,9 @@
 @use 'sass:math';
 
-@import 'styles/typography';
-@import 'styles/mixins';
+@use 'styles/typography';
+@use 'styles/mixins';
 
-@import 'facetEditor';
+@use 'facetEditor';
 
 $border-width: 1px;
 $inheritance-triangle-size: 32px;
@@ -23,13 +23,13 @@ $accent-color: var(--accent-color);
 
 	&.local-value {
 		--accent-color: #{$local-accent-color};
-		box-shadow: $gentle-shadow;
+		box-shadow: facetEditor.$gentle-shadow;
 		background: white;
 	}
 
 	border: $border-width solid var(--accent-color);
 
-	@include desktop {
+	@include mixins.desktop {
 		&.settings-style {
 			border-radius: 4px;
 			border-top-left-radius: 0;
@@ -40,7 +40,7 @@ $accent-color: var(--accent-color);
 			padding-left: $settings-style-offset;
 
 			&.local-value {
-				box-shadow: $gentler-shadow;
+				box-shadow: facetEditor.$gentler-shadow;
 			}
 
 			.top-row {
@@ -100,7 +100,7 @@ $accent-color: var(--accent-color);
 		.label-group {
 			transform: translateY(2px);
 			.inheritance-info {
-				@include subheading;
+				@include typography.subheading;
 				font-size: 10px;
 				color: var(--accent-color);
 			}
@@ -108,6 +108,6 @@ $accent-color: var(--accent-color);
 	}
 
 	.controls-container {
-		padding: $spacing;
+		padding: facetEditor.$spacing;
 	}
 }

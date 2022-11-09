@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 $icon-container-size: 32px;
 $icon-container-size-mobile: 28px;

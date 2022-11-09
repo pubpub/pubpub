@@ -1,8 +1,8 @@
 @use 'styles/vendor';
+@use 'sass:color';
+@use '../overviewStyles';
 
 $bp: vendor.$bp-namespace;
-
-@import '../overviewStyles';
 
 .kind-toggle-component[type='checkbox'] {
 	cursor: pointer;
@@ -19,12 +19,12 @@ $bp: vendor.$bp-namespace;
 
 	&[aria-checked='true'] {
 		.count {
-			color: $dark-grey;
+			color: overviewStyles.$dark-grey;
 		}
 	}
 
 	&[aria-checked='false'] {
-		color: lighten($dark-grey, 20%);
+		color: color.adjust(overviewStyles.$dark-grey, $lightness: 20%);
 	}
 
 	&:hover {

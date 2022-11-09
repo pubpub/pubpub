@@ -1,17 +1,38 @@
-@import '~prosemirror-view/style/prosemirror';
-@import '~prosemirror-gapcursor/style/gapcursor';
-@import '~prosemirror-tables/style/tables';
+@use 'figure';
+@use 'sass:meta';
+@use 'prosemirror-view/style/prosemirror';
+@use 'prosemirror-gapcursor/style/gapcursor';
+@use 'prosemirror-tables/style/tables';
 
-@import 'latex';
+@use 'latex';
 
 .editor {
-	@import 'textAlign';
-	@import 'main';
-	@import 'collab';
-	@import 'figure';
-	@include figure-queries;
-	@import 'file';
-	@import 'table';
-	@import 'code';
-	@import 'placeholder';
+	&:focus {
+		outline: none !important;
+	}
+	&.read-only {
+		.ProseMirror-selectednode {
+			outline: 0px solid #bbbdc0;
+		}
+	}
+	&.ProseMirror.read-only {
+		figure {
+			> * {
+				pointer-events: auto;
+			}
+
+			&.ProseMirror-selectednode {
+				outline: none;
+			}
+		}
+	}
+	@include meta.load-css('textAlign');
+	@include meta.load-css('main');
+	@include meta.load-css('collab');
+	@include meta.load-css('figure');
+	@include figure.figure-queries;
+	@include meta.load-css('file');
+	@include meta.load-css('table');
+	@include meta.load-css('code');
+	@include meta.load-css('placeholder');
 }

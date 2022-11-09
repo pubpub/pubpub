@@ -2,13 +2,13 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables';
-@import 'styles/typography';
+@use 'styles/variables';
+@use 'styles/typography';
 
 .pub-edge-layout {
 	display: flex;
 	flex-direction: column;
-	font-family: $header-font;
+	font-family: variables.$header-font;
 	text-decoration: none;
 	padding: 24px 32px 18px;
 	max-width: 1200px;
@@ -92,7 +92,7 @@ $bp: vendor.$bp-namespace;
 			display: flex;
 			align-items: center;
 			flex: 0 0 auto;
-			font-family: $header-font;
+			font-family: variables.$header-font;
 			font-size: 12px;
 		}
 
@@ -154,7 +154,7 @@ $bp: vendor.$bp-namespace;
 	}
 
 	.link {
-		@include link;
+		@include typography.link;
 	}
 
 	&.acts-like-link {
@@ -189,7 +189,7 @@ $bp: vendor.$bp-namespace;
 		}
 
 		p {
-			font-family: $body-font;
+			font-family: variables.$body-font;
 			font-style: normal;
 			letter-spacing: -0.003em;
 			letter-spacing: 0.01rem;

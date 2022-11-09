@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../DashboardOverview/overviewStyles';
+@use '../DashboardOverview/overviewStyles';
 
 .activity-filters-component {
 	display: flex;
@@ -40,7 +40,7 @@ $bp: vendor.$bp-namespace;
 		}
 
 		&:hover {
-			box-shadow: $gentle-shadow;
+			box-shadow: overviewStyles.$gentle-shadow;
 		}
 
 		&[aria-checked='true'] {

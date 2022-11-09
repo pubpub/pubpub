@@ -1,8 +1,8 @@
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 .dashboard-members-container {
 	.dashboard-header-left {
-		@include mobile {
+		@include mixins.mobile {
 			.details {
 				font-size: 14px;
 			}
@@ -10,14 +10,14 @@
 	}
 	.settings-section-component {
 		margin: 2em 0em 4em;
-		@include mobile {
+		@include mixins.mobile {
 			margin-bottom: 2em;
 			margin-top: 1em;
 		}
 		.add-member-controls {
 			.user-autocomplete-component {
 				width: 94%;
-				@include mobile {
+				@include mixins.mobile {
 					width: 70%;
 					margin-right: 10px;
 				}

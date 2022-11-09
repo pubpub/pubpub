@@ -2,9 +2,9 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables';
+@use 'styles/variables';
 
-$pub-body-font-size: if-is-export(14px, 20px);
+$pub-body-font-size: variables.if-is-export(14px, 20px);
 
 .pub-body-component .editor.ProseMirror,
 .pub-body-styles {
@@ -28,7 +28,7 @@ $pub-body-font-size: if-is-export(14px, 20px);
 		margin-bottom: 0.5em;
 		line-height: 1em;
 		font-weight: 500;
-		font-family: $header-font;
+		font-family: variables.$header-font;
 		letter-spacing: 1px;
 		a {
 			text-decoration: underline;
@@ -80,7 +80,7 @@ $pub-body-font-size: if-is-export(14px, 20px);
 	}
 	p,
 	li {
-		font-family: $body-font;
+		font-family: variables.$body-font;
 		letter-spacing: 0.01rem;
 		font-weight: 400;
 		font-style: normal;
@@ -162,7 +162,7 @@ $pub-body-font-size: if-is-export(14px, 20px);
 		p {
 			margin-bottom: 0em;
 			line-height: 1.2em;
-			font-family: $base-font;
+			font-family: variables.$base-font;
 		}
 	}
 	iframe {

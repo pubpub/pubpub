@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 ul.notes-component {
 	line-height: 1.5em;
 	list-style-type: none;
@@ -7,7 +9,7 @@ ul.notes-component {
 		padding-top: 18px;
 		padding-bottom: 18px;
 		&:not(:last-child):not(:only-child) {
-			border-bottom: 1px adjust-color(#c7c7c7, $alpha: -0.5) solid;
+			border-bottom: 1px color.adjust(#c7c7c7, $alpha: -0.5) solid;
 		}
 		.number {
 			font-weight: bold;

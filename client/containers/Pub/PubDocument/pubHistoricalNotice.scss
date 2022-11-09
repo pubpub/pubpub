@@ -2,8 +2,8 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../PubHeader/themes';
-@import '../pub';
+@use '../PubHeader/themes';
+@use '../pub';
 
 .pub-historical-notice-component {
 	margin-top: 25px;
@@ -24,7 +24,7 @@ $bp: vendor.$bp-namespace;
 
 		.callout-button {
 			min-width: 160px;
-			@include pub-compact-view {
+			@include pub.pub-compact-view {
 				padding-top: 5px;
 			}
 		}
@@ -40,13 +40,13 @@ $bp: vendor.$bp-namespace;
 			font-style: italic;
 			font-size: 12px;
 		}
-		@include pub-compact-view {
+		@include pub.pub-compact-view {
 			margin-block-end: 0.5em;
 		}
 	}
 	.changelog-button {
 		margin-left: 10px;
-		@include pub-compact-view {
+		@include pub.pub-compact-view {
 			margin-left: 0px;
 			margin-top: 10px;
 		}
@@ -126,7 +126,7 @@ $bp: vendor.$bp-namespace;
 				border-left: 1px dashed #888888;
 				margin-left: 10px;
 				padding-left: 10px;
-				@include pub-compact-view {
+				@include pub.pub-compact-view {
 					padding-left: 18px;
 				}
 			}
@@ -155,7 +155,7 @@ $bp: vendor.$bp-namespace;
 					}
 				}
 			}
-			@include pub-compact-view {
+			@include pub.pub-compact-view {
 				display: flex;
 				flex-direction: column;
 				border-bottom: 1px dashed #888888;

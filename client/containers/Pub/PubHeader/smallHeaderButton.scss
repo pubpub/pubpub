@@ -2,10 +2,10 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'themes';
+@use 'themes';
 
 .small-header-button-component {
-	@include base-button;
+	@include themes.base-button;
 	display: flex;
 
 	.label {

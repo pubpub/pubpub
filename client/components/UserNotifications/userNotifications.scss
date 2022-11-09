@@ -1,5 +1,5 @@
 @use 'styles/vendor';
-@import 'styles/variables';
+@use 'styles/variables';
 
 $bp: vendor.$bp-namespace;
 
@@ -99,7 +99,7 @@ $mobile-viewport-cutoff: 500px;
 				.title {
 					@include clamp-lines(2);
 					@include normalized-link;
-					font-family: $header-font;
+					font-family: variables.$header-font;
 					font-size: 15px;
 				}
 				.community {

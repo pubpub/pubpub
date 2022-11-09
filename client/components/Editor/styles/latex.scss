@@ -1,9 +1,9 @@
-@import 'styles/variables';
+@use 'styles/variables';
 
 // Don't add a .css extension to this or Sass will defer to browser @import behavior instead of
 // inlining these stylesheets during compilation 🙃
-@import '~@benrbray/prosemirror-math/style/math';
-@import '~katex/dist/katex.min';
+@use '@benrbray/prosemirror-math/style/math';
+@use 'katex/dist/katex.min';
 
 [data-node-type='math-inline'] {
 	font-size: 0.9em;
@@ -39,10 +39,10 @@
 
 .math-label {
 	text-align: center;
-	font-family: $body-font;
+	font-family: variables.$body-font;
 }
 
 .equation-label {
 	text-align: center;
-	font-family: $body-font;
+	font-family: variables.$body-font;
 }

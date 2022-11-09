@@ -2,8 +2,8 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables';
-@import 'containers/DashboardOverview/overviewStyles';
+@use 'styles/variables';
+@use 'containers/DashboardOverview/overviewStyles';
 
 .spub-header-toolbar-component {
 	.toolbar-container .col-12 {
@@ -59,7 +59,7 @@ $bp: vendor.$bp-namespace;
 		font-weight: 500;
 
 		.#{$bp}-icon {
-			@include status-colors;
+			@include overviewStyles.status-colors;
 			margin-right: 4px;
 			transform: translateY(0.5px);
 		}

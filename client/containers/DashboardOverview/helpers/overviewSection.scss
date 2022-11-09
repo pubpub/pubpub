@@ -2,10 +2,10 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../overviewStyles';
+@use '../overviewStyles';
 
 .overview-section-component {
-	color: $darkest-grey;
+	color: overviewStyles.$darkest-grey;
 
 	&.spaced {
 		margin-bottom: 20px;
@@ -28,10 +28,10 @@ $bp: vendor.$bp-namespace;
 
 		.#{$bp}-icon {
 			margin-right: 8px;
-			color: $light-grey;
+			color: overviewStyles.$light-grey;
 		}
 	}
-	@include mobile {
+	@include overviewStyles.mobile {
 		> div.title.descending {
 			position: relative;
 			margin: 10px 0;

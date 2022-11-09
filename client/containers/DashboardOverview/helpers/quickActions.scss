@@ -1,4 +1,4 @@
-@import '../overviewStyles';
+@use '../overviewStyles';
 
 .quick-actions-component {
 	> .quick-action {
@@ -12,7 +12,7 @@
 			justify-content: center;
 			width: 24px;
 			height: 24px;
-			border: 1px solid $light-grey;
+			border: 1px solid overviewStyles.$light-grey;
 			border-radius: 2px;
 		}
 

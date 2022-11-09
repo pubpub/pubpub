@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 figure {
 	display: block;
 	text-align: center;
@@ -36,7 +38,7 @@ figure {
 
 	@for $i from 1 through 100 {
 		&[data-size='#{$i}'] {
-			width: percentage($i * 0.01);
+			width: math.percentage($i * 0.01);
 		}
 	}
 
@@ -48,18 +50,6 @@ figure {
 		opacity: 0.75;
 		margin: 1em auto;
 		margin-top: 5px;
-	}
-}
-
-&.ProseMirror.read-only {
-	figure {
-		> * {
-			pointer-events: auto;
-		}
-
-		&.ProseMirror-selectednode {
-			outline: none;
-		}
 	}
 }
 

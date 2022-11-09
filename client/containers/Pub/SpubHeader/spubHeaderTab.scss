@@ -1,5 +1,5 @@
-@import 'shared';
+@use 'shared';
 
 .spub-header-tab-component {
-	background-color: $background-grey;
+	background-color: shared.$background-grey;
 }

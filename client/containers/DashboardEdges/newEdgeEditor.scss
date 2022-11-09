@@ -1,4 +1,4 @@
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 $margin-size: 15px;
 
@@ -7,7 +7,7 @@ $margin-size: 15px;
 	width: 100%;
 
 	h4 {
-		@include bleed-top-border;
+		@include mixins.bleed-top-border;
 		top: -2px;
 
 		color: #999;

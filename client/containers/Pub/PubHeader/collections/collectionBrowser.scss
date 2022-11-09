@@ -1,4 +1,4 @@
-@import 'styles/variables';
+@use 'styles/variables';
 
 .collection-browser-component_menu {
 	border-left: 0;
@@ -18,7 +18,7 @@
 	.menu-item-text {
 		white-space: normal;
 		.title {
-			font-family: $header-font;
+			font-family: variables.$header-font;
 			font-weight: 500;
 		}
 	}

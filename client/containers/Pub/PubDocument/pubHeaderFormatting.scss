@@ -2,13 +2,13 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../PubHeader/pubHeader';
+@use '../PubHeader/pubHeader';
 
 .pub-draft-header-component {
 	z-index: 19;
 	// .wrapper {
 	background: #f0f0f0;
-	border-bottom: 1px solid $header-border-color;
+	border-bottom: 1px solid pubHeader.$header-border-color;
 	// &.fixed {
 	// 	position: fixed;
 	// 	top: 0;
@@ -25,7 +25,7 @@ $bp: vendor.$bp-namespace;
 	.spacer {
 		flex: 1 1 auto;
 	}
-	.#{$bp}-callout {
+	.#{pubHeader.$bp}-callout {
 		display: inline;
 	}
 	// .left-section {

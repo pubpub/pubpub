@@ -1,10 +1,10 @@
-@import 'shared';
+@use 'shared';
 
 .text-style-picker-component {
-	@include selection-row;
+	@include shared.selection-row;
 
 	.text-style-choice {
-		@include selectable;
+		@include shared.selectable;
 		width: 50px;
 		display: flex;
 		flex-direction: column;

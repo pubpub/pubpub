@@ -1,6 +1,6 @@
-@import 'styles/colors';
+@use 'styles/colors';
 
-$warning: $orange3;
+$warning: colors.$orange3;
 $border-color: #ddd;
 $light-background: #fafafa;
 

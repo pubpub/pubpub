@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 .attribution-editor-component {
 	width: 100%;
@@ -70,7 +70,7 @@ $bp: vendor.$bp-namespace;
 			.right-details {
 				min-width: 100px;
 				width: 35%;
-				@include mobile {
+				@include mixins.mobile {
 					display: flex;
 					flex-direction: row;
 					.#{$bp}-input-group {
@@ -82,7 +82,7 @@ $bp: vendor.$bp-namespace;
 					margin-bottom: 10px;
 				}
 			}
-			@include mobile {
+			@include mixins.mobile {
 				font-size: 12px;
 				display: flex;
 				flex-direction: column;

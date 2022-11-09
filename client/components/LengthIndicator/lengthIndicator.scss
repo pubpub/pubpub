@@ -1,4 +1,4 @@
-@import 'styles/colors';
+@use 'styles/colors';
 
 .length-indicator-component {
 	font-size: 16px;
@@ -6,6 +6,6 @@
 	display: block;
 
 	&.at-max-length {
-		color: $red3;
+		color: colors.$red3;
 	}
 }

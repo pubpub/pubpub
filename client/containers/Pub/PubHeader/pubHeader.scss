@@ -2,8 +2,8 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables';
-@import 'themes';
+@use 'styles/variables';
+@use 'themes';
 
 $header-border-color: #d2d2d2;
 $header-margin-top: 0px;
@@ -54,16 +54,16 @@ $mobile-bottom-buttons-spacing: 10px;
 		font-size: 48px;
 		line-height: 1.5em;
 		font-weight: normal;
-		font-family: $header-font;
+		font-family: variables.$header-font;
 		box-decoration-break: clone;
-		@include smaller-viewport {
+		@include themes.smaller-viewport {
 			font-size: 32px;
 		}
 	}
 
 	.details-button {
 		position: absolute;
-		top: $top-bar-total-height * 0.5;
+		top: themes.$top-bar-total-height * 0.5;
 		transform: translateY(-50%);
 		right: 0;
 		.icon-container {
@@ -85,7 +85,7 @@ $mobile-bottom-buttons-spacing: 10px;
 		position: relative;
 		margin-top: $header-margin-top;
 		margin-bottom: $header-margin-bottom;
-		@include mobile {
+		@include themes.mobile {
 			margin-bottom: $header-margin-bottom-mobile;
 		}
 	}
@@ -102,7 +102,7 @@ $mobile-bottom-buttons-spacing: 10px;
 		margin: 0;
 		font-size: 18px;
 		font-weight: normal;
-		font-family: $header-font;
+		font-family: variables.$header-font;
 	}
 
 	.byline-component {
@@ -111,7 +111,7 @@ $mobile-bottom-buttons-spacing: 10px;
 		font-size: 18px;
 		font-style: italic;
 		font-weight: normal;
-		font-family: $header-font;
+		font-family: variables.$header-font;
 		letter-spacing: 0.5px;
 		.byline-icon svg {
 			width: 14px;
@@ -123,7 +123,7 @@ $mobile-bottom-buttons-spacing: 10px;
 		padding-top: 37px;
 	}
 
-	@include mobile {
+	@include themes.mobile {
 		h1 {
 			font-size: 24px;
 		}
@@ -139,7 +139,7 @@ $mobile-bottom-buttons-spacing: 10px;
 		}
 	}
 
-	@include in-blocks-theme {
+	@include themes.in-blocks-theme {
 		.pub-header-content-component {
 			column-gap: 20px;
 			.title-group-component {
@@ -150,7 +150,7 @@ $mobile-bottom-buttons-spacing: 10px;
 
 	.pub-header-content-component {
 		display: grid;
-		grid-template-rows: $top-bar-total-height auto auto;
+		grid-template-rows: themes.$top-bar-total-height auto auto;
 		grid-template-columns: 1fr 120px;
 		grid-template-areas:
 			'top top'
@@ -243,12 +243,12 @@ $mobile-bottom-buttons-spacing: 10px;
 		}
 	}
 
-	@include mobile {
+	@include themes.mobile {
 		.background-safety-layer:not(.full-height) {
 			display: none;
 		}
 
-		@include not-in-blocks-theme {
+		@include themes.not-in-blocks-theme {
 			.small-header-button-component .icon-container {
 				width: 30px;
 				height: 30px;

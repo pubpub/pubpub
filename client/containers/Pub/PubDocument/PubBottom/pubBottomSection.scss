@@ -1,4 +1,4 @@
-@import '../../pub';
+@use '../../pub';
 
 $section-height: 50px;
 $section-padding: 5px;
@@ -36,7 +36,7 @@ $center-content-margin-compact: 20px;
 			text-transform: uppercase;
 			width: 120px;
 			flex-shrink: 0;
-			@include pub-compact-view {
+			@include pub.pub-compact-view {
 				width: 100px;
 			}
 		}
@@ -60,7 +60,7 @@ $center-content-margin-compact: 20px;
 					margin-right: $center-content-margin;
 				}
 				margin-right: $center-content-margin;
-				@include pub-compact-view {
+				@include pub.pub-compact-view {
 					&::before {
 						margin-right: $center-content-margin-compact;
 					}

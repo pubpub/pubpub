@@ -2,22 +2,22 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../themes';
-@import 'styles/variables';
+@use '../themes';
+@use 'styles/variables';
 
 .pub-details-component {
 	height: 100%;
 
-	@include mobile {
+	@include themes.mobile {
 		.more-cite-options-button {
 			display: none;
 		}
 	}
 
 	.pub-title {
-		font-family: $header-font;
-		height: $top-bar-total-height;
-		line-height: $top-bar-total-height;
+		font-family: variables.$header-font;
+		height: themes.$top-bar-total-height;
+		line-height: themes.$top-bar-total-height;
 		margin: 0;
 		width: calc(100% - 120px);
 		overflow: hidden;
@@ -25,12 +25,12 @@ $bp: vendor.$bp-namespace;
 		text-overflow: ellipsis;
 		font-weight: normal;
 
-		@include mobile {
+		@include themes.mobile {
 			margin: 0;
 			font-size: 14px;
 			width: calc(100% - 40px);
-			height: $top-bar-total-height-mobile;
-			line-height: $top-bar-total-height-mobile;
+			height: themes.$top-bar-total-height-mobile;
+			line-height: themes.$top-bar-total-height-mobile;
 		}
 	}
 
@@ -40,20 +40,20 @@ $bp: vendor.$bp-namespace;
 		top: 7px; // Hand-tuned to appear centered w.r.t title
 		right: 0;
 
-		@include mobile {
+		@include themes.mobile {
 			display: unset;
 		}
 	}
 
 	.sections-wrapper {
 		position: relative;
-		height: calc(100% - #{$top-bar-total-height});
+		height: calc(100% - #{themes.$top-bar-total-height});
 		display: flex;
 		justify-content: space-between;
 
-		@include mobile {
+		@include themes.mobile {
 			display: block;
-			height: calc(100% - #{$top-bar-total-height-mobile});
+			height: calc(100% - #{themes.$top-bar-total-height-mobile});
 			overflow-y: auto;
 
 			& > :last-child {
@@ -77,7 +77,7 @@ $bp: vendor.$bp-namespace;
 				line-height: initial;
 				white-space: nowrap;
 
-				@include mobile {
+				@include themes.mobile {
 					height: auto;
 					margin: 0;
 					padding-top: 25px;
@@ -85,7 +85,7 @@ $bp: vendor.$bp-namespace;
 				}
 			}
 
-			@include mobile {
+			@include themes.mobile {
 				width: 100%;
 				max-width: initial;
 				min-width: initial;
@@ -106,7 +106,7 @@ $bp: vendor.$bp-namespace;
 						margin-bottom: 20px;
 					}
 
-					@include mobile {
+					@include themes.mobile {
 						margin-bottom: 10px;
 						&:last-child {
 							margin-bottom: 0px;
@@ -114,12 +114,12 @@ $bp: vendor.$bp-namespace;
 					}
 				}
 
-				@include mobile {
+				@include themes.mobile {
 					overflow: unset;
 				}
 			}
 
-			@include mobile {
+			@include themes.mobile {
 				h6 {
 					padding-top: 0 !important;
 				}
@@ -141,7 +141,7 @@ $bp: vendor.$bp-namespace;
 			.full-height-date {
 				height: 30px;
 				line-height: 30px;
-				@include mobile {
+				@include themes.mobile {
 					height: unset;
 					line-height: unset;
 				}
@@ -158,7 +158,7 @@ $bp: vendor.$bp-namespace;
 					}
 				}
 
-				@include mobile {
+				@include themes.mobile {
 					overflow: unset;
 				}
 			}

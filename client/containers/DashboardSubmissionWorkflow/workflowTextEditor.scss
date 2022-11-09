@@ -1,4 +1,4 @@
-@import 'shared';
+@use 'shared';
 
 .workflow-text-editor-component {
 	max-height: 300px;
@@ -8,10 +8,10 @@
 	background: white;
 
 	.minimal-editor-component {
-		@include box;
+		@include shared.box;
 
 		> .editor-wrapper {
-			border-top: 1px solid $border-color;
+			border-top: 1px solid shared.$border-color;
 			padding: 10px;
 			min-height: 150px;
 		}

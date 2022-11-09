@@ -1,4 +1,4 @@
-@import '../../pub';
+@use '../../pub';
 
 .pub-bottom-component {
 	background: #f6f4f4;
@@ -6,10 +6,10 @@
 	overflow: hidden;
 	padding: 2em 0em;
 	margin-top: 2em;
-	@include has-grid('. pub . . .');
+	@include pub.has-grid('. pub . . .');
 	.inner {
 		grid-area: pub;
-		@include pub-compact-view {
+		@include pub.pub-compact-view {
 			grid-area: unset;
 			width: 100vw;
 			padding-left: 10px;
@@ -35,7 +35,7 @@
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
 	.pub-bottom-component {
 		.inner {
-			max-width: $pub-max-width;
+			max-width: pub.$pub-max-width;
 			margin: 0 auto;
 		}
 	}

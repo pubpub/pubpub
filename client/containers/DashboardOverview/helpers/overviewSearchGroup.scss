@@ -2,9 +2,9 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../overviewStyles';
+@use '../overviewStyles';
 
-$accent-color: $light-grey;
+$accent-color: overviewStyles.$light-grey;
 $active-color: #aaa;
 $transition-duration: 100ms;
 
@@ -59,7 +59,7 @@ $transition-duration: 100ms;
 				font-style: italic;
 			}
 		}
-		@include mobile {
+		@include overviewStyles.mobile {
 			display: block;
 			border: 0;
 			padding-top: 5px;
@@ -88,7 +88,7 @@ $transition-duration: 100ms;
 			}
 		}
 	}
-	@include mobile {
+	@include overviewStyles.mobile {
 		> .filter-controls {
 			align-self: flex-start;
 		}

@@ -1,6 +1,7 @@
 /* Imports the equivalent of components/Editor/styles/base.scss,
 but without the media query mixin, which breaks PagedJS-cli:
 https://gitlab.pagedmedia.org/tools/pagedjs-cli/issues/11 */
+@use 'styles/variables';
 @import '~prosemirror-view/style/prosemirror';
 @import '~prosemirror-gapcursor/style/gapcursor';
 @import '~prosemirror-tables/style/tables';
@@ -17,13 +18,12 @@ https://gitlab.pagedmedia.org/tools/pagedjs-cli/issues/11 */
 }
 
 /* Import some global variables and styles, including fonts */
-@import 'styles/variables';
 @import 'containers/Pub/PubDocument/pubBody';
 
 @import url('https://use.typekit.net/kmi0tdo.css');
 
 body {
-	font-family: $base-font;
+	font-family: variables.$base-font;
 }
 
 /* Paged-specific overrides */

@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../../containers/DashboardOverview/overviewStyles';
+@use '../../containers/DashboardOverview/overviewStyles';
 
 .scope-dropdown-component {
 	font-size: 12px;
@@ -45,9 +45,9 @@ $bp: vendor.$bp-namespace;
 			a {
 				padding: 0 3px;
 				margin: 0 2px;
-				color: $light-grey;
+				color: overviewStyles.$light-grey;
 				&:hover {
-					color: $medium-grey;
+					color: overviewStyles.$medium-grey;
 				}
 			}
 		}

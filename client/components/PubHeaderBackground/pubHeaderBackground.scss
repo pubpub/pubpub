@@ -2,7 +2,7 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../../containers/Pub/PubHeader/themes';
+@use '../../containers/Pub/PubHeader/themes';
 
 .pub-header-background-component {
 	position: relative;
@@ -23,7 +23,7 @@ $bp: vendor.$bp-namespace;
 			}
 		}
 		&.background-safety-layer {
-			height: $top-bar-total-height;
+			height: themes.$top-bar-total-height;
 		}
 	}
 }

@@ -1,11 +1,11 @@
 @use 'styles/vendor';
-@import 'shared';
+@use 'shared';
 
 $bp: vendor.$bp-namespace;
 
 @mixin input-with-border {
 	border: none;
-	border-bottom: 1px solid $light-grey;
+	border-bottom: 1px solid shared.$light-grey;
 	&:focus-within {
 		border-color: var(--community-accent-dark);
 	}
@@ -39,7 +39,7 @@ $bp: vendor.$bp-namespace;
 
 	> .instructions {
 		font-weight: 300;
-		color: $lighter-grey;
+		color: shared.$lighter-grey;
 		letter-spacing: 0.015em;
 	}
 
@@ -48,7 +48,7 @@ $bp: vendor.$bp-namespace;
 		min-height: unset;
 
 		&::placeholder {
-			color: $lighter-grey;
+			color: shared.$lighter-grey;
 			font-style: italic;
 			font-weight: 300;
 			letter-spacing: 0.015em;
@@ -86,7 +86,7 @@ $bp: vendor.$bp-namespace;
 			&:after {
 				font-style: italic;
 				font-weight: 300;
-				color: $lighter-grey;
+				color: shared.$lighter-grey;
 				letter-spacing: 0.015em;
 				opacity: 1;
 			}

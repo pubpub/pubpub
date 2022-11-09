@@ -1,4 +1,4 @@
-@import 'shared';
+@use 'shared';
 
 .submission-workflow-step-picker-component {
 	display: flex;
@@ -48,7 +48,7 @@
 		}
 
 		.progress-indicator {
-			background: $border-color;
+			background: shared.$border-color;
 			height: 6px;
 		}
 
@@ -74,7 +74,7 @@
 
 		&.incomplete {
 			.progress-indicator {
-				background: $warning;
+				background: shared.$warning;
 			}
 		}
 

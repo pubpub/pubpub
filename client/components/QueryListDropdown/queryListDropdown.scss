@@ -2,13 +2,13 @@
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins';
+@use 'styles/mixins';
 
 .query-list-dropdown-component {
 	.#{$bp}-popover-content > .search-wrapper {
 		width: 400px;
 		max-height: 400px;
-		@include mobile {
+		@include mixins.mobile {
 			width: auto;
 			max-width: 400px;
 		}

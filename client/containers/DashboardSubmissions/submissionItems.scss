@@ -2,10 +2,10 @@
 
 $bp: vendor.$bp-namespace;
 
-@import '../DashboardOverview/overviewStyles';
+@use '../DashboardOverview/overviewStyles';
 
 .submission-items-component {
 	.#{$bp}-non-ideal-state {
-		margin-top: $empty-state-margin-top;
+		margin-top: overviewStyles.$empty-state-margin-top;
 	}
 }

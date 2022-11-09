@@ -1,4 +1,4 @@
-@import 'styles/variables';
+@use 'styles/variables';
 
 .thread-comment-component {
 	display: flex;
@@ -47,7 +47,7 @@
 			h6,
 			p,
 			li {
-				font-family: $base-font;
+				font-family: variables.$base-font;
 				line-height: 1.3;
 			}
 		}
