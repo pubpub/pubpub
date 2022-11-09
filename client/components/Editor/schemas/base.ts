@@ -1,31 +1,4 @@
-import { DOMOutputSpec, NodeSpec, Node } from 'prosemirror-model';
-import { fromLezer } from 'hast-util-from-lezer';
-import { toHtml } from 'hast-util-to-html';
-import { parser as javascriptParser } from '@lezer/javascript';
-
-export interface CodeProps {
-	language?: string;
-	source: string;
-}
-
-const renderStaticCode = (node: Node) => {
-	console.log({ node });
-	const parsers = {
-		javascript: javascriptParser,
-	};
-	const parser = parsers[node.attrs.lang];
-	const tree = parser.parse(node.textContent);
-	const root = fromLezer(node.textContent, tree);
-	const content = toHtml(tree);
-	console.log({ root, content }, 'another reset');
-	const renderedCode = '<div>testCodeStufff</div>';
-	return [
-		'div',
-		{
-			dangerouslySetInnerHTML: { __html: renderedCode },
-		},
-	] as any;
-};
+import { DOMOutputSpec, NodeSpec } from 'prosemirror-model';
 
 export const baseNodes: { [key: string]: NodeSpec } = {
 	doc: {
@@ -218,36 +191,6 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 		toDOM: () => {
 			return ['li', 0] as DOMOutputSpec;
 		},
-	},
-	code_block: {
-		content: 'text*',
-		group: 'block',
-		attrs: {
-			lang: { default: 'javascript' },
-			id: { default: null },
-		},
-		code: true,
-		selectable: false,
-		parseDOM: [
-			{
-				tag: 'pre',
-				getAttrs: (node) => {
-					return {
-						id: (node as Element).getAttribute('id'),
-					};
-				},
-				preserveWhitespace: 'full',
-			},
-		],
-		toDOM: (node: Node, { isReact } = { isReact: false }) =>
-			isReact
-				? renderStaticCode(node)
-				: renderStaticCode(node) ||
-				  ([
-						'pre',
-						{ ...(node.attrs.id && { id: node.attrs.id }) },
-						['code', 0],
-				  ] as DOMOutputSpec),
 	},
 	text: {
 		inline: true,
