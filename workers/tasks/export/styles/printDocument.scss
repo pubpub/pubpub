@@ -2,23 +2,24 @@
 but without the media query mixin, which breaks PagedJS-cli:
 https://gitlab.pagedmedia.org/tools/pagedjs-cli/issues/11 */
 @use 'styles/variables';
-@import '~prosemirror-view/style/prosemirror';
-@import '~prosemirror-gapcursor/style/gapcursor';
-@import '~prosemirror-tables/style/tables';
+@use 'sass:meta';
+@use 'prosemirror-view/style/prosemirror';
+@use 'prosemirror-gapcursor/style/gapcursor';
+@use 'prosemirror-tables/style/tables';
 
-@import 'components/Editor/styles/latex';
+@use 'components/Editor/styles/latex';
 
 .editor {
-	@import 'components/Editor/styles/main';
-	@import 'components/Editor/styles/collab';
-	@import 'components/Editor/styles/figure';
-	@import 'components/Editor/styles/file';
-	@import 'components/Editor/styles/table';
-	@import 'components/Editor/styles/textAlign';
+	@include meta.load-css('components/Editor/styles/main');
+	@include meta.load-css('components/Editor/styles/collab');
+	@include meta.load-css('components/Editor/styles/figure');
+	@include meta.load-css('components/Editor/styles/file');
+	@include meta.load-css('components/Editor/styles/table');
+	@include meta.load-css('components/Editor/styles/textAlign');
 }
 
 /* Import some global variables and styles, including fonts */
-@import 'containers/Pub/PubDocument/pubBody';
+@include meta.load-css('containers/Pub/PubDocument/pubBody');
 
 @import url('https://use.typekit.net/kmi0tdo.css');
 
