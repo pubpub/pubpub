@@ -4,7 +4,7 @@ $bp: vendor.$bp-namespace;
 
 @import 'styles/mixins';
 
-@import './shared';
+@import 'shared';
 
 .submission-workflow-editor-component {
 	.step-content {

@@ -1,8 +1,7 @@
 @use 'styles/vendor';
+@import 'shared';
 
 $bp: vendor.$bp-namespace;
-
-@import './styles';
 
 @mixin input-with-border {
 	border: none;

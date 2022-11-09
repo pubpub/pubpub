@@ -1,6 +1,6 @@
 @import 'styles/mixins';
 
-@import './shared';
+@import 'shared';
 
 .email-preview-component {
 	@include box;
