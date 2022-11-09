@@ -25,8 +25,7 @@ $bp: vendor.$bp-namespace;
 			max-height: 24px;
 			margin-left: 10px;
 		}
-		.#{$bp}-input-group.#{$bp}-disabled
-			.#{$bp}-input {
+		.#{$bp}-input-group.#{$bp}-disabled .#{$bp}-input {
 			background: white;
 			color: inherit;
 			cursor: text;

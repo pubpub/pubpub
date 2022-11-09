@@ -24,8 +24,7 @@ $bp: vendor.$bp-namespace;
 	.#{$bp}-button-group {
 		display: block;
 	}
-	.#{$bp}-button.expandable
-		.#{$bp}-icon:first-child:last-child {
+	.#{$bp}-button.expandable .#{$bp}-icon:first-child:last-child {
 		margin: 0px 5px 0px 0px;
 	}
 	.#{$bp}-callout {
