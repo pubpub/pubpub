@@ -1,59 +1,39 @@
-import { DOMOutputSpec, Node } from 'prosemirror-model';
-import { highlightTree, classHighlighter } from '@lezer/highlight';
+import { DOMOutputSpec, Node, NodeSpec } from 'prosemirror-model';
+import { highlightTree } from '@lezer/highlight';
+import { defaultHighlightStyle } from '@codemirror/language';
 import { parser as javascriptParser } from '@lezer/javascript';
 import type { Tree } from '@lezer/common';
 
-type Text = {
-	type: string;
-	value: string;
-};
-
 const fromLezer = (source: string, tree: Tree) => {
-	const children: (DOMOutputSpec | Text)[] = [];
+	const children: DOMOutputSpec[] = [];
 	let index = 0;
 
-	highlightTree(tree as any, classHighlighter, (from, to, classes) => {
+	highlightTree(tree, defaultHighlightStyle, (from, to, classes) => {
 		if (from > index) {
-			children.push({ type: 'text', value: source.slice(index, from) });
+			children.push(source.slice(index, from));
 		}
-		children.push(['span', { class: classes }]);
-		/*
-			type: 'element',
-			tagName: 'span',
-			properties: { className: classes },
-			children: [{ type: 'text', value: source.slice(from, to) }],
-		});
-		*/
-
+		children.push(['span', { class: classes }, source.slice(from, to)]);
 		index = to;
 	});
-
 	if (index < source.length) {
-		children.push({ type: 'text', value: source.slice(index) });
+		children.push(source.slice(index));
 	}
-
-	return { type: 'root', children };
+	return children;
 };
 
-const renderStaticCode = (node: Node) => {
+const renderStaticCode = (node: Node): DOMOutputSpec => {
 	const parsers = {
 		javascript: javascriptParser,
 	};
-	const parser = parsers[node.attrs.lang];
+	// const lang = node.attrs.lang;
+	// const parser = parsers[node.attrs.lang];
+	const parser = parsers.javascript;
 	const tree = parser.parse(node.textContent);
-	const root = fromLezer(node.textContent, tree);
-	// const content = toHtml(tree);
-	console.log({ root }, 'another reset');
-	const renderedCode = '<div>testCodeStufff</div>';
-	return [
-		'div',
-		{
-			dangerouslySetInnerHTML: { __html: renderedCode },
-		},
-	] as DOMOutputSpec;
+	const children = fromLezer(node.textContent, tree as unknown as Tree);
+	return ['pre', ['code', ...children]] as DOMOutputSpec;
 };
 
-export default {
+const codeSchema: { [key: string]: NodeSpec } = {
 	code_block: {
 		content: 'text*',
 		group: 'block',
@@ -71,23 +51,18 @@ export default {
 						id: (node as Element).getAttribute('id'),
 					};
 				},
-				preserveWhitespace: 'full',
+				preserveWhitespace: 'full' as const,
 			},
 		],
 		toDOM: (node: Node, { isReact } = { isReact: false }) =>
 			isReact
 				? renderStaticCode(node)
-				: renderStaticCode(node) ||
-				  ([
+				: ([
 						'pre',
 						{ ...(node.attrs.id && { id: node.attrs.id }) },
 						['code', 0],
 				  ] as DOMOutputSpec),
 	},
-	code: {
-		parseDOM: [{ tag: 'code' }],
-		toDOM: () => {
-			return ['code'] as DOMOutputSpec;
-		},
-	},
 };
+
+export default codeSchema;
