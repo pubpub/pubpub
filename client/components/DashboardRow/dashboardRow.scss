@@ -1,9 +1,9 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables.scss';
-@import 'styles/mixins.scss';
+@import 'styles/variables';
+@import 'styles/mixins';
 
 $hover-background: #f9f9f9;
 

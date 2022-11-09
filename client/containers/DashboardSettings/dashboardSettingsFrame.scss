@@ -1,9 +1,9 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins.scss';
-@import 'client/containers/App/BottomMenu/bottomMenu.scss';
+@import 'styles/mixins';
+@import 'client/containers/App/BottomMenu/bottomMenu';
 
 $gentle-shadow: 0 4px 2px -2px rgba(black, 0.1);
 $gentle-shadow-upside-down: 0 -4px 2px -2px rgba(black, 0.1);

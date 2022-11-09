@@ -1,14 +1,14 @@
 // Import Normalize, Blueprint, Editor, and Grid
 // ****************************
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 @import '~normalize.css';
 @import '~@blueprintjs/core/lib/css/blueprint.css';
 @import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
 
-@import './grid.scss';
+@import 'styles/grid';
 @import url('https://use.typekit.net/kmi0tdo.css');
-@import './variables.scss';
-@import './typography.scss';
+@import 'styles/variables';
+@import 'styles/typography';
 
 $bp: vendor.$bp-namespace;
 

@@ -1,8 +1,8 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables.scss';
+@import 'styles/variables';
 
 #legal-container {
 	.legal-columns {

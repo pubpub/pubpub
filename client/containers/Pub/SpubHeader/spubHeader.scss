@@ -1,9 +1,9 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import '../PubHeader/pubHeader.scss';
-@import './styles.scss';
+@import '../PubHeader/pubHeader';
+@import './styles';
 
 .spub-header-component {
 	position: relative;

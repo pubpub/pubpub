@@ -1,9 +1,9 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables.scss';
-@import 'containers/DashboardOverview/overviewStyles.scss';
+@import 'styles/variables';
+@import 'containers/DashboardOverview/overviewStyles';
 
 .spub-header-toolbar-component {
 	.toolbar-container .col-12 {

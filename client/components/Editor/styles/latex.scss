@@ -1,4 +1,4 @@
-@import '../../../styles/variables.scss';
+@import 'styles/variables';
 
 // Don't add a .css extension to this or Sass will defer to browser @import behavior instead of
 // inlining these stylesheets during compilation 🙃

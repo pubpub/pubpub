@@ -1,9 +1,9 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import '../themes.scss';
-@import 'styles/variables.scss';
+@import '../themes';
+@import 'styles/variables';
 
 .pub-details-component {
 	height: 100%;

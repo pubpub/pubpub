@@ -2,16 +2,16 @@
 @import '~prosemirror-gapcursor/style/gapcursor';
 @import '~prosemirror-tables/style/tables';
 
-@import './latex.scss';
+@import './latex';
 
 .editor {
-	@import './textAlign.scss';
-	@import './main.scss';
-	@import './collab.scss';
-	@import './figure.scss';
+	@import './textAlign';
+	@import './main';
+	@import './collab';
+	@import './figure';
 	@include figure-queries;
-	@import './file.scss';
-	@import './table.scss';
-	@import './code.scss';
-	@import './placeholder.scss';
+	@import './file';
+	@import './table';
+	@import './code';
+	@import './placeholder';
 }

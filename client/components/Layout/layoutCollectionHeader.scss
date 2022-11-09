@@ -1,8 +1,7 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
+@import 'styles/variables';
 
 $bp: vendor.$bp-namespace;
-
-@import '../../styles/variables.scss';
 
 $details-row-margin: 12px;
 $row-spacing: 10px;

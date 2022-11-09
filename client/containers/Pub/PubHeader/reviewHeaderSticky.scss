@@ -1,9 +1,9 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables.scss';
-@import '../pub.scss';
+@import 'styles/variables';
+@import '../pub';
 
 .review-header-sticky-component {
 	bottom: 0;

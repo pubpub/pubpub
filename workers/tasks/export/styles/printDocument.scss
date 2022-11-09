@@ -5,20 +5,20 @@ https://gitlab.pagedmedia.org/tools/pagedjs-cli/issues/11 */
 @import '~prosemirror-gapcursor/style/gapcursor';
 @import '~prosemirror-tables/style/tables';
 
-@import 'components/Editor/styles/latex.scss';
+@import 'components/Editor/styles/latex';
 
 .editor {
-	@import 'components/Editor/styles/main.scss';
-	@import 'components/Editor/styles/collab.scss';
-	@import 'components/Editor/styles/figure.scss';
-	@import 'components/Editor/styles/file.scss';
-	@import 'components/Editor/styles/table.scss';
-	@import 'components/Editor/styles/textAlign.scss';
+	@import 'components/Editor/styles/main';
+	@import 'components/Editor/styles/collab';
+	@import 'components/Editor/styles/figure';
+	@import 'components/Editor/styles/file';
+	@import 'components/Editor/styles/table';
+	@import 'components/Editor/styles/textAlign';
 }
 
 /* Import some global variables and styles, including fonts */
-@import 'styles/variables.scss';
-@import 'containers/Pub/PubDocument/pubBody.scss';
+@import 'styles/variables';
+@import 'containers/Pub/PubDocument/pubBody';
 
 @import url('https://use.typekit.net/kmi0tdo.css');
 

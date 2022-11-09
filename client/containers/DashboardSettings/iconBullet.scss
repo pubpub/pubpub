@@ -1,8 +1,8 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins.scss';
+@import 'styles/mixins';
 
 $icon-container-size: 32px;
 $icon-container-size-mobile: 28px;

@@ -1,9 +1,9 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/variables.scss';
-@import './themes.scss';
+@import 'styles/variables';
+@import './themes';
 
 $header-border-color: #d2d2d2;
 $header-margin-top: 0px;

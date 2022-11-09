@@ -1,8 +1,8 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import './styles.scss';
+@import './styles';
 
 @mixin input-with-border {
 	border: none;

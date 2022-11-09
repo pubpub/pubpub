@@ -21,7 +21,7 @@
 // we'll be locked out of newer versions of dart-sass.  If we upgrade to Blueprint >=4, we'll get
 // a fixed version from here:
 // https://github.com/palantir/blueprint/pull/5216
-// But for now we simply can't @import `~@blueprintjs/core/**/*.scss`. So if you want to use
+// But for now we simply can't @import `~@blueprintjs/core/**/*`. So if you want to use
 // constants from those files, your best bet is to copy them here.
 
 $red2: #c23030;

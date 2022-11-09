@@ -1,9 +1,9 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import '../overviewStyles.scss';
-@import 'styles/variables.scss';
+@import '../overviewStyles';
+@import 'styles/variables';
 
 .primary-collection-swap-popover {
 	max-width: 300px;

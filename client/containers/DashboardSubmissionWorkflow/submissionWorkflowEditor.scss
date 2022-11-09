@@ -1,10 +1,10 @@
-@use 'styles/vendor.scss';
+@use 'styles/vendor';
 
 $bp: vendor.$bp-namespace;
 
-@import 'styles/mixins.scss';
+@import 'styles/mixins';
 
-@import './shared.scss';
+@import './shared';
 
 .submission-workflow-editor-component {
 	.step-content {

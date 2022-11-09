@@ -1,9 +1,9 @@
 @use 'sass:math';
 
-@import 'styles/typography.scss';
-@import 'styles/mixins.scss';
+@import 'styles/typography';
+@import 'styles/mixins';
 
-@import './facetEditor.scss';
+@import './facetEditor';
 
 $border-width: 1px;
 $inheritance-triangle-size: 32px;
