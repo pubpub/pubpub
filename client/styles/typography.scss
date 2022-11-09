@@ -1,8 +1,8 @@
-@import 'styles/variables';
+@use 'variables';
 
 body {
 	color: #333;
-	font-family: $base-font;
+	font-family: variables.$base-font;
 }
 
 h1 {

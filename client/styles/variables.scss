@@ -1,5 +1,6 @@
+@use "sass:meta";
 @function if-is-export($export, $default) {
-	@if (variable-exists('PUBPUB_EXPORT')) {
+	@if (meta.variable-exists('PUBPUB_EXPORT')) {
 		@return $export;
 	}
 	@return $default;

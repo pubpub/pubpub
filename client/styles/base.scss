@@ -1,14 +1,16 @@
 // Import Normalize, Blueprint, Editor, and Grid
 // ****************************
-@use 'styles/vendor';
-@import '~normalize.css';
-@import '~@blueprintjs/core/lib/css/blueprint.css';
-@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
+@use 'normalize.css/normalize';
+@use '@blueprintjs/icons/lib/css/blueprint-icons';
+@use '@blueprintjs/core/lib/css/blueprint';
 
-@import 'styles/grid';
+@use 'vendor';
+@use 'sass:meta';
+@use 'variables';
+@use 'grid';
+@use 'typography';
+
 @import url('https://use.typekit.net/kmi0tdo.css');
-@import 'styles/variables';
-@import 'styles/typography';
 
 $bp: vendor.$bp-namespace;
 
@@ -121,9 +123,9 @@ a {
 
 // Link
 a {
-	color: $color-gray-black;
+	color: variables.$color-gray-black;
 	&:hover {
-		color: $color-gray-black;
+		color: variables.$color-gray-black;
 	}
 }
 
@@ -131,7 +133,7 @@ a {
 .#{$bp}-control,
 .#{$bp}-control:hover {
 	input:checked ~ .#{$bp}-control-indicator {
-		background-color: $color-gray-dark;
+		background-color: variables.$color-gray-dark;
 	}
 }
 
@@ -139,17 +141,17 @@ a {
 .#{$bp}-control.#{$bp}-switch,
 .#{$bp}-control.#{$bp}-switch:hover {
 	input:checked ~ .#{$bp}-control-indicator {
-		background: $color-gray-dark;
+		background: variables.$color-gray-dark;
 	}
 }
 
 // Tab
 .#{$bp}-tab[aria-selected='true'],
 .#{$bp}-tab:not([aria-disabled='true']):hover {
-	color: $color-gray-black;
+	color: variables.$color-gray-black;
 }
 
 // Tab indicator
 .#{$bp}-tab-indicator-wrapper .#{$bp}-tab-indicator {
-	background-color: $color-gray-black;
+	background-color: variables.$color-gray-black;
 }

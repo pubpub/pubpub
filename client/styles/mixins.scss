@@ -1,4 +1,4 @@
-@import 'styles/variables';
+@use 'variables';
 
 @mixin bleed-top-border() {
 	background-color: #fff;
@@ -8,13 +8,13 @@
 	transform: translateY(-50%);
 }
 
-@mixin mobile($cutoff: $mobile-cutoff) {
+@mixin mobile($cutoff: variables.$mobile-cutoff) {
 	@media screen and (max-width: $cutoff) {
 		@content;
 	}
 }
 
-@mixin desktop($cutoff: $mobile-cutoff) {
+@mixin desktop($cutoff: variables.$mobile-cutoff) {
 	@media screen and (min-width: #{1 + $cutoff}) {
 		@content;
 	}
