@@ -19,6 +19,9 @@ import { formatDate } from 'utils/dates';
 import { pubUrl } from 'utils/canonicalUrls';
 import { Pub, PubHistoryState } from 'types';
 
+import { renderTimeLabelForDate } from './utils';
+import RestoreHistoryDialog from './RestoreHistoryDialog';
+
 require('./pubHistoryViewer.scss');
 
 type Props = {
@@ -111,7 +114,12 @@ const PubHistoryViewer = (props: Props) => {
 	const { timestamps, latestKey, currentKey, outstandingRequests, loadedIntoHistory } =
 		historyData;
 	const { releases } = pubData;
-	const { communityData } = usePageContext();
+	const {
+		communityData,
+		scopeData: {
+			activePermissions: { canEdit },
+		},
+	} = usePageContext();
 	const [sliderValue, setSliderValue] = useState(currentKey);
 	const historyScrollRef = useRef<null | HTMLHeadingElement>(null);
 	const hasScrolledRef = useRef<null | boolean>(null);
@@ -177,8 +185,7 @@ const PubHistoryViewer = (props: Props) => {
 		const historyKey = sliderVal - 1;
 		const dateForStep = getDateForHistoryKey(historyKey, timestamps);
 		if (dateForStep) {
-			const date = formatDate(dateForStep);
-			const time = formatDate(dateForStep, { includeDate: false, includeTime: true });
+			const { date, time } = renderTimeLabelForDate(dateForStep);
 			return (
 				<span className="date-and-time">
 					<span className="date">{date}</span> <span className="time">{time}</span>
@@ -309,12 +316,26 @@ const PubHistoryViewer = (props: Props) => {
 						})}
 						beforeCopyPrompt="Copy link to this point in history"
 					>
-						{(handleClick) => (
-							<Button minimal icon="link" onClick={handleClick}>
-								Link here
-							</Button>
-						)}
+						{(handleClick) => <Button minimal icon="link" onClick={handleClick} />}
 					</ClickToCopyButton>
+					{canEdit && (
+						<Tooltip content="Restore to this point in history">
+							<RestoreHistoryDialog
+								historyKey={currentKey}
+								dateForHistoryKey={currentDate}
+								onRestore={onClose}
+							>
+								{(options) => (
+									<Button
+										minimal
+										icon="undo"
+										disabled={isLoadingHistory || currentKey === latestKey}
+										onClick={options.open}
+									/>
+								)}
+							</RestoreHistoryDialog>
+						</Tooltip>
+					)}
 					<Button
 						minimal
 						icon="chevron-right"
