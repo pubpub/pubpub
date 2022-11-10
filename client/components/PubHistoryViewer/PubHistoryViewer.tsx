@@ -1,6 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import classNames from 'classnames';
-import { Button, ButtonGroup, Classes, Menu, MenuItem, Slider, Spinner } from '@blueprintjs/core';
+import {
+	AnchorButton,
+	Button,
+	ButtonGroup,
+	Classes,
+	Menu,
+	MenuItem,
+	Slider,
+	Spinner,
+	Tooltip,
+} from '@blueprintjs/core';
 
 import { ClickToCopyButton } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -61,6 +71,7 @@ const dateReleases = (releases) => {
 			type: 'release',
 			date: new Date(release.createdAt),
 			releaseNumber: index + 1,
+			historyKey: release.historyKey,
 		};
 	});
 };
@@ -108,14 +119,25 @@ const PubHistoryViewer = (props: Props) => {
 	const hasMeaningfulHistory = latestKey >= 0;
 	historyScrollRef.current = null;
 
-	const currentDate = getDateForHistoryKey(currentKey, timestamps);
-	const edits = dateTimestamps(timestamps);
-	const datedReleases = dateReleases(releases);
-	const entries = [
-		{ type: 'created', date: new Date(pubData.createdAt) },
-		...edits,
-		...datedReleases,
-	].sort((a, b) => (a.date > b.date ? 1 : -1));
+	const currentDate = useMemo(
+		() => getDateForHistoryKey(currentKey, timestamps),
+		[currentKey, timestamps],
+	);
+
+	const entries = useMemo(() => {
+		const edits = dateTimestamps(timestamps);
+		const datedReleases = dateReleases(releases);
+		return [
+			{ type: 'created', date: new Date(pubData.createdAt) },
+			...edits,
+			...datedReleases,
+		].sort((a, b) => (a.date > b.date ? 1 : -1));
+	}, [pubData.createdAt, releases, timestamps]);
+
+	const releaseHistoryKeys = useMemo(
+		() => new Set(entries.filter((e) => e.type === 'release').map((e) => e.historyKey)),
+		[entries],
+	);
 
 	useSticky({
 		target: '.pub-history-viewer-component',
@@ -173,6 +195,10 @@ const PubHistoryViewer = (props: Props) => {
 			const {
 				range: [startKey, endKey],
 			} = entry;
+			if (releaseHistoryKeys.has(startKey)) {
+				// Don't show an entry that duplicates the entry for a Release
+				return null;
+			}
 			const containsCurrentKey = currentKey >= startKey && currentKey <= endKey;
 			const dateString = formatDate(date, { includeTime: true, includeDate: false });
 			return (
@@ -187,7 +213,7 @@ const PubHistoryViewer = (props: Props) => {
 			);
 		}
 		if (entry.type === 'release') {
-			const { releaseNumber } = entry;
+			const { releaseNumber, historyKey } = entry;
 			const dateString = formatDate(date, {
 				includeTime: true,
 				includeDate: false,
@@ -195,12 +221,24 @@ const PubHistoryViewer = (props: Props) => {
 			});
 			return (
 				<MenuItem
-					text={`Release ${dateString}`}
+					className="release-menu-item"
+					text={`Released ${dateString}`}
 					intent="success"
 					icon="document-share"
 					key={key}
-					href={pubUrl(communityData, pubData, { releaseNumber })}
-					target="_blank"
+					onClick={() => onSetCurrentHistoryKey(historyKey)}
+					labelElement={
+						<Tooltip content="Visit this Release" position="top">
+							<AnchorButton
+								small
+								minimal
+								icon="circle-arrow-right"
+								className="visit-release-button"
+								href={pubUrl(communityData, pubData, { releaseNumber })}
+								target="_blank"
+							/>
+						</Tooltip>
+					}
 				/>
 			);
 		}
