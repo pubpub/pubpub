@@ -34,27 +34,25 @@ const Review = (props: Props) => {
 
 	return (
 		<div className="review-component">
-			<Card interactive={true} elevation={Elevation.TWO}>
-				<div className="review-border" style={{ borderColor: bgColor }}>
-					<ReviewEditor setReviewDoc={updateReview} reviewDoc={review} />
-				</div>
-				<div className="review-button">
-					<Button
-						icon="document-share"
-						onClick={onSubmit}
-						minimal={true}
-						loading={isLoading}
-						className="review-submission-button"
-						style={{ background: bgColor }}
-						intent="primary"
-						disabled={isEmptyDoc(review as DocJson)}
-						onMouseEnter={() => setHover(true)}
-						onMouseLeave={() => setHover(false)}
-					>
-						Submit Review
-					</Button>
-				</div>
-			</Card>
+			<div className="review-border" style={{ borderColor: bgColor }}>
+				<ReviewEditor setReviewDoc={updateReview} reviewDoc={review} />
+			</div>
+			<div className="review-button">
+				<Button
+					icon="document-share"
+					onClick={onSubmit}
+					minimal={true}
+					loading={isLoading}
+					className="review-submission-button"
+					style={{ background: bgColor }}
+					intent="primary"
+					disabled={isEmptyDoc(review as DocJson)}
+					onMouseEnter={() => setHover(true)}
+					onMouseLeave={() => setHover(false)}
+				>
+					Submit Review
+				</Button>
+			</div>
 		</div>
 	);
 };

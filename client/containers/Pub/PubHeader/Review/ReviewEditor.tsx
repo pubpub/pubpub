@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { MinimalEditor } from 'components';
 import { DocJson } from 'types';
@@ -8,14 +8,16 @@ type Props = {
 	reviewDoc: DocJson;
 };
 
-const ReviewEditor = (props: Props) => {
+const ReviewEditor = React.forwardRef((props: Props, ref: any) => {
 	const { setReviewDoc, reviewDoc } = props;
 
+	const handleEdit = useCallback((doc) => setReviewDoc(doc.toJSON() as DocJson), []);
+
 	return (
-		<div className="review-editor-component">
+		<div className="review-editor-component" ref={ref}>
 			<MinimalEditor
 				getButtons={(buttons) => buttons.reviewButtonSet}
-				onEdit={(doc) => setReviewDoc(doc.toJSON() as DocJson)}
+				onEdit={handleEdit}
 				useFormattingBar
 				focusOnLoad={true}
 				initialContent={reviewDoc}
@@ -23,6 +25,6 @@ const ReviewEditor = (props: Props) => {
 			/>
 		</div>
 	);
-};
+});
 
 export default ReviewEditor;
