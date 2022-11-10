@@ -54,8 +54,8 @@ const codeSchema: { [key: string]: NodeSpec } = {
 				preserveWhitespace: 'full' as const,
 			},
 		],
-		toDOM: (node: Node, { isReact } = { isReact: false }) =>
-			isReact
+		toDOM: (node: Node, { isStaticallyRendered } = { isStaticallyRendered: false }) =>
+			isStaticallyRendered
 				? renderStaticCode(node)
 				: ([
 						'pre',

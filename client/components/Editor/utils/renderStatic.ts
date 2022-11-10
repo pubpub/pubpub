@@ -136,7 +136,7 @@ const createOutputSpecFromNode = (node, schema, context) => {
 
 	// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 	const outputSpec = fillHoleInSpec(
-		nodeSpec.toDOM(hydratedNode, { ...context, isReact: true }),
+		nodeSpec.toDOM(hydratedNode, { ...context, isStaticallyRendered: true }),
 		childSpecs,
 	);
 
