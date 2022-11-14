@@ -58,7 +58,7 @@ async function getCreateDepositContext(ids: CreateDepositIds): Promise<CreateDep
 export async function createDeposit(ids: CreateDepositIds) {
 	const context = await getCreateDepositContext(ids);
 	assert('pub' in context);
-	const { pub, pubEdge } = preparePubForDeposit(context.pub, true);
+	const { pub, parentPubEdge: pubEdge } = preparePubForDeposit(context.pub, true);
 	const dois = getDois(
 		pubEdge && pubEdge.relationType === RelationType.Supplement
 			? { ...context, pubEdge }

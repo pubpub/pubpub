@@ -19,7 +19,7 @@ function filterForMutuallyApprovedEdges(pubEdges: PubEdge[]) {
 
 export function preparePubForDeposit<
 	T extends DefinitelyHas<Pub, 'inboundEdges' | 'outboundEdges'>,
->(pub: T, includeRelationships: boolean): { pub: T; pubEdge: Maybe<PubEdge> } {
+>(pub: T, includeRelationships: boolean): { pub: T; parentPubEdge?: PubEdge } {
 	pub = structuredClone(pub);
 	// Remove unapproved PubEdges for RelationTypes that require bidirectional
 	// approval.
@@ -27,7 +27,7 @@ export function preparePubForDeposit<
 	filterForMutuallyApprovedEdges(pub.outboundEdges);
 
 	// Find the primary relationship (in order of Preprint > Supplement > Review).
-	const pubEdge = findParentEdgeByRelationTypes(pub, [
+	const parentPubEdge = findParentEdgeByRelationTypes(pub, [
 		RelationType.Preprint,
 		RelationType.Supplement,
 		RelationType.Review,
@@ -39,5 +39,5 @@ export function preparePubForDeposit<
 		pub.outboundEdges = [];
 	}
 
-	return { pub, pubEdge };
+	return { pub, parentPubEdge };
 }
