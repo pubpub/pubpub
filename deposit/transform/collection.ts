@@ -20,11 +20,11 @@ function getResourceKindForCollection(collection: Collection): ResourceKind {
 	switch (collection.kind) {
 		case 'tag':
 		case 'issue':
-			return ResourceKind.Journal;
+			return 'Journal';
 		case 'book':
-			return ResourceKind.Book;
+			return 'Book';
 		case 'conference':
-			return ResourceKind.Conference;
+			return 'Conference';
 	}
 }
 
@@ -62,6 +62,6 @@ export async function transformCollectionToResource(
 		timestamp: new Date().toUTCString(),
 		license: { spdxIdentifier: licence.spdxIdentifier },
 		contributions,
-		relations: [],
+		relationships: [],
 	};
 }
