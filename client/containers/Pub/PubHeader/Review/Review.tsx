@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Button, Card, Elevation } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import Color from 'color';
 
 import { DocJson, Community } from 'types';

@@ -11,7 +11,7 @@ type Props = {
 const ReviewEditor = React.forwardRef((props: Props, ref: any) => {
 	const { setReviewDoc, reviewDoc } = props;
 
-	const handleEdit = useCallback((doc) => setReviewDoc(doc.toJSON() as DocJson), []);
+	const handleEdit = useCallback((doc) => setReviewDoc(doc.toJSON() as DocJson), [setReviewDoc]);
 
 	return (
 		<div className="review-editor-component" ref={ref}>

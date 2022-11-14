@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, AnchorButton } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
 import { pubUrl } from 'utils/canonicalUrls';
-import { Icon, PopoverButton } from 'components';
+import { PopoverButton } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 import { useLocalStorage } from 'client/utils/useLocalStorage';
 import { getEmptyDoc } from 'client/components/Editor';
@@ -26,8 +26,6 @@ const ReviewHeaderSticky = () => {
 		loginData: { fullName },
 	} = usePageContext();
 	const { viewHash } = pubData;
-
-	useEffect(() => console.log('mount RHS'), []);
 
 	const [visible, setVisible] = useState(false);
 	const [reviewTitle, setReviewTitle] = useState('Untitled Review');
