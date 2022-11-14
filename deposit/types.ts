@@ -1,4 +1,10 @@
-import { License } from 'types';
+export type ResourceLicense = {
+	/**
+	 * SPDX license identifier.
+	 * @see {@link https://spdx.org/licenses}
+	 */
+	id: string;
+};
 
 export enum ResourceKind {
 	Book = 'Book',
@@ -26,31 +32,23 @@ export type ResourceRelation = {
 	kind: ResourceRelationKind;
 };
 
-export enum ResourceAttributionKind {
-	Creator = 'Creator',
-	Editor = 'Editor',
-	Translator = 'Translator',
-	Chair = 'Chair',
-}
+export type ResourceContributorKind = 'Person' | 'Organization';
+export type ResourceContributorRole = 'Creator' | 'Editor' | 'Translator' | 'Chair';
 
 export type ResourceContributor = {
-	id: string;
 	name: string;
+	kind: ResourceContributorKind;
 	orcid?: string;
 };
 
-export type ResourceAttribution = {
-	kind?: ResourceAttributionKind | string;
+export type ResourceContribution = {
 	contributor: ResourceContributor;
-	affiliation?: string;
+	contributorAffiliation: string;
+	contributorRole: ResourceContributorRole;
+	isAttribution: boolean;
 };
 
 export type Resource = {
-	/**
-	 * A globally unique resource id.
-	 */
-	id: string;
-
 	/**
 	 * The type of resource.
 	 */
@@ -67,13 +65,13 @@ export type Resource = {
 	url: string;
 
 	/**
-	 * When the resource was last updated.
+	 * The version of the resource expressed as a UTC datetime string.
 	 */
-	timestamp: number;
+	timestamp: string;
 
-	license: License;
+	license: ResourceLicense;
 
-	attributions: ResourceAttribution[];
+	contributions: ResourceContribution[];
 
 	relations: ResourceRelation[];
 };

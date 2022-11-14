@@ -1,5 +1,8 @@
 import { Resource, ResourceKind } from '../types';
-import { Collection } from 'types';
+import { Collection, Community } from 'types';
+import { collectionUrl } from 'utils/canonicalUrls';
+import { fetchFacetsForScope } from 'server/facets';
+import { licenseDetailsByKind } from 'utils/licenses';
 
 function getResourceKindForCollection(collection: Collection): ResourceKind {
 	switch (collection.kind) {
@@ -13,4 +16,21 @@ function getResourceKindForCollection(collection: Collection): ResourceKind {
 	}
 }
 
-export function transformCollectionToResource(collection: Collection) {}
+export async function transformCollectionToResource(
+	collection: Collection,
+	community: Community,
+): Promise<Resource> {
+	let facets = await fetchFacetsForScope({ collectionId: collection.id }, ['License']);
+	let { spdx } = licenseDetailsByKind[facets.License.value.kind];
+	return {
+		kind: getResourceKindForCollection(collection),
+		title: collection.title,
+		url: collectionUrl(community, collection),
+		timestamp: new Date().toUTCString(),
+		license: {
+			id: spdx,
+		},
+		contributions: [],
+		relations: [],
+	};
+}
