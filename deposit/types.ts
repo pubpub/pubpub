@@ -3,7 +3,7 @@ export type ResourceLicense = {
 	 * SPDX license identifier.
 	 * @see {@link https://spdx.org/licenses}
 	 */
-	id: string;
+	spdxIdentifier: string;
 };
 
 export enum ResourceKind {
@@ -32,18 +32,57 @@ export type ResourceRelation = {
 	kind: ResourceRelationKind;
 };
 
-export type ResourceContributorKind = 'Person' | 'Organization';
-export type ResourceContributorRole = 'Creator' | 'Editor' | 'Translator' | 'Chair';
+// distinguish between vaguely creative roles and contributor roles
+// any kind of creative input (dataviz) should be a kind of authorship - aspirational/visionary pubpub!
 
-export type ResourceContributor = {
-	name: string;
-	kind: ResourceContributorKind;
-	orcid?: string;
-};
+// what constitutes major/minor, creative/attributed is never gonna break down cleanly
+// unless we choose primary (temporally – while its in production) vs secondary (pre/post?).
 
+export type ResourceContributorKind = 'Person' | 'Organization'; // etc?? Gov't orgs, labs
+export type ResourceContributorRole = 'Creator' | 'Editor' | 'Translator' | 'Other';
+
+// Datacite
+// export type ContributorType =
+//   | "ContactPerson"
+//   | "DataCollector"
+//   | "DataCurator"
+//   | "DataManager"
+//   | "Distributor"
+//   | "Editor"
+//   | "HostingInstitution"
+//   | "Other"
+//   | "Producer"
+//   | "ProjectLeader"
+//   | "ProjectManager"
+//   | "ProjectMember"
+//   | "RegistrationAgency"
+//   | "RegistrationAuthority"
+//   | "RelatedPerson"
+//   | "ResearchGroup"
+//   | "RightsHolder"
+//   | "Researcher"
+//   | "Sponsor"
+//   | "Supervisor"
+//   | "WorkPackageLeader";
+
+// Crossref
+// Enumeration	author
+// Enumeration	editor
+// Enumeration	chair
+// Enumeration	reviewer
+// Enumeration	review-assistant
+// Enumeration	stats-reviewer
+// Enumeration	reviewer-external
+// Enumeration	reader
+// Enumeration	translator
+
+export type ResourceContributor = { name: string; orcid?: string };
+
+// Review Arcadia's credit taxonomy, tiered contributions (eg not instrumental to the creation of work)
+// Review bibtex contribution roles
 export type ResourceContribution = {
 	contributor: ResourceContributor;
-	contributorAffiliation: string;
+	contributorAffiliation: string | undefined;
 	contributorRole: ResourceContributorRole;
 	isAttribution: boolean;
 };

@@ -12,7 +12,7 @@ export const licenseDetailsByKind: { [L in LicenseKind]: LicenseDetails<L> } = {
 		short: 'CC-BY',
 		version: '4.0',
 		link: 'https://creativecommons.org/licenses/by/4.0/',
-		spdx: 'CC-BY-4.0',
+		spdxIdentifier: 'CC-BY-4.0',
 	},
 	'cc-0': {
 		kind: 'cc-0',
@@ -20,7 +20,7 @@ export const licenseDetailsByKind: { [L in LicenseKind]: LicenseDetails<L> } = {
 		short: 'CC-0',
 		version: '1.0',
 		link: 'https://creativecommons.org/publicdomain/zero/1.0/',
-		spdx: 'CC-0-1.0',
+		spdxIdentifier: 'CC-0-1.0',
 	},
 	'cc-by-nc': {
 		kind: 'cc-by-nc',
@@ -28,7 +28,7 @@ export const licenseDetailsByKind: { [L in LicenseKind]: LicenseDetails<L> } = {
 		short: 'CC-BY-NC',
 		version: '4.0',
 		link: 'https://creativecommons.org/licenses/by-nc/4.0/',
-		spdx: 'CC-BY-NC-4.0',
+		spdxIdentifier: 'CC-BY-NC-4.0',
 	},
 	'cc-by-nd': {
 		kind: 'cc-by-nd',
@@ -36,7 +36,7 @@ export const licenseDetailsByKind: { [L in LicenseKind]: LicenseDetails<L> } = {
 		short: 'CC-BY-ND',
 		version: '4.0',
 		link: 'https://creativecommons.org/licenses/by-nd/4.0/',
-		spdx: 'CC-BY-ND-4.0',
+		spdxIdentifier: 'CC-BY-ND-4.0',
 	},
 	'cc-by-nc-nd': {
 		kind: 'cc-by-nc-nd',
@@ -44,7 +44,7 @@ export const licenseDetailsByKind: { [L in LicenseKind]: LicenseDetails<L> } = {
 		short: 'CC-BY-NC-ND',
 		version: '4.0',
 		link: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
-		spdx: 'CC-BY-NC-ND-4.0',
+		spdxIdentifier: 'CC-BY-NC-ND-4.0',
 	},
 	'cc-by-sa': {
 		kind: 'cc-by-sa',
@@ -52,7 +52,7 @@ export const licenseDetailsByKind: { [L in LicenseKind]: LicenseDetails<L> } = {
 		short: 'CC-BY-SA',
 		version: '4.0',
 		link: 'https://creativecommons.org/licenses/by-sa/4.0/',
-		spdx: 'CC-BY-SA-4.0',
+		spdxIdentifier: 'CC-BY-SA-4.0',
 	},
 	'cc-by-nc-sa': {
 		kind: 'cc-by-nc-sa',
@@ -60,7 +60,7 @@ export const licenseDetailsByKind: { [L in LicenseKind]: LicenseDetails<L> } = {
 		short: 'CC-BY-NC-SA',
 		version: '4.0',
 		link: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
-		spdx: 'CC-BY-NC-SA-4.0',
+		spdxIdentifier: 'CC-BY-NC-SA-4.0',
 	},
 	copyright: {
 		kind: 'copyright',
@@ -69,7 +69,7 @@ export const licenseDetailsByKind: { [L in LicenseKind]: LicenseDetails<L> } = {
 		version: null,
 		link: null,
 		requiresPremium: true,
-		spdx: null,
+		spdxIdentifier: null,
 	},
 };
 
