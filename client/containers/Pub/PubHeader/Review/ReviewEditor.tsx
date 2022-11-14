@@ -8,13 +8,13 @@ type Props = {
 	reviewDoc: DocJson;
 };
 
-const ReviewEditor = React.forwardRef((props: Props, ref: any) => {
+const ReviewEditor = (props: Props) => {
 	const { setReviewDoc, reviewDoc } = props;
 
 	const handleEdit = useCallback((doc) => setReviewDoc(doc.toJSON() as DocJson), [setReviewDoc]);
 
 	return (
-		<div className="review-editor-component" ref={ref}>
+		<div className="review-editor-component">
 			<MinimalEditor
 				getButtons={(buttons) => buttons.reviewButtonSet}
 				onEdit={handleEdit}
@@ -25,6 +25,6 @@ const ReviewEditor = React.forwardRef((props: Props, ref: any) => {
 			/>
 		</div>
 	);
-});
+};
 
 export default ReviewEditor;
