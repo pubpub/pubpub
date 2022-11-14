@@ -141,7 +141,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						outerLabel={{ bottom: 'view latest release', top: 'see published version' }}
 					/>
 				)}
-				{canAdmin && !isReviewingPub && isAVisitingCommenter && (
+				{canAdmin && !isReviewingPub && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
