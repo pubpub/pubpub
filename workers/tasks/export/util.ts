@@ -1,33 +1,19 @@
 import fs from 'fs';
-import AWS from 'aws-sdk';
 import tmp from 'tmp-promise';
 import crypto from 'crypto';
 
 import { Export } from 'server/models';
+import { assetsClient } from 'server/utils/s3';
 import { generateHash } from 'utils/hashes';
+import { AttributionWithUser } from 'types';
 
 tmp.setGracefulCleanup();
 
-AWS.config.setPromisesDependency(Promise);
-const s3bucket = new AWS.S3({ params: { Bucket: 'assets.pubpub.org' } });
-
-export const uploadDocument = (pubId, tmpFile, extension) => {
+export const uploadDocument = async (pubId, tmpFile, extension) => {
 	const readableStream = fs.createReadStream(tmpFile.path);
 	const key = `${generateHash(8)}/${pubId}.${extension}`;
-	const params = {
-		Key: key,
-		Body: readableStream,
-		ACL: 'public-read',
-	};
-	return new Promise((resolve, reject) => {
-		// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
-		s3bucket.upload(params, (err) => {
-			if (err) {
-				reject(err);
-			}
-			resolve(`https://assets.pubpub.org/${key}`);
-		});
-	});
+	const { url } = await assetsClient.uploadFile(key, readableStream);
+	return url;
 };
 
 export const getTmpFileForExtension = (extension) => tmp.file({ postfix: `.${extension}` });
@@ -56,3 +42,22 @@ export const digestCitation = (unstructuredValue, structuredValue) =>
 		.update(structuredValue)
 		.digest('base64')
 		.substring(0, 10);
+
+export const getAffiliations = (attribution: AttributionWithUser) =>
+	!attribution?.affiliation?.length
+		? []
+		: attribution.affiliation
+				.split(';')
+				.map((x) => x.trim())
+				.filter(Boolean);
+
+export const getDedupedAffliations = (attributions: AttributionWithUser[]) => {
+	const affiliations = [
+		...new Set(
+			attributions
+				.reduce((all, attr) => all.concat(getAffiliations(attr)), [] as string[])
+				.filter(Boolean),
+		),
+	];
+	return affiliations;
+};

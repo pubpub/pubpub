@@ -1,10 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
 import {
+	Classes,
 	Icon as BlueprintIcon,
 	IconName as BlueprintIconName,
 	Intent as BlueprintIntent,
 } from '@blueprintjs/core';
+
+import { PubPubIconName, pubPubIcons } from 'client/utils/icons';
 
 import customIcons from './customIcons';
 
@@ -18,11 +21,10 @@ type Props = {
 	ariaLabel?: string;
 	className?: string;
 	color?: string;
-	icon: IconName;
 	iconSize?: number;
 	useColor?: boolean;
 	intent?: BlueprintIntent;
-};
+} & ({ icon: IconName } | { pubPubIcon: PubPubIconName });
 
 const Icon = (props: Props) => {
 	const {
@@ -30,18 +32,20 @@ const Icon = (props: Props) => {
 		ariaLabel = '',
 		className,
 		color,
-		icon,
 		iconSize = 16,
 		useColor = false,
 		intent,
 	} = props;
+
+	const icon = 'icon' in props ? props.icon : pubPubIcons[props.pubPubIcon];
+
 	if (customIcons[icon]) {
 		const { squareViewboxDimension, path, viewbox: providedViewbox } = customIcons[icon];
 		const viewbox =
 			providedViewbox || `0 0 ${squareViewboxDimension} ${squareViewboxDimension}`;
 		return (
 			<span
-				className={classNames('bp3-icon', useColor && 'color', className)}
+				className={classNames(Classes.ICON, useColor && 'color', className)}
 				data-icon={icon.toLowerCase().replace(/_/gi, '-')}
 				aria-label={ariaLabel}
 				aria-hidden={ariaHidden}

@@ -1,0 +1,11 @@
+@use 'styles/vendor.scss';
+
+$bp: vendor.$bp-namespace;
+
+.label-with-info-component {
+	.#{$bp}-icon-info-sign {
+		padding-left: 5px;
+		padding-bottom: 3px;
+		opacity: 0.5;
+	}
+}
