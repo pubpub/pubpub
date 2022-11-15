@@ -43,7 +43,6 @@ const AccessHashOptions = (props: SharedProps) => {
 	const { communityData, featureFlags } = usePageContext();
 	const { historyData } = usePubContext();
 	const { commentHash, reviewHash, viewHash, editHash, releases } = pubData;
-	console.log(releases);
 	const renderCopyLabelComponent = (label, url) => {
 		return (
 			<ControlGroup className="hash-row">

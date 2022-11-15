@@ -360,4 +360,3 @@ app.get(
 		return renderPubDocument(res, pubData, initialData, customScripts);
 	}),
 );
-

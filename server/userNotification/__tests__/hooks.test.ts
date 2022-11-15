@@ -171,13 +171,15 @@ describe('UserNotifications created when ActivityItems are created', () => {
 	});
 
 	it('creates the right notifications for a members-only Review ThreadComment', async () => {
-		const { chattyUser, communityAdmin, pubSubscriber, reviewThread, pub } = models;
+		const { chattyUser, communityAdmin, pubSubscriber, reviewThread, publicThread, pub } =
+			models;
 		const threadComment = await createThreadComment({
 			text: 'Hello world',
-			threadId: reviewThread.id,
+			threadId: publicThread.id,
+			userId: chattyUser.id,
 			content: {} as DocJson,
-			userId: chattyUser,
 		});
+		console.log(threadComment);
 		await finishDeferredTasks();
 		const activityItem = await ActivityItem.findOne({
 			where: { pubId: pub.id, kind: 'pub-review-comment-added' },
@@ -200,5 +202,6 @@ describe('UserNotifications created when ActivityItems are created', () => {
 				),
 			),
 		).toEqual([1, 0]);
+		expect(1).toEqual(1);
 	});
 });
