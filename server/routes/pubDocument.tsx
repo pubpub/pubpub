@@ -308,19 +308,39 @@ app.get(
 
 // do i need diff routes
 app.get(
-	['/pub/:pubSlug/comment/:historyKey/', '/pub/:pubSlug/comment/release-id/:releaseId'],
+	['/pub/:pubSlug/comment/:historyKey/', '/pub/:pubSlug/comment/release/:releaseNumber'],
 	wrap(async (req, res, next) => {
 		if (!hostIsValid(req, 'community')) {
 			return next();
 		}
 
 		const initialData = await getInitialDataForPub(req);
-		const { historyKey: historyKeyString, pubSlug } = req.params;
+		const {
+			historyKey: historyKeyString,
+			releaseNumber: releaseNumberString,
+			pubSlug,
+		} = req.params;
 		const { canView } = initialData.scopeData.activePermissions;
 		const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
 
 		if (!canView) {
 			throw new NotFoundError();
+		}
+
+		const releaseNumber = parseInt(releaseNumberString, 10);
+		if (Number.isNaN(releaseNumber) || releaseNumber < 1) {
+			throw new NotFoundError();
+		}
+
+		if (releaseNumber) {
+			const pubData = await getEnrichedPubData({
+				pubSlug,
+				releaseNumber,
+				initialData,
+			});
+
+			const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
+			return renderPubDocument(res, pubData, initialData, customScripts);
 		}
 
 		const pubData = await Promise.all([
@@ -335,7 +355,9 @@ app.get(
 			...enrichedPubData,
 			membersData,
 		}));
+
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		return renderPubDocument(res, pubData, initialData, customScripts);
 	}),
 );
+

@@ -42,8 +42,8 @@ const AccessHashOptions = (props: SharedProps) => {
 	const { pubData } = props;
 	const { communityData, featureFlags } = usePageContext();
 	const { historyData } = usePubContext();
-	const { commentHash, reviewHash, viewHash, editHash, releaseNumber, releases } = pubData;
-	console.log(releaseNumber, releases);
+	const { commentHash, reviewHash, viewHash, editHash, releases } = pubData;
+	console.log(releases);
 	const renderCopyLabelComponent = (label, url) => {
 		return (
 			<ControlGroup className="hash-row">
@@ -61,6 +61,7 @@ const AccessHashOptions = (props: SharedProps) => {
 		historyKey: historyData.currentKey,
 		isReview: true,
 	});
+	const releaseCount = releases ? releases.length : 0;
 
 	return (
 		<div className="access-hash-options">
@@ -79,7 +80,7 @@ const AccessHashOptions = (props: SharedProps) => {
 			{pubData.releases.length > 0 &&
 				renderCopyLabelComponent(
 					'Release Comment URL',
-					createAccessUrl(commentHash, { isComment: true, releaseNumber }),
+					createAccessUrl(commentHash, { isComment: true, releaseNumber: releaseCount }),
 				)}
 			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
 			{featureFlags.reviews && renderCopyLabelComponent('Review', reviewAccessUrl)}
