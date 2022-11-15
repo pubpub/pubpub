@@ -50,7 +50,6 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
 	const { isRelease, isReviewingPub, isAVisitingCommenter } = pubData;
 	const shouldShowReleaseReviewButton = canCreateReviews && !isReviewingPub && !submissionState;
-	console.log(isAVisitingCommenter);
 	const renderForRelease = () => {
 		const { releases, releaseNumber } = pubData;
 		const latestReleaseTimestamp = new Date(releases[releases.length - 1].createdAt).valueOf();

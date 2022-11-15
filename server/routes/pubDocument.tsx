@@ -91,7 +91,6 @@ const getEnrichedPubData = async ({
 		getDiscussions: true,
 		isAVisitingCommenter,
 	});
-
 	if (!pubData) {
 		throw new ForbiddenError();
 	}
@@ -138,8 +137,8 @@ const getEnrichedPubData = async ({
 			? findUserSubscription({ userId: initialData.loginData.id, pubId: pubData.id })
 			: null,
 	]);
-	const citations = await getPubCitations(pubData, initialData, docInfo.initialDoc);
 
+	const citations = await getPubCitations(pubData, initialData, docInfo.initialDoc);
 	return {
 		subscription: subscription?.toJSON() ?? null,
 		...pubData,
@@ -307,6 +306,7 @@ app.get(
 	}),
 );
 
+// do i need diff routes
 app.get(
 	['/pub/:pubSlug/comment/:historyKey/', '/pub/:pubSlug/comment/release-id/:releaseId'],
 	wrap(async (req, res, next) => {
@@ -314,7 +314,7 @@ app.get(
 			return next();
 		}
 
-		const initialData = await getInitialData(req);
+		const initialData = await getInitialDataForPub(req);
 		const { historyKey: historyKeyString, pubSlug } = req.params;
 		const { canView } = initialData.scopeData.activePermissions;
 		const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);

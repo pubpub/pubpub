@@ -124,8 +124,10 @@ export default async (scopeInputs) => {
 			isDashboard,
 		}
 	*/
+
 	const scopeElements = await getScopeElements(scopeInputs);
 	const facets = await getFacets(scopeInputs.includeFacets, scopeElements);
+
 	const publicPermissionsData = await getPublicPermissionsData(scopeElements);
 	const scopeMemberData = await getScopeMemberData(scopeInputs, scopeElements);
 	const [activePermissions, activeCounts] = await Promise.all([

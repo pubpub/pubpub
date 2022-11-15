@@ -42,8 +42,8 @@ const AccessHashOptions = (props: SharedProps) => {
 	const { pubData } = props;
 	const { communityData, featureFlags } = usePageContext();
 	const { historyData } = usePubContext();
-	const { commentHash, reviewHash, viewHash, editHash } = pubData;
-
+	const { commentHash, reviewHash, viewHash, editHash, releaseNumber, releases } = pubData;
+	console.log(releaseNumber, releases);
 	const renderCopyLabelComponent = (label, url) => {
 		return (
 			<ControlGroup className="hash-row">
@@ -69,19 +69,17 @@ const AccessHashOptions = (props: SharedProps) => {
 				sharing a URL.
 			</p>
 			{viewHash && renderCopyLabelComponent('View', createAccessUrl(viewHash, { isDraft }))}
-			{commentHash &&
+			{renderCopyLabelComponent(
+				'Draft Comment URL',
+				createAccessUrl(commentHash, {
+					isComment: true,
+					historyKey: historyData.currentKey,
+				}),
+			)}
+			{pubData.releases.length > 0 &&
 				renderCopyLabelComponent(
-					'Copy Draft Comment URL',
-					createAccessUrl(commentHash, {
-						isComment: true,
-						historyKey: historyData.currentKey,
-					}),
-				)}
-			{commentHash &&
-				pubData.releases.length > 0 &&
-				renderCopyLabelComponent(
-					'Copy Release Comment URL',
-					createAccessUrl(commentHash, { isComment: true, releaseId: 2 }),
+					'Release Comment URL',
+					createAccessUrl(commentHash, { isComment: true, releaseNumber }),
 				)}
 			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
 			{featureFlags.reviews && renderCopyLabelComponent('Review', reviewAccessUrl)}

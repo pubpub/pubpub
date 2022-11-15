@@ -63,8 +63,8 @@ export const pubUrl = (community, pub, options = {}) => {
 		return url;
 	}
 
-	if (isComment && accessHash && releaseId !== undefined) {
-		baseUrl = `${baseUrl}/comment/release/${releaseId}`;
+	if (isComment && accessHash && releaseNumber !== undefined) {
+		baseUrl = `${baseUrl}/comment/release/${releaseNumber}`;
 		const url = queryString.stringifyUrl(
 			{ url: baseUrl, query: { access: accessHash, ...query } },
 			{ skipNull: true },
