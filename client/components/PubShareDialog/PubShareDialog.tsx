@@ -69,16 +69,22 @@ const AccessHashOptions = (props: SharedProps) => {
 				sharing a URL.
 			</p>
 			{viewHash && renderCopyLabelComponent('View', createAccessUrl(viewHash, { isDraft }))}
-			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
-			{featureFlags.reviews && renderCopyLabelComponent('Review', reviewAccessUrl)}
 			{commentHash &&
 				renderCopyLabelComponent(
-					'Comment on Draft',
+					'Copy Draft Comment URL',
 					createAccessUrl(commentHash, {
 						isComment: true,
 						historyKey: historyData.currentKey,
 					}),
 				)}
+			{commentHash &&
+				pubData.releases.length > 0 &&
+				renderCopyLabelComponent(
+					'Copy Release Comment URL',
+					createAccessUrl(commentHash, { isComment: true, releaseId: 2 }),
+				)}
+			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
+			{featureFlags.reviews && renderCopyLabelComponent('Review', reviewAccessUrl)}
 		</div>
 	);
 };

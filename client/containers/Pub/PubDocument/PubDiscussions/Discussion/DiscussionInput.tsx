@@ -120,8 +120,7 @@ const DiscussionInput = (props: Props) => {
 				content: getJSON(changeObject?.view),
 				text: getText(changeObject?.view) || '',
 				initAnchorData,
-				visibilityAccess:
-					pubData.isRelease || pubData.isAVisitingCommenter ? 'public' : 'members',
+				visibilityAccess: pubData.isRelease ? 'public' : 'members',
 				commentAccessHash,
 				commenterName,
 			}),
@@ -168,7 +167,7 @@ const DiscussionInput = (props: Props) => {
 						value={commenterName}
 						onChange={handleInputChange}
 						onBlur={handleCommenterNameOnBlur}
-						placeholder="anonymous"
+						placeholder="name"
 					/>
 				</div>
 			)
