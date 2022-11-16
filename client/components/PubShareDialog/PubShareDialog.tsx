@@ -69,7 +69,7 @@ const AccessHashOptions = (props: SharedProps) => {
 			</p>
 			{viewHash && renderCopyLabelComponent('View', createAccessUrl(viewHash, { isDraft }))}
 			{renderCopyLabelComponent(
-				'Draft Comment URL',
+				'Draft Comment',
 				createAccessUrl(commentHash, {
 					isComment: true,
 					historyKey: historyData.currentKey,
@@ -77,7 +77,7 @@ const AccessHashOptions = (props: SharedProps) => {
 			)}
 			{pubData.releases.length > 0 &&
 				renderCopyLabelComponent(
-					'Release Comment URL',
+					'Release Comment',
 					createAccessUrl(commentHash, { isComment: true, releaseNumber: releaseCount }),
 				)}
 			{editHash && renderCopyLabelComponent('Edit', createAccessUrl(editHash, { isDraft }))}
