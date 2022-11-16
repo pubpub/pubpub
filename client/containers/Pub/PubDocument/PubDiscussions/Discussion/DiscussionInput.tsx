@@ -167,7 +167,7 @@ const DiscussionInput = (props: Props) => {
 						value={commenterName}
 						onChange={handleInputChange}
 						onBlur={handleCommenterNameOnBlur}
-						placeholder="Name"
+						placeholder="Enter name here..."
 					/>
 				</div>
 			)

@@ -55,7 +55,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 		const latestReleaseTimestamp = new Date(releases[releases.length - 1].createdAt).valueOf();
 		return (
 			<React.Fragment>
-				{(canView || canViewDraft) && (
+				{(canView || canViewDraft) && !isAVisitingCommenter && (
 					<ResponsiveHeaderButton
 						icon="edit"
 						tagName="a"

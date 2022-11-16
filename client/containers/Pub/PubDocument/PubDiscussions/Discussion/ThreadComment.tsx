@@ -89,14 +89,18 @@ const ThreadComment = (props: Props) => {
 			<div className="avatar-wrapper">
 				<Avatar
 					width={18}
-					initials={threadCommentData.author?.initials}
+					initials={
+						threadCommentData.author ? threadCommentData.author.intials : commenterName
+					}
 					avatar={threadCommentData.author?.avatar}
 				/>
 			</div>
 			<div className="content-wrapper">
 				<div className="item-header">
 					<span className="name">
-						{threadCommentData.author?.fullName || commenterName}
+						{threadCommentData.author
+							? threadCommentData.author.fullName
+							: commenterName}
 						{isPreview ? ': ' : ''}
 					</span>
 
