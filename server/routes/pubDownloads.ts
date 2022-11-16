@@ -8,7 +8,7 @@ import { getInitialData } from 'server/utils/initData';
 import { getPubForRequest } from 'server/utils/queryHelpers';
 import { getBestDownloadUrl } from 'utils/pub/downloads';
 import { defer } from 'server/utils/deferred';
-import { createLatestPubExports } from 'server/export/queries';
+import { createPubExportsForLatestRelease } from 'server/export/queries';
 
 app.get(
 	['/pub/:pubSlug/download', '/pub/:pubSlug/download/:format'],
@@ -35,7 +35,7 @@ app.get(
 		// an auto-generated PDF. We generally shouldn't get into this state, since those are
 		// generated when a Pub is released -- and this route only works for released Pubs.
 		defer(async () => {
-			await createLatestPubExports(pubData.id);
+			await createPubExportsForLatestRelease(pubData.id);
 		});
 
 		throw new NotFoundError();
