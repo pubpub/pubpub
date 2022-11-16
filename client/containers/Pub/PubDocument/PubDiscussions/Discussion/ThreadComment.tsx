@@ -92,7 +92,9 @@ const ThreadComment = (props: Props) => {
 					initials={
 						threadCommentData.author
 							? threadCommentData.author.intials
-							: getPartsOfFullName(commenterName).initials
+							: commenterName
+							? getPartsOfFullName(commenterName).initials
+							: '?'
 					}
 					avatar={threadCommentData.author?.avatar}
 				/>
@@ -102,7 +104,7 @@ const ThreadComment = (props: Props) => {
 					<span className="name">
 						{threadCommentData.author
 							? threadCommentData.author.fullName
-							: commenterName}
+							: commenterName ?? 'anonymous'}
 						{isPreview ? ': ' : ''}
 					</span>
 

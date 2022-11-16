@@ -66,7 +66,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						}}
 					/>
 				)}
-				{!isAVisitingCommenter && !isReviewingPub && (
+				{!isReviewingPub && (
 					<Menu
 						className="releases-menu"
 						aria-label="Choose a historical release of this Pub"
