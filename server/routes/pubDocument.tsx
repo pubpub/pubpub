@@ -317,6 +317,7 @@ app.get(
 		const { historyKey: historyKeyString, pubSlug } = req.params;
 		const { canView } = initialData.scopeData.activePermissions;
 		const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
+		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 
 		if (!canView) {
 			throw new NotFoundError();
@@ -329,13 +330,10 @@ app.get(
 				historyKey: hasHistoryKey ? historyKey : null,
 				isAVisitingCommenter: true,
 			}),
-			getMembers(initialData),
-		]).then(([enrichedPubData, membersData]) => ({
+		]).then(([enrichedPubData]) => ({
 			...enrichedPubData,
-			membersData,
 		}));
 
-		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		return renderPubDocument(res, pubData, initialData, customScripts);
 	}),
 );

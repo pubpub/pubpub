@@ -9,6 +9,7 @@ import { Avatar, Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Callback } from 'types';
+import { getPartsOfFullName } from 'utils/names';
 
 require('./threadComment.scss');
 
@@ -82,15 +83,16 @@ const ThreadComment = (props: Props) => {
 			/>
 		);
 	};
-	const commenterName = discussionData.commenters?.name;
-
+	const commenterName = discussionData.commenter?.name;
 	return (
 		<div className={classNames('thread-comment-component', isPreview && 'is-preview')}>
 			<div className="avatar-wrapper">
 				<Avatar
 					width={18}
 					initials={
-						threadCommentData.author ? threadCommentData.author.intials : commenterName
+						threadCommentData.author
+							? threadCommentData.author.intials
+							: getPartsOfFullName(commenterName).initials
 					}
 					avatar={threadCommentData.author?.avatar}
 				/>
