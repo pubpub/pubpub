@@ -3,7 +3,7 @@ export default (sequelize, dataTypes) => {
 		'UserNotificationPreferences',
 		{
 			id: sequelize.idType,
-			userId: { type: dataTypes.UUID, allowNull: false },
+			userId: { type: dataTypes.UUID },
 			receiveNotifications: { type: dataTypes.BOOLEAN, allowNull: false, defaultValue: true },
 			lastReceivedNotificationsAt: { type: dataTypes.DATE, allowNull: true },
 			subscribeToThreadsAsCommenter: {

@@ -61,7 +61,6 @@ const AccessHashOptions = (props: SharedProps) => {
 		isReview: true,
 	});
 	const releaseCount = releases ? releases.length : 0;
-
 	return (
 		<div className="access-hash-options">
 			<p>

@@ -200,6 +200,5 @@ describe('UserNotifications created when ActivityItems are created', () => {
 				),
 			),
 		).toEqual([1, 0]);
-		expect(1).toEqual(1);
 	});
 });
