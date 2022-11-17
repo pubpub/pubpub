@@ -132,7 +132,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 	}
 	if (isAVisitingCommenter) {
 		return {
-			editorKey: 'review',
+			editorKey: 'commenting',
 			isReadOnly: true,
 			initialHistoryKey: initialDocKey,
 			initialContent: initialDoc,

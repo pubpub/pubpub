@@ -19,7 +19,7 @@ const filterDiscussionsByDraftOrRelease = (
 	isRelease: boolean,
 	isAVisitingCommenter: boolean,
 ) => {
-	const shownVisibilityAccess = isRelease || isAVisitingCommenter ? 'public' : 'members';
+	const shownVisibilityAccess = isRelease && isAVisitingCommenter ? 'public' : 'members';
 	return discussions.filter(
 		(discussion) => discussion.visibility.access === shownVisibilityAccess,
 	);
