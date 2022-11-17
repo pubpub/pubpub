@@ -2,7 +2,7 @@ import { fetchFacetsForScope } from 'server/facets';
 import { Collection, CollectionAttribution, Community, DefinitelyHas } from 'types';
 import { collectionUrl } from 'utils/canonicalUrls';
 import { licenseDetailsByKind } from 'utils/licenses';
-import { Resource, ResourceKind, ResourceContribution, ResourceContributorRole } from '../types';
+import { AnyResource, ResourceKind, ResourceContribution, ResourceContributorRole } from '../types';
 
 const attributionRoleToResourceContributorRole: Record<string, ResourceContributorRole> = {
 	'Writing – Review & Editing': 'Editor',
@@ -46,7 +46,7 @@ function transformCollectionAttributionToResourceContribution(
 export async function transformCollectionToResource(
 	collection: DefinitelyHas<Collection, 'attributions'>,
 	community: Community,
-): Promise<Resource> {
+): Promise<AnyResource> {
 	let facets = await fetchFacetsForScope({ collectionId: collection.id }, ['License']);
 	let licence = licenseDetailsByKind[facets.License.value.kind];
 	let contributions: ResourceContribution[] = collection.attributions.flatMap(

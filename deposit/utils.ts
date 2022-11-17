@@ -1,6 +1,7 @@
-import { DefinitelyHas, Maybe, Pub, PubEdge } from 'types';
+import { Pub, PubEdge } from 'types';
 import { RelationType } from 'utils/pubEdge';
 import { findParentEdgeByRelationTypes } from 'utils/pubEdge/relations';
+import { AnyResource, Resource } from './types';
 
 function filterForMutuallyApprovedEdges(pubEdges: PubEdge[]) {
 	let i = 0;
@@ -17,27 +18,35 @@ function filterForMutuallyApprovedEdges(pubEdges: PubEdge[]) {
 	}
 }
 
-export function preparePubForDeposit<
-	T extends DefinitelyHas<Pub, 'inboundEdges' | 'outboundEdges'>,
->(pub: T, includeRelationships: boolean): { pub: T; parentPubEdge?: PubEdge } {
-	pub = structuredClone(pub);
-	// Remove unapproved PubEdges for RelationTypes that require bidirectional
-	// approval.
-	filterForMutuallyApprovedEdges(pub.inboundEdges);
-	filterForMutuallyApprovedEdges(pub.outboundEdges);
-
-	// Find the primary relationship (in order of Preprint > Supplement > Review).
-	const parentPubEdge = findParentEdgeByRelationTypes(pub, [
-		RelationType.Preprint,
-		RelationType.Supplement,
-		RelationType.Review,
-		RelationType.Rejoinder,
-	]) as Maybe<PubEdge>;
-
-	if (!includeRelationships) {
-		pub.inboundEdges = [];
-		pub.outboundEdges = [];
+export function getPrimaryParentPubEdge(pub: Pub) {
+	if (pub.inboundEdges && pub.outboundEdges) {
+		// Find the primary relationship (in order of Preprint > Supplement > Review).
+		return findParentEdgeByRelationTypes(pub, [
+			RelationType.Preprint,
+			RelationType.Supplement,
+			RelationType.Review,
+			RelationType.Rejoinder,
+		]);
 	}
+	return null;
+}
 
-	return { pub, parentPubEdge };
+export function sanitizePubEdges<T extends Pub>(pub: T, includeRelationships: boolean): Pub {
+	// @ts-ignore
+	pub = structuredClone(pub);
+	if (pub.inboundEdges && pub.outboundEdges) {
+		// Remove unapproved PubEdges for RelationTypes that require bidirectional
+		// approval.
+		filterForMutuallyApprovedEdges(pub.inboundEdges);
+		filterForMutuallyApprovedEdges(pub.outboundEdges);
+		if (!includeRelationships) {
+			pub.inboundEdges = [];
+			pub.outboundEdges = [];
+		}
+	}
+	return pub;
+}
+
+export function isFullResource(resource: AnyResource): resource is Resource {
+	return 'title' in resource;
 }
