@@ -1,6 +1,6 @@
-import { creatThreadCommentWithUserOrCommenter } from 'server/thread/queries';
 import { ThreadComment, includeUserModel, Commenter } from 'server/models';
-import { DocJson } from 'types';
+import * as types from 'types';
+import { createCommenter } from '../commenter/queries';
 
 const findThreadCommentWithUser = (id) =>
 	ThreadComment.findOne({
@@ -8,13 +8,38 @@ const findThreadCommentWithUser = (id) =>
 		include: [includeUserModel({ as: 'author' }), { model: Commenter, as: 'commenter' }],
 	});
 
+export type CreateThreadWithCommentOptions = {
+	text: string;
+	content: types.DocJson;
+	userId: null | string;
+	commenterName: null | string;
+};
+
+export const createThreadCommentWithUserOrCommenter = async (
+	options: CreateThreadWithCommentOptions,
+	threadId: string,
+) => {
+	const { text, content, userId, commenterName } = options;
+	const newCommenter = commenterName && (await createCommenter({ name: commenterName }));
+	const userIdOrCommenterId = newCommenter ? { commenterId: newCommenter.id } : { userId };
+	const commenter = newCommenter && 'id' in newCommenter ? newCommenter : null;
+	const threadComment = await ThreadComment.create({
+		text,
+		content,
+		threadId,
+		...userIdOrCommenterId,
+	});
+
+	return { threadCommentId: threadComment.id, commenterId: commenter?.id };
+};
+
 export type CreateThreadOptions = {
 	text: string;
-	content: DocJson;
+	content: types.DocJson;
 	threadId: string;
 	commenterName?: string;
 	userId?: string;
-} & ({ userId: string } | { commenterName: string });
+};
 
 export const createThreadComment = async (options: CreateThreadOptions) => {
 	const { text, content, commenterName, threadId, userId } = options;
@@ -22,7 +47,7 @@ export const createThreadComment = async (options: CreateThreadOptions) => {
 	const user = userId || null;
 	const commenter = commenterName || null;
 
-	const { threadCommentId } = await creatThreadCommentWithUserOrCommenter(
+	const { threadCommentId } = await createThreadCommentWithUserOrCommenter(
 		{ text, content, userId: user, commenterName: commenter },
 		threadId,
 	);

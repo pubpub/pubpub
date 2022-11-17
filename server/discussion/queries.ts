@@ -66,7 +66,7 @@ type CreateDiscussionOpts = {
 	};
 	commenterName?: string;
 	userId?: string;
-} & ({ userId: string } | { commenterName: string });
+};
 
 export const createDiscussion = async (options: CreateDiscussionOpts) => {
 	const {

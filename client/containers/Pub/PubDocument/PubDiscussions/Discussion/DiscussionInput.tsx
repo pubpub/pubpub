@@ -49,7 +49,6 @@ const DiscussionInput = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [didFocus, setDidFocus] = useState(false);
 	const [editorKey, setEditorKey] = useState(Date.now());
-	const [commentAccessHash, setCommentAccessHash] = useState<string | null>();
 	const [commenterName, setCommenterName] = useState('');
 	const isNewThread = !discussionData.number;
 	const inputView = changeObject?.view;
@@ -57,14 +56,6 @@ const DiscussionInput = (props: Props) => {
 	useEffect(() => {
 		if (!isPubBottomInput && (isNewThread || didFocus) && inputView) {
 			inputView.focus();
-		}
-
-		// create quewry access handlers for submitting post to discussion
-		// do not know why i have to check here but not in ReviewHeaderSticky
-		if (typeof window !== 'undefined') {
-			const url = new URL(window.location.href);
-			const query = new URLSearchParams(url.search);
-			setCommentAccessHash(query.get('access'));
 		}
 	}, [isNewThread, inputView, didFocus, isPubBottomInput]);
 
@@ -80,7 +71,7 @@ const DiscussionInput = (props: Props) => {
 				communityId: communityData.id,
 				content: getJSON(changeObject?.view),
 				text: getText(changeObject?.view) || '',
-				commentAccessHash,
+				commentAccessHash: pubData.commentHash,
 				commenterName,
 			}),
 		});
@@ -121,7 +112,7 @@ const DiscussionInput = (props: Props) => {
 				text: getText(changeObject?.view) || '',
 				initAnchorData,
 				visibilityAccess: pubData.isRelease ? 'public' : 'members',
-				commentAccessHash,
+				commentAccessHash: pubData.commentHash,
 				commenterName,
 			}),
 		});
@@ -142,7 +133,6 @@ const DiscussionInput = (props: Props) => {
 		locationData.queryString.length > 1 ? locationData.queryString : ''
 	}`;
 
-	// this is where we check for commentHash
 	const canComment = isLoggedIn || pubData.isAVisitingCommenter;
 	const isUser = !!(canEdit || loginData.fullName);
 

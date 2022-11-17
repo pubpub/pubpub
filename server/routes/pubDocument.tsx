@@ -323,16 +323,12 @@ app.get(
 			throw new NotFoundError();
 		}
 
-		const pubData = await Promise.all([
-			getEnrichedPubData({
-				pubSlug,
-				initialData,
-				historyKey: hasHistoryKey ? historyKey : null,
-				isAVisitingCommenter: true,
-			}),
-		]).then(([enrichedPubData]) => ({
-			...enrichedPubData,
-		}));
+		const pubData = await getEnrichedPubData({
+			pubSlug,
+			initialData,
+			historyKey: hasHistoryKey ? historyKey : null,
+			isAVisitingCommenter: true,
+		});
 
 		return renderPubDocument(res, pubData, initialData, customScripts);
 	}),

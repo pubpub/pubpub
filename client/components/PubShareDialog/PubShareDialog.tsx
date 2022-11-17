@@ -42,7 +42,7 @@ const AccessHashOptions = (props: SharedProps) => {
 	const { pubData } = props;
 	const { communityData, featureFlags } = usePageContext();
 	const { historyData } = usePubContext();
-	const { commentHash, reviewHash, viewHash, editHash, releases } = pubData;
+	const { commentHash, reviewHash, viewHash, editHash, releases, isRelease } = pubData;
 	const renderCopyLabelComponent = (label, url) => {
 		return (
 			<ControlGroup className="hash-row">
@@ -53,7 +53,7 @@ const AccessHashOptions = (props: SharedProps) => {
 			</ControlGroup>
 		);
 	};
-	const isDraft = true;
+	const isDraft = !isRelease;
 	const createAccessUrl = (accessHash, options) =>
 		pubUrl(communityData, pubData, { accessHash, ...options });
 	const reviewAccessUrl = createAccessUrl(reviewHash, {

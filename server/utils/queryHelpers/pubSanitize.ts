@@ -6,11 +6,13 @@ import sanitizeReviews from './reviewsSanitize';
 import { sanitizePubEdges } from './sanitizePubEdge';
 
 const sanitizeHashes = (pubData, activePermissions) => {
-	const { editHash, viewHash } = pubData;
+	const { editHash, viewHash, commentHash, reviewHash } = pubData;
 	const { canView, canViewDraft, canEdit, canEditDraft } = activePermissions;
 	return {
 		viewHash: canView || canViewDraft ? viewHash : null,
 		editHash: canEdit || canEditDraft ? editHash : null,
+		commentHash: canView ? commentHash : null,
+		reviewHash: canView ? reviewHash : null,
 	};
 };
 
@@ -38,7 +40,6 @@ export default (
 	pubData,
 	initialData,
 	releaseNumber: number | null = null,
-	isReview: boolean = false,
 	isAVisitingCommenter: boolean = false,
 ): null | SanitizedPubData => {
 	const { loginData, scopeData } = initialData;
@@ -111,7 +112,6 @@ export default (
 		exports: getFilteredExports(pubData, isRelease),
 		collectionPubs: filteredCollectionPubs,
 		isRelease,
-		isReview,
 		isAVisitingCommenter,
 		releases: sortedReleases,
 		releaseNumber,

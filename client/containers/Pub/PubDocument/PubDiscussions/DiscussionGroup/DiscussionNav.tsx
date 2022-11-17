@@ -26,7 +26,7 @@ const defaultProps = {
 
 const getLabelForDiscussion = (discussion) =>
 	discussion.thread.comments
-		.map((comment) => (comment.author ? comment.author.fullName : comment.commenter.name))
+		.map((comment) => comment.author?.fullName ?? comment.commenter?.name)
 		.filter((name, index, array) => array.indexOf(name) === index)
 		.join(', ');
 
