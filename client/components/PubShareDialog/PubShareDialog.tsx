@@ -68,14 +68,16 @@ const AccessHashOptions = (props: SharedProps) => {
 				sharing a URL.
 			</p>
 			{viewHash && renderCopyLabelComponent('View', createAccessUrl(viewHash, { isDraft }))}
-			{renderCopyLabelComponent(
-				'Draft Comment',
-				createAccessUrl(commentHash, {
-					isComment: true,
-					historyKey: historyData.currentKey,
-				}),
-			)}
-			{pubData.releases.length > 0 &&
+			{featureFlags.comments &&
+				renderCopyLabelComponent(
+					'Draft Comment',
+					createAccessUrl(commentHash, {
+						isComment: true,
+						historyKey: historyData.currentKey,
+					}),
+				)}
+			{featureFlags.comments &&
+				pubData.releases.length > 0 &&
 				renderCopyLabelComponent(
 					'Release Comment',
 					createAccessUrl(commentHash, { isComment: true, releaseNumber: releaseCount }),

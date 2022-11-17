@@ -14,7 +14,6 @@ import { getCustomScriptsForCommunity } from 'server/customScript/queries';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
-import { generateHash } from 'utils/hashes';
 import {
 	getPubForRequest,
 	getMembers,
@@ -28,7 +27,6 @@ import {
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { InitialData } from 'types';
 import { findUserSubscription } from 'server/userSubscription/shared/queries';
-import { Pub } from 'server/models';
 
 const getInitialDataForPub = (req) => getInitialData(req, { includeFacets: true });
 
@@ -93,29 +91,6 @@ const getEnrichedPubData = async ({
 	});
 	if (!pubData) {
 		throw new ForbiddenError();
-	}
-
-	// ! ill get rid of both of these soon enough
-	if (!pubData.reviewHash) {
-		const reviewHash = generateHash(8);
-		Pub.update(
-			{ reviewHash },
-			{
-				where: { id: pubData.id },
-			},
-		);
-		pubData.reviewHash = reviewHash;
-	}
-
-	if (!pubData.commentHash) {
-		const commentHash = generateHash(8);
-		Pub.update(
-			{ commentHash },
-			{
-				where: { id: pubData.id },
-			},
-		);
-		pubData.commentHash = commentHash;
 	}
 
 	const { isRelease } = pubData;
