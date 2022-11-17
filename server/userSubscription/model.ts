@@ -5,7 +5,7 @@ export default (sequelize, dataTypes) => {
 			id: sequelize.idType,
 			setAutomatically: { type: dataTypes.BOOLEAN, allowNull: false },
 			status: { type: dataTypes.STRING, allowNull: false },
-			userId: { type: dataTypes.UUID, allowNull: true },
+			userId: { type: dataTypes.UUID, allowNull: false },
 			pubId: { type: dataTypes.UUID },
 			threadId: { type: dataTypes.UUID },
 		},
