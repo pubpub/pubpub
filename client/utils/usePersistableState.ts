@@ -61,6 +61,8 @@ export const usePersistableState = <T extends Record<string, any>>(
 				persist();
 			}
 		},
+		// React Hook useCallback has a missing dependency: 'T'. Either include it or remove the dependency array.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[persist, persistedStateRef, setUnpersistedState],
 	);
 
@@ -71,6 +73,8 @@ export const usePersistableState = <T extends Record<string, any>>(
 				return { ...current, ...updatedState };
 			});
 		},
+		// React Hook useCallback has a missing dependency: 'T'. Either include it or remove the dependency array.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[setPersistedState],
 	);
 
