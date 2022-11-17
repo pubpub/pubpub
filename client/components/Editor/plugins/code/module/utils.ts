@@ -110,9 +110,7 @@ export const setMode = async (
 	languageConf: Compartment,
 ) => {
 	const support = await settings.languageLoaders?.[lang]?.();
-	console.log('setMode called ', { lang, settings, support });
 	if (support) {
-		console.log('supported!');
 		cmView.dispatch({
 			effects: languageConf.reconfigure(support),
 		});

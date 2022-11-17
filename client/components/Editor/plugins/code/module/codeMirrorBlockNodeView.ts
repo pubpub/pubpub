@@ -161,9 +161,8 @@ export const codeMirrorBlockNodeView = (settings: CodeBlockSettings) => {
 				codeMirrorView.focus();
 				forwardSelection(codeMirrorView, view, getPos);
 				updating = true;
-				const pos = typeof getPos === 'function' ? getPos() : 0;
 				codeMirrorView.dispatch({
-					selection: { anchor: anchor, head: head },
+					selection: { anchor, head },
 				});
 				updating = false;
 			},

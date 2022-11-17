@@ -85,7 +85,6 @@ const createSelect = (
 
 export default (schema) => {
 	if (schema.nodes.code_block) {
-		console.log('doing it, I really, really, really hope');
 		return [
 			codeMirrorBlockPlugin({
 				...defaultSettings,

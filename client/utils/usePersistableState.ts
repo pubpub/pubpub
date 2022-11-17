@@ -55,7 +55,6 @@ export const usePersistableState = <T extends Record<string, any>>(
 					typeof next === 'function'
 						? next({ ...persistedStateRef.current, ...current })
 						: next;
-				console.log(updatedState);
 				return { ...current, ...updatedState };
 			});
 			if (andPersist) {

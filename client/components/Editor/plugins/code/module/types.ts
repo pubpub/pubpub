@@ -1,10 +1,10 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 import { Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
+import { Extension } from '@codemirror/state';
 import { LanguageSupport } from '@codemirror/language';
 
 export type LanguageLoaders = Record<string, () => Promise<LanguageSupport>>;
-import { Extension } from '@codemirror/state';
 
 export type CodeBlockSettings = {
 	createSelect: (
