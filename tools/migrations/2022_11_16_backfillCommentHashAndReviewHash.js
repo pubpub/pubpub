@@ -9,12 +9,11 @@ export const up = async () => {
 		async (pub) => {
 			if (!pub.commentHash) {
 				pub.commentHash = generateHash(8);
-				await pub.save();
 			}
 			if (!pub.reviewHash) {
 				pub.reviewHash = generateHash(8);
-				await pub.save();
 			}
+			await pub.save();
 		},
 		200,
 	);
