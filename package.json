@@ -155,7 +155,7 @@
 		"prosemirror-compress-pubpub": "0.0.3",
 		"prosemirror-dev-tools": "^2.1.1",
 		"prosemirror-gapcursor": "^1.1.5",
-		"prosemirror-history": "^1.1.3",
+		"prosemirror-history": "^1.3.0",
 		"prosemirror-inputrules": "^1.1.2",
 		"prosemirror-keymap": "^1.1.3",
 		"prosemirror-model": "^1.18.2",
