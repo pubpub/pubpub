@@ -205,7 +205,7 @@ class LabelFilter extends Component<Props, State> {
 												content={
 													label.publicApply ? (
 														<span>
-															All discussion authors can apply this
+															All discussion contributors can apply this
 															label.
 														</span>
 													) : (

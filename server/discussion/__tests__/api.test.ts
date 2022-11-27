@@ -17,7 +17,7 @@ const couldApplyManagedLabel = {
 };
 
 const publicLabel = {
-	title: 'Authors can apply this label to their own discussions',
+	title: 'Contributors can apply this label to their own discussions',
 	publicApply: true,
 	id: uuid.v4(),
 };
