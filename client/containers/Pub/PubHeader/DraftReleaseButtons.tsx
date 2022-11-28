@@ -1,7 +1,7 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 
-import { DialogLauncher, PubReleaseDialog } from 'components';
+import { DialogLauncher, PubReleaseDialog, PubReleaseReviewDialog } from 'components';
 import { PatchFn, PubPageData } from 'types';
 import { Menu, MenuItem } from 'components/Menu';
 import { pubUrl } from 'utils/canonicalUrls';
@@ -48,18 +48,14 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 	const { communityData, scopeData } = usePageContext();
 	const { submissionState } = usePubContext();
 	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
-	const { isRelease, isReviewingPub, reviewHash } = pubData;
+	const { isRelease, isReviewingPub, isAVisitingCommenter, reviewHash } = pubData;
 	const shouldShowReleaseReviewButton = canCreateReviews && !isReviewingPub && !submissionState;
-	console.log(
-		'put this in the thingy with the actual review button',
-		shouldShowReleaseReviewButton,
-	);
 	const renderForRelease = () => {
 		const { releases, releaseNumber } = pubData;
 		const latestReleaseTimestamp = new Date(releases[releases.length - 1].createdAt).valueOf();
 		return (
 			<React.Fragment>
-				{(canView || canViewDraft) && (
+				{(canView || canViewDraft) && !isAVisitingCommenter && (
 					<ResponsiveHeaderButton
 						icon="edit"
 						tagName="a"
@@ -157,7 +153,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 						outerLabel={{ bottom: 'view latest release', top: 'see published version' }}
 					/>
 				)}
-				{canAdmin && !isReviewingPub && (
+				{canAdmin && !isReviewingPub && !isAVisitingCommenter && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
@@ -182,6 +178,30 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 										};
 									})
 								}
+							/>
+						)}
+					</DialogLauncher>
+				)}
+				{shouldShowReleaseReviewButton && !isAVisitingCommenter && (
+					<DialogLauncher
+						renderLauncherElement={({ openDialog }) => (
+							<ResponsiveHeaderButton
+								disabled={!canRelease}
+								icon="social-media"
+								onClick={openDialog}
+								label={{
+									bottom: 'Create a Release Review',
+									top: 'Request Publication',
+								}}
+							/>
+						)}
+					>
+						{({ onClose, key }) => (
+							<PubReleaseReviewDialog
+								key={key}
+								onClose={onClose}
+								pubData={pubData}
+								updatePubData={updatePubData}
 							/>
 						)}
 					</DialogLauncher>

@@ -2,10 +2,10 @@ import React from 'react';
 
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
+import { DialogLauncher, PubShareDialog, PopoverButton, FacetEditor } from 'components';
 import { pubUrl } from 'utils/canonicalUrls';
-import { DialogLauncher, PubThemePicker, PubShareDialog, PopoverButton } from 'components';
 
-import { Callback, PatchFn, PubPageData } from 'types';
+import { Callback, PubPageData } from 'types';
 import CitationsPreview from './CitationsPreview';
 import Download from './Download';
 import PubToc from './PubToc';
@@ -17,11 +17,10 @@ import { usePubContext } from '../pubHooks';
 type Props = {
 	onShowHeaderDetails: Callback;
 	pubData: PubPageData;
-	updatePubData: PatchFn<PubPageData>;
 };
 
 const UtilityButtons = (props: Props) => {
-	const { onShowHeaderDetails, pubData, updatePubData } = props;
+	const { onShowHeaderDetails, pubData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { historyData } = usePubContext();
 	const { isRelease, membersData, reviewHash } = pubData;
@@ -36,11 +35,8 @@ const UtilityButtons = (props: Props) => {
 			/>
 			{canManage && !isRelease && (
 				<PopoverButton
-					component={PubThemePicker}
+					component={() => <FacetEditor facetName="PubHeaderTheme" selfContained />}
 					className="pub-header-popover"
-					updatePubData={updatePubData}
-					pubData={pubData}
-					communityData={communityData}
 					aria-label="Pub header theme options"
 				>
 					<SmallHeaderButton label="Edit theme" labelPosition="left" icon="clean" />
@@ -73,9 +69,8 @@ const UtilityButtons = (props: Props) => {
 				</DialogLauncher>
 			)}
 			<PopoverButton
-				component={CitationsPreview}
+				component={() => <CitationsPreview pubData={pubData} />}
 				className="pub-header-popover"
-				pubData={pubData}
 				aria-label="Cite this Pub"
 			>
 				<SmallHeaderButton
@@ -114,7 +109,7 @@ const UtilityButtons = (props: Props) => {
 							onClose={onClose}
 							pubData={pubData}
 							communityData={communityData}
-							updatePubData={updatePubData}
+							updatePubData={() => {}}
 						/>
 					)}
 				</DialogLauncher>

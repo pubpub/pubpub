@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Tooltip, Card } from '@blueprintjs/core';
+import { Button, Card, Classes, Tooltip } from '@blueprintjs/core';
 import stickybits from 'stickybits';
 
 import { LayoutBlock, LayoutPubsByBlock } from 'utils/layout';
@@ -48,7 +48,7 @@ const getTitleKindForBlock = (blockType: string) => {
 	return blockType;
 };
 
-const LayoutEditor = (props: Props) => {
+const LayoutEditor = React.memo((props: Props) => {
 	const { initialLayout, initialLayoutPubsByBlock, collection, communityData, onChange } = props;
 	const {
 		layout,
@@ -83,7 +83,7 @@ const LayoutEditor = (props: Props) => {
 		return (
 			<div className="block-title">
 				<div className="text">{getTitleKindForBlock(block.type)} Block</div>
-				<div className="bp3-button-group bp3-minimal bp3-small">
+				<div className={`${Classes.BUTTON_GROUP} ${Classes.MINIMAL} ${Classes.SMALL}`}>
 					<Button
 						text="Move Up"
 						icon="caret-up"
@@ -215,6 +215,6 @@ const LayoutEditor = (props: Props) => {
 			{layout.map(renderLayoutBlock)}
 		</div>
 	);
-};
+});
 
 export default LayoutEditor;

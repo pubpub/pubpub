@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import uuidv4 from 'uuid/v4';
-import { Button } from '@blueprintjs/core';
+import { Button, Classes } from '@blueprintjs/core';
 
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
 import { Icon, ClickToCopyButton } from 'components';
 import { FormattingBar, buttons } from 'components/FormattingBar';
-import { setLocalHighlight, moveToEndOfSelection } from 'components/Editor';
+import { setLocalHighlight, moveToEndOfSelection, isDescendantOf } from 'components/Editor';
 
 import { usePubContext } from '../pubHooks';
 
@@ -22,18 +22,20 @@ const PubInlineMenu = () => {
 	const { pubData, collabData, historyData, pubBodyState } = usePubContext();
 	const { communityData, scopeData } = usePageContext();
 	const { canView, canCreateDiscussions } = scopeData.activePermissions;
-	const selection = collabData.editorChangeObject!.selection || {};
+	const selection = collabData.editorChangeObject!.selection;
+	const shouldHide = useMemo(() => {
+		return (
+			!selection ||
+			selection.empty ||
+			(selection as any).$anchorCell ||
+			collabData.editorChangeObject!.selectedNode ||
+			isDescendantOf('code_block', collabData.editorChangeObject!.selection)
+		);
+	}, [collabData.editorChangeObject, selection]);
 	const selectionBoundingBox: Record<string, any> =
 		collabData.editorChangeObject!.selectionBoundingBox || {};
 
-	if (
-		!collabData.editorChangeObject!.selection ||
-		selection.empty ||
-		(selection as any).$anchorCell ||
-		collabData.editorChangeObject!.selectedNode
-	) {
-		return null;
-	}
+	if (shouldHide) return null;
 
 	const topPosition =
 		window.scrollY +
@@ -58,7 +60,7 @@ const PubInlineMenu = () => {
 
 	return (
 		<div
-			className="pub-inline-menu-component bp3-elevation-2"
+			className={`pub-inline-menu-component ${Classes.ELEVATION_2}`}
 			style={{ position: 'absolute', top: topPosition, left: selectionBoundingBox.left }}
 		>
 			{renderFormattingBar()}

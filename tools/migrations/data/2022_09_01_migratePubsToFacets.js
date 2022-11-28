@@ -32,7 +32,7 @@ export const up = async () => {
 						PubHeaderTheme: {
 							textStyle: headerStyle,
 							backgroundColor: headerBackgroundColor,
-							backgroundImage: headerBackgroundImage,
+							backgroundImage: headerBackgroundImage || '',
 						},
 						PubEdgeDisplay: {
 							defaultsToCarousel: pubEdgeListingDefaultsToCarousel,
@@ -64,5 +64,6 @@ export const up = async () => {
 			}
 		},
 		50,
+		[['updatedAt', 'DESC']],
 	);
 };

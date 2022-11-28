@@ -1,12 +1,12 @@
-import React from 'react';
-import { AnchorButton, Button } from '@blueprintjs/core';
+import React, { useCallback } from 'react';
+import { AnchorButton, Button, Classes } from '@blueprintjs/core';
 import { useUpdateEffect } from 'react-use';
 
 import { communityUrl } from 'utils/canonicalUrls';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
 import { slugifyString } from 'utils/strings';
-import { LayoutPubsByBlock } from 'utils/layout';
+import { LayoutBlock, LayoutPubsByBlock } from 'utils/layout';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getSlugError } from 'client/utils/slug';
 
@@ -82,7 +82,7 @@ const DashboardPage = (props: Props) => {
 	const slugError = getSlugError(slug, slugStatus);
 
 	useUpdateEffect(() => {
-		if (!hasChanges) {
+		if (!hasChanges && slug) {
 			window.history.replaceState(
 				{},
 				'',
@@ -93,6 +93,11 @@ const DashboardPage = (props: Props) => {
 			);
 		}
 	}, [slug, hasChanges]);
+
+	const handleLayoutChange = useCallback(
+		(newLayout: LayoutBlock[]) => updatePageData({ layout: newLayout }),
+		[updatePageData],
+	);
 
 	const renderControls = () => {
 		const canPersistChanges = hasChanges && title && (slug || !persistedPageData.slug);
@@ -159,14 +164,14 @@ const DashboardPage = (props: Props) => {
 					/>
 				)}
 				<InputField label="Width">
-					<div className="bp3-button-group">
+					<div className={Classes.BUTTON_GROUP}>
 						<Button
-							className={isNarrowWidth ? '' : 'bp3-active'}
+							className={isNarrowWidth ? '' : Classes.ACTIVE}
 							onClick={() => updatePageData({ isNarrowWidth: false })}
 							text="Wide"
 						/>
 						<Button
-							className={isNarrowWidth ? 'bp3-active' : ''}
+							className={isNarrowWidth ? Classes.ACTIVE : ''}
 							onClick={() => updatePageData({ isNarrowWidth: true })}
 							text="Narrow"
 						/>
@@ -174,15 +179,15 @@ const DashboardPage = (props: Props) => {
 				</InputField>
 				{!isHome && (
 					<InputField label="Privacy">
-						<div className="bp3-button-group">
+						<div className={Classes.BUTTON_GROUP}>
 							<Button
-								className={isPublic ? 'bp3-active' : ''}
+								className={isPublic ? Classes.ACTIVE : ''}
 								onClick={() => updatePageData({ isPublic: true })}
 								text="Public"
 								icon="globe"
 							/>
 							<Button
-								className={isPublic ? '' : 'bp3-active'}
+								className={isPublic ? '' : Classes.ACTIVE}
 								onClick={() => updatePageData({ isPublic: false })}
 								text="Private"
 								icon="lock"
@@ -210,7 +215,7 @@ const DashboardPage = (props: Props) => {
 		return (
 			<SettingsSection title="Layout">
 				<LayoutEditor
-					onChange={(newLayout) => updatePageData({ layout: newLayout })}
+					onChange={handleLayoutChange}
 					initialLayout={layout}
 					initialLayoutPubsByBlock={layoutPubsByBlock}
 					communityData={communityData}

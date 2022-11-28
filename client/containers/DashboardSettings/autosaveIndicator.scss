@@ -1,0 +1,21 @@
+@use 'styles/vendor.scss';
+
+$bp: vendor.$bp-namespace;
+
+.autosave-indicator-component {
+	color: #999;
+	display: flex;
+	align-items: center;
+	opacity: 0;
+	transition: 100ms opacity ease-out;
+	font-style: italic;
+
+	&[aria-hidden='false'] {
+		opacity: 1;
+	}
+
+	.#{$bp}-spinner,
+	.#{$bp}-icon {
+		margin-right: 6px;
+	}
+}
