@@ -1,15 +1,41 @@
+import { Plugin, PluginKey } from 'prosemirror-state';
 import { undo, redo } from 'prosemirror-history';
 import { EditorView } from 'prosemirror-view';
 import { Node } from 'prosemirror-model';
 import { Classes } from '@blueprintjs/core';
 
-import {
+import { CodeBlockSettings, LanguageLoaders } from './types';
+import { codeMirrorBlockNodeView } from './codeMirrorBlockNodeView';
+import { codeBlockArrowHandlers } from './utils';
+import { CodeBlockLanguages, LegacyLanguages } from './languages';
+import { defaultSettings } from './defaults';
+import languageLoaders, { legacyLanguageLoaders } from './languageLoaders';
+
+export const codeMirrorBlockKey = new PluginKey('codemirror-block');
+
+const codeMirrorBlockPlugin = (settings: CodeBlockSettings) => {
+	return new Plugin({
+		key: codeMirrorBlockKey,
+		props: {
+			nodeViews: {
+				code_block: codeMirrorBlockNodeView(settings),
+			},
+		},
+	});
+};
+
+export {
+	codeMirrorBlockNodeView,
+	codeBlockArrowHandlers,
 	codeMirrorBlockPlugin,
 	CodeBlockSettings,
+	LanguageLoaders,
+	CodeBlockLanguages,
+	LegacyLanguages,
 	defaultSettings,
 	languageLoaders,
 	legacyLanguageLoaders,
-} from './module';
+};
 
 const createSelect = (
 	settings: CodeBlockSettings,
@@ -23,7 +49,7 @@ const createSelect = (
 	wrapper.classList.add(Classes.HTML_SELECT, 'codeblock-select-wrapper');
 	const select = document.createElement('select');
 	const carets = document.createElement('span');
-	carets.classList.add(Classes.ICON, `${Classes.ICON}-caret-down`);
+	carets.classList.add(Classes.ICON, 'bp3-icon-caret-down');
 	wrapper.append(select);
 	wrapper.append(carets);
 	select.className = 'codeblock-select';
@@ -59,7 +85,6 @@ const createSelect = (
 
 export default (schema) => {
 	if (schema.nodes.code_block) {
-		console.log('doing it, I really, really, really hope');
 		return [
 			codeMirrorBlockPlugin({
 				...defaultSettings,
