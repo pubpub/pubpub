@@ -42,7 +42,9 @@ export const codeMirrorBlockNodeView = (settings: CodeBlockSettings) => {
 	return (pmNode: Node, view: PMEditorView, getPos: (() => number) | boolean): NodeView => {
 		let node = pmNode;
 		let updating = false;
-		const dom = document.createElement('div');
+		const wrap = document.createElement('pre');
+		const dom = document.createElement('code');
+		wrap.append(dom);
 		dom.className = 'codeblock-root';
 		const languageConf = new Compartment();
 		const state = EditorState.create({
@@ -152,7 +154,7 @@ export const codeMirrorBlockNodeView = (settings: CodeBlockSettings) => {
 		setMode(node.attrs.lang, codeMirrorView, settings, languageConf);
 
 		return {
-			dom,
+			dom: wrap,
 			selectNode() {
 				codeMirrorView.focus();
 			},
