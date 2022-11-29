@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, Classes } from '@blueprintjs/core';
 
 import {
 	DatePicker,
@@ -12,7 +12,7 @@ import {
 	FacetEditor,
 	TitleEditor,
 } from 'components';
-import { Pub, PubWithCollections } from 'types';
+import { DepositTarget, Pub, PubWithCollections } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { slugifyString } from 'utils/strings';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
@@ -29,6 +29,7 @@ import DashboardSettingsFrame, { Subtab } from '../DashboardSettingsFrame';
 type Props = {
 	settingsData: {
 		pubData: PubWithCollections;
+		depositTarget?: DepositTarget;
 	};
 };
 
@@ -51,10 +52,15 @@ const PubSettings = (props: Props) => {
 	} = usePersistableState<Pub>(settingsData.pubData, async (update) => {
 		await pendingPromise(apiFetch.put('/api/pubs', { pubId: pubData.id, ...update }));
 		if (update.slug && update.slug !== settingsData.pubData.slug) {
-			window.location.href = getDashUrl({
-				pubSlug: update.slug,
-				mode: 'settings',
-			});
+			// The setTimeout() gives the usePersistableState hook a chance to disable its
+			// onBeforeUnload hook. which triggers a browser popup asking the user if they really
+			// want to navigate away.
+			setTimeout(() => {
+				window.location.href = getDashUrl({
+					pubSlug: update.slug,
+					mode: 'settings',
+				});
+			}, 0);
 		}
 	});
 	const headerBackgroundImage = useFacetsQuery((F) => F.PubHeaderTheme.backgroundImage);
@@ -65,7 +71,7 @@ const PubSettings = (props: Props) => {
 				<SettingsSection title="Details" showTitle={false}>
 					<InputField label="Title" error={!pubData.title ? 'Required' : null}>
 						<TitleEditor
-							className="bp3-input"
+							className={Classes.INPUT}
 							initialValue={pubData.htmlTitle ?? pubData.title}
 							onInput={(nextHtmlTitle, nextTitle) =>
 								updatePubData({ htmlTitle: nextHtmlTitle, title: nextTitle })
@@ -158,6 +164,7 @@ const PubSettings = (props: Props) => {
 					communityData={communityData}
 					updatePubData={updatePersistedPubData}
 					canIssueDoi={canAdminCommunity}
+					depositTarget={settingsData.depositTarget}
 				/>
 			</SettingsSection>
 		);
