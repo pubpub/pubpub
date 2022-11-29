@@ -1,34 +1,37 @@
-import { cppLanguage } from '@codemirror/lang-cpp';
-import { cssLanguage } from '@codemirror/lang-css';
-import { htmlLanguage } from '@codemirror/lang-html';
-import { phpLanguage } from '@codemirror/lang-php';
-// import { sqlLanguage } from '@codemirror/lang-sql';
-import { xmlLanguage } from '@codemirror/lang-xml';
-import { javascriptLanguage } from '@codemirror/lang-javascript';
-import { javaLanguage } from '@codemirror/lang-java';
-import { jsonLanguage } from '@codemirror/lang-json';
+// the lezer parsers that @codemirror depends on
+import { parser as cppParser } from '@lezer/cpp';
+import { parser as cssParser } from '@lezer/css';
+import { parser as htmlParser } from '@lezer/html';
+import { parser as phpParser } from '@lezer/php';
+import { parser as xmlParser } from '@lezer/xml';
+import { parser as javascriptParser } from '@lezer/javascript';
+import { parser as javaParser } from '@lezer/java';
+import { parser as jsonParser } from '@lezer/json';
+import { parser as markdownParser } from '@lezer/markdown';
+import { parser as pythonParser } from '@lezer/python';
+import { parser as rustParser } from '@lezer/rust';
+
+// the  few we need from codemirror
+import { sql } from '@codemirror/lang-sql';
 import { lezerLanguage } from '@codemirror/lang-lezer';
-// import { markdownLanguage } from '@codemirror/lang-markdown';
-import { pythonLanguage } from '@codemirror/lang-python';
-import { rustLanguage } from '@codemirror/lang-rust';
 import { wastLanguage } from '@codemirror/lang-wast';
 
 import { Parsers } from './types';
 
 const parsers: Parsers = {
-	cpp: cppLanguage.parser,
-	css: cssLanguage.parser,
-	html: htmlLanguage.parser,
-	php: phpLanguage.parser,
-	// sql: sqlLanguage.parser,
-	xml: xmlLanguage.parser,
-	javascript: javascriptLanguage.parser,
-	java: javaLanguage.parser,
-	json: jsonLanguage.parser,
+	cpp: cppParser,
+	css: cssParser,
+	html: htmlParser,
+	php: phpParser,
+	sql: sql().language.parser,
+	xml: xmlParser,
+	javascript: javascriptParser,
+	java: javaParser,
+	json: jsonParser,
 	lezer: lezerLanguage.parser,
-	// markdown: markdownLanguage.parser,
-	python: pythonLanguage.parser,
-	rust: rustLanguage.parser,
+	markdown: markdownParser,
+	python: pythonParser,
+	rust: rustParser,
 	wast: wastLanguage.parser,
 };
 

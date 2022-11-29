@@ -3,6 +3,9 @@ import { Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { Extension } from '@codemirror/state';
 import { LanguageSupport, LRLanguage } from '@codemirror/language';
+import { LRParser } from '@lezer/lr';
+import { MarkdownParser } from '@lezer/markdown';
+import { sql } from '@codemirror/lang-sql';
 
 import { CodeBlockLanguages, LegacyLanguages } from './languages';
 
@@ -10,7 +13,14 @@ type LanguageName = typeof CodeBlockLanguages[number] | typeof LegacyLanguages[n
 
 export type LanguageLoaders = Record<LanguageName, () => Promise<LanguageSupport>>;
 
-export type Parsers = Record<LanguageName[number], LRLanguage['parser']>;
+// TODO how to get this type? I thought it was the { Parser } abstract class out of @codemirror/common, but no dice
+const sqlParser = sql().language.parser;
+type SQLParser = typeof sqlParser;
+
+export type Parsers = Record<
+	LanguageName[number],
+	LRLanguage['parser'] | LRParser | MarkdownParser | SQLParser
+>;
 
 export type CodeBlockSettings = {
 	createSelect: (

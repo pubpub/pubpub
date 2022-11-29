@@ -14,10 +14,11 @@ import React from 'react';
 import css from 'css';
 import camelCaseCss from 'camelcase-css';
 import { Node } from 'prosemirror-model';
-import { defaultHighlightStyle, HighlightStyle } from '@codemirror/language';
 import { getReactedDoc } from '@pubpub/prosemirror-reactive';
 
 import { DocJson } from 'types';
+
+import { getHighlightStylesFromDoc } from './highlightStyles';
 
 const parseStyleToObject = (style) => {
 	try {
@@ -153,17 +154,6 @@ export const getReactedDocFromJson = (doc, schema, noteManager, nodeLabels) => {
 		},
 	});
 	return reactedDoc.toJSON() as DocJson;
-};
-
-type HighlightStylesMap = Record<string, HighlightStyle>;
-
-const getHighlightStylesFromDoc = (doc: DocJson): HighlightStylesMap => {
-	const highlightStyles: HighlightStylesMap = {};
-	const hasSomeCodeBlocks = doc.content.some((node) => node.type === 'code_block');
-	if (hasSomeCodeBlocks) {
-		highlightStyles.code_block = defaultHighlightStyle;
-	}
-	return highlightStyles;
 };
 
 export const renderStatic = ({
