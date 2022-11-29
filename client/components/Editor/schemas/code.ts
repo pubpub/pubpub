@@ -1,8 +1,9 @@
 import { DOMOutputSpec, Node, NodeSpec } from 'prosemirror-model';
 import { highlightTree } from '@lezer/highlight';
 import { defaultHighlightStyle } from '@codemirror/language';
-import { parser as javascriptParser } from '@lezer/javascript';
 import type { Tree } from '@lezer/common';
+
+import { parsers } from '../plugins/code';
 
 const fromLezer = (source: string, tree: Tree) => {
 	const children: DOMOutputSpec[] = [];
@@ -22,9 +23,6 @@ const fromLezer = (source: string, tree: Tree) => {
 };
 
 const renderStaticCode = (node: Node): DOMOutputSpec => {
-	const parsers = {
-		javascript: javascriptParser,
-	};
 	const parser = parsers[node.attrs.lang];
 	const tree = parser.parse(node.textContent);
 	const children = fromLezer(node.textContent, tree as unknown as Tree);

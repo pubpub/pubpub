@@ -2,9 +2,15 @@ import { EditorState, Transaction } from 'prosemirror-state';
 import { Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { Extension } from '@codemirror/state';
-import { LanguageSupport } from '@codemirror/language';
+import { LanguageSupport, LRLanguage } from '@codemirror/language';
 
-export type LanguageLoaders = Record<string, () => Promise<LanguageSupport>>;
+import { CodeBlockLanguages, LegacyLanguages } from './languages';
+
+type LanguageName = typeof CodeBlockLanguages[number] | typeof LegacyLanguages[number];
+
+export type LanguageLoaders = Record<LanguageName, () => Promise<LanguageSupport>>;
+
+export type Parsers = Record<LanguageName[number], LRLanguage['parser']>;
 
 export type CodeBlockSettings = {
 	createSelect: (

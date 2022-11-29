@@ -2,354 +2,349 @@
 // @ts-nocheck
 
 import { StreamLanguage } from '@codemirror/language';
-import { CodeBlockLanguages, LegacyLanguages } from './languages';
+
 import { LanguageLoaders } from './types';
 
 const languageLoaders: LanguageLoaders = {
-	[CodeBlockLanguages.cpp]: () => import('@codemirror/lang-cpp').then((i) => i.cpp()),
-	[CodeBlockLanguages.css]: () => import('@codemirror/lang-css').then((i) => i.css()),
-	[CodeBlockLanguages.html]: () => import('@codemirror/lang-html').then((i) => i.html()),
-	[CodeBlockLanguages.php]: () => import('@codemirror/lang-php').then((i) => i.php()),
-	[CodeBlockLanguages.sql]: () => import('@codemirror/lang-sql').then((i) => i.sql()),
-	[CodeBlockLanguages.xml]: () => import('@codemirror/lang-xml').then((i) => i.xml()),
-	[CodeBlockLanguages.javascript]: () =>
-		import('@codemirror/lang-javascript').then((i) => i.javascript()),
-	[CodeBlockLanguages.java]: () => import('@codemirror/lang-java').then((i) => i.java()),
-	[CodeBlockLanguages.json]: () => import('@codemirror/lang-json').then((i) => i.json()),
-	[CodeBlockLanguages.lezer]: () => import('@codemirror/lang-lezer').then((i) => i.lezer()),
-	[CodeBlockLanguages.markdown]: () =>
-		import('@codemirror/lang-markdown').then((i) => i.markdown()),
-	[CodeBlockLanguages.python]: () => import('@codemirror/lang-python').then((i) => i.python()),
-	[CodeBlockLanguages.rust]: () => import('@codemirror/lang-rust').then((i) => i.rust()),
-	[CodeBlockLanguages.wast]: () => import('@codemirror/lang-wast').then((i) => i.wast()),
+	cpp: () => import('@codemirror/lang-cpp').then((i) => i.cpp()),
+	css: () => import('@codemirror/lang-css').then((i) => i.css()),
+	html: () => import('@codemirror/lang-html').then((i) => i.html()),
+	php: () => import('@codemirror/lang-php').then((i) => i.php()),
+	sql: () => import('@codemirror/lang-sql').then((i) => i.sql()),
+	xml: () => import('@codemirror/lang-xml').then((i) => i.xml()),
+	javascript: () => import('@codemirror/lang-javascript').then((i) => i.javascript()),
+	java: () => import('@codemirror/lang-java').then((i) => i.java()),
+	json: () => import('@codemirror/lang-json').then((i) => i.json()),
+	lezer: () => import('@codemirror/lang-lezer').then((i) => i.lezer()),
+	markdown: () => import('@codemirror/lang-markdown').then((i) => i.markdown()),
+	python: () => import('@codemirror/lang-python').then((i) => i.python()),
+	rust: () => import('@codemirror/lang-rust').then((i) => i.rust()),
+	wast: () => import('@codemirror/lang-wast').then((i) => i.wast()),
 };
 
 export const legacyLanguageLoaders: LanguageLoaders = {
-	[LegacyLanguages.apl]: () =>
+	apl: () =>
 		import('@codemirror/legacy-modes/mode/apl').then(({ apl }) => StreamLanguage.define(apl)),
-	[LegacyLanguages.asciiarmor]: () =>
+	asciiarmor: () =>
 		import('@codemirror/legacy-modes/mode/asciiarmor').then(({ asciiArmor }) =>
 			StreamLanguage.define(asciiArmor),
 		),
-	[LegacyLanguages.asn1]: () =>
+	asn1: () =>
 		import('@codemirror/legacy-modes/mode/asn1').then(({ asn1 }) =>
 			StreamLanguage.define(asn1),
 		),
-	[LegacyLanguages.asterisk]: () =>
+	asterisk: () =>
 		import('@codemirror/legacy-modes/mode/asterisk').then(({ asterisk }) =>
 			StreamLanguage.define(asterisk),
 		),
-	[LegacyLanguages.brainfuck]: () =>
+	brainfuck: () =>
 		import('@codemirror/legacy-modes/mode/brainfuck').then(({ brainfuck }) =>
 			StreamLanguage.define(brainfuck),
 		),
-	[LegacyLanguages.clike]: () =>
+	clike: () =>
 		import('@codemirror/legacy-modes/mode/clike').then(({ clike }) =>
 			StreamLanguage.define(clike),
 		),
-	[LegacyLanguages.clojure]: () =>
+	clojure: () =>
 		import('@codemirror/legacy-modes/mode/clojure').then(({ clojure }) =>
 			StreamLanguage.define(clojure),
 		),
-	[LegacyLanguages.cmake]: () =>
+	cmake: () =>
 		import('@codemirror/legacy-modes/mode/cmake').then(({ cmake }) =>
 			StreamLanguage.define(cmake),
 		),
-	[LegacyLanguages.cobol]: () =>
+	cobol: () =>
 		import('@codemirror/legacy-modes/mode/cobol').then(({ cobol }) =>
 			StreamLanguage.define(cobol),
 		),
-	[LegacyLanguages.coffeescript]: () =>
+	coffeescript: () =>
 		import('@codemirror/legacy-modes/mode/coffeescript').then(({ coffeeScript }) =>
 			StreamLanguage.define(coffeeScript),
 		),
-	[LegacyLanguages.commonlisp]: () =>
+	commonlisp: () =>
 		import('@codemirror/legacy-modes/mode/commonlisp').then(({ commonLisp }) =>
 			StreamLanguage.define(commonLisp),
 		),
-	[LegacyLanguages.crystal]: () =>
+	crystal: () =>
 		import('@codemirror/legacy-modes/mode/crystal').then(({ crystal }) =>
 			StreamLanguage.define(crystal),
 		),
-	[LegacyLanguages.cypher]: () =>
+	cypher: () =>
 		import('@codemirror/legacy-modes/mode/cypher').then(({ cypher }) =>
 			StreamLanguage.define(cypher),
 		),
-	[LegacyLanguages.d]: () =>
-		import('@codemirror/legacy-modes/mode/d').then(({ d }) => StreamLanguage.define(d)),
-	[LegacyLanguages.diff]: () =>
+	d: () => import('@codemirror/legacy-modes/mode/d').then(({ d }) => StreamLanguage.define(d)),
+	diff: () =>
 		import('@codemirror/legacy-modes/mode/diff').then(({ diff }) =>
 			StreamLanguage.define(diff),
 		),
-	[LegacyLanguages.dockerfile]: () =>
+	dockerfile: () =>
 		import('@codemirror/legacy-modes/mode/dockerfile').then(({ dockerFile }) =>
 			StreamLanguage.define(dockerFile),
 		),
-	[LegacyLanguages.dtd]: () =>
+	dtd: () =>
 		import('@codemirror/legacy-modes/mode/dtd').then(({ dtd }) => StreamLanguage.define(dtd)),
-	[LegacyLanguages.dylan]: () =>
+	dylan: () =>
 		import('@codemirror/legacy-modes/mode/dylan').then(({ dylan }) =>
 			StreamLanguage.define(dylan),
 		),
-	[LegacyLanguages.ebnf]: () =>
+	ebnf: () =>
 		import('@codemirror/legacy-modes/mode/ebnf').then(({ ebnf }) =>
 			StreamLanguage.define(ebnf),
 		),
-	[LegacyLanguages.ecl]: () =>
+	ecl: () =>
 		import('@codemirror/legacy-modes/mode/ecl').then(({ ecl }) => StreamLanguage.define(ecl)),
-	[LegacyLanguages.eiffel]: () =>
+	eiffel: () =>
 		import('@codemirror/legacy-modes/mode/eiffel').then(({ eiffel }) =>
 			StreamLanguage.define(eiffel),
 		),
-	[LegacyLanguages.elm]: () =>
+	elm: () =>
 		import('@codemirror/legacy-modes/mode/elm').then(({ elm }) => StreamLanguage.define(elm)),
-	[LegacyLanguages.erlang]: () =>
+	erlang: () =>
 		import('@codemirror/legacy-modes/mode/erlang').then(({ erlang }) =>
 			StreamLanguage.define(erlang),
 		),
-	[LegacyLanguages.factor]: () =>
+	factor: () =>
 		import('@codemirror/legacy-modes/mode/factor').then(({ factor }) =>
 			StreamLanguage.define(factor),
 		),
-	[LegacyLanguages.fcl]: () =>
+	fcl: () =>
 		import('@codemirror/legacy-modes/mode/fcl').then(({ fcl }) => StreamLanguage.define(fcl)),
-	[LegacyLanguages.forth]: () =>
+	forth: () =>
 		import('@codemirror/legacy-modes/mode/forth').then(({ forth }) =>
 			StreamLanguage.define(forth),
 		),
-	[LegacyLanguages.fortran]: () =>
+	fortran: () =>
 		import('@codemirror/legacy-modes/mode/fortran').then(({ fortran }) =>
 			StreamLanguage.define(fortran),
 		),
-	[LegacyLanguages.gas]: () =>
+	gas: () =>
 		import('@codemirror/legacy-modes/mode/gas').then(({ gas }) => StreamLanguage.define(gas)),
-	[LegacyLanguages.gherkin]: () =>
+	gherkin: () =>
 		import('@codemirror/legacy-modes/mode/gherkin').then(({ gherkin }) =>
 			StreamLanguage.define(gherkin),
 		),
-	[LegacyLanguages.go]: () =>
+	go: () =>
 		import('@codemirror/legacy-modes/mode/go').then(({ go }) => StreamLanguage.define(go)),
-	[LegacyLanguages.groovy]: () =>
+	groovy: () =>
 		import('@codemirror/legacy-modes/mode/groovy').then(({ groovy }) =>
 			StreamLanguage.define(groovy),
 		),
-	[LegacyLanguages.haskell]: () =>
+	haskell: () =>
 		import('@codemirror/legacy-modes/mode/haskell').then(({ haskell }) =>
 			StreamLanguage.define(haskell),
 		),
-	[LegacyLanguages.haxe]: () =>
+	haxe: () =>
 		import('@codemirror/legacy-modes/mode/haxe').then(({ haxe }) =>
 			StreamLanguage.define(haxe),
 		),
-	[LegacyLanguages.http]: () =>
+	http: () =>
 		import('@codemirror/legacy-modes/mode/http').then(({ http }) =>
 			StreamLanguage.define(http),
 		),
-	[LegacyLanguages.idl]: () =>
+	idl: () =>
 		import('@codemirror/legacy-modes/mode/idl').then(({ idl }) => StreamLanguage.define(idl)),
-	[LegacyLanguages.jinja2]: () =>
+	jinja2: () =>
 		import('@codemirror/legacy-modes/mode/jinja2').then(({ jinja2 }) =>
 			StreamLanguage.define(jinja2),
 		),
-	[LegacyLanguages.julia]: () =>
+	julia: () =>
 		import('@codemirror/legacy-modes/mode/julia').then(({ julia }) =>
 			StreamLanguage.define(julia),
 		),
-	[LegacyLanguages.livescript]: () =>
+	livescript: () =>
 		import('@codemirror/legacy-modes/mode/livescript').then(({ liveScript }) =>
 			StreamLanguage.define(liveScript),
 		),
-	[LegacyLanguages.lua]: () =>
+	lua: () =>
 		import('@codemirror/legacy-modes/mode/lua').then(({ lua: legacyLua }) =>
 			StreamLanguage.define(legacyLua),
 		),
-	[LegacyLanguages.mathematica]: () =>
+	mathematica: () =>
 		import('@codemirror/legacy-modes/mode/mathematica').then(({ mathematica }) =>
 			StreamLanguage.define(mathematica),
 		),
-	[LegacyLanguages.mbox]: () =>
+	mbox: () =>
 		import('@codemirror/legacy-modes/mode/mbox').then(({ mbox }) =>
 			StreamLanguage.define(mbox),
 		),
-	[LegacyLanguages.mirc]: () =>
+	mirc: () =>
 		import('@codemirror/legacy-modes/mode/mirc').then(({ mirc }) =>
 			StreamLanguage.define(mirc),
 		),
-	[LegacyLanguages.mllike]: () =>
+	mllike: () =>
 		import('@codemirror/legacy-modes/mode/mllike').then(({ oCaml }) =>
 			StreamLanguage.define(oCaml),
 		),
-	[LegacyLanguages.modelica]: () =>
+	modelica: () =>
 		import('@codemirror/legacy-modes/mode/modelica').then(({ modelica }) =>
 			StreamLanguage.define(modelica),
 		),
-	[LegacyLanguages.mscgen]: () =>
+	mscgen: () =>
 		import('@codemirror/legacy-modes/mode/mscgen').then(({ mscgen }) =>
 			StreamLanguage.define(mscgen),
 		),
-	[LegacyLanguages.mumps]: () =>
+	mumps: () =>
 		import('@codemirror/legacy-modes/mode/mumps').then(({ mumps }) =>
 			StreamLanguage.define(mumps),
 		),
-	[LegacyLanguages.nginx]: () =>
+	nginx: () =>
 		import('@codemirror/legacy-modes/mode/nginx').then(({ nginx }) =>
 			StreamLanguage.define(nginx),
 		),
-	[LegacyLanguages.nsis]: () =>
+	nsis: () =>
 		import('@codemirror/legacy-modes/mode/nsis').then(({ nsis }) =>
 			StreamLanguage.define(nsis),
 		),
-	[LegacyLanguages.ntriples]: () =>
+	ntriples: () =>
 		import('@codemirror/legacy-modes/mode/ntriples').then(({ ntriples }) =>
 			StreamLanguage.define(ntriples),
 		),
-	[LegacyLanguages.octave]: () =>
+	octave: () =>
 		import('@codemirror/legacy-modes/mode/octave').then(({ octave }) =>
 			StreamLanguage.define(octave),
 		),
-	[LegacyLanguages.oz]: () =>
+	oz: () =>
 		import('@codemirror/legacy-modes/mode/oz').then(({ oz }) => StreamLanguage.define(oz)),
-	[LegacyLanguages.pascal]: () =>
+	pascal: () =>
 		import('@codemirror/legacy-modes/mode/pascal').then(({ pascal }) =>
 			StreamLanguage.define(pascal),
 		),
-	[LegacyLanguages.perl]: () =>
+	perl: () =>
 		import('@codemirror/legacy-modes/mode/perl').then(({ perl }) =>
 			StreamLanguage.define(perl),
 		),
-	[LegacyLanguages.pig]: () =>
+	pig: () =>
 		import('@codemirror/legacy-modes/mode/pig').then(({ pig }) => StreamLanguage.define(pig)),
-	[LegacyLanguages.powershell]: () =>
+	powershell: () =>
 		import('@codemirror/legacy-modes/mode/powershell').then(({ powerShell }) =>
 			StreamLanguage.define(powerShell),
 		),
-	[LegacyLanguages.properties]: () =>
+	properties: () =>
 		import('@codemirror/legacy-modes/mode/properties').then(({ properties }) =>
 			StreamLanguage.define(properties),
 		),
-	[LegacyLanguages.protobuf]: () =>
+	protobuf: () =>
 		import('@codemirror/legacy-modes/mode/protobuf').then(({ protobuf }) =>
 			StreamLanguage.define(protobuf),
 		),
-	[LegacyLanguages.puppet]: () =>
+	puppet: () =>
 		import('@codemirror/legacy-modes/mode/puppet').then(({ puppet }) =>
 			StreamLanguage.define(puppet),
 		),
-	[LegacyLanguages.q]: () =>
-		import('@codemirror/legacy-modes/mode/q').then(({ q }) => StreamLanguage.define(q)),
-	[LegacyLanguages.r]: () =>
-		import('@codemirror/legacy-modes/mode/r').then(({ r }) => StreamLanguage.define(r)),
-	[LegacyLanguages.rpm]: () =>
+	q: () => import('@codemirror/legacy-modes/mode/q').then(({ q }) => StreamLanguage.define(q)),
+	r: () => import('@codemirror/legacy-modes/mode/r').then(({ r }) => StreamLanguage.define(r)),
+	rpm: () =>
 		import('@codemirror/legacy-modes/mode/rpm').then(({ rpmSpec }) =>
 			StreamLanguage.define(rpmSpec),
 		),
-	[LegacyLanguages.ruby]: () =>
+	ruby: () =>
 		import('@codemirror/legacy-modes/mode/ruby').then(({ ruby }) =>
 			StreamLanguage.define(ruby),
 		),
-	[LegacyLanguages.sas]: () =>
+	sas: () =>
 		import('@codemirror/legacy-modes/mode/sas').then(({ sas }) => StreamLanguage.define(sas)),
-	[LegacyLanguages.scheme]: () =>
+	scheme: () =>
 		import('@codemirror/legacy-modes/mode/scheme').then(({ scheme }) =>
 			StreamLanguage.define(scheme),
 		),
-	[LegacyLanguages.shell]: () =>
+	shell: () =>
 		import('@codemirror/legacy-modes/mode/shell').then(({ shell }) =>
 			StreamLanguage.define(shell),
 		),
-	[LegacyLanguages.smalltalk]: () =>
+	smalltalk: () =>
 		import('@codemirror/legacy-modes/mode/smalltalk').then(({ smalltalk }) =>
 			StreamLanguage.define(smalltalk),
 		),
-	[LegacyLanguages.solr]: () =>
+	solr: () =>
 		import('@codemirror/legacy-modes/mode/solr').then(({ solr }) =>
 			StreamLanguage.define(solr),
 		),
-	[LegacyLanguages.sparql]: () =>
+	sparql: () =>
 		import('@codemirror/legacy-modes/mode/sparql').then(({ sparql }) =>
 			StreamLanguage.define(sparql),
 		),
-	[LegacyLanguages.spreadsheet]: () =>
+	spreadsheet: () =>
 		import('@codemirror/legacy-modes/mode/spreadsheet').then(({ spreadsheet }) =>
 			StreamLanguage.define(spreadsheet),
 		),
-	[LegacyLanguages.stex]: () =>
+	stex: () =>
 		import('@codemirror/legacy-modes/mode/stex').then(({ stex }) =>
 			StreamLanguage.define(stex),
 		),
-	[LegacyLanguages.stylus]: () =>
+	stylus: () =>
 		import('@codemirror/legacy-modes/mode/stylus').then(({ stylus }) =>
 			StreamLanguage.define(stylus),
 		),
-	[LegacyLanguages.swift]: () =>
+	swift: () =>
 		import('@codemirror/legacy-modes/mode/swift').then(({ swift }) =>
 			StreamLanguage.define(swift),
 		),
-	[LegacyLanguages.tcl]: () =>
+	tcl: () =>
 		import('@codemirror/legacy-modes/mode/tcl').then(({ tcl }) => StreamLanguage.define(tcl)),
-	[LegacyLanguages.textile]: () =>
+	textile: () =>
 		import('@codemirror/legacy-modes/mode/textile').then(({ textile }) =>
 			StreamLanguage.define(textile),
 		),
-	[LegacyLanguages.tiddlywiki]: () =>
+	tiddlywiki: () =>
 		import('@codemirror/legacy-modes/mode/tiddlywiki').then(({ tiddlyWiki }) =>
 			StreamLanguage.define(tiddlyWiki),
 		),
-	[LegacyLanguages.tiki]: () =>
+	tiki: () =>
 		import('@codemirror/legacy-modes/mode/tiki').then(({ tiki }) =>
 			StreamLanguage.define(tiki),
 		),
-	[LegacyLanguages.toml]: () =>
+	toml: () =>
 		import('@codemirror/legacy-modes/mode/toml').then(({ toml }) =>
 			StreamLanguage.define(toml),
 		),
-	[LegacyLanguages.troff]: () =>
+	troff: () =>
 		import('@codemirror/legacy-modes/mode/troff').then(({ troff }) =>
 			StreamLanguage.define(troff),
 		),
-	[LegacyLanguages.ttcn]: () =>
+	ttcn: () =>
 		import('@codemirror/legacy-modes/mode/ttcn').then(({ ttcn }) =>
 			StreamLanguage.define(ttcn),
 		),
-	[LegacyLanguages.turtle]: () =>
+	turtle: () =>
 		import('@codemirror/legacy-modes/mode/turtle').then(({ turtle }) =>
 			StreamLanguage.define(turtle),
 		),
-	[LegacyLanguages.vb]: () =>
+	vb: () =>
 		import('@codemirror/legacy-modes/mode/vb').then(({ vb }) => StreamLanguage.define(vb)),
-	[LegacyLanguages.vbscript]: () =>
+	vbscript: () =>
 		import('@codemirror/legacy-modes/mode/vbscript').then(({ vbScript }) =>
 			StreamLanguage.define(vbScript),
 		),
-	[LegacyLanguages.velocity]: () =>
+	velocity: () =>
 		import('@codemirror/legacy-modes/mode/velocity').then(({ velocity }) =>
 			StreamLanguage.define(velocity),
 		),
-	[LegacyLanguages.verilog]: () =>
+	verilog: () =>
 		import('@codemirror/legacy-modes/mode/verilog').then(({ verilog }) =>
 			StreamLanguage.define(verilog),
 		),
-	[LegacyLanguages.vhdl]: () =>
+	vhdl: () =>
 		import('@codemirror/legacy-modes/mode/vhdl').then(({ vhdl }) =>
 			StreamLanguage.define(vhdl),
 		),
-	[LegacyLanguages.webidl]: () =>
+	webidl: () =>
 		import('@codemirror/legacy-modes/mode/webidl').then(({ webIDL }) =>
 			StreamLanguage.define(webIDL),
 		),
-	[LegacyLanguages.xquery]: () =>
+	xquery: () =>
 		import('@codemirror/legacy-modes/mode/xquery').then(({ xQuery }) =>
 			StreamLanguage.define(xQuery),
 		),
-	[LegacyLanguages.yacas]: () =>
+	yacas: () =>
 		import('@codemirror/legacy-modes/mode/yacas').then(({ yacas }) =>
 			StreamLanguage.define(yacas),
 		),
-	[LegacyLanguages.yaml]: () =>
+	yaml: () =>
 		import('@codemirror/legacy-modes/mode/yaml').then(({ yaml }) =>
 			StreamLanguage.define(yaml),
 		),
-	[LegacyLanguages.z80]: () =>
+	z80: () =>
 		import('@codemirror/legacy-modes/mode/z80').then(({ z80 }) => StreamLanguage.define(z80)),
 };
 

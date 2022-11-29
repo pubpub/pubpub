@@ -10,6 +10,7 @@ import { codeBlockArrowHandlers } from './utils';
 import { CodeBlockLanguages, LegacyLanguages } from './languages';
 import { defaultSettings } from './defaults';
 import languageLoaders, { legacyLanguageLoaders } from './languageLoaders';
+import parsers from './parsers';
 
 export const codeMirrorBlockKey = new PluginKey('codemirror-block');
 
@@ -33,6 +34,7 @@ export {
 	CodeBlockLanguages,
 	LegacyLanguages,
 	defaultSettings,
+	parsers,
 	languageLoaders,
 	legacyLanguageLoaders,
 };
