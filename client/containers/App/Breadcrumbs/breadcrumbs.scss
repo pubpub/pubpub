@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .breadcrumbs-component {
 	z-index: 10;
 	background: #fff;
@@ -46,7 +42,7 @@ $bp: vendor.$bp-namespace;
 			overflow: hidden;
 			display: flex;
 			align-items: baseline;
-			.#{$bp}-icon {
+			.bp3-icon {
 				margin-right: 5px;
 				opacity: 0.5;
 			}
@@ -75,7 +71,7 @@ $bp: vendor.$bp-namespace;
 	}
 	.breadcrumb-actions {
 		flex: 0 0 auto;
-		.#{$bp}-button {
+		.bp3-button {
 			margin-left: 15px;
 		}
 	}

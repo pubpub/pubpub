@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Classes, MenuItem } from '@blueprintjs/core';
+import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 
@@ -35,7 +35,7 @@ const LinkedPageSelect = (props: Props) => {
 				});
 			}}
 			onItemSelect={onSelectPage}
-			popoverProps={{ popoverClassName: Classes.MINIMAL }}
+			popoverProps={{ popoverClassName: 'bp3-minimal' }}
 		>
 			<Button
 				className="linked-page-select-button"

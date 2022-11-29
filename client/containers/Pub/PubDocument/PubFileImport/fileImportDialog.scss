@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 $drop-area-bkg: rgba(138, 155, 168, 0.15);
 
 @mixin fix-button {
@@ -18,7 +14,7 @@ $drop-area-bkg: rgba(138, 155, 168, 0.15);
 	.drop-area-container {
 		width: 100%;
 	}
-	.#{$bp}-button.file-drop-area {
+	.bp3-button.file-drop-area {
 		@include fix-button();
 		height: 150px;
 		background: $drop-area-bkg;
@@ -29,12 +25,12 @@ $drop-area-bkg: rgba(138, 155, 168, 0.15);
 			margin-top: 4px;
 			font-size: 0.8em;
 			font-style: italic;
-			.#{$bp}-popover-target {
+			.bp3-popover-target {
 				justify-content: center;
 			}
 		}
 	}
-	.#{$bp}-button.directory-drop-area {
+	.bp3-button.directory-drop-area {
 		@include fix-button();
 		height: 40px;
 	}
@@ -60,11 +56,11 @@ $drop-area-bkg: rgba(138, 155, 168, 0.15);
 	.metadata-info {
 		margin-top: 10px;
 	}
-	.#{$bp}-drawer-footer {
+	.bp3-drawer-footer {
 		text-align: right;
 	}
 	.dialog-footer {
-		.#{$bp}-button {
+		.bp3-button {
 			margin-right: 10px;
 		}
 		& > :last-child {
@@ -78,13 +74,13 @@ $drop-area-bkg: rgba(138, 155, 168, 0.15);
 	position: relative;
 	top: -175px;
 	text-align: center;
-	.#{$bp}-intent-primary {
+	.bp3-intent-primary {
 		-webkit-appearance: none;
 	}
 	input {
 		display: none;
 	}
-	.#{$bp}-button-text {
+	.bp3-button-text {
 		div:first-child {
 			font-size: 1.25em;
 			padding: 3px 0px 7px;

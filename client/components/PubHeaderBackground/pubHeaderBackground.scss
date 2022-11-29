@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 @import '../../containers/Pub/PubHeader/themes.scss';
 
 .pub-header-background-component {

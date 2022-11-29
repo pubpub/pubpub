@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Checkbox, Classes, NonIdealState } from '@blueprintjs/core';
+import { Button, NonIdealState, Checkbox } from '@blueprintjs/core';
 
 import { ColorInput, GridWrapper, InputField, ImageUpload } from 'components';
 import { slugifyString } from 'utils/strings';
@@ -74,7 +74,7 @@ const CommunityCreate = () => {
 						// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; visual: string; action: Ele... Remove this comment to see the full error message
 						visual="error"
 						action={
-							<a href="/login?redirect=/community/create" className={Classes.BUTTON}>
+							<a href="/login?redirect=/community/create" className="bp3-button">
 								Login or Signup
 							</a>
 						}
@@ -164,7 +164,7 @@ const CommunityCreate = () => {
 								<Button
 									name="create"
 									type="submit"
-									className={`${Classes.BUTTON} ${Classes.INTENT_PRIMARY} create-account-button`}
+									className="bp3-button bp3-intent-primary create-account-button"
 									onClick={onCreateSubmit}
 									text="Create Community"
 									disabled={!subdomain || !title || !acceptTerms}

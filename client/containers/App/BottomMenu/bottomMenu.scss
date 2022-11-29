@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 @import 'styles/mixins.scss';
 
 $bottom-menu-height: 50px;
@@ -94,7 +90,7 @@ $bottom-menu-height: 50px;
 				}
 				padding: 15px;
 				padding-left: 25px;
-				.#{$bp}-icon {
+				.bp3-icon {
 					color: #fff;
 					margin-top: 0px;
 				}
@@ -123,7 +119,7 @@ $bottom-menu-height: 50px;
 				color: #fff;
 				text-transform: capitalize;
 			}
-			.#{$bp}-icon {
+			.bp3-icon {
 				color: #fff;
 			}
 			[data-icon='caret-down'] {

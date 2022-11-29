@@ -122,7 +122,7 @@ class UserEdit extends Component<Props, State> {
 			{
 				label: 'Location',
 				showTextOnButton: true,
-				// icon: `${Classes.ICON}-map-marker`,
+				// icon: 'bp3-icon-map-marker',
 				value: this.state.location,
 				onChange: (evt) => {
 					this.setState({ location: evt.target.value, hasChanged: true });
@@ -131,7 +131,7 @@ class UserEdit extends Component<Props, State> {
 			{
 				label: 'Website',
 				showTextOnButton: true,
-				// icon: `${Classes.ICON}-link`,
+				// icon: 'bp3-icon-link',
 				value: this.state.website,
 				onChange: (evt) => {
 					this.setState({ website: evt.target.value, hasChanged: true });
@@ -139,7 +139,7 @@ class UserEdit extends Component<Props, State> {
 			},
 			{
 				label: 'Orcid',
-				// icon: `${Classes.ICON}-orcid`,
+				// icon: 'bp3-icon-orcid',
 				helperText: `https://orcid.org/${this.state.orcid}`,
 				value: this.state.orcid,
 				onChange: (evt) => {
@@ -148,7 +148,7 @@ class UserEdit extends Component<Props, State> {
 			},
 			{
 				label: 'Github',
-				// icon: `${Classes.ICON}-github`,
+				// icon: 'bp3-icon-github',
 				helperText: `https://github.com/${this.state.github}`,
 				value: this.state.github,
 				onChange: (evt) => {
@@ -157,7 +157,7 @@ class UserEdit extends Component<Props, State> {
 			},
 			{
 				label: 'Twitter',
-				// icon: `${Classes.ICON}-twitter`,
+				// icon: 'bp3-icon-twitter',
 				helperText: `https://twitter.com/${this.state.twitter}`,
 				value: this.state.twitter,
 				onChange: (evt) => {
@@ -166,7 +166,7 @@ class UserEdit extends Component<Props, State> {
 			},
 			{
 				label: 'Facebook',
-				// icon: `${Classes.ICON}-facebook`,
+				// icon: 'bp3-icon-facebook',
 				helperText: `https://facebook.com/${this.state.facebook}`,
 				value: this.state.facebook,
 				onChange: (evt) => {
@@ -175,7 +175,7 @@ class UserEdit extends Component<Props, State> {
 			},
 			{
 				label: 'Google Scholar',
-				// icon: `${Classes.ICON}-google-scholar`,
+				// icon: 'bp3-icon-google-scholar',
 				helperText: `https://scholar.google.com/citations?user=${this.state.googleScholar}`,
 				value: this.state.googleScholar,
 				onChange: (evt) => {

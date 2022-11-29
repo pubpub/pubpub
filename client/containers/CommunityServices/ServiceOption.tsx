@@ -1,5 +1,5 @@
-import React, { ReactElement, useState } from 'react';
 import { ButtonGroup, Button, Tooltip } from '@blueprintjs/core';
+import React, { ReactElement, useState } from 'react';
 
 require('./serviceOption.scss');
 

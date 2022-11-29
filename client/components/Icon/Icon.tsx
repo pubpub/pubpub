@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import {
-	Classes,
 	Icon as BlueprintIcon,
 	IconName as BlueprintIconName,
 	Intent as BlueprintIntent,
@@ -45,7 +44,7 @@ const Icon = (props: Props) => {
 			providedViewbox || `0 0 ${squareViewboxDimension} ${squareViewboxDimension}`;
 		return (
 			<span
-				className={classNames(Classes.ICON, useColor && 'color', className)}
+				className={classNames('bp3-icon', useColor && 'color', className)}
 				data-icon={icon.toLowerCase().replace(/_/gi, '-')}
 				aria-label={ariaLabel}
 				aria-hidden={ariaHidden}

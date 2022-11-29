@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .sharing-card-component {
 	padding: 4px 6px;
 	display: flex;
@@ -23,11 +19,11 @@ $bp: vendor.$bp-namespace;
 		flex-grow: 1;
 		flex-shrink: 1;
 		.avatar-component,
-		.#{$bp}-icon {
+		.bp3-icon {
 			margin-right: 0.5em;
 			flex-shrink: 0;
 		}
-		.#{$bp}-icon-people {
+		.bp3-icon-people {
 			font-size: 14px;
 			margin-right: 2px;
 		}
@@ -43,7 +39,7 @@ $bp: vendor.$bp-namespace;
 		display: flex;
 		align-items: center;
 	}
-	.#{$bp}-control {
+	.bp3-control {
 		margin-bottom: 0px;
 	}
 	&.add {

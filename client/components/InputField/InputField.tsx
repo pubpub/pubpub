@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React from 'react';
-import { Classes } from '@blueprintjs/core';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -51,26 +50,24 @@ const InputField = function (props) {
 		<div
 			className={classNames(
 				'input-field-component',
-				Classes.FORM_GROUP,
+				'bp3-form-group',
 				props.wrapperClassName,
-				props.error ? Classes.INTENT_DANGER : '',
+				props.error ? 'bp3-intent-danger' : '',
 			)}
 		>
-			<label className={Classes.LABEL} htmlFor={`input-${props.htmlFor || props.label}`}>
+			<label className="bp3-label" htmlFor={`input-${props.htmlFor || props.label}`}>
 				{props.label}
 				{props.isRequired && (
-					<span className={`${Classes.TEXT_MUTED} required-text`}> (required)</span>
+					<span className="bp3-text-muted required-text"> (required)</span>
 				)}
 			</label>
-			<div className={Classes.FORM_CONTENT}>
+			<div className="bp3-form-content">
 				{props.children}
-				<div
-					className={`${Classes.INPUT_GROUP} ${props.error ? Classes.INTENT_DANGER : ''}`}
-				>
+				<div className={`bp3-input-group ${props.error ? 'bp3-intent-danger' : ''}`}>
 					{!props.children && !props.isTextarea && (
 						<input
 							id={`input-${props.htmlFor || props.label}`}
-							className={Classes.INPUT}
+							className="bp3-input"
 							disabled={props.isDisabled}
 							placeholder={props.placeholder}
 							value={props.value}
@@ -86,7 +83,7 @@ const InputField = function (props) {
 					{!props.children && props.isTextarea && (
 						<textarea
 							id={`input-${props.label}`}
-							className={Classes.INPUT}
+							className="bp3-input"
 							disabled={props.isDisabled}
 							placeholder={props.placeholder}
 							value={props.value}
@@ -99,9 +96,7 @@ const InputField = function (props) {
 							ref={props.inputRef}
 						/>
 					)}
-					<div className={Classes.FORM_HELPER_TEXT}>
-						{props.error || props.helperText}
-					</div>
+					<div className="bp3-form-helper-text">{props.error || props.helperText}</div>
 				</div>
 			</div>
 		</div>

@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 @import '../overviewStyles.scss';
 
 $accent-color: $light-grey;
@@ -27,7 +23,7 @@ $transition-duration: 100ms;
 		padding: 12px;
 		transition: box-shadow $transition-duration, color $transition-duration;
 
-		.#{$bp}-icon.search-icon {
+		.bp3-icon.search-icon {
 			transition: color $transition-duration;
 			> svg {
 				fill: $accent-color;
@@ -66,7 +62,7 @@ $transition-duration: 100ms;
 			padding-left: 0;
 			padding-right: 0;
 			padding-bottom: 10px;
-			.#{$bp}-icon.search-icon {
+			.bp3-icon.search-icon {
 				margin-top: -5px;
 				margin-left: 9px;
 				> svg {

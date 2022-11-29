@@ -1,14 +1,10 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .sort-list-component {
 	padding: 1em;
 	min-width: 250px;
-	.#{$bp}-menu-header {
+	.bp3-menu-header {
 		margin-bottom: 15px;
 	}
-	.#{$bp}-menu-item {
+	.bp3-menu-item {
 		display: flex;
 		align-items: center;
 	}

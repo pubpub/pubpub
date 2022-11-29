@@ -1,11 +1,7 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .slider-input-component {
 	display: flex;
 	align-items: center;
-	.#{$bp}-input-group {
+	.bp3-input-group {
 		margin-left: 15px;
 		width: 50px;
 		display: flex;

@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .autosave-indicator-component {
 	color: #999;
 	display: flex;
@@ -14,8 +10,8 @@ $bp: vendor.$bp-namespace;
 		opacity: 1;
 	}
 
-	.#{$bp}-spinner,
-	.#{$bp}-icon {
+	.bp3-spinner,
+	.bp3-icon {
 		margin-right: 6px;
 	}
 }

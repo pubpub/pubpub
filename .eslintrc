@@ -1,6 +1,6 @@
 {
 	"extends": ["airbnb", "prettier"],
-	"plugins": ["react", "import", "prettier", "react-hooks", "pubpub-rules", "@typescript-eslint", "@blueprintjs"],
+	"plugins": ["react", "import", "prettier", "react-hooks", "pubpub-rules", "@typescript-eslint"],
 	"parser": "@typescript-eslint/parser",
 	"env": {
 		"browser": true,
@@ -112,8 +112,7 @@
 		"react/static-property-placement": 0,
 		"react/no-unescaped-entities": ["error", { "forbid": [">", "}"] }],
 		"react/require-default-props": 0,
-		"space-before-function-paren": 0,
-		"@blueprintjs/classes-constants": 2
+		"space-before-function-paren": 0
 	},
 	"overrides": [
 		{

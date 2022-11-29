@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .layout-editor-component {
 	.block-title {
 		display: flex;
@@ -19,7 +15,7 @@ $bp: vendor.$bp-namespace;
 		margin-bottom: 2em;
 		border: 1px solid #ccc;
 	}
-	// div is a specificity hack against an aggressive selection of .bp[#]-form-group in settingsSection.scss
+	// div is a specificity hack against an aggressive selection of .bp3-form-group in settingsSection.scss
 	div.block-header {
 		display: flex;
 		// align-items: flex-end;
@@ -32,10 +28,10 @@ $bp: vendor.$bp-namespace;
 		.input-field-component,
 		.image-upload-component,
 		.dropdown-grouping,
-		> .#{$bp}-form-group {
+		> .bp3-form-group {
 			margin: 0em 0.5em;
 		}
-		.input-field-component .#{$bp}-control.#{$bp}-checkbox {
+		.input-field-component .bp3-control.bp3-checkbox {
 			display: inline-block;
 			margin-right: 2em;
 			margin: 0.5em 2em 0px 0px;
@@ -117,7 +113,7 @@ $bp: vendor.$bp-namespace;
 		}
 	}
 	.layout-editor-collection-header-component {
-		.#{$bp}-form-content {
+		.bp3-form-content {
 			margin-left: 6px;
 		}
 	}
@@ -156,29 +152,29 @@ $bp: vendor.$bp-namespace;
 	.block-content {
 		transition: 100ms opacity;
 	}
-	.#{$bp}-popover-content {
+	.bp3-popover-content {
 		font-size: 14px;
 		font-weight: 400;
 	}
 }
 
-.#{$bp}-card.layout-editor-pubs_limit-pubs-component {
+.bp3-card.layout-editor-pubs_limit-pubs-component {
 	width: 300px;
 	user-select: none;
 	padding: 10px;
-	.#{$bp}-control:last-child {
+	.bp3-control:last-child {
 		margin-bottom: 0;
 	}
-	.#{$bp}-control input {
-		// .bp[#]-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
+	.bp3-control input {
+		// .bp3-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
 		opacity: 1;
 	}
 }
 
-.#{$bp}-card.layout-editor-pubs_preview-elements-component {
+.bp3-card.layout-editor-pubs_preview-elements-component {
 	user-select: none;
 	padding: 10px;
-	.#{$bp}-control:last-child {
+	.bp3-control:last-child {
 		margin-bottom: 0;
 	}
 }

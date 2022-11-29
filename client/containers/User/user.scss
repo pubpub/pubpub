@@ -1,17 +1,13 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 #user-container {
 	padding-top: 3em;
 	.content .row {
 		margin: 1em 0em;
 	}
-	.#{$bp}-non-ideal-state {
+	.bp3-non-ideal-state {
 		margin: 2em auto;
 	}
 	.external-pubs-wrapper {
-		.#{$bp}-button {
+		.bp3-button {
 			float: right;
 			margin-left: 1em;
 		}

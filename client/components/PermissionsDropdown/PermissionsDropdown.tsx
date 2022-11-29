@@ -32,7 +32,7 @@ const PermissionsDropdown = function (props) {
 		view: {
 			value: 'view',
 			title: 'View',
-			// icon: `${Classes.ICON}-eye-open`,
+			// icon: 'bp3-icon-eye-open',
 			onClick: () => {
 				props.onChange('view');
 			},
@@ -47,7 +47,7 @@ const PermissionsDropdown = function (props) {
 		edit: {
 			value: 'edit',
 			title: 'Edit',
-			// icon: `${Classes.ICON}-edit2`,
+			// icon: 'bp3-icon-edit2',
 			onClick: () => {
 				props.onChange('edit');
 			},
@@ -55,7 +55,7 @@ const PermissionsDropdown = function (props) {
 		manage: {
 			value: 'manage',
 			title: 'Manage',
-			// icon: `${Classes.ICON}-manage2`,
+			// icon: 'bp3-icon-manage2',
 			onClick: () => {
 				props.onChange('manage');
 			},

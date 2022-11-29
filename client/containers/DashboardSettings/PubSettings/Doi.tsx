@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
 import { Button, Callout, FormGroup, InputGroup } from '@blueprintjs/core';
+import React, { Component } from 'react';
 
 import { apiFetch } from 'client/utils/apiFetch';
 import { AssignDoi } from 'components';

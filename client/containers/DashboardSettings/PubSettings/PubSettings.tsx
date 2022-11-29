@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Classes } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 import {
 	DatePicker,
@@ -65,7 +65,7 @@ const PubSettings = (props: Props) => {
 				<SettingsSection title="Details" showTitle={false}>
 					<InputField label="Title" error={!pubData.title ? 'Required' : null}>
 						<TitleEditor
-							className={Classes.INPUT}
+							className="bp3-input"
 							initialValue={pubData.htmlTitle ?? pubData.title}
 							onInput={(nextHtmlTitle, nextTitle) =>
 								updatePubData({ htmlTitle: nextHtmlTitle, title: nextTitle })

@@ -1,10 +1,6 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .user-autocomplete-component {
 	width: 100%;
-	.#{$bp}-popover-target {
+	.bp3-popover-target {
 		width: 100%;
 	}
 }
@@ -13,7 +9,7 @@ $bp: vendor.$bp-namespace;
 	.autocomplete-name {
 		padding: 0em 1em;
 	}
-	.#{$bp}-menu-item {
+	.bp3-menu-item {
 		display: flex;
 		align-content: center;
 		align-items: center;

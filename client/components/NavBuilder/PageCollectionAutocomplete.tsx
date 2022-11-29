@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 import React, { Component } from 'react';
-import { Classes, MenuItem, Position } from '@blueprintjs/core';
+import { MenuItem, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 
@@ -103,8 +103,8 @@ class PageAutocomplete extends Component<Props, State> {
 									onClick={handleClick}
 									className={
 										modifiers.active
-											? `${Classes.MENU_ITEM} ${Classes.ACTIVE}`
-											: Classes.MENU_ITEM
+											? 'bp3-menu-item bp3-active'
+											: 'bp3-menu-item'
 									}
 								>
 									<span className="title">{item.title}</span>

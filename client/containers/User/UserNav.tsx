@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Classes } from '@blueprintjs/core';
 
 require('./userNav.scss');
 
@@ -27,14 +26,14 @@ const UserNav = function (props) {
 	];
 	return (
 		<div className="user-nav-component">
-			<div className={Classes.TABS}>
-				<div className={`${Classes.TAB_LIST} ${Classes.LARGE}`} role="tablist">
+			<div className="bp3-tabs">
+				<div className="bp3-tab-list bp3-large" role="tablist">
 					{tabs.map((tab) => {
 						return (
 							<a
 								key={`tab-${tab.id}`}
 								href={`/user/${props.userSlug}${tab.path}`}
-								className={Classes.TAB}
+								className="bp3-tab"
 								role="tab"
 								aria-selected={
 									tab.path.indexOf(props.activeTab) > -1 ||

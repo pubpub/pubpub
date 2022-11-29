@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Classes, Slider } from '@blueprintjs/core';
+import { Button, Slider } from '@blueprintjs/core';
 import AvatarEditor from 'react-avatar-editor';
 
 import { s3Upload } from 'client/utils/upload';
@@ -105,7 +105,7 @@ class ImageCropper extends Component<Props, State> {
 					<Button text="Cancel" onClick={this.props.onCancel} />
 					<Button
 						text="Crop and Save"
-						className={Classes.INTENT_PRIMARY}
+						className="bp3-intent-primary"
 						onClick={this.handleSaveClick}
 						loading={this.state.isUploading}
 					/>

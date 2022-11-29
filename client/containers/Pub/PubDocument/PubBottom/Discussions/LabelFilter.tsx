@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import {
-	Icon as BlueprintIcon,
-	Button,
 	ButtonGroup,
-	Classes,
+	Button,
 	Popover,
 	PopoverInteractionKind,
 	Position,
@@ -193,11 +191,7 @@ class LabelFilter extends Component<Props, State> {
 											>
 												{this.props.selectedLabels.indexOf(label.id) >
 													-1 && (
-													<BlueprintIcon
-														className={Classes.ICON_STANDARD}
-														icon="small-tick"
-														tagName="span"
-													/>
+													<span className="bp3-icon-standard bp3-icon-small-tick" />
 												)}
 											</div>
 											<div className="title">{label.title}</div>
@@ -215,15 +209,13 @@ class LabelFilter extends Component<Props, State> {
 													)
 												}
 												// @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element; content: Element; toolt... Remove this comment to see the full error message
-												tooltipClassName={Classes.DARK}
+												tooltipClassName="bp3-dark"
 												position={Position.TOP}
 											>
-												<BlueprintIcon
-													icon="endorsed"
-													className={`${Classes.ICON_STANDARD} ${
+												<span
+													className={`bp3-icon-standard bp3-icon-endorsed ${
 														label.publicApply ? '' : 'active'
 													}`}
-													tagName="span"
 												/>
 											</Tooltip>
 										</div>
@@ -232,7 +224,7 @@ class LabelFilter extends Component<Props, State> {
 							})}
 
 					{!showEditMode && !this.state.labelsData.length && (
-						<div className={`${Classes.MENU_ITEM} empty`}>No Labels to Filter by</div>
+						<div className="bp3-menu-item empty">No Labels to Filter by</div>
 					)}
 
 					{/* Labels Edit Mode */}
@@ -265,7 +257,7 @@ class LabelFilter extends Component<Props, State> {
 								<div key={`label-edit-${label.id}`} className="label edit">
 									<Popover
 										content={
-											<div className={`${Classes.MENU} color-select-menu`}>
+											<div className="bp3-menu color-select-menu">
 												{colors.map((color) => {
 													return (
 														<span
@@ -297,7 +289,7 @@ class LabelFilter extends Component<Props, State> {
 										/>
 									</Popover>
 									<input
-										className={Classes.INPUT}
+										className="bp3-input"
 										type="text"
 										value={label.title}
 										onChange={handleTitleChange}
@@ -313,17 +305,20 @@ class LabelFilter extends Component<Props, State> {
 											)
 										}
 										// @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element; content: Element; toolt... Remove this comment to see the full error message
-										tooltipClassName={Classes.DARK}
+										tooltipClassName="bp3-dark"
 										position={Position.TOP}
 									>
 										<Button
-											icon="endorsed"
-											minimal
 											onClick={handlePublicApplyToggle}
-											className={label.publicApply ? '' : 'active'}
+											className={`bp3-minimal bp3-icon-endorsed ${
+												label.publicApply ? '' : 'active'
+											}`}
 										/>
 									</Tooltip>
-									<Button onClick={handleLabelRemove} icon="trash" minimal />
+									<Button
+										onClick={handleLabelRemove}
+										className="bp3-icon-trash bp3-minimal"
+									/>
 								</div>
 							);
 						})}

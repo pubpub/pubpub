@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 @import '../overviewStyles.scss';
 
 $mobile-viewport-cutoff: 750px;
@@ -41,11 +37,11 @@ $mobile-viewport-cutoff: 750px;
 
 	.right-element {
 		display: flex;
-		.#{$bp}-icon {
+		.bp3-icon {
 			color: $light-grey;
 		}
 		&.darker {
-			.#{$bp}-icon {
+			.bp3-icon {
 				color: $medium-grey;
 			}
 		}
@@ -83,7 +79,7 @@ $mobile-viewport-cutoff: 750px;
 			align-items: center;
 			margin-top: 4px;
 			> .summary-icon-pair {
-				.#{$bp}-icon {
+				.bp3-icon {
 					@include status-colors;
 				}
 				display: flex;

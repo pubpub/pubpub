@@ -1,6 +1,4 @@
-import { Classes } from '@blueprintjs/core';
 import { DOMOutputSpec } from 'prosemirror-model';
-
 import { renderHtmlChildren } from '../utils/renderHtml';
 
 const getExtension = (attrs) => {
@@ -58,7 +56,7 @@ export default {
 				},
 				[
 					'div',
-					{ class: `${Classes.CARD} ${Classes.ELEVATION_2} details` },
+					{ class: 'bp3-card bp3-elevation-2 details' },
 					[
 						'div',
 						{
@@ -92,7 +90,7 @@ export default {
 							target: '_blank',
 							rel: 'noopener noreferrer',
 							download: attrs.fileName,
-							class: `${Classes.BUTTON} ${Classes.ICON}-download`,
+							class: 'bp3-button bp3-icon-download',
 						},
 					],
 				],

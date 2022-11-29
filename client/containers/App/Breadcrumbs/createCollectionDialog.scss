@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 @import 'styles/mixins.scss';
 
 $element-spacing: 10px;
@@ -42,7 +38,7 @@ $element-spacing: 10px;
 		align-items: flex-start;
 		padding: 15px;
 		overflow: hidden;
-		.#{$bp}-icon {
+		.bp3-icon {
 			margin-top: 2px;
 		}
 		.text {
@@ -60,7 +56,7 @@ $element-spacing: 10px;
 		.collection-creation-controls {
 			display: flex;
 			flex-direction: column-reverse;
-			.#{$bp}-control-group {
+			.bp3-control-group {
 				display: flex;
 				flex-direction: column;
 				.collection-title-input {

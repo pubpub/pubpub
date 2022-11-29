@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 @import 'styles/mixins.scss';
 
 .dashboard-frame-component {
@@ -46,12 +42,12 @@ $bp: vendor.$bp-namespace;
 				@include mobile {
 					flex-wrap: wrap;
 					max-width: 100vw;
-					.#{$bp}-form-group {
+					.bp3-form-group {
 						margin-bottom: 0px;
 					}
 				}
 			}
-			.#{$bp}-button {
+			.bp3-button {
 				margin-left: 1em;
 				@include mobile {
 					font-size: 12px;
@@ -59,7 +55,7 @@ $bp: vendor.$bp-namespace;
 					margin-left: 0px;
 				}
 			}
-			.#{$bp}-button-group .#{$bp}-button {
+			.bp3-button-group .bp3-button {
 				z-index: unset;
 				margin-left: auto;
 			}

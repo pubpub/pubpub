@@ -1,6 +1,5 @@
 import React from 'react';
-import { Classes, Menu, MenuItem } from '@blueprintjs/core';
-
+import { Menu, MenuItem } from '@blueprintjs/core';
 import { Icon } from 'components';
 
 require('./sortList.scss');
@@ -21,8 +20,8 @@ const SortList = (props: Props) => {
 		{ id: 5, slug: 'leastReplies', title: 'Least Replies' },
 	];
 	return (
-		<Menu className={`sort-list-component ${Classes.ELEVATION_1}`}>
-			<li className={Classes.MENU_HEADER}>
+		<Menu className="sort-list-component bp3-elevation-1">
+			<li className="bp3-menu-header">
 				<h6>Sort</h6>
 			</li>
 

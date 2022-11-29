@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import {
-	Button,
-	Callout,
-	Card,
-	Classes,
-	ControlGroup,
-	InputGroup,
-	Overlay,
-} from '@blueprintjs/core';
+import { Button, Callout, Card, ControlGroup, Overlay, InputGroup } from '@blueprintjs/core';
 import { RadioGroup, Radio, useRadioState } from 'reakit/Radio';
 
 import { Icon } from 'components';
@@ -90,10 +82,10 @@ const CreateCollectionDialog = (props: Props) => {
 					<button
 						type="button"
 						className={classNames(
-							Classes.BUTTON,
-							Classes.OUTLINED,
+							'bp3-button',
+							'bp3-outlined',
 							'kind-button',
-							checked && Classes.ACTIVE,
+							checked && 'bp3-active',
 						)}
 						{...restProps}
 					>

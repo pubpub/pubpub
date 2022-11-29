@@ -1,6 +1,4 @@
 import React from 'react';
-import { Classes } from '@blueprintjs/core';
-
 import { Icon } from 'components';
 
 require('./landing.scss');
@@ -163,8 +161,8 @@ const Landing = () => {
 	return (
 		<div id="landing-container">
 			<style>{`
-				.header-component.${Classes.DARK} a.${Classes.BUTTON},
-				.header-component.${Classes.DARK} a.${Classes.BUTTON}:hover {
+				.header-component.bp3-dark a.bp3-button,
+				.header-component.bp3-dark a.bp3-button:hover {
 					color: #111;
 				}
 			`}</style>

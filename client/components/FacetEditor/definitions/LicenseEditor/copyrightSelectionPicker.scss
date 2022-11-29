@@ -1,9 +1,5 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .copyright-selection-picker-component {
-	.#{$bp}-numeric-input {
+	.bp3-numeric-input {
 		display: inline-flex;
 	}
 }

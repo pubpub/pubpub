@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 $full-size-bubble: 40px;
 $small-bubble-diameter: 24px;
 $large-bubble-diameter: 40px;
@@ -28,7 +24,7 @@ $controls-margin: 5px;
 				width: $small-bubble-diameter;
 				height: $small-bubble-diameter;
 				border-radius: #{$small-bubble-diameter * 0.5};
-				.#{$bp}-icon {
+				.bp3-icon {
 					color: inherit;
 				}
 			}

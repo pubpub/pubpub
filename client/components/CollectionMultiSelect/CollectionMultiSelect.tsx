@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Classes, Position } from '@blueprintjs/core';
+import { Position } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 
@@ -49,9 +49,7 @@ const CollectionMultiSelect = function (props) {
 							tabIndex={-1}
 							onClick={handleClick}
 							className={
-								modifiers.active
-									? `${Classes.MENU_ITEM} ${Classes.ACTIVE}`
-									: Classes.MENU_ITEM
+								modifiers.active ? 'bp3-menu-item bp3-active' : 'bp3-menu-item'
 							}
 						>
 							{collection.title}
@@ -69,7 +67,7 @@ const CollectionMultiSelect = function (props) {
 				placeholder: props.placeholder,
 				// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 				collectionProps: {
-					className: `${Classes.MINIMAL} ${Classes.INTENT_PRIMARY}`,
+					className: 'bp3-minimal bp3-intent-primary',
 				},
 				inputProps: {
 					placeholder: props.placeholder,
@@ -77,9 +75,9 @@ const CollectionMultiSelect = function (props) {
 			}}
 			resetOnSelect={true}
 			onItemSelect={props.onItemSelect}
-			noResults={<div className={Classes.MENU_ITEM}>No Matching Collections</div>}
+			noResults={<div className="bp3-menu-item">No Matching Collections</div>}
 			popoverProps={{
-				popoverClassName: Classes.MINIMAL,
+				popoverClassName: 'bp3-minimal',
 				position: Position.BOTTOM_LEFT,
 				modifiers: {
 					preventOverflow: { enabled: false },

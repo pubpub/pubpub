@@ -1,16 +1,12 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .label-filter-component {
 	min-width: 250px;
 	.action-button {
 		float: right;
 	}
-	.#{$bp}-menu-header {
+	.bp3-menu-header {
 		margin-bottom: 15px;
 	}
-	.#{$bp}-fill {
+	.bp3-fill {
 		margin-bottom: 10px;
 	}
 	li {
@@ -44,14 +40,14 @@ $bp: vendor.$bp-namespace;
 			width: 30px;
 			margin-right: 10px;
 		}
-		.#{$bp}-icon-small-tick {
+		.bp3-icon-small-tick {
 			&:before {
 				color: white;
 			}
 		}
 	}
 	.title,
-	.#{$bp}-input {
+	.bp3-input {
 		// vertical-align: middle;
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -60,7 +56,7 @@ $bp: vendor.$bp-namespace;
 		pointer-events: none;
 		opacity: 0.75;
 	}
-	.#{$bp}-icon-endorsed {
+	.bp3-icon-endorsed {
 		&:before {
 			opacity: 0.25;
 		}
@@ -71,7 +67,7 @@ $bp: vendor.$bp-namespace;
 		}
 	}
 }
-.#{$bp}-popover.color-select-popover {
+.bp3-popover.color-select-popover {
 	.color-select-menu {
 		width: 150px;
 		min-width: 150px;
@@ -88,7 +84,7 @@ $bp: vendor.$bp-namespace;
 			}
 		}
 	}
-	.#{$bp}-popover-arrow {
+	.bp3-popover-arrow {
 		display: block;
 	}
 }

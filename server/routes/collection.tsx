@@ -1,5 +1,5 @@
-import React from 'react';
 import { Op } from 'sequelize';
+import React from 'react';
 
 import app from 'server/server';
 import Html from 'server/Html';

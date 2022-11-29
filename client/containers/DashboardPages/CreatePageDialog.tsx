@@ -134,7 +134,7 @@ class CreatePageDialog extends Component<Props, State> {
 								<Button
 									name="login"
 									type="submit"
-									className={`${Classes.BUTTON} ${Classes.INTENT_PRIMARY}`}
+									className="bp3-button bp3-intent-primary"
 									onClick={this.handleCreateSubmit}
 									text="Create Page"
 									disabled={!this.state.title || !this.state.slug}

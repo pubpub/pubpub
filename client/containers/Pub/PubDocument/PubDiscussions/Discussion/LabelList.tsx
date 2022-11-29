@@ -1,5 +1,4 @@
 import React from 'react';
-import { Classes } from '@blueprintjs/core';
 
 require('./labelList.scss');
 
@@ -37,7 +36,7 @@ const LabelList = (props: Props) => {
 						return (
 							<span
 								key={labelId}
-								className={Classes.TAG}
+								className="bp3-tag"
 								style={{ backgroundColor: label.color }}
 							>
 								{label.title}

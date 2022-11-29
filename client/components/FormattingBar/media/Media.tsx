@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Classes, Menu, MenuItem } from '@blueprintjs/core';
+import { Menu, MenuItem } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
@@ -63,7 +63,7 @@ class Media extends Component<Props, State> {
 			<div className="formatting-bar_media-component">
 				<div className="options">
 					<Menu>
-						<li className={Classes.MENU_HEADER}>
+						<li className="bp3-menu-header">
 							<h6>Files</h6>
 						</li>
 						{files.map((file) => {
@@ -79,7 +79,7 @@ class Media extends Component<Props, State> {
 								/>
 							);
 						})}
-						<li className={Classes.MENU_HEADER}>
+						<li className="bp3-menu-header">
 							<h6>Apps</h6>
 						</li>
 						{apps.map((app) => {

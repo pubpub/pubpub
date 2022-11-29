@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Card, Classes, Tooltip } from '@blueprintjs/core';
+import { Button, Tooltip, Card } from '@blueprintjs/core';
 import stickybits from 'stickybits';
 
 import { LayoutBlock, LayoutPubsByBlock } from 'utils/layout';
@@ -83,7 +83,7 @@ const LayoutEditor = React.memo((props: Props) => {
 		return (
 			<div className="block-title">
 				<div className="text">{getTitleKindForBlock(block.type)} Block</div>
-				<div className={`${Classes.BUTTON_GROUP} ${Classes.MINIMAL} ${Classes.SMALL}`}>
+				<div className="bp3-button-group bp3-minimal bp3-small">
 					<Button
 						text="Move Up"
 						icon="caret-up"

@@ -1,13 +1,9 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 .dashboard-pages-container {
 	.title-and-subtitle {
 		cursor: default;
 	}
 	.page-row {
-		.#{$bp}-button {
+		.bp3-button {
 			margin-right: 1em;
 		}
 		.privacy-indicator {
@@ -15,7 +11,7 @@ $bp: vendor.$bp-namespace;
 			align-items: center;
 			justify-content: flex-end;
 			width: 80px;
-			.#{$bp}-icon {
+			.bp3-icon {
 				margin-right: 4px;
 			}
 		}

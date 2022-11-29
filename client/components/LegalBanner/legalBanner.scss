@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 $viewport-padding: 10px;
 $small-viewport-cutoff: 720px;
 
@@ -71,7 +67,7 @@ $small-viewport-cutoff: 720px;
 		}
 	}
 	.legal-buttons {
-		.#{$bp}-button {
+		.bp3-button {
 			padding: 0;
 			flex-shrink: 0;
 			min-width: 120px;

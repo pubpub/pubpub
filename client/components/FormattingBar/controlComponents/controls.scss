@@ -1,7 +1,3 @@
-@use 'styles/vendor.scss';
-
-$bp: vendor.$bp-namespace;
-
 @mixin text-fields {
 	input[type='text'] {
 		border-radius: 2px;
@@ -32,29 +28,29 @@ $bp: vendor.$bp-namespace;
 		height: unset;
 	}
 
-	.#{$bp}-slider {
-		.#{$bp}-slider-track {
+	.bp3-slider {
+		.bp3-slider-track {
 			background: rgba(255, 255, 255, 0.2);
 		}
-		.#{$bp}-slider-progress:not(:last-child) {
+		.bp3-slider-progress:not(:last-child) {
 			background: white;
 		}
-		.#{$bp}-slider-handle:focus {
+		.bp3-slider-handle:focus {
 			outline: 1.5px solid white;
 		}
 	}
 
-	.#{$bp}-spinner {
-		.#{$bp}-spinner-track {
+	.bp3-spinner {
+		.bp3-spinner-track {
 			stroke: white;
 		}
 	}
 
-	.#{$bp}-tabs {
+	.bp3-tabs {
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		.#{$bp}-tab {
+		.bp3-tab {
 			&[aria-selected='true'] {
 				color: white;
 				&:hover {
@@ -69,10 +65,10 @@ $bp: vendor.$bp-namespace;
 				}
 			}
 		}
-		.#{$bp}-tab-indicator {
+		.bp3-tab-indicator {
 			background: white;
 		}
-		.#{$bp}-tab-panel {
+		.bp3-tab-panel {
 			flex-grow: 1;
 			margin-top: 9px;
 		}
@@ -106,7 +102,7 @@ $bp: vendor.$bp-namespace;
 		height: 100%;
 		overflow: hidden;
 		& > *:not(:last-child) {
-			label.#{$bp}-control {
+			label.bp3-control {
 				margin-bottom: 0;
 			}
 			margin-bottom: 9px;
@@ -136,7 +132,7 @@ $bp: vendor.$bp-namespace;
 			display: flex;
 			flex-grow: 1;
 		}
-		.#{$bp}-control.#{$bp}-disabled {
+		.bp3-control.bp3-disabled {
 			color: rgba(white, 0.6);
 		}
 	}
@@ -202,10 +198,10 @@ $bp: vendor.$bp-namespace;
 		display: flex;
 		align-items: center;
 		width: 100%;
-		.#{$bp}-button.label-type-menu {
+		.bp3-button.label-type-menu {
 			margin-right: 5px;
 		}
-		.#{$bp}-input-group {
+		.bp3-input-group {
 			flex-grow: 1;
 		}
 	}
@@ -218,7 +214,7 @@ $bp: vendor.$bp-namespace;
 
 	.source-control {
 		.controls {
-			.#{$bp}-input-group {
+			.bp3-input-group {
 				width: 100%;
 			}
 		}
