@@ -25,9 +25,7 @@ const renderStaticCode = (node: Node): DOMOutputSpec => {
 	const parsers = {
 		javascript: javascriptParser,
 	};
-	// const lang = node.attrs.lang;
-	// const parser = parsers[node.attrs.lang];
-	const parser = parsers.javascript;
+	const parser = parsers[node.attrs.lang];
 	const tree = parser.parse(node.textContent);
 	const children = fromLezer(node.textContent, tree as unknown as Tree);
 	return ['pre', ['code', ...children]] as DOMOutputSpec;

@@ -14,6 +14,7 @@ import React from 'react';
 import css from 'css';
 import camelCaseCss from 'camelcase-css';
 import { Node } from 'prosemirror-model';
+import { defaultHighlightStyle, HighlightStyle } from '@codemirror/language';
 import { getReactedDoc } from '@pubpub/prosemirror-reactive';
 
 import { DocJson } from 'types';
@@ -154,6 +155,17 @@ export const getReactedDocFromJson = (doc, schema, noteManager, nodeLabels) => {
 	return reactedDoc.toJSON() as DocJson;
 };
 
+type HighlightStylesMap = Record<string, HighlightStyle>;
+
+const getHighlightStylesFromDoc = (doc: DocJson): HighlightStylesMap => {
+	const highlightStyles: HighlightStylesMap = {};
+	const hasSomeCodeBlocks = doc.content.some((node) => node.type === 'code_block');
+	if (hasSomeCodeBlocks) {
+		highlightStyles.code_block = defaultHighlightStyle;
+	}
+	return highlightStyles;
+};
+
 export const renderStatic = ({
 	schema,
 	doc,
@@ -163,8 +175,20 @@ export const renderStatic = ({
 	context = {},
 }) => {
 	const finalDoc = reactedDoc || getReactedDocFromJson(doc, schema, noteManager, nodeLabels);
-	return finalDoc.content.map((node, index) => {
+	const highlightStyles = getHighlightStylesFromDoc(finalDoc);
+	const styleElements: any[] = [];
+	Object.keys(highlightStyles).forEach((key) => {
+		const style = highlightStyles[key];
+		const rules = style.module?.getRules();
+		if (rules) {
+			styleElements.push(
+				React.createElement('style', { dangerouslySetInnerHTML: { __html: rules }, key }),
+			);
+		}
+	});
+	const docElements = finalDoc.content.map((node, index) => {
 		const outputSpec = createOutputSpecFromNode(node, schema, context);
 		return createReactFromOutputSpec(outputSpec, index);
 	});
+	return [...styleElements, ...docElements];
 };
