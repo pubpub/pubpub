@@ -136,8 +136,8 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			isReadOnly: true,
 			initialHistoryKey: initialDocKey,
 			initialContent: initialDoc,
-			includeCollabPlugin: false,
-			includeDiscussionsPlugin: false,
+			includeCollabPlugin: true,
+			includeDiscussionsPlugin: true,
 			discussionAnchors,
 			canCreateAnchoredDiscussions: true,
 		};
