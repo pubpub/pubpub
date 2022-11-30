@@ -27,7 +27,6 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			isRelease,
 			isReviewingPub,
 			discussions,
-			isAVisitingCommenter,
 		},
 		submissionState,
 		historyData: { currentKey, isViewingHistory, historyDoc, historyDocEditorKey },
@@ -40,7 +39,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 	} = usePageContext();
 
 	const discussionAnchors = useMemo(() => {
-		if (isRelease || isAVisitingCommenter) {
+		if (isRelease) {
 			return discussions
 				.map((discussion) =>
 					discussion.anchors!.filter((anchor) => anchor.historyKey === currentKey),
@@ -48,7 +47,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 				.reduce((a, b) => [...a, ...b], []);
 		}
 		return [];
-	}, [discussions, isRelease, currentKey, isAVisitingCommenter]);
+	}, [discussions, isRelease, currentKey]);
 
 	if (isInMaintenanceMode) {
 		return {
@@ -130,18 +129,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			canCreateAnchoredDiscussions: true,
 		};
 	}
-	if (isAVisitingCommenter) {
-		return {
-			editorKey: 'commenting',
-			isReadOnly: true,
-			initialHistoryKey: initialDocKey,
-			initialContent: initialDoc,
-			includeCollabPlugin: false,
-			includeDiscussionsPlugin: true,
-			discussionAnchors,
-			canCreateAnchoredDiscussions: true,
-		};
-	}
+
 	return {
 		editorKey: firebaseDraftRef ? 'ready' : 'unready',
 		isReadOnly: !(canEdit || canEditDraft),
