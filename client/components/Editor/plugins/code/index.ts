@@ -85,11 +85,12 @@ const createSelect = (
 	return () => {};
 };
 
-export default (schema) => {
+export default (schema, pluginsOptions) => {
 	if (schema.nodes.code_block) {
 		return [
 			codeMirrorBlockPlugin({
 				...defaultSettings,
+				readOnly: pluginsOptions.isReadOnly,
 				createSelect,
 				languageLoaders: { ...languageLoaders, ...legacyLanguageLoaders },
 				undo,

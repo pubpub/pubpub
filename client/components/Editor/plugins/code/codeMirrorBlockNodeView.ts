@@ -43,6 +43,7 @@ export const codeMirrorBlockNodeView = (settings: CodeBlockSettings) => {
 		let node = pmNode;
 		let updating = false;
 		const wrap = document.createElement('pre');
+		wrap.className = 'codeblock-wrapper';
 		const dom = document.createElement('code');
 		wrap.append(dom);
 		dom.className = 'codeblock-root';
