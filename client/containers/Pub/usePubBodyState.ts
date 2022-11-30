@@ -40,7 +40,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 	} = usePageContext();
 
 	const discussionAnchors = useMemo(() => {
-		if (isRelease) {
+		if (isRelease || isAVisitingCommenter) {
 			return discussions
 				.map((discussion) =>
 					discussion.anchors!.filter((anchor) => anchor.historyKey === currentKey),
@@ -48,7 +48,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 				.reduce((a, b) => [...a, ...b], []);
 		}
 		return [];
-	}, [discussions, isRelease, currentKey]);
+	}, [discussions, isRelease, currentKey, isAVisitingCommenter]);
 
 	if (isInMaintenanceMode) {
 		return {
@@ -136,7 +136,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			isReadOnly: true,
 			initialHistoryKey: initialDocKey,
 			initialContent: initialDoc,
-			includeCollabPlugin: true,
+			includeCollabPlugin: false,
 			includeDiscussionsPlugin: true,
 			discussionAnchors,
 			canCreateAnchoredDiscussions: true,
