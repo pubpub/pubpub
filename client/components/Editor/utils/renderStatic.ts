@@ -18,7 +18,7 @@ import { getReactedDoc } from '@pubpub/prosemirror-reactive';
 
 import { DocJson } from 'types';
 
-import { getHighlightStylesFromDoc } from './highlightStyles';
+import getHighlightStyles from './codeHighlightStyle';
 
 const parseStyleToObject = (style) => {
 	try {
@@ -165,17 +165,15 @@ export const renderStatic = ({
 	context = {},
 }) => {
 	const finalDoc = reactedDoc || getReactedDocFromJson(doc, schema, noteManager, nodeLabels);
-	const highlightStyles = getHighlightStylesFromDoc(finalDoc);
+	const styles = getHighlightStyles(finalDoc);
 	const styleElements: any[] = [];
-	Object.keys(highlightStyles).forEach((key) => {
-		const style = highlightStyles[key];
-		const rules = style.module?.getRules();
-		if (rules) {
-			styleElements.push(
-				React.createElement('style', { dangerouslySetInnerHTML: { __html: rules }, key }),
-			);
-		}
-	});
+	if (styles) {
+		styleElements.push(
+			React.createElement('style', {
+				dangerouslySetInnerHTML: { __html: styles },
+			}),
+		);
+	}
 	const docElements = finalDoc.content.map((node, index) => {
 		const outputSpec = createOutputSpecFromNode(node, schema, context);
 		return createReactFromOutputSpec(outputSpec, index);
