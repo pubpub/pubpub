@@ -7,9 +7,9 @@ import { LRParser } from '@lezer/lr';
 import { MarkdownParser } from '@lezer/markdown';
 import { sql } from '@codemirror/lang-sql';
 
-import { CodeBlockLanguages, LegacyLanguages } from './languages';
+import { CodeBlockLanguages } from './languages';
 
-type LanguageName = typeof CodeBlockLanguages[number] | typeof LegacyLanguages[number];
+type LanguageName = typeof CodeBlockLanguages[number];
 
 export type LanguageLoaders = Record<LanguageName, () => Promise<LanguageSupport>>;
 

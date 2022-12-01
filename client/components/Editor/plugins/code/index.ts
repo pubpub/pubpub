@@ -7,9 +7,9 @@ import { Classes } from '@blueprintjs/core';
 import { CodeBlockSettings, LanguageLoaders } from './types';
 import { codeMirrorBlockNodeView } from './codeMirrorBlockNodeView';
 import { codeBlockArrowHandlers } from './utils';
-import { CodeBlockLanguages, LegacyLanguages } from './languages';
+import { CodeBlockLanguages } from './languages';
 import { defaultSettings } from './defaults';
-import languageLoaders, { legacyLanguageLoaders } from './languageLoaders';
+import languageLoaders from './languageLoaders';
 import parsers from './parsers';
 
 export const codeMirrorBlockKey = new PluginKey('codemirror-block');
@@ -32,11 +32,9 @@ export {
 	CodeBlockSettings,
 	LanguageLoaders,
 	CodeBlockLanguages,
-	LegacyLanguages,
 	defaultSettings,
 	parsers,
 	languageLoaders,
-	legacyLanguageLoaders,
 };
 
 const createSelect = (
@@ -92,7 +90,7 @@ export default (schema, pluginsOptions) => {
 				...defaultSettings,
 				readOnly: pluginsOptions.isReadOnly,
 				createSelect,
-				languageLoaders: { ...languageLoaders, ...legacyLanguageLoaders },
+				languageLoaders,
 				undo,
 				redo,
 			}),
