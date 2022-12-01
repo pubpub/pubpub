@@ -11,17 +11,19 @@ require('./overviewSearchGroup.scss');
 
 type SearchTermCallback = (q: string) => unknown;
 
-type Props = {
+type Props<QueryType> = {
 	placeholder: string;
 	onUpdateSearchTerm?: SearchTermCallback;
 	onCommitSearchTerm?: SearchTermCallback;
-	onChooseFilter?: (q: OverviewSearchFilter) => unknown;
+	onChooseFilter?: (q: OverviewSearchFilter<QueryType>) => unknown;
 	rightControls?: React.ReactNode;
-	filters?: OverviewSearchFilter[];
-	filter?: OverviewSearchFilter;
+	filters?: OverviewSearchFilter<QueryType>[];
+	filter?: OverviewSearchFilter<QueryType>;
 };
 
-const OverviewSearchGroup = (props: Props) => {
+const OverviewSearchGroup = <SearchQueryType extends Record<string, any>>(
+	props: Props<SearchQueryType>,
+) => {
 	const {
 		placeholder,
 		onCommitSearchTerm,
@@ -43,7 +45,10 @@ const OverviewSearchGroup = (props: Props) => {
 		if (providedFilters) {
 			return providedFilters;
 		}
-		return getDefaultOverviewSearchFilters({ userId, isViewMember: canView });
+		return getDefaultOverviewSearchFilters({
+			userId,
+			isViewMember: canView,
+		}) as OverviewSearchFilter<any>[];
 	}, [userId, canView, providedFilters]);
 
 	const handleChange = useCallback(
@@ -109,5 +114,4 @@ const OverviewSearchGroup = (props: Props) => {
 	);
 };
 
-export { OverviewSearchFilter };
 export default OverviewSearchGroup;
