@@ -7,21 +7,10 @@ import { ForbiddenError, handleErrors, NotFoundError } from 'server/utils/errors
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getLandingPageFeatures } from 'server/landingPageFeature/queries';
-import { queryCommunitiesForSpamManagement } from 'server/spamTag/communities';
 
 const getTabProps = async (tabKind: SuperAdminTabKind) => {
 	if (tabKind === 'landingPageFeatures') {
 		return { landingPageFeatures: await getLandingPageFeatures({ onlyValidItems: false }) };
-	}
-	if (tabKind === 'spam') {
-		return {
-			communities: await queryCommunitiesForSpamManagement({
-				status: ['unreviewed'],
-				ordering: { field: 'spam-score', direction: 'DESC' },
-				limit: 50,
-				offset: 0,
-			}),
-		};
 	}
 	return {};
 };
@@ -50,7 +39,6 @@ app.get('/superadmin/:tabKind', async (req, res, next) => {
 				headerComponents={generateMetaComponents({
 					initialData,
 					title: 'SuperAdmin · PubPub',
-					description: "Well aren't you special",
 					unlisted: true,
 				})}
 			/>,
