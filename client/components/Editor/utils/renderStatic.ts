@@ -18,7 +18,7 @@ import { getReactedDoc } from '@pubpub/prosemirror-reactive';
 
 import { DocJson } from 'types';
 
-import getHighlightStyles from './codeHighlightStyle';
+import { getCodeHighlightStyles } from './codeHighlightStyle';
 
 const parseStyleToObject = (style) => {
 	try {
@@ -165,7 +165,7 @@ export const renderStatic = ({
 	context = {},
 }) => {
 	const finalDoc = reactedDoc || getReactedDocFromJson(doc, schema, noteManager, nodeLabels);
-	const styles = getHighlightStyles(finalDoc);
+	const styles = getCodeHighlightStyles(finalDoc);
 	const styleElements: any[] = [];
 	if (styles) {
 		styleElements.push(

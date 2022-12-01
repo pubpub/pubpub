@@ -2,7 +2,7 @@ import { defaultHighlightStyle } from '@codemirror/language';
 
 import { DocJson } from 'types';
 
-export default (doc: DocJson): string => {
+export const getCodeHighlightStyles = (doc: DocJson): string => {
 	const hasSomeCodeBlocks = doc.content.some((node) => node.type === 'code_block');
 	const highlightStyles = {
 		...(hasSomeCodeBlocks && { code_block: defaultHighlightStyle }),
