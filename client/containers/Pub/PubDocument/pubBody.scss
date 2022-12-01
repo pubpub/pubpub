@@ -133,13 +133,14 @@ $pub-body-font-size: if-is-export(14px, 20px);
 		overflow: hidden;
 		overflow-x: auto;
 		code {
-			display:inline-block;
+			display: inline-block;
 			white-space: pre;
 			background-color: transparent;
 			padding: 0em;
 		}
 	}
-	pre.codeblock-wrapper { // accomodate language dropdown without showing overflow
+	pre.codeblock-wrapper {
+		// accomodate language dropdown without showing overflow
 		margin-bottom: 0;
 		padding-bottom: 30px;
 	}
