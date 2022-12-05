@@ -148,9 +148,9 @@ app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, n
 	}
 	try {
 		const { releaseNumber: releaseNumberString, pubSlug } = req.params;
-		const { access } = req.query;
-		console.log(access);
+
 		const initialData = await getInitialDataForPub(req);
+		console.log(initialData.locationData.query);
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		const releaseNumber = parseInt(releaseNumberString, 10);
 		if (Number.isNaN(releaseNumber) || releaseNumber < 1) {
