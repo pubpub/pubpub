@@ -67,19 +67,15 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 	);
 };
 
-const getEnrichedPubData = async ({
-	pubSlug,
-	initialData,
-	historyKey = null,
-	releaseNumber = null,
-	isAVisitingCommenter = false,
-}: {
+type EnrichedPubOptions = {
 	pubSlug: string;
 	initialData: InitialData;
 	historyKey?: null | number;
 	releaseNumber?: null | number;
-	isAVisitingCommenter?: boolean;
-}) => {
+};
+
+const getEnrichedPubData = async (options: EnrichedPubOptions) => {
+	const { pubSlug, initialData, historyKey = null, releaseNumber = null } = options;
 	const pubData = await getPubForRequest({
 		slug: pubSlug,
 		initialData,
@@ -87,8 +83,8 @@ const getEnrichedPubData = async ({
 		getSubmissions: true,
 		getDraft: true,
 		getDiscussions: true,
-		isAVisitingCommenter,
 	});
+
 	if (!pubData) {
 		throw new ForbiddenError();
 	}
@@ -114,12 +110,17 @@ const getEnrichedPubData = async ({
 	]);
 
 	const citations = await getPubCitations(pubData, initialData, docInfo.initialDoc);
+
+	const { access } = initialData.locationData.query;
+	const isAVisitingCommenter = !!access && access === pubData.commentHash;
+
 	return {
 		subscription: subscription?.toJSON() ?? null,
 		...pubData,
 		...citations,
 		...edges,
 		...docInfo,
+		isAVisitingCommenter,
 	};
 };
 
@@ -150,7 +151,6 @@ app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, n
 		const { releaseNumber: releaseNumberString, pubSlug } = req.params;
 
 		const initialData = await getInitialDataForPub(req);
-		console.log(initialData.locationData.query);
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		const releaseNumber = parseInt(releaseNumberString, 10);
 		if (Number.isNaN(releaseNumber) || releaseNumber < 1) {
