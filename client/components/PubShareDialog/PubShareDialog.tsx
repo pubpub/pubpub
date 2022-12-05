@@ -26,7 +26,7 @@ type PubShareDialogProps = SharedProps & {
 	onClose: (...args: any[]) => any;
 };
 
-type UrlOption = {
+type UrlOptions = {
 	isDraft?: boolean;
 	historyKey?: number;
 	isReview?: boolean;
@@ -61,7 +61,7 @@ const AccessHashOptions = (props: SharedProps) => {
 	};
 	const isDraft = !isRelease;
 
-	const createAccessUrl = (accessHash: string | undefined, options?: UrlOption) =>
+	const createAccessUrl = (accessHash: string | undefined, options?: UrlOptions) =>
 		pubUrl(communityData, pubData, { accessHash, ...options });
 	const reviewAccessUrl = createAccessUrl(reviewHash, {
 		historyKey: historyData.currentKey,
