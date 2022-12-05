@@ -10,7 +10,4 @@ export const CodeBlockLanguages = [
 	'markdown',
 	'java',
 	'cpp',
-	'lezer',
-	'php',
-	'wast',
 ] as const;

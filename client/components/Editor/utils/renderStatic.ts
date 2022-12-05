@@ -165,15 +165,19 @@ export const renderStatic = ({
 	context = {},
 }) => {
 	const finalDoc = reactedDoc || getReactedDocFromJson(doc, schema, noteManager, nodeLabels);
-	const styles = getCodeHighlightStyles(finalDoc);
-	const styleElements: any[] = [];
-	if (styles) {
-		styleElements.push(
-			React.createElement('style', {
-				dangerouslySetInnerHTML: { __html: styles },
-			}),
-		);
-	}
+	const styles = { code_block: getCodeHighlightStyles(finalDoc) };
+	const styleElements = Object.keys(styles).reduce((memo, key) => {
+		if (styles[key]) {
+			return [
+				...memo,
+				React.createElement('style', {
+					key,
+					dangerouslySetInnerHTML: { __html: styles },
+				}),
+			];
+		}
+		return memo;
+	}, [] as any[]);
 	const docElements = finalDoc.content.map((node, index) => {
 		const outputSpec = createOutputSpecFromNode(node, schema, context);
 		return createReactFromOutputSpec(outputSpec, index);

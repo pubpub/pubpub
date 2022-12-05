@@ -13,7 +13,6 @@ type LanguageName = typeof CodeBlockLanguages[number];
 
 export type LanguageLoaders = Record<LanguageName, () => Promise<LanguageSupport>>;
 
-// TODO how to get this type? I thought it was the { Parser } abstract class out of @codemirror/common, but no dice
 const sqlParser = sql().language.parser;
 type SQLParser = typeof sqlParser;
 
