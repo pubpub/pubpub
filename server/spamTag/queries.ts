@@ -43,7 +43,7 @@ export const updateSpamTagForCommunity = async (options: UpdateSpamTagForCommuni
 		include: [{ model: SpamTag, as: 'spamTag' }],
 	});
 	if (spamTag) {
-		await spamTag.update({ status });
+		await spamTag.update({ status, statusUpdatedAt: new Date() });
 	} else {
 		throw new Error('Community is missing a SpamTag');
 	}

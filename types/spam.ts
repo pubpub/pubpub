@@ -6,6 +6,7 @@ export type SpamTag = {
 	spamScoreVersion: number;
 	spamScoreComputedAt: string;
 	status: SpamStatus;
+	statusUpdatedAt: null | string;
 	fields: Record<string, string[]>;
 };
 
