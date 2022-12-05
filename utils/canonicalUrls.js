@@ -42,29 +42,10 @@ export const pubUrl = (community, pub, options = {}) => {
 		download,
 		hash,
 		isReview,
-		isComment,
 	} = options;
 
 	if (isReview && historyKey && accessHash) {
 		baseUrl = `${baseUrl}/review/${historyKey}`;
-		const url = queryString.stringifyUrl(
-			{ url: baseUrl, query: { access: accessHash, ...query } },
-			{ skipNull: true },
-		);
-		return url;
-	}
-
-	if (isComment && accessHash && historyKey) {
-		baseUrl = `${baseUrl}/comment/${historyKey}`;
-		const url = queryString.stringifyUrl(
-			{ url: baseUrl, query: { access: accessHash, ...query } },
-			{ skipNull: true },
-		);
-		return url;
-	}
-
-	if (isComment && accessHash && releaseNumber) {
-		baseUrl = `${baseUrl}/comment/release/${releaseNumber}`;
 		const url = queryString.stringifyUrl(
 			{ url: baseUrl, query: { access: accessHash, ...query } },
 			{ skipNull: true },

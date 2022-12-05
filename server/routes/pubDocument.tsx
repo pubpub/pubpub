@@ -148,6 +148,8 @@ app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, n
 	}
 	try {
 		const { releaseNumber: releaseNumberString, pubSlug } = req.params;
+		const { access } = req.query;
+		console.log(access);
 		const initialData = await getInitialDataForPub(req);
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		const releaseNumber = parseInt(releaseNumberString, 10);
@@ -278,62 +280,5 @@ app.get(
 		}));
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		return renderPubDocument(res, pubData, initialData, customScripts);
-	}),
-);
-
-app.get(
-	['/pub/:pubSlug/comment/:historyKey/'],
-	wrap(async (req, res, next) => {
-		if (!hostIsValid(req, 'community')) {
-			return next();
-		}
-
-		const initialData = await getInitialDataForPub(req);
-		const { historyKey: historyKeyString, pubSlug } = req.params;
-		const { canView } = initialData.scopeData.activePermissions;
-		const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
-		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-
-		if (!canView) {
-			throw new NotFoundError();
-		}
-
-		const pubData = await getEnrichedPubData({
-			pubSlug,
-			initialData,
-			historyKey: hasHistoryKey ? historyKey : null,
-			isAVisitingCommenter: true,
-		});
-
-		return renderPubDocument(res, pubData, initialData, customScripts);
-	}),
-);
-
-app.get(
-	['/pub/:pubSlug/comment/release/:releaseNumber'],
-	wrap(async (req, res, next) => {
-		if (!hostIsValid(req, 'community')) {
-			return next();
-		}
-		try {
-			const { releaseNumber: releaseNumberString, pubSlug } = req.params;
-			const initialData = await getInitialDataForPub(req);
-			const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-			const releaseNumber = parseInt(releaseNumberString, 10);
-			if (Number.isNaN(releaseNumber) || releaseNumber < 1) {
-				throw new NotFoundError();
-			}
-
-			const pubData = await getEnrichedPubData({
-				pubSlug,
-				releaseNumber,
-				initialData,
-				isAVisitingCommenter: true,
-			});
-
-			return renderPubDocument(res, pubData, initialData, customScripts);
-		} catch (err) {
-			return handleErrors(req, res, next)(err);
-		}
 	}),
 );
