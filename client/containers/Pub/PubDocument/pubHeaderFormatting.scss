@@ -25,7 +25,7 @@ $bp: vendor.$bp-namespace;
 	.spacer {
 		flex: 1 1 auto;
 	}
-	.#{pubHeader.$bp}-callout {
+	.#{$bp}-callout {
 		display: inline;
 	}
 	// .left-section {

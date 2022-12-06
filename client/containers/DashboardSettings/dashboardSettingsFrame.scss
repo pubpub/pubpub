@@ -19,11 +19,11 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 }
 
 .dashboard-settings-frame-component {
-	.#{bottomMenu.$bp}-tabs.dashboard-settings-frame-tabs {
-		.#{bottomMenu.$bp}-tab-indicator-wrapper .#{bottomMenu.$bp}-tab-indicator {
+	.#{$bp}-tabs.dashboard-settings-frame-tabs {
+		.#{$bp}-tab-indicator-wrapper .#{$bp}-tab-indicator {
 			background-color: var(--community-accent-dark);
 		}
-		.#{bottomMenu.$bp}-tab.dashboard-settings-frame-tab {
+		.#{$bp}-tab.dashboard-settings-frame-tab {
 			display: flex;
 			align-items: center;
 			padding: 6px 0;
@@ -41,8 +41,8 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 		}
 	}
 
-	.#{bottomMenu.$bp}-button.dashboard-settings-frame-menu {
-		.#{bottomMenu.$bp}-button-text {
+	.#{$bp}-button.dashboard-settings-frame-menu {
+		.#{$bp}-button-text {
 			flex-grow: 1;
 		}
 	}
@@ -79,11 +79,11 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 			& > * {
 				// Thicken up the dropdown and the button a little
 				height: 100%;
-				.#{bottomMenu.$bp}-button {
+				.#{$bp}-button {
 					height: 100%;
 				}
 			}
-			.#{bottomMenu.$bp}-button {
+			.#{$bp}-button {
 				background-color: white;
 			}
 			.autosave-indicator-component {
@@ -122,7 +122,7 @@ $mobile-sticky-controls-offset: 50px; // height of bottom menu
 }
 
 .dashboard-settings-frame-component__tabs-menu {
-	.#{bottomMenu.$bp}-menu-item {
+	.#{$bp}-menu-item {
 		align-items: center;
 	}
 }

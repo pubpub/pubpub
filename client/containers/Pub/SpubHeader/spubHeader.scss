@@ -3,8 +3,6 @@
 @use '../PubHeader/pubHeader';
 @use 'shared';
 
-pubHeader.$bp: vendor.$bp-namespace;
-
 .spub-header-component {
 	position: relative;
 	z-index: 20;
