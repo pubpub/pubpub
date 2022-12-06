@@ -54,6 +54,7 @@ type GetPubForRequestOptions = PubGetOptions & {
 	slug: string;
 	initialData: InitialData;
 	releaseNumber?: number | null;
+	isAVisitingCommenter?: boolean;
 };
 
 export const getPubForRequest = async (options: GetPubForRequestOptions) => {

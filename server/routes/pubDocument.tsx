@@ -7,14 +7,13 @@ import { pubUrl } from 'utils/canonicalUrls';
 import { getPdfDownloadUrl, getTextAbstract, getGoogleScholarNotes } from 'utils/pub/metadata';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import Html from 'server/Html';
-import app, { wrap } from 'server/server';
+import app from 'server/server';
 import { handleErrors, NotFoundError, ForbiddenError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
-import { generateHash } from 'utils/hashes';
 import {
 	getPubForRequest,
 	getMembers,
@@ -28,7 +27,6 @@ import {
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { InitialData } from 'types';
 import { findUserSubscription } from 'server/userSubscription/shared/queries';
-import { Pub } from 'server/models';
 
 const getInitialDataForPub = (req) => getInitialData(req, { includeFacets: true });
 
@@ -69,17 +67,15 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 	);
 };
 
-const getEnrichedPubData = async ({
-	pubSlug,
-	initialData,
-	historyKey = null,
-	releaseNumber = null,
-}: {
+type EnrichedPubOptions = {
 	pubSlug: string;
 	initialData: InitialData;
 	historyKey?: null | number;
 	releaseNumber?: null | number;
-}) => {
+};
+
+const getEnrichedPubData = async (options: EnrichedPubOptions) => {
+	const { pubSlug, initialData, historyKey = null, releaseNumber = null } = options;
 	const pubData = await getPubForRequest({
 		slug: pubSlug,
 		initialData,
@@ -91,17 +87,6 @@ const getEnrichedPubData = async ({
 
 	if (!pubData) {
 		throw new ForbiddenError();
-	}
-
-	if (!pubData.reviewHash) {
-		const reviewHash = generateHash(8);
-		Pub.update(
-			{ reviewHash },
-			{
-				where: { id: pubData.id },
-			},
-		);
-		pubData.reviewHash = reviewHash;
 	}
 
 	const { isRelease } = pubData;
@@ -123,7 +108,12 @@ const getEnrichedPubData = async ({
 			? findUserSubscription({ userId: initialData.loginData.id, pubId: pubData.id })
 			: null,
 	]);
+
 	const citations = await getPubCitations(pubData, initialData, docInfo.initialDoc);
+
+	const { access } = initialData.locationData.query;
+	const isAVisitingCommenter = !!access && access === pubData.commentHash;
+	const isReviewingPub = !!access && access === pubData.reviewHash;
 
 	return {
 		subscription: subscription?.toJSON() ?? null,
@@ -131,6 +121,8 @@ const getEnrichedPubData = async ({
 		...citations,
 		...edges,
 		...docInfo,
+		isAVisitingCommenter,
+		isReviewingPub,
 	};
 };
 
@@ -159,6 +151,7 @@ app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, n
 	}
 	try {
 		const { releaseNumber: releaseNumberString, pubSlug } = req.params;
+
 		const initialData = await getInitialDataForPub(req);
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
 		const releaseNumber = parseInt(releaseNumberString, 10);
@@ -235,7 +228,6 @@ app.get(
 			const { historyKey: historyKeyString, pubSlug } = req.params;
 			const { canViewDraft, canView } = initialData.scopeData.activePermissions;
 			const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
-
 			if (!canViewDraft && !canView) {
 				throw new NotFoundError();
 			}
@@ -257,37 +249,4 @@ app.get(
 			return handleErrors(req, res, next)(err);
 		}
 	},
-);
-
-app.get(
-	['/pub/:pubSlug/review/:historyKey/'],
-	wrap(async (req, res, next) => {
-		if (!hostIsValid(req, 'community')) {
-			return next();
-		}
-
-		const initialData = await getInitialData(req);
-		const { historyKey: historyKeyString, pubSlug } = req.params;
-		const { canView } = initialData.scopeData.activePermissions;
-		const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
-
-		if (!canView) {
-			throw new NotFoundError();
-		}
-
-		const pubData = await Promise.all([
-			getEnrichedPubData({
-				pubSlug,
-				initialData,
-				historyKey: hasHistoryKey ? historyKey : null,
-			}),
-			getMembers(initialData),
-		]).then(([enrichedPubData, membersData]) => ({
-			...enrichedPubData,
-			membersData,
-			isReviewingPub: true,
-		}));
-		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-		return renderPubDocument(res, pubData, initialData, customScripts);
-	}),
 );

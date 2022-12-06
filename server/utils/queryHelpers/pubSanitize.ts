@@ -6,11 +6,13 @@ import sanitizeReviews from './reviewsSanitize';
 import { sanitizePubEdges } from './sanitizePubEdge';
 
 const sanitizeHashes = (pubData, activePermissions) => {
-	const { editHash, viewHash } = pubData;
+	const { editHash, viewHash, commentHash, reviewHash } = pubData;
 	const { canView, canViewDraft, canEdit, canEditDraft } = activePermissions;
 	return {
 		viewHash: canView || canViewDraft ? viewHash : null,
 		editHash: canEdit || canEditDraft ? editHash : null,
+		commentHash: canView ? commentHash : null,
+		reviewHash: canView ? reviewHash : null,
 	};
 };
 
@@ -38,7 +40,6 @@ export default (
 	const { loginData, scopeData } = initialData;
 	const { activePermissions } = scopeData;
 	const { canView, canViewDraft } = activePermissions;
-
 	const hasPubMemberAccess = pubData.members.some((member) => {
 		return member.userId === initialData.loginData.id;
 	});
@@ -76,7 +77,6 @@ export default (
 			return null;
 		}
 	}
-
 	// TODO(ian): completely unsure why we can't just the `order` parameter within the `include`
 	// object for the query made above, but it doesn't seem to work.
 	const sortedReleases = pubData.releases

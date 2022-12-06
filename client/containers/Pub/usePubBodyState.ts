@@ -124,9 +124,9 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			initialHistoryKey: initialDocKey,
 			initialContent: initialDoc,
 			includeCollabPlugin: false,
-			includeDiscussionsPlugin: false,
-			discussionAnchors: null,
-			canCreateAnchoredDiscussions: false,
+			includeDiscussionsPlugin: true,
+			discussionAnchors,
+			canCreateAnchoredDiscussions: true,
 		};
 	}
 

@@ -14,6 +14,7 @@ import {
 	SubmissionWorkflow,
 } from 'server/models';
 
+import { isUserSuperAdmin } from 'server/user/queries';
 import { FacetsError } from 'facets';
 import { fetchFacetsForScope } from 'server/facets';
 import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
@@ -124,8 +125,10 @@ export default async (scopeInputs) => {
 			isDashboard,
 		}
 	*/
+
 	const scopeElements = await getScopeElements(scopeInputs);
 	const facets = await getFacets(scopeInputs.includeFacets, scopeElements);
+
 	const publicPermissionsData = await getPublicPermissionsData(scopeElements);
 	const scopeMemberData = await getScopeMemberData(scopeInputs, scopeElements);
 	const [activePermissions, activeCounts] = await Promise.all([
@@ -306,11 +309,6 @@ getScopeMemberData = async (scopeInputs, scopeElements) => {
 	});
 };
 
-export const checkIfSuperAdmin = (userId) => {
-	const adminIds = ['b242f616-7aaa-479c-8ee5-3933dcf70859'];
-	return adminIds.includes(userId);
-};
-
 getActivePermissions = async (
 	scopeInputs,
 	scopeElements,
@@ -318,10 +316,9 @@ getActivePermissions = async (
 	scopeMemberData,
 ) => {
 	const { activePub, activeCollection, activeCommunity, inactiveCollections } = scopeElements;
-	const isSuperAdmin = checkIfSuperAdmin(scopeInputs.loginId);
+	const isSuperAdmin = await isUserSuperAdmin({ userId: scopeInputs.loginId });
 	const permissionLevels: MemberPermission[] = ['view', 'edit', 'manage', 'admin'];
 	let defaultPermissionIndex = -1;
-
 	[activePub, activeCollection, activeCommunity, ...inactiveCollections]
 		.filter((elem) => !!elem)
 		.forEach((elem) => {
@@ -332,6 +329,9 @@ getActivePermissions = async (
 				defaultPermissionIndex = 1;
 			}
 			if (elem.reviewHash && elem.reviewHash === scopeInputs.accessHash) {
+				defaultPermissionIndex = 0;
+			}
+			if (elem.commentHash && elem.commentHash === scopeInputs.accessHash) {
 				defaultPermissionIndex = 0;
 			}
 		});
