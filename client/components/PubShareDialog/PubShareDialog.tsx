@@ -88,7 +88,7 @@ const AccessHashOptions = (props: SharedProps) => {
 					'Draft Feedback',
 					createAccessUrl(reviewHash, { isDraft }),
 				)}
-			{featureFlags.comments &&
+			{featureFlags.reviews &&
 				pubData.releases.length > 0 &&
 				renderCopyLabelComponent('Release Feedback', createAccessUrl(reviewHash))}
 		</div>
