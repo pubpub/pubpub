@@ -113,6 +113,7 @@ const getEnrichedPubData = async (options: EnrichedPubOptions) => {
 
 	const { access } = initialData.locationData.query;
 	const isAVisitingCommenter = !!access && access === pubData.commentHash;
+	const isReviewingPub = !!access && access === pubData.reviewHash;
 
 	return {
 		subscription: subscription?.toJSON() ?? null,
@@ -121,6 +122,7 @@ const getEnrichedPubData = async (options: EnrichedPubOptions) => {
 		...edges,
 		...docInfo,
 		isAVisitingCommenter,
+		isReviewingPub,
 	};
 };
 
@@ -226,7 +228,6 @@ app.get(
 			const { historyKey: historyKeyString, pubSlug } = req.params;
 			const { canViewDraft, canView } = initialData.scopeData.activePermissions;
 			const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
-
 			if (!canViewDraft && !canView) {
 				throw new NotFoundError();
 			}
@@ -248,37 +249,4 @@ app.get(
 			return handleErrors(req, res, next)(err);
 		}
 	},
-);
-
-app.get(
-	['/pub/:pubSlug/review/:historyKey/'],
-	wrap(async (req, res, next) => {
-		if (!hostIsValid(req, 'community')) {
-			return next();
-		}
-
-		const initialData = await getInitialDataForPub(req);
-		const { historyKey: historyKeyString, pubSlug } = req.params;
-		const { canView } = initialData.scopeData.activePermissions;
-		const { hasHistoryKey, historyKey } = checkHistoryKey(historyKeyString);
-
-		if (!canView) {
-			throw new NotFoundError();
-		}
-
-		const pubData = await Promise.all([
-			getEnrichedPubData({
-				pubSlug,
-				initialData,
-				historyKey: hasHistoryKey ? historyKey : null,
-			}),
-			getMembers(initialData),
-		]).then(([enrichedPubData, membersData]) => ({
-			...enrichedPubData,
-			membersData,
-			isReviewingPub: true,
-		}));
-		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-		return renderPubDocument(res, pubData, initialData, customScripts);
-	}),
 );
