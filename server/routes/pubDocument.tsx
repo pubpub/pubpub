@@ -7,7 +7,7 @@ import { pubUrl } from 'utils/canonicalUrls';
 import { getPdfDownloadUrl, getTextAbstract, getGoogleScholarNotes } from 'utils/pub/metadata';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import Html from 'server/Html';
-import app, { wrap } from 'server/server';
+import app from 'server/server';
 import { handleErrors, NotFoundError, ForbiddenError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
