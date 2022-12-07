@@ -1,5 +1,6 @@
 import React from 'react';
 
+import * as types from 'types';
 import Html from 'server/Html';
 import app from 'server/server';
 import { superAdminTabKinds, SuperAdminTabKind, getSuperAdminTabUrl } from 'utils/superAdmin';
@@ -9,15 +10,18 @@ import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getLandingPageFeatures } from 'server/landingPageFeature/queries';
 import { queryCommunitiesForSpamManagement } from 'server/spamTag/communities';
 
-const getTabProps = async (tabKind: SuperAdminTabKind) => {
+const getTabProps = async (tabKind: SuperAdminTabKind, locationData: types.LocationData) => {
 	if (tabKind === 'landingPageFeatures') {
 		return { landingPageFeatures: await getLandingPageFeatures({ onlyValidItems: false }) };
 	}
 	if (tabKind === 'spam') {
+		const searchTerm = locationData.query.q ?? null;
 		return {
+			searchTerm,
 			communities: await queryCommunitiesForSpamManagement({
 				status: ['unreviewed'],
 				limit: 50,
+				searchTerm,
 				ordering: {
 					field: 'spam-score',
 					direction: 'DESC',
@@ -48,7 +52,10 @@ app.get('/superadmin/:tabKind', async (req, res, next) => {
 			<Html
 				chunkName="SuperAdminDashboard"
 				initialData={initialData}
-				viewData={{ tabKind, tabProps: await getTabProps(tabKind) }}
+				viewData={{
+					tabKind,
+					tabProps: await getTabProps(tabKind, initialData.locationData),
+				}}
 				headerComponents={generateMetaComponents({
 					initialData,
 					title: 'SuperAdmin · PubPub',
