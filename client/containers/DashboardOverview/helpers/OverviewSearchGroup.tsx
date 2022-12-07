@@ -13,6 +13,7 @@ type SearchTermCallback = (q: string) => unknown;
 
 type Props<QueryType> = {
 	placeholder: string;
+	initialSearchTerm?: string;
 	onUpdateSearchTerm?: SearchTermCallback;
 	onCommitSearchTerm?: SearchTermCallback;
 	onChooseFilter?: (q: OverviewSearchFilter<QueryType>) => unknown;
@@ -26,6 +27,7 @@ const OverviewSearchGroup = <SearchQueryType extends Record<string, any>>(
 ) => {
 	const {
 		placeholder,
+		initialSearchTerm,
 		onCommitSearchTerm,
 		onUpdateSearchTerm,
 		rightControls,
@@ -102,6 +104,7 @@ const OverviewSearchGroup = <SearchQueryType extends Record<string, any>>(
 			<div className={classNames('search-bar', isSearchFocused && 'search-focused')}>
 				<Icon icon="search" className="search-icon" iconSize={16} />
 				<input
+					defaultValue={initialSearchTerm}
 					placeholder={placeholder}
 					onFocus={() => setIsSearchFocused(true)}
 					onBlur={() => setIsSearchFocused(false)}

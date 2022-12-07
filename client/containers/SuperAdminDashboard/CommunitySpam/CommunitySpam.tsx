@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Spinner } from '@blueprintjs/core';
+import { useUpdateEffect } from 'react-use';
 
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import { OverviewSearchGroup } from 'client/containers/DashboardOverview/helpers';
@@ -13,12 +14,13 @@ require('./communitySpam.scss');
 
 type Props = {
 	communities: CommunityWithSpam[];
+	searchTerm: null | string;
 };
 
 const CommunitySpam = (props: Props) => {
-	const { communities: initialCommunities } = props;
+	const { communities: initialCommunities, searchTerm: initialSearchTerm } = props;
 	const [filter, setFilter] = useState(filters[0]);
-	const [searchTerm, setSearchTerm] = useState('');
+	const [searchTerm, setSearchTerm] = useState(initialSearchTerm ?? '');
 
 	const { communities, isLoading, loadMoreCommunities, mayLoadMoreCommunities } =
 		useSpamCommunities({
@@ -35,6 +37,11 @@ const CommunitySpam = (props: Props) => {
 		enabled: mayLoadMoreCommunities,
 	});
 
+	useUpdateEffect(() => {
+		const nextSearchPart = searchTerm ? `?q=${searchTerm}` : '';
+		window.history.replaceState({}, '', window.location.pathname + nextSearchPart);
+	}, [searchTerm]);
+
 	return (
 		<div className="community-spam-component">
 			<OverviewSearchGroup
@@ -44,6 +51,7 @@ const CommunitySpam = (props: Props) => {
 				onCommitSearchTerm={setSearchTerm}
 				onChooseFilter={setFilter}
 				filter={filter}
+				initialSearchTerm={initialSearchTerm ?? undefined}
 				rightControls={isLoading && <Spinner size={20} />}
 			/>
 			<div className="communities">

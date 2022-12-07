@@ -6,6 +6,10 @@ export default (sequelize, dataTypes) => {
 			defaultValue: 'unreviewed',
 			allowNull: false,
 		},
+		statusUpdatedAt: {
+			type: dataTypes.DATE,
+			allowNull: true,
+		},
 		fields: {
 			type: dataTypes.JSONB,
 			allowNull: false,

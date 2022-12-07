@@ -1,9 +1,9 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
-import { queryCommunitiesForSpamManagement } from './communities';
 
 import { canManipulateSpamTags } from './permissions';
 import { updateSpamTagForCommunity } from './queries';
+import { queryCommunitiesForSpamManagement } from './communities';
 
 app.put(
 	'/api/spamTags',
