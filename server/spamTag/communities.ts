@@ -48,7 +48,7 @@ const getCommunityWhereQuery = (searchTerm: undefined | string) => {
 	return {};
 };
 
-const getSpamTagWhereQuery = (status: undefined | types.SpamStatus[]) => {
+const getSpamTagStatusWhereQuery = (status: undefined | types.SpamStatus[]) => {
 	if (status) {
 		return { where: { status: { [Op.in]: status } } };
 	}
@@ -76,7 +76,7 @@ export const queryCommunitiesForSpamManagement = (
 				model: SpamTag,
 				as: 'spamTag',
 				distinct: true,
-				...getSpamTagWhereQuery(status),
+				...getSpamTagStatusWhereQuery(status),
 			},
 		],
 	});
