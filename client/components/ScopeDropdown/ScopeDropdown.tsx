@@ -179,7 +179,7 @@ const ScopeDropdown = (props: Props) => {
 												mode: 'settings',
 											})}
 										>
-											<Tooltip content="View settings">
+											<Tooltip content="Settings">
 												<Icon icon={pubPubIcons.settings} iconSize={12} />
 											</Tooltip>
 										</a>
@@ -191,7 +191,7 @@ const ScopeDropdown = (props: Props) => {
 												mode: 'members',
 											})}
 										>
-											<Tooltip content="View members">
+											<Tooltip content="Members">
 												<Icon icon={pubPubIcons.member} iconSize={12} />
 											</Tooltip>
 										</a>
@@ -203,7 +203,7 @@ const ScopeDropdown = (props: Props) => {
 												mode: 'impact',
 											})}
 										>
-											<Tooltip content="View impact">
+											<Tooltip content="Impact">
 												<Icon icon={pubPubIcons.impact} iconSize={12} />
 											</Tooltip>
 										</a>
@@ -216,7 +216,7 @@ const ScopeDropdown = (props: Props) => {
 													mode: 'layout',
 												})}
 											>
-												<Tooltip content="Visit collection">
+												<Tooltip content="Layout">
 													<Icon icon={pubPubIcons.layout} iconSize={12} />
 												</Tooltip>
 											</a>
@@ -229,7 +229,7 @@ const ScopeDropdown = (props: Props) => {
 												''
 											}`}
 										>
-											<Tooltip content={`${scope.title} landing page`}>
+											<Tooltip content="Home">
 												<Icon icon="globe" iconSize={12} />
 											</Tooltip>
 										</a>
@@ -242,7 +242,7 @@ const ScopeDropdown = (props: Props) => {
 												(scope.slugs && scope.slugs.pageSlug) || '/'
 											}`}
 										>
-											<Tooltip content={`${scope.title} landing page`}>
+											<Tooltip content="Home">
 												<Icon icon="globe" iconSize={12} />
 											</Tooltip>
 										</a>
