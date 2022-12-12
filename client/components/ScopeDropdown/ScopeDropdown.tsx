@@ -8,6 +8,7 @@ import { getPrimaryCollectionPub } from 'utils/collections/primary';
 import { sortByRank } from 'utils/rank';
 import { Collection, Pub } from 'types';
 import { pubPubIcons } from 'client/utils/icons';
+import { Tooltip } from '@blueprintjs/core';
 
 require('./scopeDropdown.scss');
 
@@ -178,7 +179,9 @@ const ScopeDropdown = (props: Props) => {
 												mode: 'settings',
 											})}
 										>
-											<Icon icon={pubPubIcons.settings} iconSize={12} />
+											<Tooltip content="View settings">
+												<Icon icon={pubPubIcons.settings} iconSize={12} />
+											</Tooltip>
 										</a>
 										<a
 											href={getDashUrl({
@@ -188,7 +191,9 @@ const ScopeDropdown = (props: Props) => {
 												mode: 'members',
 											})}
 										>
-											<Icon icon={pubPubIcons.member} iconSize={12} />
+											<Tooltip content="View members">
+												<Icon icon={pubPubIcons.member} iconSize={12} />
+											</Tooltip>
 										</a>
 										<a
 											href={getDashUrl({
@@ -198,7 +203,9 @@ const ScopeDropdown = (props: Props) => {
 												mode: 'impact',
 											})}
 										>
-											<Icon icon={pubPubIcons.impact} iconSize={12} />
+											<Tooltip content="View impact">
+												<Icon icon={pubPubIcons.impact} iconSize={12} />
+											</Tooltip>
 										</a>
 										{scope.type === 'Collection' && (
 											<a
@@ -209,7 +216,9 @@ const ScopeDropdown = (props: Props) => {
 													mode: 'layout',
 												})}
 											>
-												<Icon icon={pubPubIcons.layout} iconSize={12} />
+												<Tooltip content="Visit collection">
+													<Icon icon={pubPubIcons.layout} iconSize={12} />
+												</Tooltip>
 											</a>
 										)}
 										<a
@@ -220,7 +229,9 @@ const ScopeDropdown = (props: Props) => {
 												''
 											}`}
 										>
-											<Icon icon="globe" iconSize={12} />
+											<Tooltip content={`${scope.title} landing page`}>
+												<Icon icon="globe" iconSize={12} />
+											</Tooltip>
 										</a>
 									</div>
 								)}
@@ -231,7 +242,9 @@ const ScopeDropdown = (props: Props) => {
 												(scope.slugs && scope.slugs.pageSlug) || '/'
 											}`}
 										>
-											<Icon icon="globe" iconSize={12} />
+											<Tooltip content={`${scope.title} landing page`}>
+												<Icon icon="globe" iconSize={12} />
+											</Tooltip>
 										</a>
 									</div>
 								)}
