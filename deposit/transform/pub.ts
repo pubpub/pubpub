@@ -53,8 +53,8 @@ function derivePubEdgeRelation(pubEdge: PubEdge): ResourceRelation {
 	return pubEdgeRelationTypeToResourceRelation[pubEdge.relationType];
 }
 
-function transformExternalPublicationToResource({ url }: ExternalPublication): AnyResource {
-	return { url };
+function transformExternalPublicationToResource({ title, url }: ExternalPublication): AnyResource {
+	return { kind: 'Other', title, identifiers: [{ kind: 'url', value: url }] };
 }
 
 async function transformOutboundEdgeToResourceRelationship(
@@ -83,12 +83,12 @@ export async function transformPubToResource(pub: Pub, community: Community): Pr
 	return {
 		kind: derivePubResourceKind(pub),
 		title: pub.title,
-		url: pubUrl(community, pub),
 		timestamp: new Date().toUTCString(),
 		license: { spdxIdentifier: license.spdxIdentifier },
 		summaries: [],
 		descriptions: [],
 		contributions,
 		relationships,
+		identifiers: [{ kind: 'url', value: pubUrl(community, pub) }],
 	};
 }

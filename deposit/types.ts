@@ -70,28 +70,30 @@ export type ResourceSummary = {
 
 export type PartialResource = {
 	/**
-	 * The resource's canonical URL.
-	 */
-	url: string;
-};
-
-export type Resource = PartialResource & {
-	/**
-	 * The type of resource.
-	 */
-	kind: ResourceKind;
-
-	/**
 	 * The title of the resource.
 	 */
 	title: string;
 
 	/**
+	 * The type of resource.
+	 */
+	kind: ResourceKind;
+
+	identifiers: ResourceIdentifier[];
+};
+
+export type ResourceIdentifierKind = 'url' | 'doi';
+
+export type ResourceIdentifier = {
+	kind: ResourceIdentifierKind;
+	value: string;
+};
+
+export type Resource = PartialResource & {
+	/**
 	 * The version of the resource expressed as a UTC datetime string.
 	 */
 	timestamp: string;
-
-	license: ResourceLicense;
 
 	descriptions: ResourceDescription[];
 
@@ -100,6 +102,8 @@ export type Resource = PartialResource & {
 	contributions: ResourceContribution[];
 
 	relationships: ResourceRelationship[];
+
+	license: ResourceLicense;
 };
 
 export type AnyResource = PartialResource | Resource;

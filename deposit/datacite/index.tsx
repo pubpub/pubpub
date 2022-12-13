@@ -7,49 +7,10 @@ import {
 	ResourceDescriptor,
 	ResourceKind,
 	ResourceSummaryKind,
+	ResourceContributorRole,
+	ResourceRelationship,
+	ResourceRelation,
 } from 'deposit/types';
-import { Collection, Community, Pub } from 'server/models';
-import { buildPubOptions } from 'server/utils/queryHelpers';
-import * as types from 'types';
-
-type DepositablePub = types.PubWithConnections & {
-	collectionPubs: types.DefinitelyHas<types.CollectionPub, 'collection'>[];
-};
-
-type CreateDepositIds = { communityId: string } & ({ collectionId: string } | { pubId: string });
-type CreateDepositContext = { community: types.Community } & (
-	| { collection: types.Collection }
-	| { pub: DepositablePub }
-);
-
-const findPub = (pubId: string): Promise<DepositablePub> =>
-	Pub.findOne({
-		where: { id: pubId },
-		...buildPubOptions({
-			getEdgesOptions: {
-				// Include Pub for both inbound and outbound pub connections
-				// since we do a lot of downstream processing with pubEdges.
-				includePub: true,
-				includeCommunityForPubs: true,
-			},
-			getCollections: true,
-		}),
-	}).then((pub) => pub.get({ plain: true }));
-
-async function getCreateDepositContext(ids: CreateDepositIds): Promise<CreateDepositContext> {
-	const communityPromise: Promise<types.Community> = Community.findOne({
-		where: { id: ids.communityId },
-	});
-	if ('collectionId' in ids) {
-		const [community, collection] = await Promise.all([
-			communityPromise,
-			Collection.findOne({ where: { id: ids.collectionId } }) as Promise<types.Collection>,
-		]);
-		return { community, collection };
-	}
-	const [community, pub] = await Promise.all([communityPromise, findPub(ids.pubId)]);
-	return { community, pub };
-}
 
 function transformResourceKindToDataciteResourceType(kind: ResourceKind) {
 	switch (kind) {
@@ -89,6 +50,35 @@ function transformResourceSummaryKindToDataciteDescriptionType(kind: ResourceSum
 	return 'Other';
 }
 
+function transformResourceContributorRoleToDataciteContributorType(role: ResourceContributorRole) {
+	switch (role) {
+		case 'Editor':
+			return 'Editor';
+	}
+	return 'Other';
+}
+
+function transformResourceRelationToDataciteRelationType(
+	relation: ResourceRelation,
+	isParent: boolean,
+) {
+	switch (relation) {
+		case 'Review':
+			return isParent ? 'Reviews' : 'IsReviewedBy';
+		case 'Reply':
+		case 'Comment':
+			return isParent ? 'References' : 'IsReferencedBy';
+		case 'Preprint':
+			return isParent ? 'IsPreviousVersionOf' : 'IsNewVersionOf';
+		case 'Supplement':
+			return isParent ? 'IsSupplementTo' : 'IsSupplementedBy';
+		case 'Translation':
+			return isParent ? 'IsVariantFormOf' : 'IsOriginalFormOf';
+		case 'Version':
+			return isParent ? 'IsVersionOf' : 'HasVersion';
+	}
+}
+
 function renderCreator(contribution: ResourceContribution) {
 	return (
 		<creator>
@@ -101,14 +91,49 @@ function renderCreator(contribution: ResourceContribution) {
 	);
 }
 
+function renderContributor(contribution: ResourceContribution) {
+	return (
+		<contributor
+			contributorType={transformResourceContributorRoleToDataciteContributorType(
+				contribution.contributorRole,
+			)}
+		>
+			<contributorName>{contribution.contributor.name}</contributorName>
+			{contribution.contributorAffiliation ? (
+				// @ts-expect-error
+				<affiliation>{contribution.contributorAffiliation}</affiliation>
+			) : undefined}
+		</contributor>
+	);
+}
+
+function renderRelatedItem(relationship: ResourceRelationship) {
+	const identifier = relationship.resource.identifiers[0];
+	return (
+		<relatedItem
+			relatedItemType={transformResourceKindToDataciteResourceType(
+				relationship.resource.kind,
+			)}
+			relationType={transformResourceRelationToDataciteRelationType(
+				relationship.relation,
+				relationship.isParent,
+			)}
+		>
+			<identifier identifierType={identifier.kind}>{identifier.value}</identifier>
+			<titles>{relationship.resource.title}</titles>
+		</relatedItem>
+	);
+}
+
 export async function createDeposit(resource: Resource, doi: string) {
+	const identifier = resource.identifiers[0];
 	const wordCount = resource.summaries.find((summary) => summary.kind === 'WordCount');
 	return (
 		<resource xmlns="http://datacite.org/schema/kernel-4">
 			<resourceType
 				resourceTypeGeneral={transformResourceKindToDataciteResourceType(resource.kind)}
-			></resourceType>
-			<identifier identifierType="DOI">{doi}</identifier>
+			/>
+			<identifier identifierType={identifier.kind}>{identifier.value}</identifier>
 			<titles>
 				<title xml:lang="en-US">{resource.title}</title>
 			</titles>
@@ -137,11 +162,17 @@ export async function createDeposit(resource: Resource, doi: string) {
 					.filter((contribution) => contribution.isAttribution)
 					.map(renderCreator)}
 			</creators>
+			<contributors>
+				{resource.contributions
+					.filter((contribution) => !contribution.isAttribution)
+					.map(renderContributor)}
+			</contributors>
 			{wordCount && (
 				<sizes>
 					<size>${wordCount.value} words</size>
 				</sizes>
 			)}
+			<relatedItems>{resource.relationships.map(renderRelatedItem)}</relatedItems>
 		</resource>
 	);
 }
