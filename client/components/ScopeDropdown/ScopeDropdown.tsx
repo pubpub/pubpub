@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 
-import { getDashUrl } from 'utils/dashboard';
+import { getDashUrl, DashboardMode } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 import { Avatar, Icon, IconName, MenuItem } from 'components';
 import { getPrimaryCollectionPub } from 'utils/collections/primary';
@@ -144,6 +144,22 @@ const ScopeDropdown = (props: Props) => {
 		});
 	}
 
+	const renderDropddownButton = function (scope: Scope, mode: DashboardMode, icon: IconName) {
+		return (
+			<a
+				href={getDashUrl({
+					collectionSlug: scope.slugs && scope.slugs.collectionSlug,
+					pubSlug: scope.slugs && scope.slugs.pubSlug,
+					mode,
+				})}
+			>
+				<Tooltip content={mode.charAt(0).toUpperCase() + mode.slice(1)}>
+					<Icon icon={icon} iconSize={12} />
+				</Tooltip>
+			</a>
+		);
+	};
+
 	return (
 		<div className={classNames('scope-dropdown-component', isDashboard && 'in-dashboard')}>
 			{isDashboard && <div className="intro">Select Scope:</div>}
@@ -171,56 +187,23 @@ const ScopeDropdown = (props: Props) => {
 								</div>
 								{scope.showSettings && scope.type !== 'Page' && (
 									<div className="settings">
-										<a
-											href={getDashUrl({
-												collectionSlug:
-													scope.slugs && scope.slugs.collectionSlug,
-												pubSlug: scope.slugs && scope.slugs.pubSlug,
-												mode: 'settings',
-											})}
-										>
-											<Tooltip content="Settings">
-												<Icon icon={pubPubIcons.settings} iconSize={12} />
-											</Tooltip>
-										</a>
-										<a
-											href={getDashUrl({
-												collectionSlug:
-													scope.slugs && scope.slugs.collectionSlug,
-												pubSlug: scope.slugs && scope.slugs.pubSlug,
-												mode: 'members',
-											})}
-										>
-											<Tooltip content="Members">
-												<Icon icon={pubPubIcons.member} iconSize={12} />
-											</Tooltip>
-										</a>
-										<a
-											href={getDashUrl({
-												collectionSlug:
-													scope.slugs && scope.slugs.collectionSlug,
-												pubSlug: scope.slugs && scope.slugs.pubSlug,
-												mode: 'impact',
-											})}
-										>
-											<Tooltip content="Impact">
-												<Icon icon={pubPubIcons.impact} iconSize={12} />
-											</Tooltip>
-										</a>
-										{scope.type === 'Collection' && (
-											<a
-												href={getDashUrl({
-													collectionSlug:
-														scope.slugs && scope.slugs.collectionSlug,
-													pubSlug: scope.slugs && scope.slugs.pubSlug,
-													mode: 'layout',
-												})}
-											>
-												<Tooltip content="Layout">
-													<Icon icon={pubPubIcons.layout} iconSize={12} />
-												</Tooltip>
-											</a>
+										{renderDropddownButton(
+											scope,
+											'settings',
+											pubPubIcons.settings,
 										)}
+										{renderDropddownButton(
+											scope,
+											'members',
+											pubPubIcons.member,
+										)}
+										{renderDropddownButton(scope, 'impact', pubPubIcons.impact)}
+										{scope.type === 'Collection' &&
+											renderDropddownButton(
+												scope,
+												'layout',
+												pubPubIcons.layout,
+											)}
 										<a
 											href={`/${
 												(scope.slugs?.pubSlug &&
