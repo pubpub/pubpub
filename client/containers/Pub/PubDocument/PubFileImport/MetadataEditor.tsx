@@ -247,7 +247,7 @@ const MetadataEditor = (props: MetadataEditorProps) => {
 		if (attributions && attributions.length) {
 			return (
 				<>
-					<h6>Contributors</h6>
+					<h6>Attributions</h6>
 					{attributions.map((attr, index) => (
 						<ProposedAttribution
 							// eslint-disable-next-line react/no-array-index-key
