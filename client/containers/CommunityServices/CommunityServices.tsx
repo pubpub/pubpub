@@ -60,7 +60,6 @@ const CommunityServices = () => {
 			description:
 				'We assign one person from our team to work as your dedicated production point person. This work includes regular calls, communication with authors, and providing general publication strategy as well as insights. Teams who find this service most useful include those that publish on a regular basis but do not have the internal bandwidth to manage these activities nor the budget to hire an additional full-time person to do so.',
 		},
-
 		{
 			title: 'Text to Audio',
 			options: ['None', 'Low Volume', 'Medium Volume', 'High Volume'],
@@ -87,7 +86,7 @@ const CommunityServices = () => {
 			prices: ['$0', '$2,500 - $3,000', '$4,000 - $5,000', '$6,000+'],
 			initOption: 0,
 			description:
-				"We'll work in partnership to enhance discoverability of your publications with customizable XML transformation and, or project support for relevant A&I services. For example: PubMed Central, Web of Science, Scopus, EBSCOhost, ProQuest, HeinOnline, Directory of Open Access Journals (DOAJ), Directory of Open Access Books (DOAB), Crossref, Datacite, and Portico.",
+				"We'll work in partnership to enhance discoverability of your publications with customizable XML transformation and, or project support for relevant A&I services. For example: PubMed Central, Web of Science, Scopus, EBSCOhost, ProQuest, HeinOnline, Directory of Open Access Journals (DOAJ), Directory of Open Access Books (DOAB), and others.",
 		},
 		{
 			title: 'Interactives',
