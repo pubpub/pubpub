@@ -74,14 +74,26 @@ class LayoutBanner extends Component<Props, State> {
 			this.props.content.buttonType || (this.props.content.showButton && 'create-pub');
 
 		const buttonText = getButtonText(buttonType, this.props.content.buttonText, isLoggedIn);
-		const buttonUrl =
-			buttonType === 'link'
-				? this.props.content.buttonUrl
-				: isLoggedIn && buttonType === 'create-pub'
-				? `/login?redirect=${this.props.locationData.path}`
-				: buttonType === 'signup'
-				? '/signup'
-				: undefined;
+
+		let buttonUrl;
+		if (buttonType === 'link') {
+			buttonUrl = this.props.content.buttonUrl;
+		} else if (!isLoggedIn && buttonType === 'create-pub') {
+			buttonUrl = `/login?redirect=${this.props.locationData.path}`;
+		} else if (buttonType === 'signup') {
+			buttonUrl = 'signup';
+		} else {
+			buttonUrl = undefined;
+		}
+
+		// const buttonUrl =
+		// 	buttonType === 'link'
+		// 		? this.props.content.buttonUrl
+		// 		: isLoggedIn && buttonType === 'create-pub'
+		// 		? `/login?redirect=${this.props.locationData.path}`
+		// 		: buttonType === 'signup'
+		// 		? '/signup'
+		// 		: undefined;
 
 		const onButtonClick =
 			(isLoggedIn && buttonType === 'create-pub' && this.createPub) || undefined;
