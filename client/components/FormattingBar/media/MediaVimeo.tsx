@@ -54,6 +54,7 @@ class MediaVimeo extends Component<Props, State> {
 			url: this.state.embedUrl,
 			caption: this.state.embedTitle,
 			align: 'full',
+			allowfullscreen: 'true',
 		});
 	}
 
