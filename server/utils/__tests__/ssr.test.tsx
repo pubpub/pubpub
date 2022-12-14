@@ -12,7 +12,7 @@ const defaultProps = {
 	title: 'Test Pub',
 };
 
-const MetaComponents = (props) => <>{generateMetaComponents(props)}</>;
+const MetaComponents = (props) => <React.Fragment>{generateMetaComponents(props)}</React.Fragment>;
 
 describe('generateMetaComponents', () => {
 	it('generates citation_author metadata for every author WITHOUT a contributor role as their primary role', () => {
