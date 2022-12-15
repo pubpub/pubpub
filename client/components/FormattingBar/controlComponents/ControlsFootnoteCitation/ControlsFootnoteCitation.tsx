@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
+import zoteroClient from 'zotero-api-client';
 
 import { SimpleEditor, PubNoteContent } from 'components';
 import { getCitationInlineLabel } from 'components/Editor/utils/citation';
@@ -27,6 +28,15 @@ type Props = {
 			};
 		};
 	};
+};
+
+const fetchCitations = async () => {
+	const myApi = zoteroClient('AUTH_KEY').library('user', 0);
+
+	const itemsResponse = await myApi.items().get();
+	console.log({ zoteroClient, myApi });
+	console.log({ itemsResponse });
+	return itemsResponse;
 };
 
 const unwrapPendingAttrs = (pendingAttrs, isFootnote) => {
@@ -90,6 +100,9 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const structuredSection = (
 		<div className="section" key="structured">
 			<div className="title">Structured Data</div>
+			<button type="button" onClick={fetchCitations}>
+				fetch citations
+			</button>
 			<textarea
 				className="structured-data"
 				placeholder="Enter bibtex, DOI, wikidata url, or bibjson..."
