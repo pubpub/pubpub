@@ -8,6 +8,7 @@ import enforce from 'express-sslify';
 import express from 'express';
 import noSlash from 'no-slash';
 import passport from 'passport';
+import passportOAuth1 from 'passport-oauth1';
 import path from 'path';
 
 import { setEnvironment, setAppCommit, isProd, getAppCommit } from 'utils/environment';
@@ -108,6 +109,29 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
+passport.use(
+	'zotero',
+	new passportOAuth1.Strategy(
+		{
+			requestTokenURL: 'https://www.zotero.org/oauth/request',
+			accessTokenURL: 'https://www.zotero.org/oauth/access',
+			userAuthorizationURL: 'https://www.zotero.org/oauth/authorize',
+			consumerKey: process.env.ZOTERO_CLIENT_KEY,
+			consumerSecret: process.env.ZOTERO_CLIENT_SECRET,
+			callbackURL: 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me/login/zotero/return',
+			signatureMethod: 'HMAC-SHA1',
+		},
+		(token, tokenSecret, params, profile, cb) => {
+			console.log(profile);
+			const user = {
+				username: params.username,
+				userID: params.userID,
+				accessToken: token,
+			};
+			return cb(null, user);
+		},
+	),
+);
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
