@@ -16,13 +16,14 @@ const {
 
 const getPubExports = async (pubId, dest) => {
 	const [pubData] = await getPubData([pubId]);
-	const pdfUrl = await getBestDownloadUrl(pubData, 'pdf');
-	const jatsUrl = await getBestDownloadUrl(pubData, 'jats');
+	const pdfUrl = getBestDownloadUrl(pubData, 'pdf');
+	const jatsUrl = getBestDownloadUrl(pubData, 'jats');
 	const finalDest = `${dest}/${pubData.slug}`;
 
 	if (!pdfUrl || !jatsUrl) {
 		console.log('Missing:', pubData.slug);
-		createLatestPubExports(pubId);
+		await createLatestPubExports(pubId);
+		await getPubExports(pubId, dest);
 	} else {
 		fs.mkdirSync(finalDest);
 		if (jatsUrl) {
@@ -57,7 +58,9 @@ const main = async () => {
 			throwIfNo: true,
 		});
 		const dest = `/tmp/${collection.slug}`;
-		fs.rmdirSync(dest, { recursive: true });
+		if (fs.existsSync(dest)) {
+			fs.rmdirSync(dest, { recursive: true });
+		}
 		fs.mkdirSync(dest);
 		await Promise.all(
 			collection.collectionPubs.map((collectionPub) =>
