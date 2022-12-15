@@ -30,6 +30,7 @@ $pub-body-font-size: if-is-export(14px, 20px);
 		font-weight: 500;
 		font-family: $header-font;
 		letter-spacing: 1px;
+		overflow-x: auto;
 		a {
 			text-decoration: underline;
 		}
@@ -98,6 +99,7 @@ $pub-body-font-size: if-is-export(14px, 20px);
 
 	p {
 		margin: 0em 0em 1em;
+		overflow-x: auto;
 	}
 
 	ul > li::marker {
