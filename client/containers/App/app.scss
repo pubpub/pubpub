@@ -4,6 +4,8 @@
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
+	width: 100%;
+	overflow-x: hidden;
 	#main-content {
 		outline: none;
 		flex-grow: 1;
