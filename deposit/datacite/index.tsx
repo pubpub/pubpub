@@ -119,7 +119,9 @@ function renderRelatedItem(relationship: ResourceRelationship) {
 				relationship.isParent,
 			)}
 		>
-			<identifier identifierType={identifier.kind}>{identifier.value}</identifier>
+			<identifier identifierType={identifier.identifierKind}>
+				{identifier.identifierValue}
+			</identifier>
 			<titles>{relationship.resource.title}</titles>
 		</relatedItem>
 	);
@@ -133,7 +135,9 @@ export async function createDeposit(resource: Resource, doi: string) {
 			<resourceType
 				resourceTypeGeneral={transformResourceKindToDataciteResourceType(resource.kind)}
 			/>
-			<identifier identifierType={identifier.kind}>{identifier.value}</identifier>
+			<identifier identifierType={identifier.identifierKind}>
+				{identifier.identifierValue}
+			</identifier>
 			<titles>
 				<title xml:lang="en-US">{resource.title}</title>
 			</titles>

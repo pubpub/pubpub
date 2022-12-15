@@ -85,8 +85,8 @@ export type PartialResource = {
 export type ResourceIdentifierKind = 'url' | 'doi';
 
 export type ResourceIdentifier = {
-	kind: ResourceIdentifierKind;
-	value: string;
+	identifierKind: ResourceIdentifierKind;
+	identifierValue: string;
 };
 
 export type Resource = PartialResource & {

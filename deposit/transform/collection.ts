@@ -58,7 +58,12 @@ export async function transformCollectionToResource(
 	return {
 		kind: getResourceKindForCollection(collection),
 		title: collection.title,
-		url: collectionUrl(community, collection),
+		identifiers: [
+			{
+				identifierKind: 'url',
+				identifierValue: collectionUrl(community, collection),
+			},
+		],
 		timestamp: new Date().toUTCString(),
 		license: { spdxIdentifier: licence.spdxIdentifier },
 		contributions,
