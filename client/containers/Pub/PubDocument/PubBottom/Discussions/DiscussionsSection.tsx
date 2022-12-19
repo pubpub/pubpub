@@ -65,8 +65,9 @@ const DiscussionsSection = (props: Props) => {
 					>
 						<AccentedIconButton
 							accentColor={iconColor}
-							icon="sort"
 							title="Sort comments"
+							aria-label="Sort comments"
+							icon="sort"
 						/>
 					</Popover>
 					<Popover
@@ -101,8 +102,9 @@ const DiscussionsSection = (props: Props) => {
 					>
 						<AccentedIconButton
 							accentColor={iconColor}
-							icon="filter"
 							title="Filter comments"
+							aria-label="Filter comments"
+							icon="filter"
 						/>
 					</Popover>
 					{userId && featureFlags.notifications && (
