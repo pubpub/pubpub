@@ -110,6 +110,7 @@ const PubBottomSection = (props: PubBottomSectionProps) => {
 					accentColor="white"
 					icon="cross"
 					title="Search this section"
+					aria-label="Search this section"
 					onClick={() => setSearchTerm(null)}
 				/>
 			);
@@ -120,6 +121,7 @@ const PubBottomSection = (props: PubBottomSectionProps) => {
 		return (
 			<AccentedIconButton
 				title={isExpanded ? 'Collapse this section' : 'Expand this section'}
+				aria-label={isExpanded ? 'Collapse this section' : 'Expand this section'}
 				accentColor={accentColor}
 				icon={isExpanded ? 'collapse-all' : 'expand-all'}
 				onClick={() => setIsExpanded(!isExpanded)}
