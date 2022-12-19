@@ -1,0 +1,7 @@
+span[data-suggested-edits-addition="true"] {
+    background-color: rgba(forestgreen, 0.2);
+}
+
+span[data-suggested-edits-removal="true"] {
+    text-decoration: 2px forestgreen line-through;
+}

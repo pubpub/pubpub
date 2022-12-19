@@ -10,7 +10,7 @@ storiesOf('components/MinimalEditor', module).add('default', () => (
 			<MinimalEditor focusOnLoad={true} />
 		</div>
 		<div style={wrapperStyle}>
-			<MinimalEditor useFormattingBar={true} placeholder="Yippie" />
+			<MinimalEditor useFormattingBar={true} placeholder="Type here" />
 		</div>
 	</div>
 ));

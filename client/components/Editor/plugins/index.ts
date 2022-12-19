@@ -15,6 +15,7 @@ import buildMath from './math';
 import buildOnChange from './onChange';
 import buildPlaceholder from './placeholder';
 import buildPaste from './paste';
+import buildSuggestedEdits from './suggestedEdits';
 import buildReactive from './reactive';
 import buildTable from './table';
 import buildCode from './code';
@@ -50,6 +51,7 @@ export const standardPlugins = {
 	paste: buildPaste,
 	mathPlugin: buildMath,
 	codePlugin: buildCode,
+	suggestedEdits: buildSuggestedEdits,
 };
 
 const getSortedPlugins = (plugins: Record<string, null | PluginLoader>): PluginLoader[] => {

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { suggest } from 'prosemirror-suggest';
 import {
 	codeBlockToggle,
 	alignTextCenter,
@@ -19,6 +20,7 @@ import {
 	subscriptToggle,
 	superscriptToggle,
 } from '../Editor/commands';
+import { toggleSuggestedEdits } from '../Editor/plugins/suggestedEdits';
 import { getCurrentNodeLabels, EditorChangeObject } from '../Editor';
 import {
 	ControlsMath,
@@ -303,7 +305,15 @@ export const simpleMedia: FormattingBarButtonData = {
 	isMedia: true,
 };
 
-export const minimalButtonSet = [[strong, em, link, rightToLeft, math]];
+export const suggestedEdits: FormattingBarButtonData = {
+	key: 'suggestedEdits',
+	title: 'Toggle Suggested Edits',
+	icon: 'highlight',
+	isToggle: true,
+	command: toggleSuggestedEdits,
+};
+
+export const minimalButtonSet = [[suggestedEdits, strong, em, link, rightToLeft, math]];
 export const abstractButtonSet = [[strong, em, link, rightToLeft, math]];
 export const reviewButtonSet = [
 	[
@@ -338,6 +348,7 @@ export const fullButtonSet = [
 	[alignLeft, alignCenter, alignRight],
 	[rightToLeft],
 	[
+		suggestedEdits,
 		strong,
 		em,
 		link,
