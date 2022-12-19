@@ -62,7 +62,7 @@ const LicenseSection = () => {
 						aria-label="Edit license"
 					>
 						<AccentedIconButton
-							ariab-label="Edit Pub license"
+							aria-label="Edit Pub license"
 							icon="edit"
 							accentColor={iconColor}
 						/>
