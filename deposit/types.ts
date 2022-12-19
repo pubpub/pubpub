@@ -82,11 +82,15 @@ export type PartialResource = {
 	identifiers: ResourceIdentifier[];
 };
 
-export type ResourceIdentifierKind = 'url' | 'doi';
+export type ResourceIdentifierKind = 'URL' | 'DOI';
 
 export type ResourceIdentifier = {
 	identifierKind: ResourceIdentifierKind;
 	identifierValue: string;
+};
+
+type ResourceMeta = {
+	[key: string]: string;
 };
 
 export type Resource = PartialResource & {
@@ -104,6 +108,8 @@ export type Resource = PartialResource & {
 	relationships: ResourceRelationship[];
 
 	license: ResourceLicense;
+
+	meta: ResourceMeta;
 };
 
 export type AnyResource = PartialResource | Resource;

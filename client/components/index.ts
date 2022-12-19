@@ -108,3 +108,5 @@ export { default as TimeAgo } from './TimeAgo/TimeAgo';
 export { Timeline, TimelineCondenser, TimelineItem } from './Timeline';
 export { default as UserAutocomplete } from './UserAutocomplete/UserAutocomplete';
 export { default as UserNotificationsPopover } from './UserNotifications/UserNotificationsPopover';
+
+export { default as DataciteDeposit } from './Deposit/DataciteDeposit';

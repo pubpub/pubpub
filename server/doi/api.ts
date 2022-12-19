@@ -1,11 +1,15 @@
+import { renderXml } from '@pubpub/deposit-utils/datacite';
 import { createDeposit } from 'deposit/datacite';
-import { Release } from 'server/models';
+import { transformCollectionToResource } from 'deposit/transform/collection';
+import { Resource } from 'deposit/types';
+import { Community, Release } from 'server/models';
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
+import * as types from 'types';
 import { parentToSupplementNeedsDoiError } from 'utils/crossref/createDeposit';
 import xmlbuilder from 'xmlbuilder';
 import { getPermissions } from './permissions';
-import { generateDoi, getDoiData, setDoiData } from './queries';
+import { findCollection, generateDoi, getDoiData, setDoiData } from './queries';
 
 const assertUserAuthorized = async (target, requestIds) => {
 	const permissions = await getPermissions(requestIds);
@@ -127,9 +131,8 @@ app.get(
 );
 
 app.get(
-	'/api/depositTest',
+	'/api/deposit',
 	wrap(async (req, res) => {
-		let xml: any;
 		const user = req.user || {};
 		const { communityId, collectionId, pubId, target } = req.query;
 		const requestIds = {
@@ -141,13 +144,28 @@ app.get(
 
 		await assertUserAuthorized(target, requestIds);
 
+		const community: types.Community = await Community.findOne({
+			where: { id: requestIds.communityId },
+		});
+		const collection: types.DefinitelyHas<types.Collection, 'attributions'> =
+			await findCollection(requestIds.collectionId);
+
+		const collectionIdentifiers = await generateDoi(requestIds, 'collection');
+		const collectionResource = await transformCollectionToResource(collection, community);
+
+		collectionResource.meta['created-date'] = collection.createdAt.toString();
+
+		if (collection.updatedAt !== collection.createdAt) {
+			collectionResource.meta['updated-date'] = collection.updatedAt.toString();
+		}
+
+		collectionResource.meta['publisher'] = community.publishAs || 'PubPub';
+
 		try {
-			xml = await createDeposit(
-				pubId ? { communityId, pubId } : { communityId, collectionId },
-			);
+			const collectionDepositAst = createDeposit(collectionResource as Resource);
+			return res.status(200).json(collectionDepositAst);
 		} catch (error) {
 			return res.status(404).json({ error: (error as Error).toString() });
 		}
-		return res.status(200).json({ xml });
 	}),
 );

@@ -11,6 +11,7 @@ import {
 	ResourceRelationship,
 	ResourceRelation,
 } from 'deposit/types';
+import { exists, expect } from 'utils/assert';
 
 function transformResourceKindToDataciteResourceType(kind: ResourceKind) {
 	switch (kind) {
@@ -127,20 +128,51 @@ function renderRelatedItem(relationship: ResourceRelationship) {
 	);
 }
 
-export async function createDeposit(resource: Resource, doi: string) {
+function renderRelatedIdentifier(relationship: ResourceRelationship) {
+	const identifier = relationship.resource.identifiers[0];
+	return (
+		<relatedIdentifier
+			relatedIdentifierType={identifier.identifierKind}
+			resourceTypeGeneral={transformResourceKindToDataciteResourceType(
+				relationship.resource.kind,
+			)}
+			relationType={transformResourceRelationToDataciteRelationType(
+				relationship.relation,
+				relationship.isParent,
+			)}
+		>
+			{identifier.identifierValue}
+		</relatedIdentifier>
+	);
+}
+
+export function createDeposit(resource: Resource) {
 	const identifier = resource.identifiers[0];
 	const wordCount = resource.summaries.find((summary) => summary.kind === 'WordCount');
+	const publisher = expect(resource.meta['publisher']);
+	const createdDate = expect(resource.meta['created-date']);
+	const updatedDate = resource.meta['updated-date'];
+	const { identifierValue: url } = expect(
+		resource.identifiers.find((identifier) => identifier.identifierKind === 'URL'),
+	);
 	return (
 		<resource xmlns="http://datacite.org/schema/kernel-4">
 			<resourceType
 				resourceTypeGeneral={transformResourceKindToDataciteResourceType(resource.kind)}
 			/>
+			<publisher>{publisher}</publisher>
+			<publicationYear>{new Date(resource.timestamp).getUTCFullYear()}</publicationYear>
 			<identifier identifierType={identifier.identifierKind}>
 				{identifier.identifierValue}
 			</identifier>
 			<titles>
 				<title xml:lang="en-US">{resource.title}</title>
 			</titles>
+			<subjects></subjects>
+			<dates>
+				<date dateType="Created">{createdDate}</date>
+				{exists(updatedDate) && <date dateType="Updated">{updatedDate}</date>}
+			</dates>
 			<descriptions>
 				{resource.descriptions.map((description) => (
 					<description
@@ -171,12 +203,24 @@ export async function createDeposit(resource: Resource, doi: string) {
 					.filter((contribution) => !contribution.isAttribution)
 					.map(renderContributor)}
 			</contributors>
-			{wordCount && (
-				<sizes>
-					<size>${wordCount.value} words</size>
-				</sizes>
-			)}
-			<relatedItems>{resource.relationships.map(renderRelatedItem)}</relatedItems>
+			<sizes>{wordCount && <size>${wordCount.value} words</size>}</sizes>
+			<alternateIdentifiers>
+				<alternateIdentifier
+					// @ts-expect-error
+					alternateIdentifierType="URL"
+				>
+					{url}
+				</alternateIdentifier>
+			</alternateIdentifiers>
+			{/* <relatedItems>{resource.relationships.map(renderRelatedItem)}</relatedItems> */}
+			<relatedIdentifiers>
+				{resource.relationships.map(renderRelatedIdentifier)}
+			</relatedIdentifiers>
+			<version>1.0</version>
+			<formats>
+				<format>text/html</format>
+			</formats>
+			<language>en-US</language>
 		</resource>
 	);
 }

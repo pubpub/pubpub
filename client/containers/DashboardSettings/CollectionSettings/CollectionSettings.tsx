@@ -3,7 +3,7 @@ import { useUpdateEffect } from 'react-use';
 
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
-import { CollectionAttributionEditor, SettingsSection } from 'components';
+import { CollectionAttributionEditor, DataciteDeposit, SettingsSection } from 'components';
 import { pruneFalsyValues } from 'utils/arrays';
 import { AttributionWithUser } from 'types';
 import { useCollectionState } from '../../DashboardOverview/CollectionOverview/collectionState';
@@ -67,6 +67,7 @@ const CollectionSettings = () => {
 			icon: 'heat-grid',
 			sections: [
 				<SettingsSection title="Metadata" id="metadata" showTitle={false}>
+					<DataciteDeposit collection={collection} communityData={communityData} />
 					<CollectionMetadataEditor
 						collection={collection}
 						communityData={communityData}

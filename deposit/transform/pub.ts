@@ -59,7 +59,7 @@ function transformExternalPublicationToResource({ title, url }: ExternalPublicat
 		title,
 		identifiers: [
 			{
-				identifierKind: 'url',
+				identifierKind: 'URL',
 				identifierValue: url,
 			},
 		],
@@ -100,7 +100,7 @@ export async function transformPubToResource(pub: Pub, community: Community): Pr
 		relationships,
 		identifiers: [
 			{
-				identifierKind: 'url',
+				identifierKind: 'URL',
 				identifierValue: pubUrl(community, pub),
 			},
 		],

@@ -2,7 +2,13 @@ import { fetchFacetsForScope } from 'server/facets';
 import { Collection, CollectionAttribution, Community, DefinitelyHas } from 'types';
 import { collectionUrl } from 'utils/canonicalUrls';
 import { licenseDetailsByKind } from 'utils/licenses';
-import { AnyResource, ResourceKind, ResourceContribution, ResourceContributorRole } from '../types';
+import {
+	AnyResource,
+	ResourceKind,
+	ResourceContribution,
+	ResourceContributorRole,
+	Resource,
+} from '../types';
 
 const attributionRoleToResourceContributorRole: Record<string, ResourceContributorRole> = {
 	'Writing – Review & Editing': 'Editor',
@@ -46,7 +52,7 @@ function transformCollectionAttributionToResourceContribution(
 export async function transformCollectionToResource(
 	collection: DefinitelyHas<Collection, 'attributions'>,
 	community: Community,
-): Promise<AnyResource> {
+): Promise<Resource> {
 	let facets = await fetchFacetsForScope({ collectionId: collection.id }, ['License']);
 	let licence = licenseDetailsByKind[facets.License.value.kind];
 	let contributions: ResourceContribution[] = collection.attributions.flatMap(
@@ -60,13 +66,16 @@ export async function transformCollectionToResource(
 		title: collection.title,
 		identifiers: [
 			{
-				identifierKind: 'url',
+				identifierKind: 'URL',
 				identifierValue: collectionUrl(community, collection),
 			},
 		],
-		timestamp: new Date().toUTCString(),
 		license: { spdxIdentifier: licence.spdxIdentifier },
+		timestamp: collection.updatedAt,
 		contributions,
 		relationships: [],
+		descriptions: [],
+		summaries: [],
+		meta: {},
 	};
 }
