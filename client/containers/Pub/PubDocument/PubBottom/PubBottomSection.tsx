@@ -167,6 +167,8 @@ const PubBottomSection = (props: PubBottomSectionProps) => {
 						<AccentedIconButton
 							accentColor={accentColor}
 							icon="search"
+							title="Search comments"
+							aria-label="Search comments"
 							onClick={() => setSearchTerm('')}
 						/>
 					)}
