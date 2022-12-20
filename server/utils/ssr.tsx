@@ -71,6 +71,11 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
 	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
+
+	const isPub = Boolean(url?.includes('/pub/'))
+	const needsBookTitle = collection?.kind === 'book' && !isPub
+
+
 	let outputComponents: any[] = [];
 	if (!initialData.locationData.isBasePubPub) {
 		outputComponents = [
@@ -92,12 +97,12 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			<meta
 				key="t2"
 				property="og:title"
-				content={collection?.kind === 'book' ? collection.title : title}
+				content={needsBookTitle ? collection.title : title}
 			/>,
 			<meta key="t3" name="twitter:title" content={titleWithContext} />,
 			<meta key="t4" name="twitter:image:alt" content={titleWithContext} />,
-			<meta key="t5" name="citation_title" content={collection?.title ?? title} />,
-			<meta key="t6" name="dc.title" content={collection?.title ?? title} />,
+			<meta key="t5" name="citation_title" content={needsBookTitle ? collection?.title : title} />,
+			<meta key="t6" name="dc.title" content={needsBookTitle ? collection?.title : title} />,
 		];
 	}
 
@@ -125,7 +130,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 				content={
 					collection?.kind === 'book'
 						? 'book'
-						: url.indexOf('/pub/') > -1
+						: isPub
 						? 'article'
 						: 'website'
 				}
