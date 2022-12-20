@@ -1,5 +1,12 @@
 import { Schema, Node, Fragment, Slice } from 'prosemirror-model';
-import { AddMarkStep, Mapping, ReplaceAroundStep, ReplaceStep, Step } from 'prosemirror-transform';
+import {
+	AddMarkStep,
+	Mapping,
+	RemoveMarkStep,
+	ReplaceAroundStep,
+	ReplaceStep,
+	Step,
+} from 'prosemirror-transform';
 import { Selection, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { flattenOnce } from 'utils/arrays';
@@ -8,8 +15,16 @@ import { suggestedEditsPluginKey } from './plugin';
 
 type StepWithDoc = {
 	doc: Node;
+	afterDoc: Node;
 	step: Step;
 	inverseStep: Step;
+};
+
+type AdditionAndRemovalSlices = {
+	addition: Slice;
+	removal: Slice;
+	from: number;
+	to: number;
 };
 
 type UnifiedStepResult = {
@@ -24,8 +39,14 @@ const getStepsWithIntermediateDocs = (steps: Step[], startingDoc: Node): StepWit
 	let currentDoc = startingDoc;
 	for (let i = 0; i < steps.length; i++) {
 		const step = steps[i];
-		stepsWithDocs.push({ doc: currentDoc, step, inverseStep: step.invert(currentDoc) });
-		currentDoc = step.apply(currentDoc).doc!;
+		const afterDoc = step.apply(currentDoc).doc!;
+		stepsWithDocs.push({
+			doc: currentDoc,
+			step,
+			inverseStep: step.invert(currentDoc),
+			afterDoc,
+		});
+		currentDoc = afterDoc;
 	}
 	return stepsWithDocs;
 };
@@ -101,29 +122,61 @@ const applySuggestedEditMarkToNode = (
 	return node.copy(applySuggestedEditMarkToFragment(schema, kind, node.content));
 };
 
+const getAdditionAndRemovalSlices = (stepWithDoc: StepWithDoc): null | AdditionAndRemovalSlices => {
+	const { step, inverseStep, doc, afterDoc } = stepWithDoc;
+	if (step instanceof ReplaceStep && inverseStep instanceof ReplaceStep) {
+		return {
+			addition: step.slice,
+			removal: inverseStep.slice,
+			from: step.from,
+			to: step.to,
+		};
+	}
+	if (step instanceof ReplaceAroundStep && inverseStep instanceof ReplaceAroundStep) {
+		const removal = doc.slice(step.from, step.to);
+		const stepMap = step.getMap();
+		const newFrom = stepMap.map(step.from, 1);
+		const newTo = stepMap.map(step.to, -1);
+		const addition = afterDoc.slice(newFrom, newTo);
+		return {
+			removal,
+			addition,
+			from: step.from,
+			to: step.to,
+		};
+	}
+	if (step instanceof AddMarkStep || step instanceof RemoveMarkStep) {
+		const removal = doc.slice(step.from, step.to);
+		const addition = afterDoc.slice(step.from, step.to);
+		return {
+			addition,
+			removal,
+			from: step.from,
+			to: step.to,
+		};
+	}
+	return null;
+};
+
 const getUnifiedAdditionAndRemovalStep = (
 	schema: Schema,
 	stepWithDoc: StepWithDoc,
 ): null | UnifiedStepResult => {
-	const { step, inverseStep } = stepWithDoc;
-	if (step instanceof ReplaceStep && inverseStep instanceof ReplaceStep) {
-		const removedContent = applySuggestedEditMarkToFragment(
-			schema,
-			'remove',
-			inverseStep.slice.content,
-		);
-		const addedContent = applySuggestedEditMarkToFragment(schema, 'add', step.slice.content);
-		const slice = new Slice(
+	const additionAndRemoval = getAdditionAndRemovalSlices(stepWithDoc);
+	if (additionAndRemoval) {
+		const { addition, removal, from, to } = additionAndRemoval;
+		const removedContent = applySuggestedEditMarkToFragment(schema, 'remove', removal.content);
+		const addedContent = applySuggestedEditMarkToFragment(schema, 'add', addition.content);
+		const unifiedSlice = new Slice(
 			removedContent.append(addedContent),
-			inverseStep.slice.openStart,
-			step.slice.openEnd,
+			removal.openStart,
+			addition.openEnd,
 		);
 		return {
-			step: new ReplaceStep(step.from, step.to, slice),
+			step: new ReplaceStep(from, to, unifiedSlice),
 			mapForward: addedContent.size > 0,
 		};
 	}
-	console.log('not ReplaceStep');
 	return null;
 };
 
@@ -147,6 +200,9 @@ const getTransactionToAddSuggestionMarks = (
 			const { step, mapForward } = unified;
 			stepsWithTrackedChanges.push(step);
 			someMapForward ||= mapForward;
+		}
+		if (i === 1) {
+			console.log('fuck!!!');
 		}
 	}
 	const allSteps = [...stepsToInvert, ...stepsWithTrackedChanges];
