@@ -1,6 +1,6 @@
 import { Schema, Node, Fragment, Slice } from 'prosemirror-model';
 import { AddMarkStep, Mapping, ReplaceAroundStep, ReplaceStep, Step } from 'prosemirror-transform';
-import { EditorState, Transaction } from 'prosemirror-state';
+import { Selection, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { flattenOnce } from 'utils/arrays';
 import { isSuggestedEditsEnabled } from './util';
@@ -16,6 +16,11 @@ type RemovedAndAddedSlices = {
 	removed: Slice;
 	added: Slice;
 	position: number;
+};
+
+type UnifiedStepResult = {
+	step: ReplaceStep;
+	mapForward: boolean;
 };
 
 type SuggestedEditKind = 'add' | 'remove';
@@ -44,6 +49,25 @@ const nodeHasSuggestedEditMark = (schema: Schema, kind: SuggestedEditKind, node:
 
 const nodeIsSuggestedEditTarget = (schema: Schema, node: Node) => {
 	return node.type === schema.nodes.text;
+};
+
+const mapSelectionThroughTransaction = (
+	transaction: Transaction,
+	startingSelection: Selection,
+	mapForward: boolean,
+) => {
+	if (startingSelection instanceof TextSelection) {
+		const assoc = mapForward ? 1 : -1;
+		return transaction.steps.reduce((selection: TextSelection, step: Step, index: number) => {
+			const map = step.getMap();
+			const nextAnchor = map.map(selection.anchor, assoc);
+			const nextHead = map.map(selection.head, assoc);
+			const currentDoc =
+				index === transaction.docs.length ? transaction.docs[index + 1] : transaction.doc;
+			return TextSelection.create(currentDoc, nextAnchor, nextHead);
+		}, startingSelection);
+	}
+	return startingSelection.map(transaction.doc, transaction.mapping);
 };
 
 const applySuggestedEditMark = <Target extends Node | Fragment>(
@@ -76,56 +100,95 @@ const applySuggestedEditMark = <Target extends Node | Fragment>(
 const getUnifiedAdditionAndRemovalStep = (
 	schema: Schema,
 	stepWithDoc: StepWithDoc,
-): null | Step => {
+): null | UnifiedStepResult => {
 	const { step, inverseStep } = stepWithDoc;
 	if (step instanceof ReplaceStep && inverseStep instanceof ReplaceStep) {
 		const removedContent = applySuggestedEditMark(schema, 'remove', inverseStep.slice.content);
 		const addedContent = applySuggestedEditMark(schema, 'add', step.slice.content);
-		console.log(removedContent, addedContent);
 		const slice = new Slice(
 			removedContent.append(addedContent),
 			inverseStep.slice.openStart,
 			step.slice.openEnd,
 		);
-		return new ReplaceStep(step.from, step.to, slice);
+		return {
+			step: new ReplaceStep(step.from, step.to, slice),
+			mapForward: addedContent.size > 0,
+		};
 	}
-	console.log('not ReplaceStep');
 	return null;
 };
 
-const getStepsToAddSuggestionMarks = (schema: Schema, steps: Step[], startingDoc: Node) => {
+const getTransactionToAddSuggestionMarks = (
+	state: EditorState,
+	steps: Step[],
+	startingDoc: Node,
+) => {
+	const { schema, tr, selection } = state;
 	const stepsWithDocs = getStepsWithIntermediateDocs(steps, startingDoc);
 	// First we get a list of steps we need to invert the document to its starting point before
 	// these steps...
 	const stepsToInvert = stepsWithDocs.map((swd) => swd.inverseStep).reverse();
 	// Now we replay the steps, and after each one, we track changes with marks
 	const stepsWithTrackedChanges: Step[] = [];
-	const mapping = new Mapping();
+	let someMapForward = false;
 	for (let i = 0; i < stepsWithDocs.length; i++) {
 		const stepWithDoc = stepsWithDocs[i];
-		const unifiedStep = getUnifiedAdditionAndRemovalStep(schema, stepWithDoc);
-		stepsWithTrackedChanges.push(unifiedStep);
+		const unified = getUnifiedAdditionAndRemovalStep(schema, stepWithDoc);
+		if (unified) {
+			const { step, mapForward } = unified;
+			stepsWithTrackedChanges.push(step);
+			someMapForward ||= mapForward;
+		}
 	}
-	return [...stepsToInvert, ...stepsWithTrackedChanges];
+	const allSteps = [...stepsToInvert, ...stepsWithTrackedChanges];
+	allSteps.forEach((step) => tr.step(step));
+	const newSelection = mapSelectionThroughTransaction(tr, selection, someMapForward);
+	tr.setSelection(newSelection);
+	return tr;
+};
+
+const transactionDeletedNoContentOutsideOfAdditionMark = (tr: Transaction) => {
+	const additionMark = getMarkForSuggestedEditKind(tr.doc.type.schema, 'add');
+	if (!tr.docChanged) {
+		return true;
+	}
+	return tr.steps.every((step, index) => {
+		let stepDeletedNoContentOutsideOfAdditionMark = true;
+		const stepMap = step.getMap();
+		stepMap.forEach((oldStart, oldEnd, newStart, newEnd) => {
+			const hasDeleted = newEnd === newStart;
+			if (hasDeleted) {
+				const docBeforeStep = index === 0 ? tr.before : tr.docs[index - 1];
+				const sliceOfStep = docBeforeStep.slice(oldStart, oldEnd);
+				sliceOfStep.content.descendants((node: Node) => {
+					if (
+						nodeIsSuggestedEditTarget(tr.doc.type.schema, node) &&
+						!nodeHasSuggestedEditMark(tr.doc.type.schema, 'add', node)
+					) {
+						stepDeletedNoContentOutsideOfAdditionMark = false;
+					}
+				});
+			} else {
+				stepDeletedNoContentOutsideOfAdditionMark = false;
+			}
+		});
+		return stepDeletedNoContentOutsideOfAdditionMark;
+	});
 };
 
 export const appendTransactionForSuggestedEdits = (
-	transactions: readonly Transaction[],
+	transactions: Transaction[],
 	oldState: EditorState,
 	newState: EditorState,
 ) => {
 	const isEnabled = isSuggestedEditsEnabled(newState);
-	if (isEnabled) {
-		const steps = flattenOnce(
-			transactions.filter((tr) => !tr.getMeta(suggestedEditsPluginKey)).map((tr) => tr.steps),
-		);
-		const stepsToInvert = getStepsToAddSuggestionMarks(newState.schema, steps, oldState.doc);
-		const { tr } = newState;
-		stepsToInvert.forEach((step) => tr.step(step));
-		if (tr.steps.length) {
-			tr.setMeta(suggestedEditsPluginKey, { isViaPlugin: true });
-			return tr;
-		}
+	const canSkip = transactions.every((tr) =>
+		transactionDeletedNoContentOutsideOfAdditionMark(tr),
+	);
+	if (isEnabled && !canSkip) {
+		const validTransactions = transactions.filter((tr) => !tr.getMeta('history$'));
+		const steps = flattenOnce(validTransactions.map((tr) => tr.steps));
+		return getTransactionToAddSuggestionMarks(newState, steps, oldState.doc);
 	}
 	return null;
 };
