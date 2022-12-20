@@ -49,8 +49,8 @@ type RenderNoteOptions = {
 
 const getRenderedNotes = (options: RenderNoteOptions): RenderedNote[] => {
 	const { notes, renderedStructuredValues, includeNumbers, isFootnote } = options;
-	const obj = isFootnote ? notes : unique(notes, (note) => note.fingerprint);
-	return obj.map((note, index) => {
+	const notesObject = isFootnote ? notes : unique(notes, (note) => note.fingerprint);
+	return notesObject.map((note, index) => {
 		return {
 			...note,
 			...(includeNumbers && { number: index + 1 }),
