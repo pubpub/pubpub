@@ -12,12 +12,6 @@ type StepWithDoc = {
 	inverseStep: Step;
 };
 
-type RemovedAndAddedSlices = {
-	removed: Slice;
-	added: Slice;
-	position: number;
-};
-
 type UnifiedStepResult = {
 	step: ReplaceStep;
 	mapForward: boolean;
@@ -70,31 +64,41 @@ const mapSelectionThroughTransaction = (
 	return startingSelection.map(transaction.doc, transaction.mapping);
 };
 
-const applySuggestedEditMark = <Target extends Node | Fragment>(
+const applySuggestedEditMarkToFragment = (
 	schema: Schema,
 	kind: SuggestedEditKind,
-	target: Target,
-): Target => {
-	if (target instanceof Fragment) {
-		const updatedChildren: Node[] = [];
-		for (let i = 0; i < target.childCount; i++) {
-			const child = target.child(i);
-			const updatedChild = applySuggestedEditMark(schema, kind, child);
+	fragment: Fragment,
+): Fragment => {
+	const updatedChildren: Node[] = [];
+	for (let i = 0; i < fragment.childCount; i++) {
+		const child = fragment.child(i);
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
+		const updatedChild = applySuggestedEditMarkToNode(schema, kind, child);
+		if (updatedChild) {
 			updatedChildren.push(updatedChild);
 		}
-		return Fragment.from(updatedChildren) as Target;
 	}
-	if (target instanceof Node) {
-		const mark = getMarkForSuggestedEditKind(schema, kind);
-		if (
-			nodeIsSuggestedEditTarget(schema, target) &&
-			!nodeHasSuggestedEditMark(schema, kind, target)
-		) {
-			return target.mark([...target.marks, mark.create()]) as Target;
+	return Fragment.from(updatedChildren);
+};
+
+const applySuggestedEditMarkToNode = (
+	schema: Schema,
+	kind: SuggestedEditKind,
+	node: Node,
+): null | Node => {
+	const otherKind = kind === 'add' ? 'remove' : 'add';
+	if (nodeIsSuggestedEditTarget(schema, node)) {
+		if (nodeHasSuggestedEditMark(schema, otherKind, node)) {
+			// Don't add an addition mark to a removal mark or vice-versa.
+			return null;
 		}
-		return target.copy(applySuggestedEditMark(schema, kind, target.content)) as Target;
+		if (!nodeHasSuggestedEditMark(schema, kind, node)) {
+			const mark = getMarkForSuggestedEditKind(schema, kind);
+			return node.mark([...node.marks, mark.create()]);
+		}
+		return node;
 	}
-	return target as Target;
+	return node.copy(applySuggestedEditMarkToFragment(schema, kind, node.content));
 };
 
 const getUnifiedAdditionAndRemovalStep = (
@@ -103,8 +107,12 @@ const getUnifiedAdditionAndRemovalStep = (
 ): null | UnifiedStepResult => {
 	const { step, inverseStep } = stepWithDoc;
 	if (step instanceof ReplaceStep && inverseStep instanceof ReplaceStep) {
-		const removedContent = applySuggestedEditMark(schema, 'remove', inverseStep.slice.content);
-		const addedContent = applySuggestedEditMark(schema, 'add', step.slice.content);
+		const removedContent = applySuggestedEditMarkToFragment(
+			schema,
+			'remove',
+			inverseStep.slice.content,
+		);
+		const addedContent = applySuggestedEditMarkToFragment(schema, 'add', step.slice.content);
 		const slice = new Slice(
 			removedContent.append(addedContent),
 			inverseStep.slice.openStart,
@@ -115,6 +123,7 @@ const getUnifiedAdditionAndRemovalStep = (
 			mapForward: addedContent.size > 0,
 		};
 	}
+	console.log('not ReplaceStep');
 	return null;
 };
 
@@ -147,45 +156,14 @@ const getTransactionToAddSuggestionMarks = (
 	return tr;
 };
 
-const transactionDeletedNoContentOutsideOfAdditionMark = (tr: Transaction) => {
-	const additionMark = getMarkForSuggestedEditKind(tr.doc.type.schema, 'add');
-	if (!tr.docChanged) {
-		return true;
-	}
-	return tr.steps.every((step, index) => {
-		let stepDeletedNoContentOutsideOfAdditionMark = true;
-		const stepMap = step.getMap();
-		stepMap.forEach((oldStart, oldEnd, newStart, newEnd) => {
-			const hasDeleted = newEnd === newStart;
-			if (hasDeleted) {
-				const docBeforeStep = index === 0 ? tr.before : tr.docs[index - 1];
-				const sliceOfStep = docBeforeStep.slice(oldStart, oldEnd);
-				sliceOfStep.content.descendants((node: Node) => {
-					if (
-						nodeIsSuggestedEditTarget(tr.doc.type.schema, node) &&
-						!nodeHasSuggestedEditMark(tr.doc.type.schema, 'add', node)
-					) {
-						stepDeletedNoContentOutsideOfAdditionMark = false;
-					}
-				});
-			} else {
-				stepDeletedNoContentOutsideOfAdditionMark = false;
-			}
-		});
-		return stepDeletedNoContentOutsideOfAdditionMark;
-	});
-};
-
 export const appendTransactionForSuggestedEdits = (
-	transactions: Transaction[],
+	transactions: readonly Transaction[],
 	oldState: EditorState,
 	newState: EditorState,
 ) => {
 	const isEnabled = isSuggestedEditsEnabled(newState);
-	const canSkip = transactions.every((tr) =>
-		transactionDeletedNoContentOutsideOfAdditionMark(tr),
-	);
-	if (isEnabled && !canSkip) {
+	if (isEnabled) {
+		// We should be accessing the history plugin by its actual PluginKey
 		const validTransactions = transactions.filter((tr) => !tr.getMeta('history$'));
 		const steps = flattenOnce(validTransactions.map((tr) => tr.steps));
 		return getTransactionToAddSuggestionMarks(newState, steps, oldState.doc);
