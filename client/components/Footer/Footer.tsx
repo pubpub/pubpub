@@ -256,12 +256,8 @@ const Footer = (props: Props) => {
 						<ul className="social-list">
 							{socialItems.map((item) => {
 								return (
-									<li>
-										<a
-											href={item.url}
-											key={`social-item-${item.id}`}
-											aria-label={item.title}
-										>
+									<li key={`social-item-${item.id}`}>
+										<a href={item.url} aria-label={item.title}>
 											<Icon icon={item.icon} />
 										</a>
 									</li>
