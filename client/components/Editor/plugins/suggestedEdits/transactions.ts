@@ -193,7 +193,7 @@ const getTransactionToAddSuggestionMarks = (
 	getStepsToInvert(steps, startingDoc).forEach((step) => tr.step(step));
 	// Now we replay the steps as suggested edits.
 	const mapping = new Mapping();
-	console.log('STEPS', steps);
+	console.log('STEPS', steps, state.doc, state.doc.toJSON());
 	[...steps].forEach((step) => {
 		const mappedStep = step.map(mapping);
 		if (mappedStep) {
