@@ -1,24 +1,19 @@
 import { Schema, Node, Fragment, Slice } from 'prosemirror-model';
 import {
 	AddMarkStep,
+	Mappable,
 	Mapping,
 	RemoveMarkStep,
 	ReplaceAroundStep,
 	ReplaceStep,
 	Step,
+	Transform,
 } from 'prosemirror-transform';
 import { Selection, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { flattenOnce } from 'utils/arrays';
 import { isSuggestedEditsEnabled } from './util';
 import { suggestedEditsPluginKey } from './plugin';
-
-type StepWithDoc = {
-	doc: Node;
-	afterDoc: Node;
-	step: Step;
-	inverseStep: Step;
-};
 
 type AdditionAndRemovalSlices = {
 	addition: Slice;
@@ -28,27 +23,29 @@ type AdditionAndRemovalSlices = {
 };
 
 type UnifiedStepResult = {
-	step: ReplaceStep;
-	mapForward: boolean;
+	unifiedStep: ReplaceStep;
+	mapSelectionForward: boolean;
+};
+
+type StepTransition = {
+	beforeDoc: Node;
+	afterDoc: Node;
+	step: Step;
+	inverseStep: Step;
 };
 
 type SuggestedEditKind = 'add' | 'remove';
 
-const getStepsWithIntermediateDocs = (steps: Step[], startingDoc: Node): StepWithDoc[] => {
-	const stepsWithDocs: StepWithDoc[] = [];
+const getStepsToInvert = (steps: Step[], startingDoc: Node): Step[] => {
+	const inverseSteps: Step[] = [];
 	let currentDoc = startingDoc;
 	for (let i = 0; i < steps.length; i++) {
 		const step = steps[i];
-		const afterDoc = step.apply(currentDoc).doc!;
-		stepsWithDocs.push({
-			doc: currentDoc,
-			step,
-			inverseStep: step.invert(currentDoc),
-			afterDoc,
-		});
-		currentDoc = afterDoc;
+		const inverseStep = step.invert(currentDoc);
+		inverseSteps.push(inverseStep);
+		currentDoc = step.apply(currentDoc).doc!;
 	}
-	return stepsWithDocs;
+	return inverseSteps.reverse();
 };
 
 const getMarkForSuggestedEditKind = (schema: Schema, kind: SuggestedEditKind) => {
@@ -122,8 +119,10 @@ const applySuggestedEditMarkToNode = (
 	return node.copy(applySuggestedEditMarkToFragment(schema, kind, node.content));
 };
 
-const getAdditionAndRemovalSlices = (stepWithDoc: StepWithDoc): null | AdditionAndRemovalSlices => {
-	const { step, inverseStep, doc, afterDoc } = stepWithDoc;
+const getAdditionAndRemovalSlices = (
+	stepTransition: StepTransition,
+): null | AdditionAndRemovalSlices => {
+	const { step, inverseStep, beforeDoc, afterDoc } = stepTransition;
 	if (step instanceof ReplaceStep && inverseStep instanceof ReplaceStep) {
 		return {
 			addition: step.slice,
@@ -133,7 +132,7 @@ const getAdditionAndRemovalSlices = (stepWithDoc: StepWithDoc): null | AdditionA
 		};
 	}
 	if (step instanceof ReplaceAroundStep && inverseStep instanceof ReplaceAroundStep) {
-		const removal = doc.slice(step.from, step.to);
+		const removal = beforeDoc.slice(step.from, step.to);
 		const stepMap = step.getMap();
 		const newFrom = stepMap.map(step.from, 1);
 		const newTo = stepMap.map(step.to, -1);
@@ -146,7 +145,7 @@ const getAdditionAndRemovalSlices = (stepWithDoc: StepWithDoc): null | AdditionA
 		};
 	}
 	if (step instanceof AddMarkStep || step instanceof RemoveMarkStep) {
-		const removal = doc.slice(step.from, step.to);
+		const removal = beforeDoc.slice(step.from, step.to);
 		const addition = afterDoc.slice(step.from, step.to);
 		return {
 			addition,
@@ -160,21 +159,23 @@ const getAdditionAndRemovalSlices = (stepWithDoc: StepWithDoc): null | AdditionA
 
 const getUnifiedAdditionAndRemovalStep = (
 	schema: Schema,
-	stepWithDoc: StepWithDoc,
+	transition: StepTransition,
 ): null | UnifiedStepResult => {
-	const additionAndRemoval = getAdditionAndRemovalSlices(stepWithDoc);
+	const additionAndRemoval = getAdditionAndRemovalSlices(transition);
 	if (additionAndRemoval) {
 		const { addition, removal, from, to } = additionAndRemoval;
 		const removedContent = applySuggestedEditMarkToFragment(schema, 'remove', removal.content);
 		const addedContent = applySuggestedEditMarkToFragment(schema, 'add', addition.content);
+		console.log('addition', addition);
 		const unifiedSlice = new Slice(
 			removedContent.append(addedContent),
-			removal.openStart,
-			addition.openEnd,
+			Math.max(addition.openStart, removal.openStart),
+			Math.max(addition.openEnd, removal.openEnd),
 		);
+		console.log('unifiedSlice', unifiedSlice);
 		return {
-			step: new ReplaceStep(from, to, unifiedSlice),
-			mapForward: addedContent.size > 0,
+			unifiedStep: new ReplaceStep(from, to, unifiedSlice),
+			mapSelectionForward: addedContent.size > 0,
 		};
 	}
 	return null;
@@ -186,28 +187,44 @@ const getTransactionToAddSuggestionMarks = (
 	startingDoc: Node,
 ) => {
 	const { schema, tr, selection } = state;
-	const stepsWithDocs = getStepsWithIntermediateDocs(steps, startingDoc);
-	// First we get a list of steps we need to invert the document to its starting point before
-	// these steps...
-	const stepsToInvert = stepsWithDocs.map((swd) => swd.inverseStep).reverse();
-	// Now we replay the steps, and after each one, we track changes with marks
-	const stepsWithTrackedChanges: Step[] = [];
-	let someMapForward = false;
-	for (let i = 0; i < stepsWithDocs.length; i++) {
-		const stepWithDoc = stepsWithDocs[i];
-		const unified = getUnifiedAdditionAndRemovalStep(schema, stepWithDoc);
-		if (unified) {
-			const { step, mapForward } = unified;
-			stepsWithTrackedChanges.push(step);
-			someMapForward ||= mapForward;
+	let shouldMapSelectionForward = false;
+	// First let's invert all the steps in the transaction to bring the document back to its
+	// previous state...
+	getStepsToInvert(steps, startingDoc).forEach((step) => tr.step(step));
+	// Now we replay the steps as suggested edits.
+	const mapping = new Mapping();
+	console.log('STEPS', steps);
+	[...steps].forEach((step) => {
+		const mappedStep = step.map(mapping);
+		if (mappedStep) {
+			const inverseStep = mappedStep.invert(tr.doc);
+			mapping.appendMap(inverseStep.getMap());
+			const transform = new Transform(tr.doc);
+			const { doc: afterDoc } = transform.maybeStep(mappedStep);
+			if (afterDoc) {
+				const unifiedResult = getUnifiedAdditionAndRemovalStep(schema, {
+					step,
+					inverseStep,
+					afterDoc,
+					beforeDoc: tr.doc,
+				});
+				if (unifiedResult) {
+					const { unifiedStep, mapSelectionForward } = unifiedResult;
+					console.log('unified step', unifiedStep);
+					mapping.appendMap(unifiedStep.getMap());
+					tr.step(unifiedStep);
+					shouldMapSelectionForward ||= mapSelectionForward;
+				} else {
+					console.log('no unifiedResult');
+				}
+			} else {
+				console.log('maybeStep failed');
+			}
+		} else {
+			console.log('mapping failed');
 		}
-		if (i === 1) {
-			console.log('fuck!!!');
-		}
-	}
-	const allSteps = [...stepsToInvert, ...stepsWithTrackedChanges];
-	allSteps.forEach((step) => tr.step(step));
-	const newSelection = mapSelectionThroughTransaction(tr, selection, someMapForward);
+	});
+	const newSelection = mapSelectionThroughTransaction(tr, selection, shouldMapSelectionForward);
 	tr.setSelection(newSelection);
 	return tr;
 };
@@ -218,11 +235,18 @@ export const appendTransactionForSuggestedEdits = (
 	newState: EditorState,
 ) => {
 	const isEnabled = isSuggestedEditsEnabled(newState);
-	if (isEnabled) {
-		// We should be accessing the history plugin by its actual PluginKey
-		const validTransactions = transactions.filter((tr) => !tr.getMeta('history$'));
+	// We should be accessing the history plugin by its actual PluginKey
+	const validTransactions = transactions.filter(
+		(tr) =>
+			!tr.getMeta('history$') &&
+			!tr.getMeta(suggestedEditsPluginKey) &&
+			!tr.getMeta('appendedTransaction'),
+	);
+	if (isEnabled && validTransactions.length) {
 		const steps = flattenOnce(validTransactions.map((tr) => tr.steps));
-		return getTransactionToAddSuggestionMarks(newState, steps, oldState.doc);
+		const tr = getTransactionToAddSuggestionMarks(newState, steps, oldState.doc);
+		tr.setMeta(suggestedEditsPluginKey, { isFromPlugin: true });
+		return tr;
 	}
 	return null;
 };
