@@ -7,10 +7,12 @@ $bp: vendor.$bp-namespace;
 	overflow: hidden;
 	position: relative;
 	z-index: 1;
+	.dropdown {
+		display: inline-flex;
+	}
 	a,
 	.dropdown {
 		margin-right: 2em;
-		display: inline-flex;
 		align-items: center;
 		height: 40px;
 		user-select: none;
@@ -90,16 +92,13 @@ $bp: vendor.$bp-namespace;
 	li {
 		text-transform: uppercase;
 		text-decoration: inherit;
+		display: inline-flex;
 		// font-weight: 500;
 		.#{$bp}-icon {
 			font-size: 14px;
 			margin-left: 0.25em;
 			position: relative;
 			top: -2px;
-			&.lock-icon,
-			&.external-icon {
-				top: -1px;
-			}
 		}
 	}
 	.external-icon {

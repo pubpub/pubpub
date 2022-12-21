@@ -1,21 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Classes, Icon } from '@blueprintjs/core';
+import { Classes, Icon, IconName } from '@blueprintjs/core';
 
 require('./nonIdealState.scss');
 
-const propTypes = {
-	title: PropTypes.string,
-	icon: PropTypes.string,
-	action: PropTypes.node,
-	description: PropTypes.string,
-	children: PropTypes.node,
-	className: PropTypes.string,
+type Props = {
+	title?: string;
+	icon?: IconName;
+	action?: React.ReactNode;
+	description?: string;
+	children?: React.ReactNode;
+	className?: string;
 };
 
-const defaultProps = {};
-
-const NonIdealState = function (props) {
+const NonIdealState = function (props: Props) {
 	return (
 		<div className={`${props.className} ${Classes.NON_IDEAL_STATE}`}>
 			{props.icon && (
@@ -31,6 +28,4 @@ const NonIdealState = function (props) {
 	);
 };
 
-NonIdealState.propTypes = propTypes;
-NonIdealState.defaultProps = defaultProps;
 export default NonIdealState;

@@ -65,9 +65,10 @@ const GlobalControls = (props: Props) => {
 	const renderNotificiations = () => {
 		if (loggedIn) {
 			return (
-				<UserNotificationsPopover aria-label="Notifications inbox">
+				<UserNotificationsPopover>
 					{({ hasUnreadNotifications }) => (
 						<GlobalControlsButton
+							aria-label="Notifications inbox"
 							mobileOrDesktop={{
 								icon: hasUnreadNotifications ? 'inbox-update' : 'inbox',
 							}}

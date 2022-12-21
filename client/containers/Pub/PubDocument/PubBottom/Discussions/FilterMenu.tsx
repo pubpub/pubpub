@@ -21,7 +21,7 @@ const FilterMenu = (props: Props) => {
 		onShowAnchoredComments,
 	} = props;
 	return (
-		<Card className={`filter-list-component ${Classes.ELEVATION_1}`}>
+		<Card className={`filter-menu-component ${Classes.ELEVATION_1}`}>
 			<Switch
 				label="Browse archived comments"
 				checked={isBrowsingArchive}

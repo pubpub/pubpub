@@ -65,7 +65,6 @@ const DiscussionsSection = (props: Props) => {
 					>
 						<AccentedIconButton
 							accentColor={iconColor}
-							title="Sort comments"
 							aria-label="Sort comments"
 							icon="sort"
 						/>
@@ -102,7 +101,6 @@ const DiscussionsSection = (props: Props) => {
 					>
 						<AccentedIconButton
 							accentColor={iconColor}
-							title="Filter comments"
 							aria-label="Filter comments"
 							icon="filter"
 						/>
