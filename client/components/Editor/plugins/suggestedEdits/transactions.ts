@@ -60,7 +60,13 @@ const nodeHasSuggestedEditMark = (schema: Schema, kind: SuggestedEditKind, node:
 };
 
 const nodeIsSuggestedEditTarget = (schema: Schema, node: Node) => {
-	return node.type === schema.nodes.text;
+	if (node.type === schema.nodes.text) {
+		return true;
+	}
+	if (node.type === schema.nodes.paragraph && node.content.size === 0) {
+		return false;
+	}
+	return false;
 };
 
 const mapSelectionThroughTransaction = (
@@ -215,13 +221,13 @@ const getTransactionToAddSuggestionMarks = (
 					tr.step(unifiedStep);
 					shouldMapSelectionForward ||= mapSelectionForward;
 				} else {
-					console.log('no unifiedResult');
+					console.error('no unifiedResult');
 				}
 			} else {
-				console.log('maybeStep failed');
+				console.error('maybeStep failed');
 			}
 		} else {
-			console.log('mapping failed');
+			console.error('mapping failed', step, mapping);
 		}
 	});
 	const newSelection = mapSelectionThroughTransaction(tr, selection, shouldMapSelectionForward);
