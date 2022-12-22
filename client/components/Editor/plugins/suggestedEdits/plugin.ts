@@ -11,6 +11,13 @@ export default () => {
 	return new Plugin<SuggestedEditsPluginState>({
 		key: suggestedEditsPluginKey,
 		appendTransaction: appendTransactionForSuggestedEdits,
+		view: () => {
+			return {
+				update: (view) => {
+					(window as any).editorView = view;
+				},
+			};
+		},
 		state: {
 			init: () => {
 				return { isEnabled: false };

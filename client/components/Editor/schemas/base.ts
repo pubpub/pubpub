@@ -3,6 +3,7 @@ import { DOMOutputSpec, NodeSpec } from 'prosemirror-model';
 export const baseNodes: { [key: string]: NodeSpec } = {
 	doc: {
 		content: 'block+',
+		marks: '_',
 		attrs: {
 			meta: { default: {} },
 		},

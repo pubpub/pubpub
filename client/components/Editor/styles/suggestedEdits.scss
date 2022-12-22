@@ -3,5 +3,13 @@ span[data-suggested-edits-addition="true"] {
 }
 
 span[data-suggested-edits-removal="true"] {
-    text-decoration: 2px forestgreen line-through;
+    text-decoration: 2px darkred line-through;
+}
+
+div[data-suggested-edits-addition="true"] {
+    background-color: rgba(forestgreen, 0.2);
+}
+
+div[data-suggested-edits-removal="true"] {
+    background-color: rgba(darkred, 0.2);
 }

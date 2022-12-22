@@ -34,6 +34,11 @@ type StepTransition = {
 	inverseStep: Step;
 };
 
+type BindingResult<Result> = {
+	result: Result;
+	didBind: boolean;
+};
+
 type SuggestedEditKind = 'add' | 'remove';
 
 const getStepsToInvert = (steps: Step[], startingDoc: Node): Step[] => {
@@ -60,13 +65,7 @@ const nodeHasSuggestedEditMark = (schema: Schema, kind: SuggestedEditKind, node:
 };
 
 const nodeIsSuggestedEditTarget = (schema: Schema, node: Node) => {
-	if (node.type === schema.nodes.text) {
-		return true;
-	}
-	if (node.type === schema.nodes.paragraph && node.content.size === 0) {
-		return false;
-	}
-	return false;
+	return node.type === schema.nodes.text;
 };
 
 const mapSelectionThroughTransaction = (
@@ -138,11 +137,11 @@ const getAdditionAndRemovalSlices = (
 		};
 	}
 	if (step instanceof ReplaceAroundStep && inverseStep instanceof ReplaceAroundStep) {
-		const removal = beforeDoc.slice(step.from, step.to);
-		const stepMap = step.getMap();
-		const newFrom = stepMap.map(step.from, 1);
-		const newTo = stepMap.map(step.to, -1);
-		const addition = afterDoc.slice(newFrom, newTo);
+		const removal = Slice.empty;
+		const addition = afterDoc.slice(
+			step.from,
+			step.from + (step.gapTo - step.gapFrom) + step.slice.size,
+		);
 		return {
 			removal,
 			addition,
@@ -172,13 +171,12 @@ const getUnifiedAdditionAndRemovalStep = (
 		const { addition, removal, from, to } = additionAndRemoval;
 		const removedContent = applySuggestedEditMarkToFragment(schema, 'remove', removal.content);
 		const addedContent = applySuggestedEditMarkToFragment(schema, 'add', addition.content);
-		console.log('addition', addition);
+		console.log('removed', removedContent.toJSON());
 		const unifiedSlice = new Slice(
 			removedContent.append(addedContent),
 			Math.max(addition.openStart, removal.openStart),
 			Math.max(addition.openEnd, removal.openEnd),
 		);
-		console.log('unifiedSlice', unifiedSlice);
 		return {
 			unifiedStep: new ReplaceStep(from, to, unifiedSlice),
 			mapSelectionForward: addedContent.size > 0,
@@ -199,12 +197,11 @@ const getTransactionToAddSuggestionMarks = (
 	getStepsToInvert(steps, startingDoc).forEach((step) => tr.step(step));
 	// Now we replay the steps as suggested edits.
 	const mapping = new Mapping();
-	console.log('STEPS', steps, state.doc, state.doc.toJSON());
-	[...steps].forEach((step) => {
+	steps.forEach((step) => {
 		const mappedStep = step.map(mapping);
+		console.log('trying step', step.toJSON());
 		if (mappedStep) {
 			const inverseStep = mappedStep.invert(tr.doc);
-			mapping.appendMap(inverseStep.getMap());
 			const transform = new Transform(tr.doc);
 			const { doc: afterDoc } = transform.maybeStep(mappedStep);
 			if (afterDoc) {
@@ -216,10 +213,9 @@ const getTransactionToAddSuggestionMarks = (
 				});
 				if (unifiedResult) {
 					const { unifiedStep, mapSelectionForward } = unifiedResult;
-					console.log('unified step', unifiedStep);
-					mapping.appendMap(unifiedStep.getMap());
 					tr.step(unifiedStep);
 					shouldMapSelectionForward ||= mapSelectionForward;
+					console.info('step', step.toJSON(), '->', unifiedStep.toJSON());
 				} else {
 					console.error('no unifiedResult');
 				}
@@ -227,7 +223,7 @@ const getTransactionToAddSuggestionMarks = (
 				console.error('maybeStep failed');
 			}
 		} else {
-			console.error('mapping failed', step, mapping);
+			console.error('mapping failed', step.toJSON(), mapping);
 		}
 	});
 	const newSelection = mapSelectionThroughTransaction(tr, selection, shouldMapSelectionForward);
