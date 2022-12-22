@@ -5,7 +5,7 @@
 	flex-direction: column;
 	min-height: 100vh;
 	width: 100%;
-	overflow-x: hidden;
+	overflow-x: clip;
 	#main-content {
 		outline: none;
 		flex-grow: 1;
