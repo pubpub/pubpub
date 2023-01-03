@@ -30,8 +30,14 @@ type Props = {
 	};
 };
 
+const userZoteroAuthKey = '';
+
 const fetchCitations = async () => {
-	const myApi = zoteroClient('AUTH_KEY').library('user', 0);
+	if (!userZoteroAuthKey) {
+		console.log(userZoteroAuthKey);
+		return null;
+	}
+	const myApi = zoteroClient(userZoteroAuthKey).library('user', 0);
 
 	const itemsResponse = await myApi.items().get();
 	console.log({ zoteroClient, myApi });

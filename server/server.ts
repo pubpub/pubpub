@@ -118,7 +118,7 @@ passport.use(
 			userAuthorizationURL: 'https://www.zotero.org/oauth/authorize',
 			consumerKey: process.env.ZOTERO_CLIENT_KEY,
 			consumerSecret: process.env.ZOTERO_CLIENT_SECRET,
-			callbackURL: 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me/login/zotero/return',
+			callbackURL: 'http://localhost:9876/auth/zotero/redirect',
 			signatureMethod: 'HMAC-SHA1',
 		},
 		(token, tokenSecret, params, profile, cb) => {
