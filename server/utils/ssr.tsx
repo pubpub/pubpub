@@ -68,7 +68,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	} = initialData.communityData;
 
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
-	const isPub = !!initialData.scopeData.elements.activePub;
+	const isPub = !!initialData.scopeData?.elements.activePub;
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
 	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
