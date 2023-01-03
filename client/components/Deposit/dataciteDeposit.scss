@@ -1,0 +1,13 @@
+@use 'styles/vendor.scss';
+
+$bp: vendor.$bp-namespace;
+
+.datacite-deposit {
+	.#{$bp}-tree-node-label {
+		font-family: 'Courier New', Courier, monospace;
+		flex: initial;
+	}
+	.#{$bp}-tree-node-secondary-label {
+
+	}
+}

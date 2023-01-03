@@ -21,6 +21,8 @@ const {
 	SLIDER_HANDLE,
 	SLIDER_PROGRESS,
 	SLIDER_LABEL,
+	TREE_NODE,
+	TREE_NODE_EXPANDED,
 } = Classes;
 
 const propTypes = {
@@ -99,6 +101,7 @@ const AccentStyle = function (props) {
 			.${BUTTON}.${INTENT_PRIMARY}.${OUTLINED}:hover:not(.${DISABLED}) { background-color: ${baseMinimal}; color: ${baseColor}; }
 			.${BUTTON}.${INTENT_PRIMARY}.${OUTLINED}:active:not(.${DISABLED}), .${BUTTON}.${INTENT_PRIMARY}.${ACTIVE}:not(.${DISABLED}) { background-color: ${baseMinimalAction}; color: ${baseColor}; }
 
+			.${TREE_NODE}.${TREE_NODE}-selected > .${TREE_NODE}-content { background-color: ${baseColor}; }
 
 			.${TAG}.${INTENT_PRIMARY} { background: ${baseColor}; color: ${baseText}; }
 			.${TAG}.${MINIMAL}.${INTENT_PRIMARY} { background-color: ${baseMinimal}; color: inherit; }
