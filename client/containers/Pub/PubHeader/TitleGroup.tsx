@@ -16,7 +16,7 @@ type Props = {
 
 const TitleGroup = (props: Props) => {
 	const { pubData, updatePubData } = props;
-	const { title, htmlTitle, description, isRelease } = pubData;
+	const { title, htmlTitle, description, htmlDescription, isRelease } = pubData;
 	const { communityData, scopeData, featureFlags } = usePageContext();
 	const { submissionState } = usePubContext();
 	const isUnsubmitted = submissionState?.submission.status === 'incomplete';
@@ -66,6 +66,13 @@ const TitleGroup = (props: Props) => {
 		[updatePubData],
 	);
 
+	const onDescritptionEditorChange = useCallback(
+		(nextHtmlDescription: string, nextDescription: string) => {
+			updatePubData({ description: nextDescription, htmlDescription: nextHtmlDescription });
+		},
+		[updatePubData],
+	);
+
 	return (
 		<div className="title-group-component">
 			{featureFlags.htmlTitles ? (
@@ -86,7 +93,14 @@ const TitleGroup = (props: Props) => {
 					placeholder="Add a Pub title"
 				/>
 			)}
-			{(canModify || description) && (
+			{(canModify || description) && featureFlags.htmlTitles ? (
+				<TitleEditor
+					initialValue={htmlDescription ?? description}
+					isReadOnly={!canModify}
+					onChange={onDescritptionEditorChange}
+					placeholder="Add a description for this Pub"
+				/>
+			) : (
 				<EditableHeaderText
 					text={description}
 					updateText={(text) => updatePubData({ description: text })}
