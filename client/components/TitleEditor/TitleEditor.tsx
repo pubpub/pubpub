@@ -13,9 +13,11 @@ type Props = {
 	onInput?: (html: string, text: string) => void;
 	className?: string;
 	placeholder?: string;
+	maxLength?: number;
 };
 
 const SUPPORTED_DECORATIONS = new Set(['i', 'em', 'b', 'strong']);
+const SUPPORTED_KEYS = new Set(['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']);
 
 function isChildOf(descendant: Node, ancestor: Node) {
 	let node: Node | null = descendant;
@@ -72,7 +74,14 @@ const commonProps = {
 };
 
 export default function TitleEditor(props: Props) {
-	const { initialValue = '', onChange, onInput, isReadOnly = false, ...restProps } = props;
+	const {
+		initialValue = '',
+		onChange,
+		onInput,
+		isReadOnly = false,
+		maxLength = Infinity,
+		...restProps
+	} = props;
 	const node = useRef<HTMLDivElement>(null);
 	const init = useRef(false);
 	const [focused, setFocused] = useState(false);
@@ -91,9 +100,15 @@ export default function TitleEditor(props: Props) {
 			const selection = getSelection();
 			if (selection === null) return;
 			const range = selection.getRangeAt(0);
+			// console.log(event.clipboardData.getData('text/html'));
 			const html = event.clipboardData.getData('text/html');
+			// .slice(0, Math.max(maxLength - editor.innerText.length, 0));
+			// console.log(html);
+
 			const dom = parseDom(html);
 			sanitizeDocumentFragment(dom.content);
+			// if (dom.innerText.length + editor.innerText.length > maxLength) return;
+
 			let pasted = false;
 			// execCommand is a deprecated API, but it's still found in most
 			// browsers and is the easist way to support undo/redo without
@@ -113,22 +128,33 @@ export default function TitleEditor(props: Props) {
 				range.collapse(false);
 			}
 		},
-		[node],
+		[node, maxLength],
 	);
 
-	const handleKeyDown = useCallback((event) => {
-		if (event.key === 'Enter') {
-			event.preventDefault();
-		} else if (event.key.toLowerCase() === 'u' && event.metaKey) {
-			event.preventDefault();
-		} else if (event.key.toLowerCase() === 'b' && event.metaKey) {
-			event.preventDefault();
-			document.execCommand('Bold', false);
-		} else if (event.key.toLowerCase() === 'i' && event.metaKey) {
-			event.preventDefault();
-			document.execCommand('Italic', false);
-		}
-	}, []);
+	const handleKeyDown = useCallback(
+		(event) => {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+			} else if (event.key.toLowerCase() === 'u' && event.metaKey) {
+				event.preventDefault();
+			} else if (event.key.toLowerCase() === 'b' && event.metaKey) {
+				event.preventDefault();
+				document.execCommand('Bold', false);
+			} else if (event.key.toLowerCase() === 'i' && event.metaKey) {
+				event.preventDefault();
+				document.execCommand('Italic', false);
+			} else if (
+				!SUPPORTED_KEYS.has(event.key) &&
+				event.metaKey === false &&
+				(getSelection() === null || getSelection()?.toString() === '') &&
+				node.current &&
+				node.current.innerText.length >= maxLength
+			) {
+				event.preventDefault();
+			}
+		},
+		[node, maxLength],
+	);
 
 	// contenteditable inserts a <br> when it contains an element (e.g. <b>,
 	// <em>, etc.) and its contents are cleared.
