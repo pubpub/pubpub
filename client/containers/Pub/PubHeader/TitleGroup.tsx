@@ -75,7 +75,7 @@ const TitleGroup = (props: Props) => {
 
 	return (
 		<div className="title-group-component">
-			{featureFlags.htmlTitles ? (
+			{featureFlags.htmlPubHeaderValues ? (
 				<h1 className="title">
 					<TitleEditor
 						initialValue={htmlTitle ?? title}
@@ -93,7 +93,7 @@ const TitleGroup = (props: Props) => {
 					placeholder="Add a Pub title"
 				/>
 			)}
-			{(canModify || description) && featureFlags.htmlTitles ? (
+			{(canModify || description) && featureFlags.htmlPubHeaderValues ? (
 				<TitleEditor
 					initialValue={htmlDescription ?? description}
 					isReadOnly={!canModify}
