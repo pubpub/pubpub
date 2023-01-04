@@ -69,6 +69,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
 	const isPub = !!initialData.scopeData?.elements.activePub;
+	const useCollectionTitle = !isPub && collection?.title;
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
 	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
@@ -93,16 +94,20 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			<meta
 				key="t2"
 				property="og:title"
-				content={!isPub ? collection?.title || title : title}
+				content={useCollectionTitle ? collection.title : title}
 			/>,
 			<meta key="t3" name="twitter:title" content={titleWithContext} />,
 			<meta key="t4" name="twitter:image:alt" content={titleWithContext} />,
 			<meta
 				key="t5"
 				name="citation_title"
-				content={!isPub ? collection?.title || title : title}
+				content={useCollectionTitle ? collection.title : title}
 			/>,
-			<meta key="t6" name="dc.title" content={!isPub ? collection?.title || title : title} />,
+			<meta
+				key="t6"
+				name="dc.title"
+				content={useCollectionTitle ? collection.title : title}
+			/>,
 		];
 	}
 
