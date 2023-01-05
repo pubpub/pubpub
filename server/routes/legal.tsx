@@ -13,7 +13,7 @@ app.get('/privacy/settings', (_, res) => res.redirect('/legal/settings'));
 app.get('/tos', (_, res) => res.redirect('/legal/terms'));
 app.get('/legal', (_, res) => res.redirect('/legal/terms'));
 
-app.get(['/legal/terms', '/legal/privacy', '/legal/aup', '/legal/settings'], (req, res, next) => {
+app.get('/legal/:tab', (req, res, next) => {
 	return getInitialData(req)
 		.then((initialData) => {
 			return renderToNodeStream(
