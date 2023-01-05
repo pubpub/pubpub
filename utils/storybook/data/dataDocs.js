@@ -41,6 +41,233 @@ export const plainDoc = {
 			],
 		},
 		{
+			type: 'table',
+			content: [
+				{
+					type: 'table_row',
+					content: [
+						{
+							type: 'table_header',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Info',
+										},
+									],
+								},
+							],
+						},
+						{
+							type: 'table_header',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Contact',
+										},
+									],
+								},
+							],
+						},
+						{
+							type: 'table_header',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Country',
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+				{
+					type: 'table_row',
+					content: [
+						{
+							type: 'table_cell',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Alfreds Futterkiste',
+										},
+									],
+								},
+							],
+						},
+						{
+							type: 'table_cell',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Maria Anders',
+										},
+									],
+								},
+							],
+						},
+						{
+							type: 'table_cell',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Germany',
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+				{
+					type: 'table_row',
+					content: [
+						{
+							type: 'table_cell',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Centro comercial Moctezuma',
+										},
+									],
+								},
+							],
+						},
+						{
+							type: 'table_cell',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Francisco Chang',
+										},
+									],
+								},
+							],
+						},
+						{
+							type: 'table_cell',
+							attrs: {
+								colspan: 1,
+								rowspan: 1,
+								colwidth: null,
+								background: null,
+							},
+							content: [
+								{
+									type: 'paragraph',
+									attrs: {
+										class: null,
+									},
+									content: [
+										{
+											type: 'text',
+											text: 'Mexico',
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			],
+		},
+		{
 			type: 'paragraph',
 			content: [
 				{

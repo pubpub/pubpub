@@ -9,63 +9,38 @@ import {
 	Step,
 	Transform,
 } from 'prosemirror-transform';
+import { ChangeSet } from 'prosemirror-changeset';
 import { Selection, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { flattenOnce } from 'utils/arrays';
 import { isSuggestedEditsEnabled } from './util';
 import { suggestedEditsPluginKey } from './plugin';
 
-type AdditionAndRemovalSlices = {
-	addition: Slice;
-	removal: Slice;
-	from: number;
-	to: number;
-};
-
-type UnifiedStepResult = {
-	unifiedStep: ReplaceStep;
-	mapSelectionForward: boolean;
-};
+type SuggestionKind = 'addition' | 'removal';
 
 type StepTransition = {
 	beforeDoc: Node;
 	afterDoc: Node;
 	step: Step;
-	inverseStep: Step;
 };
 
-type BindingResult<Result> = {
-	result: Result;
-	didBind: boolean;
+const nodeTypeCanHaveSimultaneousAdditionAndDeletion = (node: Node) => {
+	const { type } = node;
+	const { schema } = type;
+	return type === schema.nodes.table_header || type === schema.nodes.table_cell;
 };
 
-type SuggestedEditKind = 'add' | 'remove';
-
-const getStepsToInvert = (steps: Step[], startingDoc: Node): Step[] => {
-	const inverseSteps: Step[] = [];
-	let currentDoc = startingDoc;
-	for (let i = 0; i < steps.length; i++) {
-		const step = steps[i];
-		const inverseStep = step.invert(currentDoc);
-		inverseSteps.push(inverseStep);
-		currentDoc = step.apply(currentDoc).doc!;
-	}
-	return inverseSteps.reverse();
-};
-
-const getMarkForSuggestedEditKind = (schema: Schema, kind: SuggestedEditKind) => {
-	return kind === 'add'
-		? schema.marks.suggested_edits_addition
-		: schema.marks.suggested_edits_removal;
-};
-
-const nodeHasSuggestedEditMark = (schema: Schema, kind: SuggestedEditKind, node: Node) => {
-	const kindMark = getMarkForSuggestedEditKind(schema, kind);
-	return node.marks.some((mark) => mark.type === kindMark);
-};
-
-const nodeIsSuggestedEditTarget = (schema: Schema, node: Node) => {
-	return node.type === schema.nodes.text;
+const getStepTransitions = (transactions: readonly Transaction[]): StepTransition[] => {
+	return flattenOnce(
+		transactions.map((txn) => {
+			const { docs, doc, steps } = txn;
+			return steps.map((step, index) => {
+				const beforeDoc = docs[index];
+				const afterDoc = index === steps.length - 1 ? doc : docs[index + 1];
+				return { step, beforeDoc, afterDoc };
+			});
+		}),
+	);
 };
 
 const mapSelectionThroughTransaction = (
@@ -87,147 +62,119 @@ const mapSelectionThroughTransaction = (
 	return startingSelection.map(transaction.doc, transaction.mapping);
 };
 
-const applySuggestedEditMarkToFragment = (
-	schema: Schema,
-	kind: SuggestedEditKind,
-	fragment: Fragment,
-): Fragment => {
-	const updatedChildren: Node[] = [];
+const getNetSuggestionFragment = (fragment: Fragment, kind: SuggestionKind) => {
+	const oppositeKind = kind === 'addition' ? 'removal' : 'addition';
+	const children: Node[] = [];
 	for (let i = 0; i < fragment.childCount; i++) {
 		const child = fragment.child(i);
-		// eslint-disable-next-line @typescript-eslint/no-use-before-define
-		const updatedChild = applySuggestedEditMarkToNode(schema, kind, child);
-		if (updatedChild) {
-			updatedChildren.push(updatedChild);
-		}
-	}
-	return Fragment.from(updatedChildren);
-};
-
-const applySuggestedEditMarkToNode = (
-	schema: Schema,
-	kind: SuggestedEditKind,
-	node: Node,
-): null | Node => {
-	const otherKind = kind === 'add' ? 'remove' : 'add';
-	if (nodeIsSuggestedEditTarget(schema, node)) {
-		if (nodeHasSuggestedEditMark(schema, otherKind, node)) {
-			// Don't add an addition mark to a removal mark or vice-versa.
-			return null;
-		}
-		if (!nodeHasSuggestedEditMark(schema, kind, node)) {
-			const mark = getMarkForSuggestedEditKind(schema, kind);
-			return node.mark([...node.marks, mark.create()]);
-		}
-		return node;
-	}
-	return node.copy(applySuggestedEditMarkToFragment(schema, kind, node.content));
-};
-
-const getAdditionAndRemovalSlices = (
-	stepTransition: StepTransition,
-): null | AdditionAndRemovalSlices => {
-	const { step, inverseStep, beforeDoc, afterDoc } = stepTransition;
-	if (step instanceof ReplaceStep && inverseStep instanceof ReplaceStep) {
-		return {
-			addition: step.slice,
-			removal: inverseStep.slice,
-			from: step.from,
-			to: step.to,
-		};
-	}
-	if (step instanceof ReplaceAroundStep && inverseStep instanceof ReplaceAroundStep) {
-		const removal = Slice.empty;
-		const addition = afterDoc.slice(
-			step.from,
-			step.from + (step.gapTo - step.gapFrom) + step.slice.size,
+		const {
+			marks,
+			attrs,
+			type: { schema },
+		} = child;
+		const hasOppositeKindMark = marks.some(
+			(mark) => mark.type === schema.marks.suggestion && mark.attrs.kind === oppositeKind,
 		);
-		return {
-			removal,
-			addition,
-			from: step.from,
-			to: step.to,
-		};
+		const hasOppositeKindAttr = attrs.suggestion === oppositeKind;
+		const skipCheckForOppositeKind = nodeTypeCanHaveSimultaneousAdditionAndDeletion(child);
+		if (skipCheckForOppositeKind || (!hasOppositeKindMark && !hasOppositeKindAttr)) {
+			const newChild = child.copy(getNetSuggestionFragment(child.content, kind));
+			children.push(newChild);
+		}
 	}
-	if (step instanceof AddMarkStep || step instanceof RemoveMarkStep) {
-		const removal = beforeDoc.slice(step.from, step.to);
-		const addition = afterDoc.slice(step.from, step.to);
-		return {
-			addition,
-			removal,
-			from: step.from,
-			to: step.to,
-		};
-	}
-	return null;
+	return Fragment.from(children);
 };
 
-const getUnifiedAdditionAndRemovalStep = (
-	schema: Schema,
-	transition: StepTransition,
-): null | UnifiedStepResult => {
-	const additionAndRemoval = getAdditionAndRemovalSlices(transition);
-	if (additionAndRemoval) {
-		const { addition, removal, from, to } = additionAndRemoval;
-		const removedContent = applySuggestedEditMarkToFragment(schema, 'remove', removal.content);
-		const addedContent = applySuggestedEditMarkToFragment(schema, 'add', addition.content);
-		console.log('removed', removedContent.toJSON());
-		const unifiedSlice = new Slice(
-			removedContent.append(addedContent),
-			Math.max(addition.openStart, removal.openStart),
-			Math.max(addition.openEnd, removal.openEnd),
-		);
-		return {
-			unifiedStep: new ReplaceStep(from, to, unifiedSlice),
-			mapSelectionForward: addedContent.size > 0,
-		};
-	}
-	return null;
+const getNetSuggestionSlice = (slice: Slice, kind: SuggestionKind) => {
+	const { content, openStart, openEnd } = slice;
+	const netContent = getNetSuggestionFragment(content, kind);
+	return new Slice(netContent, openStart, openEnd);
 };
 
 const getTransactionToAddSuggestionMarks = (
 	state: EditorState,
-	steps: Step[],
-	startingDoc: Node,
+	transactions: readonly Transaction[],
 ) => {
-	const { schema, tr, selection } = state;
-	let shouldMapSelectionForward = false;
-	// First let's invert all the steps in the transaction to bring the document back to its
-	// previous state...
-	getStepsToInvert(steps, startingDoc).forEach((step) => tr.step(step));
-	// Now we replay the steps as suggested edits.
-	const mapping = new Mapping();
-	steps.forEach((step) => {
-		const mappedStep = step.map(mapping);
-		console.log('trying step', step.toJSON());
-		if (mappedStep) {
-			const inverseStep = mappedStep.invert(tr.doc);
-			const transform = new Transform(tr.doc);
-			const { doc: afterDoc } = transform.maybeStep(mappedStep);
-			if (afterDoc) {
-				const unifiedResult = getUnifiedAdditionAndRemovalStep(schema, {
-					step,
-					inverseStep,
-					afterDoc,
-					beforeDoc: tr.doc,
-				});
-				if (unifiedResult) {
-					const { unifiedStep, mapSelectionForward } = unifiedResult;
-					tr.step(unifiedStep);
-					shouldMapSelectionForward ||= mapSelectionForward;
-					console.info('step', step.toJSON(), '->', unifiedStep.toJSON());
-				} else {
-					console.error('no unifiedResult');
+	const { tr, schema } = state;
+	const additionMark = schema.marks.suggestion.create({ kind: 'addition' });
+	const removalMark = schema.marks.suggestion.create({ kind: 'removal' });
+
+	const changeset = transactions.reduce(
+		(set, txn) =>
+			set.addSteps(
+				txn.doc,
+				txn.steps.map((step) => step.getMap()),
+				null,
+			),
+		ChangeSet.create(transactions[0].before),
+	);
+
+	[...changeset.changes]
+		.sort((x, y) => y.fromB - x.fromB)
+		.forEach((change) => {
+			const { fromA, toA, fromB, toB } = change;
+			tr.addMark(fromB, toB, additionMark);
+			tr.doc.nodesBetween(fromB, toB, (node: Node, pos: number) => {
+				if (pos >= fromB && pos <= toB && !node.isText) {
+					tr.setNodeAttribute(pos, 'suggestion', 'addition');
 				}
-			} else {
-				console.error('maybeStep failed');
+			});
+			const removedSlice = getNetSuggestionSlice(
+				changeset.startDoc.slice(fromA, toA),
+				'removal',
+			);
+			if (removedSlice.size > 0) {
+				const newToB = fromB + removedSlice.size;
+				tr.replace(fromB, fromB, removedSlice);
+				tr.addMark(fromB, newToB, removalMark);
+				tr.doc.nodesBetween(fromB, newToB, (node: Node, pos: number) => {
+					if (pos >= fromB && pos <= newToB && !node.isText) {
+						tr.setNodeAttribute(pos, 'suggestion', 'removal');
+					}
+				});
 			}
-		} else {
-			console.error('mapping failed', step.toJSON(), mapping);
-		}
-	});
-	const newSelection = mapSelectionThroughTransaction(tr, selection, shouldMapSelectionForward);
+		});
+
+	const newSelection = mapSelectionThroughTransaction(tr, state.selection, false);
 	tr.setSelection(newSelection);
+
+	return tr;
+
+	// for (let i = 0; i < stepTransitions.length; i++) {
+	// 	const { step, beforeDoc } = stepTransitions[i];
+	// 	const mapsOfFutureSteps = stepTransitions
+	// 		.slice(i + 1, stepTransitions.length)
+	// 		.map((transition) => transition.step.getMap());
+	// 	const remainingStepsMapping = new Mapping(mapsOfFutureSteps);
+	// 	const mapping = step.getMap();
+	// 	mapping.forEach((oldStart: number, oldEnd: number, newStart: number, newEnd: number) => {
+	// 		const [
+	// 			oldStartInCurrentDoc,
+	// 			oldEndInCurrentDoc,
+	// 			newStartInCurrentDoc,
+	// 			newEndInCurrentDoc,
+	// 		] = [oldStart, oldEnd, newStart, newEnd].map((position) =>
+	// 			remainingStepsMapping.map(position),
+	// 		);
+	// 		tr.addMark(newStart, newEnd, additionMark);
+	// 		tr.doc.nodesBetween(
+	// 			newStartInCurrentDoc,
+	// 			newEndInCurrentDoc,
+	// 			(node: Node, pos: number) => {
+	// 				if (pos >= newStart && pos <= newEnd && !node.isText) {
+	// 					console.log(node.toJSON(), pos);
+	// 					tr.setNodeAttribute(pos, 'suggestion', 'addition');
+	// 				}
+	// 			},
+	// 		);
+	// 		if (newStart === newEnd) {
+	// 			const sliceOfBeforeDoc = beforeDoc.slice(oldStart, oldEnd);
+	// 			console.log('removed slice', sliceOfBeforeDoc);
+	// 			tr.replace(newStartInCurrentDoc, newEndInCurrentDoc, sliceOfBeforeDoc);
+	// 		}
+	// 	});
+	// }
+
 	return tr;
 };
 
@@ -244,10 +191,10 @@ export const appendTransactionForSuggestedEdits = (
 			!tr.getMeta(suggestedEditsPluginKey) &&
 			!tr.getMeta('appendedTransaction'),
 	);
-	if (isEnabled && validTransactions.length) {
+	if (isEnabled && validTransactions.length && transactions.some((tr) => tr.docChanged)) {
 		const steps = flattenOnce(validTransactions.map((tr) => tr.steps));
-		const tr = getTransactionToAddSuggestionMarks(newState, steps, oldState.doc);
-		tr.setMeta(suggestedEditsPluginKey, { isFromPlugin: true });
+		const tr = getTransactionToAddSuggestionMarks(newState, transactions);
+		// tr.setMeta(suggestedEditsPluginKey, { isFromPlugin: true });
 		return tr;
 	}
 	return null;

@@ -1,15 +1,15 @@
-span[data-suggested-edits-addition="true"] {
+span[data-suggestion-mark='addition'] {
     background-color: rgba(forestgreen, 0.2);
 }
 
-span[data-suggested-edits-removal="true"] {
+span[data-suggestion-mark='removal'] {
     text-decoration: 2px darkred line-through;
 }
 
-div[data-suggested-edits-addition="true"] {
-    background-color: rgba(forestgreen, 0.2);
+*[data-suggestion='addition'] {
+    background-color: rgba(forestgreen, 0.05);
 }
 
-div[data-suggested-edits-removal="true"] {
-    background-color: rgba(darkred, 0.2);
+*[data-suggestion='removal'] {
+    background-color: rgba(darkred, 0.05);
 }

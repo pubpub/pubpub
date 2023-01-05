@@ -20,7 +20,7 @@ export default () => {
 		},
 		state: {
 			init: () => {
-				return { isEnabled: false };
+				return { isEnabled: true };
 			},
 			apply: (tr: Transaction, pluginState: SuggestedEditsPluginState) => {
 				const meta = tr.getMeta(suggestedEditsPluginKey);
