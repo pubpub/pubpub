@@ -1,4 +1,4 @@
-import { Schema, Node, Fragment, Slice } from 'prosemirror-model';
+import { Schema, Node, Fragment, Slice, MarkType } from 'prosemirror-model';
 import {
 	AddMarkStep,
 	Mappable,
@@ -15,33 +15,6 @@ import { Selection, EditorState, TextSelection, Transaction } from 'prosemirror-
 import { flattenOnce } from 'utils/arrays';
 import { isSuggestedEditsEnabled } from './util';
 import { suggestedEditsPluginKey } from './plugin';
-
-type SuggestionKind = 'addition' | 'removal';
-
-type StepTransition = {
-	beforeDoc: Node;
-	afterDoc: Node;
-	step: Step;
-};
-
-const nodeTypeCanHaveSimultaneousAdditionAndDeletion = (node: Node) => {
-	const { type } = node;
-	const { schema } = type;
-	return type === schema.nodes.table_header || type === schema.nodes.table_cell;
-};
-
-const getStepTransitions = (transactions: readonly Transaction[]): StepTransition[] => {
-	return flattenOnce(
-		transactions.map((txn) => {
-			const { docs, doc, steps } = txn;
-			return steps.map((step, index) => {
-				const beforeDoc = docs[index];
-				const afterDoc = index === steps.length - 1 ? doc : docs[index + 1];
-				return { step, beforeDoc, afterDoc };
-			});
-		}),
-	);
-};
 
 const mapSelectionThroughTransaction = (
 	transaction: Transaction,
@@ -62,32 +35,47 @@ const mapSelectionThroughTransaction = (
 	return startingSelection.map(transaction.doc, transaction.mapping);
 };
 
-const getNetSuggestionFragment = (fragment: Fragment, kind: SuggestionKind) => {
-	const oppositeKind = kind === 'addition' ? 'removal' : 'addition';
+const canNodeTypeHaveSimultaneousAdditionAndDeletion = (node: Node) => {
+	const { type } = node;
+	const { schema } = type;
+	// return type === schema.nodes.table_header || type === schema.nodes.table_cell;
+	return false;
+};
+
+const shouldNodeBeIncludedInRemovalFragment = (node: Node) => {
+	const {
+		attrs,
+		marks,
+		type: { schema },
+	} = node;
+	if (canNodeTypeHaveSimultaneousAdditionAndDeletion(node)) {
+		return true;
+	}
+	if (attrs.suggestion === 'addition') {
+		return false;
+	}
+	if (marks.some((mark) => mark.type === schema.marks.suggestion_addition)) {
+		return false;
+	}
+	return true;
+};
+
+const getNetRemovalFragment = (fragment: Fragment) => {
 	const children: Node[] = [];
 	for (let i = 0; i < fragment.childCount; i++) {
 		const child = fragment.child(i);
-		const {
-			marks,
-			attrs,
-			type: { schema },
-		} = child;
-		const hasOppositeKindMark = marks.some(
-			(mark) => mark.type === schema.marks.suggestion && mark.attrs.kind === oppositeKind,
-		);
-		const hasOppositeKindAttr = attrs.suggestion === oppositeKind;
-		const skipCheckForOppositeKind = nodeTypeCanHaveSimultaneousAdditionAndDeletion(child);
-		if (skipCheckForOppositeKind || (!hasOppositeKindMark && !hasOppositeKindAttr)) {
-			const newChild = child.copy(getNetSuggestionFragment(child.content, kind));
+		if (shouldNodeBeIncludedInRemovalFragment(child)) {
+			const newChildFramgent = getNetRemovalFragment(child.content);
+			const newChild = child.copy(newChildFramgent);
 			children.push(newChild);
 		}
 	}
 	return Fragment.from(children);
 };
 
-const getNetSuggestionSlice = (slice: Slice, kind: SuggestionKind) => {
+const getNetRemovalSlice = (slice: Slice) => {
 	const { content, openStart, openEnd } = slice;
-	const netContent = getNetSuggestionFragment(content, kind);
+	const netContent = getNetRemovalFragment(content);
 	return new Slice(netContent, openStart, openEnd);
 };
 
@@ -96,8 +84,8 @@ const getTransactionToAddSuggestionMarks = (
 	transactions: readonly Transaction[],
 ) => {
 	const { tr, schema } = state;
-	const additionMark = schema.marks.suggestion.create({ kind: 'addition' });
-	const removalMark = schema.marks.suggestion.create({ kind: 'removal' });
+	const additionMark = schema.marks.suggestion_addition.create();
+	const removalMark = schema.marks.suggestion_removal.create();
 
 	const changeset = transactions.reduce(
 		(set, txn) =>
@@ -116,14 +104,14 @@ const getTransactionToAddSuggestionMarks = (
 			tr.addMark(fromB, toB, additionMark);
 			tr.doc.nodesBetween(fromB, toB, (node: Node, pos: number) => {
 				if (pos >= fromB && pos <= toB && !node.isText) {
+					console.log('setting suggestion mark on node', node.toJSON());
 					tr.setNodeAttribute(pos, 'suggestion', 'addition');
 				}
 			});
-			const removedSlice = getNetSuggestionSlice(
-				changeset.startDoc.slice(fromA, toA),
-				'removal',
-			);
+
+			const removedSlice = getNetRemovalSlice(changeset.startDoc.slice(fromA, toA));
 			if (removedSlice.size > 0) {
+				console.log('restoring removedSlice', removedSlice.content.toJSON());
 				const newToB = fromB + removedSlice.size;
 				tr.replace(fromB, fromB, removedSlice);
 				tr.addMark(fromB, newToB, removalMark);
@@ -137,44 +125,6 @@ const getTransactionToAddSuggestionMarks = (
 
 	const newSelection = mapSelectionThroughTransaction(tr, state.selection, false);
 	tr.setSelection(newSelection);
-
-	return tr;
-
-	// for (let i = 0; i < stepTransitions.length; i++) {
-	// 	const { step, beforeDoc } = stepTransitions[i];
-	// 	const mapsOfFutureSteps = stepTransitions
-	// 		.slice(i + 1, stepTransitions.length)
-	// 		.map((transition) => transition.step.getMap());
-	// 	const remainingStepsMapping = new Mapping(mapsOfFutureSteps);
-	// 	const mapping = step.getMap();
-	// 	mapping.forEach((oldStart: number, oldEnd: number, newStart: number, newEnd: number) => {
-	// 		const [
-	// 			oldStartInCurrentDoc,
-	// 			oldEndInCurrentDoc,
-	// 			newStartInCurrentDoc,
-	// 			newEndInCurrentDoc,
-	// 		] = [oldStart, oldEnd, newStart, newEnd].map((position) =>
-	// 			remainingStepsMapping.map(position),
-	// 		);
-	// 		tr.addMark(newStart, newEnd, additionMark);
-	// 		tr.doc.nodesBetween(
-	// 			newStartInCurrentDoc,
-	// 			newEndInCurrentDoc,
-	// 			(node: Node, pos: number) => {
-	// 				if (pos >= newStart && pos <= newEnd && !node.isText) {
-	// 					console.log(node.toJSON(), pos);
-	// 					tr.setNodeAttribute(pos, 'suggestion', 'addition');
-	// 				}
-	// 			},
-	// 		);
-	// 		if (newStart === newEnd) {
-	// 			const sliceOfBeforeDoc = beforeDoc.slice(oldStart, oldEnd);
-	// 			console.log('removed slice', sliceOfBeforeDoc);
-	// 			tr.replace(newStartInCurrentDoc, newEndInCurrentDoc, sliceOfBeforeDoc);
-	// 		}
-	// 	});
-	// }
-
 	return tr;
 };
 

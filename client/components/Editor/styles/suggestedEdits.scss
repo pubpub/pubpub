@@ -1,8 +1,8 @@
-span[data-suggestion-mark='addition'] {
+span[data-suggestion-addition='true'] {
     background-color: rgba(forestgreen, 0.2);
 }
 
-span[data-suggestion-mark='removal'] {
+span[data-suggestion-removal='true'] {
     text-decoration: 2px darkred line-through;
 }
 

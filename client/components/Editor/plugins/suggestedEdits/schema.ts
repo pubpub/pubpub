@@ -1,7 +1,7 @@
-import { Mark, MarkSpec, Node, NodeSpec, ParseRule } from 'prosemirror-model';
+import { MarkSpec, Node, NodeSpec, ParseRule } from 'prosemirror-model';
 
 export const marks: Record<string, MarkSpec> = {
-	suggestion: {
+	suggestion_addition: {
 		attrs: {
 			kind: {},
 		},
@@ -10,23 +10,48 @@ export const marks: Record<string, MarkSpec> = {
 			{
 				tag: 'span',
 				getAttrs: (node: string | HTMLElement) => {
-					if (node instanceof HTMLElement && node.hasAttribute('data-suggestion-mark')) {
-						return { suggestion: node.getAttribute('data-suggestion-mark') };
+					if (
+						node instanceof HTMLElement &&
+						node.hasAttribute('data-suggestion-addition')
+					) {
+						return {};
 					}
 					return false;
 				},
 			},
 		],
-		toDOM: (mark: Mark) => {
-			const { kind } = mark.attrs;
-			return ['span', { 'data-suggestion-mark': kind }];
+		toDOM: () => {
+			return ['span', { 'data-suggestion-addition': true }];
+		},
+	},
+	suggestion_removal: {
+		attrs: {
+			kind: {},
+		},
+		inclusive: false,
+		parseDOM: [
+			{
+				tag: 'span',
+				getAttrs: (node: string | HTMLElement) => {
+					if (
+						node instanceof HTMLElement &&
+						node.hasAttribute('data-suggestion-removal')
+					) {
+						return {};
+					}
+					return false;
+				},
+			},
+		],
+		toDOM: () => {
+			return ['span', { 'data-suggestion-removal': true }];
 		},
 	},
 };
 
 export const amendNodeSpecWithSuggestedEdits = (nodeSpec: NodeSpec) => {
-	const { group, parseDOM, toDOM, attrs } = nodeSpec;
-	if (group === 'block') {
+	const { inline, parseDOM, toDOM, attrs } = nodeSpec;
+	if (!inline) {
 		return {
 			...nodeSpec,
 			attrs: {
@@ -56,7 +81,6 @@ export const amendNodeSpecWithSuggestedEdits = (nodeSpec: NodeSpec) => {
 				const domOutputSpec = toDOM?.(node);
 				const suggestionAttr = suggestion ? { 'data-suggestion': suggestion } : {};
 				if (Array.isArray(domOutputSpec)) {
-					console.log('dOS', domOutputSpec);
 					const [tagEntry, maybeAttrsEntry, ...restEntries] = domOutputSpec;
 					if (maybeAttrsEntry && typeof maybeAttrsEntry === 'object') {
 						return [
