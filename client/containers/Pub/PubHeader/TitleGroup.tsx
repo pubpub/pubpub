@@ -93,25 +93,26 @@ const TitleGroup = (props: Props) => {
 					placeholder="Add a Pub title"
 				/>
 			)}
-			{(canModify || description) && featureFlags.htmlPubHeaderValues ? (
-				<TitleEditor
-					initialValue={htmlDescription ?? description}
-					isReadOnly={!canModify}
-					onChange={onDescritptionEditorChange}
-					placeholder="Add a description for this Pub"
-					maxLength={10}
-				/>
-			) : (
-				<EditableHeaderText
-					text={description}
-					updateText={(text) => updatePubData({ description: text })}
-					canEdit={canModify}
-					tagName="p"
-					className="description pub-header-themed-secondary"
-					placeholder="Add a description for this Pub"
-					maxLength={280}
-				/>
-			)}
+			{(canModify || description) &&
+				(featureFlags.htmlPubHeaderValues ? (
+					<TitleEditor
+						initialValue={htmlDescription ?? description}
+						isReadOnly={!canModify}
+						onChange={onDescritptionEditorChange}
+						placeholder="Add a description for this Pub"
+						maxLength={10}
+					/>
+				) : (
+					<EditableHeaderText
+						text={description}
+						updateText={(text) => updatePubData({ description: text })}
+						canEdit={canModify}
+						tagName="p"
+						className="description pub-header-themed-secondary"
+						placeholder="Add a description for this Pub"
+						maxLength={280}
+					/>
+				))}
 			<PubByline
 				pubData={pubData as any}
 				renderSuffix={() => !isRelease && renderBylineEditor()}

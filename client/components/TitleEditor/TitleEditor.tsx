@@ -3,6 +3,12 @@ import classNames from 'classnames';
 import { useBeforeUnload } from 'react-use';
 
 import { ClientOnly } from 'components';
+import {
+	trimDocumentFragment,
+	parseDom,
+	sanitizeDocumentFragment,
+	isChildOf,
+} from './smolUwUEditor';
 
 require('./titleEditor.scss');
 
@@ -16,56 +22,7 @@ type Props = {
 	maxLength?: number;
 };
 
-const SUPPORTED_DECORATIONS = new Set(['i', 'em', 'b', 'strong']);
 const SUPPORTED_KEYS = new Set(['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']);
-
-function isChildOf(descendant: Node, ancestor: Node) {
-	let node: Node | null = descendant;
-	while (node !== null) {
-		if (node === ancestor) return true;
-		node = node.parentNode;
-	}
-	return false;
-}
-
-function stripAttrs(element: Element) {
-	while (element.attributes.length > 0) {
-		element.removeAttribute(element.attributes[0].name);
-	}
-}
-
-function sanitizeElement(element: Element) {
-	if (!SUPPORTED_DECORATIONS.has(element.tagName.toLowerCase())) {
-		const parent = element.parentNode!;
-		if (element.textContent !== null && element.textContent.length > 0) {
-			const textNode = document.createTextNode(element.textContent ?? '');
-			parent.replaceChild(textNode, element);
-		} else {
-			parent.removeChild(element);
-		}
-		return;
-	}
-	stripAttrs(element);
-	if (element.nodeType === Node.ELEMENT_NODE) {
-		for (let i = element.children.length - 1; i >= 0; i--) {
-			sanitizeElement(element.children[i]);
-		}
-	} else if (element.nodeType === Node.TEXT_NODE) {
-		element.textContent = element.textContent?.replace(/[\r\n]+/gm, '') ?? null;
-	}
-}
-
-function sanitizeDocumentFragment(doc: DocumentFragment) {
-	for (let i = doc.children.length - 1; i >= 0; i--) {
-		sanitizeElement(doc.children[i]);
-	}
-}
-
-function parseDom(html: string) {
-	const template = document.createElement('template');
-	template.innerHTML = html;
-	return template;
-}
 
 const commonProps = {
 	role: 'textbox',
@@ -100,14 +57,12 @@ export default function TitleEditor(props: Props) {
 			const selection = getSelection();
 			if (selection === null) return;
 			const range = selection.getRangeAt(0);
-			// console.log(event.clipboardData.getData('text/html'));
 			const html = event.clipboardData.getData('text/html');
-			// .slice(0, Math.max(maxLength - editor.innerText.length, 0));
-			// console.log(html);
-
 			const dom = parseDom(html);
+			console.log(`Before Sanitization doc length: ${dom.content.children.length}`);
 			sanitizeDocumentFragment(dom.content);
-			// if (dom.innerText.length + editor.innerText.length > maxLength) return;
+			console.log(`After Sanitization doc length: ${dom.content.children.length}`);
+			if (maxLength !== null) trimDocumentFragment(dom.content, maxLength);
 
 			let pasted = false;
 			// execCommand is a deprecated API, but it's still found in most
