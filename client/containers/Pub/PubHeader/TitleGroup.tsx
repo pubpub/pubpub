@@ -100,7 +100,7 @@ const TitleGroup = (props: Props) => {
 						isReadOnly={!canModify}
 						onChange={onDescritptionEditorChange}
 						placeholder="Add a description for this Pub"
-						maxLength={10}
+						maxLength={280}
 					/>
 				) : (
 					<EditableHeaderText
