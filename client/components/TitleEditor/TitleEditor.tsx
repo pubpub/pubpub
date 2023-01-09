@@ -59,10 +59,9 @@ export default function TitleEditor(props: Props) {
 			const range = selection.getRangeAt(0);
 			const html = event.clipboardData.getData('text/html');
 			const dom = parseDom(html);
-			console.log(`Before Sanitization doc length: ${dom.content.children.length}`);
 			sanitizeDocumentFragment(dom.content);
-			console.log(`After Sanitization doc length: ${dom.content.children.length}`);
-			if (maxLength !== null) trimDocumentFragment(dom.content, maxLength);
+			if (maxLength !== null)
+				trimDocumentFragment(dom.content, maxLength - editor.textContent!.length);
 
 			let pasted = false;
 			// execCommand is a deprecated API, but it's still found in most

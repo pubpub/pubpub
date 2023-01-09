@@ -1,7 +1,6 @@
 const SUPPORTED_DECORATIONS = new Set(['i', 'em', 'b', 'strong']);
 
-function trimNodeContentsInner(element: Element, totalCharsToTrim: number) {
-	console.log('called inner');
+function trimNodeContentsInner(element: Node, totalCharsToTrim: number) {
 	if (totalCharsToTrim === 0) return 0;
 	for (let i = element.childNodes.length - 1; i >= 0; i--) {
 		const child = element.childNodes[i];
@@ -19,15 +18,11 @@ function trimNodeContentsInner(element: Element, totalCharsToTrim: number) {
 }
 
 export function trimDocumentFragment(doc: DocumentFragment, maxLength: number) {
-	console.log('called');
-	console.log(`trimmed doc length: ${doc.children.length}`);
 	const charactersToTrim = doc.textContent!.length - maxLength;
 	if (charactersToTrim <= 0) {
 		return;
 	}
-	for (let i = doc.children.length - 1; i >= 0; i--) {
-		trimNodeContentsInner(doc.children[i], charactersToTrim);
-	}
+	trimNodeContentsInner(doc, charactersToTrim);
 }
 
 export function isChildOf(descendant: Node, ancestor: Node) {
