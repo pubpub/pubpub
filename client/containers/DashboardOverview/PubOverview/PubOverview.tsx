@@ -138,7 +138,7 @@ const PubOverview = (props: Props) => {
 								<span
 									// eslint-disable-next-line react/no-danger
 									dangerouslySetInnerHTML={{
-										__html: htmlDescription ?? '',
+										__html: htmlDescription ?? description ?? '',
 									}}
 								/>
 							) : (

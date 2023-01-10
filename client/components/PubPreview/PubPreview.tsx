@@ -165,7 +165,8 @@ const PubPreview = (props: Props) => {
 								<span
 									// eslint-disable-next-line react/no-danger
 									dangerouslySetInnerHTML={{
-										__html: pubData.htmlDescription ?? '',
+										__html:
+											pubData.htmlDescription ?? pubData.description ?? '',
 									}}
 								/>
 							) : (
