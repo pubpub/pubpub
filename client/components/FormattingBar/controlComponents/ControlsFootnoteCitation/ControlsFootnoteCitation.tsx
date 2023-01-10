@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
-import zoteroClient from 'zotero-api-client';
 
 import { SimpleEditor, PubNoteContent } from 'components';
 import { getCitationInlineLabel } from 'components/Editor/utils/citation';
+import { apiFetch } from 'client/utils/apiFetch';
 import { usePubContext } from 'containers/Pub/pubHooks';
 
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
@@ -30,19 +30,13 @@ type Props = {
 	};
 };
 
-const userZoteroAuthKey = '';
-
+/*
+	 const fetchCitations = () => apiFetch('/api/citations/zotero', { method: 'POST' });
+ */
 const fetchCitations = async () => {
-	if (!userZoteroAuthKey) {
-		console.log(userZoteroAuthKey);
-		return null;
-	}
-	const myApi = zoteroClient(userZoteroAuthKey).library('user', 0);
-
-	const itemsResponse = await myApi.items().get();
-	console.log({ zoteroClient, myApi });
-	console.log({ itemsResponse });
-	return itemsResponse;
+	const { items } = await apiFetch('/api/citations/zotero', { method: 'GET' });
+	console.log({ items });
+	return items;
 };
 
 const unwrapPendingAttrs = (pendingAttrs, isFootnote) => {

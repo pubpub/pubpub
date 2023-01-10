@@ -4,6 +4,8 @@ export default (sequelize, dataTypes) =>
 		{
 			id: sequelize.idType,
 			userId: { type: dataTypes.UUID, allowNull: false },
+			externalUserId: { type: dataTypes.TEXT, allowNull: false },
+			externalUsername: { type: dataTypes.TEXT, allowNull: false },
 			externalLoginProviderId: { type: dataTypes.UUID, allowNull: false },
 			externalProviderToken: { type: dataTypes.TEXT },
 		},

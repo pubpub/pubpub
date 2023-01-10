@@ -4,6 +4,8 @@ import { UserLoginDataExternal } from 'server/models';
 
 type CreateOptions = {
 	userId: string;
+	externalUsername: string;
+	externalUserId: string;
 	externalLoginProviderId: string;
 	externalProviderToken: string;
 };
@@ -15,12 +17,16 @@ type UpdateOptions = Partial<types.Submission> & {
 
 export const createUserLoginDataExternal = ({
 	userId,
+	externalUserId,
+	externalUsername,
 	externalLoginProviderId,
 	externalProviderToken,
 }: CreateOptions): Promise<types.SequelizeModel<types.UserLoginDataExternal>> =>
 	UserLoginDataExternal.create(
 		{
 			userId,
+			externalUserId,
+			externalUsername,
 			externalLoginProviderId,
 			externalProviderToken,
 		},

@@ -126,6 +126,7 @@ passport.use(
 		(req, token, tokenSecret, params, profile, cb) => {
 			const { user } = req;
 			const { id: userId } = user;
+			const { username: externalUsername, userID: externalUserId } = params;
 			return Promise.all([
 				UserLoginDataExternal.findOne({ where: { userId } }),
 				ExternalLoginProvider.findOne({ where: { name: 'zotero' } }),
@@ -135,6 +136,8 @@ passport.use(
 						oldLoginData ||
 						createUserLoginDataExternal({
 							userId,
+							externalUsername,
+							externalUserId,
 							externalLoginProviderId: externalLoginProvider.id,
 							externalProviderToken: token,
 						}),
