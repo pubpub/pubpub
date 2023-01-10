@@ -4,7 +4,6 @@ export default (sequelize, dataTypes) =>
 		{
 			id: sequelize.idType,
 			name: { type: dataTypes.TEXT },
-			webServiceEndPoint: { type: dataTypes.TEXT },
 		},
 		{
 			classMethods: {
