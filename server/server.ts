@@ -21,7 +21,8 @@ setAppCommit(process.env.HEROKU_SLUG_COMMIT);
 import 'server/utils/serverModuleOverwrite';
 import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
 
-import { sequelize, User } from './models';
+import { sequelize, User, UserLoginDataExternal, ExternalLoginProvider } from './models';
+import { createUserLoginDataExternal } from './userLoginDataExternal/queries';
 import './hooks';
 
 // Wrapper for app.METHOD() handlers. Though we need this to properly catch errors in handlers that
@@ -118,17 +119,30 @@ passport.use(
 			userAuthorizationURL: 'https://www.zotero.org/oauth/authorize',
 			consumerKey: process.env.ZOTERO_CLIENT_KEY,
 			consumerSecret: process.env.ZOTERO_CLIENT_SECRET,
-			callbackURL: 'http://localhost:9876/auth/zotero/redirect',
+			callbackURL: 'http://lvh.me:9876/auth/zotero/redirect',
 			signatureMethod: 'HMAC-SHA1',
+			passReqToCallback: true,
 		},
-		(token, tokenSecret, params, profile, cb) => {
-			console.log(profile);
-			const user = {
-				username: params.username,
-				userID: params.userID,
-				accessToken: token,
-			};
-			return cb(null, user);
+		(req, token, tokenSecret, params, profile, cb) => {
+			const { user } = req;
+			const { id: userId } = user;
+			return Promise.all([
+				UserLoginDataExternal.findOne({ where: { userId } }),
+				ExternalLoginProvider.findOne({ where: { name: 'zotero' } }),
+			])
+				.then(
+					([oldLoginData, externalLoginProvider]) =>
+						oldLoginData ||
+						createUserLoginDataExternal({
+							userId,
+							externalLoginProviderId: externalLoginProvider.id,
+							externalProviderToken: token,
+						}),
+				)
+				.then(() => {
+					cb(null, user);
+				})
+				.catch((err) => cb(err));
 		},
 	),
 );

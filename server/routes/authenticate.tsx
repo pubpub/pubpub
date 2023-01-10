@@ -1,11 +1,14 @@
 import passport from 'passport';
 import app from 'server/server';
 
-app.get('/auth/zotero', passport.authenticate('zotero', {}));
+app.get('/auth/zotero', passport.authenticate('zotero'));
 
 // callback route for zotero to redirect to
 // hand control to passport to use code to grab profile info
-app.get('/auth/zotero/redirect', passport.authenticate('zotero'), (req, res) => {
-	console.log({ req, res });
-	res.redirect('/');
-});
+app.get(
+	'/auth/zotero/redirect',
+	passport.authenticate('zotero', {
+		failureRedirect: '/user/fail',
+		successRedirect: '/user/success',
+	}),
+);
