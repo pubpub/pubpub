@@ -3,7 +3,12 @@ import classNames from 'classnames';
 import { useBeforeUnload } from 'react-use';
 
 import { ClientOnly } from 'components';
-import { trimDocumentFragment, parseDom, sanitizeDocumentFragment, isChildOf } from './smallEditor';
+import {
+	trimDocumentFragment,
+	parseDom,
+	sanitizeDocumentFragment,
+	isChildOf,
+} from './titleEditorFunctions';
 
 require('./titleEditor.scss');
 
