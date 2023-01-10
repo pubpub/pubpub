@@ -110,3 +110,4 @@ export { default as UserAutocomplete } from './UserAutocomplete/UserAutocomplete
 export { default as UserNotificationsPopover } from './UserNotifications/UserNotificationsPopover';
 
 export { default as DataciteDeposit } from './Deposit/DataciteDeposit';
+export { default as Deposit } from './Deposit/Deposit';

@@ -6,7 +6,13 @@ import { getPrimaryCollection } from 'utils/collections/primary';
 import { licenseDetailsByKind } from 'utils/licenses';
 import { RelationType, relationTypeDefinitions } from 'utils/pubEdge';
 
-import { AnyResource, ResourceKind, ResourceRelation, ResourceRelationship } from '../types';
+import {
+	AnyResource,
+	Resource,
+	ResourceKind,
+	ResourceRelation,
+	ResourceRelationship,
+} from '../types';
 
 const pubEdgeRelationTypeToResourceRelation: Record<
 	keyof typeof relationTypeDefinitions,
@@ -79,7 +85,7 @@ async function transformOutboundEdgeToResourceRelationship(
 	};
 }
 
-export async function transformPubToResource(pub: Pub, community: Community): Promise<AnyResource> {
+export async function transformPubToResource(pub: Pub, community: Community): Promise<Resource> {
 	pub = sanitizePubEdges(pub, true);
 	const facets = await fetchFacetsForScope({ pubId: pub.id }, ['License']);
 	const license = licenseDetailsByKind[facets.License.value.kind];
@@ -104,5 +110,6 @@ export async function transformPubToResource(pub: Pub, community: Community): Pr
 				identifierValue: pubUrl(community, pub),
 			},
 		],
+		meta: {},
 	};
 }

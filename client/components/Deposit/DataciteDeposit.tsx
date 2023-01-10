@@ -1,6 +1,6 @@
-import { Button, Icon, ITreeNode, Tree, TreeNode, Spinner, IconName } from '@blueprintjs/core';
-import classNames from 'classnames';
-import React, { MouseEvent, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { Button, ITreeNode, Tree, IconName } from '@blueprintjs/core';
+import React, { MouseEvent, useCallback, useEffect, useReducer } from 'react';
+
 import { Collection, InitialCommunityData, Pub } from 'types';
 
 import { apiFetch } from 'client/utils/apiFetch';
@@ -93,6 +93,14 @@ const nodeNameToIcon: Record<string, IconName> = {
 	language: 'translate',
 };
 
+const supportedAttributes = new Set([
+	'dateType',
+	'identifierType',
+	'alternateIdentifierType',
+	'descriptionType',
+	'relatedItemType',
+]);
+
 function nodeToBlueprintTreeNode(node: Node): ITreeNode | undefined {
 	if (node.type === 'text') {
 		return { id: node.value, label: node.value };
@@ -101,20 +109,26 @@ function nodeToBlueprintTreeNode(node: Node): ITreeNode | undefined {
 	if (node.children.length === 0) {
 		return undefined;
 	}
+	const nodeAttrs =
+		node.attributes &&
+		Object.entries(node.attributes).filter(([key]) => supportedAttributes.has(key));
+	const label =
+		node.name +
+		(nodeAttrs && nodeAttrs.length > 0
+			? `(${nodeAttrs.map(([key, value]) => `${key}=${value}`).join(',')})`
+			: '');
+	const id = node.name + ',' + label;
+	const sharedAttrs = { id, label, icon: icon as IconName };
 	if (node.children.length === 1) {
 		if (node.children[0].type === 'text') {
 			const firstChild = node.children[0];
 			return {
-				id: node.name,
-				label: node.name,
+				...sharedAttrs,
 				secondaryLabel: firstChild.value,
-				icon,
 			};
 		}
 		return {
-			id: node.name,
-			icon,
-			label: node.name,
+			...sharedAttrs,
 			childNodes: node.children
 				.map(nodeToBlueprintTreeNode)
 				.filter((x): x is ITreeNode => Boolean(x)),
@@ -122,9 +136,7 @@ function nodeToBlueprintTreeNode(node: Node): ITreeNode | undefined {
 		};
 	}
 	return {
-		id: node.name,
-		icon,
-		label: node.name,
+		...sharedAttrs,
 		childNodes: node.children
 			.map(nodeToBlueprintTreeNode)
 			.filter((x): x is ITreeNode => Boolean(x)),
@@ -173,6 +185,7 @@ export default function DataciteDeposit(props: Props) {
 
 	return (
 		<div className="datacite-deposit">
+			<p>Expand the resource below to preview the Datacite deposit before it is submitted.</p>
 			<Tree
 				contents={nodes}
 				onNodeClick={handleNodeClick}

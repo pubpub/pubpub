@@ -9,7 +9,7 @@ import DataciteDeposit from './DataciteDeposit';
 type Props = {
 	canIssueDoi: boolean;
 	communityData: InitialCommunityData;
-	depositTarget: DepositTarget;
+	depositTarget?: DepositTarget;
 } & (
 	| {
 			pubData: Pub;

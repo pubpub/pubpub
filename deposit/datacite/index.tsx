@@ -147,13 +147,15 @@ function renderRelatedIdentifier(relationship: ResourceRelationship) {
 }
 
 export function createDeposit(resource: Resource) {
-	const identifier = resource.identifiers[0];
 	const wordCount = resource.summaries.find((summary) => summary.kind === 'WordCount');
 	const publisher = expect(resource.meta['publisher']);
 	const createdDate = expect(resource.meta['created-date']);
 	const updatedDate = resource.meta['updated-date'];
 	const { identifierValue: url } = expect(
 		resource.identifiers.find((identifier) => identifier.identifierKind === 'URL'),
+	);
+	const { identifierValue: doi } = expect(
+		resource.identifiers.find((identifier) => identifier.identifierKind === 'DOI'),
 	);
 	return (
 		<resource xmlns="http://datacite.org/schema/kernel-4">
@@ -162,9 +164,7 @@ export function createDeposit(resource: Resource) {
 			/>
 			<publisher>{publisher}</publisher>
 			<publicationYear>{new Date(resource.timestamp).getUTCFullYear()}</publicationYear>
-			<identifier identifierType={identifier.identifierKind}>
-				{identifier.identifierValue}
-			</identifier>
+			<identifier identifierType="DOI">{doi}</identifier>
 			<titles>
 				<title xml:lang="en-US">{resource.title}</title>
 			</titles>

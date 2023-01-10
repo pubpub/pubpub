@@ -11,6 +11,7 @@ import {
 	PubCollectionsListing,
 	FacetEditor,
 	TitleEditor,
+	Deposit,
 } from 'components';
 import { DepositTarget, Pub, PubWithCollections } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
@@ -182,7 +183,7 @@ const PubSettings = (props: Props) => {
 	const renderDoi = () => {
 		return (
 			<SettingsSection title="DOI" showTitle={false}>
-				<Doi
+				<Deposit
 					pubData={persistedPubData}
 					communityData={communityData}
 					updatePubData={updatePersistedPubData}

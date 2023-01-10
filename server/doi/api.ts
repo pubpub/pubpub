@@ -1,15 +1,17 @@
 import { renderXml } from '@pubpub/deposit-utils/datacite';
 import { createDeposit } from 'deposit/datacite';
 import { transformCollectionToResource } from 'deposit/transform/collection';
+import { transformPubToResource } from 'deposit/transform/pub';
 import { Resource } from 'deposit/types';
 import { Community, Release } from 'server/models';
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 import * as types from 'types';
+import { assert } from 'utils/assert';
 import { parentToSupplementNeedsDoiError } from 'utils/crossref/createDeposit';
 import xmlbuilder from 'xmlbuilder';
 import { getPermissions } from './permissions';
-import { findCollection, generateDoi, getDoiData, setDoiData } from './queries';
+import { findCollection, findPub, generateDoi, getDoiData, setDoiData } from './queries';
 
 const assertUserAuthorized = async (target, requestIds) => {
 	const permissions = await getPermissions(requestIds);
@@ -130,6 +132,10 @@ app.get(
 	}),
 );
 
+function isValidTarget(target: string): target is 'pub' | 'collection' {
+	return target === 'pub' || target === 'collection';
+}
+
 app.get(
 	'/api/deposit',
 	wrap(async (req, res) => {
@@ -147,25 +153,48 @@ app.get(
 		const community: types.Community = await Community.findOne({
 			where: { id: requestIds.communityId },
 		});
-		const collection: types.DefinitelyHas<types.Collection, 'attributions'> =
-			await findCollection(requestIds.collectionId);
-
-		const collectionIdentifiers = await generateDoi(requestIds, 'collection');
-		const collectionResource = await transformCollectionToResource(collection, community);
-
-		collectionResource.meta['created-date'] = collection.createdAt.toString();
-
-		if (collection.updatedAt !== collection.createdAt) {
-			collectionResource.meta['updated-date'] = collection.updatedAt.toString();
-		}
-
-		collectionResource.meta['publisher'] = community.publishAs || 'PubPub';
 
 		try {
-			const collectionDepositAst = createDeposit(collectionResource as Resource);
-			return res.status(200).json(collectionDepositAst);
+			assert(isValidTarget(target));
 		} catch (error) {
-			return res.status(404).json({ error: (error as Error).toString() });
+			return res.status(400).json({ error: (error as Error).message });
+		}
+
+		const dois = await generateDoi(requestIds, target);
+
+		let object:
+			| types.DefinitelyHas<types.Pub, 'attributions'>
+			| types.DefinitelyHas<types.Collection, 'attributions'>;
+		let resource: Resource;
+
+		if (target === 'pub') {
+			const pub = (object = (await findPub(requestIds.pubId)).get({ plain: true }));
+			resource = await transformPubToResource(pub, community);
+		} else {
+			const collection = (object = (await findCollection(requestIds.collectionId)).get({
+				plain: true,
+			}));
+			resource = await transformCollectionToResource(collection, community);
+		}
+
+		resource.identifiers.push({
+			identifierKind: 'DOI',
+			identifierValue: dois[target],
+		});
+
+		resource.meta['created-date'] = object.createdAt.toString();
+
+		if (object.updatedAt !== object.createdAt) {
+			resource.meta['updated-date'] = object.updatedAt.toString();
+		}
+
+		resource.meta['publisher'] = community.publishAs || 'PubPub';
+
+		try {
+			const resourceDepositAst = createDeposit(resource);
+			return res.status(200).json(resourceDepositAst);
+		} catch (error) {
+			return res.status(404).json({ error: (error as Error).message });
 		}
 	}),
 );

@@ -42,7 +42,7 @@ const findPrimaryCollectionPubForPub = async (pubId) => {
 export const findCollection = (collectionId) =>
 	Collection.findOne({ where: { id: collectionId }, include: collectionIncludes });
 
-const findPub = (pubId) =>
+export const findPub = (pubId) =>
 	Pub.findOne({
 		where: { id: pubId },
 		...buildPubOptions({
