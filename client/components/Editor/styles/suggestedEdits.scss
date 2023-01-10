@@ -6,10 +6,31 @@ span[data-suggestion-removal='true'] {
     text-decoration: 2px darkred line-through;
 }
 
+@at-root {
+    :root {
+        --suggested-edits-block-addition-opacity: 1;
+    }
+}
+
 *[data-suggestion='addition'] {
-    background-color: rgba(forestgreen, 0.05);
+    &::before {
+        position: absolute;
+        left: 0;
+        display: block;
+        color: rgba(forestgreen, 0.5);
+        transform: translateX(calc(-100% - 5px));
+        opacity: var(--suggested-edits-block-addition-opacity);
+        content: '¶';
+    }
+
+    * {
+        &::before {
+            display: none;
+        }
+    }
 }
 
 *[data-suggestion='removal'] {
-    background-color: rgba(darkred, 0.05);
+    border-left: 2px solid rgba(darkred, 0.2);
+    transform: translateX(-2px);
 }
