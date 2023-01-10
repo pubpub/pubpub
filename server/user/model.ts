@@ -81,7 +81,7 @@ export default (sequelize, dataTypes) => {
 					});
 					User.hasMany(UserLoginDataExternal, {
 						onDelete: 'CASCADE',
-						as: 'userLoginDataExternal',
+						as: 'userLoginDataExternals',
 						foreignKey: 'userId',
 					});
 				},
