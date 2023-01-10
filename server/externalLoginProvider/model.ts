@@ -1,6 +1,21 @@
 export default (sequelize, dataTypes) =>
-	sequelize.define('UserNotificationPreferences', {
-		id: sequelize.idType,
-		name: { type: dataTypes.TEXT },
-		webServiceEndPoint: { type: dataTypes.TEXT },
-	});
+	sequelize.define(
+		'ExternalLoginProvider',
+		{
+			id: sequelize.idType,
+			name: { type: dataTypes.TEXT },
+			webServiceEndPoint: { type: dataTypes.TEXT },
+		},
+		{
+			classMethods: {
+				associate: (models) => {
+					const { ExternalLoginProvider, UserLoginDataExternal } = models;
+					ExternalLoginProvider.hasMany(UserLoginDataExternal, {
+						onDelete: 'CASCADE',
+						as: 'userLoginDatas',
+						foreignKey: 'externalLoginProviderId',
+					});
+				},
+			},
+		},
+	);
