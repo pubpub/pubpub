@@ -1,6 +1,17 @@
 import { AttributeSpec, MarkSpec, Node, NodeSpec, ParseRule } from 'prosemirror-model';
 
+import { arraysHaveSameElements } from 'utils/arrays';
+import { assert } from 'utils/assert';
 import { mapObject, pruneFalsyObjectValues } from 'utils/objects';
+
+export const suggestionNodeAttributes = [
+	'suggestionId',
+	'suggestionTimestamp',
+	'suggestionUserId',
+	'suggestionKind',
+	'suggestionOriginalAttrs',
+	'suggestionDiscussionId',
+];
 
 const createSuggestionMark = (
 	kind: string,
@@ -10,32 +21,50 @@ const createSuggestionMark = (
 	return {
 		attrs: {
 			id: { default: null },
-			userId: { default: null },
-			timestamp: { default: null },
-			discussionId: { default: null },
+			suggestionUserId: { default: null },
+			suggestionTimestamp: { default: null },
+			suggestionDiscussionId: { default: null },
 			...attrSpecs,
 		},
 		inclusive: false,
 		parseDOM: [
 			{
 				tag: 'span',
-				getAttrs: (node: string | HTMLElement) => {
+				getAttrs: (element: string | HTMLElement) => {
 					if (
-						node instanceof HTMLElement &&
-						node.hasAttribute(`data-suggestion-${kind}`)
+						element instanceof HTMLElement &&
+						element.hasAttribute(`data-suggestion-${kind}`)
 					) {
-						return mapObject(extraAttrs, (attr) => node.getAttribute(attr.dataKey));
+						return {
+							...mapObject(extraAttrs, (attr) => element.getAttribute(attr.dataKey)),
+							suggestionId: element.getAttribute('data-suggestion-id'),
+							suggestionUserId: element.getAttribute('data-suggestion-user-id'),
+							suggestionTimestamp: element.getAttribute('data-suggestion-timestamp'),
+							suggestionDiscussionId: element.getAttribute(
+								'data-suggestion-discussion-id',
+							),
+						};
 					}
 					return false;
 				},
 			},
 		],
 		toDOM: (node) => {
-			const attrs: Record<string, any> = {};
+			const moreAttrs: Record<string, any> = {};
 			Object.entries(extraAttrs).forEach(([key, { dataKey }]) => {
-				attrs[dataKey] = node.attrs[key];
+				moreAttrs[dataKey] = node.attrs[key];
 			});
-			return ['span', { [`data-suggestion-${kind}`]: true, ...attrs }];
+			return [
+				'span',
+				{
+					[`data-suggestion-${kind}`]: true,
+					'data-suggestion-id': node.attrs.suggestionId,
+					'data-suggestion-user-id': node.attrs.suggestionUserId,
+					'data-suggestion-timestamp': node.attrs.suggestionTimestamp,
+					'data-suggestion-discussion-id': node.attrs.suggestionDiscussionId,
+					...moreAttrs,
+				},
+			];
 		},
 	};
 };
@@ -56,25 +85,32 @@ export const amendNodeSpecWithSuggestedEdits = (nodeKey: string, nodeSpec: NodeS
 	if (nodeKey === 'text') {
 		return nodeSpec;
 	}
+	const newAttrs = {
+		suggestionId: {
+			default: null,
+		},
+		suggestionTimestamp: {
+			default: null,
+		},
+		suggestionUserId: {
+			default: null,
+		},
+		suggestionDiscussionId: {
+			default: null,
+		},
+		suggestionKind: {
+			default: null,
+		},
+		suggestionOriginalAttrs: {
+			default: null,
+		},
+	};
+	assert(arraysHaveSameElements(Object.keys(newAttrs), suggestionNodeAttributes));
 	return {
 		...nodeSpec,
 		attrs: {
 			...attrs,
-			suggestionId: {
-				default: null,
-			},
-			suggestionTimestamp: {
-				default: null,
-			},
-			suggestionUserId: {
-				default: null,
-			},
-			suggestionAction: {
-				default: null,
-			},
-			suggestionOriginalAttrs: {
-				default: null,
-			},
+			...newAttrs,
 		},
 		parseDOM: parseDOM?.map((rule: ParseRule) => {
 			const { getAttrs } = rule;
@@ -88,7 +124,7 @@ export const amendNodeSpecWithSuggestedEdits = (nodeKey: string, nodeSpec: NodeS
 						}
 						return {
 							...originalAttrs,
-							suggestionAction: element.getAttribute('data-suggestion-action'),
+							suggestionKind: element.getAttribute('data-suggestion-kind'),
 							suggestionId: element.getAttribute('data-suggestion-id'),
 							suggestionUserId: element.getAttribute('data-suggestion-user-id'),
 							suggestionTimestamp: element.getAttribute('data-suggestion-timestamp'),
@@ -110,7 +146,7 @@ export const amendNodeSpecWithSuggestedEdits = (nodeKey: string, nodeSpec: NodeS
 				suggestionTimestamp,
 				suggestionUserId,
 				suggestionDiscussionId,
-				suggestionAction,
+				suggestionKind,
 				suggestionOriginalAttrs,
 			} = node.attrs;
 			// TS doesn't know that we let toDOM take a secondary argument
@@ -121,7 +157,7 @@ export const amendNodeSpecWithSuggestedEdits = (nodeKey: string, nodeSpec: NodeS
 				'data-suggestion-timestamp': suggestionTimestamp,
 				'data-suggestion-user-id': suggestionUserId,
 				'data-suggestion-discussion-id': suggestionDiscussionId,
-				'data-suggestion-action': suggestionAction,
+				'data-suggestion-kind': suggestionKind,
 				'data-suggestion-original-attrs': suggestionOriginalAttrs,
 			});
 			if (Array.isArray(domOutputSpec)) {

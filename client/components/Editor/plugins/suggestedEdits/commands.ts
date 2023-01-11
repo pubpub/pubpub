@@ -3,7 +3,7 @@ import { Command, EditorState } from 'prosemirror-state';
 import { Dispatch, createCommandSpec } from '../../commands';
 import { suggestedEditsPluginKey } from './plugin';
 
-import { isSuggestedEditsEnabled, updateSuggestedEditsState } from './util';
+import { isSuggestedEditsEnabled, updateSuggestedEditsState } from './state';
 
 const toggleSuggestedEditsCommand: Command = (state: EditorState, dispatch?: Dispatch) => {
 	const pluginState = suggestedEditsPluginKey.getState(state);

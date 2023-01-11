@@ -50,28 +50,28 @@ span[data-suggestion-modification='true'] {
     background-color: rgba($modification, 0.2);
 }
 
-> *[data-suggestion-action='add'] {
-    @include block-border('add', rgba($addition, 0.5));
+> *[data-suggestion-kind='addition'] {
+    @include block-border('addition', rgba($addition, 0.5));
 }
 
-> *[data-suggestion-action='remove'] {
-    @include block-border('remove', rgba($removal, 0.5));
+> *[data-suggestion-kind='removal'] {
+    @include block-border('removal', rgba($removal, 0.5));
 }
 
-> *[data-suggestion-action='modify'] {
-    @include block-border('modify', rgba($modification, 0.5));
+> *[data-suggestion-kind='modification'] {
+    @include block-border('modifciation', rgba($modification, 0.5));
 }
 
-p > *[data-suggestion-action='modify'] {
+p > *[data-suggestion-kind='modification'] {
     background-color: rgba($modification, 0.2);
 }
 
-.tableWrapper:not([data-suggestion-action='add']) {
-    tr > *[data-suggestion-action='add'] {
+.tableWrapper:not([data-suggestion-kind='addition']) {
+    tr > *[data-suggestion-kind='addition'] {
         @include corner-triangle(6px, $addition);
     }
 
-    tr > *[data-suggestion-action='remove'] {
+    tr > *[data-suggestion-kind='removal'] {
         @include corner-triangle(6px, $removal);
     }
 }

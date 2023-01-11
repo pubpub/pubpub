@@ -1,3 +1,3 @@
 export { default } from './plugin';
-export * from './util';
+export * from './state';
 export * from './commands';

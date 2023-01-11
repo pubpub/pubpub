@@ -35,7 +35,7 @@ export class TableView extends BaseTableView {
 	syncAttributes(node) {
 		const {
 			id,
-			suggestionAction,
+			suggestionKind,
 			suggestionId,
 			suggestionUserId,
 			suggestionTimestamp,
@@ -47,7 +47,7 @@ export class TableView extends BaseTableView {
 		} = node.attrs;
 		const { dom } = this as any as { dom: HTMLElement };
 		dom.setAttribute('id', id);
-		dom.setAttribute('data-suggestion-action', suggestionAction);
+		dom.setAttribute('data-suggestion-kind', suggestionKind);
 		dom.setAttribute('data-suggestion-id', suggestionId);
 		dom.setAttribute('data-suggestion-user-id', suggestionUserId);
 		dom.setAttribute('data-suggestion-timestamp', suggestionTimestamp);

@@ -1,9 +1,11 @@
 import { Node } from 'prosemirror-model';
-import { EditorState, Plugin, Transaction } from 'prosemirror-state';
+import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Step, ReplaceStep, ReplaceAroundStep } from 'prosemirror-transform';
 
 import { generateHash } from '../utils';
+
+export const idsPluginKey = new PluginKey('ids');
 
 const isPasteStep = (step: Step): step is ReplaceStep | ReplaceAroundStep =>
 	'from' in step && 'slice' in step;
@@ -101,7 +103,7 @@ const getIdsTransactionForState = (
 			);
 		}
 	});
-
+	transaction.setMeta(idsPluginKey, true);
 	return mustReturnTransaction ? transaction : null;
 };
 
@@ -110,6 +112,7 @@ export default (_, props) => {
 		return [];
 	}
 	return new Plugin({
+		key: idsPluginKey,
 		view: (editorView: EditorView) => {
 			const transaction = getIdsTransactionForState(editorView.state);
 			if (transaction) {

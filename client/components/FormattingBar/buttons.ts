@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { suggest } from 'prosemirror-suggest';
 import {
 	codeBlockToggle,
 	alignTextCenter,
