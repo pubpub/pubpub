@@ -24,6 +24,20 @@ $removal: red;
     }
 }
 
+@mixin corner-triangle($size, $color) {
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: $size $size 0 0;
+        border-color: $color transparent transparent transparent;
+    }
+}
+
 span[data-suggestion-addition='true'] {
     background-color: rgba($addition, 0.2);
 }
@@ -54,10 +68,10 @@ p > *[data-suggestion-action='modify'] {
 
 .tableWrapper:not([data-suggestion-action='add']) {
     tr > *[data-suggestion-action='add'] {
-        background-color: rgba($addition, 0.2);
+        @include corner-triangle(6px, $addition);
     }
 
     tr > *[data-suggestion-action='remove'] {
-        background-color: rgba($removal, 0.2);
+        @include corner-triangle(6px, $removal);
     }
 }
