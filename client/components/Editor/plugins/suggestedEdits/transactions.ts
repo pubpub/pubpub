@@ -48,7 +48,7 @@ const shouldNodeBeIncludedInRemovalFragment = (node: Node) => {
 	if (canNodeTypeHaveSimultaneousAdditionAndDeletion(node)) {
 		return true;
 	}
-	if (attrs.suggestionAction === 'split') {
+	if (attrs.suggestionAction === 'add') {
 		return false;
 	}
 	if (marks.some((mark) => mark.type === schema.marks.suggestion_addition)) {
@@ -226,7 +226,7 @@ const getTransactionToAddSuggestionMarks = (
 			newTransaction.addMark(fromB, toB, additionMark);
 			newTransaction.doc.nodesBetween(fromB, toB, (node: Node, pos: number) => {
 				if (pos >= fromB && pos <= toB && node.isBlock) {
-					newTransaction.setNodeAttribute(pos, 'suggestionAction', 'split');
+					newTransaction.setNodeAttribute(pos, 'suggestionAction', 'add');
 				}
 			});
 
@@ -237,7 +237,7 @@ const getTransactionToAddSuggestionMarks = (
 				newTransaction.addMark(fromB, newToB, removalMark);
 				newTransaction.doc.nodesBetween(fromB, newToB, (node: Node, pos: number) => {
 					if (pos >= fromB && pos <= newToB && node.isBlock) {
-						newTransaction.setNodeAttribute(pos, 'suggestionAction', 'merge');
+						newTransaction.setNodeAttribute(pos, 'suggestionAction', 'remove');
 					}
 				});
 			}

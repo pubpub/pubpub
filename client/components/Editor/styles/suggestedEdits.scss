@@ -36,12 +36,12 @@ span[data-suggestion-modification='true'] {
     background-color: rgba($modification, 0.2);
 }
 
-> *[data-suggestion-action='split'] {
-    @include block-border('split', rgba($addition, 0.5));
+> *[data-suggestion-action='add'] {
+    @include block-border('add', rgba($addition, 0.5));
 }
 
-> *[data-suggestion-action='merge'] {
-    @include block-border('merge', rgba($removal, 0.5));
+> *[data-suggestion-action='remove'] {
+    @include block-border('remove', rgba($removal, 0.5));
 }
 
 > *[data-suggestion-action='modify'] {
@@ -52,12 +52,12 @@ p > *[data-suggestion-action='modify'] {
     background-color: rgba($modification, 0.2);
 }
 
-.tableWrapper:not([data-suggestion-action='split']) {
-    tr > *[data-suggestion-action='split'] {
+.tableWrapper:not([data-suggestion-action='add']) {
+    tr > *[data-suggestion-action='add'] {
         background-color: rgba($addition, 0.2);
     }
 
-    tr > *[data-suggestion-action='merge'] {
+    tr > *[data-suggestion-action='remove'] {
         background-color: rgba($removal, 0.2);
     }
 }
