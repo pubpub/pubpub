@@ -44,6 +44,14 @@ span[data-suggestion-modification='true'] {
     @include block-border('merge', rgba($removal, 0.5));
 }
 
+> *[data-suggestion-action='modify'] {
+    @include block-border('modify', rgba($modification, 0.5));
+}
+
+p > *[data-suggestion-action='modify'] {
+    background-color: rgba($modification, 0.2);
+}
+
 .tableWrapper:not([data-suggestion-action='split']) {
     tr > *[data-suggestion-action='split'] {
         background-color: rgba($addition, 0.2);

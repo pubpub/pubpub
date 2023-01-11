@@ -1,5 +1,6 @@
 import { Schema } from 'prosemirror-model';
 
+import { mapObject } from 'utils/objects';
 import { defaultNodes, defaultMarks } from 'components/Editor/schemas';
 import {
 	marks as suggestedEditMarks,
@@ -7,22 +8,19 @@ import {
 } from 'components/Editor/plugins/suggestedEdits/schema';
 
 export const buildSchema = (customNodes = {}, customMarks = {}) => {
-	const schemaNodes = {
-		...defaultNodes,
-		...customNodes,
-	};
+	const schemaNodes = mapObject(
+		{
+			...defaultNodes,
+			...customNodes,
+		},
+		(nodeSpec, nodeKey) => amendNodeSpecWithSuggestedEdits(nodeKey, nodeSpec),
+	);
+
 	const schemaMarks = {
 		...defaultMarks,
 		...customMarks,
 		...suggestedEditMarks,
 	};
-
-	Object.keys(schemaNodes).forEach((nodeKey) => {
-		const nodeSpec = schemaNodes[nodeKey];
-		if (nodeSpec) {
-			schemaNodes[nodeKey] = amendNodeSpecWithSuggestedEdits(nodeSpec);
-		}
-	});
 
 	/* Filter out undefined (e.g. overwritten) nodes and marks */
 	Object.keys(schemaNodes).forEach((nodeKey) => {

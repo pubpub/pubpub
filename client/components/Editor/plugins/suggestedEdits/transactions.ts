@@ -1,18 +1,15 @@
-import { Schema, Node, Fragment, Slice, MarkType, Mark } from 'prosemirror-model';
+import { Node, Fragment, Slice, Mark } from 'prosemirror-model';
 import {
 	AddMarkStep,
-	Mappable,
-	Mapping,
+	AttrStep,
 	RemoveMarkStep,
-	ReplaceAroundStep,
-	ReplaceStep,
 	Step,
-	Transform,
+	ReplaceStep,
+	ReplaceAroundStep,
 } from 'prosemirror-transform';
 import { ChangeSet } from 'prosemirror-changeset';
 import { Selection, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { flattenOnce } from 'utils/arrays';
 import { isSuggestedEditsEnabled } from './util';
 import { suggestedEditsPluginKey } from './plugin';
 
@@ -55,6 +52,32 @@ const shouldNodeBeIncludedInRemovalFragment = (node: Node) => {
 		return false;
 	}
 	if (marks.some((mark) => mark.type === schema.marks.suggestion_addition)) {
+		return false;
+	}
+	return true;
+};
+
+const shouldNodeHaveModificationAttrApplied = (node: Node) => {
+	const {
+		attrs,
+		marks,
+		type: {
+			schema: {
+				marks: { suggestion_addition, suggestion_removal, suggestion_modification },
+			},
+		},
+	} = node;
+	if (attrs.suggestionAction) {
+		return false;
+	}
+	if (
+		marks.some(
+			(mark) =>
+				mark.type === suggestion_addition ||
+				mark.type === suggestion_modification ||
+				mark.type === suggestion_removal,
+		)
+	) {
 		return false;
 	}
 	return true;
@@ -141,11 +164,48 @@ const getMarkedModifiedSlice = (
 	return new Slice(netContent, openStart, openEnd);
 };
 
+const getModifiedNodeInfo = (
+	step: Step,
+	docBeforeStep: Node,
+): null | { pos: number; nodeBeforeStep: Node } => {
+	if (step instanceof AttrStep) {
+		const { pos } = step;
+		const nodeBeforeStep = docBeforeStep.nodeAt(pos);
+		if (nodeBeforeStep) {
+			return { pos, nodeBeforeStep };
+		}
+	}
+	if (step instanceof ReplaceStep) {
+		const {
+			from,
+			to,
+			slice: { content },
+		} = step;
+		const nodeBeforeStep = docBeforeStep.nodeAt(from);
+		const firstAndOnlyNodeInContent = content.childCount === 1 ? content.child(0) : null;
+		if (nodeBeforeStep) {
+			if (to === from + 1 && nodeBeforeStep.type === firstAndOnlyNodeInContent?.type) {
+				return { pos: from, nodeBeforeStep };
+			}
+		}
+	}
+	if (step instanceof ReplaceAroundStep) {
+		const { from, gapFrom, to, gapTo } = step;
+		const nodeBeforeStep = docBeforeStep.nodeAt(from);
+		if (nodeBeforeStep) {
+			if (gapFrom === from + 1 && gapTo === to - 1) {
+				return { pos: from, nodeBeforeStep };
+			}
+		}
+	}
+	return null;
+};
+
 const getTransactionToAddSuggestionMarks = (
 	state: EditorState,
 	transactions: readonly Transaction[],
 ) => {
-	const { tr, schema } = state;
+	const { tr: newTransaction, schema } = state;
 	const additionMark = schema.marks.suggestion_addition.create();
 	const removalMark = schema.marks.suggestion_removal.create();
 
@@ -163,32 +223,33 @@ const getTransactionToAddSuggestionMarks = (
 		.sort((x, y) => y.fromB - x.fromB)
 		.forEach((change) => {
 			const { fromA, toA, fromB, toB } = change;
-			tr.addMark(fromB, toB, additionMark);
-			tr.doc.nodesBetween(fromB, toB, (node: Node, pos: number) => {
-				if (pos >= fromB && pos <= toB && !node.isText) {
-					tr.setNodeAttribute(pos, 'suggestionAction', 'split');
+			newTransaction.addMark(fromB, toB, additionMark);
+			newTransaction.doc.nodesBetween(fromB, toB, (node: Node, pos: number) => {
+				if (pos >= fromB && pos <= toB && node.isBlock) {
+					newTransaction.setNodeAttribute(pos, 'suggestionAction', 'split');
 				}
 			});
 
 			const removedSlice = getNetRemovalSlice(changeset.startDoc.slice(fromA, toA));
 			if (removedSlice.size > 0) {
 				const newToB = fromB + removedSlice.size;
-				tr.replace(fromB, fromB, removedSlice);
-				tr.addMark(fromB, newToB, removalMark);
-				tr.doc.nodesBetween(fromB, newToB, (node: Node, pos: number) => {
-					if (pos >= fromB && pos <= newToB && !node.isText) {
-						tr.setNodeAttribute(pos, 'suggestionAction', 'merge');
+				newTransaction.replace(fromB, fromB, removedSlice);
+				newTransaction.addMark(fromB, newToB, removalMark);
+				newTransaction.doc.nodesBetween(fromB, newToB, (node: Node, pos: number) => {
+					if (pos >= fromB && pos <= newToB && node.isBlock) {
+						newTransaction.setNodeAttribute(pos, 'suggestionAction', 'merge');
 					}
 				});
 			}
 		});
 
 	transactions.forEach((txn) => {
-		txn.steps.forEach((step) => {
+		const { steps } = txn;
+		steps.forEach((step, index) => {
 			if (step instanceof AddMarkStep || step instanceof RemoveMarkStep) {
-				const fromInCurrentDoc = tr.mapping.map(step.from);
-				const toInCurrentDoc = tr.mapping.map(step.to);
-				const markedSlice = tr.doc.slice(fromInCurrentDoc, toInCurrentDoc);
+				const fromInCurrentDoc = newTransaction.mapping.map(step.from);
+				const toInCurrentDoc = newTransaction.mapping.map(step.to);
+				const markedSlice = newTransaction.doc.slice(fromInCurrentDoc, toInCurrentDoc);
 				const markedModifiedSlice = getMarkedModifiedSlice(markedSlice, (marks) =>
 					step instanceof AddMarkStep
 						? marks.filter((m) => !m.eq(step.mark))
@@ -196,14 +257,35 @@ const getTransactionToAddSuggestionMarks = (
 						? [...marks]
 						: [...marks, step.mark],
 				);
-				tr.replace(fromInCurrentDoc, toInCurrentDoc, markedModifiedSlice);
+				newTransaction.replace(fromInCurrentDoc, toInCurrentDoc, markedModifiedSlice);
+			}
+			const docBeforeStep = txn.docs[index];
+			const modifiedNodeInfo = getModifiedNodeInfo(step, docBeforeStep);
+			if (modifiedNodeInfo) {
+				const { nodeBeforeStep, pos } = modifiedNodeInfo;
+				const posInCurrentDoc = newTransaction.mapping.map(pos);
+				const nodeInCurrentDoc = newTransaction.doc.nodeAt(posInCurrentDoc);
+				if (nodeInCurrentDoc && shouldNodeHaveModificationAttrApplied(nodeInCurrentDoc)) {
+					const originalAttrsJson = nodeBeforeStep.toJSON().attrs;
+					const originalAttrsJsonString = JSON.stringify(originalAttrsJson);
+					newTransaction.setNodeMarkup(
+						posInCurrentDoc,
+						null,
+						{
+							...nodeInCurrentDoc.attrs,
+							suggestionAction: 'modify',
+							suggestionOriginalAttrs: originalAttrsJsonString,
+						},
+						nodeInCurrentDoc.marks,
+					);
+				}
 			}
 		});
 	});
 
-	const newSelection = mapSelectionThroughTransaction(tr, state.selection, false);
-	tr.setSelection(newSelection);
-	return tr;
+	const newSelection = mapSelectionThroughTransaction(newTransaction, state.selection, false);
+	newTransaction.setSelection(newSelection);
+	return newTransaction;
 };
 
 export const appendTransactionForSuggestedEdits = (

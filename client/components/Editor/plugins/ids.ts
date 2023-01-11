@@ -53,6 +53,7 @@ const getIdsTransactionForState = (
 						pos,
 						node.type,
 						updatedNodeAttrsWithNewRandomId(node),
+						node.marks,
 					);
 				} else {
 					// If it is in the pasted range, but we haven't seen the ID
@@ -69,20 +70,35 @@ const getIdsTransactionForState = (
 				// If it's not in pasted range and we've seen the ID, that means it's
 				// a duplicate from before the time of unique IDs. Change the ID.
 				mustReturnTransaction = true;
-				transaction.setNodeMarkup(pos, node.type, updatedNodeAttrsWithNewRandomId(node));
+				transaction.setNodeMarkup(
+					pos,
+					node.type,
+					updatedNodeAttrsWithNewRandomId(node),
+					node.marks,
+				);
 			} else {
 				seenIds.add(node.attrs.id);
 				if (possibleChangesForPastedNodes[node.attrs.id]) {
 					const newChange = possibleChangesForPastedNodes[node.attrs.id];
 					mustReturnTransaction = true;
-					transaction.setNodeMarkup(newChange.offset, newChange.type, newChange.attrs);
+					transaction.setNodeMarkup(
+						newChange.offset,
+						newChange.type,
+						newChange.attrs,
+						node.marks,
+					);
 				}
 			}
 		} else if (nodeTypeHasId) {
 			// If it doesn't have an ID, assign one as long as its
 			// schema supports ID fields.
 			mustReturnTransaction = true;
-			transaction.setNodeMarkup(pos, node.type, updatedNodeAttrsWithNewRandomId(node));
+			transaction.setNodeMarkup(
+				pos,
+				node.type,
+				updatedNodeAttrsWithNewRandomId(node),
+				node.marks,
+			);
 		}
 	});
 

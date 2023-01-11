@@ -1,7 +1,5 @@
-import { Schema } from 'prosemirror-model';
 import { Plugin, PluginKey, Transaction } from 'prosemirror-state';
 
-import { PluginsOptions } from '../..';
 import { SuggestedEditsPluginState } from './types';
 import { appendTransactionForSuggestedEdits } from './transactions';
 
@@ -20,7 +18,7 @@ export default () => {
 		},
 		state: {
 			init: () => {
-				return { isEnabled: true };
+				return { isEnabled: false };
 			},
 			apply: (tr: Transaction, pluginState: SuggestedEditsPluginState) => {
 				const meta = tr.getMeta(suggestedEditsPluginKey);
