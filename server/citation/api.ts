@@ -2,24 +2,21 @@ import zoteroClient from 'zotero-api-client';
 
 import app from 'server/server';
 
-import { UserLoginDataExternal, ExternalLoginProvider } from '../models';
+import { IntegrationDataOAuth1, Integration } from '../models';
 
 app.post('/api/citations/zotero', (req, res) => {
 	const userId = req.user.id;
-	return ExternalLoginProvider.findOne({ where: { name: 'zotero' } })
-		.then((zoteroProvider) => {
-			if (!zoteroProvider) throw new Error('No such external login provider');
-			return UserLoginDataExternal.findOne({
-				where: { userId, externalLoginProviderId: zoteroProvider.id },
+	return Integration.findOne({ where: { name: 'zotero' } })
+		.then((zoteroIntegration) => {
+			if (!zoteroIntegration) throw new Error('No zotero integration found');
+			return IntegrationDataOAuth1.findOne({
+				where: { userId, integrationId: zoteroIntegration.id },
 			});
 		})
 		.then((loginData) => {
 			if (!loginData) throw new Error('Zotero not authenticated');
 			const externalUserId = parseInt(loginData.externalUserId, 10);
-			const myApi = zoteroClient(loginData.externalProviderToken).library(
-				'user',
-				externalUserId,
-			);
+			const myApi = zoteroClient(loginData.accessToken).library('user', externalUserId);
 			return myApi.items().get();
 		})
 		.then((items) => {

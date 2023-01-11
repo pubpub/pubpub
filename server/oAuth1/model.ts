@@ -1,22 +1,22 @@
 export default (sequelize, dataTypes) =>
 	sequelize.define(
-		'UserLoginDataExternal',
+		'OAuth1Data',
 		{
 			id: sequelize.idType,
 			userId: { type: dataTypes.UUID, allowNull: false },
 			externalUserId: { type: dataTypes.TEXT, allowNull: false },
 			externalUsername: { type: dataTypes.TEXT, allowNull: false },
-			externalLoginProviderId: { type: dataTypes.UUID, allowNull: false },
-			externalProviderToken: { type: dataTypes.TEXT },
+			integrationId: { type: dataTypes.UUID, allowNull: false },
+			accessToken: { type: dataTypes.TEXT },
 		},
 		{
 			classMethods: {
 				associate: (models) => {
-					const { UserLoginDataExternal, ExternalLoginProvider } = models;
-					UserLoginDataExternal.belongsTo(ExternalLoginProvider, {
+					const { IntegrationDataOAuth1, Integration } = models;
+					IntegrationDataOAuth1.belongsTo(Integration, {
 						onDelete: 'CASCADE',
-						as: 'externalLoginProvider',
-						foreignKey: 'externalLoginProviderId',
+						as: 'integration',
+						foreignKey: 'integrationId',
 					});
 				},
 			},

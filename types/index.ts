@@ -33,5 +33,5 @@ export * from './user';
 export * from './util';
 export * from './viewport';
 export * from './visibility';
-export * from './userLoginDataExternal';
-export * from './externalLoginProvider';
+export * from './integrationDataOAuth1';
+export * from './integration';

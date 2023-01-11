@@ -21,8 +21,8 @@ setAppCommit(process.env.HEROKU_SLUG_COMMIT);
 import 'server/utils/serverModuleOverwrite';
 import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
 
-import { sequelize, User, UserLoginDataExternal, ExternalLoginProvider } from './models';
-import { createUserLoginDataExternal } from './userLoginDataExternal/queries';
+import { sequelize, User, IntegrationDataOAuth1, Integration } from './models';
+import { createIntegrationDataOAuth1 } from './integrationDataOAuth1/queries';
 import './hooks';
 
 // Wrapper for app.METHOD() handlers. Though we need this to properly catch errors in handlers that
@@ -128,18 +128,18 @@ passport.use(
 			const { id: userId } = user;
 			const { username: externalUsername, userID: externalUserId } = params;
 			return Promise.all([
-				UserLoginDataExternal.findOne({ where: { userId } }),
-				ExternalLoginProvider.findOne({ where: { name: 'zotero' } }),
+				IntegrationDataOAuth1.findOne({ where: { userId } }),
+				Integration.findOne({ where: { name: 'zotero' } }),
 			])
 				.then(
-					([oldLoginData, externalLoginProvider]) =>
+					([oldLoginData, integration]) =>
 						oldLoginData ||
-						createUserLoginDataExternal({
+						createIntegrationDataOAuth1({
 							userId,
 							externalUsername,
 							externalUserId,
-							externalLoginProviderId: externalLoginProvider.id,
-							externalProviderToken: token,
+							integrationId: integration.id,
+							accessToken: token,
 						}),
 				)
 				.then(() => {
