@@ -1,4 +1,4 @@
-import { Schema, Node, Fragment, Slice, MarkType } from 'prosemirror-model';
+import { Schema, Node, Fragment, Slice, MarkType, Mark } from 'prosemirror-model';
 import {
 	AddMarkStep,
 	Mappable,
@@ -51,7 +51,7 @@ const shouldNodeBeIncludedInRemovalFragment = (node: Node) => {
 	if (canNodeTypeHaveSimultaneousAdditionAndDeletion(node)) {
 		return true;
 	}
-	if (attrs.suggestion === 'addition') {
+	if (attrs.suggestionAction === 'split') {
 		return false;
 	}
 	if (marks.some((mark) => mark.type === schema.marks.suggestion_addition)) {
@@ -76,6 +76,68 @@ const getNetRemovalFragment = (fragment: Fragment) => {
 const getNetRemovalSlice = (slice: Slice) => {
 	const { content, openStart, openEnd } = slice;
 	const netContent = getNetRemovalFragment(content);
+	return new Slice(netContent, openStart, openEnd);
+};
+
+const maybeApplyModifiedMarkToNode = (
+	node: Node,
+	amendOriginalMarks: (marks: readonly Mark[]) => Mark[],
+	isSuggestionMark: (mark: Mark) => boolean,
+) => {
+	const {
+		marks,
+		type: { schema },
+	} = node;
+	const modificationMarkType = schema.marks.suggestion_modification;
+	if (!marks.some(isSuggestionMark)) {
+		const originalMarks = amendOriginalMarks(node.marks).map((mark) => mark.toJSON());
+		const originalMarksString = JSON.stringify(originalMarks);
+		return node.mark([
+			...node.marks,
+			modificationMarkType.create({ originalMarks: originalMarksString }),
+		]);
+	}
+
+	return node;
+};
+
+const getMarkedModifiedFragment = (
+	fragment: Fragment,
+	amendOriginalMarks: (marks: readonly Mark[]) => Mark[],
+	isSuggestionMark: (mark: Mark) => boolean,
+) => {
+	const children: Node[] = [];
+	for (let i = 0; i < fragment.childCount; i++) {
+		const child = fragment.child(i);
+		const newChildFramgent = getMarkedModifiedFragment(
+			child.content,
+			amendOriginalMarks,
+			isSuggestionMark,
+		);
+		const newChild = child.copy(newChildFramgent);
+		children.push(maybeApplyModifiedMarkToNode(newChild, amendOriginalMarks, isSuggestionMark));
+	}
+	return Fragment.from(children);
+};
+
+const getMarkedModifiedSlice = (
+	slice: Slice,
+	amendOriginalMarks: (marks: readonly Mark[]) => Mark[],
+) => {
+	const { content, openStart, openEnd } = slice;
+	const netContent = getMarkedModifiedFragment(content, amendOriginalMarks, (mark) => {
+		const { type } = mark;
+		const {
+			schema: {
+				marks: { suggestion_addition, suggestion_removal, suggestion_modification },
+			},
+		} = type;
+		return (
+			type === suggestion_addition ||
+			type === suggestion_removal ||
+			type === suggestion_modification
+		);
+	});
 	return new Slice(netContent, openStart, openEnd);
 };
 
@@ -104,24 +166,40 @@ const getTransactionToAddSuggestionMarks = (
 			tr.addMark(fromB, toB, additionMark);
 			tr.doc.nodesBetween(fromB, toB, (node: Node, pos: number) => {
 				if (pos >= fromB && pos <= toB && !node.isText) {
-					console.log('setting suggestion mark on node', node.toJSON());
-					tr.setNodeAttribute(pos, 'suggestion', 'addition');
+					tr.setNodeAttribute(pos, 'suggestionAction', 'split');
 				}
 			});
 
 			const removedSlice = getNetRemovalSlice(changeset.startDoc.slice(fromA, toA));
 			if (removedSlice.size > 0) {
-				console.log('restoring removedSlice', removedSlice.content.toJSON());
 				const newToB = fromB + removedSlice.size;
 				tr.replace(fromB, fromB, removedSlice);
 				tr.addMark(fromB, newToB, removalMark);
 				tr.doc.nodesBetween(fromB, newToB, (node: Node, pos: number) => {
 					if (pos >= fromB && pos <= newToB && !node.isText) {
-						tr.setNodeAttribute(pos, 'suggestion', 'removal');
+						tr.setNodeAttribute(pos, 'suggestionAction', 'merge');
 					}
 				});
 			}
 		});
+
+	transactions.forEach((txn) => {
+		txn.steps.forEach((step) => {
+			if (step instanceof AddMarkStep || step instanceof RemoveMarkStep) {
+				const fromInCurrentDoc = tr.mapping.map(step.from);
+				const toInCurrentDoc = tr.mapping.map(step.to);
+				const markedSlice = tr.doc.slice(fromInCurrentDoc, toInCurrentDoc);
+				const markedModifiedSlice = getMarkedModifiedSlice(markedSlice, (marks) =>
+					step instanceof AddMarkStep
+						? marks.filter((m) => !m.eq(step.mark))
+						: marks.some((m) => m.eq(step.mark))
+						? [...marks]
+						: [...marks, step.mark],
+				);
+				tr.replace(fromInCurrentDoc, toInCurrentDoc, markedModifiedSlice);
+			}
+		});
+	});
 
 	const newSelection = mapSelectionThroughTransaction(tr, state.selection, false);
 	tr.setSelection(newSelection);
@@ -134,17 +212,16 @@ export const appendTransactionForSuggestedEdits = (
 	newState: EditorState,
 ) => {
 	const isEnabled = isSuggestedEditsEnabled(newState);
-	// We should be accessing the history plugin by its actual PluginKey
+	// We should be accessing the history and collab plugins by their actual PluginKey
 	const validTransactions = transactions.filter(
 		(tr) =>
 			!tr.getMeta('history$') &&
+			!tr.getMeta('collab$') &&
 			!tr.getMeta(suggestedEditsPluginKey) &&
 			!tr.getMeta('appendedTransaction'),
 	);
 	if (isEnabled && validTransactions.length && transactions.some((tr) => tr.docChanged)) {
-		const steps = flattenOnce(validTransactions.map((tr) => tr.steps));
 		const tr = getTransactionToAddSuggestionMarks(newState, transactions);
-		// tr.setMeta(suggestedEditsPluginKey, { isFromPlugin: true });
 		return tr;
 	}
 	return null;

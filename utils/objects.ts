@@ -33,3 +33,13 @@ export const mapObject = <Keys extends string, From, To>(
 	});
 	return result as Record<Keys, To>;
 };
+
+export const pruneFalsyObjectValues = <T extends Record<any, any>>(object: T): Partial<T> => {
+	const result: Partial<T> = {};
+	Object.keys(object).forEach((key) => {
+		if (object[key]) {
+			result[key as keyof T] = object[key];
+		}
+	});
+	return result;
+};

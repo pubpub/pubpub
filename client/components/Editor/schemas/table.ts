@@ -12,15 +12,6 @@ const pmTableNodes = tableNodes({
 	tableGroup: 'block',
 	cellContent: 'block+',
 	cellAttributes: {
-		suggestion: {
-			default: null,
-			getFromDOM: (dom) => {
-				return dom.getAttribute('data-suggestion');
-			},
-			setDOMAttr: (value, attrs) => {
-				attrs['data-suggestion'] = value;
-			},
-		},
 		background: {
 			default: null,
 			getFromDOM: (dom) => {
