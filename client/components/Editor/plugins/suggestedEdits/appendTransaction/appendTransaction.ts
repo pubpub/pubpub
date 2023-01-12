@@ -23,10 +23,10 @@ export const appendTransaction = (
 ) => {
 	const pluginState = getSuggestedEditsState(newState)!;
 	if (pluginState.isEnabled) {
-		const context = createSuggestedEditsTransactionContext(pluginState);
 		const transactionsToExamine = transactions.filter(shouldExamineTransaction);
 		if (transactionsToExamine.length > 0) {
 			const { tr: newTransaction } = newState;
+			const context = createSuggestedEditsTransactionContext(pluginState);
 			indicateTextAndStructureChanges(transactionsToExamine, newTransaction, context);
 			indicateMarkChanges(transactionsToExamine, newTransaction, context);
 			indicateAttributeChanges(transactionsToExamine, newTransaction, context);
