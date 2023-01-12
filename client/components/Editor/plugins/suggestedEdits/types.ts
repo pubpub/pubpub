@@ -1,4 +1,4 @@
-import { Schema } from 'prosemirror-model';
+import { MarkType } from 'prosemirror-model';
 import { Transaction } from 'prosemirror-state';
 
 import { suggestionNodeAttributes } from './schema';
@@ -6,19 +6,6 @@ import { suggestionNodeAttributes } from './schema';
 export type SuggestionKind = 'addition' | 'modification' | 'removal';
 
 export type SuggestionNodeAttribute = keyof typeof suggestionNodeAttributes;
-
-export type SuggestedEditsTransactionContext = {
-	existingTransactions: readonly Transaction[];
-	newTransaction: Transaction;
-	transactionAttrs: SuggestionAttrsPerTransaction;
-	schema: Schema;
-};
-
-export type SuggestedEditsPluginState = {
-	isEnabled: boolean;
-	suggestionUserId: string;
-	schema: Schema;
-};
 
 export type SuggestionUniqueAttrs = {
 	suggestionId: string;
@@ -32,6 +19,7 @@ export type SuggestionAttrsPerTransaction = {
 export type SuggestionBaseAttrs = SuggestionUniqueAttrs &
 	SuggestionAttrsPerTransaction & {
 		suggestionDiscussionId: null | string;
+		suggestionKind: SuggestionKind;
 	};
 
 export type SuggestionMarkAttrs = SuggestionBaseAttrs & {
@@ -39,6 +27,18 @@ export type SuggestionMarkAttrs = SuggestionBaseAttrs & {
 };
 
 export type SuggestionNodeAttrs = SuggestionBaseAttrs & {
-	suggestionKind: SuggestionKind;
 	suggestionOriginalAttrs?: null | string;
+};
+
+export type SuggestedEditsPluginState = {
+	isEnabled: boolean;
+	suggestionUserId: string;
+	suggestionMark: MarkType;
+};
+
+export type SuggestedEditsTransactionContext = {
+	existingTransactions: readonly Transaction[];
+	newTransaction: Transaction;
+	transactionAttrs: SuggestionAttrsPerTransaction;
+	suggestionMark: MarkType;
 };

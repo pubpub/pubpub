@@ -7,9 +7,9 @@ export const createSuggestedEditsTransactionContext = (
 	existingTransactions: readonly Transaction[],
 	newTransaction: Transaction,
 ): SuggestedEditsTransactionContext => {
-	const { suggestionUserId, schema } = pluginState;
+	const { suggestionUserId, suggestionMark } = pluginState;
 	return {
-		schema,
+		suggestionMark,
 		existingTransactions,
 		newTransaction,
 		transactionAttrs: {

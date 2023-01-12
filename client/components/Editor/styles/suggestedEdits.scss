@@ -38,15 +38,15 @@ $removal: red;
 	}
 }
 
-span[data-suggestion-addition='true'] {
+span[data-suggestion-mark='true'][data-suggestion-kind='addition'] {
 	background-color: rgba($addition, 0.2);
 }
 
-span[data-suggestion-removal='true'] {
+span[data-suggestion-mark='true'][data-suggestion-kind='removal'] {
 	text-decoration: 2px $removal line-through;
 }
 
-span[data-suggestion-modification='true'] {
+span[data-suggestion-mark='true'][data-suggestion-kind='modification'] {
 	background-color: rgba($modification, 0.2);
 }
 

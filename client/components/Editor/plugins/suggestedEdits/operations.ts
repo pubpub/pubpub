@@ -1,4 +1,4 @@
-import { Node, Mark, Schema, Attrs } from 'prosemirror-model';
+import { Node, Mark, Schema, Attrs, MarkType } from 'prosemirror-model';
 import uuid from 'uuid/v4';
 
 import { withValue } from 'utils/fp';
@@ -12,17 +12,6 @@ import {
 	SuggestionNodeAttrs,
 	SuggestionUniqueAttrs,
 } from './types';
-
-const getMarkTypeForSuggestionKind = (schema: Schema, kind: SuggestionKind) => {
-	const { suggestion_addition, suggestion_removal, suggestion_modification } = schema.marks;
-	if (kind === 'addition') {
-		return suggestion_addition;
-	}
-	if (kind === 'removal') {
-		return suggestion_removal;
-	}
-	return suggestion_modification;
-};
 
 const createSuggestionUniqueAttrs = (): SuggestionUniqueAttrs => {
 	return {
@@ -38,17 +27,17 @@ const findJoinableSuggestionMarkForRange = (
 	withinMinutes: number = 60,
 ) => {
 	const {
-		schema,
+		suggestionMark,
 		transactionAttrs: { suggestionTimestamp, suggestionUserId },
 		newTransaction: { doc },
 	} = context;
-	const matchingMarkType = getMarkTypeForSuggestionKind(schema, suggestionKind);
 	const pos = suggestionKind === 'addition' ? from : to;
 	const { nodeBefore, nodeAfter } = doc.resolve(pos);
 	const resolvedNode = suggestionKind === 'addition' ? nodeBefore : nodeAfter;
 	const matchingMark = resolvedNode?.marks?.find((mark) => {
 		return (
-			mark.type === matchingMarkType &&
+			mark.type === suggestionMark &&
+			mark.attrs.suggestionKind === suggestionKind &&
 			// eslint-disable-next-line eqeqeq
 			mark.attrs.suggestionUserId == suggestionUserId &&
 			suggestionTimestamp - mark.attrs.suggestionTimestamp < 1000 * 60 * withinMinutes
@@ -57,20 +46,16 @@ const findJoinableSuggestionMarkForRange = (
 	return matchingMark ?? null;
 };
 
+export const getSuggestionMarkFromSchema = (schema: Schema) => {
+	return schema.marks.suggestion;
+};
+
 export const nodeHasSuggestion = (node: Node) => {
 	const {
 		type: { schema },
 	} = node;
-	const { suggestion_addition, suggestion_removal, suggestion_modification } = schema.marks;
-	return (
-		!!node.attrs.suggestionKind ||
-		node.marks.some(
-			(mark) =>
-				mark.type === suggestion_addition ||
-				mark.type === suggestion_removal ||
-				mark.type === suggestion_modification,
-		)
-	);
+	const suggestionMark = getSuggestionMarkFromSchema(schema);
+	return !!node.attrs.suggestionKind || node.marks.some((mark) => mark.type === suggestionMark);
 };
 
 export const nodeHasSuggestionKind = (node: Node, kind: SuggestionKind) => {
@@ -80,17 +65,18 @@ export const nodeHasSuggestionKind = (node: Node, kind: SuggestionKind) => {
 	if (node.attrs.suggestionKind === kind) {
 		return true;
 	}
-	const markForKind = getMarkTypeForSuggestionKind(schema, kind);
-	return node.marks.some((mark) => mark.type === markForKind);
+	const suggestionMark = getSuggestionMarkFromSchema(schema);
+	return node.marks.some(
+		(mark) => mark.type === suggestionMark && mark.attrs.suggestionKind === kind,
+	);
 };
 
 export const createSuggestionMark = (
 	suggestionKind: SuggestionKind,
-	schema: Schema,
+	suggestionMark: MarkType,
 	transactionAttrs: SuggestionAttrsPerTransaction,
 	suggestionOriginalMarks?: readonly Mark[],
 ) => {
-	const markType = getMarkTypeForSuggestionKind(schema, suggestionKind);
 	const originalMarksAttrs = withValue(suggestionOriginalMarks, (marks) => {
 		if (marks) {
 			const asJson = marks.map((mark) => mark.toJSON());
@@ -102,9 +88,10 @@ export const createSuggestionMark = (
 		...createSuggestionUniqueAttrs(),
 		...transactionAttrs,
 		...originalMarksAttrs,
+		suggestionKind,
 		suggestionDiscussionId: null,
 	};
-	return markType.create(markAttrs);
+	return suggestionMark.create(markAttrs);
 };
 
 export const addSuggestionToRange = (
@@ -113,22 +100,11 @@ export const addSuggestionToRange = (
 	from: number,
 	to: number,
 ) => {
-	const { newTransaction, transactionAttrs, schema } = context;
+	const { newTransaction, transactionAttrs, suggestionMark } = context;
 	const mark =
 		findJoinableSuggestionMarkForRange(suggestionKind, context, from, to) ||
-		createSuggestionMark(suggestionKind, schema, transactionAttrs);
+		createSuggestionMark(suggestionKind, suggestionMark, transactionAttrs);
 	newTransaction.addMark(from, to, mark);
-};
-
-export const removeSuggestionFromRange = (
-	suggestionKind: SuggestionKind,
-	context: SuggestedEditsTransactionContext,
-	from: number,
-	to: number,
-) => {
-	const { newTransaction, schema } = context;
-	const markType = getMarkTypeForSuggestionKind(schema, suggestionKind);
-	newTransaction.removeMark(from, to, markType);
 };
 
 export const addSuggestionToNode = (

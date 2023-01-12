@@ -30,12 +30,12 @@ const maybeApplyModifiedMarkToNode = (
 	getOriginalMarks: GetOriginalMarks,
 	context: SuggestedEditsTransactionContext,
 ) => {
-	const { transactionAttrs, schema } = context;
+	const { transactionAttrs, suggestionMark } = context;
 	if (!nodeHasSuggestion(node)) {
 		const originalMarks = getOriginalMarks(node);
 		const newMark = createSuggestionMark(
 			'modification',
-			schema,
+			suggestionMark,
 			transactionAttrs,
 			originalMarks,
 		);

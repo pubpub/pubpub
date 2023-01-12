@@ -1,8 +1,8 @@
-import { AttributeSpec, MarkSpec, Node, NodeSpec, ParseRule } from 'prosemirror-model';
+import { MarkSpec, Node, NodeSpec, ParseRule } from 'prosemirror-model';
 
 import { arraysHaveSameElements } from 'utils/arrays';
 import { assert } from 'utils/assert';
-import { mapObject, pruneFalsyObjectValues } from 'utils/objects';
+import { pruneFalsyObjectValues } from 'utils/objects';
 
 export const suggestionNodeAttributes = [
 	'suggestionId',
@@ -13,35 +13,35 @@ export const suggestionNodeAttributes = [
 	'suggestionDiscussionId',
 ];
 
-const createSuggestionMark = (
-	kind: string,
-	extraAttrs: Record<string, { dataKey: string; spec: AttributeSpec }> = {},
-): MarkSpec => {
-	const attrSpecs = mapObject(extraAttrs, (attr) => attr.spec);
-	return {
+export const marks: Record<string, MarkSpec> = {
+	suggestion: {
 		attrs: {
-			id: { default: null },
+			suggestionKind: {},
+			suggestionId: { default: null },
 			suggestionUserId: { default: null },
 			suggestionTimestamp: { default: null },
 			suggestionDiscussionId: { default: null },
-			...attrSpecs,
+			suggestionOriginalMarks: { default: null },
 		},
 		inclusive: false,
 		parseDOM: [
 			{
-				tag: 'span',
+				tag: 'span[data-suggestion-mark]',
 				getAttrs: (element: string | HTMLElement) => {
 					if (
 						element instanceof HTMLElement &&
-						element.hasAttribute(`data-suggestion-${kind}`)
+						element.hasAttribute(`data-suggestion-mark`)
 					) {
 						return {
-							...mapObject(extraAttrs, (attr) => element.getAttribute(attr.dataKey)),
+							suggestionKind: element.getAttribute('data-suggestion-kind'),
 							suggestionId: element.getAttribute('data-suggestion-id'),
 							suggestionUserId: element.getAttribute('data-suggestion-user-id'),
 							suggestionTimestamp: element.getAttribute('data-suggestion-timestamp'),
 							suggestionDiscussionId: element.getAttribute(
 								'data-suggestion-discussion-id',
+							),
+							suggestionOriginalMarks: element.getAttribute(
+								'data-suggestion-original-marks',
 							),
 						};
 					}
@@ -50,34 +50,20 @@ const createSuggestionMark = (
 			},
 		],
 		toDOM: (node) => {
-			const moreAttrs: Record<string, any> = {};
-			Object.entries(extraAttrs).forEach(([key, { dataKey }]) => {
-				moreAttrs[dataKey] = node.attrs[key];
-			});
 			return [
 				'span',
 				{
-					[`data-suggestion-${kind}`]: true,
+					'data-suggestion-mark': true,
+					'data-suggestion-kind': node.attrs.suggestionKind,
 					'data-suggestion-id': node.attrs.suggestionId,
 					'data-suggestion-user-id': node.attrs.suggestionUserId,
 					'data-suggestion-timestamp': node.attrs.suggestionTimestamp,
 					'data-suggestion-discussion-id': node.attrs.suggestionDiscussionId,
-					...moreAttrs,
+					'data-suggestion-original-marks': node.attrs.suggestionOriginalMarks,
 				},
 			];
 		},
-	};
-};
-
-export const marks: Record<string, MarkSpec> = {
-	suggestion_addition: createSuggestionMark('addition'),
-	suggestion_removal: createSuggestionMark('removal'),
-	suggestion_modification: createSuggestionMark('modification', {
-		originalMarks: {
-			dataKey: 'data-original-marks',
-			spec: { default: null },
-		},
-	}),
+	},
 };
 
 export const amendNodeSpecWithSuggestedEdits = (nodeKey: string, nodeSpec: NodeSpec): NodeSpec => {
