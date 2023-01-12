@@ -20,6 +20,12 @@ export type SuggestedEditsTransactionContext = {
 		to: number,
 		suggestionKind: SuggestionKind,
 	) => void;
+	removeSuggestionFromRange: (
+		tr: Transaction,
+		from: number,
+		to: number,
+		suggestionKind: SuggestionKind,
+	) => void;
 	addSuggestionToNode: (
 		tr: Transaction,
 		pos: number,

@@ -47,7 +47,7 @@ export const indicateTextAndStructureChanges = (
 	newTransaction: Transaction,
 	context: SuggestedEditsTransactionContext,
 ) => {
-	const { addSuggestionToNode, addSuggestionToRange } = context;
+	const { addSuggestionToNode, addSuggestionToRange, removeSuggestionFromRange } = context;
 	// prosemirror-changeset will provide a list of Change objects which contain:
 	// - a range (fromB, toB) which represents newly-changed content in the document
 	// - a corresponding range (fromA, toA) in the old document.
@@ -68,6 +68,9 @@ export const indicateTextAndStructureChanges = (
 		// First mark all inline content in the change range. This will affect things like text,
 		// citations, and footnotes that live inside a single paragraph.
 		addSuggestionToRange(newTransaction, fromB, toB, 'addition');
+		// We also need to remove any removal marks from this range
+		// (They might sneak in via copy-paste)
+		removeSuggestionFromRange(newTransaction, fromB, toB, 'removal');
 		// Now look at the _nodes_ that were created in that range...
 		newTransaction.doc.nodesBetween(fromB, toB, (node: Node, pos: number) => {
 			// If the node's position is in the range, it was just created.

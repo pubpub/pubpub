@@ -20,6 +20,7 @@ export const createSuggestedEditsTransactionContext = (
 		nodeHasSuggestionKind,
 		createMarkForSuggestionKind: baseCreateMarkForSuggestionKind,
 		suggestionUserId,
+		getMarkTypeForSuggestionKind,
 	} = pluginState;
 	const suggestionBaseAttrs: Pick<
 		SuggestionAttrs,
@@ -48,6 +49,15 @@ export const createSuggestedEditsTransactionContext = (
 		addSuggestionToRange: (tr: Transaction, from: number, to: number, kind: SuggestionKind) => {
 			const mark = createMarkForSuggestionKind(kind);
 			tr.addMark(from, to, mark);
+		},
+		removeSuggestionFromRange: (
+			tr: Transaction,
+			from: number,
+			to: number,
+			kind: SuggestionKind,
+		) => {
+			const markType = getMarkTypeForSuggestionKind(kind);
+			tr.removeMark(from, to, markType);
 		},
 		addSuggestionToNode: (
 			tr: Transaction,
