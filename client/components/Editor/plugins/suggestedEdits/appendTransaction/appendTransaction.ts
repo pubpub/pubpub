@@ -8,7 +8,6 @@ import { createSuggestedEditsTransactionContext } from '../context';
 import { indicateMarkChanges } from './marks';
 import { mapSelectionThroughTransaction } from './selection';
 import { indicateTextAndStructureChanges } from './textAndStructure';
-import { getSuggestionRanges } from '../ranges';
 
 // TODO: we should be using the history and collab plugin PluginKeys here
 const excludedMeta = ['history$', 'collab$', idsPluginKey, 'appendedTransaction'];
@@ -37,7 +36,6 @@ export const appendTransaction = (
 			indicateAttributeChanges(context);
 			mapSelectionThroughTransaction(newTransaction, newState.selection);
 			if (newTransaction.docChanged) {
-				console.log(getSuggestionRanges(newTransaction.doc));
 				return newTransaction;
 			}
 		}

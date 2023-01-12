@@ -23,7 +23,7 @@ export const marks: Record<string, MarkSpec> = {
 			suggestionDiscussionId: { default: null },
 			suggestionOriginalMarks: { default: null },
 		},
-		inclusive: false,
+		inclusive: true,
 		parseDOM: [
 			{
 				tag: 'span[data-suggestion-mark]',
