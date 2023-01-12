@@ -1,8 +1,8 @@
 import { Fragment, Mark, Node, Slice } from 'prosemirror-model';
-import { Transaction } from 'prosemirror-state';
 import { AddMarkStep, RemoveMarkStep } from 'prosemirror-transform';
 
 import { SuggestedEditsTransactionContext } from '../types';
+import { createMarkForSuggestionKind, nodeHasSuggestion } from '../operations';
 
 const createGetOriginalMarksForStep = (step: AddMarkStep | RemoveMarkStep) => {
 	const { mark: changedMark } = step;
@@ -30,10 +30,15 @@ const maybeApplyModifiedMarkToNode = (
 	getOriginalMarks: GetOriginalMarks,
 	context: SuggestedEditsTransactionContext,
 ) => {
-	const { nodeHasSuggestion, createMarkForSuggestionKind } = context;
+	const { transactionAttrs, schema } = context;
 	if (!nodeHasSuggestion(node)) {
 		const originalMarks = getOriginalMarks(node);
-		const newMark = createMarkForSuggestionKind('modification', originalMarks);
+		const newMark = createMarkForSuggestionKind(
+			'modification',
+			schema,
+			transactionAttrs,
+			originalMarks,
+		);
 		return node.mark([...node.marks, newMark]);
 	}
 	return node;
@@ -68,11 +73,8 @@ const getMarkedModifiedSlice = (
 	return new Slice(markedContent, openStart, openEnd);
 };
 
-export const indicateMarkChanges = (
-	existingTransactions: readonly Transaction[],
-	newTransaction: Transaction,
-	context: SuggestedEditsTransactionContext,
-) => {
+export const indicateMarkChanges = (context: SuggestedEditsTransactionContext) => {
+	const { existingTransactions, newTransaction } = context;
 	// Detect marks that have been added to the document (prosemirror-changeset doesn't do this)
 	// and apply an additional "yellow" changed mark over these.
 	existingTransactions.forEach((txn) => {

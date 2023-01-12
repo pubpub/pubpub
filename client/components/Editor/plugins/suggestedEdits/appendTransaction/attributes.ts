@@ -1,8 +1,8 @@
 import { Node } from 'prosemirror-model';
-import { Transaction } from 'prosemirror-state';
 import { AttrStep, ReplaceAroundStep, ReplaceStep, Step } from 'prosemirror-transform';
 
 import { SuggestedEditsTransactionContext } from '../types';
+import { addSuggestionToNode, nodeHasSuggestion } from '../operations';
 
 const getModifiedNodeInfo = (
 	step: Step,
@@ -55,14 +55,10 @@ const getModifiedNodeInfo = (
 	return null;
 };
 
-export const indicateAttributeChanges = (
-	existingTransactions: readonly Transaction[],
-	newTransaction: Transaction,
-	context: SuggestedEditsTransactionContext,
-) => {
+export const indicateAttributeChanges = (context: SuggestedEditsTransactionContext) => {
+	const { existingTransactions, newTransaction } = context;
 	// Look for nodes whose attributes were changed in this transaction and mark them with a
 	// "yellow" modified suggestionKind attribute -- assuming they're not already in a suggestion.
-	const { nodeHasSuggestion, addSuggestionToNode } = context;
 	existingTransactions.forEach((txn) => {
 		const { steps } = txn;
 		steps.forEach((step, index) => {
@@ -74,10 +70,10 @@ export const indicateAttributeChanges = (
 				const nodeInCurrentDoc = newTransaction.doc.nodeAt(posInCurrentDoc);
 				if (nodeInCurrentDoc && !nodeHasSuggestion(nodeInCurrentDoc)) {
 					addSuggestionToNode(
-						newTransaction,
+						'modification',
+						context,
 						posInCurrentDoc,
 						nodeInCurrentDoc,
-						'modification',
 						nodeBeforeStep.attrs,
 					);
 				}
