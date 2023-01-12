@@ -11,15 +11,15 @@ const createGetOriginalMarksForStep = (step: AddMarkStep | RemoveMarkStep) => {
 		const { marks } = node;
 		// If we removed a mark this step...
 		if (step instanceof RemoveMarkStep) {
-			if (!marks.some((mark) => mark.eq(changedMark))) {
+			if (!changedMark.isInSet(marks)) {
 				// We want to add it back to the list of original marks
-				return [...marks, changedMark];
+				return changedMark.addToSet(marks);
 			}
 			// That is, unless, it was already there.
 			return marks;
 		}
 		// If we added a mark this step, we want to remove it from the list of original marks
-		return marks.filter((m) => !m.eq(changedMark));
+		return changedMark.removeFromSet(marks);
 	};
 };
 
