@@ -30,6 +30,33 @@ const createSuggestionUniqueAttrs = (): SuggestionUniqueAttrs => {
 	};
 };
 
+const findJoinableSuggestionMarkForRange = (
+	suggestionKind: SuggestionKind,
+	context: SuggestedEditsTransactionContext,
+	from: number,
+	to: number,
+	withinMinutes: number = 60,
+) => {
+	const {
+		schema,
+		transactionAttrs: { suggestionTimestamp, suggestionUserId },
+		newTransaction: { doc },
+	} = context;
+	const matchingMarkType = getMarkTypeForSuggestionKind(schema, suggestionKind);
+	const pos = suggestionKind === 'addition' ? from : to;
+	const { nodeBefore, nodeAfter } = doc.resolve(pos);
+	const resolvedNode = suggestionKind === 'addition' ? nodeBefore : nodeAfter;
+	const matchingMark = resolvedNode?.marks?.find((mark) => {
+		return (
+			mark.type === matchingMarkType &&
+			// eslint-disable-next-line eqeqeq
+			mark.attrs.suggestionUserId == suggestionUserId &&
+			suggestionTimestamp - mark.attrs.suggestionTimestamp < 1000 * 60 * withinMinutes
+		);
+	});
+	return matchingMark ?? null;
+};
+
 export const nodeHasSuggestion = (node: Node) => {
 	const {
 		type: { schema },
@@ -57,7 +84,7 @@ export const nodeHasSuggestionKind = (node: Node, kind: SuggestionKind) => {
 	return node.marks.some((mark) => mark.type === markForKind);
 };
 
-export const createMarkForSuggestionKind = (
+export const createSuggestionMark = (
 	suggestionKind: SuggestionKind,
 	schema: Schema,
 	transactionAttrs: SuggestionAttrsPerTransaction,
@@ -87,8 +114,10 @@ export const addSuggestionToRange = (
 	to: number,
 ) => {
 	const { newTransaction, transactionAttrs, schema } = context;
-	const newMark = createMarkForSuggestionKind(suggestionKind, schema, transactionAttrs);
-	newTransaction.addMark(from, to, newMark);
+	const mark =
+		findJoinableSuggestionMarkForRange(suggestionKind, context, from, to) ||
+		createSuggestionMark(suggestionKind, schema, transactionAttrs);
+	newTransaction.addMark(from, to, mark);
 };
 
 export const removeSuggestionFromRange = (
