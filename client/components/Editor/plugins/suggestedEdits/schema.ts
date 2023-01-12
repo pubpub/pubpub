@@ -162,17 +162,17 @@ export const amendNodeSpecWithSuggestedEdits = (nodeKey: string, nodeSpec: NodeS
 			});
 			if (Array.isArray(domOutputSpec)) {
 				const [tagEntry, maybeAttrsEntry, ...restEntries] = domOutputSpec;
-				if (maybeAttrsEntry) {
-					if (typeof maybeAttrsEntry === 'object' && !Array.isArray(maybeAttrsEntry)) {
-						return [
-							tagEntry,
-							{ ...maybeAttrsEntry, ...suggestionAttrs },
-							...restEntries,
-						];
-					}
-					return [tagEntry, suggestionAttrs, maybeAttrsEntry, ...restEntries];
+				if (
+					maybeAttrsEntry &&
+					typeof maybeAttrsEntry === 'object' &&
+					!Array.isArray(maybeAttrsEntry)
+				) {
+					return [tagEntry, { ...maybeAttrsEntry, ...suggestionAttrs }, ...restEntries];
 				}
-				return [tagEntry, suggestionAttrs, ...restEntries];
+				return [tagEntry, suggestionAttrs, maybeAttrsEntry, ...restEntries].filter(
+					// 0 is a hole for child content so we need to preserve it
+					(entry) => entry === 0 || !!entry,
+				);
 			}
 			return domOutputSpec;
 		},
