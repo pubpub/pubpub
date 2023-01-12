@@ -7,6 +7,7 @@ import { suggestionNodeAttributes } from './schema';
 import {
 	SuggestedEditsTransactionContext,
 	SuggestionAttrsPerTransaction,
+	SuggestionBaseAttrs,
 	SuggestionKind,
 	SuggestionMarkAttrs,
 	SuggestionNodeAttrs,
@@ -46,16 +47,28 @@ const findJoinableSuggestionMarkForRange = (
 	return matchingMark ?? null;
 };
 
-export const getSuggestionMarkFromSchema = (schema: Schema) => {
+export const getSuggestionMarkTypeFromSchema = (schema: Schema) => {
 	return schema.marks.suggestion;
 };
 
-export const nodeHasSuggestion = (node: Node) => {
+export const getSuggestionAttrsForNode = (node: Node): null | SuggestionBaseAttrs => {
 	const {
 		type: { schema },
 	} = node;
-	const suggestionMark = getSuggestionMarkFromSchema(schema);
-	return !!node.attrs.suggestionKind || node.marks.some((mark) => mark.type === suggestionMark);
+	if (node.attrs.suggestionKind) {
+		return node.attrs as SuggestionBaseAttrs;
+	}
+	const suggestionMarkType = getSuggestionMarkTypeFromSchema(schema);
+	const suggestionMark = node.marks.find((mark) => mark.type === suggestionMarkType);
+	if (suggestionMark) {
+		return suggestionMark.attrs as SuggestionBaseAttrs;
+	}
+	return null;
+};
+
+export const getSuggestionKindForNode = (node: Node): null | SuggestionKind => {
+	const suggestionAttrs = getSuggestionAttrsForNode(node);
+	return suggestionAttrs?.suggestionKind ?? null;
 };
 
 export const nodeHasSuggestionKind = (node: Node, kind: SuggestionKind) => {
@@ -65,7 +78,7 @@ export const nodeHasSuggestionKind = (node: Node, kind: SuggestionKind) => {
 	if (node.attrs.suggestionKind === kind) {
 		return true;
 	}
-	const suggestionMark = getSuggestionMarkFromSchema(schema);
+	const suggestionMark = getSuggestionMarkTypeFromSchema(schema);
 	return node.marks.some(
 		(mark) => mark.type === suggestionMark && mark.attrs.suggestionKind === kind,
 	);

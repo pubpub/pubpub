@@ -1,4 +1,4 @@
-import { MarkType } from 'prosemirror-model';
+import { MarkType, Slice } from 'prosemirror-model';
 import { Transaction } from 'prosemirror-state';
 
 import { suggestionNodeAttributes } from './schema';
@@ -42,3 +42,36 @@ export type SuggestedEditsTransactionContext = {
 	transactionAttrs: SuggestionAttrsPerTransaction;
 	suggestionMark: MarkType;
 };
+
+export type BaseSuggestionRange = {
+	suggestionAttrs: SuggestionBaseAttrs;
+	from: number;
+	to: number;
+};
+
+export type AdditionSuggestionRange = BaseSuggestionRange & {
+	kind: 'addition';
+	slice: Slice;
+};
+
+export type RemovalSuggestionRange = BaseSuggestionRange & {
+	kind: 'removal';
+	slice: Slice;
+};
+
+export type ReplacementSuggestionRange = BaseSuggestionRange & {
+	kind: 'replacement';
+	order: 'removal-addition' | 'addition-removal';
+	slices: [Slice, Slice];
+};
+
+export type ModificationSuggestionRange = BaseSuggestionRange & {
+	kind: 'modification';
+	slice: Slice;
+};
+
+export type SuggestionRange =
+	| AdditionSuggestionRange
+	| RemovalSuggestionRange
+	| ReplacementSuggestionRange
+	| ModificationSuggestionRange;

@@ -99,7 +99,9 @@ export const indicateTextAndStructureChanges = (context: SuggestedEditsTransacti
 			// Add the net removal slice back in...
 			newTransaction.replace(newStart, newStart, netRemovalSlice);
 			// Now mark it as a suggested removal...
-			addSuggestionToRange('removal', context, newStart, removalEnd);
+			if (newStart < removalEnd) {
+				addSuggestionToRange('removal', context, newStart, removalEnd);
+			}
 			// And do the same things to its constituent nodes, as we did above for additions.
 			newTransaction.doc.nodesBetween(newStart, removalEnd, (node: Node, pos: number) => {
 				if (pos >= newStart && pos <= removalEnd && node.isBlock) {

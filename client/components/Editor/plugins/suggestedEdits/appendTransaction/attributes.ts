@@ -2,7 +2,7 @@ import { Node } from 'prosemirror-model';
 import { AttrStep, ReplaceAroundStep, ReplaceStep, Step } from 'prosemirror-transform';
 
 import { SuggestedEditsTransactionContext } from '../types';
-import { addSuggestionToNode, nodeHasSuggestion } from '../operations';
+import { addSuggestionToNode, getSuggestionKindForNode } from '../operations';
 
 const getModifiedNodeInfo = (
 	step: Step,
@@ -68,7 +68,7 @@ export const indicateAttributeChanges = (context: SuggestedEditsTransactionConte
 				const { nodeBeforeStep, pos } = modifiedNodeInfo;
 				const posInCurrentDoc = newTransaction.mapping.map(pos);
 				const nodeInCurrentDoc = newTransaction.doc.nodeAt(posInCurrentDoc);
-				if (nodeInCurrentDoc && !nodeHasSuggestion(nodeInCurrentDoc)) {
+				if (nodeInCurrentDoc && !getSuggestionKindForNode(nodeInCurrentDoc)) {
 					addSuggestionToNode(
 						'modification',
 						context,
