@@ -162,10 +162,17 @@ export const amendNodeSpecWithSuggestedEdits = (nodeKey: string, nodeSpec: NodeS
 			});
 			if (Array.isArray(domOutputSpec)) {
 				const [tagEntry, maybeAttrsEntry, ...restEntries] = domOutputSpec;
-				if (maybeAttrsEntry && typeof maybeAttrsEntry === 'object') {
-					return [tagEntry, { ...maybeAttrsEntry, ...suggestionAttrs }, ...restEntries];
+				if (maybeAttrsEntry) {
+					if (typeof maybeAttrsEntry === 'object' && !Array.isArray(maybeAttrsEntry)) {
+						return [
+							tagEntry,
+							{ ...maybeAttrsEntry, ...suggestionAttrs },
+							...restEntries,
+						];
+					}
+					return [tagEntry, suggestionAttrs, maybeAttrsEntry, ...restEntries];
 				}
-				return [tagEntry, suggestionAttrs, maybeAttrsEntry, ...restEntries];
+				return [tagEntry, suggestionAttrs, ...restEntries];
 			}
 			return domOutputSpec;
 		},
