@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { MinimalEditor } from 'components';
-import { plainDoc } from 'utils/storybook/data';
+import { fullDoc } from 'utils/storybook/data';
 
 const wrapperStyle = { margin: '1em', padding: '20px', border: '1px solid #CCC' };
 
@@ -12,7 +12,7 @@ storiesOf('components/MinimalEditor', module).add('default', () => (
 				getButtons={(buttons) => buttons.fullButtonSet}
 				useFormattingBar={true}
 				placeholder="Type here"
-				initialContent={plainDoc}
+				initialContent={fullDoc}
 			/>
 		</div>
 	</div>
