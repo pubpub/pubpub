@@ -23,9 +23,10 @@ export default (schema: Schema, options: PluginsOptions) => {
 				newState: EditorState,
 			) => {
 				const meta = tr.getMeta(suggestedEditsPluginKey);
-				const suggestionRanges = tr.docChanged
-					? getSuggestionRanges(newState.doc)
-					: pluginState.suggestionRanges;
+				const suggestionRanges =
+					pluginState.isEnabled && tr.docChanged
+						? getSuggestionRanges(newState.doc)
+						: pluginState.suggestionRanges;
 				return {
 					...pluginState,
 					...meta?.updatedState,
