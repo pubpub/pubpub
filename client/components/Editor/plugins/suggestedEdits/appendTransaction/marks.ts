@@ -52,12 +52,12 @@ const getMarkedModifiedFragment = (
 	const children: Node[] = [];
 	for (let i = 0; i < fragment.childCount; i++) {
 		const child = fragment.child(i);
-		const newChildFramgent = getMarkedModifiedFragment(
+		const newChildFragment = getMarkedModifiedFragment(
 			child.content,
 			getOriginalMarks,
 			context,
 		);
-		const newChild = child.copy(newChildFramgent);
+		const newChild = child.copy(newChildFragment);
 		children.push(maybeApplyModifiedMarkToNode(newChild, getOriginalMarks, context));
 	}
 	return Fragment.from(children);

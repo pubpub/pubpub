@@ -4,7 +4,7 @@ import { EditorState } from 'prosemirror-state';
 import { Dispatch } from '../../commands';
 import { getSuggestionMarkTypeFromSchema } from './operations';
 
-import { suggestedEditsPluginKey } from './plugin';
+import { suggestedEditsPluginKey } from './key';
 import { SuggestedEditsPluginState } from './types';
 
 export const getInitialPluginState = (
@@ -15,6 +15,7 @@ export const getInitialPluginState = (
 		suggestionUserId,
 		isEnabled: false,
 		suggestionMark: getSuggestionMarkTypeFromSchema(schema),
+		suggestionRanges: [],
 	};
 };
 

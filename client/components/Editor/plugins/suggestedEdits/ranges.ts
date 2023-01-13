@@ -20,11 +20,7 @@ type RawSuggestionRange = {
 
 type SimpleSuggestionRange = Exclude<SuggestionRange, ReplacementSuggestionRange>;
 
-export const getRawSuggestionRanges = (
-	doc: Node,
-	from: number = 0,
-	to: number = doc.nodeSize - 2,
-) => {
+const getRawSuggestionRanges = (doc: Node, from: number = 0, to: number = doc.nodeSize - 2) => {
 	const ranges: RawSuggestionRange[] = [];
 	doc.nodesBetween(from, to, (node: Node, pos: number) => {
 		const suggestionAttrs = getSuggestionAttrsForNode(node);

@@ -34,6 +34,7 @@ export type SuggestedEditsPluginState = {
 	isEnabled: boolean;
 	suggestionUserId: string;
 	suggestionMark: MarkType;
+	suggestionRanges: SuggestionRange[];
 };
 
 export type SuggestedEditsTransactionContext = {

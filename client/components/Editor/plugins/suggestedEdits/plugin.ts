@@ -1,13 +1,13 @@
 import { Schema } from 'prosemirror-model';
-import { Plugin, PluginKey, Transaction } from 'prosemirror-state';
+import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 
 import { PluginsOptions } from '../..';
 
 import { SuggestedEditsPluginState } from './types';
 import { getInitialPluginState } from './state';
 import { appendTransaction } from './appendTransaction';
-
-export const suggestedEditsPluginKey = new PluginKey('suggested-edits');
+import { suggestedEditsPluginKey } from './key';
+import { getSuggestionRanges } from './ranges';
 
 export default (schema: Schema, options: PluginsOptions) => {
 	const { collaborativeOptions } = options;
@@ -16,15 +16,21 @@ export default (schema: Schema, options: PluginsOptions) => {
 		appendTransaction,
 		state: {
 			init: () => getInitialPluginState(schema, collaborativeOptions?.clientData?.id!),
-			apply: (tr: Transaction, pluginState: SuggestedEditsPluginState) => {
+			apply: (
+				tr: Transaction,
+				pluginState: SuggestedEditsPluginState,
+				_,
+				newState: EditorState,
+			) => {
 				const meta = tr.getMeta(suggestedEditsPluginKey);
-				if (meta?.updatedState) {
-					return {
-						...pluginState,
-						...meta.updatedState,
-					};
-				}
-				return pluginState;
+				const suggestionRanges = tr.docChanged
+					? getSuggestionRanges(newState.doc)
+					: pluginState.suggestionRanges;
+				return {
+					...pluginState,
+					...meta?.updatedState,
+					suggestionRanges,
+				};
 			},
 		},
 	});

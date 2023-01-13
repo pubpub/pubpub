@@ -8,9 +8,16 @@ import { createSuggestedEditsTransactionContext } from '../context';
 import { indicateMarkChanges } from './marks';
 import { mapSelectionThroughTransaction } from './selection';
 import { indicateTextAndStructureChanges } from './textAndStructure';
+import { suggestedEditsPluginKey } from '../key';
 
 // TODO: we should be using the history and collab plugin PluginKeys here
-const excludedMeta = ['history$', 'collab$', idsPluginKey, 'appendedTransaction'];
+const excludedMeta = [
+	'history$',
+	'collab$',
+	idsPluginKey,
+	suggestedEditsPluginKey,
+	'appendedTransaction',
+];
 
 const shouldExamineTransaction = (tr: Transaction) => {
 	return tr.docChanged && !excludedMeta.some((meta) => !!tr.getMeta(meta));
@@ -35,9 +42,7 @@ export const appendTransaction = (
 			indicateMarkChanges(context);
 			indicateAttributeChanges(context);
 			mapSelectionThroughTransaction(newTransaction, newState.selection);
-			if (newTransaction.docChanged) {
-				return newTransaction;
-			}
+			return newTransaction;
 		}
 	}
 	return null;

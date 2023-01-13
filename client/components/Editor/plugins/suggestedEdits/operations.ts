@@ -93,7 +93,7 @@ export const createSuggestionMark = (
 	const originalMarksAttrs = withValue(suggestionOriginalMarks, (marks) => {
 		if (marks) {
 			const asJson = marks.map((mark) => mark.toJSON());
-			return { originalMarks: JSON.stringify(asJson) };
+			return { suggestionOriginalMarks: JSON.stringify(asJson) };
 		}
 		return {};
 	});

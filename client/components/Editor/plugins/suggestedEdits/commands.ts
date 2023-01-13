@@ -1,12 +1,16 @@
 import { Command, EditorState } from 'prosemirror-state';
 
 import { Dispatch, createCommandSpec } from '../../commands';
-import { suggestedEditsPluginKey } from './plugin';
 
-import { isSuggestedEditsEnabled, updateSuggestedEditsState } from './state';
+import {
+	isSuggestedEditsEnabled,
+	getSuggestedEditsState,
+	updateSuggestedEditsState,
+} from './state';
+import { acceptSuggestedEdits, rejectSuggestedEdits } from './resolve';
 
 const toggleSuggestedEditsCommand: Command = (state: EditorState, dispatch?: Dispatch) => {
-	const pluginState = suggestedEditsPluginKey.getState(state);
+	const pluginState = getSuggestedEditsState(state);
 	if (pluginState) {
 		if (dispatch) {
 			updateSuggestedEditsState(dispatch, state, { isEnabled: !pluginState.isEnabled });
@@ -16,11 +20,27 @@ const toggleSuggestedEditsCommand: Command = (state: EditorState, dispatch?: Dis
 	return false;
 };
 
-export const toggleSuggestedEdits = createCommandSpec((dispatch, state) => {
+export const toggleSuggestedEditsSpec = createCommandSpec((dispatch, state) => {
 	const isEnabled = isSuggestedEditsEnabled(state);
 	return {
 		isActive: isEnabled,
 		canRun: toggleSuggestedEditsCommand(state),
 		run: () => toggleSuggestedEditsCommand(state, dispatch),
+	};
+});
+
+export const acceptSuggestedEditSpec = createCommandSpec((dispatch, state) => {
+	return {
+		isActive: false,
+		canRun: acceptSuggestedEdits(state),
+		run: () => acceptSuggestedEdits(state, dispatch),
+	};
+});
+
+export const rejectSuggestedEditSpec = createCommandSpec((dispatch, state) => {
+	return {
+		isActive: false,
+		canRun: rejectSuggestedEdits(state),
+		run: () => rejectSuggestedEdits(state, dispatch),
 	};
 });
