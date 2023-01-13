@@ -9,7 +9,7 @@ import { getSuggestedEditsState } from './state';
 import { SuggestionMarkAttrs, SuggestionNodeAttrs } from './types';
 import { suggestionNodeAttributes } from './schema';
 
-const getResolvableRangeForPointSelection = (
+const getResolvableRangeForSelection = (
 	state: EditorState,
 ): null | { from: number; to: number } => {
 	const { selection } = state;
@@ -125,7 +125,7 @@ const rejectSuggestions = (state: EditorState, from: number, to: number) => {
 };
 
 export const acceptSuggestedEdits = (state: EditorState, dispatch?: Dispatch): boolean => {
-	const range = getResolvableRangeForPointSelection(state);
+	const range = getResolvableRangeForSelection(state);
 	if (range) {
 		const tr = acceptSuggestions(state, range.from, range.to);
 		if (dispatch) {
@@ -137,7 +137,7 @@ export const acceptSuggestedEdits = (state: EditorState, dispatch?: Dispatch): b
 };
 
 export const rejectSuggestedEdits = (state: EditorState, dispatch?: Dispatch): boolean => {
-	const range = getResolvableRangeForPointSelection(state);
+	const range = getResolvableRangeForSelection(state);
 	if (range) {
 		const tr = rejectSuggestions(state, range.from, range.to);
 		if (dispatch) {
