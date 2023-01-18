@@ -1,25 +1,16 @@
-export default (sequelize, dataTypes) =>
-	sequelize.define(
-		'Integration',
-		{
-			id: sequelize.idType,
-			userId: { type: dataTypes.UUID, allowNull: false },
-			name: { type: dataTypes.TEXT },
-			authorizationType: { type: dataTypes.TEXT },
-			externalUserData: { type: dataTypes.JSONB },
-		},
-		{
-			classMethods: {
-				associate: (models) => {
-					const { User, Integration, IntegrationDataOAuth1 } = models;
-					Integration.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-					Integration.hasOne(IntegrationDataOAuth1, {
-						onDelete: 'CASCADE',
-						as: 'integrationData',
-						constraints: false,
-						foreignKey: 'integrationId',
-					});
-				},
-			},
-		},
-	);
+const Integration = (sequelize, dataTypes) =>
+	sequelize.define('Integration', {
+		name: { type: dataTypes.TEXT },
+		authSchemeName: { type: dataTypes.ENUM('OAuth1', 'Basic') },
+		externalUserData: { type: dataTypes.JSONB },
+	});
+
+Integration.prototype.getIntegrationData = function (options) {
+	return this[
+		'getIntegrationData' +
+			this.get('authSchemaName')[0].toUpperCase() +
+			this.get('authSchemaName').substr(1)
+	](options);
+};
+
+export default Integration;

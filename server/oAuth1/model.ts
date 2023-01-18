@@ -4,8 +4,6 @@ export default (sequelize, dataTypes) =>
 		{
 			id: sequelize.idType,
 			userId: { type: dataTypes.UUID, allowNull: false },
-			externalUserId: { type: dataTypes.TEXT, allowNull: false },
-			externalUsername: { type: dataTypes.TEXT, allowNull: false },
 			integrationId: { type: dataTypes.UUID, allowNull: false },
 			accessToken: { type: dataTypes.TEXT },
 		},

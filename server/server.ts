@@ -21,8 +21,7 @@ setAppCommit(process.env.HEROKU_SLUG_COMMIT);
 import 'server/utils/serverModuleOverwrite';
 import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
 
-import { sequelize, User, IntegrationDataOAuth1, Integration } from './models';
-import { createIntegrationDataOAuth1 } from './integrationDataOAuth1/queries';
+import { sequelize, User, Integration, IntegrationDataOAuth1 } from './models';
 import './hooks';
 
 // Wrapper for app.METHOD() handlers. Though we need this to properly catch errors in handlers that
@@ -124,26 +123,42 @@ passport.use(
 			passReqToCallback: true,
 		},
 		(req, token, tokenSecret, params, profile, cb) => {
-			const { user } = req;
-			const { id: userId } = user;
+			const userId = req.user.id;
 			const { username: externalUsername, userID: externalUserId } = params;
-			return Promise.all([
-				IntegrationDataOAuth1.findOne({ where: { userId } }),
-				Integration.findOne({ where: { name: 'zotero' } }),
-			])
-				.then(
-					([oldLoginData, integration]) =>
-						oldLoginData ||
-						createIntegrationDataOAuth1({
-							userId,
-							externalUsername,
-							externalUserId,
-							integrationId: integration.id,
-							accessToken: token,
-						}),
-				)
-				.then(() => {
-					cb(null, user);
+			const externalUserData = {
+				externalUserId,
+				externalUsername,
+			};
+			const integrationDataOAuth1 = {
+				userId,
+				accessToken: token,
+			};
+			return User.findOne({
+				where: { userId },
+				include: {
+					model: Integration,
+					where: { name: 'zotero' },
+					include: { model: IntegrationDataOAuth1 },
+				},
+			})
+				.then((user) => {
+					if (!user.integrations.length) {
+						return user.createIntegration({
+							name: 'zotero',
+							authSchemeName: 'OAuth1',
+							externalUserData,
+							integrationDataOAuth1,
+						});
+					}
+					const integration = user.integrations[0];
+					return integration
+						.getIntegrationData()
+						.then((oldData) => oldData.update(integrationDataOAuth1))
+						.then(() => integration);
+				})
+				.then((integration) => {
+					console.log({ integration });
+					cb(null, req.user);
 				})
 				.catch((err) => cb(err));
 		},
