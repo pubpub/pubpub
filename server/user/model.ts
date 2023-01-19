@@ -58,7 +58,7 @@ export default (sequelize, dataTypes) => {
 		{
 			classMethods: {
 				associate: (models) => {
-					const { PubAttribution, Discussion, UserNotificationPreferences, Integration } =
+					const { PubAttribution, Discussion, UserNotificationPreferences, integration } =
 						models;
 					User.hasMany(PubAttribution, {
 						onDelete: 'CASCADE',
@@ -75,11 +75,7 @@ export default (sequelize, dataTypes) => {
 						as: 'userNotificationPreferences',
 						foreignKey: 'userId',
 					});
-					User.hasMany(Integration, {
-						onDelete: 'CASCADE',
-						as: 'integrations',
-						foreignKey: 'userId',
-					});
+					User.hasMany(integration);
 				},
 			},
 		},

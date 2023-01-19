@@ -1,14 +1,16 @@
 export default (sequelize, dataTypes) =>
 	sequelize.define(
-		'IntegrationDataOAuth1',
+		'integrationDataOAuth1',
 		{
 			accessToken: { type: dataTypes.TEXT },
 		},
 		{
+			tableName: 'IntegrationDataOAuth1',
+			freezeTableName: true, // prevents sequelize pluralizing table name
 			classMethods: {
 				associate: (models) => {
-					const { IntegrationDataOAuth1, Integration } = models;
-					IntegrationDataOAuth1.belongsTo(Integration, {
+					const { integrationDataOAuth1, integration } = models;
+					integrationDataOAuth1.belongsTo(integration, {
 						scope: { authSchemeName: 'OAuth1' },
 					});
 				},
