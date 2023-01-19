@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/react';
 import { hydrate } from 'react-dom';
 import { FocusStyleManager } from '@blueprintjs/core';
 
