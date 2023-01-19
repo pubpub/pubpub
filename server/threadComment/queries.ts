@@ -2,7 +2,9 @@ import { ThreadComment, includeUserModel, Commenter } from 'server/models';
 import * as types from 'types';
 import { createCommenter } from '../commenter/queries';
 
-const findThreadCommentWithUser = (id) =>
+const findThreadCommentWithUser = (
+	id: string,
+): Promise<types.DefinitelyHas<types.ThreadComment, 'author' | 'commenter'>> =>
 	ThreadComment.findOne({
 		where: { id },
 		include: [includeUserModel({ as: 'author' }), { model: Commenter, as: 'commenter' }],
@@ -33,15 +35,15 @@ export const createThreadCommentWithUserOrCommenter = async (
 	return { threadCommentId: threadComment.id, commenterId: commenter?.id };
 };
 
-export type CreateThreadOptions = {
+export type CreateThreadCommentOptions = {
 	text: string;
 	content: types.DocJson;
 	threadId: string;
-	commenterName?: string;
-	userId?: string;
+	commenterName?: null | string;
+	userId?: null | string;
 };
 
-export const createThreadComment = async (options: CreateThreadOptions) => {
+export const createThreadComment = async (options: CreateThreadCommentOptions) => {
 	const { text, content, commenterName, threadId, userId } = options;
 
 	const user = userId || null;
@@ -52,8 +54,7 @@ export const createThreadComment = async (options: CreateThreadOptions) => {
 		threadId,
 	);
 
-	const threadCommentWithUser = await findThreadCommentWithUser(threadCommentId);
-	return threadCommentWithUser;
+	return findThreadCommentWithUser(threadCommentId);
 };
 
 export const updateThreadComment = (inputValues, updatePermissions) => {

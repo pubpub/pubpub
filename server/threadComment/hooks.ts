@@ -29,6 +29,7 @@ const createActivityItem = async (threadComment: types.ThreadComment) => {
 			await createPubReviewCommentAddedActivityItem(review.id, threadComment.id);
 		}
 	}
+	throw new Error(`Failed to find a parent for threadId=${threadComment.threadId}`);
 };
 
 ThreadComment.afterCreate(async (threadComment: types.ThreadComment) => {
