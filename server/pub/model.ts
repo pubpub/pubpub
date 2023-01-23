@@ -1,6 +1,6 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Pub',
+		'pub',
 		{
 			id: sequelize.idType,
 			slug: {
@@ -21,30 +21,29 @@ export default (sequelize, dataTypes) => {
 					len: [0, 280],
 				},
 			},
-			avatar: { type: dataTypes.TEXT },
+			avatar: dataTypes.TEXT,
 			headerStyle: {
 				type: dataTypes.ENUM,
 				values: ['white-blocks', 'black-blocks', 'dark', 'light'],
 				defaultValue: null,
 			},
-			headerBackgroundColor: { type: dataTypes.STRING },
-			headerBackgroundImage: { type: dataTypes.TEXT },
-			firstPublishedAt: { type: dataTypes.DATE },
-			lastPublishedAt: { type: dataTypes.DATE },
-			customPublishedAt: { type: dataTypes.DATE },
-			doi: { type: dataTypes.TEXT },
-			labels: { type: dataTypes.JSONB },
-			downloads: { type: dataTypes.JSONB },
-			metadata: { type: dataTypes.JSONB },
+			headerBackgroundColor: dataTypes.STRING,
+			headerBackgroundImage: dataTypes.TEXT,
+			firstPublishedAt: dataTypes.DATE,
+			lastPublishedAt: dataTypes.DATE,
+			customPublishedAt: dataTypes.DATE,
+			doi: dataTypes.TEXT,
+			labels: dataTypes.JSONB,
+			downloads: dataTypes.JSONB,
+			metadata: dataTypes.JSONB,
 			licenseSlug: { type: dataTypes.TEXT, defaultValue: 'cc-by' },
 			citationStyle: { type: dataTypes.TEXT, defaultValue: 'apa-7' },
 			citationInlineStyle: { type: dataTypes.TEXT, defaultValue: 'count' },
-			viewHash: { type: dataTypes.STRING },
-			editHash: { type: dataTypes.STRING },
-			reviewHash: { type: dataTypes.STRING },
-			commentHash: { type: dataTypes.STRING },
-			nodeLabels: { type: dataTypes.JSONB },
-
+			viewHash: dataTypes.STRING,
+			editHash: dataTypes.STRING,
+			reviewHash: dataTypes.STRING,
+			commentHash: dataTypes.STRING,
+			nodeLabels: dataTypes.JSONB,
 			pubEdgeListingDefaultsToCarousel: {
 				type: dataTypes.BOOLEAN,
 				defaultValue: true,
@@ -59,98 +58,70 @@ export default (sequelize, dataTypes) => {
 				type: dataTypes.DATE,
 				allowNull: true,
 			},
-
-			/* Set by Associations */
-			draftId: { type: dataTypes.UUID, allowNull: false },
-			communityId: { type: dataTypes.UUID, allowNull: false },
 		},
 		{
+			tableName: 'Pubs',
 			indexes: [{ fields: ['communityId'], method: 'BTREE' }],
 			classMethods: {
 				associate: (models) => {
 					const {
-						CollectionPub,
-						Community,
-						CrossrefDepositRecord,
-						Discussion,
-						Export,
-						Member,
-						Pub,
-						PubAttribution,
-						PubEdge,
-						PubVersion,
-						Release,
-						ReviewNew,
-						ScopeSummary,
-						Submission,
+						collectionPub,
+						community,
+						crossrefDepositRecord,
+						draft,
+						discussion,
+						landingPageFeature,
+						member,
+						pub,
+						pubAttribution,
+						pubEdge,
+						pubVersion,
+						release,
+						reviewNew,
+						scopeSummary,
+						submission,
 					} = models;
-					Pub.hasMany(PubAttribution, {
+					pub.belongsTo(draft, { foreignKey: { allowNull: false } });
+					pub.hasMany(pubAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
 						foreignKey: 'pubId',
 					});
-					Pub.hasMany(CollectionPub, {
+					pub.hasMany(collectionPub, {
 						onDelete: 'CASCADE',
 						hooks: true,
-						as: 'collectionPubs',
-						foreignKey: 'pubId',
 					});
-					Pub.belongsTo(Community, {
+					pub.belongsTo(community, {
 						onDelete: 'CASCADE',
-						as: 'community',
-						foreignKey: 'communityId',
+						foreignKey: { allowNull: false },
 					});
-					Pub.hasMany(Discussion, {
-						onDelete: 'CASCADE',
-						as: 'discussions',
-						foreignKey: 'pubId',
-					});
-					Pub.hasMany(Export, {
-						as: 'exports',
-						foreignKey: 'pubId',
-					});
-					Pub.hasMany(ReviewNew, {
+					pub.hasMany(discussion, { onDelete: 'CASCADE' });
+					pub.hasMany(landingPageFeature, { onDelete: 'CASCADE' });
+					pub.hasMany(models.export);
+					pub.hasMany(reviewNew, {
 						onDelete: 'CASCADE',
 						as: 'reviews',
-						foreignKey: 'pubId',
 					});
-					Pub.hasMany(Member, {
+					pub.hasMany(member, {
 						onDelete: 'CASCADE',
 						as: 'members',
 						foreignKey: 'pubId',
 					});
-					Pub.hasMany(Release, {
-						onDelete: 'CASCADE',
-						as: 'releases',
-						foreignKey: 'pubId',
-					});
-					Pub.hasMany(PubVersion, {
-						onDelete: 'CASCADE',
-						as: 'pubVersions',
-						foreignKey: 'pubId',
-					});
-					Pub.hasMany(PubEdge, {
+					pub.hasMany(release, { onDelete: 'CASCADE' });
+					pub.hasMany(pubVersion, { onDelete: 'CASCADE' });
+					pub.hasMany(pubEdge, {
 						onDelete: 'CASCADE',
 						as: 'outboundEdges',
 						foreignKey: 'pubId',
 					});
-					Pub.hasMany(PubEdge, {
+					pub.hasMany(pubEdge, {
 						onDelete: 'CASCADE',
 						as: 'inboundEdges',
 						foreignKey: 'targetPubId',
 					});
-					Pub.hasOne(Submission, {
-						as: 'submission',
-						foreignKey: 'pubId',
-					});
-					Pub.belongsTo(CrossrefDepositRecord, {
-						as: 'crossrefDepositRecord',
-						foreignKey: 'crossrefDepositRecordId',
-					});
-					Pub.belongsTo(ScopeSummary, {
-						as: 'scopeSummary',
-						foreignKey: 'scopeSummaryId',
-					});
+					pub.hasOne(submission);
+					pub.belongsTo(crossrefDepositRecord);
+					pub.belongsTo(scopeSummary);
 				},
 			},
 		},

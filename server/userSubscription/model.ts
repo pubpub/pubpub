@@ -1,15 +1,13 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'UserSubscription',
+		'userSubscription',
 		{
 			id: sequelize.idType,
 			setAutomatically: { type: dataTypes.BOOLEAN, allowNull: false },
 			status: { type: dataTypes.STRING, allowNull: false },
-			userId: { type: dataTypes.UUID, allowNull: false },
-			pubId: { type: dataTypes.UUID },
-			threadId: { type: dataTypes.UUID },
 		},
 		{
+			tableName: 'UserSubscriptions',
 			indexes: [
 				{ fields: ['userId'], method: 'BTREE' },
 				{ fields: ['pubId'], method: 'BTREE' },
@@ -17,21 +15,12 @@ export default (sequelize, dataTypes) => {
 			],
 			classMethods: {
 				associate: (models) => {
-					const { Pub, Thread, User, UserSubscription } = models;
-					UserSubscription.belongsTo(Pub, {
+					const { pub, thread, user, userSubscription } = models;
+					userSubscription.belongsTo(pub, { onDelete: 'CASCADE' });
+					userSubscription.belongsTo(thread, { onDelete: 'CASCADE' });
+					userSubscription.belongsTo(user, {
 						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
-					});
-					UserSubscription.belongsTo(Thread, {
-						onDelete: 'CASCADE',
-						as: 'thread',
-						foreignKey: 'threadId',
-					});
-					UserSubscription.belongsTo(User, {
-						onDelete: 'CASCADE',
-						as: 'user',
-						foreignKey: 'userId',
+						foreignKey: { allowNull: false },
 					});
 				},
 			},

@@ -1,19 +1,17 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Draft',
+		'draft',
 		{
 			id: sequelize.idType,
-			latestKeyAt: { type: dataTypes.DATE },
+			latestKeyAt: dataTypes.DATE,
 			firebasePath: { type: dataTypes.STRING, allowNull: false },
 		},
 		{
+			tableName: 'Drafts',
 			classMethods: {
 				associate: (models) => {
-					const { Pub, Draft } = models;
-					Pub.belongsTo(Draft, {
-						as: 'draft',
-						foreignKey: 'draftId',
-					});
+					const { pub, draft } = models;
+					draft.hasOne(pub);
 				},
 			},
 		},

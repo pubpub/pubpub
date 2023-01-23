@@ -1,22 +1,20 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'ThreadEvent',
+		'threadEvent',
 		{
 			id: sequelize.idType,
-			type: { type: dataTypes.STRING },
-			data: { type: dataTypes.JSONB },
-			/* Set by Associations */
-			userId: { type: dataTypes.UUID, allowNull: false },
-			threadId: { type: dataTypes.UUID, allowNull: false },
+			type: dataTypes.STRING,
+			data: dataTypes.JSONB,
 		},
 		{
+			tableName: 'ThreadEvents',
 			classMethods: {
 				associate: (models) => {
-					const { User, ThreadEvent } = models;
-					ThreadEvent.belongsTo(User, {
+					const { user, threadEvent, thread } = models;
+					threadEvent.belongsTo(thread, { foreignKey: { allowNull: false } });
+					threadEvent.belongsTo(user, {
 						onDelete: 'CASCADE',
-						as: 'user',
-						foreignKey: 'userId',
+						foreignKey: { allowNull: false },
 					});
 				},
 			},

@@ -1,30 +1,27 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Submission',
+		'submission',
 		{
 			id: sequelize.idType,
 			status: {
 				type: dataTypes.TEXT,
 				allowNull: false,
 			},
-			submittedAt: { type: dataTypes.DATE },
-			submissionWorkflowId: { type: dataTypes.UUID, allowNull: false },
-			pubId: { type: dataTypes.UUID, allowNull: false },
+			submittedAt: dataTypes.DATE,
 			abstract: { type: dataTypes.JSONB, allowNull: true },
 		},
 		{
+			tableName: 'Submissions',
 			classMethods: {
 				associate: (models) => {
-					const { Pub, Submission, SubmissionWorkflow } = models;
-					Submission.belongsTo(Pub, {
+					const { pub, submission, submissionWorkflow } = models;
+					submission.belongsTo(pub, {
 						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
+						foreignKey: { allowNull: false },
 					});
-					Submission.belongsTo(SubmissionWorkflow, {
+					submission.belongsTo(submissionWorkflow, {
 						onDelete: 'CASCADE',
-						as: 'submissionWorkflow',
-						foreignKey: 'submissionWorkflowId',
+						foreignKey: { allowNull: false },
 					});
 				},
 			},

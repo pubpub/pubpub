@@ -1,33 +1,28 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'PubEdge',
+		'pubEdge',
 		{
 			id: sequelize.idType,
-			pubId: { type: dataTypes.UUID, allowNull: false },
-			externalPublicationId: { type: dataTypes.UUID, allowNull: true },
-			targetPubId: { type: dataTypes.UUID, allowNull: true },
 			relationType: { type: dataTypes.STRING, allowNull: false },
 			rank: { type: dataTypes.TEXT, allowNull: false },
 			pubIsParent: { type: dataTypes.BOOLEAN, allowNull: false },
 			approvedByTarget: { type: dataTypes.BOOLEAN, allowNull: false },
 		},
 		{
+			tableName: 'PubEdges',
 			classMethods: {
-				associate: ({ PubEdge, Pub, ExternalPublication }) => {
-					PubEdge.belongsTo(Pub, {
+				associate: ({ pubEdge, pub, externalPublication }) => {
+					pubEdge.belongsTo(pub, {
 						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
+						foreignKey: { allowNull: false },
 					});
-					PubEdge.belongsTo(Pub, {
+					pubEdge.belongsTo(pub, {
 						onDelete: 'CASCADE',
 						as: 'targetPub',
-						foreignKey: 'targetPubId',
 					});
-					PubEdge.belongsTo(ExternalPublication, {
+					pubEdge.belongsTo(externalPublication, {
 						onDelete: 'CASCADE',
 						as: 'externalPublication',
-						foreignKey: 'externalPublicationId',
 					});
 				},
 			},

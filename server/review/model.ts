@@ -1,56 +1,48 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'ReviewNew',
+		'reviewNew',
 		{
 			id: sequelize.idType,
-			title: { type: dataTypes.TEXT },
+			title: dataTypes.TEXT,
 			number: { type: dataTypes.INTEGER, allowNull: false },
 			status: {
 				type: dataTypes.ENUM,
 				values: ['open', 'closed', 'completed'],
 				defaultValue: 'open',
 			},
-			releaseRequested: { type: dataTypes.BOOLEAN },
-			labels: { type: dataTypes.JSONB },
-			/* Set by Associations */
-			threadId: { type: dataTypes.UUID, allowNull: false },
-			visibilityId: { type: dataTypes.UUID, allowNull: false },
-			userId: { type: dataTypes.UUID },
-			pubId: { type: dataTypes.UUID },
+			releaseRequested: dataTypes.BOOLEAN,
+			labels: dataTypes.JSONB,
 			reviewContent: { type: dataTypes.JSONB, allowNull: true },
 		},
 		{
+			tableName: 'ReviewNews',
 			indexes: [
 				{ fields: ['userId'], method: 'BTREE' },
 				{ fields: ['pubId'], method: 'BTREE' },
 			],
 			classMethods: {
 				associate: (models) => {
-					const { ReviewNew, Reviewer, Visibility, Pub, User, Thread } = models;
-					ReviewNew.belongsTo(Thread, {
+					const { reviewNew, reviewer, visibility, pub, user, thread } = models;
+					reviewNew.belongsTo(thread, {
 						onDelete: 'CASCADE',
-						as: 'thread',
-						foreignKey: 'threadId',
+						foreignKey: { allowNull: false },
 					});
-					ReviewNew.belongsTo(Visibility, {
+					reviewNew.belongsTo(visibility, {
+						foreignKey: { allowNull: false },
 						onDelete: 'CASCADE',
-						as: 'visibility',
-						foreignKey: 'visibilityId',
 					});
-					ReviewNew.belongsTo(User, {
+					reviewNew.belongsTo(user, {
 						onDelete: 'CASCADE',
 						as: 'author',
 						foreignKey: 'userId',
 						constraints: false,
 					});
-					ReviewNew.belongsTo(Pub, {
+					reviewNew.belongsTo(pub, {
 						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
 					});
-					ReviewNew.hasMany(Reviewer, {
-						onDelete: 'CASCADE',
+					reviewNew.hasMany(reviewer, {
 						as: 'reviewers',
+						onDelete: 'CASCADE',
 						foreignKey: 'reviewId',
 					});
 				},

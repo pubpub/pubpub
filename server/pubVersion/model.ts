@@ -1,21 +1,16 @@
-export default (sequelize) => {
-	const { Sequelize } = sequelize;
+export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'PubVersion',
+		'pubVersion',
 		{
 			id: sequelize.idType,
-			historyKey: { type: Sequelize.INTEGER },
-			pubId: { type: Sequelize.UUID },
+			historyKey: dataTypes.INTEGER,
 		},
 		{
+			tableName: 'PubVersions',
 			classMethods: {
 				associate: (models) => {
-					const { PubVersion, Pub } = models;
-					PubVersion.belongsTo(Pub, {
-						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
-					});
+					const { pubVersion, pub } = models;
+					pubVersion.belongsTo(pub, { onDelete: 'CASCADE' });
 				},
 			},
 		},

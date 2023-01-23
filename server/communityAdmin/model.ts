@@ -1,9 +1,18 @@
-export default (sequelize, dataTypes) => {
-	return sequelize.define('CommunityAdmin', {
-		id: sequelize.idType,
-
-		/* Set by Associations */
-		userId: { type: dataTypes.UUID, allowNull: false },
-		communityId: { type: dataTypes.UUID, allowNull: false },
-	});
+export default (sequelize) => {
+	return sequelize.define(
+		'communityAdmin',
+		{
+			id: sequelize.idType,
+		},
+		{
+			tableName: 'CommunityAdmins',
+			classMethods: {
+				associate: (models) => {
+					const { communityAdmin, user, community } = models;
+					communityAdmin.belongsTo(user, { foreignKey: { allowNull: false } });
+					communityAdmin.belongsTo(community, { foreignKey: { allowNull: false } });
+				},
+			},
+		},
+	);
 };

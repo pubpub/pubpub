@@ -1,12 +1,16 @@
 export default (sequelize, dataTypes) => {
-	return sequelize.define('WorkerTask', {
-		id: sequelize.idType,
-		type: { type: dataTypes.TEXT, allowNull: false },
-		input: { type: dataTypes.JSONB },
-		isProcessing: { type: dataTypes.BOOLEAN },
-		attemptCount: { type: dataTypes.INTEGER },
-		error: { type: dataTypes.JSONB },
-		output: { type: dataTypes.JSONB },
-		priority: { type: dataTypes.INTEGER },
-	});
+	return sequelize.define(
+		'workerTask',
+		{
+			id: sequelize.idType,
+			type: { type: dataTypes.TEXT, allowNull: false },
+			input: dataTypes.JSONB,
+			isProcessing: dataTypes.BOOLEAN,
+			attemptCount: dataTypes.INTEGER,
+			error: dataTypes.JSONB,
+			output: dataTypes.JSONB,
+			priority: dataTypes.INTEGER,
+		},
+		{ tableName: 'WorkerTasks' },
+	);
 };

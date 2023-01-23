@@ -1,9 +1,8 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'UserNotificationPreferences',
+		'userNotificationPreferences',
 		{
 			id: sequelize.idType,
-			userId: { type: dataTypes.UUID, allowNull: false },
 			receiveNotifications: { type: dataTypes.BOOLEAN, allowNull: false, defaultValue: true },
 			lastReceivedNotificationsAt: { type: dataTypes.DATE, allowNull: true },
 			subscribeToThreadsAsCommenter: {
@@ -33,6 +32,15 @@ export default (sequelize, dataTypes) => {
 			},
 		},
 		{
+			tableName: 'UserNoficationPreferences',
+			classMethods: {
+				associate: (models) => {
+					const { userNotificationPreferences, user } = models;
+					userNotificationPreferences.belongsTo(user, {
+						foreignKey: { allowNull: false },
+					});
+				},
+			},
 			indexes: [{ fields: ['userId'], method: 'BTREE' }],
 		},
 	);

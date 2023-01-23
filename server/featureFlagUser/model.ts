@@ -1,26 +1,17 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'FeatureFlagUser',
+		'featureFlagUser',
 		{
 			id: sequelize.idType,
-			featureFlagId: { type: dataTypes.UUID },
-			userId: { type: dataTypes.UUID },
-			enabled: { type: dataTypes.BOOLEAN },
+			enabled: dataTypes.BOOLEAN,
 		},
 		{
+			tableName: 'FeatureFlagUsers',
 			classMethods: {
 				associate: (models) => {
-					const { FeatureFlag, FeatureFlagUser, User } = models;
-					FeatureFlagUser.belongsTo(User, {
-						onDelete: 'CASCADE',
-						as: 'user',
-						foreignKey: 'userId',
-					});
-					FeatureFlagUser.belongsTo(FeatureFlag, {
-						onDelete: 'CASCADE',
-						as: 'featureFlag',
-						foreignKey: 'featureFlagId',
-					});
+					const { featureFlag, featureFlagUser, user } = models;
+					featureFlagUser.belongsTo(user, { onDelete: 'CASCADE' });
+					featureFlagUser.belongsTo(featureFlag, { onDelete: 'CASCADE' });
 				},
 			},
 		},

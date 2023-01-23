@@ -1,6 +1,6 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'ThreadUser',
+		'threadUser',
 		{
 			id: sequelize.idType,
 			type: {
@@ -15,21 +15,15 @@ export default (sequelize, dataTypes) => {
 					isLowercase: true,
 				},
 			},
-			hash: { type: dataTypes.TEXT },
-
-			/* Set by Associations */
-			userId: { type: dataTypes.UUID },
-			threadId: { type: dataTypes.UUID, allowNull: false },
+			hash: dataTypes.TEXT,
 		},
 		{
+			tableName: 'ThreadUsers',
 			classMethods: {
 				associate: (models) => {
-					const { ThreadUser, User } = models;
-					ThreadUser.belongsTo(User, {
-						onDelete: 'CASCADE',
-						as: 'user',
-						foreignKey: 'userId',
-					});
+					const { threadUser, user, thread } = models;
+					threadUser.belongsTo(user, { onDelete: 'CASCADE' });
+					threadUser.belongsTo(thread, { foreignkey: { allowNull: false } });
 				},
 			},
 		},

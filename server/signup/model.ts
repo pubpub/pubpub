@@ -1,18 +1,29 @@
 export default (sequelize, dataTypes) => {
-	return sequelize.define('Signup', {
-		id: sequelize.idType,
-		email: {
-			type: dataTypes.TEXT,
-			allowNull: false,
-			unique: true,
-			validate: {
-				isEmail: true,
-				isLowercase: true,
+	return sequelize.define(
+		'signup',
+		{
+			id: sequelize.idType,
+			email: {
+				type: dataTypes.TEXT,
+				allowNull: false,
+				unique: true,
+				validate: {
+					isEmail: true,
+					isLowercase: true,
+				},
+			},
+			hash: dataTypes.TEXT,
+			count: dataTypes.INTEGER,
+			completed: dataTypes.BOOLEAN,
+		},
+		{
+			tableName: 'Signups',
+			classMethods: {
+				associate: (models) => {
+					const { signup, community } = models;
+					signup.belongsTo(community);
+				},
 			},
 		},
-		hash: { type: dataTypes.TEXT },
-		count: { type: dataTypes.INTEGER },
-		completed: { type: dataTypes.BOOLEAN },
-		communityId: { type: dataTypes.UUID },
-	});
+	);
 };

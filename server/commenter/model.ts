@@ -1,6 +1,18 @@
 export default (sequelize, dataTypes) => {
-	return sequelize.define('Commenter', {
-		id: sequelize.idType,
-		name: { type: dataTypes.TEXT },
-	});
+	return sequelize.define(
+		'commenter',
+		{
+			id: sequelize.idType,
+			name: dataTypes.TEXT,
+		},
+		{
+			tableName: 'Commenters',
+			classMethods: {
+				associate: (models) => {
+					const { commenter, discussion } = models;
+					commenter.hasMany(discussion, { onDelete: 'CASCADE' });
+				},
+			},
+		},
+	);
 };

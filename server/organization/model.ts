@@ -1,6 +1,6 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Organization',
+		'organization',
 		{
 			id: sequelize.idType,
 			subdomain: {
@@ -24,18 +24,15 @@ export default (sequelize, dataTypes) => {
 					len: [0, 280],
 				},
 			},
-			avatar: { type: dataTypes.TEXT },
-			favicon: { type: dataTypes.TEXT },
+			avatar: dataTypes.TEXT,
+			favicon: dataTypes.TEXT,
 		},
 		{
+			tableName: 'Organizations',
 			classMethods: {
 				associate: (models) => {
-					const { Organization, Community } = models;
-					Organization.hasMany(Community, {
-						onDelete: 'CASCADE',
-						as: 'communities',
-						foreignKey: 'organizationId',
-					});
+					const { organization, community } = models;
+					organization.hasMany(community, { onDelete: 'CASCADE' });
 				},
 			},
 		},

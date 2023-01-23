@@ -1,21 +1,27 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'ActivityItem',
+		'activityItem',
 		{
 			id: sequelize.idType,
 			kind: { type: dataTypes.TEXT, allowNull: false },
-			pubId: { type: dataTypes.UUID },
-			payload: { type: dataTypes.JSONB },
+			payload: dataTypes.JSONB,
 			timestamp: {
 				type: dataTypes.DATE,
 				defaultValue: sequelize.Sequelize.NOW,
 				allowNull: false,
 			},
-			communityId: { type: dataTypes.UUID, allowNull: false },
-			actorId: { type: dataTypes.UUID },
-			collectionId: { type: dataTypes.UUID },
 		},
 		{
+			tableName: 'ActivityItems',
+			classMethods: {
+				associate: (models) => {
+					const { activityItem, pub, collection, community, user } = models;
+					activityItem.belongsTo(user, { as: 'actor' });
+					activityItem.belongsTo(pub);
+					activityItem.belongsTo(collection);
+					activityItem.belongsTo(community, { foreignKey: { allowNull: false } });
+				},
+			},
 			indexes: [
 				{ fields: ['communityId'], method: 'BTREE' },
 				{ fields: ['collectionId'], method: 'BTREE' },

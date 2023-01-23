@@ -1,23 +1,24 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'FeatureFlag',
+		'featureFlag',
 		{
 			id: sequelize.idType,
-			name: { type: dataTypes.STRING },
+			name: dataTypes.STRING,
 			enabledUsersFraction: { type: dataTypes.DOUBLE, defaultValue: 0 },
 			enabledCommunitiesFraction: { type: dataTypes.DOUBLE, defaultValue: 0 },
 		},
 		{
+			tableName: 'FeatureFlags',
 			indexes: [{ unique: true, fields: ['name'] }],
 			classMethods: {
 				associate: (models) => {
-					const { FeatureFlag, FeatureFlagUser, FeatureFlagCommunity } = models;
-					FeatureFlag.hasMany(FeatureFlagUser, {
+					const { featureFlag, featureFlagUser, featureFlagCommunity } = models;
+					featureFlag.hasMany(featureFlagUser, {
 						onDelete: 'CASCADE',
 						as: 'users',
 						foreignKey: 'featureFlagId',
 					});
-					FeatureFlag.hasMany(FeatureFlagCommunity, {
+					featureFlag.hasMany(featureFlagCommunity, {
 						onDelete: 'CASCADE',
 						as: 'communities',
 						foreignKey: 'featureFlagId',

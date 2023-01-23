@@ -1,19 +1,19 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Reviewer',
+		'reviewer',
 		{
 			id: sequelize.idType,
-			name: { type: dataTypes.TEXT },
-			reviewId: { type: dataTypes.UUID, allowNull: false },
+			name: dataTypes.TEXT,
 		},
 		{
+			tableName: 'Reviewers',
 			classMethods: {
 				associate: (models) => {
-					const { Reviewer, ReviewNew } = models;
-					Reviewer.belongsTo(ReviewNew, {
-						onDelete: 'CASCADE',
+					const { reviewer, reviewNew } = models;
+					reviewer.belongsTo(reviewNew, {
 						as: 'review',
-						foreignKey: 'reviewId',
+						onDelete: 'CASCADE',
+						foreignKey: { name: 'reviewId', allowNull: false },
 					});
 				},
 			},

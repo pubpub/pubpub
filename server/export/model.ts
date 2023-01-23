@@ -1,23 +1,19 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Export',
+		'export',
 		{
 			id: sequelize.idType,
 			format: { type: dataTypes.STRING, allowNull: false },
 			url: { type: dataTypes.STRING, allowNull: true },
 			historyKey: { type: dataTypes.INTEGER, allowNull: false },
-			pubId: { type: dataTypes.UUID, allowNull: false },
-			workerTaskId: { type: dataTypes.UUID, allowNull: true },
 		},
 		{
+			tableName: 'Exports',
 			classMethods: {
 				associate: (models) => {
-					const { Export, WorkerTask } = models;
-					Export.belongsTo(WorkerTask, {
-						onDelete: 'SET NULL',
-						as: 'workerTask',
-						foreignKey: 'workerTaskId',
-					});
+					const { workerTask, pub } = models;
+					models.export.belongsTo(workerTask);
+					models.export.belongsTo(pub, { foreignKey: { allowNull: false } });
 				},
 			},
 		},

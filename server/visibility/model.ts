@@ -1,6 +1,6 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Visibility',
+		'visibility',
 		{
 			id: sequelize.idType,
 			access: {
@@ -10,14 +10,12 @@ export default (sequelize, dataTypes) => {
 			},
 		},
 		{
+			tableName: 'Visibilities',
 			classMethods: {
 				associate: (models) => {
-					const { Visibility, User } = models;
-					Visibility.belongsToMany(User, {
-						as: 'users',
-						through: 'VisibilityUser',
-						foreignKey: 'visibilityId',
-					});
+					const { visibility, visibilityUser, user, discussion } = models;
+					visibility.belongsToMany(user, { through: visibilityUser });
+					visibility.hasMany(discussion, { onDelete: 'CASCADE' });
 				},
 			},
 		},

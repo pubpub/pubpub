@@ -1,20 +1,22 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Thread',
+		'thread',
 		{
 			id: sequelize.idType,
-			isLocked: { type: dataTypes.BOOLEAN },
+			isLocked: dataTypes.BOOLEAN,
 		},
 		{
+			tableName: 'Threads',
 			classMethods: {
 				associate: (models) => {
-					const { Thread, ThreadComment, ThreadEvent } = models;
-					Thread.hasMany(ThreadComment, {
+					const { discussion, thread, threadComment, threadEvent } = models;
+					thread.hasMany(discussion, { onDelete: 'CASCADE' });
+					thread.hasMany(threadComment, {
 						onDelete: 'CASCADE',
 						as: 'comments',
 						foreignKey: 'threadId',
 					});
-					Thread.hasMany(ThreadEvent, {
+					thread.hasMany(threadEvent, {
 						onDelete: 'CASCADE',
 						as: 'events',
 						foreignKey: 'threadId',
