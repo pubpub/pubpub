@@ -1,14 +1,20 @@
-export default (sequelize, dataTypes) => {
+export default (sequelize) => {
 	return sequelize.define(
-		'UserScopeVisit',
+		'userScopeVisit',
 		{
 			id: sequelize.idType,
-			userId: { type: dataTypes.UUID, allowNull: true },
-			pubId: { type: dataTypes.UUID, allowNull: true },
-			collectionId: { type: dataTypes.UUID, allowNull: true },
-			communityId: { type: dataTypes.UUID, allowNull: true },
 		},
 		{
+			tableName: 'UserScopeVisits',
+			classMethods: {
+				associate: (models) => {
+					const { userScopeVisit, user, pub, collection, community } = models;
+					userScopeVisit.belongsTo(user);
+					userScopeVisit.belongsTo(pub);
+					userScopeVisit.belongsTo(collection);
+					userScopeVisit.belongsTo(community);
+				},
+			},
 			indexes: [
 				{
 					unique: true,

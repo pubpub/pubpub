@@ -1,29 +1,23 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'ThreadComment',
+		'threadComment',
 		{
 			id: sequelize.idType,
-			text: { type: dataTypes.TEXT },
-			content: { type: dataTypes.JSONB },
-			/* Set by Associations */
-			userId: { type: dataTypes.UUID },
-			threadId: { type: dataTypes.UUID, allowNull: false },
-			commenterId: { type: dataTypes.UUID },
+			text: dataTypes.TEXT,
+			content: dataTypes.JSONB,
 		},
 		{
+			tableName: 'ThreadComments',
 			classMethods: {
 				associate: (models) => {
-					const { Commenter, ThreadComment, User } = models;
-					ThreadComment.belongsTo(User, {
+					const { commenter, threadComment, thread, user } = models;
+					threadComment.belongsTo(thread, { foreignKey: { allowNull: false } });
+					threadComment.belongsTo(user, {
 						onDelete: 'CASCADE',
 						as: 'author',
 						foreignKey: 'userId',
 					});
-					ThreadComment.belongsTo(Commenter, {
-						onDelete: 'CASCADE',
-						as: 'commenter',
-						foreignKey: 'commenterId',
-					});
+					threadComment.belongsTo(commenter, { onDelete: 'CASCADE' });
 				},
 			},
 		},

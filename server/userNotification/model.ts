@@ -1,33 +1,28 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'UserNotification',
+		'userNotification',
 		{
 			id: sequelize.idType,
-			userId: { type: dataTypes.UUID, allowNull: false },
-			userSubscriptionId: { type: dataTypes.UUID, allowNull: false },
-			activityItemId: { type: dataTypes.UUID, allowNull: false },
 			isRead: { type: dataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 			manuallySetIsRead: { type: dataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 		},
 		{
+			tableName: 'UserNotifications',
 			indexes: [{ fields: ['userId'], method: 'BTREE' }],
 			classMethods: {
 				associate: (models) => {
-					const { ActivityItem, User, UserNotification, UserSubscription } = models;
-					UserNotification.belongsTo(ActivityItem, {
+					const { activityItem, user, userNotification, userSubscription } = models;
+					userNotification.belongsTo(activityItem, {
 						onDelete: 'CASCADE',
-						as: 'activityItem',
-						foreignKey: 'activityItemId',
+						foreignKey: { allowNull: false },
 					});
-					UserNotification.belongsTo(UserSubscription, {
+					userNotification.belongsTo(userSubscription, {
 						onDelete: 'CASCADE',
-						as: 'userSubscription',
-						foreignKey: 'userSubscriptionId',
+						foreignKey: { allowNull: false },
 					});
-					UserNotification.belongsTo(User, {
+					userNotification.belongsTo(user, {
 						onDelete: 'CASCADE',
-						as: 'user',
-						foreignKey: 'userId',
+						foreignKey: { allowNull: false },
 					});
 				},
 			},

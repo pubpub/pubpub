@@ -1,14 +1,13 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'LandingPageFeature',
+		'landingPageFeature',
 		{
 			id: sequelize.idType,
-			communityId: { type: dataTypes.UUID, allowNull: true },
-			pubId: { type: dataTypes.UUID, allowNull: true },
 			rank: { type: dataTypes.TEXT, allowNull: false },
 			payload: { type: dataTypes.JSONB, allowNull: true },
 		},
 		{
+			tableName: 'LandingPageFeatures',
 			indexes: [
 				{
 					fields: ['communityId'],
@@ -21,17 +20,9 @@ export default (sequelize, dataTypes) => {
 			],
 			classMethods: {
 				associate: (models) => {
-					const { Pub, Community, LandingPageFeature } = models;
-					LandingPageFeature.belongsTo(Pub, {
-						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
-					});
-					LandingPageFeature.belongsTo(Community, {
-						onDelete: 'CASCADE',
-						as: 'community',
-						foreignKey: 'communityId',
-					});
+					const { pub, community, landingPageFeature } = models;
+					landingPageFeature.belongsTo(pub, { onDelete: 'CASCADE' });
+					landingPageFeature.belongsTo(community, { onDelete: 'CASCADE' });
 				},
 			},
 		},

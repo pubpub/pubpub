@@ -1,10 +1,9 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'DiscussionAnchor',
+		'discussionAnchor',
 		{
 			id: sequelize.idType,
 			isOriginal: { type: dataTypes.BOOLEAN, allowNull: false },
-			discussionId: { type: dataTypes.UUID, allowNull: false },
 			historyKey: { type: dataTypes.INTEGER, allowNull: false },
 			selection: { type: dataTypes.JSONB, allowNull: true },
 			originalText: { type: dataTypes.TEXT, allowNull: false },
@@ -12,7 +11,14 @@ export default (sequelize, dataTypes) => {
 			originalTextSuffix: { type: dataTypes.TEXT, allowNull: false },
 		},
 		{
+			tableName: 'DiscussionAnchors',
 			indexes: [{ fields: ['discussionId'], method: 'BTREE' }],
+			classMethods: {
+				associate: (models) => {
+					const { discussion, discussionAnchor } = models;
+					discussionAnchor.belongsTo(discussion, { foreignKey: { allowNull: false } });
+				},
+			},
 		},
 	);
 };

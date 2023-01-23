@@ -1,9 +1,9 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Collection',
+		'collection',
 		{
 			id: sequelize.idType,
-			title: { type: dataTypes.TEXT },
+			title: dataTypes.TEXT,
 			slug: {
 				type: dataTypes.TEXT,
 				allowNull: false,
@@ -13,16 +13,15 @@ export default (sequelize, dataTypes) => {
 					is: /^[a-zA-Z0-9-]+$/, // Must contain at least one letter, alphanumeric and underscores and hyphens
 				},
 			},
-			avatar: { type: dataTypes.TEXT },
-			isRestricted: {
-				type: dataTypes.BOOLEAN,
-			} /* Restricted collections can only be set by Community Admins */,
-			isPublic: { type: dataTypes.BOOLEAN } /* Only visible to community admins */,
-			viewHash: { type: dataTypes.STRING },
-			editHash: { type: dataTypes.STRING },
-			metadata: { type: dataTypes.JSONB },
-			kind: { type: dataTypes.TEXT },
-			doi: { type: dataTypes.TEXT },
+			avatar: dataTypes.TEXT,
+			isRestricted:
+				dataTypes.BOOLEAN /* Restricted collections can only be set by Community Admins */,
+			isPublic: dataTypes.BOOLEAN /* Only visible to community admins */,
+			viewHash: dataTypes.STRING,
+			editHash: dataTypes.STRING,
+			metadata: dataTypes.JSONB,
+			kind: dataTypes.TEXT,
+			doi: dataTypes.TEXT,
 			readNextPreviewSize: {
 				type: dataTypes.ENUM('none', 'minimal', 'medium', 'choose-best'),
 				defaultValue: 'choose-best',
@@ -33,55 +32,23 @@ export default (sequelize, dataTypes) => {
 				defaultValue: false,
 				allowNull: false,
 			},
-			/* Set by Associations */
-			pageId: { type: dataTypes.UUID } /* Used to link a collection to a specific page */,
-			communityId: { type: dataTypes.UUID },
-			scopeSummaryId: { type: dataTypes.UUID, allowNull: true },
 		},
 		{
+			tableName: 'Collections',
 			classMethods: {
 				associate: (models) => {
-					const {
-						Collection,
-						CollectionAttribution,
-						CollectionPub,
-						Community,
-						CrossrefDepositRecord,
-						SubmissionWorkflow,
-						Member,
-						Page,
-						ScopeSummary,
-					} = models;
-					Collection.hasMany(CollectionAttribution, {
+					const { collection } = models;
+					collection.hasMany(models.collectionAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
 						foreignKey: 'collectionId',
 					});
-					Collection.hasOne(SubmissionWorkflow, {
-						as: 'submissionWorkflow',
-						foreignKey: 'collectionId',
-					});
-					Collection.hasMany(CollectionPub, {
-						as: 'collectionPubs',
-						foreignKey: 'collectionId',
-					});
-					Collection.hasMany(Member, {
-						as: 'members',
-						foreignKey: 'collectionId',
-					});
-					Collection.belongsTo(Page, { as: 'page', foreignKey: 'pageId' });
-					Collection.belongsTo(CrossrefDepositRecord, {
-						as: 'crossrefDepositRecord',
-						foreignKey: 'crossrefDepositRecordId',
-					});
-					Collection.belongsTo(ScopeSummary, {
-						as: 'scopeSummary',
-						foreignKey: 'scopeSummaryId',
-					});
-					Collection.belongsTo(Community, {
-						as: 'community',
-						foreignKey: 'communityId',
-					});
+					collection.hasOne(models.submissionWorkflow);
+					collection.hasMany(models.collectionPub);
+					collection.hasMany(models.member);
+					collection.belongsTo(models.page);
+					collection.belongsTo(models.crossrefDepositRecord);
+					collection.belongsTo(models.scopeSummary);
 				},
 			},
 		},

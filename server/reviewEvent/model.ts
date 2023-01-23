@@ -1,23 +1,27 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'ReviewEvent',
+		'reviewEvent',
 		{
 			id: sequelize.idType,
-			type: { type: dataTypes.STRING },
-			data: { type: dataTypes.JSONB },
-			/* Set by Associations */
-			userId: { type: dataTypes.UUID, allowNull: false },
-			pubId: { type: dataTypes.UUID, allowNull: false },
-			reviewId: { type: dataTypes.UUID, allowNull: false },
+			type: dataTypes.STRING,
+			data: dataTypes.JSONB,
 		},
 		{
+			tableName: 'ReviewEvents',
 			classMethods: {
 				associate: (models) => {
-					const { User, ReviewEvent } = models;
-					ReviewEvent.belongsTo(User, {
+					const { user, reviewEvent, reviewNew, pub } = models;
+					reviewEvent.belongsTo(user, {
 						onDelete: 'CASCADE',
-						as: 'user',
-						foreignKey: 'userId',
+						foreignKey: { allowNull: false },
+					});
+					reviewEvent.belongsTo(pub, {
+						onDelete: 'CASCADE',
+						foreignKey: { allowNull: false },
+					});
+					reviewEvent.belongsTo(reviewNew, {
+						onDelete: 'CASCADE',
+						foreignKey: { allowNull: false },
 					});
 				},
 			},

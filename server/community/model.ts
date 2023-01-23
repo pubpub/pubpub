@@ -1,6 +1,6 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Community',
+		'community',
 		{
 			id: sequelize.idType,
 			subdomain: {
@@ -18,110 +18,83 @@ export default (sequelize, dataTypes) => {
 				unique: true,
 			},
 			title: { type: dataTypes.TEXT, allowNull: false },
-			citeAs: { type: dataTypes.TEXT },
-			publishAs: { type: dataTypes.TEXT },
+			citeAs: dataTypes.TEXT,
+			publishAs: dataTypes.TEXT,
 			description: {
 				type: dataTypes.TEXT,
 				validate: {
 					len: [0, 280],
 				},
 			},
-			avatar: { type: dataTypes.TEXT },
-			favicon: { type: dataTypes.TEXT },
-			accentColorLight: { type: dataTypes.STRING },
-			accentColorDark: { type: dataTypes.STRING },
-			hideCreatePubButton: { type: dataTypes.BOOLEAN },
-			headerLogo: { type: dataTypes.TEXT },
-			headerLinks: { type: dataTypes.JSONB },
+			avatar: dataTypes.TEXT,
+			favicon: dataTypes.TEXT,
+			accentColorLight: dataTypes.STRING,
+			accentColorDark: dataTypes.STRING,
+			hideCreatePubButton: dataTypes.BOOLEAN,
+			headerLogo: dataTypes.TEXT,
+			headerLinks: dataTypes.JSONB,
 			headerColorType: {
 				type: dataTypes.ENUM,
 				values: ['light', 'dark', 'custom'],
 				defaultValue: 'dark',
 			},
-			useHeaderTextAccent: { type: dataTypes.BOOLEAN },
-			hideHero: { type: dataTypes.BOOLEAN },
-			hideHeaderLogo: { type: dataTypes.BOOLEAN },
-			heroLogo: { type: dataTypes.TEXT },
-			heroBackgroundImage: { type: dataTypes.TEXT },
-			heroBackgroundColor: { type: dataTypes.TEXT },
-			heroTextColor: { type: dataTypes.TEXT },
-			useHeaderGradient: { type: dataTypes.BOOLEAN },
-			heroImage: { type: dataTypes.TEXT },
-			heroTitle: { type: dataTypes.TEXT },
-			heroText: { type: dataTypes.TEXT },
-			heroPrimaryButton: { type: dataTypes.JSONB },
-			heroSecondaryButton: { type: dataTypes.JSONB },
-			heroAlign: { type: dataTypes.TEXT },
-			navigation: { type: dataTypes.JSONB },
-			hideNav: { type: dataTypes.BOOLEAN },
+			useHeaderTextAccent: dataTypes.BOOLEAN,
+			hideHero: dataTypes.BOOLEAN,
+			hideHeaderLogo: dataTypes.BOOLEAN,
+			heroLogo: dataTypes.TEXT,
+			heroBackgroundImage: dataTypes.TEXT,
+			heroBackgroundColor: dataTypes.TEXT,
+			heroTextColor: dataTypes.TEXT,
+			useHeaderGradient: dataTypes.BOOLEAN,
+			heroImage: dataTypes.TEXT,
+			heroTitle: dataTypes.TEXT,
+			heroText: dataTypes.TEXT,
+			heroPrimaryButton: dataTypes.JSONB,
+			heroSecondaryButton: dataTypes.JSONB,
+			heroAlign: dataTypes.TEXT,
+			navigation: dataTypes.JSONB,
+			hideNav: dataTypes.BOOLEAN,
 
-			navLinks: { type: dataTypes.JSONB },
-			footerLinks: { type: dataTypes.JSONB },
-			footerLogoLink: { type: dataTypes.TEXT },
-			footerTitle: { type: dataTypes.TEXT },
-			footerImage: { type: dataTypes.TEXT },
+			navLinks: dataTypes.JSONB,
+			footerLinks: dataTypes.JSONB,
+			footerLogoLink: dataTypes.TEXT,
+			footerTitle: dataTypes.TEXT,
+			footerImage: dataTypes.TEXT,
 
-			website: { type: dataTypes.TEXT },
-			facebook: { type: dataTypes.TEXT },
-			twitter: { type: dataTypes.TEXT },
-			email: { type: dataTypes.TEXT },
-			issn: { type: dataTypes.TEXT },
-			isFeatured: { type: dataTypes.BOOLEAN },
-			viewHash: { type: dataTypes.STRING },
-			editHash: { type: dataTypes.STRING },
+			website: dataTypes.TEXT,
+			facebook: dataTypes.TEXT,
+			twitter: dataTypes.TEXT,
+			email: dataTypes.TEXT,
+			issn: dataTypes.TEXT,
+			isFeatured: dataTypes.BOOLEAN,
+			viewHash: dataTypes.STRING,
+			editHash: dataTypes.STRING,
 			premiumLicenseFlag: { type: dataTypes.BOOLEAN, defaultValue: false },
-			defaultPubCollections: { type: dataTypes.JSONB },
-			spamTagId: { type: dataTypes.UUID },
-
-			/* Set by Associations */
-			organizationId: { type: dataTypes.UUID },
+			defaultPubCollections: dataTypes.JSONB,
 		},
 		{
+			tableName: 'Communities',
 			classMethods: {
 				associate: (models) => {
 					const {
-						Community,
-						DepositTarget,
-						Organization,
-						Collection,
-						Page,
-						Pub,
-						ScopeSummary,
-						SpamTag,
+						community,
+						depositTarget,
+						organization,
+						collection,
+						page,
+						pub,
+						scopeSummary,
+						landingPageFeature,
+						spamTag,
 					} = models;
-					Community.belongsTo(Organization, {
-						onDelete: 'CASCADE',
-						as: 'organization',
-						foreignKey: 'organizationId',
-					});
-					Community.hasMany(Collection, {
-						onDelete: 'CASCADE',
-						as: 'collections',
-						foreignKey: 'communityId',
-					});
-					Community.hasMany(Pub, {
-						onDelete: 'CASCADE',
-						as: 'pubs',
-						foreignKey: 'communityId',
-					});
-					Community.hasMany(Page, {
-						onDelete: 'CASCADE',
-						as: 'pages',
-						foreignKey: 'communityId',
-					});
-					Community.hasMany(DepositTarget, {
-						onDelete: 'CASCADE',
-						as: 'depositTargets',
-						foreignKey: 'communityId',
-					});
-					Community.belongsTo(ScopeSummary, {
-						as: 'scopeSummary',
-						foreignKey: 'scopeSummaryId',
-					});
-					Community.belongsTo(SpamTag, {
-						as: 'spamTag',
-						foreignKey: 'spamTagId',
-					});
+					community.hasMany(landingPageFeature, { onDelete: 'CASCADE' });
+					community.belongsTo(organization, { onDelete: 'CASCADE' });
+					community.hasMany(collection, { onDelete: 'CASCADE' });
+					community.hasMany(pub, { onDelete: 'CASCADE' });
+					community.hasMany(page, { onDelete: 'CASCADE' });
+					community.hasMany(depositTarget, { onDelete: 'CASCADE' });
+					community.belongsTo(scopeSummary);
+					community.belongsTo(spamTag);
 				},
 			},
 		},

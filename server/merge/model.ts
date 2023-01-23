@@ -1,23 +1,18 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'Merge',
+		'merge',
 		{
 			id: sequelize.idType,
-			noteContent: { type: dataTypes.JSONB },
-			noteText: { type: dataTypes.TEXT },
-			/* Set by Associations */
-			userId: { type: dataTypes.UUID, allowNull: false },
-			pubId: { type: dataTypes.UUID, allowNull: false },
+			noteContent: dataTypes.JSONB,
+			noteText: dataTypes.TEXT,
 		},
 		{
+			tableName: 'Merges',
 			classMethods: {
 				associate: (models) => {
-					const { User, Merge } = models;
-					Merge.belongsTo(User, {
-						onDelete: 'CASCADE',
-						as: 'user',
-						foreignKey: 'userId',
-					});
+					const { user, merge, pub } = models;
+					merge.belongsTo(user, { onDelete: 'CASCADE' });
+					merge.belongsTo(pub, { foreignKey: { allowNull: false } });
 				},
 			},
 		},

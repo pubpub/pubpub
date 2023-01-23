@@ -1,33 +1,26 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'PubAttribution',
+		'pubAttribution',
 		{
 			id: sequelize.idType,
-			name: { type: dataTypes.TEXT } /* Used for non-account attribution */,
-			avatar: { type: dataTypes.TEXT } /* Used for non-account attribution */,
-			title: { type: dataTypes.TEXT } /* Used for non-account attribution */,
-			order: { type: dataTypes.DOUBLE },
-			isAuthor: { type: dataTypes.BOOLEAN },
-			roles: { type: dataTypes.JSONB },
-			affiliation: { type: dataTypes.TEXT },
-			orcid: { type: dataTypes.STRING },
-			/* Set by Associations */
-			userId: { type: dataTypes.UUID },
-			pubId: { type: dataTypes.UUID, allowNull: false },
+			name: dataTypes.TEXT /* Used for non-account attribution */,
+			avatar: dataTypes.TEXT /* Used for non-account attribution */,
+			title: dataTypes.TEXT /* Used for non-account attribution */,
+			order: dataTypes.DOUBLE,
+			isAuthor: dataTypes.BOOLEAN,
+			roles: dataTypes.JSONB,
+			affiliation: dataTypes.TEXT,
+			orcid: dataTypes.STRING,
 		},
 		{
+			tableName: 'PubAttributions',
 			classMethods: {
 				associate: (models) => {
-					const { User, PubAttribution, Pub } = models;
-					PubAttribution.belongsTo(User, {
+					const { user, pubAttribution, pub } = models;
+					pubAttribution.belongsTo(user, { onDelete: 'CASCADE' });
+					pubAttribution.belongsTo(pub, {
 						onDelete: 'CASCADE',
-						as: 'user',
-						foreignKey: 'userId',
-					});
-					PubAttribution.belongsTo(Pub, {
-						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
+						foreignKey: { allowNull: false },
 					});
 				},
 			},

@@ -1,26 +1,17 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'FeatureFlagCommunity',
+		'featureFlagCommunity',
 		{
 			id: sequelize.idType,
-			featureFlagId: { type: dataTypes.UUID },
-			communityId: { type: dataTypes.UUID },
-			enabled: { type: dataTypes.BOOLEAN },
+			enabled: dataTypes.BOOLEAN,
 		},
 		{
+			tableName: 'FeatureFlagCommunities',
 			classMethods: {
 				associate: (models) => {
-					const { FeatureFlag, FeatureFlagCommunity, Community } = models;
-					FeatureFlagCommunity.belongsTo(Community, {
-						onDelete: 'CASCADE',
-						as: 'community',
-						foreignKey: 'communityId',
-					});
-					FeatureFlagCommunity.belongsTo(FeatureFlag, {
-						onDelete: 'CASCADE',
-						as: 'featureFlag',
-						foreignKey: 'featureFlagId',
-					});
+					const { featureFlag, featureFlagCommunity, community } = models;
+					featureFlagCommunity.belongsTo(community, { onDelete: 'CASCADE' });
+					featureFlagCommunity.belongsTo(featureFlag, { onDelete: 'CASCADE' });
 				},
 			},
 		},

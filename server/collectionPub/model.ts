@@ -1,15 +1,14 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'CollectionPub',
+		'collectionPub',
 		{
 			id: sequelize.idType,
-			pubId: { type: dataTypes.UUID, allowNull: false },
-			collectionId: { type: dataTypes.UUID, allowNull: false },
-			contextHint: { type: dataTypes.TEXT },
+			contextHint: dataTypes.TEXT,
 			rank: { type: dataTypes.TEXT, allowNull: false },
 			pubRank: { type: dataTypes.TEXT, allowNull: false },
 		},
 		{
+			tableName: 'CollectionPubs',
 			indexes: [
 				// Index to enforce that there is one CollectionPub per (collection, pub) pair
 				{
@@ -19,16 +18,14 @@ export default (sequelize, dataTypes) => {
 			],
 			classMethods: {
 				associate: (models) => {
-					const { CollectionPub, Collection, Pub } = models;
-					CollectionPub.belongsTo(Collection, {
+					const { collectionPub, collection, pub } = models;
+					collectionPub.belongsTo(collection, {
 						onDelete: 'CASCADE',
-						as: 'collection',
-						foreignKey: 'collectionId',
+						foreignKey: { allowNull: false },
 					});
-					CollectionPub.belongsTo(Pub, {
+					collectionPub.belongsTo(pub, {
 						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
+						foreignKey: { allowNull: false },
 					});
 				},
 			},

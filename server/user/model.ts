@@ -1,8 +1,8 @@
 const passportLocalSequelize = require('passport-local-sequelize');
 
 export default (sequelize, dataTypes) => {
-	const User = sequelize.define(
-		'User',
+	const user = sequelize.define(
+		'user',
 		{
 			id: sequelize.idType,
 			slug: {
@@ -19,9 +19,9 @@ export default (sequelize, dataTypes) => {
 			lastName: { type: dataTypes.TEXT, allowNull: false },
 			fullName: { type: dataTypes.TEXT, allowNull: false },
 			initials: { type: dataTypes.STRING, allowNull: false },
-			avatar: { type: dataTypes.TEXT },
-			bio: { type: dataTypes.TEXT },
-			title: { type: dataTypes.TEXT },
+			avatar: dataTypes.TEXT,
+			bio: dataTypes.TEXT,
+			title: dataTypes.TEXT,
 			email: {
 				type: dataTypes.TEXT,
 				allowNull: false,
@@ -38,57 +38,51 @@ export default (sequelize, dataTypes) => {
 					isLowercase: true,
 				},
 			},
-			authRedirectHost: { type: dataTypes.TEXT },
-			location: { type: dataTypes.TEXT },
-			website: { type: dataTypes.TEXT },
-			facebook: { type: dataTypes.TEXT },
-			twitter: { type: dataTypes.TEXT },
-			github: { type: dataTypes.TEXT },
-			orcid: { type: dataTypes.TEXT },
-			googleScholar: { type: dataTypes.TEXT },
-			resetHashExpiration: { type: dataTypes.DATE },
-			resetHash: { type: dataTypes.TEXT },
-			inactive: { type: dataTypes.BOOLEAN },
-			pubpubV3Id: { type: dataTypes.INTEGER },
-			passwordDigest: { type: dataTypes.TEXT },
+			authRedirectHost: dataTypes.TEXT,
+			location: dataTypes.TEXT,
+			website: dataTypes.TEXT,
+			facebook: dataTypes.TEXT,
+			twitter: dataTypes.TEXT,
+			github: dataTypes.TEXT,
+			orcid: dataTypes.TEXT,
+			googleScholar: dataTypes.TEXT,
+			resetHashExpiration: dataTypes.DATE,
+			resetHash: dataTypes.TEXT,
+			inactive: dataTypes.BOOLEAN,
+			pubpubV3Id: dataTypes.INTEGER,
+			passwordDigest: dataTypes.TEXT,
 			hash: { type: dataTypes.TEXT, allowNull: false },
 			salt: { type: dataTypes.TEXT, allowNull: false },
 			gdprConsent: { type: dataTypes.BOOLEAN, defaultValue: null },
 			isSuperAdmin: { type: dataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 		},
 		{
+			tableName: 'Users',
 			classMethods: {
 				associate: (models) => {
 					const {
-						PubAttribution,
-						Discussion,
-						UserNotificationPreferences,
+						pubAttribution,
+						discussion,
+						userNotificationPreferences,
+						visibility,
+						visibilityUser,
 						zoteroIntegration,
 					} = models;
-					User.hasMany(PubAttribution, {
+					user.belongsToMany(visibility, { through: visibilityUser });
+					user.hasMany(pubAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
 						foreignKey: 'userId',
 					});
-					User.hasMany(Discussion, {
-						onDelete: 'CASCADE',
-						as: 'discussions',
-						foreignKey: 'userId',
-					});
-					User.hasOne(UserNotificationPreferences, {
-						onDelete: 'CASCADE',
-						as: 'userNotificationPreferences',
-						foreignKey: 'userId',
-					});
-					User.hasOne(zoteroIntegration, {
-						foreignKey: { name: 'userId', allowNull: false },
-					});
+					user.hasOne(zoteroIntegration, { allowNull: false });
+					user.hasMany(discussion, { onDelete: 'CASCADE' });
+					user.hasOne(userNotificationPreferences, { onDelete: 'CASCADE' });
 				},
 			},
 		},
 	);
 
-	passportLocalSequelize.attachToUser(User, {
+	passportLocalSequelize.attachToUser(user, {
 		usernameField: 'email',
 		hashField: 'hash',
 		saltField: 'salt',
@@ -96,5 +90,5 @@ export default (sequelize, dataTypes) => {
 		iterations: 25000,
 	});
 
-	return User;
+	return user;
 };

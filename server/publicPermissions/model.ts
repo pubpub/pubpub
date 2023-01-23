@@ -1,28 +1,22 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'PublicPermissions',
+		'publicPermissions',
 		{
 			id: sequelize.idType,
-			canCreateReviews: { type: dataTypes.BOOLEAN },
-			canCreateDiscussions: { type: dataTypes.BOOLEAN },
-			canViewDraft: { type: dataTypes.BOOLEAN },
-			canEditDraft: { type: dataTypes.BOOLEAN },
-
-			/* Set by Associations */
-			pubId: { type: dataTypes.UUID },
-			collectionId: { type: dataTypes.UUID },
-			communityId: { type: dataTypes.UUID },
-			organizationId: { type: dataTypes.UUID },
+			canCreateReviews: dataTypes.BOOLEAN,
+			canCreateDiscussions: dataTypes.BOOLEAN,
+			canViewDraft: dataTypes.BOOLEAN,
+			canEditDraft: dataTypes.BOOLEAN,
 		},
 		{
+			tableName: 'PublicPermissions',
 			classMethods: {
 				associate: (models) => {
-					const { PublicPermissions, Pub } = models;
-					PublicPermissions.belongsTo(Pub, {
-						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
-					});
+					const { publicPermissions, pub, collection, community, organization } = models;
+					publicPermissions.belongsTo(pub, { onDelete: 'CASCADE' });
+					publicPermissions.belongsTo(collection);
+					publicPermissions.belongsTo(community);
+					publicPermissions.belongsTo(organization);
 				},
 			},
 		},

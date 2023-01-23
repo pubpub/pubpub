@@ -1,6 +1,6 @@
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
-		'FacetBinding',
+		'facetBinding',
 		{
 			id: sequelize.idType,
 			pubId: { type: dataTypes.UUID, allowNull: true },
@@ -8,6 +8,7 @@ export default (sequelize, dataTypes) => {
 			communityId: { type: dataTypes.UUID, allowNull: true },
 		},
 		{
+			tableName: 'FacetBindings',
 			indexes: [
 				{ fields: ['communityId'], method: 'BTREE' },
 				{ fields: ['collectionId'], method: 'BTREE' },
