@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Color from 'color';
 import { Button, Popover, Menu, MenuItem } from '@blueprintjs/core';
+import { usePrevious } from 'react-use';
 
 import { Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -112,9 +113,18 @@ const DiscussionNav = (props: Props) => {
 	const bubbleThreads = discussions.slice(0, maxBubblesBeforeOverflow);
 	const overflowThreads = discussions.slice(maxBubblesBeforeOverflow);
 
+	// get previousthreadId
+	const ref = document.querySelector(`style.d-${activeThread}, style.lh-${activeThread}`);
+	const previousSelectedNodeId = usePrevious(ref?.id);
+
+	useEffect(() => {
+		ref?.classList.add('.activeThread-background-color');
+	}, [activeThread, previousSelectedNodeId, ref]);
+
 	return (
 		<span className="discussion-nav-component" style={accentStyle}>
 			<style>{`.d-${activeThreadHover}, .lh-${activeThreadHover} { background-color: rgba(0, 0, 0, 0.2) !important; }`}</style>
+			{/* take the diff between the background color and the  */}
 			<style>{`.d-${activeThread}, .lh-${activeThread} { background-color: ${fadedAccentColorDark} !important; }`}</style>
 			{bubbleThreads.map(bubbleRenderer)}
 			{!!overflowThreads.length && (
