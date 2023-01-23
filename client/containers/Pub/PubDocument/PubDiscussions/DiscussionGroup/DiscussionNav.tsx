@@ -113,21 +113,14 @@ const DiscussionNav = (props: Props) => {
 	const bubbleThreads = discussions.slice(0, maxBubblesBeforeOverflow);
 	const overflowThreads = discussions.slice(maxBubblesBeforeOverflow);
 
-	// // get previousthreadId
-	// const ref = document.querySelector(`style.d-${activeThread}, style.lh-${activeThread}`);
-	// const previousSelectedNodeId = usePrevious(ref?.id);
-
-	// useEffect(() => {
-	// 	ref?.classList.add('.activeThread-background-color');
-	// }, [activeThread, previousSelectedNodeId, ref]);
-
 	return (
 		<span className="discussion-nav-component" style={accentStyle}>
 			<style>{`.d-${activeThreadHover}, .lh-${activeThreadHover} { background-color: rgba(0, 0, 0, 0.2) !important; }`}</style>
-			<style>
-				{(activeThread ? '.activeThread-background-color, ' : '') +
-					`.d-${activeThread}, .lh-${activeThread}, { background-color: ${fadedAccentColorDark} !important; }`}
-			</style>
+			{activeThread && (
+				<style>
+					{`.activeThread-background-color, .d-${activeThread}, .lh-${activeThread} { background-color: lime }`}
+				</style>
+			)}
 			{bubbleThreads.map(bubbleRenderer)}
 			{!!overflowThreads.length && (
 				<Popover
