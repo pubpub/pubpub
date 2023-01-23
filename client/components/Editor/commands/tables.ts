@@ -28,7 +28,16 @@ const findCurrentTable = cacheForEditorState((state: EditorState) => {
 const createTableCommandSpec = (command: Command, isActive?: (node: Node) => boolean) => {
 	return createCommandSpec((dispatch, state) => {
 		const currentTable = findCurrentTable(state);
-		const canRun = isInTable(state) && command(state);
+		let canRun = false;
+		try {
+			canRun = isInTable(state) && command(state);
+		} catch (_) {
+			// Sometimes it seems that ProseMirror gets upset while calling setNodeMarkup on our
+			// tables if they are the first node in the document. You can try this yourself by
+			// removing this try/catch, adding a table to the beginning of a Pub, and clicking into
+			// the table to get the hovering table controls. If that works fine, feel free to remove
+			// this block!
+		}
 		return {
 			canRun,
 			run: () => command(state, dispatch),
@@ -45,12 +54,13 @@ export const tableToggleLabel = createTableCommandSpec(
 		}
 		const table = findCurrentTable(state);
 		if (table) {
-			const transaction = state.tr.setNodeMarkup(table.pos, table.node.type, {
+			const { tr } = state;
+			tr.setNodeMarkup(table.pos, table.node.type, {
 				...table.node.attrs,
 				hideLabel: !table.node.attrs.hideLabel,
 			});
 			if (dispatch) {
-				dispatch(transaction);
+				dispatch(tr);
 			}
 			return true;
 		}
@@ -69,7 +79,7 @@ export const tableSetBreakoutSize = (size: null | number) => {
 					typeof size === 'number'
 						? { align: 'breakout', size }
 						: { align: null, size: null };
-				tr.setNodeMarkup(table.pos, table.node.type, {
+				tr.setNodeMarkup(table.pos, null, {
 					...table.node.attrs,
 					...newAttrs,
 				});
