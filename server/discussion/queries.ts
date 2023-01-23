@@ -82,9 +82,6 @@ export const createDiscussion = async (options: CreateDiscussionOpts) => {
 		userId,
 	} = options;
 
-	const user = userId || null;
-	const commenter = commenterName || null;
-
 	const discussions = await Discussion.findAll({
 		where: { pubId },
 		attributes: ['id', 'pubId', 'number'],
@@ -121,8 +118,8 @@ export const createDiscussion = async (options: CreateDiscussionOpts) => {
 	const { commenterId } = await createThreadComment({
 		text,
 		content,
-		commenterName: commenter,
-		userId: user,
+		commenterName,
+		userId,
 		threadId: newThread.id,
 	});
 
