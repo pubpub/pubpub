@@ -14,6 +14,7 @@ export const getInitialPluginState = (
 	return {
 		suggestionUserId,
 		isEnabled: false,
+		hasComputedSuggestionRanges: false,
 		suggestionMark: getSuggestionMarkTypeFromSchema(schema),
 		suggestionRanges: [],
 	};

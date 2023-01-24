@@ -22,14 +22,18 @@ export default (schema: Schema, options: PluginsOptions) => {
 				_,
 				newState: EditorState,
 			) => {
+				const { hasComputedSuggestionRanges } = pluginState;
 				const meta = tr.getMeta(suggestedEditsPluginKey);
-				const suggestionRanges = tr.docChanged
+				const shouldComputeSuggestionRanges = tr.docChanged || !hasComputedSuggestionRanges;
+				const suggestionRanges = shouldComputeSuggestionRanges
 					? getSuggestionRanges(newState.doc)
 					: pluginState.suggestionRanges;
 				return {
 					...pluginState,
 					...meta?.updatedState,
 					suggestionRanges,
+					hasComputedSuggestionRanges:
+						hasComputedSuggestionRanges || shouldComputeSuggestionRanges,
 				};
 			},
 		},
