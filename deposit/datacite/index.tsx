@@ -230,6 +230,11 @@ export function createDeposit(resource: Resource) {
 				<format>text/html</format>
 			</formats>
 			<language>en-US</language>
+			<rightsList>
+				<rights xml:lang="en-US" rightsURI={resource.license.uri}>
+					{resource.license.spdxIdentifier}
+				</rights>
+			</rightsList>
 		</resource>
 	);
 }

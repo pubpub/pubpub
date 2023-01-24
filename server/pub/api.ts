@@ -175,7 +175,7 @@ async function assertUserAuthorized(userId: string, pubId: string) {
 
 router
 	.post(
-		'/doi',
+		'/:pubId/doi',
 		wrap(async (req: PubRequest, res) => {
 			const pub = await findPub(req.params.pubId);
 			assertUserAuthorized(expect(req.user).id, pub.id);
@@ -222,7 +222,7 @@ router
 		}),
 	)
 	.post(
-		'/doi/preview',
+		'/:pubId/doi/preview',
 		wrap(async (req: PubRequest, res) => {
 			const pub = await findPub(req.params.pubId);
 			assertUserAuthorized(expect(req.user).id, pub.id);
@@ -247,4 +247,4 @@ router
 		}),
 	);
 
-app.use('/api/pub/:pubId', router);
+app.use('/api/pub', router);

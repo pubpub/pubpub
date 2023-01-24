@@ -1,4 +1,5 @@
 export type ResourceLicense = {
+	uri: string;
 	/**
 	 * SPDX license identifier.
 	 * @see {@link https://spdx.org/licenses}

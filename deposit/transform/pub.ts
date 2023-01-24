@@ -133,7 +133,7 @@ export async function transformPubToResource(pub: Pub, community: Community): Pr
 		kind: derivePubResourceKind(pub),
 		title: pub.title,
 		timestamp: new Date().toUTCString(),
-		license: { spdxIdentifier: license.spdxIdentifier },
+		license: { spdxIdentifier: license.spdxIdentifier, uri: license.link },
 		summaries: [],
 		descriptions: [],
 		contributions,

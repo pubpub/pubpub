@@ -48,7 +48,7 @@ export async function transformCollectionToResource(
 	community: Community,
 ): Promise<Resource> {
 	const facets = await fetchFacetsForScope({ collectionId: collection.id }, ['License']);
-	const licence = licenseDetailsByKind[facets.License.value.kind];
+	const license = licenseDetailsByKind[facets.License.value.kind];
 	const contributions: ResourceContribution[] = collection.attributions.flatMap(
 		(attribution) =>
 			attribution.roles?.map((role) =>
@@ -64,7 +64,7 @@ export async function transformCollectionToResource(
 				identifierValue: collectionUrl(community, collection),
 			},
 		],
-		license: { spdxIdentifier: licence.spdxIdentifier },
+		license: { spdxIdentifier: license.spdxIdentifier, uri: license.link },
 		timestamp: collection.updatedAt,
 		contributions,
 		relationships: [],
