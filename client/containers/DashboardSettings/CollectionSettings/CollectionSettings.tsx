@@ -116,9 +116,9 @@ const CollectionSettings = (props: Props) => {
 				<Deposit
 					depositTarget={depositTarget}
 					canIssueDoi
-					collectionData={collection}
+					collection={collection}
 					communityData={communityData}
-					updateCollectionData={() => {}}
+					updateCollection={() => {}}
 				/>,
 			],
 		},

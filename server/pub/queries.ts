@@ -1,7 +1,15 @@
 import striptags from 'striptags';
 import unescape from 'lodash.unescape';
 
-import { Collection, Community, Pub, PubAttribution, Member } from 'server/models';
+import {
+	Collection,
+	Community,
+	Pub,
+	PubAttribution,
+	Member,
+	CollectionAttribution,
+	includeUserModel,
+} from 'server/models';
 import { setPubSearchData, deletePubSearchData } from 'server/utils/search';
 import { createCollectionPub } from 'server/collectionPub/queries';
 import { createDraft } from 'server/draft/queries';
@@ -9,6 +17,7 @@ import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { getReadableDateInYear } from 'utils/dates';
 import { asyncForEach } from 'utils/async';
+import { buildPubOptions } from 'server/utils/queryHelpers';
 
 export const createPub = async (
 	{
@@ -129,3 +138,28 @@ export const destroyPub = async (pubId: string, actorId: null | string = null) =
 		return true;
 	});
 };
+
+const findCollectionOptions = {
+	include: [
+		{
+			model: CollectionAttribution,
+			as: 'attributions',
+			include: [includeUserModel({ as: 'user', required: false })],
+		},
+	],
+};
+
+const findPubOptions = buildPubOptions({
+	getCommunity: true,
+	getEdgesOptions: {
+		// Include Pub for both inbound and outbound pub connections
+		// since we do a lot of downstream processing with pubEdges.
+		includePub: true,
+		includeCommunityForPubs: true,
+	},
+});
+
+export const findCollection = (collectionId: string) =>
+	Collection.findOne({ where: { id: collectionId }, ...findCollectionOptions });
+
+export const findPub = (pubId: string) => Pub.findOne({ where: { id: pubId }, ...findPubOptions });

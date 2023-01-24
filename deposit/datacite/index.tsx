@@ -11,7 +11,9 @@ import {
 	ResourceRelationship,
 	ResourceRelation,
 } from 'deposit/types';
+import { DepositTarget } from 'types';
 import { exists, expect } from 'utils/assert';
+import { aes256Decrypt } from 'utils/crypto';
 
 function transformResourceKindToDataciteResourceType(kind: ResourceKind) {
 	switch (kind) {
@@ -84,6 +86,13 @@ function renderCreator(contribution: ResourceContribution) {
 	return (
 		<creator>
 			<creatorName>{contribution.contributor.name}</creatorName>
+			{contribution.contributor.orcid ? (
+				// @ts-expect-error
+				<nameIdentifier schemeURI="https://orcid.org/" nameIdentifierScheme="ORCID">
+					{contribution.contributor.orcid}
+					{/* @ts-expect-error */}
+				</nameIdentifier>
+			) : undefined}
 			{contribution.contributorAffiliation ? (
 				// @ts-expect-error
 				<affiliation>{contribution.contributorAffiliation}</affiliation>
@@ -225,19 +234,64 @@ export function createDeposit(resource: Resource) {
 	);
 }
 
-export async function submitDeposit(metadataXml: string, doi: string) {
-	let url = 'https://schema.datacite.org/meta/kernel-4.4/index.html';
-	let xml = Buffer.from(metadataXml).toString('base64');
-	let response = await fetch('https://api.test.datacite.org/dois', {
+function encodeDataciteCredentials(depositTarget: DepositTarget) {
+	const { username, password, passwordInitVec } = depositTarget;
+	const rawPassword = aes256Decrypt(
+		password,
+		expect(process.env.AES_ENCRYPTION_KEY),
+		passwordInitVec,
+	);
+	return Buffer.from(`${username}:${rawPassword}`).toString('base64');
+}
+
+export async function createDataciteDoiWithMetadata(
+	resourceXml: string,
+	resourceUrl: string,
+	resourceDoi: string,
+	depositTarget: DepositTarget,
+) {
+	const encodedXml = Buffer.from(resourceXml).toString('base64');
+	const encodedCredentials = encodeDataciteCredentials(depositTarget);
+	const body = {
+		data: {
+			id: resourceDoi,
+			type: 'dois',
+			attributes: { event: 'publish', doi: resourceDoi, url: resourceUrl, xml: encodedXml },
+		},
+	};
+	const response = await fetch('https://api.test.datacite.org/dois/', {
+		method: 'POST',
 		headers: {
 			'Content-Type': 'application/vnd.api+json',
-			Authorization: 'Basic ' + Buffer.from(process.env.DATACITE_AUTH!).toString('base64'),
+			Authorization: 'Basic ' + encodedCredentials,
 		},
-		body: JSON.stringify({
-			id: doi,
+		body: JSON.stringify(body),
+	});
+	return await response.json();
+}
+
+export async function updateDataciteDoiMetadata(
+	resourceXml: string,
+	resourceUrl: string,
+	resourceDoi: string,
+	depositTarget: DepositTarget,
+) {
+	const encodedXml = Buffer.from(resourceXml).toString('base64');
+	const encodedCredentials = encodeDataciteCredentials(depositTarget);
+	const body = {
+		data: {
+			id: resourceDoi,
 			type: 'dois',
-			attributes: { event: 'publish', doi, url, xml },
-		}),
+			attributes: { event: 'publish', doi: resourceDoi, url: resourceUrl, xml: encodedXml },
+		},
+	};
+	const response = await fetch('https://api.test.datacite.org/dois/' + resourceDoi, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/vnd.api+json',
+			Authorization: 'Basic ' + encodedCredentials,
+		},
+		body: JSON.stringify(body),
 	});
 	return await response.json();
 }

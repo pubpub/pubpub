@@ -1,6 +1,6 @@
 import { getPrimaryParentPubEdge, sanitizePubEdges } from 'deposit/utils';
 import { fetchFacetsForScope } from 'server/facets';
-import { Community, ExternalPublication, Pub, PubEdge } from 'types';
+import { Community, ExternalPublication, Pub, PubAttribution, PubEdge } from 'types';
 import { pubUrl } from 'utils/canonicalUrls';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { licenseDetailsByKind } from 'utils/licenses';
@@ -9,10 +9,24 @@ import { RelationType, relationTypeDefinitions } from 'utils/pubEdge';
 import {
 	AnyResource,
 	Resource,
+	ResourceContribution,
 	ResourceKind,
 	ResourceRelation,
 	ResourceRelationship,
+	ResourceContributorRole,
 } from '../types';
+
+const attributionRoleToResourceContributorRole: Record<string, ResourceContributorRole> = {
+	'Writing – Review & Editing': 'Editor',
+	Editor: 'Editor',
+	'Series Editor': 'Editor',
+	Translator: 'Translator',
+	Chair: 'Editor',
+};
+
+function transformAttributionRoleToResourceContributorRole(role: string): ResourceContributorRole {
+	return attributionRoleToResourceContributorRole[role] ?? 'Other';
+}
 
 const pubEdgeRelationTypeToResourceRelation: Record<
 	keyof typeof relationTypeDefinitions,
@@ -28,6 +42,21 @@ const pubEdgeRelationTypeToResourceRelation: Record<
 	translation: 'Translation',
 	version: 'Version',
 };
+
+function transformPubAttributionToResourceContribution(
+	attribution: PubAttribution,
+	role: string,
+): ResourceContribution {
+	return {
+		contributor: {
+			name: attribution.user?.fullName ?? attribution.name,
+			orcid: attribution.orcid,
+		},
+		contributorAffiliation: attribution.affiliation,
+		contributorRole: transformAttributionRoleToResourceContributorRole(role),
+		isAttribution: Boolean(attribution.isAuthor),
+	};
+}
 
 function derivePubResourceKind(pub: Pub): ResourceKind {
 	const primaryParentPubEdge = getPrimaryParentPubEdge(pub);
@@ -94,7 +123,12 @@ export async function transformPubToResource(pub: Pub, community: Community): Pr
 			transformOutboundEdgeToResourceRelationship(pubEdge, community),
 		),
 	);
-	const contributions = [];
+	const contributions: ResourceContribution[] = pub.attributions.flatMap(
+		(attribution) =>
+			attribution.roles?.map((role) =>
+				transformPubAttributionToResourceContribution(attribution, role),
+			) ?? transformPubAttributionToResourceContribution(attribution, 'Other'),
+	);
 	return {
 		kind: derivePubResourceKind(pub),
 		title: pub.title,

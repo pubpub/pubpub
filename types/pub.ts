@@ -86,6 +86,7 @@ export type Pub = {
 	reviews?: Review[];
 	releases: Release[];
 	pubVersions?: PubVersion[];
+	crossrefDepositRecordId?: string;
 	crossrefDepositRecord?: CrossrefDepositRecord;
 	inboundEdges?: InboundEdge[];
 	outboundEdges?: OutboundEdge[];

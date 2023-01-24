@@ -1,12 +1,26 @@
+import { renderXml } from '@pubpub/deposit-utils/datacite';
+import { Request, Router } from 'express';
+
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { indexByProperty } from 'utils/arrays';
-import { PubsQuery, PubGetOptions } from 'types';
+import { PubsQuery, PubGetOptions, Pub, DefinitelyHas } from 'types';
+
+import { assert, expect } from 'utils/assert';
+import { generateDoi, persistCrossrefDepositRecord, persistDoiData } from 'server/doi/queries';
+import { transformPubToResource } from 'deposit/transform/pub';
+import { Resource } from 'deposit/types';
+import {
+	createDataciteDoiWithMetadata,
+	createDeposit,
+	updateDataciteDoiMetadata,
+} from 'deposit/datacite';
 
 import { canCreatePub, getUpdatablePubFields, canDestroyPub } from './permissions';
-import { createPub, updatePub, destroyPub } from './queries';
+import { createPub, updatePub, destroyPub, findPub } from './queries';
 import { queryPubIds, getPubsById } from './queryMany';
+import { getCommunityDepositTarget } from 'server/depositTarget/queries';
 
 type ManyRequestParams = {
 	query: Omit<PubsQuery, 'communityId'>;
@@ -117,6 +131,7 @@ app.put(
 		throw new ForbiddenError();
 	}),
 );
+
 app.delete(
 	'/api/pubs',
 	wrap(async (req, res) => {
@@ -129,3 +144,107 @@ app.delete(
 		throw new ForbiddenError();
 	}),
 );
+
+let router = Router();
+
+function loadPubResourceMeta(
+	pub: DefinitelyHas<Pub, 'community'>,
+	pubResource: Resource,
+	pubDoi: string,
+) {
+	pubResource.identifiers.push({
+		identifierKind: 'DOI',
+		identifierValue: pubDoi,
+	});
+
+	pubResource.meta['created-date'] = pub.createdAt.toString();
+
+	if (pub.updatedAt !== pub.createdAt) {
+		pubResource.meta['updated-date'] = pub.updatedAt.toString();
+	}
+
+	pubResource.meta['publisher'] = pub.community.publishAs || 'PubPub';
+}
+
+type PubRequest = Request & { pub: DefinitelyHas<Pub, 'community'> };
+
+async function assertUserAuthorized(userId: string, pubId: string) {
+	const pubFields = await getUpdatablePubFields({ userId, pubId });
+	assert(expect(pubFields).includes('doi'));
+}
+
+router
+	.post(
+		'/doi',
+		wrap(async (req: PubRequest, res) => {
+			const pub = await findPub(req.params.pubId);
+			assertUserAuthorized(expect(req.user).id, pub.id);
+			const requestIds = {
+				communityId: pub.communityId,
+				pubId: pub.id,
+				collectionId: undefined,
+			};
+			const communityDepositTarget = expect(
+				await getCommunityDepositTarget(pub.communityId, true),
+			);
+			const pubDois = await generateDoi(requestIds, 'pub');
+			const pubDoi = expect(pubDois.pub);
+			const pubResource = await transformPubToResource(
+				// @ts-ignore
+				pub.get({ plain: true }),
+				pub.community,
+			);
+			const pubResourceUrl = expect(
+				pubResource.identifiers.find((identifier) => identifier.identifierKind === 'URL'),
+			).identifierValue;
+			loadPubResourceMeta(pub, pubResource, pubDoi);
+
+			try {
+				const pubDepositAst = createDeposit(pubResource);
+				const pubDepositXml = await renderXml(pubDepositAst);
+				const pubDepositResult = await (pub.crossrefDepositRecordId
+					? updateDataciteDoiMetadata
+					: createDataciteDoiWithMetadata)(
+					pubDepositXml,
+					pubResourceUrl,
+					pubDoi,
+					communityDepositTarget,
+				);
+				await Promise.all([
+					persistDoiData(requestIds, pubDois),
+					persistCrossrefDepositRecord(requestIds, pubDepositResult),
+				]);
+
+				return res.status(200).json(pubDepositAst);
+			} catch (error) {
+				return res.status(400).json({ error: (error as Error).message });
+			}
+		}),
+	)
+	.post(
+		'/doi/preview',
+		wrap(async (req: PubRequest, res) => {
+			const pub = await findPub(req.params.pubId);
+			assertUserAuthorized(expect(req.user).id, pub.id);
+			const requestIds = {
+				communityId: pub.communityId,
+				pubId: pub.id,
+				collectionId: undefined,
+			};
+			const pubDois = await generateDoi(requestIds, 'pub');
+			const pubResource = await transformPubToResource(
+				// @ts-ignore
+				pub.get({ plain: true }),
+				pub.community,
+			);
+			loadPubResourceMeta(pub, pubResource, expect(pubDois.pub));
+			try {
+				const pubDeposit = createDeposit(pubResource);
+				return res.status(200).json(pubDeposit);
+			} catch (error) {
+				return res.status(400).json({ error: (error as Error).message });
+			}
+		}),
+	);
+
+app.use('/api/pub/:pubId', router);

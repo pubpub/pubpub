@@ -184,9 +184,9 @@ const PubSettings = (props: Props) => {
 		return (
 			<SettingsSection title="DOI" showTitle={false}>
 				<Deposit
-					pubData={persistedPubData}
+					pub={persistedPubData}
 					communityData={communityData}
-					updatePubData={updatePersistedPubData}
+					updatePub={updatePersistedPubData}
 					canIssueDoi={canAdminCommunity}
 					depositTarget={settingsData.depositTarget}
 				/>

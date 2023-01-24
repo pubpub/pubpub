@@ -61,7 +61,7 @@ const findCommunity = (communityId) =>
 		attributes: ['id', 'title', 'issn', 'domain', 'subdomain', 'citeAs', 'publishAs'],
 	});
 
-const persistCrossrefDepositRecord = async (ids, depositJson) => {
+export const persistCrossrefDepositRecord = async (ids, depositJson) => {
 	const { collectionId, pubId } = ids;
 	const targetModel = pubId
 		? await Pub.findOne({
@@ -92,7 +92,7 @@ const persistCrossrefDepositRecord = async (ids, depositJson) => {
 	return targetModel;
 };
 
-const persistDoiData = (ids, dois) => {
+export const persistDoiData = (ids, dois) => {
 	const { collectionId, pubId } = ids;
 	const { collection: collectionDoi, pub: pubDoi } = dois;
 	const updates = [];
