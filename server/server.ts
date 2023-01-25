@@ -60,6 +60,13 @@ if (process.env.NODE_ENV === 'production') {
 	});
 	app.use(Sentry.Handlers.requestHandler({ user: ['id', 'slug'] }));
 	app.use(enforce.HTTPS({ trustProtoHeader: true }));
+	// Send a sentry warning after 25 seconds of request processing
+	app.use((req, res, next) => {
+		res.setTimeout(25000, () => {
+			Sentry.captureMessage('Slow request warning');
+		});
+		next();
+	});
 }
 app.use(deduplicateSlash());
 app.use(noSlash());
@@ -67,14 +74,6 @@ app.use(compression());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
-
-// Send a sentry warning after 25 seconds of request processing
-app.use((req, res, next) => {
-	res.setTimeout(25000, () => {
-		Sentry.captureMessage('Slow request warning');
-	});
-	next();
-});
 
 /* --------------------- */
 /* Configure app session */
