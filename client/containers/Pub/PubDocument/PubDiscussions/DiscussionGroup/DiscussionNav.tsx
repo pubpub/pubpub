@@ -117,7 +117,7 @@ const DiscussionNav = (props: Props) => {
 			<style>{`.d-${activeThreadHover}, .lh-${activeThreadHover} { background-color: rgba(0, 0, 0, 0.2) !important; }`}</style>
 			{activeThread && (
 				<style>
-					{`.d-${activeThread}, .lh-${activeThread} { background-color: ${fadedAccentColorDark} }`}
+					{`.d-${activeThread}, .lh-${activeThread} { background-color: var(--pubpub-active-discussion-highlight-color, ${fadedAccentColorDark}) }`}
 				</style>
 			)}
 			{bubbleThreads.map(bubbleRenderer)}
