@@ -11,9 +11,11 @@ const models = modelize`
 				User pubViewer {}
 			}
 			Release {
+				User {}
 				historyKey: 10
 			}
 			Release {
+				User {}
 				historyKey: 25
 			}
 		}

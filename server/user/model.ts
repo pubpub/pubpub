@@ -61,12 +61,16 @@ export default (sequelize, dataTypes) => {
 				associate: (models) => {
 					const {
 						pubAttribution,
+						collectionAttribution,
 						discussion,
 						userNotificationPreferences,
 						visibility,
 						visibilityUser,
 					} = models;
 					user.belongsToMany(visibility, { through: visibilityUser });
+					user.hasMany(collectionAttribution, {
+						onDelete: 'CASCADE',
+					});
 					user.hasMany(pubAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',

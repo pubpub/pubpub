@@ -19,11 +19,13 @@ export const models = modelize`
         } 
         Pub p2 {
             Release {
+								User {}
                 createdAt: "2020-02-05"
             }
         }
         Pub p3 {
             Release {
+								User {}
                 createdAt: "2020-03-09"
             }
             outboundEdges: PubEdge {
@@ -37,6 +39,7 @@ export const models = modelize`
         Pub p4 {
             customPublishedAt: "2020-04-15"
             Release {
+								User {}
                 createdAt: "2020-08-15"
             }
             outboundEdges: PubEdge {
@@ -49,6 +52,7 @@ export const models = modelize`
         }
         Pub p5 {
             Release {
+								User {}
                 createdAt: "2020-05-26"
             }
             outboundEdges: PubEdge {

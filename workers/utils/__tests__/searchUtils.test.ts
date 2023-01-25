@@ -51,6 +51,7 @@ const models = modelize`
                 }
             }
             Release {
+								User {}
                 createdAt: "2021-01-01"
                 historyKey: 1
                 Doc {
@@ -58,6 +59,7 @@ const models = modelize`
                 }
             }
             Release {
+								User {}
                 createdAt: "2020-01-02"
                 historyKey: 2
                 Doc {

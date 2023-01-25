@@ -16,7 +16,9 @@ const models = modelize`
 			User communityManager {}
 		}
 		Pub pub {
-			Release {}
+			Release {
+				User {}
+			}
 			Member {
 				permissions: "admin"
 				User pubAdmin {}

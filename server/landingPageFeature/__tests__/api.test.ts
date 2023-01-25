@@ -12,10 +12,14 @@ const models = modelize`
             User rando {}
         }
         Pub p1 {
-            Release {}
+            Release {
+							  User {}
+						}
         }
         Pub p2 {
-            Release {}
+            Release {
+							  User {}
+				    }
         }
         Pub p3 {}
     }

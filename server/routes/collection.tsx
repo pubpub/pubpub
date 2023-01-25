@@ -25,7 +25,7 @@ import { LayoutBlockSubmissionBanner } from 'utils/layout';
 const findCollectionByPartialId = (maybePartialId: string) => {
 	return Collection.findOne({
 		where: [
-			sequelize.where(sequelize.cast(sequelize.col('Collection.id'), 'varchar'), {
+			sequelize.where(sequelize.cast(sequelize.col('collection.id'), 'varchar'), {
 				[Op.iLike]: `${maybePartialId}%`,
 			}),
 		],
