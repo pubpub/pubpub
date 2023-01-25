@@ -14,11 +14,16 @@ const createInlineDecoration = (
 	discussionId: string,
 	from: number,
 	to: number,
+	expanded: boolean,
 ): DiscussionDecoration => {
 	return Decoration.inline(
 		from,
 		to,
-		{ class: `discussion-range d-${discussionId}` },
+		{
+			class: expanded
+				? `discussion-range d-${discussionId} discussion-range-expanded`
+				: `discussion-range d-${discussionId}`,
+		},
 		{ key: `discussion-inline-${discussionId}` },
 	);
 };
@@ -35,11 +40,11 @@ const createWidgetDecoration = (discussionId: string, position: number): Discuss
 };
 
 const getDecorationsForDiscussion = (discussionId: string, discussion: DiscussionInfo) => {
-	const { selection } = discussion;
+	const { selection, expanded } = discussion;
 	if (selection) {
 		const { from, to } = getRangeFromSelection(selection);
 		return [
-			createInlineDecoration(discussionId, from, to),
+			createInlineDecoration(discussionId, from, to, !!expanded),
 			createWidgetDecoration(discussionId, to),
 		];
 	}

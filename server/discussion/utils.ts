@@ -9,7 +9,7 @@ import { createDiscussionAnchor } from 'server/discussionAnchor/queries';
 
 type DiscussionWithAnchors = types.SequelizeModel<types.DefinitelyHas<types.Discussion, 'anchors'>>;
 
-type ExtendedDiscussionInfo = DiscussionInfo & {
+type ExtendedDiscussionInfo = Omit<DiscussionInfo, 'expanded'> & {
 	discussionId: string;
 } & Pick<types.DiscussionAnchor, 'originalText' | 'originalTextPrefix' | 'originalTextSuffix'>;
 
