@@ -8,7 +8,6 @@ import enforce from 'express-sslify';
 import express from 'express';
 import noSlash from 'no-slash';
 import passport from 'passport';
-import passportOAuth1 from 'passport-oauth1';
 import path from 'path';
 
 import { setEnvironment, setAppCommit, isProd, getAppCommit } from 'utils/environment';
@@ -21,7 +20,8 @@ setAppCommit(process.env.HEROKU_SLUG_COMMIT);
 import 'server/utils/serverModuleOverwrite';
 import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
 
-import { sequelize, User, Integration, IntegrationDataOAuth1 } from './models';
+import { sequelize, User } from './models';
+import { zoteroAuthStrategy } from './integration/utils/auth';
 import './hooks';
 
 // Wrapper for app.METHOD() handlers. Though we need this to properly catch errors in handlers that
@@ -109,61 +109,7 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
-passport.use(
-	'zotero',
-	new passportOAuth1.Strategy(
-		{
-			requestTokenURL: 'https://www.zotero.org/oauth/request',
-			accessTokenURL: 'https://www.zotero.org/oauth/access',
-			userAuthorizationURL: 'https://www.zotero.org/oauth/authorize',
-			consumerKey: process.env.ZOTERO_CLIENT_KEY,
-			consumerSecret: process.env.ZOTERO_CLIENT_SECRET,
-			callbackURL: 'http://lvh.me:9876/auth/zotero/redirect',
-			signatureMethod: 'HMAC-SHA1',
-			passReqToCallback: true,
-		},
-		(req, token, tokenSecret, params, profile, cb) => {
-			const userId = req.user.id;
-			const { username: externalUsername, userID: externalUserId } = params;
-			const externalUserData = {
-				externalUserId,
-				externalUsername,
-			};
-			const integrationDataOAuth1 = {
-				userId,
-				accessToken: token,
-			};
-			return User.findOne({
-				where: { userId },
-				include: {
-					model: Integration,
-					where: { name: 'zotero' },
-					include: { model: IntegrationDataOAuth1 },
-				},
-			})
-				.then((user) => {
-					if (!user.integrations.length) {
-						return user.createIntegration({
-							name: 'zotero',
-							authSchemeName: 'OAuth1',
-							externalUserData,
-							integrationDataOAuth1,
-						});
-					}
-					const integration = user.integrations[0];
-					return integration
-						.getIntegrationData()
-						.then((oldData) => oldData.update(integrationDataOAuth1))
-						.then(() => integration);
-				})
-				.then((integration) => {
-					console.log({ integration });
-					cb(null, req.user);
-				})
-				.catch((err) => cb(err));
-		},
-	),
-);
+passport.use('zotero', zoteroAuthStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 

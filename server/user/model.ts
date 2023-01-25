@@ -75,7 +75,7 @@ export default (sequelize, dataTypes) => {
 						as: 'userNotificationPreferences',
 						foreignKey: 'userId',
 					});
-					User.hasMany(integration);
+					User.hasMany(integration, { foreignKey: { name: 'userId', allowNull: false } });
 				},
 			},
 		},

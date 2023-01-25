@@ -6,7 +6,6 @@ export default (sequelize, dataTypes) =>
 		},
 		{
 			tableName: 'IntegrationDataOAuth1',
-			freezeTableName: true, // prevents sequelize pluralizing table name
 			classMethods: {
 				associate: (models) => {
 					const { integrationDataOAuth1, integration } = models;
