@@ -50,13 +50,17 @@ const models = modelize`
 			CollectionPub {
 				rank: "a"
 				Pub pub1 {
-					Release {}
+					Release {
+						User {}
+					}
 				}
 			}
 			CollectionPub someCollectionPub {
 				rank: "b"
 				Pub pub2 {
-					Release {}
+					Release {
+						User {}
+					}
 					Member {
 						permissions: "manage"
 						User someMember {}

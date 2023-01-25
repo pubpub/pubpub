@@ -46,7 +46,7 @@ const models = modelize`
     Community community {
 		id: ${communityId}
         Pub pub {
-			id: ${pubId}
+						id: ${pubId}
             Discussion {
                 number: 1
                 author: user
@@ -55,29 +55,19 @@ const models = modelize`
                     access: "public"
                 }
             }
+						ActivityItem activityItem1 {
+								kind: 'pub-discussion-comment-added'
+								payload: ${fakePayload}
+						}
+						ActivityItem activityItem2 {
+								kind: 'pub-discussion-comment-added'
+								payload: ${fakePayload}
+						}
+						ActivityItem activityItem3 {
+								kind: 'pub-discussion-comment-added'
+								payload: ${fakePayload}
+						}
         }
-    }
-
-    ActivityItem activityItem1 {
-        communityId: ${communityId}
-        pubId: ${pubId}
-        kind: 'pub-discussion-comment-added'
-		payload: ${fakePayload}
-    }
-
-    ActivityItem activityItem2 {
-        communityId: ${communityId}
-        pubId: ${pubId}
-        kind: 'pub-discussion-comment-added'
-		payload: ${fakePayload}
-
-    }
-
-    ActivityItem activityItem3 {
-        communityId: ${communityId}
-        pubId: ${pubId}
-        kind: 'pub-discussion-comment-added'
-		payload: ${fakePayload}
     }
 
     Thread thread {
@@ -87,17 +77,17 @@ const models = modelize`
             UserNotification n1 {
                 user: user
                 activityItem: activityItem1
-				createdAt: ${getTimestampForElapsedMinutes(0)}
+								createdAt: ${getTimestampForElapsedMinutes(0)}
             }
             UserNotification n2 {
                 user: user
                 activityItem: activityItem2
-				createdAt: ${getTimestampForElapsedMinutes(60)}
+								createdAt: ${getTimestampForElapsedMinutes(60)}
             }
             UserNotification n3 {
                 user: user
                 activityItem: activityItem3
-				createdAt: ${getTimestampForElapsedMinutes(75)}
+								createdAt: ${getTimestampForElapsedMinutes(75)}
             }
         }
     }
@@ -174,7 +164,7 @@ describe('/api/userNotifications', () => {
 		).toEqual(0);
 	});
 
-	it('Lets a user delete their own notificagtions', async () => {
+	it('Lets a user delete their own notifications', async () => {
 		const { user, n1, n2, n3 } = models;
 		const agent = await login(user);
 		await agent

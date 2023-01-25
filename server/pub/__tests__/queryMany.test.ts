@@ -77,9 +77,11 @@ const models = modelize`
                 c3
             }
             Release {
+							  User {}
                 createdAt: "2021-11-01"
             }
             Release {
+							  User {}
                 createdAt: "2021-12-02"
             }
             ReviewNew {
@@ -103,6 +105,7 @@ const models = modelize`
                 c3
             }
             Release {
+							  User {}
                 createdAt: "2021-10-01"
             }
 			Member {

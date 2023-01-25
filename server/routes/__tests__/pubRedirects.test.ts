@@ -13,9 +13,15 @@ const models = modelize`
 			}
 		}
 		Pub releasePub {
-			Release {}
-			Release {}
-			Release {}
+			Release {
+				User {}
+			}
+			Release {
+				User {}
+			}
+			Release {
+				User {}
+			}
 		}
 	}
 `;

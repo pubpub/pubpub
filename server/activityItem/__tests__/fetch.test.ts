@@ -51,6 +51,7 @@ const models = modelize`
 				Pub pub {
 					title: "Generic Pub"
 					Release release {
+						User {}
 						createdAt: "2021-01-01"
 						historyKey: 1
 					}

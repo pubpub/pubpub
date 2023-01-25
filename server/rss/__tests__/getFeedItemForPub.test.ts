@@ -9,6 +9,7 @@ const models = modelize`
             downloads: ${[{ type: 'formatted', url: 'formatted_download.pdf' }]}
             avatar: "avatar.png"
             Release {
+							  User {}
                 historyKey: 1
             }
             Export {

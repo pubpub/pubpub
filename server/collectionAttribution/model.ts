@@ -18,10 +18,10 @@ export default (sequelize, dataTypes) => {
 				associate: (models) => {
 					const { collectionAttribution } = models;
 					collectionAttribution.belongsTo(models.user, {
-						foreignKey: { allowNull: false },
 						onDelete: 'CASCADE',
 					});
 					collectionAttribution.belongsTo(models.collection, {
+						foreignKey: { allowNull: false },
 						onDelete: 'CASCADE',
 					});
 				},
