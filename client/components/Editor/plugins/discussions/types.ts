@@ -12,7 +12,6 @@ export type DiscussionInfo = {
 	initHead: number;
 	initAnchor: number;
 	selection: null | DiscussionSelection;
-	expanded?: boolean;
 };
 
 export type CompressedDiscussionInfo = {

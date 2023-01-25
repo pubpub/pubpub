@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Color from 'color';
 import { Button, Popover, Menu, MenuItem } from '@blueprintjs/core';
-// import { usePrevious } from 'react-use';
 
 import { Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
