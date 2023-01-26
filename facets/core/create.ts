@@ -1,8 +1,8 @@
-import { FacetDefinition, FacetInstanceType } from './facet';
+import { FacetDefinition, FacetInstance } from './facet';
 
 export function createEmptyFacetInstance<
 	Definition extends FacetDefinition,
-	Type = FacetInstanceType<Definition>,
+	Type = FacetInstance<Definition>,
 >(definition: Definition): Type {
 	const { props } = definition;
 	const emptyFacet: Partial<Type> = {};
@@ -15,8 +15,8 @@ export function createEmptyFacetInstance<
 
 export function createFacetInstance<Definition extends FacetDefinition>(
 	definition: Definition,
-	args: Partial<FacetInstanceType<Definition>> = {},
-): FacetInstanceType<Definition> {
+	args: Partial<FacetInstance<Definition>> = {},
+): FacetInstance<Definition> {
 	return {
 		...createEmptyFacetInstance(definition),
 		...args,

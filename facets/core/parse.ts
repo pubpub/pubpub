@@ -1,4 +1,4 @@
-import { FacetDefinition, FacetInstanceType } from './facet';
+import { FacetDefinition, FacetInstance } from './facet';
 import { FacetParseError } from './errors';
 
 type ParseResult<
@@ -14,7 +14,7 @@ function parsePartialOrEntireFacetInstance<
 	InstanceKey extends keyof Def['props'],
 	AllowPartialInstance extends boolean,
 	ThrowErrorOnFailure extends boolean,
-	ParsedType = Pick<FacetInstanceType<Def>, InstanceKey>,
+	ParsedType = Pick<FacetInstance<Def>, InstanceKey>,
 >(
 	definition: Def,
 	instance: Record<InstanceKey, any>,
