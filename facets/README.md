@@ -35,7 +35,7 @@ Here's a rule that, if you let it percolate while you sleep, explains a lot abou
 
 > Every scope has exactly one value for each facet.
 
-Don't try to parse this out right now — but hold it in your head as you read
+Don't try to parse this out right now — but try to hold it in your head as you read.
 
 ## Some terminology
 
@@ -206,9 +206,7 @@ This seems backwards at first; why define types with runtime objects? _Because y
 
 Zod is a well-tested, widely-used elaboration on this idea. It's _great_ for Facets because we want good TypeScript coverage, but we also want to construct database tables and parse objects against a schema at runtime.
 
-# Cascading and nullability
-
-## A taste of cascading
+# Cascading, nullability, and root values
 
 Here's a simplified example of a facet cascade. We have three `FacetInstance<T>` objects from different scopes, and we will use them to produce a `FacetValue<T>` holding the cascaded value:
 
@@ -268,7 +266,7 @@ FacetInstance<typeof PubHeaderTheme> = {
 };
 ```
 
-This sounds like a nuisance to work with, but remember that most code outside of the facets library will be working with cascaded **facet values** instead of **facet instances**. And we have a trick up our sleeve to eliminate most `null`s in this context.
+This sounds like a nuisance to work with, but remember that most code outside of the facets library will be working with cascaded **facet values** instead of **facet instances**. And we have a trick up our sleeve to eliminate most nulls in this context.
 
 ## Root values for props
 
@@ -295,10 +293,10 @@ const cascadedValue = cascade([
     { backgroundImage: null, backgroundColor: "#0f0", textStyle: "white-blocks" }, // From Community
     { backgroundImage: null, backgroundColor: "#00f", textStyle: "dark" }, // From Collection
     { backgroundImage: "test.png", backgroundColor: null, textStyle: "light" }, // From Pub
-])
+]);
 ```
 
-Setting a `rootValue` for a prop will narrow the `FacetValue` type for its facet, removing `null` from prop types that can logically no longer be null:
+Setting a non-null `rootValue` for a prop will narrow its type so it can logically never be null:
 
 ```ts
 // Facet instances have all-nullable props.
@@ -315,3 +313,100 @@ FacetValue<typeof PubHeaderTheme> = {
     textStyle: 'light' | 'dark' | ...;
 };
 ```
+
+## Advanced: Cascade strategies
+
+(Fill in later)
+
+# Utilities to create, parse, and cascade facets
+
+> ⚠️ This section serves as an API overview for some of the more internal parts of the Facets system. It's good to know about these functions, but you probably won't have to use them in day-to-day code.
+
+All of these functions take a `definition` as an argument — one of the `FacetDefinition` instances exported from `facets/definitions`. **They are also isomorphic, pure, and runtime-agnostic** — they don't persist anything, only create and manipulate vanilla JS objects.
+
+## `createDefaultFacetInstance`
+
+```ts
+createDefaultFacetInstance<Def extends FacetDefinition>(definition: Def): FacetInstance<Def>
+```
+
+This creates a facet instance for `definition` using the `defaultValues` provided in that definition's props. Where there is no default value, `null` is used. _Remember that a facet instance with all-null props is completely valid!_
+
+## `createFacetInstance`
+
+```ts
+createFacetInstance<Def extends FacetDefinition>(
+    definition: Def,
+    values: Partial<FacetInstance<Def>>,
+): FacetInstance<Def>
+```
+
+This creates a facet instance for `definition`, including the default values, and `values` that you pass along for its props. If you look carefully you'll see that this function does...almost nothing, because facet instances are vanilla JS objects. :)
+
+## `parseFacetInstance`
+
+```ts
+parseFacetInstance<Def extends FacetDefinition>(
+    definition: Def,
+    instance: Record<keyof Def['props'], any>,
+    throwErrorOnInvalidProps: boolean = false,
+): ParseResult<Def> throws FacetParseError
+```
+
+This looks at the `instance` object (which could be anything) and parses it into an object with `{ valid, invalid }` properties:
+
+- `valid` contains a `Partial<FacetInstance<Def>>` with the part of the given `instance` with valid prop values.
+- `invalid` contains any invalid values from `instance`.
+
+The function throws a `FacetParseError` if there are missing keys in `instance`. If `throwErrorOnInvalidProps` is set, the function will throw a `FacetParseError` if there are any props in `invalid`.
+
+If `throwErrorOnInvalidProps = true` and no error is thrown, it is statically known that `valid` is a full and complete `FacetInstance<Def>`.
+
+## `parsePartialFacetInstance`
+
+```ts
+parsePartialFacetInstance<Def extends FacetDefinition>(
+    definition: Def,
+    instance: Record<keyof Def['props'], any>,
+    throwErrorOnInvalidProps: boolean = false,
+): ParseResult<Def> throws FacetParseError
+```
+
+This works just like `parseFacetInstance` except it does not throw a `FacetParseError` if there are keys missing from `instance`. Parsing a partial facet is useful when receiving updates to its value from the client.
+
+## `cascade`
+
+```ts
+cascade<Def extends FacetDefinition>(
+    definition: Def,
+    stack: FacetInstanceStack<Def>,
+): FacetCascadeResult<Def>
+```
+
+This is the real version of the toy `cascade` function introduced earlier. Using it requires a `FacetInstanceStack<Def>` which is a heavy piece of machinery:
+
+```ts
+type FacetSourceScope =
+	| { kind: 'community' | 'collection' | 'pub'; id: string }
+	| { kind: 'root' };
+
+type FacetInstanceStack = {
+    scope: FacetSourceScope;
+    facetBindingId: null | string;
+    value: FacetInstance<Def>;
+}[];
+```
+
+A lot going on there, but you can basically think of it as _an array of `FacetInstance<Def>` associated with information about what scope those instances belong to_. (Note the fake `root` scope we discussed above!)
+
+The return value is just as hefty:
+
+```ts
+type FacetCascadeResult = {
+	value: FacetValue<Def>;
+	props: { [K in keyof Def['props']]: FacetPropCascadeResult<Def['props'][K]> };
+	stack: FacetInstanceStack<Def>;
+};
+```
+
+The important bit here is the `value: FacetValue<Def>` that's returned. But some callers are also interested in the `props` object, which breaks down how each prop in the facet ended up cascading. And it returns its own `stack` argument for convenience.
