@@ -2,14 +2,15 @@
 
 A **facet** is a kind of structured data that attaches to any kind of **scope**: a Community, Collection, or Pub. We have facets because we often want to unify a certain behavior across all scope kinds — for instance, to let any scope kind accept a certain metadata value. We also sometimes want to decouple where a property is _stored_ from where it is _used_ — for instance, we want to let users configure default values for Pub settings at the Community level.
 
+# Introduction
+
 At the highest level, facets are:
 
+- Made of _props_ — they're just objects with properties, one layer deep
 - Defined in a backend-agnostic way in the `facets/definitions` directory
-- Mapped to Sequelize models (and thus database tables) in a predictable way
-- Stored and retrieved with functions that abstract over Sequelize and Postgres
+- Stored in regular Postgres tables managed by Sequelize
 - ✨ _Cascading_ ✨ — values from parent scopes are used as defaults by their descendants
 - Useful for storing serializable data — less so anything that requires associations or foreign keys
-- Managed through a common set of UI primitives and React hooks on the frontend
 - Readable to the world. Writable by any `Member` of a scope with `manage`-level permissions or higher.
 
 If you haven't already, you should start by visiting `facets/definitions` to get a feel for how we define facets in practice.
@@ -32,21 +33,31 @@ _You might like to skim [Everything is a Facet](https://notes.knowledgefutures.o
 
 Here's a rule that, if you let it percolate while you sleep, explains a lot about how facets work:
 
-> Every scope has exactly one value for every facet.
+> Every scope has exactly one value for each facet.
 
-This is true even if the scope is brand-new, and there's no
+Don't try to parse this out right now — but hold it in your head as you read
 
-Here are three things that you might informally refer to as a "facet". It's fine to do this, but these names help disambiguate them.
+## Some terminology
 
-- A **facet definition** is a JavaScript object that describes the properties that a kind of facet has. We derive a TypeScript type and a Sequelize-backed database table from this.
-- A **facet instance** is a JavaScript object that satisfies that type, or fits into that database table. All of its properties are nullable.
-- A **facet cascade result** is the result of taking facets from nested scopes and cascading them "downwards", typically so that results at lower scopes take precedence.
+Here are three different things that you might informally refer to as a "facet":
 
+- A **facet definition** (`FacetDefinition`) is a JavaScript object that describes the properties that a kind of facet has. We derive a TypeScript type and a Sequelize-backed database table from this.
 
+- A **facet instance** (`FacetInstance<Definition>`) is a JavaScript object that satisfies a facet definition. These are attached to a scope and stored in entries of the Postgres table for its `Definition`. We mostly manipulate these in server-side CRUD code.
 
-## Anatomy of a facet definition
+- A **facet value** (`FacetValue<Definition>`) is a **read-only value** computed on the fly by examining the facet instances of a scope and its ancestors, and "cascading" its values, generally so that lower scopes take precedence. This is what client-side code will see as the facet value for a scope. We don't persist these anywhere, but we could as a caching optimization.
 
-I'm omitting some TypeScript generics-plumbing for the sake of readability, here, and I'll speak somewhat loosely about types. TL;DR:
+These are listed in order of durability. **Facet definitions** are hard-coded in our source; **facet instances** live in our database; **facet values** are ephemeral and exist in memory and on the wire.
+
+Let's reconsider our maxim using these new terms:
+
+> Every scope has exactly one `FacetValue<Def>` for each `FacetDefinition` 
+> 
+> ... _(which is computed from the `FacetInstance<Def>` database entries for the scope and its parents)_.
+
+# Anatomy of a facet definition
+
+Here I'll omitting some TypeScript generics-plumbing for the sake of readability, and I'll speak somewhat loosely about types. TL;DR:
 
 - A `FacetDefinition` is made of a name, label, and some `FacetProps`.
 - A `FacetProp` is made of a name, label, some defaults, and a `FacetPropType`.
@@ -54,7 +65,7 @@ I'm omitting some TypeScript generics-plumbing for the sake of readability, here
 
 Feel free to allow along using the examples in `facets/definitions`.
 
-### Defining a facet
+## Defining a facet
 
 The `facet()` function is used to create a facet definition:
 
@@ -72,7 +83,7 @@ It takes as arguments:
 - An optional `label` for the facet — a very short description that may appear in the UI.
 - A `props` that describe its properties.
 
-By convention, a facet is exported from `facets/definitions/index.ts` using a symbol name that matches its `name` property. (This is important, and is something we could choose to enforce programmatically in the future.)
+> ⚠️ By convention, a facet is exported from `facets/definitions/index.ts` using a symbol name that matches its `name` property. (This is important, and is something we could choose to enforce programmatically in the future.)
 
 <details>
 <summary>
@@ -99,7 +110,7 @@ export const PubHeaderTheme = facet({
 
 </details>
 
-### Defining facet props
+## Defining facet props
 
 The `prop()` function is used to define a facet prop:
 
@@ -194,3 +205,113 @@ type User = z.infer<typeof User>; // { username: string }
 This seems backwards at first; why define types with runtime objects? _Because you can't do it the other way around:_ there is a `typeof` operator in TS that lets you infer a type from a runtime object, but nothing that lets you do the opposite.
 
 Zod is a well-tested, widely-used elaboration on this idea. It's _great_ for Facets because we want good TypeScript coverage, but we also want to construct database tables and parse objects against a schema at runtime.
+
+# Cascading and nullability
+
+## A taste of cascading
+
+Here's a simplified example of a facet cascade. We have three `FacetInstance<T>` objects from different scopes, and we will use them to produce a `FacetValue<T>` holding the cascaded value:
+
+```ts
+// Using an imaginary, simplified cascade() function
+const cascadedValue = cascade([
+    { backgroundImage: null, backgroundColor: "#0f0", textStyle: "white-blocks" }, // From Community
+    { backgroundImage: null, backgroundColor: "#00f", textStyle: "dark" }, // From Collection
+    { backgroundImage: "test.png", backgroundColor: null, textStyle: "light" }, // From Pub
+])
+```
+
+Partially evaluated, the cascade looks a little like this:
+
+```ts
+// Using an imaginary, simplified cascadeProp() function
+{
+    backgroundImage: cascadeProp([null, null, "test.png"]),
+    backgroundColor: cascadeProp(["#0f0", "#00f", null]),
+    textStyle: cascadeProp(["white-blocks", "dark", "light"]),
+}
+```
+
+The result of this cascade is:
+
+```ts
+{
+    backgroundImage: "test.png",
+    backgroundColor: "#00f",
+    textStyle: "light",
+}
+```
+
+Which is pretty intuitive — _cascading_ is just selecting from the lowest scope having a non-`null` value.
+
+## `null` means "cascade through me"
+
+As the value for a facet prop, `null` is a special signal. It means _there's no value here — use the value cascaded from my parent scopes_. All `FacetInstance` prop values are nullable _(not optional)_.
+
+Here is a screenshot of an actual facet prop in the PubPub UI. Clicking the `[x]` button in the corner sets the value of the `PubHeaderTheme` facet instance for this scope to `null`:
+
+<img width="405" src="https://user-images.githubusercontent.com/2208769/214855522-7be6a5a7-3964-447f-b291-f57d55b07df9.png">
+
+Before we clicked the button, the prop editor said _Defined here_. Clicking the button set the prop value to `null`. And now, it says _Defined by Community_, and displays a value cascaded from the Community scope:
+
+<img width="405" src="https://user-images.githubusercontent.com/2208769/214855523-fa4aad6d-ce99-43e9-948f-f3f7db503a8a.png">
+
+For things to work this way, **props on facet instances must always nullable**. You can see that from our type definitions:
+
+```ts
+// If the `typeof` here catches you off guard, remember that PubHeaderTheme
+// is a facet definition -- a JS runtime object.
+FacetInstance<typeof PubHeaderTheme> = {
+    backgroundImage: null | string;
+    backgroundColor: null | string;
+    textStyle: null | 'light' | 'dark' | ...;
+};
+```
+
+This sounds like a nuisance to work with, but remember that most code outside of the facets library will be working with cascaded **facet values** instead of **facet instances**. And we have a trick up our sleeve to eliminate most `null`s in this context.
+
+## Root values for props
+
+You'll commonly see _PubPub Default_ as the source of a facet prop:
+
+<img width="405" src="https://user-images.githubusercontent.com/2208769/214855519-399ae3b3-1660-4a74-adf0-e9e503b15c27.png">
+
+What we call _PubPub Default_ in user-facing copy is actually the `rootValue` from the facet prop definition. You can imagine the root values for each prop forming a facet instance in some imaginary "root scope" that cascades values down to all Communities. That's how it's implemented, too. Here are the props definitions for `PubHeaderTheme`:
+
+```ts
+{
+    backgroundImage: prop(string, { rootValue: null }),
+    backgroundColor: prop(string, { rootValue: 'community' }),
+    textStyle: prop(textStylePropType, { rootValue: 'light' }),
+}
+```
+
+We interpret this as an additional layer of values at the top of the cascade:
+
+```ts
+// Using an imaginary, simplified cascade() function
+const cascadedValue = cascade([
+    { backgroundImage: null, backgroundColor: 'community', textStyle: 'light' } // From root values
+    { backgroundImage: null, backgroundColor: "#0f0", textStyle: "white-blocks" }, // From Community
+    { backgroundImage: null, backgroundColor: "#00f", textStyle: "dark" }, // From Collection
+    { backgroundImage: "test.png", backgroundColor: null, textStyle: "light" }, // From Pub
+])
+```
+
+Setting a `rootValue` for a prop will narrow the `FacetValue` type for its facet, removing `null` from prop types that can logically no longer be null:
+
+```ts
+// Facet instances have all-nullable props.
+FacetInstance<typeof PubHeaderTheme> = {
+    backgroundImage: null | string;
+    backgroundColor: null | string;
+    textStyle: null | 'light' | 'dark' | ...;
+};
+
+// Accounting for cascading, and root values, facet values may have fewer nullable props.
+FacetValue<typeof PubHeaderTheme> = {
+    backgroundImage: null | string;
+    backgroundColor: string;
+    textStyle: 'light' | 'dark' | ...;
+};
+```
