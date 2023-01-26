@@ -104,6 +104,21 @@ const inlineMathRule = (
 // textblock starting with two dollar signs into a math block.
 const blockMathRule = (nodeType) => makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, nodeType);
 
+const HTTP_LINK_REGEX =
+	// eslint-disable-next-line no-useless-escape
+	/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
+
+const autoLinkRule = (nodeType: MarkType) =>
+	new InputRule(
+		HTTP_LINK_REGEX,
+		(state: EditorState, match: RegExpMatchArray, start: number, end: number) => {
+			const url = match[1];
+			// what is thisß
+			const startPos = pos.move(-match[0].length);
+			return state.tr.addMark(start, end, nodeType.create({ href: url, title: url }));
+		},
+	);
+
 // : (Schema) → Plugin
 // A set of input rules for creating the basic block quotes, lists,
 // code blocks, and heading.
