@@ -1,24 +1,24 @@
 import { FacetDefinition, FacetInstance } from './facet';
 
-export function createEmptyFacetInstance<
+export function createDefaultFacetInstnace<
 	Definition extends FacetDefinition,
 	Type = FacetInstance<Definition>,
 >(definition: Definition): Type {
 	const { props } = definition;
-	const emptyFacet: Partial<Type> = {};
+	const defaultFacet: Partial<Type> = {};
 	Object.entries(props).forEach(([key, prop]) => {
 		const value = prop.defaultValue ?? null;
-		emptyFacet[key as keyof Type] = value;
+		defaultFacet[key as keyof Type] = value;
 	});
-	return emptyFacet as Type;
+	return defaultFacet as Type;
 }
 
 export function createFacetInstance<Definition extends FacetDefinition>(
 	definition: Definition,
-	args: Partial<FacetInstance<Definition>> = {},
+	values: Partial<FacetInstance<Definition>> = {},
 ): FacetInstance<Definition> {
 	return {
-		...createEmptyFacetInstance(definition),
-		...args,
+		...createDefaultFacetInstnace(definition),
+		...values,
 	};
 }
