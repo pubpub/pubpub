@@ -2,6 +2,7 @@ import { history } from 'prosemirror-history';
 import { gapCursor } from 'prosemirror-gapcursor';
 
 import { Schema } from 'prosemirror-model';
+import buildAutolinkOnPaste from './autoLinkonPaste';
 import buildCollaborative from './collaborative';
 import buildDiscussions from './discussions';
 import buildDomEvents from './domEvents';
@@ -50,6 +51,7 @@ export const standardPlugins = {
 	paste: buildPaste,
 	mathPlugin: buildMath,
 	codePlugin: buildCode,
+	autoLinkOnpaste: buildAutolinkOnPaste,
 };
 
 const getSortedPlugins = (plugins: Record<string, null | PluginLoader>): PluginLoader[] => {
