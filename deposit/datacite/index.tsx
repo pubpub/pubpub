@@ -129,10 +129,12 @@ function renderRelatedItem(relationship: ResourceRelationship) {
 				relationship.isParent,
 			)}
 		>
-			<identifier identifierType={identifier.identifierKind}>
+			<relatedItemIdentifier relatedItemIdentifierType={identifier.identifierKind}>
 				{identifier.identifierValue}
-			</identifier>
-			<titles>{relationship.resource.title}</titles>
+			</relatedItemIdentifier>
+			<titles>
+				<title>{relationship.resource.title}</title>
+			</titles>
 		</relatedItem>
 	);
 }
@@ -221,7 +223,7 @@ export function createDeposit(resource: Resource) {
 					{url}
 				</alternateIdentifier>
 			</alternateIdentifiers>
-			{/* <relatedItems>{resource.relationships.map(renderRelatedItem)}</relatedItems> */}
+			<relatedItems>{resource.relationships.map(renderRelatedItem)}</relatedItems>
 			<relatedIdentifiers>
 				{resource.relationships.map(renderRelatedIdentifier)}
 			</relatedIdentifiers>

@@ -1,3 +1,5 @@
+import { Community } from 'server/models';
+
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
 		'Collection',
@@ -71,6 +73,10 @@ export default (sequelize, dataTypes) => {
 					Collection.belongsTo(ScopeSummary, {
 						as: 'scopeSummary',
 						foreignKey: 'scopeSummaryId',
+					});
+					Collection.belongsTo(Community, {
+						as: 'community',
+						foreignKey: 'communityId',
 					});
 				},
 			},

@@ -18,6 +18,7 @@ import { generateHash } from 'utils/hashes';
 import { getReadableDateInYear } from 'utils/dates';
 import { asyncForEach } from 'utils/async';
 import { buildPubOptions } from 'server/utils/queryHelpers';
+import * as types from 'types';
 
 export const createPub = async (
 	{
@@ -159,7 +160,10 @@ const findPubOptions = buildPubOptions({
 	},
 });
 
-export const findCollection = (collectionId: string) =>
+export const findCollection = (
+	collectionId: string,
+): Promise<types.DefinitelyHas<types.Collection, 'attributions'>> =>
 	Collection.findOne({ where: { id: collectionId }, ...findCollectionOptions });
 
-export const findPub = (pubId: string) => Pub.findOne({ where: { id: pubId }, ...findPubOptions });
+export const findPub = (pubId: string): Promise<types.DefinitelyHas<types.Pub, 'community'>> =>
+	Pub.findOne({ where: { id: pubId }, ...findPubOptions });

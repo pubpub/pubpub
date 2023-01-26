@@ -12,7 +12,9 @@ type Props = { pub: Pub } | { collection: Collection };
 
 export default function DataciteDeposit(props: Props) {
 	const depositUrl =
-		'pub' in props ? `/api/pub/${props.pub.id}/doi` : `/api/pub/${props.collection.id}/doi`;
+		'pub' in props
+			? `/api/pub/${props.pub.id}/doi`
+			: `/api/collection/${props.collection.id}/doi`;
 	const previewUrl = `${depositUrl}/preview`;
 	const handleDepositClick = useCallback(() => {
 		apiFetch(depositUrl, { method: 'POST' })

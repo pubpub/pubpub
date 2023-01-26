@@ -53,7 +53,7 @@ export async function transformCollectionToResource(
 		(attribution) =>
 			attribution.roles?.map((role) =>
 				transformCollectionAttributionToResourceContribution(attribution, role),
-			) ?? [],
+			) ?? transformCollectionAttributionToResourceContribution(attribution, 'Other'),
 	);
 	return {
 		kind: getResourceKindForCollection(collection),

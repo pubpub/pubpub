@@ -1,7 +1,8 @@
 import { CollectionLayout } from 'utils/layout/types';
 
 import { CollectionAttribution } from './attribution';
-import { Pub } from './pub';
+import { Community } from './community';
+import { CrossrefDepositRecord, Pub } from './pub';
 import { ScopeSummary } from './scope';
 
 export type Collection = {
@@ -18,7 +19,10 @@ export type Collection = {
 	doi?: string;
 	readNextPreviewSize: 'none' | 'minimal' | 'medium' | 'choose-best';
 	pageId?: null | string;
+	community?: Community;
 	communityId: string;
+	crossrefDepositRecordId?: null | string;
+	crossrefDepositRecord?: CrossrefDepositRecord;
 	attributions?: CollectionAttribution[];
 	layout: CollectionLayout;
 	createdAt: string;

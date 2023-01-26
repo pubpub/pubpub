@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconName, ITreeNode, Spinner, Tree } from '@blueprintjs/core';
+import { Callout, IconName, ITreeNode, Spinner, Tree } from '@blueprintjs/core';
 import { apiFetch } from 'client/utils/apiFetch';
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react';
 
@@ -92,6 +92,7 @@ const supportedAttributes = new Set([
 	'alternateIdentifierType',
 	'descriptionType',
 	'relatedItemType',
+	'relationType',
 ]);
 
 function nodeToBlueprintTreeNode(node: Node): ITreeNode | undefined {
@@ -167,6 +168,7 @@ type Props = {
 
 export function DataciteDepositPreview(props: Props) {
 	const { previewUrl } = props;
+	const [error, setError] = useState<string>();
 	const [loading, setLoading] = useState(true);
 	const [nodes, dispatch] = useReducer(depositTreeReducer, []);
 	const handleNodeClick = useCallback(
@@ -195,13 +197,19 @@ export function DataciteDepositPreview(props: Props) {
 					),
 				});
 			})
+			.catch((response) => {
+				setError(response.error);
+			})
 			.finally(() => {
 				setLoading(false);
 			});
 	}, [previewUrl]);
-
 	return loading ? (
 		<Spinner />
+	) : error ? (
+		<Callout intent="danger" title="Deposit Error">
+			<p>{error}</p>
+		</Callout>
 	) : (
 		<Tree
 			contents={nodes}

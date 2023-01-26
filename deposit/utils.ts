@@ -31,7 +31,7 @@ export function getPrimaryParentPubEdge(pub: Pub) {
 	return null;
 }
 
-export function sanitizePubEdges<T extends Pub>(pub: T, includeRelationships: boolean): Pub {
+export function sanitizePubEdges<T extends Pub>(pub: T, includeRelationships: boolean): T {
 	// @ts-ignore
 	pub = structuredClone(pub);
 	if (pub.inboundEdges && pub.outboundEdges) {
