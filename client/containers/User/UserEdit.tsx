@@ -13,19 +13,20 @@ type Props = {
 };
 
 const UserEdit = (props: Props) => {
+	const { userData } = props;
 	const [hasChanged, setHasChanged] = useState(false);
-	const [firstName, setFirstName] = useState(props.userData.firstName || '');
-	const [lastName, setLastName] = useState(props.userData.lastName || '');
-	const [title, setTitle] = useState(props.userData.title || '');
-	const [bio, setBio] = useState(props.userData.bio || '');
-	const [avatar, setAvatar] = useState(props.userData.avatar);
-	const [location, setLocation] = useState(props.userData.location || '');
-	const [website, setWebsite] = useState(props.userData.website || '');
-	const [orcid, setOrcid] = useState(props.userData.orcid || '');
-	const [github, setGithub] = useState(props.userData.github || '');
-	const [twitter, setTwitter] = useState(props.userData.twitter || '');
-	const [facebook, setFacebook] = useState(props.userData.facebook || '');
-	const [googleScholar, setGoogleScholar] = useState(props.userData.googleScholar || '');
+	const [firstName, setFirstName] = useState(userData.firstName || '');
+	const [lastName, setLastName] = useState(userData.lastName || '');
+	const [title, setTitle] = useState(userData.title || '');
+	const [bio, setBio] = useState(userData.bio || '');
+	const [avatar, setAvatar] = useState(userData.avatar);
+	const [location, setLocation] = useState(userData.location || '');
+	const [website, setWebsite] = useState(userData.website || '');
+	const [orcid, setOrcid] = useState(userData.orcid || '');
+	const [github, setGithub] = useState(userData.github || '');
+	const [twitter, setTwitter] = useState(userData.twitter || '');
+	const [facebook, setFacebook] = useState(userData.facebook || '');
+	const [googleScholar, setGoogleScholar] = useState(userData.googleScholar || '');
 	const [putUserIsLoading, setPutUserIsLoading] = useState(false);
 	const [putUserError, setPutUserError] = useState('');
 	const [postResetIsLoading, setPostResetIsLoading] = useState(false);
@@ -60,7 +61,7 @@ const UserEdit = (props: Props) => {
 	const handleSaveDetails = (evt) => {
 		evt.preventDefault();
 		const newUserObject = {
-			userId: props.userData.id,
+			userId: userData.id,
 			firstName,
 			lastName,
 			avatar,
@@ -82,7 +83,7 @@ const UserEdit = (props: Props) => {
 			body: JSON.stringify(newUserObject),
 		})
 			.then(() => {
-				window.location.href = `/user/${props.userData.slug}`;
+				window.location.href = `/user/${userData.slug}`;
 			})
 			.catch((err) => {
 				setPutUserIsLoading(true);
