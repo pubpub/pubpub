@@ -50,7 +50,7 @@ export const updateIntegration = (options: UpdateOptions, actorId: string) =>
 		},
 	);
 
-export const destroyIntegration = ({ id }: { id: string }, actorId: string) =>
+export const destroyIntegration = (id: string, actorId: string) =>
 	Integration.destroy({
 		where: { id },
 		individualHooks: true,
