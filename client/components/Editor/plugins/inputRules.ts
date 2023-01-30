@@ -104,20 +104,34 @@ const inlineMathRule = (
 // textblock starting with two dollar signs into a math block.
 const blockMathRule = (nodeType) => makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, nodeType);
 
-// const HTTP_LINK_REGEX =
-// 	// eslint-disable-next-line no-useless-escape
-// 	/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
+function MarkInputRule(regexp, markType: MarkType, getAttrs) {
+	return new InputRule(regexp, (state, match, start, end) => {
+		const $start = state.doc.resolve(start);
+		const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
+		console.log('here ye here ye');
+		if (!$start.parent.type.allowsMarkType(markType)) return null;
+		const oLinkString = match[0].substring(0, match[0].length - 1);
+		const oAttr =
+			attrs.type === 'email'
+				? { href: 'mailto:' + oLinkString }
+				: { href: oLinkString, target: '_blank' };
+		const oLink = markType.create(oAttr);
+		const oPos = { from: start, to: end };
+		const tr = state.tr
+			.removeMark(oPos.from, oPos.to, markType)
+			.addMark(oPos.from, oPos.to, oLink)
+			.insertText(match[5], oPos.to);
+		return tr;
+	});
+}
 
-// const autoLinkRule = (nodeType: MarkType) =>
-// 	new InputRule(
-// 		HTTP_LINK_REGEX,
-// 		(state: EditorState, match: RegExpMatchArray, start: number, end: number) => {
-// 			const url = match[1];
-// 			// what is thisß
-// 			const startPos = pos.move(-match[0].length);
-// 			return state.tr.addMark(start, end, nodeType.create({ href: url, title: url }));
-// 		},
-// 	);
+function linkRule(markType: MarkType) {
+	return MarkInputRule(
+		/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s$/i,
+		markType,
+		(match) => ({ type: match[2] === '@' ? 'email' : 'uri' }),
+	);
+}
 
 // : (Schema) → Plugin
 // A set of input rules for creating the basic block quotes, lists,
@@ -139,5 +153,6 @@ export default (schema) => {
 		);
 	if (schema.nodes.math_display) rules.push(blockMathRule(schema.nodes.math_display));
 	if (schema.marks.code) rules.push(inlineCodeRule(schema.marks.code));
+	if (schema.marks.link) rules.push(linkRule(schema.marks.link));
 	return inputRules({ rules });
 };
