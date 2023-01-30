@@ -11,7 +11,6 @@ import {
 } from 'prosemirror-inputrules';
 
 import { makeBlockMathInputRule, REGEX_BLOCK_MATH_DOLLARS } from '@benrbray/prosemirror-math';
-import { CONSOLE } from '@blueprintjs/icons/lib/esm/generated/iconContents';
 
 // : (NodeType) → InputRule
 // Given a blockquote node type, returns an input rule that turns `"> "`
@@ -106,6 +105,7 @@ const inlineMathRule = (
 const blockMathRule = (nodeType) => makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, nodeType);
 
 const HTTP_MAILTO_REGEX = new RegExp(
+	// eslint-disable-next-line no-useless-escape
 	/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s$/i,
 );
 const getUriType = (match) => ({ type: match[2] === '@' ? 'email' : 'uri' });
