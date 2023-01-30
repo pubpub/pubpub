@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
+import { Classes } from '@blueprintjs/core';
 
 import { SimpleEditor, PubNoteContent } from 'components';
 import { getCitationInlineLabel } from 'components/Editor/utils/citation';
@@ -30,11 +31,8 @@ type Props = {
 	};
 };
 
-/*
-	 const fetchCitations = () => apiFetch('/api/citations/zotero', { method: 'POST' });
- */
-const fetchCitations = async () => {
-	const { items } = await apiFetch('/api/citations/zotero', { method: 'GET' });
+const fetchCitations = async (query) => {
+	const { items } = await apiFetch(`/api/citations/zotero?q=${query}`);
 	console.log({ items });
 	return items;
 };
@@ -84,6 +82,7 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const [renderedStructuredValue, setRenderedStructuredValue] = useState(
 		noteManager.getRenderedValueSync(structuredValue),
 	);
+	const [zoteroQuery, setZoteroQuery] = useState('');
 	const [debouncedValue] = useDebounce(structuredValue, 250);
 	const html = renderedStructuredValue?.html;
 	const showPreview = html || unstructuredValue;
@@ -100,7 +99,14 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const structuredSection = (
 		<div className="section" key="structured">
 			<div className="title">Structured Data</div>
-			<button type="button" onClick={fetchCitations}>
+			<input
+				value={zoteroQuery}
+				onChange={(e) => setZoteroQuery(e.target.value)}
+				className={Classes.INPUT}
+				placeholder="search your zotero library"
+				type="search"
+			/>
+			<button type="button" onClick={() => fetchCitations(zoteroQuery)}>
 				fetch citations
 			</button>
 			<textarea
