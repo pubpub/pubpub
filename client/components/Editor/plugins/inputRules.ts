@@ -11,6 +11,7 @@ import {
 } from 'prosemirror-inputrules';
 
 import { makeBlockMathInputRule, REGEX_BLOCK_MATH_DOLLARS } from '@benrbray/prosemirror-math';
+import { CONSOLE } from '@blueprintjs/icons/lib/esm/generated/iconContents';
 
 // : (NodeType) → InputRule
 // Given a blockquote node type, returns an input rule that turns `"> "`
@@ -104,32 +105,31 @@ const inlineMathRule = (
 // textblock starting with two dollar signs into a math block.
 const blockMathRule = (nodeType) => makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, nodeType);
 
-function MarkInputRule(regexp, markType: MarkType, getAttrs) {
-	return new InputRule(regexp, (state, match, start, end) => {
-		const $start = state.doc.resolve(start);
-		const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
-		console.log('here ye here ye');
-		if (!$start.parent.type.allowsMarkType(markType)) return null;
-		const oLinkString = match[0].substring(0, match[0].length - 1);
-		const oAttr =
-			attrs.type === 'email'
-				? { href: 'mailto:' + oLinkString }
-				: { href: oLinkString, target: '_blank' };
-		const oLink = markType.create(oAttr);
-		const oPos = { from: start, to: end };
-		const tr = state.tr
-			.removeMark(oPos.from, oPos.to, markType)
-			.addMark(oPos.from, oPos.to, oLink)
-			.insertText(match[5], oPos.to);
-		return tr;
-	});
-}
+const HTTP_MAILTO_REGEX = new RegExp(
+	/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s$/i,
+);
+const getUriType = (match) => ({ type: match[2] === '@' ? 'email' : 'uri' });
 
 function linkRule(markType: MarkType) {
-	return MarkInputRule(
-		/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s$/i,
-		markType,
-		(match) => ({ type: match[2] === '@' ? 'email' : 'uri' }),
+	return new InputRule(
+		HTTP_MAILTO_REGEX,
+		(state: EditorState, match: RegExpMatchArray, start: number, end: number) => {
+			// console.log('match: ', match);
+			const resolvedStart = state.doc.resolve(start);
+			const attrs = getUriType(match);
+			if (!resolvedStart.parent.type.allowsMarkType(markType)) return null;
+			const link = match[0].substring(0, match[0].length - 1);
+			const linkAttrs =
+				attrs.type === 'email'
+					? { href: 'mailto:' + link }
+					: { href: link, target: '_blank' };
+			const linkTo = markType.create(linkAttrs);
+			const tr = state.tr
+				.removeMark(start, end, markType)
+				.addMark(start, end, linkTo)
+				.insertText(match[5], start);
+			return tr;
+		},
 	);
 }
 
