@@ -2,9 +2,11 @@ import React from 'react';
 
 import {
 	CascadedFacetType,
+	Facet,
 	FacetCascadeResult,
 	FacetDefinition,
 	FacetInstance,
+	FacetName,
 	FacetProp,
 	FacetPropType,
 	FacetSourceScope,
