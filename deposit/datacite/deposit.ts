@@ -50,21 +50,23 @@ function isPub(scope: Scope): scope is DefinitelyHas<Pub, 'community'> {
 	return 'pubVersions' in scope;
 }
 
-export async function submitResource(scope: Scope, scopeResource: Resource, scopeDoi: string) {
+export async function submitResource(
+	scope: Scope,
+	scopeResource: Resource,
+	scopeDoi: string,
+	requestIds: { pubId: string } | { collectionId: string },
+) {
 	const depositTarget = expect(await getCommunityDepositTarget(scope.communityId, true));
-	const { resourceXml } = await prepareResource(scope, scopeResource, scopeDoi);
+	const { resourceXml, resourceAst } = await prepareResource(scope, scopeResource, scopeDoi);
 	const { identifierValue: resourceUrl } = expect(
 		scopeResource.identifiers.find((identifier) => identifier.identifierKind === 'URL'),
 	);
-	const resourceResult = await (scope.crossrefDepositRecordId
+	const depositResult = await (scope.crossrefDepositRecordId
 		? updateDataciteDoiMetadata
 		: createDataciteDoiWithMetadata)(resourceXml, resourceUrl, scopeDoi, depositTarget);
-	const requestIds = isPub(scope)
-		? { pubId: scope.id, communityId: scope.communityId }
-		: { collectionId: scope.id, communityId: scope.communityId };
 	await Promise.all([
 		persistDoiData(requestIds, isPub(scope) ? { pub: scopeDoi } : { collection: scopeDoi }),
-		persistCrossrefDepositRecord(requestIds, resourceResult),
+		persistCrossrefDepositRecord(requestIds, depositResult),
 	]);
-	return resourceResult;
+	return { depositResult, resourceAst };
 }

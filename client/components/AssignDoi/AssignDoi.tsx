@@ -1,23 +1,25 @@
-import React, { useCallback, useReducer, useEffect, useMemo, useRef } from 'react';
-import { Button, Callout } from '@blueprintjs/core';
 import pickBy from 'lodash.pickby';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 
-import { InputField, MenuItem, MenuButton } from 'components';
+import { apiFetch } from 'client/utils/apiFetch';
+import { InputField, MenuButton, MenuItem } from 'components';
 import {
 	getDepositRecordContentVersion,
-	setDepositRecordContentVersion,
-	getDepositRecordReviewType,
-	setDepositRecordReviewType,
 	getDepositRecordReviewRecommendation,
-	setDepositRecordReviewRecommendation,
-	isPreprintDeposit,
-	isPeerReviewDeposit,
-	isStandaloneComponentDeposit,
+	getDepositRecordReviewType,
 	getDepositTypeTitle,
+	isPeerReviewDeposit,
+	isPreprintDeposit,
+	isStandaloneComponentDeposit,
+	setDepositRecordContentVersion,
+	setDepositRecordReviewRecommendation,
+	setDepositRecordReviewType,
 } from 'utils/crossref/parseDeposit';
-import { apiFetch } from 'client/utils/apiFetch';
 
+import ReviewDepositCallout from '../Deposit/ReviewDepositCallout';
 import AssignDoiPreview from './AssignDoiPreview';
+import { SubmitDepositStatus } from '../Deposit/SubmitDepositStatus';
+import SubmitDepositButton from '../Deposit/SubmitDepositButton';
 
 require('./assignDoi.scss');
 
@@ -40,14 +42,6 @@ const defaultProps = {
 	onPreview: noop,
 };
 
-const AssignDoiStatus = {
-	Initial: 'initial',
-	Previewing: 'previewing',
-	Previewed: 'previewed',
-	Depositing: 'depositing',
-	Deposited: 'deposited',
-};
-
 const AssignDoiActionType = {
 	FetchPreview: 'fetch_preview',
 	FetchPreviewSuccess: 'fetch_preview_success',
@@ -60,22 +54,11 @@ const AssignDoiActionType = {
 };
 
 const buttonTextByStatus = {
-	[AssignDoiStatus.Initial]: 'Preview Deposit',
-	[AssignDoiStatus.Previewing]: 'Generating Preview',
-	[AssignDoiStatus.Previewed]: 'Submit Deposit',
-	[AssignDoiStatus.Depositing]: 'Depositing',
-	[AssignDoiStatus.Deposited]: 'DOI Deposited',
-};
-
-const getButtonText = (status, deposit) => {
-	if (status === AssignDoiStatus.Initial && deposit) {
-		return 'Update & Preview Deposit';
-	}
-	if (status === AssignDoiStatus.Previewed && deposit) {
-		return 'Re-Submit Deposit';
-	}
-
-	return buttonTextByStatus[status];
+	[SubmitDepositStatus.Initial]: 'Preview Deposit',
+	[SubmitDepositStatus.Previewing]: 'Generating Preview',
+	[SubmitDepositStatus.Previewed]: 'Submit Deposit',
+	[SubmitDepositStatus.Depositing]: 'Depositing',
+	[SubmitDepositStatus.Deposited]: 'DOI Deposited',
 };
 
 export function reducer(state, action) {
@@ -83,11 +66,11 @@ export function reducer(state, action) {
 		case AssignDoiActionType.FetchPreview:
 			if (
 				!(
-					state.status === AssignDoiStatus.Initial ||
+					state.status === SubmitDepositStatus.Initial ||
 					// @ts-expect-error ts-migrate(2339) FIXME: Property 'Error' does not exist on type '{ Initial... Remove this comment to see the full error message
-					state.status === AssignDoiStatus.Error ||
+					state.status === SubmitDepositStatus.Error ||
 					// re-fetch preview
-					state.status === AssignDoiStatus.Previewed
+					state.status === SubmitDepositStatus.Previewed
 				)
 			) {
 				return state;
@@ -95,22 +78,22 @@ export function reducer(state, action) {
 
 			return {
 				...state,
-				status: AssignDoiStatus.Previewing,
+				status: SubmitDepositStatus.Previewing,
 				error: null,
 			};
 		case AssignDoiActionType.FetchPreviewSuccess:
-			if (state.status !== AssignDoiStatus.Previewing) {
+			if (state.status !== SubmitDepositStatus.Previewing) {
 				return state;
 			}
 
 			return {
 				...state,
-				status: AssignDoiStatus.Previewed,
+				status: SubmitDepositStatus.Previewed,
 				crossrefDepositRecord: action.payload,
 				error: null,
 			};
 		case AssignDoiActionType.UpdateContentVersion: {
-			if (state.status !== AssignDoiStatus.Previewed) {
+			if (state.status !== SubmitDepositStatus.Previewed) {
 				return state;
 			}
 
@@ -127,7 +110,7 @@ export function reducer(state, action) {
 			};
 		}
 		case AssignDoiActionType.UpdateReviewType: {
-			if (state.status !== AssignDoiStatus.Previewed) {
+			if (state.status !== SubmitDepositStatus.Previewed) {
 				return state;
 			}
 
@@ -141,7 +124,7 @@ export function reducer(state, action) {
 			};
 		}
 		case AssignDoiActionType.UpdateReviewRecommendation: {
-			if (state.status !== AssignDoiStatus.Previewed) {
+			if (state.status !== SubmitDepositStatus.Previewed) {
 				return state;
 			}
 
@@ -155,30 +138,30 @@ export function reducer(state, action) {
 			};
 		}
 		case AssignDoiActionType.FetchDeposit:
-			if (state.status !== AssignDoiStatus.Previewed) {
+			if (state.status !== SubmitDepositStatus.Previewed) {
 				return state;
 			}
 
 			return {
 				...state,
-				status: AssignDoiStatus.Depositing,
+				status: SubmitDepositStatus.Depositing,
 				error: null,
 			};
 		case AssignDoiActionType.FetchDepositSuccess:
-			if (state.status !== AssignDoiStatus.Depositing) {
+			if (state.status !== SubmitDepositStatus.Depositing) {
 				return state;
 			}
 
 			return {
 				...state,
-				status: AssignDoiStatus.Deposited,
+				status: SubmitDepositStatus.Deposited,
 				crossrefDepositRecord: action.payload,
 				error: null,
 			};
 		case AssignDoiActionType.Error:
 			return {
 				...state,
-				status: AssignDoiStatus.Initial,
+				status: SubmitDepositStatus.Initial,
 				error: action.payload,
 			};
 		default:
@@ -187,7 +170,7 @@ export function reducer(state, action) {
 }
 
 const initialState = {
-	status: AssignDoiStatus.Initial,
+	status: SubmitDepositStatus.Initial,
 	preview: null,
 	crossrefDepositRecord: null,
 	error: null,
@@ -358,9 +341,9 @@ function AssignDoi(props: Props) {
 
 	let handleButtonClick;
 
-	if (status === AssignDoiStatus.Initial) {
+	if (status === SubmitDepositStatus.Initial) {
 		handleButtonClick = handlePreviewClick;
-	} else if (status === AssignDoiStatus.Previewed) {
+	} else if (status === SubmitDepositStatus.Previewed) {
 		handleButtonClick = handleDepositClick;
 	}
 
@@ -368,7 +351,7 @@ function AssignDoi(props: Props) {
 
 	// Re-load the preview when the Pub's DOI changes.
 	useEffect(() => {
-		if (priorPubDoi.current !== pubData.doi && status === AssignDoiStatus.Previewed) {
+		if (priorPubDoi.current !== pubData.doi && status === SubmitDepositStatus.Previewed) {
 			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			fetchPreview();
 		}
@@ -377,16 +360,13 @@ function AssignDoi(props: Props) {
 
 	return (
 		<div className="assign-doi-component">
-			{(status === AssignDoiStatus.Previewed || status === AssignDoiStatus.Previewing) && (
+			{(status === SubmitDepositStatus.Previewed ||
+				status === SubmitDepositStatus.Previewing) && (
 				<>
-					<Callout intent="primary" title="Review Deposit">
-						This work is being deposited as a{' '}
-						<strong>{getDepositTypeTitle(crossrefDepositRecord) || '...'}</strong> based
-						on its Connections, Primary Collection, or selected Content Version. Review
-						the information below, then click the "Submit Deposit" button to submit the
-						deposit to Crossref.
-					</Callout>
-
+					<ReviewDepositCallout
+						depositTypeTitle={getDepositTypeTitle(crossrefDepositRecord)}
+						depositTargetServiceName="Crossref"
+					/>
 					{!isStandaloneComponentDeposit(crossrefDepositRecord) && (
 						<InputField label="Content Version">
 							<MenuButton
@@ -449,21 +429,16 @@ function AssignDoi(props: Props) {
 					)}
 				</>
 			)}
-			{status === AssignDoiStatus.Previewed && (
+			{status === SubmitDepositStatus.Previewed && (
 				<AssignDoiPreview crossrefDepositRecord={crossrefDepositRecord} />
 			)}
-			<InputField error={error && 'There was an error depositing the work.'}>
-				<Button
-					disabled={disabled || !handleButtonClick}
-					text={getButtonText(status, pubData.crossrefDepositRecord)}
-					loading={
-						status === AssignDoiStatus.Previewing ||
-						status === AssignDoiStatus.Depositing
-					}
-					onClick={handleButtonClick}
-					icon={status === AssignDoiStatus.Deposited && 'tick'}
-				/>
-			</InputField>
+			<SubmitDepositButton
+				disabled={disabled}
+				onClick={handleButtonClick}
+				status={status}
+				depositRecord={pubData.crossrefDepositRecord}
+				error={error}
+			/>
 		</div>
 	);
 }

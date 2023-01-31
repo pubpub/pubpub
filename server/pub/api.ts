@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import app, { wrap } from 'server/server';
-import { ForbiddenError } from 'server/utils/errors';
+import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { PubGetOptions, PubsQuery } from 'types';
 import { indexByProperty } from 'utils/arrays';
@@ -149,6 +149,9 @@ app.post(
 			throw new ForbiddenError();
 		}
 		const pub = await findPub(pubId);
+		if (!pub) {
+			return new NotFoundError();
+		}
 		const dois = await generateDoi(
 			{ communityId: pub.communityId, pubId, collectionId: undefined },
 			'pub',
@@ -159,8 +162,10 @@ app.post(
 			pub.community,
 		);
 		try {
-			const depositResult = await submitResource(pub, resource, expect(dois.pub));
-			return res.status(200).json(depositResult);
+			const { resourceAst } = await submitResource(pub, resource, expect(dois.pub), {
+				pubId,
+			});
+			return res.status(200).json(resourceAst);
 		} catch (error) {
 			return res.status(400).json({ error: (error as Error).message });
 		}

@@ -2,7 +2,7 @@ import { CollectionLayout } from 'utils/layout/types';
 
 import { CollectionAttribution } from './attribution';
 import { Community } from './community';
-import { CrossrefDepositRecord, Pub } from './pub';
+import { DepositRecord, Pub } from './pub';
 import { ScopeSummary } from './scope';
 
 export type Collection = {
@@ -22,7 +22,7 @@ export type Collection = {
 	community?: Community;
 	communityId: string;
 	crossrefDepositRecordId?: null | string;
-	crossrefDepositRecord?: CrossrefDepositRecord;
+	crossrefDepositRecord?: DepositRecord;
 	attributions?: CollectionAttribution[];
 	layout: CollectionLayout;
 	createdAt: string;

@@ -52,7 +52,7 @@ export type PubVersion = {
 	pubId?: string;
 };
 
-export type CrossrefDepositRecord = {
+export type DepositRecord = {
 	id: string;
 	depositJson?: {};
 };
@@ -87,7 +87,7 @@ export type Pub = {
 	releases: Release[];
 	pubVersions?: PubVersion[];
 	crossrefDepositRecordId?: string;
-	crossrefDepositRecord?: CrossrefDepositRecord;
+	crossrefDepositRecord?: DepositRecord;
 	inboundEdges?: InboundEdge[];
 	outboundEdges?: OutboundEdge[];
 	draftId?: string;

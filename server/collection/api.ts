@@ -1,7 +1,7 @@
 import { prepareResource, submitResource } from 'deposit/datacite/deposit';
 import { generateDoi } from 'server/doi/queries';
 import app, { wrap } from 'server/server';
-import { ForbiddenError } from 'server/utils/errors';
+import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { expect } from 'utils/assert';
 
 import { transformCollectionToResource } from 'deposit/transform/collection';
@@ -72,6 +72,9 @@ app.post(
 	wrap(async (req, res) => {
 		const { collectionId } = req.params;
 		const collection = await findCollection(collectionId);
+		if (!collection) {
+			return new NotFoundError();
+		}
 		const permissions = await getPermissions({
 			userId: req.user.id,
 			collectionId,
@@ -90,12 +93,13 @@ app.post(
 			collection.community,
 		);
 		try {
-			const depositResult = await submitResource(
+			const { resourceAst } = await submitResource(
 				collection,
 				resource,
 				expect(dois.collection),
+				{ collectionId },
 			);
-			return res.status(200).json(depositResult);
+			return res.status(200).json(resourceAst);
 		} catch (error) {
 			return res.status(400).json({ error: (error as Error).message });
 		}

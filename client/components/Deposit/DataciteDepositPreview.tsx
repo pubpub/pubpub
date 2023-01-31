@@ -1,15 +1,15 @@
-import React from 'react';
 import { Callout, IconName, ITreeNode, Spinner, Tree } from '@blueprintjs/core';
 import { apiFetch } from 'client/utils/apiFetch';
-import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react';
+import React, { MouseEvent, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { expect } from 'utils/assert';
 
 // TODO: Export this from @pubpub/deposit-utils
-type Node =
+export type DepositNode =
 	| {
 			type: 'element';
 			name: string;
 			attributes: { [key: string]: unknown };
-			children: Node[];
+			children: DepositNode[];
 	  }
 	| {
 			type: 'text';
@@ -95,7 +95,7 @@ const supportedAttributes = new Set([
 	'relationType',
 ]);
 
-function nodeToBlueprintTreeNode(node: Node): ITreeNode | undefined {
+function depositNodeToBlueprintTreeNode(node: DepositNode): ITreeNode | undefined {
 	if (node.type === 'text') {
 		return { id: node.value, label: node.value };
 	}
@@ -124,7 +124,7 @@ function nodeToBlueprintTreeNode(node: Node): ITreeNode | undefined {
 		return {
 			...sharedAttrs,
 			childNodes: node.children
-				.map(nodeToBlueprintTreeNode)
+				.map(depositNodeToBlueprintTreeNode)
 				.filter((x): x is ITreeNode => Boolean(x)),
 			isExpanded: true,
 		};
@@ -132,7 +132,7 @@ function nodeToBlueprintTreeNode(node: Node): ITreeNode | undefined {
 	return {
 		...sharedAttrs,
 		childNodes: node.children
-			.map(nodeToBlueprintTreeNode)
+			.map(depositNodeToBlueprintTreeNode)
 			.filter((x): x is ITreeNode => Boolean(x)),
 	};
 }
@@ -163,14 +163,13 @@ function deselectAll() {
 }
 
 type Props = {
-	previewUrl: string;
+	deposit: DepositNode;
 };
 
 export function DataciteDepositPreview(props: Props) {
-	const { previewUrl } = props;
-	const [error, setError] = useState<string>();
-	const [loading, setLoading] = useState(true);
-	const [nodes, dispatch] = useReducer(depositTreeReducer, []);
+	const { deposit } = props;
+	const node = useMemo(() => expect(depositNodeToBlueprintTreeNode(deposit)), [deposit]);
+	const [nodes, dispatch] = useReducer(depositTreeReducer, [node]);
 	const handleNodeClick = useCallback(
 		(node: ITreeNode, path: NodePath, event: MouseEvent<HTMLElement>) => {
 			const selected = node.isSelected;
@@ -187,30 +186,7 @@ export function DataciteDepositPreview(props: Props) {
 	const handleNodeExpand = useCallback((_node: ITreeNode, path: NodePath) => {
 		dispatch(expand(path));
 	}, []);
-	useEffect(() => {
-		apiFetch(previewUrl, { method: 'POST' })
-			.then((json) => {
-				dispatch({
-					type: 'RESET',
-					payload: [nodeToBlueprintTreeNode(json)].filter((x): x is ITreeNode =>
-						Boolean(x),
-					),
-				});
-			})
-			.catch((response) => {
-				setError(response.error);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	}, [previewUrl]);
-	return loading ? (
-		<Spinner />
-	) : error ? (
-		<Callout intent="danger" title="Deposit Error">
-			<p>{error}</p>
-		</Callout>
-	) : (
+	return (
 		<Tree
 			contents={nodes}
 			onNodeClick={handleNodeClick}
