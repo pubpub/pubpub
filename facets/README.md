@@ -21,9 +21,9 @@ Consider two throughlines of PubPub's evolution over the years:
 
 - Users like that PubPub's unopinionated scope names — Community, Collection and Pub — can flex to cover periodicals, books, conferences, and works less easily categorized. But while the names are unopinionated, the implementations aren't. There is often a single "PubPub way" to do something that falls out of emergent behavior, but it isn't always discovered through experimentation or self-expression. For some users, our nouns feel like just another box.
 
-- Users have always wanted "default Pub settings" to keep the look and feel of their Community consistent — if they prefer a certain Pub header style, and a certain citation format, they shouldn't have to configure those for each new Pub.
+- Users have always wanted "cascading Pub settings" to keep the look and feel of their Community consistent — if they prefer a certain Pub header style, and a certain citation format, they shouldn't have to configure those for each new Pub. Instead they can set the style once on the Community, and let it "cascade" down into the Pubs.
 
-Facets were born from the implementation of "default Pub settings" in the second point, but they are also a big step towards addressing the first. With facets, we aim to grow the set of capabilities shared by all scopes, giving users more ways to structure their Communities. In time, the practical differences between our scope types may become a blurry formality. We might even choose to migrate them to a generic `Scope` that has no properties until facets are applied to it.
+Facets were born from the implementation of "cascading Pub settings" in the second point, but they are also a big step towards addressing the first. With facets, we aim to grow the set of capabilities shared by all scopes, giving users more ways to structure their Communities. In time, the practical differences between our scope types may become a blurry formality. We might even choose to migrate them to a generic `Scope` that has no properties until facets are applied to it.
 
 In that vein, we think about Facets as the seed of a "structurally-typed CMS": a publishing platform with a single generic content type, whose instances are distinguished _structurally_, by the properties they happen to have, rather than _nominally_, e.g. because they are intrinsically a Community, Collection, or Pub.
 
@@ -54,6 +54,103 @@ Let's reconsider our maxim using these new terms:
 > Every scope has exactly one `FacetValue<Def>` for each `FacetDefinition` 
 > 
 > ... _(which is computed from the `FacetInstance<Def>` database entries for the scope and its parents)_.
+
+# Should I use facets for [x] new feature?
+
+The current Facets system is best understood as an implementation of "cascading Pub settings" for these Pub settings:
+
+- Header theme
+- Citation style
+- License
+- In-text node labels
+- Look and feel of Connections
+
+All of these settings are _only_ relevant on the Pub routes under `/pub/<slug>`, and in the Dashboard for that Pub. They do _not_ appear, for instance, when this Pub is rendered as part of a long list of Pubs in a Collection layout.
+
+Therefore, we haven't done any optimization of bulk-loading of facets for many Pubs at once. This may be too slow as-is. So if your facet will need to be loaded for hundreds of scopes at once, you might want to:
+
+- Not use a facet
+- Benchmark to be very sure it's okay to use facets in this case
+- Embark an an optimization project like the one sketched out below
+
+## Sketch: improving bulk facet load performance with archetypes
+
+Imagine that we want to facet-ize the following Pub properties:
+
+- `title`
+- `description`
+- `attributions`
+- `previewImage`
+
+These are all loaded for each Pub in a Page or Collection layout, so loading these facets for hundreds of Pubs needs to be fast. Here are two reasons this might be too slow:
+
+- We must load values for all the Pubs' parent scopes (Collections and Communities)
+- The facet values are spread across many small tables which must be individually joined.
+
+Ideally, we'd store the pre-cascaded values for each of these facets in a _single table_ that can be referenced when these facets need to be loaded. Taking [overt inspiration](https://rust-tutorials.github.io/entity-component-scrapyard/03-Archetypes/archetype-explanation.html) from [Entity Component system](https://en.wikipedia.org/wiki/Entity_component_system) architecture, let's call this a "facet archetype".
+
+We want our archetypes to inherit the guarantees around type-safety, runtime-agnosticism, and validation that individual facets have. So let's introduce an `archetype()` function in the `facets/core` directory. It might be used like this:
+
+```ts
+// We are in a hypothetical facets/archetypes/pubInLayout.ts
+import { Title, Description, Attributions, PreviewImage } from "facets/definitions";
+
+export const PubInLayout = archetype({
+    facets: [
+        Title,
+        Description,
+        Attributions,
+        PreviewImage
+    ],
+    scopes: ['pub'],
+});
+```
+
+This has type:
+
+```ts
+FacetArchetypeValue<typeof PubInLayout> =
+    (FacetCascadedType<typeof Title>
+        & FacetCascadedType<typeof Description>
+        & FacetCascadedType<typeof Attributions>
+        & FacetCascadedType<typeof PreviewImage>);
+```
+
+_(These are some problems with prop name collisions that I'm ignoring here — a prefixing scheme might be necessary.)_
+
+Our server code would then read from the `facets/archetypes` directory to create a new table for each archetype. When creating this table, it can also reference the tables it's creating for each individual facet, and automatically generate Sequelize hooks to recompute the archetype row whenever one of its dependency facets updates.
+
+An _extremely_ loose sketch:
+
+```ts
+facetModels.Title.afterUpdate((title) => {
+    const facetBinding = await FacetBinding.findOne({
+        where: { id: title.facetBidingId }
+    });
+    // Given the scope IDs inside FacetBinding...
+    const pubs = await getChildPubsIncludingSelfForScope(facetBinding);
+    // In reality, do all this in parallel...
+    for (const pub of pubs) {
+        const currentFacetValues = await fetchFacetsForScope(
+            { pubId: pub.id },
+            [
+                'Title',
+                'Description',
+                'Attributions',
+                'PreviewImage',
+            ]
+        );
+        await facetArchetypes.PubInLayout.update(
+            currentFacetValues,
+            { where: { pubId: pub.id } },
+        );
+    }
+});
+```
+
+Something like this would keep the `PubInLayout` table up to date for a given Pub. _(More work would need to be done to handle creation and deletion of `Title` rows, recomputing `PubInLayout` rows from scratch, etc.)_.
+
+The last step would be to modify `fetchFacetsForScope` to detect that an archetype table can be used when these facet values are being loaded. Everything downstream of this function wouldn't need to know anything about archetype tables — they'll just get their facets faster!
 
 # Anatomy of a facet definition
 
@@ -410,3 +507,184 @@ type FacetCascadeResult = {
 ```
 
 The important bit here is the `value: FacetValue<Def>` that's returned. But some callers are also interested in the `props` object, which breaks down how each prop in the facet ended up cascading. And it returns its own `stack` argument for convenience.
+
+# Facet instances in the database
+
+When the PubPub server starts, it constructs a Sequelize model for each `FacetDefinition` that we export from `facets/definitions`. These very quickly turn into plain old database tables. These tables for a given facet definition `Def` hold objects of type `FacetInstance<Def>`, **so it's appropriate to call the entries of these tables "facet instances"**. Here's the one for `PubHeaderTheme`:
+
+```sql
+CREATE TABLE "PubHeaderTheme" (
+    "backgroundImage" text,
+    "backgroundColor" text,
+    "textStyle" character varying,
+    id uuid PRIMARY KEY,
+    "facetBindingId" uuid NOT NULL REFERENCES "FacetBindings"(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+```
+
+_These models are exported on the `facetModels` object in `server/models`. But you'll rarely need to work with them directly._
+
+We have columns for:
+- A unique primary key
+- The three actual facet props `{ backgroundImage, backgroundColor, textStyle }`
+- The `{ createdAt, updatedAt }` that Sequelize helpfully adds to tables
+- A `facetBindingId`. Hmm, what's that?
+
+## The `FacetBindings` table
+
+Each facet instance is associated with a scope using a layer of indirection called `FacetBinding`:
+
+```ts
+type FacetBinding = {
+	communityId: null | string;
+	collectionId: null | string;
+	pubId: null | string;
+	id: string;
+};
+```
+
+By convention, only one of `{ communityId, collectionId, pubId }` is non-null. So, facet instances attach to a scope by attaching to a `FacetBinding` with a reference to that scope. here's how this works for an instance of the `License` facet:
+
+`[Pub] --(FacetBinding.pubId)--> [FacetBinding] --(License.facetBindingId)--> [License]`
+
+Or equivalently as psuedo-SQL:
+
+```sql
+SELECT Pub
+JOIN FacetBindings ON Pub.id = FacetBindings.pubId
+JOIN License ON License.facetBindingId = FacetBindings.id
+```
+
+> ℹ️ Aside: this extra layer of indirection presents a design tradeoff. Queries would be faster if we joined facet tables (e.g. `License`) directly to scope tables (e.g. `Pub`). But as Facets evolves, there may be more information to store about a facet instance's relationship to a scope:
+> 
+> - Is it enabled?
+> - Is it part of a Release?
+> - Does it apply to this scope, or only this scope's children?
+>
+> ...which could be a lot to store directly on the facet instance tables. This is the basis on which the `FacetBinding` design was chosen.
+
+## Migrations for facet definitions
+
+Facet tables face a usual limitations of Sequelize models: migrations must be written by hand. Specifically, this means:
+
+- A file in `tools/migrations` should imperatively add/remove columns from the relevant table in concert with the facet schema change in `facets/definitions`.
+- A file in the `tools/migrations/data` may need to specify a data migration, to backfill values into the new column.
+
+We might consider writing an automated system for this (and thus for Sequelize in general), or eventually moving to a different ORM with better migration tooling that Facets can tap into.
+
+# Reading and writing facets on the backend
+
+## Reading facets as part of a normal request
+
+The ubiquitous `ScopeData` type has an optional `facets` property. If you're already using either `getInitialData` or `getScope`, you can direct these functions to also return all _cascaded_ facet values. This is most appropriate when you really do need _all_ facet values, for instance because you intend to pass them down to the client.
+
+### Via `getInitialData`
+
+Just pass `includeFacets` into the second argument:
+
+```ts
+const initialData = await getInitialData(req, { includeFacets: true });
+```
+
+If you pass `isDashboard`, the function assumes `includeFacets: true`.
+
+Then read `initialData.scopeData.facets`.
+
+### Via `getScope`
+
+Just pass `includeFacets: true` in the options object:
+
+```ts
+const scopeData = await getScope({
+    pubId: whatever.pubId,
+    includeFacets: true,
+});
+```
+
+then read `scopeData.facets`.
+
+## Reading specific facets, or facets for many scopes
+
+If you don't need all facet values, or you need the facet values for many scopes at once, you can import these utility functions from `server/facets`. Note that these return _cascaded_ values — you don't have to do any work to build a tree of scopes and cascade the values yourself.
+
+### `fetchFacetsForScope`
+
+```ts
+fetchFacetsForScope(
+    scopeId: SingleScopeId,
+    facetNames?: string[],
+): Promise<Record<string, FacetCascadeResult>>
+```
+
+The `SingleScopeId` type is defined in `types/scope.ts`:
+
+```ts
+type SingleScopeId =
+    | { communityId: string } 
+    | { pubId: string } 
+    | { collectionId: string };
+```
+
+The return value of this function is a record mapping facet names to `FacetCascadeResult` values (these are discussed in some detail in [the documentation for `cascade()`](#cascade). It would look a little like this:
+
+```ts
+{
+    PubHeaderTheme: { /* Cascade result */ },
+    License: { /* Cascade result */ },
+    // ...
+}
+```
+
+### `fetchFacetsForScopeIds`
+
+```ts
+fetchFacetsForScopeIds(
+    scopeIds: Partial<ByScopeKind<string[]>>,
+    facetNames?: string[],
+): Promise<ByScopeKind<Record<string, FacetCascadeResult>>>
+```
+
+The `ByScopeKind<T>` type asks you to break down your inputs by scope kind:
+
+```ts
+const scopeIds: Partial<ByScopeKind<string[]>> = {
+    // These are implied to be Pub IDs
+    pub: [
+        'a5b02ab4-16d4-4242-a091-cedb0fefc602',
+        'd3b593db-8388-4d9a-b933-435d268d8f0e',
+    ],
+    // These are implied to be Community IDs
+    community: [
+        '7243a1cc-c66d-4878-8a6f-9202cce5215d',
+    ],
+    // We can omit Collection IDs since this is a partial record
+}
+```
+
+The function returns cascade results in a similar `ByScopeKind` format:
+
+```ts
+{
+    pub: {
+        'a5b02ab4-16d4-4242-a091-cedb0fefc602': {
+            PubHeaderTheme: { /* Cascade result */ },
+            License: { /* Cascade result */ },
+            // ...
+       },
+       'd3b593db-8388-4d9a-b933-435d268d8f0e': {
+            PubHeaderTheme: { /* Cascade result */ },
+            License: { /* Cascade result */ },
+            // ...
+       }
+    },
+    community: {
+       '7243a1cc-c66d-4878-8a6f-9202cce5215d': {
+            PubHeaderTheme: { /* Cascade result */ },
+            License: { /* Cascade result */ },
+            // ...
+       }
+    }
+}
+```
