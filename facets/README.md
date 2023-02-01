@@ -77,7 +77,7 @@ Therefore, we haven't done any optimization of bulk-loading of facets for many P
 Here I'll omitting some TypeScript generics-plumbing for the sake of readability, and I'll speak somewhat loosely about types. TL;DR:
 
 - A `FacetDefinition` is made of a name, label, and some `FacetProps`.
-- A `FacetProp` is made of a name, label, some defaults, and a `FacetPropType`.
+- A `FacetProp` is made of a name, label, a default value, and a `FacetPropType`.
 - A `FacetPropType` is a wrapper around a [`zod`](https://github.com/colinhacks/zod) type definition. We derive a TS and a Postgres type from it.
 
 Feel free to allow along using the examples in `facets/definitions`.
@@ -135,7 +135,6 @@ The `prop()` function is used to define a facet prop:
 prop(propType: FacetPropType, options: {
     label: string,
     rootValue: null | T,
-    defaultValue?: null | T,
     cascade?: CascadeStrategy,
 }): FacetProp
 ```
@@ -143,8 +142,7 @@ prop(propType: FacetPropType, options: {
 The `propType` argument is (and must be) a JavaScript object, _not_ a TypeScript type. From it, we infer `T`, a TypeScript type corresponding to `propType` (more on the why and how of this soon). The rest of the prop definition is:
 
 - A `label` which is short, human-readable, and may appear in the UI.
-- A `defaultValue` used as a default when calling `createFacetInstance()`.
-- A `rootValue` that can be used as the top of the cascade. This is also a kind of default value, and might be what users think of as the "default" — it's the value the prop takes on if it's not specified at any specific scope.
+- A `rootValue` that can be used as the top of the cascade. This is a kind of default value — it's the value the prop takes on if it's not specified at any specific scope.
 - a `cascade` value that explains how the prop should cascade from scope to scope (see  [Advanced: cascade strategies](#advanced-cascade-strategies)).
 
 (To learn more about `rootValue` and `cascade`, see the section on Cascading, below.)
@@ -365,13 +363,13 @@ See the [section on `cascade()`](#cascade) for the full story on how this functi
 
 All of these functions take a `definition` as an argument — one of the `FacetDefinition` instances exported from `facets/definitions`. **They are also isomorphic, pure, and runtime-agnostic** — they don't persist anything, only create and manipulate vanilla JS objects.
 
-## `createDefaultFacetInstance`
+## `createEmptyFacetInstance`
 
 ```ts
-createDefaultFacetInstance<Def extends FacetDefinition>(definition: Def): FacetInstance<Def>
+createEmptyFacetInstance<Def extends FacetDefinition>(definition: Def): FacetInstance<Def>
 ```
 
-This creates a facet instance for `definition` using the `defaultValues` provided in that definition's props. Where there is no default value, `null` is used. _Remember that a facet instance with all-null props is completely valid!_
+This creates a facet instance for `definition` where all the prop values are set to `null`.
 
 ## `createFacetInstance`
 
@@ -382,7 +380,7 @@ createFacetInstance<Def extends FacetDefinition>(
 ): FacetInstance<Def>
 ```
 
-This creates a facet instance for `definition`, including the default values, and `values` that you pass along for its props. If you look carefully you'll see that this function does...almost nothing, because facet instances are vanilla JS objects. :)
+This creates a facet instance for `definition`, with the `values` that you pass along for its props, and `null` for any other props. If you look carefully you'll see that this function does...almost nothing, because facet instances are vanilla JS objects. :)
 
 ## `parseFacetInstance`
 
