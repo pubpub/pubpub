@@ -1,6 +1,6 @@
 import { FacetDefinition, FacetInstance } from './facet';
 
-export function createDefaultFacetInstnace<
+export function createDefaultFacetInstance<
 	Definition extends FacetDefinition,
 	Type = FacetInstance<Definition>,
 >(definition: Definition): Type {
@@ -18,7 +18,7 @@ export function createFacetInstance<Definition extends FacetDefinition>(
 	values: Partial<FacetInstance<Definition>> = {},
 ): FacetInstance<Definition> {
 	return {
-		...createDefaultFacetInstnace(definition),
+		...createDefaultFacetInstance(definition),
 		...values,
 	};
 }
