@@ -18,6 +18,7 @@ const updateFacetForScope = async <Name extends FacetName>(
 	scope: SingleScopeId,
 	facet: Facet<Name>,
 	update: UpdateFacetByName<Name>,
+	actorId: string | null = null,
 ) => {
 	const FacetModel = facetModels[facet.name];
 	const existing = await FacetModel.findOne({
@@ -31,15 +32,18 @@ const updateFacetForScope = async <Name extends FacetName>(
 		],
 	});
 	if (existing) {
-		existing.update(update);
-		await existing.save();
+		await existing.update(update, { actorId });
 	} else {
 		const facetBinding = await FacetBinding.create({ ...scope });
-		await FacetModel.create({ ...update, facetBindingId: facetBinding.id });
+		await FacetModel.create({ ...update, facetBindingId: facetBinding.id }, { actorId });
 	}
 };
 
-export const updateFacetsForScope = async (scope: SingleScopeId, update: UpdateFacetsQuery) => {
+export const updateFacetsForScope = async (
+	scope: SingleScopeId,
+	update: UpdateFacetsQuery,
+	actorId: string | null = null,
+) => {
 	await Promise.all(
 		Object.entries(update).map(async ([facetName, facetUpdate]) => {
 			const facet = ALL_FACET_DEFINITIONS[facetName];
@@ -48,7 +52,9 @@ export const updateFacetsForScope = async (scope: SingleScopeId, update: UpdateF
 				facetUpdate as any,
 				true,
 			);
-			await updateFacetForScope(scope, facet, parsedUpdate);
+			if (Object.keys(parsedUpdate).length > 0) {
+				await updateFacetForScope(scope, facet, parsedUpdate, actorId);
+			}
 		}),
 	);
 };

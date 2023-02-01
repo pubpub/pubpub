@@ -14,7 +14,7 @@ app.post(
 		if (!canUpdate) {
 			throw new ForbiddenError();
 		}
-		await updateFacetsForScope(scopeId, facets);
+		await updateFacetsForScope(scopeId, facets, req.user?.id);
 		return res.status(200).json({});
 	}),
 );

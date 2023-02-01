@@ -1,12 +1,5 @@
-import { Model as ModelType } from 'sequelize';
-
 import * as types from 'types';
-import {
-	FacetDefinition,
-	FacetInstance,
-	FacetInstanceWithBinding,
-	parseFacetInstance,
-} from 'facets';
+import { FacetDefinition, FacetInstanceWithBinding, parsePartialFacetInstance } from 'facets';
 import {
 	Collection,
 	CollectionPub,
@@ -26,8 +19,8 @@ import {
 	FacetBinding,
 } from 'server/models';
 
+import { getScopeIdForFacetBinding } from 'server/facets';
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
-import { withValue } from 'utils/fp';
 
 const resolvePartialMemberItem = async (member: types.Member) => {
 	if (member.pubId) {
@@ -608,22 +601,39 @@ export const createSubmissionUpdatedActivityItem = async (
 	return null;
 };
 
-export const createFacetInstanceUpdatedActivityItem = async <Def extends FacetDefinition>(
+// Before there's an actual facet instance associated with a scope in the DB, we treat that scope
+// as having a totally empty facet instance (with all null props). So we don't bother to treat
+// creating and updating facet instances as two separate kinds of events -- they're all "updates"
+// to the facet instance at that scope, from the perspective of the rest of the system.
+export const createFacetInstanceUpdatedActivityItem = async (
 	FacetModel: any,
-	facetDefinition: Def,
+	facetDefinition: FacetDefinition,
 	actorId: null | string,
 	facetModelInstanceId: string,
-	previousModelInstance: null | Record<keyof Def['props'], any>,
+	previousModelInstance: null | Record<string, any>,
 ) => {
-	const facetInstance: FacetInstanceWithBinding<Def> = await FacetModel.findOne({
-		where: { id: facetModelInstanceId },
-		include: [{ model: FacetBinding, as: 'facetBinding' }],
+	const facetInstance: types.SequelizeModel<FacetInstanceWithBinding<any>> =
+		await FacetModel.findOne({
+			where: { id: facetModelInstanceId },
+			include: [{ model: FacetBinding, as: 'facetBinding' }],
+		});
+	const { valid: newProps } = parsePartialFacetInstance(facetDefinition, facetInstance.toJSON());
+	const oldProps = previousModelInstance
+		? parsePartialFacetInstance(facetDefinition, previousModelInstance).valid
+		: {};
+	const scopeId = await getScopeIdForFacetBinding(facetInstance.facetBinding);
+	return createActivityItem({
+		kind: 'facet-instance-updated-activity-item',
+		actorId,
+		communityId: scopeId.communityId,
+		collectionId: 'collectionId' in scopeId ? scopeId.collectionId : undefined,
+		pubId: 'pubId' in scopeId ? scopeId.pubId : undefined,
+		payload: {
+			facetName: facetDefinition.name,
+			facetProps: {
+				from: oldProps,
+				to: newProps,
+			},
+		},
 	});
-	const { valid: newInstanceProps } = parseFacetInstance(facetDefinition, facetInstance);
-	const oldInstance = withValue(previousModelInstance, instance => {
-		if (instance) => {
-			const parseResult = parseFacetInstance(facetDefinition, instance);
-
-		}
-	}
 };
