@@ -1,5 +1,10 @@
 import * as types from 'types';
-import { FacetDefinition, FacetInstanceWithBinding, parsePartialFacetInstance } from 'facets';
+import {
+	createEmptyFacetInstance,
+	FacetDefinition,
+	FacetInstanceWithBinding,
+	parsePartialFacetInstance,
+} from 'facets';
 import {
 	Collection,
 	CollectionPub,
@@ -620,7 +625,7 @@ export const createFacetInstanceUpdatedActivityItem = async (
 	const { valid: newProps } = parsePartialFacetInstance(facetDefinition, facetInstance.toJSON());
 	const oldProps = previousModelInstance
 		? parsePartialFacetInstance(facetDefinition, previousModelInstance).valid
-		: {};
+		: createEmptyFacetInstance(facetDefinition);
 	const scopeId = await getScopeIdForFacetBinding(facetInstance.facetBinding);
 	return createActivityItem({
 		kind: 'facet-instance-updated',
