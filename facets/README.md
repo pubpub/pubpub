@@ -946,45 +946,53 @@ export const PubInLayout = archetype({
 This has type:
 
 ```ts
-FacetArchetypeValue<typeof PubInLayout> =
-    (FacetCascadedType<typeof Title>
-        & FacetCascadedType<typeof Description>
-        & FacetCascadedType<typeof Attributions>
-        & FacetCascadedType<typeof PreviewImage>);
+FacetArchetypeValue<typeof PubInLayout> = {
+    Title: FacetCascadedType<typeof Title>,
+    Description: FacetCascadedType<typeof Description>,
+    Attributions: FacetCascadedType<typeof Attributions>,
+    PreviewImage: FacetCascadedType<typeof PreviewImage>,
+}
 ```
 
-_(These are some problems with prop name collisions that I'm ignoring here — a prefixing scheme might be necessary.)_
+Our server-side function `createSequelizeModelsFromFacetDefinitions` would then read from the `facets/archetypes` directory to create a new table for each archetype. This table would flatten the props of the constituent facets in a predictable way, e.g. turning `PreviewImage.url` into a column called `PreviewImage__url`.
 
-Our server code would then read from the `facets/archetypes` directory to create a new table for each archetype. When creating this table, it can also reference the tables it's creating for each individual facet, and automatically generate Sequelize hooks to recompute the archetype row whenever one of its dependency facets updates.
+
+When it creates this table, this function can also reference the tables it's created for each individual facet, and automatically generate Sequelize hooks to recompute the archetype row whenever one of its dependency facets updates.
 
 An _extremely_ loose sketch:
 
 ```ts
-facetModels.Title.afterUpdate((title) => {
-    const facetBinding = await FacetBinding.findOne({
-        where: { id: title.facetBidingId }
+const dependencyFacetNames = [
+    'Title',
+    'Description',
+    'Attributions',
+    'PreviewImage',
+];
+
+dependencyFacetNames.forEach(facetName => {
+    const FacetModel = facetModels[facetName];
+    // Also include .afterCreate and .afterDestroy equivalents...
+    FacetModel.afterUpdate((title) => {
+        const facetBinding = await FacetBinding.findOne({
+            where: { id: title.facetBidingId },
+        });
+        const pubs = await getChildPubsIncludingSelfForScopeIds(facetBinding);
+        // In reality, do all this in parallel:
+        for (const pub of pubs) {
+            const currentFacetValues = await fetchFacetsForScope(
+                { pubId: pub.id },
+                dependencyFacetNames,
+            );
+            await facetArchetypes.PubInLayout.update(
+                // This would turn e.g. `url` into `PreviewImage__url`.
+                prefixKeysForArchetype(PubInLayout, currentFacetValues),
+                { where: { pubId: pub.id } },
+            );
+        }
     });
-    // Given the scope IDs inside FacetBinding...
-    const pubs = await getChildPubsIncludingSelfForScope(facetBinding);
-    // In reality, do all this in parallel...
-    for (const pub of pubs) {
-        const currentFacetValues = await fetchFacetsForScope(
-            { pubId: pub.id },
-            [
-                'Title',
-                'Description',
-                'Attributions',
-                'PreviewImage',
-            ]
-        );
-        await facetArchetypes.PubInLayout.update(
-            currentFacetValues,
-            { where: { pubId: pub.id } },
-        );
-    }
 });
 ```
 
-Something like this would keep the `PubInLayout` table up to date for a given Pub. _(More work would need to be done to handle creation and deletion of `Title` rows, recomputing `PubInLayout` rows from scratch, etc.)_.
+Something like this would keep the `PubInLayout` table up to date for a given Pub. _(More work would need to be done to handle creation and deletion of facet instance rows, recomputing `PubInLayout` rows from scratch, etc.)_.
 
 The last step would be to modify `fetchFacetsForScope` to detect that an archetype table can be used when these facet values are being loaded. Everything downstream of this function wouldn't need to know anything about archetype tables — they'll just get their facets faster!
