@@ -2,7 +2,7 @@ import { history } from 'prosemirror-history';
 import { gapCursor } from 'prosemirror-gapcursor';
 
 import { Schema } from 'prosemirror-model';
-import buildAutolinkOnPaste from './autoLinkonPaste';
+import buildAutolinkOnPaste from './autoLinkOnPaste';
 import buildCollaborative from './collaborative';
 import buildDiscussions from './discussions';
 import buildDomEvents from './domEvents';
