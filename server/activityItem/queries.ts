@@ -1,4 +1,12 @@
+import { Model as ModelType } from 'sequelize';
+
 import * as types from 'types';
+import {
+	FacetDefinition,
+	FacetInstance,
+	FacetInstanceWithBinding,
+	parseFacetInstance,
+} from 'facets';
 import {
 	Collection,
 	CollectionPub,
@@ -15,9 +23,11 @@ import {
 	Thread,
 	ThreadComment,
 	SubmissionWorkflow,
+	FacetBinding,
 } from 'server/models';
 
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
+import { withValue } from 'utils/fp';
 
 const resolvePartialMemberItem = async (member: types.Member) => {
 	if (member.pubId) {
@@ -596,4 +606,24 @@ export const createSubmissionUpdatedActivityItem = async (
 	}
 
 	return null;
+};
+
+export const createFacetInstanceUpdatedActivityItem = async <Def extends FacetDefinition>(
+	FacetModel: any,
+	facetDefinition: Def,
+	actorId: null | string,
+	facetModelInstanceId: string,
+	previousModelInstance: null | Record<keyof Def['props'], any>,
+) => {
+	const facetInstance: FacetInstanceWithBinding<Def> = await FacetModel.findOne({
+		where: { id: facetModelInstanceId },
+		include: [{ model: FacetBinding, as: 'facetBinding' }],
+	});
+	const { valid: newInstanceProps } = parseFacetInstance(facetDefinition, facetInstance);
+	const oldInstance = withValue(previousModelInstance, instance => {
+		if (instance) => {
+			const parseResult = parseFacetInstance(facetDefinition, instance);
+
+		}
+	}
 };

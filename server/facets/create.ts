@@ -1,6 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-import { ALL_FACET_DEFINITIONS, FacetName, FacetProp, FacetProps } from '../../facets';
+import { ALL_FACET_DEFINITIONS, FacetName, FacetProp, FacetProps } from 'facets';
+import { createSequelizeHooksForFacetModel } from './hooks';
 
 type Column = {
 	type: typeof DataTypes[keyof typeof DataTypes];
@@ -46,6 +47,7 @@ export const createSequelizeModelsFromFacetDefinitions = (sequelize: Sequelize) 
 			as: 'facetBinding',
 			onDelete: 'CASCADE',
 		});
+		createSequelizeHooksForFacetModel(facet, FacetModel);
 		modelsByName[name] = FacetModel;
 	});
 	return {
