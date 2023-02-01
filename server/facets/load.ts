@@ -1,9 +1,4 @@
-import {
-	FacetDefinition,
-	FacetDoesNotExistError,
-	FacetInstance,
-	parseFacetInstance,
-} from 'facets';
+import { FacetDefinition, FacetDoesNotExistError, FacetInstance, parseFacetInstance } from 'facets';
 import { facetModels } from 'server/models';
 import { indexByProperty } from 'utils/arrays';
 import { mapObject } from 'utils/objects';
