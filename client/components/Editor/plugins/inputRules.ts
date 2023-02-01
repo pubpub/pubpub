@@ -106,9 +106,8 @@ const blockMathRule = (nodeType) => makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLL
 
 const HTTP_MAILTO_REGEX = new RegExp(
 	// eslint-disable-next-line no-useless-escape
-	/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s$/i,
+	/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s $/,
 );
-const getUriType = (match) => ({ type: match[2] === '@' ? 'email' : 'uri' });
 
 function linkRule(markType: MarkType) {
 	return new InputRule(
@@ -117,7 +116,7 @@ function linkRule(markType: MarkType) {
 			console.log('match: ', match);
 			const resolvedStart = state.doc.resolve(start);
 			if (!resolvedStart.parent.type.allowsMarkType(markType)) return null;
-			const attrs = getUriType(match);
+			const attrs = { type: match[2] === '@' ? 'email' : 'uri' };
 			const link = match[0].substring(0, match[0].length - 1);
 			const linkAttrs =
 				attrs.type === 'email'
