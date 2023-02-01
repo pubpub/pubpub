@@ -34,7 +34,7 @@ export const activityItemRenderers: ActivityItemRenderers = {
 	'collection-removed': renderCollectionRemoved,
 	'collection-pub-created': renderCollectionPubCreated,
 	'collection-pub-removed': renderCollectionPubRemoved,
-	'facet-instance-updated-activity-item': renderFacetInstanceUpdated,
+	'facet-instance-updated': renderFacetInstanceUpdated,
 	'page-created': renderPageCreated,
 	'page-updated': renderPageUpdated,
 	'page-removed': renderPageRemoved,

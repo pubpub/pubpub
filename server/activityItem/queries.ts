@@ -623,7 +623,7 @@ export const createFacetInstanceUpdatedActivityItem = async (
 		: {};
 	const scopeId = await getScopeIdForFacetBinding(facetInstance.facetBinding);
 	return createActivityItem({
-		kind: 'facet-instance-updated-activity-item',
+		kind: 'facet-instance-updated',
 		actorId,
 		communityId: scopeId.communityId,
 		collectionId: 'collectionId' in scopeId ? scopeId.collectionId : undefined,
