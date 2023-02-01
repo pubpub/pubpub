@@ -114,21 +114,20 @@ function linkRule(markType: MarkType) {
 	return new InputRule(
 		HTTP_MAILTO_REGEX,
 		(state: EditorState, match: RegExpMatchArray, start: number, end: number) => {
-			// console.log('match: ', match);
+			console.log('match: ', match);
 			const resolvedStart = state.doc.resolve(start);
-			const attrs = getUriType(match);
 			if (!resolvedStart.parent.type.allowsMarkType(markType)) return null;
+			const attrs = getUriType(match);
 			const link = match[0].substring(0, match[0].length - 1);
 			const linkAttrs =
 				attrs.type === 'email'
 					? { href: 'mailto:' + link }
 					: { href: link, target: '_blank' };
 			const linkTo = markType.create(linkAttrs);
-			const tr = state.tr
+			return state.tr
 				.removeMark(start, end, markType)
 				.addMark(start, end, linkTo)
 				.insertText(match[5], start);
-			return tr;
 		},
 	);
 }
