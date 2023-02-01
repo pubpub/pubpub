@@ -630,10 +630,7 @@ export const createFacetInstanceUpdatedActivityItem = async (
 		pubId: 'pubId' in scopeId ? scopeId.pubId : undefined,
 		payload: {
 			facetName: facetDefinition.name,
-			facetProps: {
-				from: oldProps,
-				to: newProps,
-			},
+			facetProps: getDiffsForPayload(newProps, oldProps, Object.keys(facetDefinition.props)),
 		},
 	});
 };
