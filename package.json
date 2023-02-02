@@ -77,6 +77,7 @@
 		"@pubpub/prosemirror-reactive": "^0.2.0",
 		"@sentry/node": "^7.30.0",
 		"@sentry/react": "^7.31.1",
+		"@tiptap/core": "^2.0.0-beta.209",
 		"@types/html-minifier": "^4.0.1",
 		"@types/js-beautify": "^1.13.2",
 		"@types/lodash.flow": "^3.5.6",
