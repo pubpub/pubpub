@@ -3,7 +3,6 @@ import { gapCursor } from 'prosemirror-gapcursor';
 
 import { Schema } from 'prosemirror-model';
 import buildAutolinkOnPaste from './autoLinkOnPaste';
-import buildAutolinkOnInput from './autoLinkOnInput';
 import buildCollaborative from './collaborative';
 import buildDiscussions from './discussions';
 import buildDomEvents from './domEvents';
@@ -52,7 +51,6 @@ export const standardPlugins = {
 	paste: buildPaste,
 	mathPlugin: buildMath,
 	codePlugin: buildCode,
-	autoLinkOnInput: buildAutolinkOnInput,
 	autoLinkOnpaste: buildAutolinkOnPaste,
 };
 
