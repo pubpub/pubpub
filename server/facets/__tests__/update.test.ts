@@ -1,4 +1,4 @@
-import { setup, modelize } from 'stubstub';
+import { setup, modelize, expectCreatedActivityItem } from 'stubstub';
 
 import { FacetsError } from 'facets';
 import { FacetBinding, facetModels } from 'server/models';
@@ -94,6 +94,24 @@ describe('updateFacetsForScope', () => {
 		expect(allCitationStylesForPub[0].toJSON()).toMatchObject({
 			citationStyle: 'apa-7',
 			inlineCitationStyle: 'authorYear',
+		});
+	});
+
+	it('creates an ActivityItem when it updates a facet', async () => {
+		const { pub } = models;
+		expectCreatedActivityItem(
+			updateFacetsForScope({ pubId: pub.id }, { License: { kind: 'cc-by-nc' } }),
+		).toMatchObject({
+			kind: 'facet-instance-updated',
+			payload: {
+				facetName: 'License',
+				facetProps: {
+					kind: {
+						from: null,
+						to: 'cc-by-nc',
+					},
+				},
+			},
 		});
 	});
 });
