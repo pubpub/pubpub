@@ -2,6 +2,27 @@
 
 A **facet** is a kind of structured data that attaches to any kind of **scope**: a Community, Collection, or Pub. We have facets because we often want to unify a certain behavior across all scope kinds — for instance, to let any scope kind accept a certain metadata value. We also sometimes want to decouple where a property is _stored_ from where it is _used_ — for instance, we want to let users configure default values for Pub settings at the Community level.
 
+# Quick start: Working with facets
+
+_I want to add a new facet:_
+
+1. First, read [Are facets the right choice for my new feature?](#are-facets-the-right-choice-for-my-new-feature) It's possible that you actually don't want a facet for your use case, or you may have to plan some  work on the Facets system itself into your project. That could be fun!
+
+2. Then, read [Anatomy of a facet definition](#anatomy-of-a-facet-definition). Armed with this, and cribbing from the existing facets, add a new definition to `facets/definitions`. Make sure to export the facet by name in `index.ts`, and also add it to `ALL_FACET_DEFINITIONS`.
+
+3. The next time you start your server, PubPub will automatically create a table for your new facet. That's all you need to start storing data in it!
+
+4. If you want users to edit your facet using `<FacetEditor>`, first read [Adding an editor for a new facet](#adding-an-editor-for-a-new-facet). Add your new editor definition to `client/components/FacetEditor/definitions`. Don't forget to export it from `index.ts` and register it in `FacetEditor.tsx` under `editorsForFacets`.
+
+5. Depending on what your facet does, you may consider adding it to `PubSettings.tsx` or `CommunityOrCollectionLevelPubSettings.tsx`. You may also want to use a `<PopoverButton>` to launch the `<FacetEditor>` from another UI element as described [here](#usage-with-popoverbutton).
+
+_I want to work with an existing facet:_
+
+5. If you want to query the value of a facet from somewhere on the client, read up on [`useFacetsQuery()`](#usefacetsquery). If you want to _update_ the facet from something other than the `<FacetEditor>`, read up on [`useFacetsState()`](#usefacetsstate).
+
+6. If you want to query or update a facet from somewhere in non-client code (an unusual server method, a worker task, a tool, or something else), read up on [fetching](#fetching-specific-facets-or-facets-for-many-scopes) and [updating](#updating-facets-for-a-single-scope) facet values.
+
+7. If you want to update the structure of a facet, you'll need to do so more or less manually, using a Sequelize migration. [This section](#migrations-for-facet-definitions) goes into a bit more detail.
 # Introduction
 
 At the highest level, facets are:
@@ -57,6 +78,10 @@ Let's reconsider our maxim using these new terms:
 
 # Are facets the right choice for my new feature?
 
+Glad you asked! Here are some things to consider. You might find some dealbreakers in here, or some cool projects to vastly expand the utility of Facets — it's up to you whether you want to extend this system to meet more of PubPub's needs.
+
+## Will my feature require me to bulk-load facets for many scopes?
+
 The current Facets system is best understood as an implementation of "cascading Pub settings" for these Pub settings:
 
 - Header theme
@@ -70,8 +95,25 @@ All of these settings are _only_ relevant on the Pub routes under `/pub/<slug>`,
 Therefore, we haven't done any optimization of bulk-loading of facets for many Pubs at once. This may be too slow as-is. So if your facet will need to be loaded for hundreds of scopes at once, you might want to:
 
 - Not use a facet
-- Benchmark to be very sure it's okay to use facets in this case
+- Benchmark to be very sure it's okay to use facets in this case. You might need to load only a few scopes, or maybe you're building a worker task, where latency is less important.
 - Embark an an optimization project like the one sketched out in [Sketch: Improving bulk facet load performance with archetypes](#sketch-improving-bulk-facet-load-performance-with-archetypes).
+
+## Do I want to write queries against the facet?
+
+Ideally we'd have a `getScopesMatchingFacet()` that would give you all the scopes in a Community whose facets match a certain value. We don't have this function yet. It's a totally tractable problem, but since computing a facet value requires looking at all of a scope's parents, the queries required aren't readily expressed in a single SQL query or Sequelize call.
+
+Building out the archetypes pattern mentioned above might make _this_ much easier to implement.
+
+## Do I need foreign keys? Can I fit everything I need into a single table?
+
+Facets don't hold foreign keys, so they can't reference other objects on PubPub in a way that the database knows about. There's nothing stopping you from adding a UUID to a facet prop, but your code will be responsible for interpreting it, and loading any associated models. As far as Facets knows, it's just a string.
+
+Adding foreign key support to Facets would be a big project involving some Postgres acrobatics. A reasonable first step in this direction would be [a dataloader pattern like the one we use for `ActivityItems`](https://github.com/pubpub/pubpub/blob/master/server/activityItem/fetch.ts) that automatically fetches certain models when facets are loaded. This would let us e.g. store IDs for `User` models in an `Attributions` facet, and send the associated `Users` to the client to render their name and avatar.
+
+## Do I really want cascading? Do I want to limit my facet to certain scope types?
+
+There's currently no way to turn off cascading for a facet, or to only allow it to bind to certain scope types. But neither would be terribly hard to implement!
+
 # Anatomy of a facet definition
 
 Here I'll omitting some TypeScript generics-plumbing for the sake of readability, and I'll speak somewhat loosely about types. TL;DR:
@@ -100,7 +142,7 @@ It takes as arguments:
 - An optional `label` for the facet — a very short description that may appear in the UI.
 - A `props` that describe its properties.
 
-> ⚠️ By convention, a facet is exported from `facets/definitions/index.ts` using a symbol name that matches its `name` property. (This is important, and is something we could choose to enforce programmatically in the future.)
+> ⚠️ By convention, a facet is exported from `facets/definitions/index.ts` using a symbol name that matches its `name` property. We must also add it to `ALL_FACET_DEFINITIONS` in that file. (This is important, and is something we could choose to enforce programmatically in the future.)
 
 <details>
 <summary>
@@ -787,6 +829,15 @@ type FacetsQueryOptions<T> = {
 
 ## The `<FacetEditor>` component
 
+This is `<FacetEditor>`. You may recognize it from the Settings tab of the dashboard.
+
+<img width="300" src="https://user-images.githubusercontent.com/2208769/216369534-abc3c11d-0601-4846-97fb-20573b75e564.png">
+
+This is also `<FacetEditor>`, in its `selfContained` look and feel:
+
+<img width="300" src="https://user-images.githubusercontent.com/2208769/216369854-73a41bc7-36c8-4097-a681-a2abfdd5067b.png" />
+
+
 If you're building UI that lets users update a facet value, you're encouraged to give them a `<FacetEditor>` instance to work with. This provides a consistent look and feel for updating facets, including feedback about where values are cascading from. The basic API is dead simple:
 
 ```ts
@@ -802,6 +853,8 @@ type FacetEditorProps = {
     selfContained?: boolean;
 }
 ```
+
+## Usage with `<PopoverButton>`
 
 It's common use in conjunction with our `PopoverButton` from `components`:
 
