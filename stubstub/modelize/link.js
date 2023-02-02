@@ -2,10 +2,10 @@
 import uuid from 'uuid/v4';
 import * as graphlib from 'graphlib';
 
-import { modelDefinitions } from './models';
+import { sequelizeModels } from './models';
 
 const modelByName = (modelName) => {
-	const model = modelDefinitions[modelName];
+	const model = sequelizeModels[modelName];
 	if (!model) {
 		throw new Error(`Modelize cannot find a model named ${modelName}`);
 	}

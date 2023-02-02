@@ -3,14 +3,14 @@ import { parse } from './parse';
 import { link } from './link';
 import { builders } from './builders';
 import { buildProxyObject } from './proxy';
-import { modelDefinitions } from './models';
+import { sequelizeModels } from './models';
 
 const buildForModelName = async (modelName, args) => {
 	const builderFn = builders[modelName];
 	if (builderFn) {
 		return builderFn(args);
 	}
-	const Model = modelDefinitions[modelName];
+	const Model = sequelizeModels[modelName];
 	return Model.create(args);
 };
 
