@@ -2,8 +2,6 @@ import { Sequelize, DataTypes } from 'sequelize';
 
 import { ALL_FACET_DEFINITIONS, FacetName, FacetProp, FacetProps } from '../../facets';
 
-import { createSequelizeHooksForFacetModel } from './hooks';
-
 type Column = {
 	type: typeof DataTypes[keyof typeof DataTypes];
 	allowNull: true;
@@ -48,8 +46,13 @@ export const createSequelizeModelsFromFacetDefinitions = (sequelize: Sequelize) 
 			as: 'facetBinding',
 			onDelete: 'CASCADE',
 		});
-		createSequelizeHooksForFacetModel(facet, FacetModel);
 		modelsByName[name] = FacetModel;
+		if (!process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB) {
+			// HACK(ian): Don't import this file while setting up the test DB because it has too
+			// many non-relative imports (see the comment in stubstub/global/setup.js for context).
+			// eslint-disable-next-line global-require
+			require('./hooks').createSequelizeHooksForFacetModel(facet, FacetModel);
+		}
 	});
 	return {
 		facetModels: modelsByName as Record<FacetName, any>,
