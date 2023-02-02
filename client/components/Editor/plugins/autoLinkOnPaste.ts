@@ -2,9 +2,9 @@ import { Plugin } from 'prosemirror-state';
 import { Fragment, Slice, Node } from 'prosemirror-model';
 import isURL from 'is-url';
 
-const HTTP_LINK_REGEX =
-	// eslint-disable-next-line no-useless-escape
-	/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
+const HTTP_LINK_REGEX = new RegExp(
+	/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g,
+);
 
 const linkify = function (fragment: Fragment): Fragment {
 	const linkified: Node[] = [];
