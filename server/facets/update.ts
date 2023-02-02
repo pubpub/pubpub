@@ -44,17 +44,19 @@ export const updateFacetsForScope = async (
 	update: UpdateFacetsQuery,
 	actorId: string | null = null,
 ) => {
+	// Parse all the updates first -- if any fail, throw an error and don't update anything
+	const parsedUpdate: Record<string, Record<string, any>> = {};
+	Object.entries(update).forEach(([facetName, facetUpdate]) => {
+		const facet = ALL_FACET_DEFINITIONS[facetName];
+		const { valid } = parsePartialFacetInstance(facet, facetUpdate as any, true);
+		if (Object.keys(valid).length > 0) {
+			parsedUpdate[facetName] = valid;
+		}
+	});
 	await Promise.all(
-		Object.entries(update).map(async ([facetName, facetUpdate]) => {
+		Object.entries(parsedUpdate).map(async ([facetName, facetPatch]) => {
 			const facet = ALL_FACET_DEFINITIONS[facetName];
-			const { valid: parsedUpdate } = parsePartialFacetInstance(
-				facet,
-				facetUpdate as any,
-				true,
-			);
-			if (Object.keys(parsedUpdate).length > 0) {
-				await updateFacetForScope(scope, facet, parsedUpdate, actorId);
-			}
+			await updateFacetForScope(scope, facet, facetPatch, actorId);
 		}),
 	);
 };
