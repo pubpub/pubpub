@@ -7,6 +7,7 @@ import { updateFacetsForScope } from '..';
 const models = modelize`
 	Community community {
 		Pub pub {}
+		Pub activityItemTestPub {}
 	}
 `;
 
@@ -98,9 +99,13 @@ describe('updateFacetsForScope', () => {
 	});
 
 	it('creates an ActivityItem when it updates a facet', async () => {
-		const { pub } = models;
+		const { activityItemTestPub } = models;
+		// Should be firing a License.afterCreate() hook
 		expectCreatedActivityItem(
-			updateFacetsForScope({ pubId: pub.id }, { License: { kind: 'cc-by-nc' } }),
+			updateFacetsForScope(
+				{ pubId: activityItemTestPub.id },
+				{ License: { kind: 'cc-by-nc' } },
+			),
 		).toMatchObject({
 			kind: 'facet-instance-updated',
 			payload: {
@@ -109,7 +114,22 @@ describe('updateFacetsForScope', () => {
 					kind: {
 						from: null,
 						to: 'cc-by-nc',
-					},
+					} as any,
+				},
+			},
+		});
+		// Should be firing a License.afterUpdate() hook
+		expectCreatedActivityItem(
+			updateFacetsForScope({ pubId: activityItemTestPub.id }, { License: { kind: 'cc-0' } }),
+		).toMatchObject({
+			kind: 'facet-instance-updated',
+			payload: {
+				facetName: 'License',
+				facetProps: {
+					kind: {
+						from: 'cc-by-nc',
+						to: 'cc-0',
+					} as any,
 				},
 			},
 		});
