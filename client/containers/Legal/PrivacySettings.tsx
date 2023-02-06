@@ -11,9 +11,6 @@ type PrivacySettingsProps = {
 	isLoggedIn: boolean;
 };
 
-const deleteIntegration = (integrationId: string) =>
-	apiFetch.delete('/api/integrations', { id: integrationId });
-
 const exportEmailBody = `
 Hello.
 %0D%0A%0D%0A
@@ -78,8 +75,40 @@ const ThirdPartyAnalyticsCard = () => {
 	);
 };
 
+type IntegrationCardProps = {
+	integration: Integration;
+};
+
+const IntegrationCard = (props: IntegrationCardProps) => {
+	const { integration } = props;
+	const [isDeletingIntegration, setIsDeletingIntegration] = useState(false);
+	const deleteIntegration = () => {
+		setIsDeletingIntegration(true);
+		apiFetch.delete('/api/integration', { id: integration.id }).then((stuff) => {
+			console.log({ stuff });
+			setIsDeletingIntegration(false);
+		});
+	};
+	return (
+		<Card key={integration.id}>
+			<h5>{integration.name} integration</h5>
+			<p>
+				Deleting the integration will purge your {integration.name} credentials from our
+				database.
+			</p>
+			<Button
+				intent="danger"
+				text="Remove"
+				loading={isDeletingIntegration}
+				onClick={deleteIntegration}
+			/>
+		</Card>
+	);
+};
+
 const PrivacySettings = (props: PrivacySettingsProps) => {
 	const { isLoggedIn, integrations } = props;
+
 	return (
 		<div className="privacy-settings">
 			<ThirdPartyAnalyticsCard />
@@ -99,18 +128,7 @@ const PrivacySettings = (props: PrivacySettingsProps) => {
 						</AnchorButton>
 					</Card>
 					{integrations.map((integration) => (
-						<Card key={integration.id}>
-							<h5>{integration.name} integration</h5>
-							<p>
-								Deleting the integration will purge your {integration.name}{' '}
-								credentials from our database.
-							</p>
-							<Button
-								intent="danger"
-								text="Remove"
-								onClick={() => deleteIntegration(integration.id)}
-							/>
-						</Card>
+						<IntegrationCard integration={integration} />
 					))}
 					<Card>
 						<h5>Account deletion</h5>
