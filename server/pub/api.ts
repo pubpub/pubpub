@@ -14,6 +14,7 @@ import { prepareResource, submitResource } from 'deposit/datacite/deposit';
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
 import { getPubsById, queryPubIds } from './queryMany';
+import { assertValidResource } from 'deposit/validate';
 
 type ManyRequestParams = {
 	query: Omit<PubsQuery, 'communityId'>;
@@ -162,6 +163,11 @@ app.post(
 			pub.community,
 		);
 		try {
+			assertValidResource(resource);
+		} catch (error) {
+			return res.status(400).json({ error: (error as Error).message });
+		}
+		try {
 			const { resourceAst } = await submitResource(pub, resource, expect(dois.pub), {
 				pubId,
 			});
@@ -192,6 +198,11 @@ app.post(
 			pub.get({ plain: true }),
 			pub.community,
 		);
+		try {
+			assertValidResource(resource);
+		} catch (error) {
+			return res.status(400).json({ error: (error as Error).message });
+		}
 		try {
 			const { resourceAst } = await prepareResource(pub, resource, expect(dois.pub));
 			return res.status(200).json(resourceAst);

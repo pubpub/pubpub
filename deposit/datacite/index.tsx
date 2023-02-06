@@ -2,15 +2,17 @@
 /** @jsxFrag null */
 import { x } from '@pubpub/deposit-utils/datacite';
 import {
+	isInterWorkRelationship,
+	isIntraWorkRelationship,
 	Resource,
 	ResourceContribution,
+	ResourceContributorRole,
 	ResourceDescriptor,
 	ResourceKind,
-	ResourceSummaryKind,
-	ResourceContributorRole,
-	ResourceRelationship,
 	ResourceRelation,
-} from 'deposit/types';
+	ResourceRelationship,
+	ResourceSummaryKind,
+} from 'deposit/resource';
 import { DepositTarget } from 'types';
 import { exists, expect } from 'utils/assert';
 import { aes256Decrypt } from 'utils/crypto';
@@ -79,6 +81,10 @@ function transformResourceRelationToDataciteRelationType(
 			return isParent ? 'IsVariantFormOf' : 'IsOriginalFormOf';
 		case 'Version':
 			return isParent ? 'IsVersionOf' : 'HasVersion';
+		case 'Part':
+			return isParent ? 'IsPartOf' : 'HasPart';
+		case 'Publication':
+			return isParent ? 'IsPublishedIn' : 'HasPart';
 	}
 }
 
@@ -118,7 +124,14 @@ function renderContributor(contribution: ResourceContribution) {
 }
 
 function renderRelatedItem(relationship: ResourceRelationship) {
-	const identifier = relationship.resource.identifiers[0];
+	const identifier = expect(
+		relationship.resource.identifiers.find(
+			(identifier) => identifier.identifierKind === 'DOI',
+		) ??
+			relationship.resource.identifiers.find(
+				(identifier) => identifier.identifierKind === 'URL',
+			),
+	);
 	return (
 		<relatedItem
 			relatedItemType={transformResourceKindToDataciteResourceType(
@@ -223,9 +236,13 @@ export function createDeposit(resource: Resource) {
 					{url}
 				</alternateIdentifier>
 			</alternateIdentifiers>
-			<relatedItems>{resource.relationships.map(renderRelatedItem)}</relatedItems>
+			<relatedItems>
+				{resource.relationships.filter(isIntraWorkRelationship).map(renderRelatedItem)}
+			</relatedItems>
 			<relatedIdentifiers>
-				{resource.relationships.map(renderRelatedIdentifier)}
+				{resource.relationships
+					.filter(isInterWorkRelationship)
+					.map(renderRelatedIdentifier)}
 			</relatedIdentifiers>
 			<version>1.0</version>
 			<formats>

@@ -18,7 +18,7 @@ export type ResourceKind =
 	| 'ConferencePaper'
 	| 'Other';
 
-export type ResourceRelation =
+export type InterWorkResourceRelation =
 	| 'Comment'
 	| 'Preprint'
 	| 'Reply'
@@ -26,6 +26,10 @@ export type ResourceRelation =
 	| 'Supplement'
 	| 'Translation'
 	| 'Version';
+
+export type IntraWorkResourceRelation = 'Part' | 'Publication';
+
+export type ResourceRelation = InterWorkResourceRelation | IntraWorkResourceRelation;
 
 export type ResourceRelationship = {
 	isParent: boolean;
@@ -106,6 +110,9 @@ export type Resource = PartialResource & {
 
 	contributions: ResourceContribution[];
 
+	/**
+	 * Homogeneous list of inter- and intra-work relationships.
+	 */
 	relationships: ResourceRelationship[];
 
 	license: ResourceLicense;
@@ -114,3 +121,12 @@ export type Resource = PartialResource & {
 };
 
 export type AnyResource = PartialResource | Resource;
+
+export let isIntraWorkRelation = (relation: ResourceRelation) =>
+	relation === 'Part' || relation === 'Publication';
+export let isInterWorkRelation = (relation: ResourceRelation) => !isIntraWorkRelation(relation);
+
+export let isIntraWorkRelationship = (relationship: ResourceRelationship) =>
+	isIntraWorkRelation(relationship.relation);
+export let isInterWorkRelationship = (relationship: ResourceRelationship) =>
+	!isIntraWorkRelationship(relationship);

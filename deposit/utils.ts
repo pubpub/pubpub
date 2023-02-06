@@ -1,7 +1,7 @@
 import { Pub, PubEdge } from 'types';
 import { RelationType } from 'utils/pubEdge';
 import { findParentEdgeByRelationTypes } from 'utils/pubEdge/relations';
-import { AnyResource, Resource } from './types';
+import { AnyResource, Resource } from './resource';
 
 function filterForMutuallyApprovedEdges(pubEdges: PubEdge[]) {
 	let i = 0;

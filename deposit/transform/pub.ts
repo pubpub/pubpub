@@ -1,20 +1,22 @@
 import { getPrimaryParentPubEdge, sanitizePubEdges } from 'deposit/utils';
 import { fetchFacetsForScope } from 'server/facets';
-import { Community, ExternalPublication, Pub, PubAttribution, PubEdge } from 'types';
+import * as types from 'types';
+import { exists, expect } from 'utils/assert';
 import { pubUrl } from 'utils/canonicalUrls';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { licenseDetailsByKind } from 'utils/licenses';
 import { RelationType, relationTypeDefinitions } from 'utils/pubEdge';
-
+import { sortByRank } from 'utils/rank';
 import {
 	AnyResource,
 	Resource,
 	ResourceContribution,
+	ResourceContributorRole,
 	ResourceKind,
 	ResourceRelation,
 	ResourceRelationship,
-	ResourceContributorRole,
-} from '../types';
+} from '../resource';
+import { transformCollectionToResource } from './collection';
 
 const attributionRoleToResourceContributorRole: Record<string, ResourceContributorRole> = {
 	'Writing – Review & Editing': 'Editor',
@@ -44,7 +46,7 @@ const pubEdgeRelationTypeToResourceRelation: Record<
 };
 
 function transformPubAttributionToResourceContribution(
-	attribution: PubAttribution,
+	attribution: types.PubAttribution,
 	role: string,
 ): ResourceContribution {
 	return {
@@ -58,18 +60,19 @@ function transformPubAttributionToResourceContribution(
 	};
 }
 
-function derivePubResourceKind(pub: Pub): ResourceKind {
-	const primaryParentPubEdge = getPrimaryParentPubEdge(pub);
-	const primaryCollection = pub.collectionPubs ? getPrimaryCollection(pub.collectionPubs) : null;
-	switch (primaryParentPubEdge?.relationType) {
+function derivePubResourceKind(
+	pubPrimaryParentEdge?: types.PubEdge,
+	pubPrimaryCollection?: types.Collection | null,
+): ResourceKind {
+	switch (pubPrimaryParentEdge?.relationType) {
 		case RelationType.Preprint:
 		case RelationType.Supplement:
 			return 'Other';
 		default:
 			break;
 	}
-	if (primaryCollection !== null) {
-		switch (primaryCollection.kind) {
+	if (exists(pubPrimaryCollection)) {
+		switch (pubPrimaryCollection.kind) {
 			case 'issue':
 			case 'tag':
 				return 'JournalArticle';
@@ -84,12 +87,16 @@ function derivePubResourceKind(pub: Pub): ResourceKind {
 	return 'JournalArticle';
 }
 
-function derivePubEdgeRelation(pubEdge: PubEdge): ResourceRelation {
+function derivePubEdgeRelation(pubEdge: types.PubEdge): ResourceRelation {
 	return pubEdgeRelationTypeToResourceRelation[pubEdge.relationType];
 }
 
-function transformExternalPublicationToResource({ title, url }: ExternalPublication): AnyResource {
-	return {
+function transformExternalPublicationToResource({
+	title,
+	url,
+	doi,
+}: types.ExternalPublication): AnyResource {
+	let externalPublicationResource: AnyResource = {
 		kind: 'Other',
 		title,
 		identifiers: [
@@ -99,38 +106,56 @@ function transformExternalPublicationToResource({ title, url }: ExternalPublicat
 			},
 		],
 	};
+	if (doi) {
+		externalPublicationResource.identifiers.push({
+			identifierKind: 'DOI',
+			identifierValue: doi,
+		});
+	}
+	return externalPublicationResource;
 }
 
-async function transformOutboundEdgeToResourceRelationship(
-	pubEdge: PubEdge,
-	community: Community,
+async function transformEdgeToResourceRelationship(
+	pubEdge: types.PubEdge,
+	community: types.Community,
+	inbound = false,
 ): Promise<ResourceRelationship> {
 	return {
-		isParent: pubEdge.pubIsParent,
+		isParent: inbound ? pubEdge.pubIsParent : !pubEdge.pubIsParent,
 		resource: pubEdge.externalPublication
 			? transformExternalPublicationToResource(pubEdge.externalPublication)
-			: await transformPubToResource(pubEdge.pub as Pub, community),
+			: await transformPubToResource(expect(pubEdge.targetPub), community),
 		relation: derivePubEdgeRelation(pubEdge),
 	};
 }
 
-export async function transformPubToResource(pub: Pub, community: Community): Promise<Resource> {
+export async function transformPubToResource(
+	pub: types.Pub,
+	community: types.Community,
+): Promise<Resource> {
 	pub = sanitizePubEdges(pub, true);
+	const pubPrimaryParentEdge = getPrimaryParentPubEdge(pub);
+	const pubPrimaryCollection = pub.collectionPubs
+		? getPrimaryCollection(pub.collectionPubs)
+		: null;
 	const facets = await fetchFacetsForScope({ pubId: pub.id }, ['License']);
 	const license = licenseDetailsByKind[facets.License.value.kind];
-	const relationships: ResourceRelationship[] = await Promise.all(
-		(pub.outboundEdges ?? []).map((pubEdge) =>
-			transformOutboundEdgeToResourceRelationship(pubEdge, community),
+	const relationships: ResourceRelationship[] = await Promise.all([
+		...sortByRank(pub.outboundEdges ?? []).map((pubEdge) =>
+			transformEdgeToResourceRelationship(pubEdge, community),
 		),
-	);
+		...sortByRank(pub.inboundEdges ?? []).map((pubEdge) =>
+			transformEdgeToResourceRelationship(pubEdge, community, true),
+		),
+	]);
 	const contributions: ResourceContribution[] = pub.attributions.flatMap(
 		(attribution) =>
 			attribution.roles?.map((role) =>
 				transformPubAttributionToResourceContribution(attribution, role),
 			) ?? transformPubAttributionToResourceContribution(attribution, 'Other'),
 	);
-	return {
-		kind: derivePubResourceKind(pub),
+	let pubResource: Resource = {
+		kind: derivePubResourceKind(pubPrimaryParentEdge, pubPrimaryCollection),
 		title: pub.title,
 		timestamp: new Date().toUTCString(),
 		license: { spdxIdentifier: license.spdxIdentifier, uri: license.link },
@@ -146,4 +171,18 @@ export async function transformPubToResource(pub: Pub, community: Community): Pr
 		],
 		meta: {},
 	};
+	if (pub.doi) {
+		pubResource.identifiers.push({
+			identifierKind: 'DOI',
+			identifierValue: pub.doi,
+		});
+	}
+	if (pubPrimaryCollection) {
+		pubResource.relationships.push({
+			isParent: false,
+			relation: pubPrimaryCollection.kind === 'book' ? 'Part' : 'Publication',
+			resource: await transformCollectionToResource(pubPrimaryCollection, community),
+		});
+	}
+	return pubResource;
 }

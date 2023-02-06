@@ -1,5 +1,5 @@
 import { renderXml } from '@pubpub/deposit-utils/datacite';
-import { Resource } from 'deposit/types';
+import { Resource } from 'deposit/resource';
 import { getCommunityDepositTarget } from 'server/depositTarget/queries';
 import { persistCrossrefDepositRecord, persistDoiData } from 'server/doi/queries';
 import { Collection, DefinitelyHas, Pub } from 'types';
@@ -46,10 +46,6 @@ export async function prepareResource(scope: Scope, scopeResource: Resource, sco
 	}
 }
 
-function isPub(scope: Scope): scope is DefinitelyHas<Pub, 'community'> {
-	return 'pubVersions' in scope;
-}
-
 export async function submitResource(
 	scope: Scope,
 	scopeResource: Resource,
@@ -65,7 +61,10 @@ export async function submitResource(
 		? updateDataciteDoiMetadata
 		: createDataciteDoiWithMetadata)(resourceXml, resourceUrl, scopeDoi, depositTarget);
 	await Promise.all([
-		persistDoiData(requestIds, isPub(scope) ? { pub: scopeDoi } : { collection: scopeDoi }),
+		persistDoiData(
+			requestIds,
+			'pubId' in requestIds ? { pub: scopeDoi } : { collection: scopeDoi },
+		),
 		persistCrossrefDepositRecord(requestIds, depositResult),
 	]);
 	return { depositResult, resourceAst };
