@@ -16,7 +16,7 @@ type MetaProps = {
 	contextTitle?: string;
 	description?: string;
 	image?: string;
-	attributions?: any[];
+	attributions?: Attribution[];
 	doi?: string;
 	publishedAt?: null | Date;
 	unlisted?: boolean;
@@ -28,7 +28,7 @@ type MetaProps = {
 };
 
 const contributorRoles = ['Writing – Review & Editing', 'Editor', 'Series Editor'];
-const sortAttributions = (foo, bar) => {
+const sortAttributions = (foo: Attribution, bar: Attribution) => {
 	if (foo.order < bar.order) {
 		return -1;
 	}
@@ -68,6 +68,8 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	} = initialData.communityData;
 
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
+	const isPub = !!initialData.scopeData?.elements?.activePub;
+	const useCollectionTitle = !isPub && collection?.title;
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
 	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
@@ -92,12 +94,20 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			<meta
 				key="t2"
 				property="og:title"
-				content={collection?.kind === 'book' ? collection.title : title}
+				content={useCollectionTitle ? collection.title : title}
 			/>,
 			<meta key="t3" name="twitter:title" content={titleWithContext} />,
 			<meta key="t4" name="twitter:image:alt" content={titleWithContext} />,
-			<meta key="t5" name="citation_title" content={collection?.title ?? title} />,
-			<meta key="t6" name="dc.title" content={collection?.title ?? title} />,
+			<meta
+				key="t5"
+				name="citation_title"
+				content={useCollectionTitle ? collection.title : title}
+			/>,
+			<meta
+				key="t6"
+				name="dc.title"
+				content={useCollectionTitle ? collection.title : title}
+			/>,
 		];
 	}
 
@@ -122,13 +132,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			<meta
 				key="u2"
 				property="og:type"
-				content={
-					collection?.kind === 'book'
-						? 'book'
-						: url.indexOf('/pub/') > -1
-						? 'article'
-						: 'website'
-				}
+				content={collection?.kind === 'book' ? 'book' : isPub ? 'article' : 'website'}
 			/>,
 		];
 	}
@@ -174,7 +178,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 				...outputComponents,
 				<meta key="c10" name="citation_conference_title" content={collection.title} />,
 				<meta key="c11" name="citation_conferenceName" content={collection.title} />,
-				<meta key="c9" name="citation_date" content={collection.metadata?.date} />,
+				<meta key="c12" name="citation_date" content={collection.metadata?.date} />,
 			];
 		}
 	}
@@ -220,14 +224,21 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	}
 
 	if (attributions) {
-		const authors = attributions.sort(sortAttributions).filter((item) => {
-			return item.isAuthor && !item.roles;
-		});
+		const authors: Attribution[] = [];
+		const contributors: Attribution[] = [];
 
 		const getPrimaryRole = (contributor: Attribution) => contributor.roles?.[0];
-		const contributors = attributions.sort(sortAttributions).filter((item) => {
-			const primaryRole = getPrimaryRole(item);
-			return item.isAuthor && primaryRole && contributorRoles.includes(primaryRole);
+
+		attributions.sort(sortAttributions).forEach((attribution) => {
+			if (!attribution.isAuthor) {
+				return;
+			}
+			const primaryRole = getPrimaryRole(attribution);
+			if (primaryRole && contributorRoles.includes(primaryRole)) {
+				contributors.push(attribution);
+			} else {
+				authors.push(attribution);
+			}
 		});
 
 		const citationAuthorTags = authors.map((author) => {
