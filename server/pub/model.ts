@@ -21,44 +21,22 @@ export default (sequelize, dataTypes) => {
 					len: [0, 280],
 				},
 			},
-			avatar: { type: dataTypes.TEXT },
-			headerStyle: {
-				type: dataTypes.ENUM,
-				values: ['white-blocks', 'black-blocks', 'dark', 'light'],
-				defaultValue: null,
+			htmlDescription: {
+				type: dataTypes.TEXT,
+				validate: {
+					len: [0, 280],
+				},
 			},
-			headerBackgroundColor: { type: dataTypes.STRING },
-			headerBackgroundImage: { type: dataTypes.TEXT },
-			firstPublishedAt: { type: dataTypes.DATE },
-			lastPublishedAt: { type: dataTypes.DATE },
+			avatar: { type: dataTypes.TEXT },
 			customPublishedAt: { type: dataTypes.DATE },
 			doi: { type: dataTypes.TEXT },
 			labels: { type: dataTypes.JSONB },
 			downloads: { type: dataTypes.JSONB },
 			metadata: { type: dataTypes.JSONB },
-			licenseSlug: { type: dataTypes.TEXT, defaultValue: 'cc-by' },
-			citationStyle: { type: dataTypes.TEXT, defaultValue: 'apa-7' },
-			citationInlineStyle: { type: dataTypes.TEXT, defaultValue: 'count' },
 			viewHash: { type: dataTypes.STRING },
 			editHash: { type: dataTypes.STRING },
 			reviewHash: { type: dataTypes.STRING },
 			commentHash: { type: dataTypes.STRING },
-			nodeLabels: { type: dataTypes.JSONB },
-
-			pubEdgeListingDefaultsToCarousel: {
-				type: dataTypes.BOOLEAN,
-				defaultValue: true,
-				allowNull: false,
-			},
-			pubEdgeDescriptionVisible: {
-				type: dataTypes.BOOLEAN,
-				defaultValue: true,
-				allowNull: false,
-			},
-			facetsMigratedAt: {
-				type: dataTypes.DATE,
-				allowNull: true,
-			},
 
 			/* Set by Associations */
 			draftId: { type: dataTypes.UUID, allowNull: false },
