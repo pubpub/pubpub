@@ -2,31 +2,19 @@ export default (sequelize, dataTypes) =>
 	sequelize.define(
 		'integration',
 		{
-			name: { type: dataTypes.TEXT },
-			authSchemeName: { type: dataTypes.ENUM('OAuth1', 'Basic') },
-			externalUserData: { type: dataTypes.JSONB },
+			name: dataTypes.TEXT,
+			authSchemeName: dataTypes.ENUM('OAuth1'), // this frames polymorphism, add schema names here and in corresponding type
+			externalUserData: dataTypes.JSONB,
+			logoUrl: dataTypes.TEXT,
 		},
 		{
 			tableName: 'Integrations',
 			classMethods: {
 				associate: (models) => {
-					const { User, integration, integrationDataOAuth1, integrationDataBasic } =
-						models;
+					const { User, integration, integrationDataOAuth1 } = models;
 					integration.belongsTo(User, { as: 'user', foreignKey: { allowNull: false } });
 					integration.hasOne(integrationDataOAuth1);
-					integration.hasOne(integrationDataBasic);
 				},
 			},
 		},
 	);
-/* would love to get the below to work as an instance method
-	Integration.prototype.getIntegrationData = function (options) {
-		console.log(options, this.get('authSchemaName'));
-		return this[
-			'getIntegrationData' +
-				this.get('authSchemaName')[0].toUpperCase() +
-				this.get('authSchemaName').substr(1)
-		](options);
-	};
-	return Integration;
-	*/

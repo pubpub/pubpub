@@ -2,7 +2,7 @@ export default (sequelize, dataTypes) =>
 	sequelize.define(
 		'integrationDataOAuth1',
 		{
-			accessToken: { type: dataTypes.TEXT },
+			accessToken: dataTypes.TEXT,
 		},
 		{
 			tableName: 'IntegrationDataOAuth1',

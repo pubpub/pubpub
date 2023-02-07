@@ -56,7 +56,6 @@ export const FeatureFlagUser = sequelize.import('./featureFlagUser/model');
 export const FeatureFlagCommunity = sequelize.import('./featureFlagCommunity/model');
 export const Integration = sequelize.import('./integration/model');
 export const IntegrationDataOAuth1 = sequelize.import('./integrationDataOAuth1/model');
-export const IntegrationDataBasic = sequelize.import('./integrationDataBasic/model');
 export const LandingPageFeature = sequelize.import('./landingPageFeature/model');
 export const Member = sequelize.import('./member/model');
 export const Merge = sequelize.import('./merge/model');
