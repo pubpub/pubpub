@@ -173,7 +173,7 @@ app.use(errorMiddleware);
 /* ------------ */
 const port = process.env.PORT || 9876;
 export const startServer = () => {
-	return app.listen(
+	const server = app.listen(
 		port,
 		// @ts-expect-error
 		(err) => {
@@ -184,4 +184,7 @@ export const startServer = () => {
 			console.info('==> 💻  Send requests to http://localhost:%s', port);
 		},
 	);
+	server.keepAliveTimeout = 31000;
+	server.headersTimeout = 31000;
+	return server;
 };
