@@ -8,7 +8,7 @@ app.get('/auth/zotero', passport.authenticate('zotero'));
 app.get(
 	'/auth/zotero/redirect',
 	passport.authenticate('zotero', {
-		failureRedirect: '/user/fail',
-		successRedirect: '/user/success',
+		failureRedirect: '/legal/settings?integration=fail',
+		successRedirect: '/legal/settings?integration=success',
 	}),
 );

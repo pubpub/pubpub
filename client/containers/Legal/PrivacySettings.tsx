@@ -75,39 +75,14 @@ const ThirdPartyAnalyticsCard = () => {
 	);
 };
 
-type IntegrationCardProps = {
-	integration: Integration;
-};
-
-const IntegrationCard = (props: IntegrationCardProps) => {
-	const { integration } = props;
-	const [isDeletingIntegration, setIsDeletingIntegration] = useState(false);
-	const deleteIntegration = () => {
-		setIsDeletingIntegration(true);
-		apiFetch.delete('/api/integration', { id: integration.id }).then((stuff) => {
-			console.log({ stuff });
-			setIsDeletingIntegration(false);
+const PrivacySettings = (props: PrivacySettingsProps) => {
+	const [deletedIntegrations, setDeletedIntegrations] = useState<string[]>([]);
+	const { isLoggedIn, integrations } = props;
+	const onDeleteIntegration = (id) => () => {
+		apiFetch.delete('/api/integration', { id }).then((deletedId) => {
+			setDeletedIntegrations([...deletedIntegrations, deletedId]);
 		});
 	};
-	return (
-		<Card key={integration.id}>
-			<h5>{integration.name} integration</h5>
-			<p>
-				Deleting the integration will purge your {integration.name} credentials from our
-				database.
-			</p>
-			<Button
-				intent="danger"
-				text="Remove"
-				loading={isDeletingIntegration}
-				onClick={deleteIntegration}
-			/>
-		</Card>
-	);
-};
-
-const PrivacySettings = (props: PrivacySettingsProps) => {
-	const { isLoggedIn, integrations } = props;
 
 	return (
 		<div className="privacy-settings">
@@ -127,9 +102,22 @@ const PrivacySettings = (props: PrivacySettingsProps) => {
 							Request data export
 						</AnchorButton>
 					</Card>
-					{integrations.map((integration) => (
-						<IntegrationCard integration={integration} />
-					))}
+					{integrations
+						.filter((integration) => !deletedIntegrations.includes(integration.id))
+						.map((integration) => (
+							<Card key={integration.id}>
+								<h5>{integration.name} integration</h5>
+								<p>
+									Deleting the integration will purge your {integration.name}{' '}
+									credentials from our database.
+								</p>
+								<Button
+									intent="danger"
+									text="Remove"
+									onClick={onDeleteIntegration(integration.id)}
+								/>
+							</Card>
+						))}
 					<Card>
 						<h5>Account deletion</h5>
 						<p>
