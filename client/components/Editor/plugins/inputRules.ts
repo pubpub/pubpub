@@ -113,7 +113,6 @@ function linkRule(markType: MarkType) {
 	return new InputRule(
 		HTTP_MAILTO_REGEX,
 		(state: EditorState, match: RegExpMatchArray, start: number, end: number) => {
-			console.log('match: ', match);
 			const resolvedStart = state.doc.resolve(start);
 			if (!resolvedStart.parent.type.allowsMarkType(markType)) return null;
 			const attrs = { type: match[2] === '@' ? 'email' : 'uri' };
