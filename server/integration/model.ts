@@ -5,7 +5,6 @@ export default (sequelize, dataTypes) =>
 			name: dataTypes.TEXT,
 			authSchemeName: dataTypes.ENUM('OAuth1'), // this frames polymorphism, add schema names here and in corresponding type
 			externalUserData: dataTypes.JSONB,
-			logoUrl: dataTypes.TEXT,
 		},
 		{
 			tableName: 'Integrations',

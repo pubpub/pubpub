@@ -26,6 +26,13 @@ data associated with that account, be deleted.
 I understand that this action may be irreversible.
 `;
 
+const possibleIntegrations = [
+	{
+		name: 'zotero',
+		authUrl: '/auth/zotero',
+	},
+];
+
 const ThirdPartyAnalyticsCard = () => {
 	const { loginData } = usePageContext();
 	const [hasUsedToggle, setHasUsedToggle] = useState(false);
@@ -76,11 +83,16 @@ const ThirdPartyAnalyticsCard = () => {
 };
 
 const PrivacySettings = (props: PrivacySettingsProps) => {
-	const [deletedIntegrations, setDeletedIntegrations] = useState<string[]>([]);
 	const { isLoggedIn, integrations } = props;
-	const onDeleteIntegration = (id) => () => {
-		apiFetch.delete('/api/integration', { id }).then((deletedId) => {
-			setDeletedIntegrations([...deletedIntegrations, deletedId]);
+	const initialActiveIntegration = integrations.map(({ name }) => name);
+	const [unusedIntegrations, setUnusedIntegrations] = useState<string[]>(
+		possibleIntegrations
+			.map(({ name }) => name)
+			.filter((name) => !initialActiveIntegration.includes(name)),
+	);
+	const onDeleteIntegration = (integration: Integration) => () => {
+		apiFetch.delete('/api/integration', { id: integration.id }).then(() => {
+			setUnusedIntegrations([...unusedIntegrations, integration.name]);
 		});
 	};
 
@@ -102,22 +114,27 @@ const PrivacySettings = (props: PrivacySettingsProps) => {
 							Request data export
 						</AnchorButton>
 					</Card>
-					{integrations
-						.filter((integration) => !deletedIntegrations.includes(integration.id))
-						.map((integration) => (
-							<Card key={integration.id}>
-								<h5>{integration.name} integration</h5>
+					{possibleIntegrations.map((i) => {
+						const integration = integrations.find(({ name }) => name === i.name);
+						return (
+							<Card key={i.name}>
+								<h5>{i.name} integration</h5>
 								<p>
-									Deleting the integration will purge your {integration.name}{' '}
-									credentials from our database.
+									Deleting the integration will purge your {i.name} credentials
+									from our database.
 								</p>
-								<Button
-									intent="danger"
-									text="Remove"
-									onClick={onDeleteIntegration(integration.id)}
-								/>
+								{!unusedIntegrations.includes(i.name) && integration ? (
+									<Button
+										intent="danger"
+										text="Remove"
+										onClick={onDeleteIntegration(integration)}
+									/>
+								) : (
+									<AnchorButton text="Activate" href={i.authUrl} />
+								)}
 							</Card>
-						))}
+						);
+					})}
 					<Card>
 						<h5>Account deletion</h5>
 						<p>
