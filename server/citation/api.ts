@@ -7,8 +7,9 @@ import { Integration, IntegrationDataOAuth1 } from '../models';
 // the parameters which can be passed to the get() method
 // can be found at https://www.zotero.org/support/dev/web_api/v3/basics
 app.get('/api/citations/zotero', (req, res) => {
-	const userId = req.user.id;
+	const userId = req.user?.id;
 	const { q } = req.query;
+	if !userId return new Error('Log in to request citations');
 	return Integration.findOne({
 		where: { name: 'zotero', userId },
 		include: { model: IntegrationDataOAuth1, required: false },
