@@ -9,7 +9,7 @@ import { Integration, IntegrationDataOAuth1 } from '../models';
 app.get('/api/citations/zotero', (req, res) => {
 	const userId = req.user?.id;
 	const { q } = req.query;
-	if !userId return new Error('Log in to request citations');
+	if (!userId) return new Error('Log in to request citations');
 	return Integration.findOne({
 		where: { name: 'zotero', userId },
 		include: { model: IntegrationDataOAuth1, required: false },
