@@ -43,12 +43,15 @@ export const zoteroAuthStrategy = () =>
 			})
 				.then((user) => {
 					if (!user.integrations.length) {
-						return user.createIntegration({
-							name: 'zotero',
-							authSchemeName: 'OAuth1',
-							externalUserData,
-							integrationDataOAuth1,
-						});
+						return user
+							.createIntegration({
+								name: 'zotero',
+								authSchemeName: 'OAuth1',
+								externalUserData,
+							})
+							.then((integration) =>
+								integration.createIntegrationDataOAuth1(integrationDataOAuth1),
+							);
 					}
 					const integration = user.integrations[0];
 					return integration
