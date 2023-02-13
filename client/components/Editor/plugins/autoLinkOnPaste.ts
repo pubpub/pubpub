@@ -14,12 +14,14 @@ const linkify = function (fragment: Fragment): Fragment {
 			const text = child.text as string;
 			let pos = 0;
 			let match;
+			// const link = match[0].substring(0, match[0].length - 1);
 
 			// eslint-disable-next-line no-cond-assign
 			while ((match = HTTP_LINK_REGEX.exec(text))) {
 				const start = match.index;
 				const end = start + match[0].length;
 				const link = child.type.schema.marks.link;
+				const attrs = { type: match[2] === '@' ? 'email' : 'uri' };
 
 				// simply copy across the text from before the match
 				if (start > 0) {
@@ -27,10 +29,13 @@ const linkify = function (fragment: Fragment): Fragment {
 				}
 
 				const urlText = text.slice(start, end);
+				const linkAttrs =
+					attrs.type === 'email'
+						? { href: 'mailto:' + urlText }
+						: { href: urlText, target: '_blank' };
+
 				linkified.push(
-					child
-						.cut(start, end)
-						.mark(link.create({ href: urlText }).addToSet(child.marks)),
+					child.cut(start, end).mark(link.create(linkAttrs).addToSet(child.marks)),
 				);
 				pos = end;
 			}
