@@ -139,6 +139,23 @@ app.delete(
 	}),
 );
 
+app.get(
+	'/api/pub/:pubId/resource',
+	wrap(async (req, res) => {
+		const { pubId } = req.params;
+		const pub = await findPub(pubId);
+		if (!pub) {
+			return new NotFoundError();
+		}
+		const resource = await transformPubToResource(
+			// @ts-expect-error
+			pub.get({ plain: true }),
+			pub.community,
+		);
+		return res.status(200).json(resource);
+	}),
+);
+
 app.post(
 	'/api/pub/:pubId/doi',
 	wrap(async (req, res) => {

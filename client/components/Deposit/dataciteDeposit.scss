@@ -3,11 +3,13 @@
 $bp: vendor.$bp-namespace;
 
 .datacite-deposit {
+	.#{$bp}-tree {
+		margin: 1em 0;
+		border: 1px dashed #ccc;
+		border-radius: 3px;
+	}
 	.#{$bp}-tree-node-label {
 		font-family: 'Courier New', Courier, monospace;
 		flex: initial;
-	}
-	.#{$bp}-tree-node-secondary-label {
-
 	}
 }

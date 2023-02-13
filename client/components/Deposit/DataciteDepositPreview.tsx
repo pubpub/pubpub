@@ -1,6 +1,13 @@
-import { Callout, IconName, ITreeNode, Spinner, Tree } from '@blueprintjs/core';
-import { apiFetch } from 'client/utils/apiFetch';
-import React, { MouseEvent, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { IconName, ITreeNode, Tree } from '@blueprintjs/core';
+import React, {
+	MouseEvent,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useMemo,
+	useReducer,
+} from 'react';
+
 import { expect } from 'utils/assert';
 
 // TODO: Export this from @pubpub/deposit-utils
@@ -185,6 +192,9 @@ export function DataciteDepositPreview(props: Props) {
 	}, []);
 	const handleNodeExpand = useCallback((_node: ITreeNode, path: NodePath) => {
 		dispatch(expand(path));
+	}, []);
+	useLayoutEffect(() => {
+		dispatch(expand([0]));
 	}, []);
 	return (
 		<Tree

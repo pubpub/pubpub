@@ -84,6 +84,11 @@ export default function DataciteDeposit(props: Props) {
 				onClick={handleDepositClick}
 				status={status}
 				depositRecord={depositRecord}
+				disabled={
+					status === SubmitDepositStatus.Previewing ||
+					status === SubmitDepositStatus.Depositing ||
+					status === SubmitDepositStatus.Deposited
+				}
 			/>
 		</div>
 	);

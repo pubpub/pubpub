@@ -159,6 +159,7 @@ const findPubOptions = buildPubOptions({
 		includeTargetPub: true,
 		includeCommunityForPubs: true,
 	},
+	getCollections: true,
 });
 
 export const findCollection = (

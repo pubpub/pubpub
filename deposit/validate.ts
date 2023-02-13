@@ -15,7 +15,6 @@ export const primaryParentResourceHasDoi = (resource: Resource): boolean => {
 		}
 		return false;
 	});
-	console.log(resource.relationships);
 	return (
 		!exists(primaryParentResource) ||
 		primaryParentResource.resource.identifiers.find(

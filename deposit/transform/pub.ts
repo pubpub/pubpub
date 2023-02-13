@@ -179,7 +179,7 @@ export async function transformPubToResource(
 	}
 	if (pubPrimaryCollection) {
 		pubResource.relationships.push({
-			isParent: false,
+			isParent: true,
 			relation: pubPrimaryCollection.kind === 'book' ? 'Part' : 'Publication',
 			resource: await transformCollectionToResource(pubPrimaryCollection, community),
 		});

@@ -1,5 +1,5 @@
 import { fetchFacetsForScope } from 'server/facets';
-import { Collection, CollectionAttribution, Community, DefinitelyHas } from 'types';
+import { Collection, CollectionAttribution, Community } from 'types';
 import { collectionUrl } from 'utils/canonicalUrls';
 import { licenseDetailsByKind } from 'utils/licenses';
 import { ResourceKind, ResourceContribution, ResourceContributorRole, Resource } from '../resource';

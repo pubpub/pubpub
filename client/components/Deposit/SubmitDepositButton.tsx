@@ -23,7 +23,7 @@ const buttonTextByStatus = {
 
 const getButtonText = (status: SubmitDepositStatus, depositRecord?: DepositRecord) => {
 	if (status === SubmitDepositStatus.Initial && depositRecord) {
-		return 'Update & Preview Deposit';
+		return 'Preview & Update Deposit';
 	}
 	if (status === SubmitDepositStatus.Previewed && depositRecord) {
 		return 'Re-Submit Deposit';
