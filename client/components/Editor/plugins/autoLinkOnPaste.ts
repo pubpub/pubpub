@@ -21,7 +21,6 @@ const linkify = function (fragment: Fragment): Fragment {
 				const start = match.index;
 				const end = start + match[0].length;
 				const link = child.type.schema.marks.link;
-				console.log(match);
 				const attrs = { type: match[2] === '@' ? 'email' : 'uri' };
 
 				// simply copy across the text from before the match
@@ -40,7 +39,6 @@ const linkify = function (fragment: Fragment): Fragment {
 				);
 				pos = end;
 			}
-			console.log(match);
 
 			// copy over whatever is left
 			if (pos < text.length) {
