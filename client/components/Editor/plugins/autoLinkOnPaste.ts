@@ -4,7 +4,7 @@ import isURL from 'is-url';
 
 const HTTP_LINK_REGEX = new RegExp(
 	// eslint-disable-next-line no-useless-escape
-	/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g,
+	/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s$/g,
 );
 
 const linkify = function (fragment: Fragment): Fragment {
@@ -21,6 +21,7 @@ const linkify = function (fragment: Fragment): Fragment {
 				const start = match.index;
 				const end = start + match[0].length;
 				const link = child.type.schema.marks.link;
+				console.log(match);
 				const attrs = { type: match[2] === '@' ? 'email' : 'uri' };
 
 				// simply copy across the text from before the match
@@ -39,6 +40,7 @@ const linkify = function (fragment: Fragment): Fragment {
 				);
 				pos = end;
 			}
+			console.log(match);
 
 			// copy over whatever is left
 			if (pos < text.length) {
