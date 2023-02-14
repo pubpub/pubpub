@@ -2,6 +2,7 @@ import passportOAuth1 from 'passport-oauth1';
 
 import { User, Integration, IntegrationDataOAuth1 } from 'server/models';
 import { isDuqDuq, isDevelopment } from 'utils/environment';
+import { expect } from 'utils/assert';
 
 const baseRedirectUrl = isDuqDuq()
 	? 'https://duqduq.org'
@@ -43,27 +44,23 @@ export const zoteroAuthStrategy = () =>
 			})
 				.then((user) => {
 					if (!user.integrations.length) {
-						return user
-							.createIntegration({
-								name: 'zotero',
-								authSchemeName: 'OAuth1',
-								externalUserData,
-							})
-							.then((integration) =>
-								integration.createIntegrationDataOAuth1(integrationDataOAuth1),
-							);
+						return Integration.create({
+							userId: user.id,
+							name: 'zotero',
+							authSchemeName: 'OAuth1',
+							externalUserData,
+						}).then((integration) =>
+							IntegrationDataOAuth1.create({
+								...integrationDataOAuth1,
+								integrationId: integration.id,
+							}),
+						);
 					}
 					const integration = user.integrations[0];
-					return integration
-						.getIntegrationDataOAuth1()
-						.then((oldData) => {
-							if (!oldData) {
-								return integration.createIntegrationDataOAuth1(
-									integrationDataOAuth1,
-								);
-							}
-							return oldData.update(integrationDataOAuth1);
-						})
+					return IntegrationDataOAuth1.findOne({
+						where: { integrationId: integration.id },
+					})
+						.then((oldData) => expect(oldData).update(integrationDataOAuth1))
 						.then(() => integration);
 				})
 				.then(() => {

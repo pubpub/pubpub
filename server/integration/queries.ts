@@ -7,7 +7,7 @@ type CreateOptions = {
 	name: string;
 	userId: string;
 	integrationId: string;
-	authSchemeName: string;
+	authSchemeName: types.AuthSchemeName;
 	externalUserData: types.IntegrationUserData;
 	accessToken: string;
 	integrationData?: object;
