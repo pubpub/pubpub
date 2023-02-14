@@ -33,7 +33,7 @@ type Props = {
 
 const fetchCitations = async (query) => {
 	const { items } = await apiFetch(`/api/citations/zotero?q=${query}`);
-	console.log('bump', { items });
+	console.log({ items });
 	return items;
 };
 
