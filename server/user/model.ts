@@ -58,8 +58,12 @@ export default (sequelize, dataTypes) => {
 		{
 			classMethods: {
 				associate: (models) => {
-					const { PubAttribution, Discussion, UserNotificationPreferences, integration } =
-						models;
+					const {
+						PubAttribution,
+						Discussion,
+						UserNotificationPreferences,
+						zoteroIntegration,
+					} = models;
 					User.hasMany(PubAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
@@ -75,7 +79,9 @@ export default (sequelize, dataTypes) => {
 						as: 'userNotificationPreferences',
 						foreignKey: 'userId',
 					});
-					User.hasMany(integration, { foreignKey: { name: 'userId', allowNull: false } });
+					User.hasOne(zoteroIntegration, {
+						foreignKey: { name: 'userId', allowNull: false },
+					});
 				},
 			},
 		},

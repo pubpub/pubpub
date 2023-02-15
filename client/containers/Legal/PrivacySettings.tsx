@@ -91,7 +91,7 @@ const PrivacySettings = (props: PrivacySettingsProps) => {
 			.filter((name) => !initialActiveIntegration.includes(name)),
 	);
 	const onDeleteIntegration = (integration: Integration) => () => {
-		apiFetch.delete('/api/integration', { id: integration.id }).then(() => {
+		apiFetch.delete('/api/zoteroIntegrations', { id: integration.id }).then(() => {
 			setUnusedIntegrations([...unusedIntegrations, integration.name]);
 		});
 	};

@@ -13,7 +13,7 @@ require('./editor/api');
 require('./export/api');
 require('./facets/api');
 require('./import/api');
-require('./integration/api');
+require('./zoteroIntegration/api');
 require('./landingPageFeature/api');
 require('./layout/api');
 require('./logout/api');

@@ -1,9 +1,11 @@
-import { User, Integration } from 'server/models';
+import { User, ZoteroIntegration } from 'server/models';
 
 export default async (userId) => {
 	const user = await User.findOne({
 		where: { id: userId },
-		include: { model: Integration, required: false },
+		include: { model: ZoteroIntegration, required: false },
 	});
-	return user.toJSON().integrations;
+	// include more integrations as they are added to the user
+	const { zoteroIntegration } = user.toJSON();
+	return [...(zoteroIntegration ? [{ name: 'zotero', ...zoteroIntegration }] : [])];
 };

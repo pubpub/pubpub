@@ -8,9 +8,10 @@ export default (sequelize, dataTypes) =>
 			tableName: 'IntegrationDataOAuth1',
 			classMethods: {
 				associate: (models) => {
-					const { integrationDataOAuth1, integration } = models;
-					integrationDataOAuth1.belongsTo(integration, {
-						scope: { authSchemeName: 'OAuth1' },
+					const { integrationDataOAuth1, zoteroIntegration } = models;
+					integrationDataOAuth1.hasOne(zoteroIntegration, {
+						foreignKey: { allowNull: false },
+						onDelete: 'CASCADE',
 					});
 				},
 			},

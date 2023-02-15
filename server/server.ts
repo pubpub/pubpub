@@ -22,7 +22,7 @@ import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
 import { deduplicateSlash } from './middleware/deduplicateSlash';
 
 import { sequelize, User } from './models';
-import { zoteroAuthStrategy } from './integration/utils/auth';
+import { zoteroAuthStrategy } from './zoteroIntegration/utils/auth';
 import './hooks';
 
 // Wrapper for app.METHOD() handlers. Though we need this to properly catch errors in handlers that

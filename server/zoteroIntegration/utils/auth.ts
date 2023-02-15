@@ -1,6 +1,6 @@
 import passportOAuth1 from 'passport-oauth1';
 
-import { User, Integration, IntegrationDataOAuth1 } from 'server/models';
+import { User, ZoteroIntegration, IntegrationDataOAuth1 } from 'server/models';
 import { isDuqDuq, isDevelopment } from 'utils/environment';
 import { expect } from 'utils/assert';
 
@@ -22,45 +22,36 @@ export const zoteroAuthStrategy = () =>
 			signatureMethod: 'HMAC-SHA1',
 			passReqToCallback: true,
 		},
-		(req, token, tokenSecret, params, profile, cb) => {
+		(req, accessToken, tokenSecret, params, profile, cb) => {
 			const userId = req.user.id;
-			const { username: externalUsername, userID: externalUserId } = params;
-			const externalUserData = {
-				externalUserId,
-				externalUsername,
-			};
-			const integrationDataOAuth1 = {
-				userId,
-				accessToken: token,
-			};
+			const { username: zoteroUsername, userID: zoteroUserId } = params;
 			return User.findOne({
 				where: { id: userId },
 				include: {
-					model: Integration,
+					model: ZoteroIntegration,
 					where: { name: 'zotero' },
 					required: false,
 					include: { model: IntegrationDataOAuth1, required: false },
 				},
 			})
 				.then((user) => {
-					if (!user.integrations.length) {
-						return Integration.create({
-							userId: user.id,
-							name: 'zotero',
-							authSchemeName: 'OAuth1',
-							externalUserData,
-						}).then((integration) =>
-							IntegrationDataOAuth1.create({
-								...integrationDataOAuth1,
-								integrationId: integration.id,
-							}),
+					if (!user.zoteroIntegration) {
+						return IntegrationDataOAuth1.create({ accessToken }).then(
+							(integrationData) =>
+								ZoteroIntegration.create({
+									userId: user.id,
+									name: 'zotero',
+									zoteroUsername,
+									zoteroUserId,
+									integrationDataOAuth1Id: integrationData.id,
+								}),
 						);
 					}
-					const integration = user.integrations[0];
+					const integration = user.zoteroIntegration;
 					return IntegrationDataOAuth1.findOne({
-						where: { integrationId: integration.id },
+						where: { id: integration.integrationDataOAuth1Id },
 					})
-						.then((oldData) => expect(oldData).update(integrationDataOAuth1))
+						.then((oldData) => expect(oldData).update({ accessToken }))
 						.then(() => integration);
 				})
 				.then(() => {
