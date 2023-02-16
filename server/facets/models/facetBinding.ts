@@ -1,11 +1,8 @@
-export default (sequelize, dataTypes) => {
+export default (sequelize) => {
 	return sequelize.define(
 		'facetBinding',
 		{
 			id: sequelize.idType,
-			pubId: { type: dataTypes.UUID, allowNull: true },
-			collectionId: { type: dataTypes.UUID, allowNull: true },
-			communityId: { type: dataTypes.UUID, allowNull: true },
 		},
 		{
 			tableName: 'FacetBindings',
@@ -16,21 +13,15 @@ export default (sequelize, dataTypes) => {
 			],
 			classMethods: {
 				associate: (models) => {
-					const { FacetBinding, Community, Collection, Pub } = models;
-					FacetBinding.belongsTo(Community, {
+					const { facetBinding, community, collection, pub } = models;
+					facetBinding.belongsTo(community, {
 						onDelete: 'CASCADE',
-						as: 'community',
-						foreignKey: 'communityId',
 					});
-					FacetBinding.belongsTo(Collection, {
+					facetBinding.belongsTo(collection, {
 						onDelete: 'CASCADE',
-						as: 'collection',
-						foreignKey: 'collectionId',
 					});
-					FacetBinding.belongsTo(Pub, {
+					facetBinding.belongsTo(pub, {
 						onDelete: 'CASCADE',
-						as: 'pub',
-						foreignKey: 'pubId',
 					});
 				},
 			},

@@ -32,7 +32,7 @@ export default (sequelize, dataTypes) => {
 			},
 		},
 		{
-			tableName: 'UserNoficationPreferences',
+			tableName: 'UserNotificationPreferences',
 			classMethods: {
 				associate: (models) => {
 					const { userNotificationPreferences, user } = models;
