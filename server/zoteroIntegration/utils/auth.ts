@@ -29,7 +29,6 @@ export const zoteroAuthStrategy = () =>
 				where: { id: userId },
 				include: {
 					model: ZoteroIntegration,
-					where: { name: 'zotero' },
 					required: false,
 					include: { model: IntegrationDataOAuth1, required: false },
 				},
@@ -40,7 +39,6 @@ export const zoteroAuthStrategy = () =>
 							(integrationData) =>
 								ZoteroIntegration.create({
 									userId: user.id,
-									name: 'zotero',
 									zoteroUsername,
 									zoteroUserId,
 									integrationDataOAuth1Id: integrationData.id,

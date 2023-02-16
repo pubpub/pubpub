@@ -2,6 +2,7 @@ export default (sequelize, dataTypes) =>
 	sequelize.define(
 		'integrationDataOAuth1',
 		{
+			id: sequelize.idType,
 			accessToken: dataTypes.TEXT,
 		},
 		{
@@ -9,10 +10,7 @@ export default (sequelize, dataTypes) =>
 			classMethods: {
 				associate: (models) => {
 					const { integrationDataOAuth1, zoteroIntegration } = models;
-					integrationDataOAuth1.hasOne(zoteroIntegration, {
-						foreignKey: { allowNull: false },
-						onDelete: 'CASCADE',
-					});
+					integrationDataOAuth1.hasOne(zoteroIntegration, { onDelete: 'CASCADE' });
 				},
 			},
 		},

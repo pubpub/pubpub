@@ -2,7 +2,7 @@ export default (sequelize, dataTypes) =>
 	sequelize.define(
 		'zoteroIntegration',
 		{
-			name: dataTypes.TEXT,
+			id: sequelize.idType,
 			zoteroUsername: dataTypes.TEXT,
 			zoteroUserId: dataTypes.TEXT,
 		},
@@ -15,9 +15,7 @@ export default (sequelize, dataTypes) =>
 						as: 'user',
 						foreignKey: { allowNull: false },
 					});
-					zoteroIntegration.belongsTo(integrationDataOAuth1, {
-						foreignKey: { allowNull: false },
-					});
+					zoteroIntegration.belongsTo(integrationDataOAuth1, { onDelete: 'CASCADE' });
 				},
 			},
 		},
