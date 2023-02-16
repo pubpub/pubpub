@@ -15,7 +15,10 @@ export default (sequelize, dataTypes) =>
 						as: 'user',
 						foreignKey: { allowNull: false },
 					});
-					zoteroIntegration.belongsTo(integrationDataOAuth1, { onDelete: 'CASCADE' });
+					zoteroIntegration.belongsTo(integrationDataOAuth1, {
+						foreignKey: { allowNull: false },
+						onDelete: 'CASCADE',
+					});
 				},
 			},
 		},
