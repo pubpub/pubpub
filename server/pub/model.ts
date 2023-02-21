@@ -71,6 +71,7 @@ export default (sequelize, dataTypes) => {
 			classMethods: {
 				associate: (models) => {
 					const {
+						activityItem,
 						collectionPub,
 						community,
 						crossrefDepositRecord,
@@ -88,6 +89,7 @@ export default (sequelize, dataTypes) => {
 						submission,
 					} = models;
 					pub.belongsTo(draft, { foreignKey: { allowNull: false } });
+					pub.hasMany(activityItem);
 					pub.hasMany(pubAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',

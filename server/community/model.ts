@@ -77,6 +77,7 @@ export default (sequelize, dataTypes) => {
 			classMethods: {
 				associate: (models) => {
 					const {
+						activityItem,
 						community,
 						depositTarget,
 						organization,
@@ -87,6 +88,7 @@ export default (sequelize, dataTypes) => {
 						landingPageFeature,
 						spamTag,
 					} = models;
+					community.hasMany(activityItem, { foreignKey: { allowNull: false } });
 					community.hasMany(landingPageFeature, { onDelete: 'CASCADE' });
 					community.belongsTo(organization, { onDelete: 'CASCADE' });
 					community.hasMany(collection, { onDelete: 'CASCADE' });
