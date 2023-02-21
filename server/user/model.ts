@@ -60,6 +60,7 @@ export default (sequelize, dataTypes) => {
 			classMethods: {
 				associate: (models) => {
 					const {
+						activityItem,
 						pubAttribution,
 						collectionAttribution,
 						discussion,
@@ -68,6 +69,7 @@ export default (sequelize, dataTypes) => {
 						visibilityUser,
 					} = models;
 					user.belongsToMany(visibility, { through: visibilityUser });
+					user.hasMany(activityItem, { as: 'actor' });
 					user.hasMany(collectionAttribution, {
 						onDelete: 'CASCADE',
 					});

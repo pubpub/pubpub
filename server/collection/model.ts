@@ -14,9 +14,8 @@ export default (sequelize, dataTypes) => {
 				},
 			},
 			avatar: dataTypes.TEXT,
-			isRestricted:
-				dataTypes.BOOLEAN /* Restricted collections can only be set by Community Admins */,
-			isPublic: dataTypes.BOOLEAN /* Only visible to community admins */,
+			isRestricted: dataTypes.BOOLEAN, // Restricted collections can only be set by Community Admins
+			isPublic: dataTypes.BOOLEAN, // Only visible to community admins
 			viewHash: dataTypes.STRING,
 			editHash: dataTypes.STRING,
 			metadata: dataTypes.JSONB,
@@ -32,18 +31,29 @@ export default (sequelize, dataTypes) => {
 			tableName: 'Collections',
 			classMethods: {
 				associate: (models) => {
-					const { collection } = models;
-					collection.hasMany(models.collectionAttribution, {
+					const {
+						activityItem,
+						collectionAttribution,
+						submissionWorkflow,
+						collectionPub,
+						member,
+						page,
+						crossrefDepositRecord,
+						scopeSummary,
+						collection,
+					} = models;
+					collection.hasMany(activityItem);
+					collection.hasMany(collectionPub);
+					collection.hasMany(collectionAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
 						foreignKey: 'collectionId',
 					});
-					collection.hasOne(models.submissionWorkflow);
-					collection.hasMany(models.collectionPub);
-					collection.hasMany(models.member);
-					collection.belongsTo(models.page);
-					collection.belongsTo(models.crossrefDepositRecord);
-					collection.belongsTo(models.scopeSummary);
+					collection.belongsTo(crossrefDepositRecord);
+					collection.hasMany(member);
+					collection.belongsTo(page);
+					collection.hasOne(submissionWorkflow);
+					collection.belongsTo(scopeSummary);
 				},
 			},
 		},
