@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
+import { Classes } from '@blueprintjs/core';
 
 import { SimpleEditor, PubNoteContent } from 'components';
 import { getCitationInlineLabel } from 'components/Editor/utils/citation';
+import { apiFetch } from 'client/utils/apiFetch';
 import { usePubContext } from 'containers/Pub/pubHooks';
 
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
@@ -27,6 +29,11 @@ type Props = {
 			};
 		};
 	};
+};
+
+const fetchCitations = (query) => {
+	console.log({ query });
+	return apiFetch(`/api/citations/zotero?q=${query}`);
 };
 
 const unwrapPendingAttrs = (pendingAttrs, isFootnote) => {
@@ -74,6 +81,26 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const [renderedStructuredValue, setRenderedStructuredValue] = useState(
 		noteManager.getRenderedValueSync(structuredValue),
 	);
+	const [zoteroQuery, setZoteroQuery] = useState('');
+	const [isSearching, setIsSearching] = useState(false);
+	const [debouncedZoteroQuery] = useDebounce(zoteroQuery, 300);
+	const [zoteroCitations, setZoteroCitations] = useState<any[]>([]);
+	useEffect(
+		() => {
+			if (debouncedZoteroQuery) {
+				setIsSearching(true);
+				fetchCitations(debouncedZoteroQuery).then((results) => {
+					setIsSearching(false);
+					setZoteroCitations(results);
+				});
+			} else {
+				setZoteroCitations([]);
+				setIsSearching(false);
+			}
+		},
+		[debouncedZoteroQuery], // Only call effect if debounced search term changes
+	);
+	console.log({ isSearching, zoteroCitations });
 	const [debouncedValue] = useDebounce(structuredValue, 250);
 	const html = renderedStructuredValue?.html;
 	const showPreview = html || unstructuredValue;
@@ -90,6 +117,13 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const structuredSection = (
 		<div className="section" key="structured">
 			<div className="title">Structured Data</div>
+			<input
+				value={zoteroQuery}
+				onChange={(e) => setZoteroQuery(e.target.value)}
+				className={Classes.INPUT}
+				placeholder="search your zotero library"
+				type="search"
+			/>
 			<textarea
 				className="structured-data"
 				placeholder="Enter bibtex, DOI, wikidata url, or bibjson..."
