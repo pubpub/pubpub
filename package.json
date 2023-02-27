@@ -195,7 +195,7 @@
 		"sanitize-html": "^2.3.2",
 		"sass": "^1.52.2",
 		"sass-loader": "^7.1.0",
-		"sequelize": "^5.22.0",
+		"sequelize": "^6.29.0",
 		"sitemap": "^6.2.0",
 		"slowdance": "0.0.2",
 		"stickybits": "^3.6.5",
