@@ -181,6 +181,12 @@ export function createDeposit(resource: Resource) {
 	const { identifierValue: doi } = expect(
 		resource.identifiers.find((identifier) => identifier.identifierKind === 'DOI'),
 	);
+	const { identifierValue: issn } = expect(
+		resource.identifiers.find((identifier) => identifier.identifierKind === 'ISSN'),
+	);
+	const { identifierValue: eissn } = expect(
+		resource.identifiers.find((identifier) => identifier.identifierKind === 'EISSN'),
+	);
 	return (
 		<resource xmlns="http://datacite.org/schema/kernel-4">
 			<resourceType
@@ -243,6 +249,24 @@ export function createDeposit(resource: Resource) {
 				{resource.relationships
 					.filter(isInterWorkRelationship)
 					.map(renderRelatedIdentifier)}
+				{issn && (
+					<relatedIdentifier
+						resourceTypeGeneral="Book"
+						relationType="IsPartOf"
+						relatedIdentifierType="ISSN"
+					>
+						{issn}
+					</relatedIdentifier>
+				)}
+				{eissn && (
+					<relatedIdentifier
+						resourceTypeGeneral="Book"
+						relationType="IsPartOf"
+						relatedIdentifierType="EISSN"
+					>
+						{eissn}
+					</relatedIdentifier>
+				)}
 			</relatedIdentifiers>
 			<version>1.0</version>
 			<formats>

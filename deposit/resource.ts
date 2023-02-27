@@ -87,7 +87,7 @@ export type PartialResource = {
 	identifiers: ResourceIdentifier[];
 };
 
-export type ResourceIdentifierKind = 'URL' | 'DOI';
+export type ResourceIdentifierKind = 'URL' | 'DOI' | 'ISSN' | 'EISSN';
 
 export type ResourceIdentifier = {
 	identifierKind: ResourceIdentifierKind;

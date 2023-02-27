@@ -12,7 +12,9 @@ import './dataciteDeposit.scss';
 import ReviewDepositCallout from './ReviewDepositCallout';
 import { assert, expect } from 'utils/assert';
 
-type Props = { pub: Pub } | { collection: Collection };
+type Props = ({ pub: Pub } | { collection: Collection }) & {
+	onDepositSuccess(): void;
+};
 
 const getDepositTypeTitle = (deposit: DepositNode) => {
 	assert('attributes' in deposit);
@@ -33,33 +35,38 @@ export default function DataciteDeposit(props: Props) {
 		'pub' in props
 			? `/api/pub/${props.pub.id}/doi`
 			: `/api/collection/${props.collection.id}/doi`;
+	const fetchDepositPreview = () =>
+		apiFetch(`${baseUrl}/preview`, { method: 'POST' })
+			.then((json) => {
+				setStatus(SubmitDepositStatus.Previewed);
+				setDeposit(json);
+			})
+			.catch((response) => {
+				setStatus(SubmitDepositStatus.Initial);
+				setError(response.error);
+			});
+	const submitDeposit = () =>
+		apiFetch(`${baseUrl}`, { method: 'POST' })
+			.then((json) => {
+				setDeposit(json);
+				setStatus(SubmitDepositStatus.Deposited);
+				props.onDepositSuccess();
+			})
+			.catch((response) => {
+				setStatus(SubmitDepositStatus.Previewed);
+				setError(response.error);
+			});
 	const handleDepositClick = useCallback(() => {
 		switch (status) {
 			case SubmitDepositStatus.Initial:
 				setError(undefined);
 				setStatus(SubmitDepositStatus.Previewing);
-				apiFetch(`${baseUrl}/preview`, { method: 'POST' })
-					.then((json) => {
-						setStatus(SubmitDepositStatus.Previewed);
-						setDeposit(json);
-					})
-					.catch((response) => {
-						setStatus(SubmitDepositStatus.Initial);
-						setError(response.error);
-					});
+				fetchDepositPreview();
 				break;
 			case SubmitDepositStatus.Previewed:
 				setError(undefined);
 				setStatus(SubmitDepositStatus.Depositing);
-				apiFetch(`${baseUrl}`, { method: 'POST' })
-					.then((json) => {
-						setDeposit(json);
-						setStatus(SubmitDepositStatus.Deposited);
-					})
-					.catch((response) => {
-						setStatus(SubmitDepositStatus.Previewed);
-						setError(response.error);
-					});
+				submitDeposit();
 				break;
 		}
 	}, [status]);
