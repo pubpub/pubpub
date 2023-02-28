@@ -1115,8 +1115,8 @@
     }
   },
   "fontFamilies": {
-    "global": {
-      "value": "SF Pro Display",
+    "roboto": {
+      "value": "Roboto",
       "type": "fontFamilies"
     }
   },
@@ -1494,7 +1494,7 @@
       "type": "textCase"
     },
     "uppercase": {
-      "value": "{textCase.none}",
+      "value": "uppercase",
       "type": "textCase"
     }
   },

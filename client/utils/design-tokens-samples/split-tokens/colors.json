@@ -1014,9 +1014,5 @@
       "value": "#263238",
       "type": "color"
     }
-  },
-  "ui-spacing": {
-    "value": "3px",
-    "type": "spacing"
   }
 }

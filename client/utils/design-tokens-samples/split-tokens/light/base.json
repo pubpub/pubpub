@@ -1116,7 +1116,7 @@
   },
   "fontFamilies": {
     "global": {
-      "value": "SF Pro Display",
+      "value": "Inter",
       "type": "fontFamilies"
     }
   },
@@ -1517,6 +1517,10 @@
     }
   },
   "spacing": {
+    "0": {
+      "value": "{spacing.base}/2",
+      "type": "spacing"
+    },
     "1": {
       "value": "{spacing.base} * 1",
       "type": "spacing"
