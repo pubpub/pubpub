@@ -1,29 +1,118 @@
-import { transformTokens } from 'token-transformer';
-import core from './tokens/colors.json';
+import fs from 'fs';
+import { execSync } from 'child_process';
+import SD from 'style-dictionary';
 
-console.log(core);
+import { colors, lightBase } from './tokens';
 
-// import token fißle
+const StyleDictionary = SD.extend('builconfig.json');
 
-// convert it with token transformers
-const rawTokens = { coreStyles: { ...core } };
-const setsToUse = ['coreStyles'];
-const excludes: any = [];
+const transformedTokenPath = `build/style-dictionary/token.json`;
+const tokenToTransformPath = `build/rawToken.json`;
+const SDConfigPath = `build/config.json`;
 
-const transformerOptions = {
-	expandTypography: true,
-	expandShadow: true,
-	expandComposition: true,
-	expandBorder: true,
-	preserveRawValue: false,
-	throwErrorWhenNotResolved: true,
-	resolveReferences: true,
+const parseFontWeight = (value: string | number) => {
+	if (typeof value !== 'string') return value;
+	const val = value?.toLowerCase().replace(' ', '');
+	switch (val) {
+		case 'thin':
+			return 100;
+		case 'extra light':
+			return 200;
+		case 'light':
+			return 300;
+		case 'regular':
+			return 400;
+		case 'medium':
+			return 500;
+		case 'semibold':
+			return 600;
+		case 'bold':
+			return 700;
+		case 'extra bold':
+			return 800;
+		case 'black':
+			return 900;
+		case 'extra black':
+			return 950;
+		default:
+			return val;
+	}
 };
 
-const resolved = transformTokens(rawTokens, setsToUse, excludes, transformerOptions);
+const parseLetterSpacing = (value: string | number) => {
+	if (typeof value === 'string') {
+		const lastChar = value.slice(-1);
+		if (lastChar === '%') {
+			const newBase = value.slice(0, value.length - 1);
+			return newBase + 'em';
+		}
+		return value;
+	}
+	return `${value}px`;
+};
 
-console.log(resolved);
+const parseNumberToPixel = (value: string | number) =>
+	typeof value === 'string' ? value : `${value}px`;
 
-// transform object to it can register mui tyupography from the token file
+const parseLineHeight = (value: string | number) => parseNumberToPixel(value);
 
-// add to style dictionary
+const rawTokens = { global: { 'color set': { ...colors }, ...lightBase } };
+
+fs.writeFileSync(`${tokenToTransformPath}`, JSON.stringify(rawTokens));
+
+execSync(
+	`npx token-transformer ${tokenToTransformPath} ${transformedTokenPath} --expandTypography=true`,
+);
+
+const config = {
+	source: [transformedTokenPath],
+	platforms: {
+		mui: {
+			transformGroup: 'js/custom',
+			buildPath: `build/theme`,
+			files: [
+				{
+					destination: 'typography.json',
+					format: 'muiTypography',
+				},
+				{
+					destination: 'misc.json',
+					format: 'jsMisc',
+				},
+				{
+					destination: 'colors.json',
+					format: 'jsColors',
+				},
+				{
+					destination: 'shadows.json',
+					format: 'jsShadows',
+				},
+			],
+		},
+	},
+};
+
+fs.writeFileSync(`${SDConfigPath}`, JSON.stringify(config));
+
+StyleDictionary.registerTransform({
+	name: 'lineHeight/px',
+	type: 'value',
+	matcher: ({ type }: SD.TransformedToken) => type === 'lineHeights',
+	transformer: ({ value }: { value: string | number }) => parseLineHeight(value),
+});
+
+StyleDictionary.registerTransform({
+	name: 'letterSpacing/em',
+	type: 'value',
+	matcher: ({ type }: SD.TransformedToken) => type === 'letterSpacing',
+	transformer: ({ value }: { value: string | number }) => parseLetterSpacing(value),
+});
+
+StyleDictionary.registerTransform({
+	name: 'fontWeight/lowerCaseOrNum',
+	type: 'value',
+	matcher: ({ type }: SD.TransformedToken) => type === 'fontWeights',
+	transformer: ({ value }: { value: string | number }) => parseFontWeight(value),
+});
+
+StyleDictionary.buildAllPlatforms();

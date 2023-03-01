@@ -1,0 +1,1 @@
+{"source":["build/style-dictionary/token.json"],"platforms":{"mui":{"transformGroup":"js/custom","buildPath":"build/theme","files":[{"destination":"typography.json","format":"muiTypography"},{"destination":"misc.json","format":"jsMisc"},{"destination":"colors.json","format":"jsColors"},{"destination":"shadows.json","format":"jsShadows"}]}}}
