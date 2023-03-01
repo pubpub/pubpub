@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
-import { Classes } from '@blueprintjs/core';
 
 import { SimpleEditor, PubNoteContent } from 'components';
 import { getCitationInlineLabel } from 'components/Editor/utils/citation';
-import { apiFetch } from 'client/utils/apiFetch';
 import { usePubContext } from 'containers/Pub/pubHooks';
 
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
@@ -48,7 +46,7 @@ const unwrapPendingAttrs = (pendingAttrs, isFootnote) => {
 	};
 };
 
-const wrapUpdateAttrs = (updateAttrs, isFootnote) => {
+const wrapUpdateAttrs = (updateAttrs, isFootnote: boolean) => {
 	return (attrsUpdate) => {
 		const { structuredValue, unstructuredValue, ...restValues } = attrsUpdate;
 		const result = { ...restValues };
@@ -64,7 +62,7 @@ const wrapUpdateAttrs = (updateAttrs, isFootnote) => {
 
 const onSelectSuggestedCitation = (selectedCitation) => {
 	console.log({ selectedCitation });
-}
+};
 
 const ControlsFootnoteCitation = (props: Props) => {
 	const { editorChangeObject, onClose, pendingAttrs } = props;
@@ -97,9 +95,7 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const structuredSection = (
 		<div className="section" key="structured">
 			<div className="title">Structured Data</div>
-			<CitationBuilder
-				onSelectCitation={onSelectSuggestedCitation}
-			/>
+			<CitationBuilder onSelectCitation={onSelectSuggestedCitation} />
 			<textarea
 				className="structured-data"
 				placeholder="Enter bibtex, DOI, wikidata url, or bibjson..."
