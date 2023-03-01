@@ -4,11 +4,11 @@ import SD from 'style-dictionary';
 
 import { colors, lightBase } from './tokens';
 
-const StyleDictionary = SD.extend('builconfig.json');
-
-const transformedTokenPath = `build/style-dictionary/token.json`;
-const tokenToTransformPath = `build/rawToken.json`;
-const SDConfigPath = `build/config.json`;
+const transformedTokenPath = 'build/style-dictionary/token.json';
+const tokenToTransformPath = 'build/rawToken.json';
+const SDConfigPath = 'build/config.json';
+const themeExportPath = 'build/theme';
+const StyleDictionary = SD.extend(SDConfigPath);
 
 const parseFontWeight = (value: string | number) => {
 	if (typeof value !== 'string') return value;
@@ -69,7 +69,7 @@ const config = {
 	platforms: {
 		mui: {
 			transformGroup: 'js/custom',
-			buildPath: `build/theme`,
+			buildPath: themeExportPath,
 			files: [
 				{
 					destination: 'typography.json',
