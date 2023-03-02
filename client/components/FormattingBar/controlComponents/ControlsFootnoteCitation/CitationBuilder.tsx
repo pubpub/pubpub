@@ -9,7 +9,7 @@ type Props = {
 	onSelectCitation: (...args: any[]) => any;
 };
 
-const fetchCitations = (query) => apiFetch(`/api/citations/zotero?q=${query}`);
+const fetchCitations = (query: string) => apiFetch(`/api/citations/zotero?q=${query}`);
 
 type ZoteroCSLJSON = {
 	key: string;
@@ -62,6 +62,9 @@ const CitationBuilder = (props: Props) => {
 			items={zoteroCitations}
 			inputProps={{ placeholder: 'Search your zotero library', large: true }}
 			itemRenderer={renderItem}
+			closeOnSelect={false}
+			resetOnSelect={false}
+			inputValueRenderer={() => 'string'}
 			noResults={
 				zoteroQuery ? (
 					<MenuItem
