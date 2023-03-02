@@ -72,7 +72,6 @@
 		"@lezer/rust": "^1.0.0",
 		"@lezer/xml": "^1.0.0",
 		"@monaco-editor/react": "^4.1.1",
-		"@mui/material": "^5.11.11",
 		"@popperjs/core": "^2.11.5",
 		"@pubpub/prosemirror-pandoc": "^1.1.5",
 		"@pubpub/prosemirror-reactive": "^0.2.0",
