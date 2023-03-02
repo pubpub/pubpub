@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Button, IButtonProps, AnchorButton } from '@blueprintjs/core';
+import { Button, ButtonProps, AnchorButton } from '@blueprintjs/core';
 import omit from 'lodash.omit';
 
 import { Callback } from 'types';
@@ -13,13 +13,13 @@ type OnClickProps = {
 
 type DisplayOptions = {
 	icon?: IconName;
-} & Pick<IButtonProps, 'rightIcon' | 'text'>;
+} & Pick<ButtonProps, 'rightIcon' | 'text'>;
 
 type MobileOrDesktopProps =
 	| { mobile: DisplayOptions; desktop: DisplayOptions }
 	| { mobileOrDesktop: DisplayOptions };
 
-type PartialButtonProps = Omit<IButtonProps, 'icon' | 'text' | 'onClick'> &
+type PartialButtonProps = Omit<ButtonProps, 'icon' | 'text' | 'onClick'> &
 	Omit<React.ComponentProps<typeof AnchorButton>, 'icon' | 'text' | 'href'>;
 
 type Props = OnClickProps & MobileOrDesktopProps & PartialButtonProps;
@@ -55,10 +55,13 @@ const GlobalControlsButton = React.forwardRef((props: Props, ref: React.Ref<unkn
 			large: !isMobileButton,
 			className: classNames(className, renderProps.className),
 		};
+		// https://stackoverflow.com/questions/68073958/cant-use-href-with-iconbuttonprops
+		// ? need to tell props that it will be buttonprops explicitly
+		const buttonElementProps: ButtonProps = sharedProps;
 		if (href) {
 			return <AnchorButton href={href} {...sharedProps} />;
 		}
-		return <Button onClick={onClick} {...sharedProps} />;
+		return <Button onClick={onClick} {...buttonElementProps} />;
 	};
 
 	return (
