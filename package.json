@@ -39,7 +39,7 @@
 		"@benrbray/prosemirror-math": "git+https://github.com/pubpub/prosemirror-math#9e6722987690bfad58444d8edbd73294e255de17",
 		"@blueprintjs/core": "^3.24.0",
 		"@blueprintjs/icons": "^3.14.0",
-		"@blueprintjs/select": "^3.12.0",
+		"@blueprintjs/select": "^4.9.8",
 		"@codemirror/autocomplete": "^0.20.0",
 		"@codemirror/commands": "^0.20.0",
 		"@codemirror/lang-cpp": "^0.20.0",
