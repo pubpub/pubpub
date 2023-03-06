@@ -14,7 +14,7 @@ import customIcons from './customIcons';
 require('./icon.scss');
 
 type CustomIconName = keyof typeof customIcons;
-export type IconName = BlueprintIconName | CustomIconName;
+export type IconName = BlueprintIconName;
 
 type Props = {
 	ariaHidden?: boolean;

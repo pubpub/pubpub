@@ -37,7 +37,6 @@ const AlignmentControl = (props: Props) => {
 						>
 							{({ ref, ...restRadioProps }) => (
 								<Button
-									// @ts-expect-error ts-migrate(2322) FIXME: Type '((instance: any) => void) | RefObject<any> |... Remove this comment to see the full error message
 									elementRef={ref}
 									icon={<Icon icon={item.icon} iconSize={16} />}
 									minimal={true}
