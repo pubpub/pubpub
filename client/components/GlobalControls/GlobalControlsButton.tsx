@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Button, IButtonProps, AnchorButton } from '@blueprintjs/core';
+import { Button, IButtonProps, AnchorButton, ButtonProps } from '@blueprintjs/core';
 import omit from 'lodash.omit';
 
 import { Callback } from 'types';
@@ -55,10 +55,14 @@ const GlobalControlsButton = React.forwardRef((props: Props, ref: React.Ref<unkn
 			large: !isMobileButton,
 			className: classNames(className, renderProps.className),
 		};
+
+		// ? need to tell props that it will be buttonprops explicitly
+		const buttonElementProps: ButtonProps = sharedProps;
+
 		if (href) {
 			return <AnchorButton href={href} {...sharedProps} />;
 		}
-		return <Button onClick={onClick} {...sharedProps} />;
+		return <Button onClick={onClick} {...buttonElementProps} />;
 	};
 
 	return (
