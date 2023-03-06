@@ -8,7 +8,7 @@ import {
 } from 'deposit/resource';
 import React, { useEffect, useState } from 'react';
 import { Collection, DepositTarget, InitialCommunityData, Pub } from 'types';
-import { assert } from 'utils/assert';
+import { assert, exists } from 'utils/assert';
 import { PUBPUB_DOI_PREFIX } from 'utils/crossref/communities';
 import DataciteDeposit from './DataciteDeposit';
 import './deposit.scss';
@@ -46,7 +46,7 @@ export default function Deposit(props: Props) {
 	const [resource, setResource] = useState<Resource>();
 	const [doiSuffix, setDoiSuffix] = useState('');
 	const [justSetDoi, setJustSetDoi] = useState(false);
-	const doiPrefix = depositTarget?.doiPrefix ?? PUBPUB_DOI_PREFIX;
+	const doiPrefix = depositTarget?.doiPrefix;
 	const fetchResource = async () => {
 		if ('pub' in props) {
 			await apiFetch(`/api/pub/${props.pub.id}/resource`, { method: 'GET' }).then(
@@ -147,46 +147,55 @@ export default function Deposit(props: Props) {
 	let children: React.ReactNode;
 
 	if (depositTarget?.service === 'datacite') {
-		children = (
-			<>
-				{'pub' in props && resource && firstIntraWorkRelationship && (
-					<p>
-						This Pub will be cited as a member of the{' '}
-						{resourceKindToProperNoun[
-							firstIntraWorkRelationship.resource.kind
-						].toLowerCase()}
-						, <b>{firstIntraWorkRelationship.resource.title}</b>. You can change this by
-						updating the <em>Primary Collection</em> of the Pub from the Collections
-						tab.
-					</p>
-				)}
-				{disabledDueToNoReleases && (
-					<Callout intent="warning">
-						This Pub cannot be deposited because it has no published releases.
-					</Callout>
-				)}
-				{resource && isSupplementTo(resource) && (
-					<Callout intent="warning">
-						The DOI for this Pub is not editable because it is a{' '}
-						<strong>Supplement</strong> to another Pub.
-					</Callout>
-				)}
-				{resource && (
-					<UpdateDoi
-						doiSuffix={doiSuffix}
-						doiPrefix={doiPrefix}
-						editable={
-							!isSupplementTo(resource) && !crossrefDepositRecordId && !justSetDoi
-						}
-						onDelete={onDelete}
-						onGenerate={onGenerate}
-						onUpdate={onUpdate}
-						onSave={onSave}
-					/>
-				)}
-				<DataciteDeposit {...props} onDepositSuccess={onDepositSuccess} />
-			</>
-		);
+		if (!exists(doiPrefix)) {
+			children = (
+				<Callout intent="danger">
+					Unexpected error: communities that target Datacite must be configured with a
+					custom DOI prefix. Please contact a PubPub administrator.
+				</Callout>
+			);
+		} else {
+			children = (
+				<>
+					{'pub' in props && resource && firstIntraWorkRelationship && (
+						<p>
+							This Pub will be cited as a member of the{' '}
+							{resourceKindToProperNoun[
+								firstIntraWorkRelationship.resource.kind
+							].toLowerCase()}
+							, <b>{firstIntraWorkRelationship.resource.title}</b>. You can change
+							this by updating the <em>Primary Collection</em> of the Pub from the
+							Collections tab.
+						</p>
+					)}
+					{disabledDueToNoReleases && (
+						<Callout intent="warning">
+							This Pub cannot be deposited because it has no published releases.
+						</Callout>
+					)}
+					{resource && isSupplementTo(resource) && (
+						<Callout intent="warning">
+							The DOI for this Pub is not editable because it is a{' '}
+							<strong>Supplement</strong> to another Pub.
+						</Callout>
+					)}
+					{resource && (
+						<UpdateDoi
+							doiSuffix={doiSuffix}
+							doiPrefix={doiPrefix}
+							editable={
+								!isSupplementTo(resource) && !crossrefDepositRecordId && !justSetDoi
+							}
+							onDelete={onDelete}
+							onGenerate={onGenerate}
+							onUpdate={onUpdate}
+							onSave={onSave}
+						/>
+					)}
+					<DataciteDeposit {...props} onDepositSuccess={onDepositSuccess} />
+				</>
+			);
+		}
 	} else {
 		assert('pub' in props);
 		children = (
