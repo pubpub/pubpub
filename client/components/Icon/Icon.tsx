@@ -14,7 +14,7 @@ import customIcons from './customIcons';
 require('./icon.scss');
 
 type CustomIconName = keyof typeof customIcons;
-export type IconName = BlueprintIconName;
+export type IconName = BlueprintIconName | CustomIconName;
 
 type Props = {
 	ariaHidden?: boolean;
@@ -40,9 +40,8 @@ const Icon = (props: Props) => {
 	const icon = 'icon' in props ? props.icon : pubPubIcons[props.pubPubIcon];
 
 	if (customIcons[icon]) {
-		const { squareViewboxDimension, path, viewbox: providedViewbox } = customIcons[icon];
-		const viewbox =
-			providedViewbox || `0 0 ${squareViewboxDimension} ${squareViewboxDimension}`;
+		const { squareViewboxDimension, path } = customIcons[icon];
+		const viewbox = `0 0 ${squareViewboxDimension} ${squareViewboxDimension}`;
 		return (
 			<span
 				className={classNames(Classes.ICON, useColor && 'color', className)}
