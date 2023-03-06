@@ -1,12 +1,5 @@
 import { IconName, ITreeNode, Tree } from '@blueprintjs/core';
-import React, {
-	MouseEvent,
-	useCallback,
-	useEffect,
-	useLayoutEffect,
-	useMemo,
-	useReducer,
-} from 'react';
+import React, { MouseEvent, useCallback, useLayoutEffect, useMemo, useReducer } from 'react';
 
 import { expect } from 'utils/assert';
 
@@ -35,10 +28,10 @@ function forEachNode(nodes: ITreeNode[] | undefined, callback: (node: ITreeNode)
 	if (nodes === undefined) {
 		return;
 	}
-	for (const node of nodes) {
+	nodes.forEach((node) => {
 		callback(node);
 		forEachNode(node.childNodes, callback);
-	}
+	});
 }
 
 function forNodeAtPath(nodes: ITreeNode[], path: NodePath, callback: (node: ITreeNode) => void) {
@@ -50,26 +43,27 @@ function depositTreeReducer(state: ITreeNode[], action: TreeAction) {
 		case 'RESET':
 			return action.payload;
 		case 'DESELECT_ALL': {
+			// eslint-disable-next-line no-undef
 			const next = structuredClone(state);
-			forEachNode(next, (node) => (node.isSelected = false));
+			forEachNode(next, (node) => {
+				node.isSelected = false;
+			});
 			return next;
 		}
 		case 'SET_IS_EXPANDED': {
+			// eslint-disable-next-line no-undef
 			const next = structuredClone(state);
-			forNodeAtPath(
-				next,
-				action.payload.path,
-				(node) => (node.isExpanded = action.payload.isExpanded),
-			);
+			forNodeAtPath(next, action.payload.path, (node) => {
+				node.isExpanded = action.payload.isExpanded;
+			});
 			return next;
 		}
 		case 'SET_IS_SELECTED': {
+			// eslint-disable-next-line no-undef
 			const next = structuredClone(state);
-			forNodeAtPath(
-				next,
-				action.payload.path,
-				(node) => (node.isSelected = action.payload.isSelected),
-			);
+			forNodeAtPath(next, action.payload.path, (node) => {
+				node.isSelected = action.payload.isSelected;
+			});
 			return next;
 		}
 		default:
@@ -175,8 +169,8 @@ type Props = {
 
 export function DataciteDepositPreview(props: Props) {
 	const { deposit } = props;
-	const node = useMemo(() => expect(depositNodeToBlueprintTreeNode(deposit)), [deposit]);
-	const [nodes, dispatch] = useReducer(depositTreeReducer, [node]);
+	const root = useMemo(() => expect(depositNodeToBlueprintTreeNode(deposit)), [deposit]);
+	const [nodes, dispatch] = useReducer(depositTreeReducer, [root]);
 	const handleNodeClick = useCallback(
 		(node: ITreeNode, path: NodePath, event: MouseEvent<HTMLElement>) => {
 			const selected = node.isSelected;

@@ -17,7 +17,7 @@ export function loadScopeResourceMeta(scope: Scope, scopeResource: Resource, sco
 	if (scope.updatedAt !== scope.createdAt) {
 		scopeResource.meta['updated-date'] = scope.updatedAt.toString();
 	}
-	scopeResource.meta['publisher'] = scope.community.publishAs || 'PubPub';
+	scopeResource.meta.publisher = scope.community.publishAs || 'PubPub';
 }
 
 const R_MISSING_ELEMENT =
@@ -33,7 +33,7 @@ export async function prepareResource(scope: Scope, scopeResource: Resource, sco
 		const resourceXml = await renderXml(resourceAst);
 		return { resourceAst, resourceXml };
 	} catch (error) {
-		let matches = (error as Error).message?.match(R_MISSING_ELEMENT);
+		const matches = (error as Error).message?.match(R_MISSING_ELEMENT);
 		if (matches) {
 			const dataciteEntity = matches[1];
 			throw new Error(

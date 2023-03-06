@@ -11,6 +11,8 @@ export const primaryParentResourceHasDoi = (resource: Resource): boolean => {
 				case 'Review':
 				case 'Supplement':
 					return true;
+				default:
+					return false;
 			}
 		}
 		return false;

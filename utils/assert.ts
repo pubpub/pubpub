@@ -10,11 +10,11 @@ export function assert(condition: boolean, message = ''): asserts condition {
 	}
 }
 
+export function exists<T>(value: T | null | undefined): value is T {
+	return value != null;
+}
+
 export function expect<T>(value: T | null | undefined): T {
 	assert(exists(value));
 	return value;
-}
-
-export function exists<T>(value: T | null | undefined): value is T {
-	return value != null;
 }

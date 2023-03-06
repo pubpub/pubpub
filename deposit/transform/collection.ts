@@ -25,6 +25,8 @@ function getResourceKindForCollection(collection: Collection): ResourceKind {
 			return 'Book';
 		case 'conference':
 			return 'Conference';
+		default:
+			return 'Other';
 	}
 }
 
@@ -56,7 +58,7 @@ export async function transformCollectionToResource(
 					transformCollectionAttributionToResourceContribution(attribution, role),
 				) ?? transformCollectionAttributionToResourceContribution(attribution, 'Other'),
 		) ?? [];
-	return {
+	const collectionResource: Resource = {
 		kind: getResourceKindForCollection(collection),
 		title: collection.title,
 		identifiers: [
@@ -73,4 +75,11 @@ export async function transformCollectionToResource(
 		summaries: [],
 		meta: {},
 	};
+	if (collection.doi) {
+		collectionResource.identifiers.push({
+			identifierKind: 'DOI',
+			identifierValue: collection.doi,
+		});
+	}
+	return collectionResource;
 }

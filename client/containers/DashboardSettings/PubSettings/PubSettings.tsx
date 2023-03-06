@@ -24,7 +24,6 @@ import { usePersistableState } from 'client/utils/usePersistableState';
 import { useFacetsQuery } from 'client/utils/useFacets';
 import LabelWithInfo from '../LabelWithInfo';
 import DeletePub from './DeletePub';
-import Doi from './Doi';
 import DashboardSettingsFrame, { Subtab } from '../DashboardSettingsFrame';
 
 type Props = {

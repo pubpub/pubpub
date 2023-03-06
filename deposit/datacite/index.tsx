@@ -1,5 +1,6 @@
 /** @jsx x */
 /** @jsxFrag null */
+/* eslint-disable react/no-unknown-property */
 import { x } from '@pubpub/deposit-utils/datacite';
 import {
 	isInterWorkRelationship,
@@ -33,8 +34,9 @@ function transformResourceKindToDataciteResourceType(kind: ResourceKind) {
 			return 'Journal';
 		case 'JournalArticle':
 			return 'JournalArticle';
+		default:
+			return 'Other';
 	}
-	return 'Other';
 }
 
 function transformResourceDescriptionKindToDataciteDescriptionType(kind: ResourceDescriptor) {
@@ -43,24 +45,27 @@ function transformResourceDescriptionKindToDataciteDescriptionType(kind: Resourc
 			return 'Methods';
 		case 'Mechanism':
 			return 'TechnicalInfo';
+		default:
+			return 'Other';
 	}
-	return 'Other';
 }
 
 function transformResourceSummaryKindToDataciteDescriptionType(kind: ResourceSummaryKind) {
 	switch (kind) {
 		case 'Synopsis':
 			return 'Abstract';
+		default:
+			return 'Other';
 	}
-	return 'Other';
 }
 
 function transformResourceContributorRoleToDataciteContributorType(role: ResourceContributorRole) {
 	switch (role) {
 		case 'Editor':
 			return 'Editor';
+		default:
+			return 'Other';
 	}
-	return 'Other';
 }
 
 function transformResourceRelationToDataciteRelationType(
@@ -85,6 +90,8 @@ function transformResourceRelationToDataciteRelationType(
 			return isParent ? 'IsPartOf' : 'HasPart';
 		case 'Publication':
 			return isParent ? 'IsPublishedIn' : 'HasPart';
+		default:
+			throw new Error('Invalid resource relation type');
 	}
 }
 
@@ -125,12 +132,8 @@ function renderContributor(contribution: ResourceContribution) {
 
 function renderRelatedItem(relationship: ResourceRelationship) {
 	const identifier = expect(
-		relationship.resource.identifiers.find(
-			(identifier) => identifier.identifierKind === 'DOI',
-		) ??
-			relationship.resource.identifiers.find(
-				(identifier) => identifier.identifierKind === 'URL',
-			),
+		relationship.resource.identifiers.find((i) => i.identifierKind === 'DOI') ??
+			relationship.resource.identifiers.find((i) => i.identifierKind === 'URL'),
 	);
 	return (
 		<relatedItem
@@ -172,7 +175,7 @@ function renderRelatedIdentifier(relationship: ResourceRelationship) {
 
 export function createDeposit(resource: Resource) {
 	const wordCount = resource.summaries.find((summary) => summary.kind === 'WordCount');
-	const publisher = expect(resource.meta['publisher']);
+	const publisher = expect(resource.meta.publisher);
 	const createdDate = expect(resource.meta['created-date']);
 	const updatedDate = resource.meta['updated-date'];
 	const { identifierValue: url } = expect(
@@ -181,12 +184,12 @@ export function createDeposit(resource: Resource) {
 	const { identifierValue: doi } = expect(
 		resource.identifiers.find((identifier) => identifier.identifierKind === 'DOI'),
 	);
-	const { identifierValue: issn } = expect(
-		resource.identifiers.find((identifier) => identifier.identifierKind === 'ISSN'),
-	);
-	const { identifierValue: eissn } = expect(
-		resource.identifiers.find((identifier) => identifier.identifierKind === 'EISSN'),
-	);
+	const issn = resource.identifiers.find(
+		(identifier) => identifier.identifierKind === 'ISSN',
+	)?.identifierValue;
+	const eissn = resource.identifiers.find(
+		(identifier) => identifier.identifierKind === 'EISSN',
+	)?.identifierValue;
 	return (
 		<resource xmlns="http://datacite.org/schema/kernel-4">
 			<resourceType
@@ -198,7 +201,7 @@ export function createDeposit(resource: Resource) {
 			<titles>
 				<title xml:lang="en-US">{resource.title}</title>
 			</titles>
-			<subjects></subjects>
+			<subjects />
 			<dates>
 				<date dateType="Created">{createdDate}</date>
 				{exists(updatedDate) && <date dateType="Updated">{updatedDate}</date>}
@@ -210,7 +213,7 @@ export function createDeposit(resource: Resource) {
 						descriptionType={transformResourceDescriptionKindToDataciteDescriptionType(
 							description.kind,
 						)}
-					></description>
+					/>
 				))}
 				{resource.summaries
 					.filter((summary) => summary.kind !== 'WordCount')
@@ -220,7 +223,7 @@ export function createDeposit(resource: Resource) {
 							descriptionType={transformResourceSummaryKindToDataciteDescriptionType(
 								summary.kind,
 							)}
-						></description>
+						/>
 					))}
 			</descriptions>
 			<creators>
@@ -315,7 +318,7 @@ export async function createDataciteDoiWithMetadata(
 		},
 		body: JSON.stringify(body),
 	});
-	return await response.json();
+	return response.json();
 }
 
 export async function updateDataciteDoiMetadata(
@@ -341,5 +344,5 @@ export async function updateDataciteDoiMetadata(
 		},
 		body: JSON.stringify(body),
 	});
-	return await response.json();
+	return response.json();
 }

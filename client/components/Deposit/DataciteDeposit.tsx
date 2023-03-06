@@ -1,16 +1,16 @@
 import { Callout } from '@blueprintjs/core';
 import React, { useCallback, useState } from 'react';
 
+import { assert, expect } from 'utils/assert';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Collection, Pub } from 'types';
 
 import { DataciteDepositPreview, DepositNode } from './DataciteDepositPreview';
 import SubmitDepositButton from './SubmitDepositButton';
 import { SubmitDepositStatus } from './SubmitDepositStatus';
+import ReviewDepositCallout from './ReviewDepositCallout';
 
 import './dataciteDeposit.scss';
-import ReviewDepositCallout from './ReviewDepositCallout';
-import { assert, expect } from 'utils/assert';
 
 type Props = ({ pub: Pub } | { collection: Collection }) & {
 	onDepositSuccess(): void;
@@ -28,6 +28,7 @@ const getDepositTypeTitle = (deposit: DepositNode) => {
 };
 
 export default function DataciteDeposit(props: Props) {
+	const { onDepositSuccess } = props;
 	const [deposit, setDeposit] = useState<DepositNode>();
 	const [error, setError] = useState<string>();
 	const [status, setStatus] = useState(SubmitDepositStatus.Initial);
@@ -35,27 +36,33 @@ export default function DataciteDeposit(props: Props) {
 		'pub' in props
 			? `/api/pub/${props.pub.id}/doi`
 			: `/api/collection/${props.collection.id}/doi`;
-	const fetchDepositPreview = () =>
-		apiFetch(`${baseUrl}/preview`, { method: 'POST' })
-			.then((json) => {
-				setStatus(SubmitDepositStatus.Previewed);
-				setDeposit(json);
-			})
-			.catch((response) => {
-				setStatus(SubmitDepositStatus.Initial);
-				setError(response.error);
-			});
-	const submitDeposit = () =>
-		apiFetch(`${baseUrl}`, { method: 'POST' })
-			.then((json) => {
-				setDeposit(json);
-				setStatus(SubmitDepositStatus.Deposited);
-				props.onDepositSuccess();
-			})
-			.catch((response) => {
-				setStatus(SubmitDepositStatus.Previewed);
-				setError(response.error);
-			});
+	const fetchDepositPreview = useCallback(
+		() =>
+			apiFetch(`${baseUrl}/preview`, { method: 'POST' })
+				.then((json) => {
+					setStatus(SubmitDepositStatus.Previewed);
+					setDeposit(json);
+				})
+				.catch((response) => {
+					setStatus(SubmitDepositStatus.Initial);
+					setError(response.error);
+				}),
+		[baseUrl],
+	);
+	const submitDeposit = useCallback(
+		() =>
+			apiFetch(`${baseUrl}`, { method: 'POST' })
+				.then((json) => {
+					setDeposit(json);
+					setStatus(SubmitDepositStatus.Deposited);
+					onDepositSuccess();
+				})
+				.catch((response) => {
+					setStatus(SubmitDepositStatus.Previewed);
+					setError(response.error);
+				}),
+		[baseUrl, onDepositSuccess],
+	);
 	const handleDepositClick = useCallback(() => {
 		switch (status) {
 			case SubmitDepositStatus.Initial:
@@ -68,8 +75,10 @@ export default function DataciteDeposit(props: Props) {
 				setStatus(SubmitDepositStatus.Depositing);
 				submitDeposit();
 				break;
+			default:
+				break;
 		}
-	}, [status]);
+	}, [status, fetchDepositPreview, submitDeposit]);
 	const depositRecord =
 		'pub' in props ? props.pub.crossrefDepositRecord : props.collection.crossrefDepositRecord;
 

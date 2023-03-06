@@ -67,6 +67,23 @@ app.delete(
 	}),
 );
 
+app.get(
+	'/api/collection/:collectionId/resource',
+	wrap(async (req, res) => {
+		const { collectionId } = req.params;
+		const collection = await findCollection(collectionId);
+		if (!collection) {
+			return new NotFoundError();
+		}
+		const resource = await transformCollectionToResource(
+			// @ts-expect-error
+			collection.get({ plain: true }),
+			collection.community,
+		);
+		return res.status(200).json(resource);
+	}),
+);
+
 app.post(
 	'/api/collection/:collectionId/doi',
 	wrap(async (req, res) => {

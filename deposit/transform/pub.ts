@@ -1,3 +1,6 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
 import { getPrimaryParentPubEdge, sanitizePubEdges } from 'deposit/utils';
 import { fetchFacetsForScope } from 'server/facets';
 import * as types from 'types';
@@ -96,7 +99,7 @@ function transformExternalPublicationToResource({
 	url,
 	doi,
 }: types.ExternalPublication): AnyResource {
-	let externalPublicationResource: AnyResource = {
+	const externalPublicationResource: AnyResource = {
 		kind: 'Other',
 		title,
 		identifiers: [
@@ -154,7 +157,7 @@ export async function transformPubToResource(
 				transformPubAttributionToResourceContribution(attribution, role),
 			) ?? transformPubAttributionToResourceContribution(attribution, 'Other'),
 	);
-	let pubResource: Resource = {
+	const pubResource: Resource = {
 		kind: derivePubResourceKind(pubPrimaryParentEdge, pubPrimaryCollection),
 		title: pub.title,
 		timestamp: new Date().toUTCString(),

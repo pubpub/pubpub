@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
-
+import { Callout } from '@blueprintjs/core';
 import Doi from 'client/containers/DashboardSettings/PubSettings/Doi';
+import { apiFetch } from 'client/utils/apiFetch';
+import {
+	getFirstIntraWorkRelationship,
+	Resource,
+	resourceKindToProperNoun,
+} from 'deposit/resource';
+import React, { useEffect, useState } from 'react';
 import { Collection, DepositTarget, InitialCommunityData, Pub } from 'types';
 import { assert } from 'utils/assert';
+import { PUBPUB_DOI_PREFIX } from 'utils/crossref/communities';
 import DataciteDeposit from './DataciteDeposit';
-import { Resource } from 'deposit/resource';
-import { apiFetch } from 'client/utils/apiFetch';
-import { Callout } from '@blueprintjs/core';
-
 import './deposit.scss';
 import { UpdateDoi } from './UpdateDoi';
-import { PUBPUB_DOI_PREFIX } from 'utils/crossref/communities';
 
 type PubProps = {
 	pub: Pub;
@@ -48,25 +50,25 @@ export default function Deposit(props: Props) {
 	const fetchResource = async () => {
 		if ('pub' in props) {
 			await apiFetch(`/api/pub/${props.pub.id}/resource`, { method: 'GET' }).then(
-				(resource: Resource) => {
-					const doi = resource.identifiers.find(
+				(pubResource: Resource) => {
+					const pubDoi = pubResource.identifiers.find(
 						(identifier) => identifier.identifierKind === 'DOI',
 					);
-					const doiSuffix = doi?.identifierValue.split('/')[1] ?? '';
-					setResource(resource);
-					setDoiSuffix(doiSuffix);
+					const pubDoiSuffix = pubDoi?.identifierValue.split('/')[1] ?? '';
+					setResource(pubResource);
+					setDoiSuffix(pubDoiSuffix);
 				},
 			);
 		} else {
 			await apiFetch(`/api/collection/${props.collection.id}/resource`, {
 				method: 'GET',
-			}).then((resource: Resource) => {
-				const doi = resource.identifiers.find(
+			}).then((collectionResource: Resource) => {
+				const collectionDoi = collectionResource.identifiers.find(
 					(identifier) => identifier.identifierKind === 'DOI',
 				);
-				const doiSuffix = doi?.identifierValue.split('/')[1] ?? '';
-				setResource(resource);
-				setDoiSuffix(doiSuffix);
+				const collectionDoiSuffix = collectionDoi?.identifierValue.split('/')[1] ?? '';
+				setResource(collectionResource);
+				setDoiSuffix(collectionDoiSuffix);
 			});
 		}
 	};
@@ -116,8 +118,8 @@ export default function Deposit(props: Props) {
 
 		setDoiSuffix(extractDoiSuffix(doi, depositTarget));
 	};
-	const onUpdate = (doiSuffix: string) => {
-		setDoiSuffix(doiSuffix);
+	const onUpdate = (nextDoiSuffix: string) => {
+		setDoiSuffix(nextDoiSuffix);
 	};
 	const onSave = async () => {
 		const doi = `${doiPrefix}/${doiSuffix}`;
@@ -127,17 +129,67 @@ export default function Deposit(props: Props) {
 		setJustSetDoi(true);
 	};
 
-	useEffect(() => {
-		fetchResource();
-	}, []);
+	useEffect(
+		() => {
+			fetchResource();
+		},
+		/* eslint-disable-next-line react-hooks/exhaustive-deps */
+		[],
+	);
 
-	let deposit: React.ReactNode;
+	const firstIntraWorkRelationship = resource && getFirstIntraWorkRelationship(resource);
+	const disabledDueToNoReleases = 'pub' in props && props.pub.releases.length === 0;
+	const crossrefDepositRecordId =
+		'pub' in props
+			? props.pub.crossrefDepositRecordId
+			: props.collection.crossrefDepositRecordId;
+
+	let children: React.ReactNode;
 
 	if (depositTarget?.service === 'datacite') {
-		deposit = <DataciteDeposit {...props} onDepositSuccess={onDepositSuccess} />;
+		children = (
+			<>
+				{'pub' in props && resource && firstIntraWorkRelationship && (
+					<p>
+						This Pub will be cited as a member of the{' '}
+						{resourceKindToProperNoun[
+							firstIntraWorkRelationship.resource.kind
+						].toLowerCase()}
+						, <b>{firstIntraWorkRelationship.resource.title}</b>. You can change this by
+						updating the <em>Primary Collection</em> of the Pub from the Collections
+						tab.
+					</p>
+				)}
+				{disabledDueToNoReleases && (
+					<Callout intent="warning">
+						This Pub cannot be deposited because it has no published releases.
+					</Callout>
+				)}
+				{resource && isSupplementTo(resource) && (
+					<Callout intent="warning">
+						The DOI for this Pub is not editable because it is a{' '}
+						<strong>Supplement</strong> to another Pub.
+					</Callout>
+				)}
+				{resource && (
+					<UpdateDoi
+						doiSuffix={doiSuffix}
+						doiPrefix={doiPrefix}
+						editable={
+							!isSupplementTo(resource) && !crossrefDepositRecordId && !justSetDoi
+						}
+						onDelete={onDelete}
+						onGenerate={onGenerate}
+						onUpdate={onUpdate}
+						onSave={onSave}
+					/>
+				)}
+				<DataciteDeposit {...props} onDepositSuccess={onDepositSuccess} />
+			</>
+		);
 	} else {
 		assert('pub' in props);
-		deposit = (
+		children = (
 			<Doi
 				canIssueDoi={props.canIssueDoi}
 				communityData={props.communityData}
@@ -148,37 +200,5 @@ export default function Deposit(props: Props) {
 		);
 	}
 
-	const disabledDueToNoReleases = 'pub' in props && props.pub.releases.length === 0;
-	const crossrefDepositRecordId =
-		'pub' in props
-			? props.pub.crossrefDepositRecordId
-			: props.collection.crossrefDepositRecordId;
-
-	return (
-		<div className="deposit">
-			{disabledDueToNoReleases && (
-				<Callout intent="warning">
-					This Pub cannot be deposited because it has no published releases.
-				</Callout>
-			)}
-			{resource && isSupplementTo(resource) && (
-				<Callout intent="warning">
-					The DOI for this Pub is not editable because it is a <strong>Supplement</strong>{' '}
-					to another Pub.
-				</Callout>
-			)}
-			{resource && (
-				<UpdateDoi
-					doiSuffix={doiSuffix}
-					doiPrefix={doiPrefix}
-					editable={!isSupplementTo(resource) && !crossrefDepositRecordId && !justSetDoi}
-					onDelete={onDelete}
-					onGenerate={onGenerate}
-					onUpdate={onUpdate}
-					onSave={onSave}
-				/>
-			)}
-			{deposit}
-		</div>
-	);
+	return <div className="deposit">{children}</div>;
 }

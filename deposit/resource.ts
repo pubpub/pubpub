@@ -18,6 +18,18 @@ export type ResourceKind =
 	| 'ConferencePaper'
 	| 'Other';
 
+export const resourceKindToProperNoun: Record<ResourceKind, string> = {
+	Book: 'Book',
+	BookChapter: 'Book Chapter',
+	Journal: 'Journal',
+	JournalIssue: 'Journal Issue',
+	JournalArticle: 'Journal Article',
+	Conference: 'Conference',
+	ConferenceProceeding: 'Conference Proceeding',
+	ConferencePaper: 'Conference Paper',
+	Other: 'Other',
+};
+
 export type InterWorkResourceRelation =
 	| 'Comment'
 	| 'Preprint'
@@ -122,11 +134,14 @@ export type Resource = PartialResource & {
 
 export type AnyResource = PartialResource | Resource;
 
-export let isIntraWorkRelation = (relation: ResourceRelation) =>
+export const isIntraWorkRelation = (relation: ResourceRelation) =>
 	relation === 'Part' || relation === 'Publication';
-export let isInterWorkRelation = (relation: ResourceRelation) => !isIntraWorkRelation(relation);
+export const isInterWorkRelation = (relation: ResourceRelation) => !isIntraWorkRelation(relation);
 
-export let isIntraWorkRelationship = (relationship: ResourceRelationship) =>
+export const isIntraWorkRelationship = (relationship: ResourceRelationship) =>
 	isIntraWorkRelation(relationship.relation);
-export let isInterWorkRelationship = (relationship: ResourceRelationship) =>
+export const isInterWorkRelationship = (relationship: ResourceRelationship) =>
 	!isIntraWorkRelationship(relationship);
+
+export const getFirstIntraWorkRelationship = (resource: Resource) =>
+	resource.relationships.find(isIntraWorkRelationship);

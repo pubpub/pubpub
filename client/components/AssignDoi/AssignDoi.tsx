@@ -53,14 +53,6 @@ const AssignDoiActionType = {
 	Error: 'error',
 };
 
-const buttonTextByStatus = {
-	[SubmitDepositStatus.Initial]: 'Preview Deposit',
-	[SubmitDepositStatus.Previewing]: 'Generating Preview',
-	[SubmitDepositStatus.Previewed]: 'Submit Deposit',
-	[SubmitDepositStatus.Depositing]: 'Depositing',
-	[SubmitDepositStatus.Deposited]: 'DOI Deposited',
-};
-
 export function reducer(state, action) {
 	switch (action.type) {
 		case AssignDoiActionType.FetchPreview:

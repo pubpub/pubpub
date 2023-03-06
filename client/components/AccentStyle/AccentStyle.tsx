@@ -22,7 +22,6 @@ const {
 	SLIDER_PROGRESS,
 	SLIDER_LABEL,
 	TREE_NODE,
-	TREE_NODE_EXPANDED,
 } = Classes;
 
 const propTypes = {

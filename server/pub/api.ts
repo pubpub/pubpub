@@ -1,20 +1,17 @@
-import { Router } from 'express';
-
 import app, { wrap } from 'server/server';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { PubGetOptions, PubsQuery } from 'types';
 import { indexByProperty } from 'utils/arrays';
-
 import { transformPubToResource } from 'deposit/transform/pub';
 import { generateDoi } from 'server/doi/queries';
 import { assert, expect } from 'utils/assert';
-
 import { prepareResource, submitResource } from 'deposit/datacite/deposit';
+import { assertValidResource } from 'deposit/validate';
+
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
 import { getPubsById, queryPubIds } from './queryMany';
-import { assertValidResource } from 'deposit/validate';
 
 type ManyRequestParams = {
 	query: Omit<PubsQuery, 'communityId'>;

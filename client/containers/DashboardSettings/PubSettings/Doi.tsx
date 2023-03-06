@@ -340,7 +340,7 @@ class Doi extends Component<Props, State> {
 	}
 
 	renderCrossrefDeposit() {
-		const { pubData, canIssueDoi } = this.props;
+		const { pubData } = this.props;
 		const { justSetDoi } = this.state;
 		return (
 			<FormGroup
@@ -395,8 +395,7 @@ class Doi extends Component<Props, State> {
 	}
 
 	renderContent() {
-		const { pubData, canIssueDoi } = this.props;
-		const { justSetDoi } = this.state;
+		const { canIssueDoi } = this.props;
 
 		if (!canIssueDoi) {
 			return (
