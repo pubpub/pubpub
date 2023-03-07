@@ -26,7 +26,6 @@ const AlignmentControl = (props: Props) => {
 			<RadioGroup className="controls" aria-label="Figure alignment" as="div">
 				{alignOptions.map((item) => {
 					return (
-						// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 						<Radio
 							{...radio}
 							aria-label={item.key}

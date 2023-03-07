@@ -47,7 +47,6 @@ const Popover = (props: Props) => {
 			<RkPopover
 				aria-label={ariaLabel}
 				className={className}
-				modal
 				preventBodyScroll={preventBodyScroll}
 				style={{ zIndex: 20 }}
 				{...popover}
