@@ -73,8 +73,8 @@ export const Menu = React.forwardRef((props: MenuProps, ref) => {
 				as="ul"
 				style={{ zIndex: 20, ...menuStyle }}
 				className={classNames(Classes.MENU, Classes.ELEVATION_1, className)}
-				unstable_portal={menuConfig.usePortal}
 				{...menu}
+				modal={menuConfig.usePortal}
 			>
 				<MenuContext.Provider value={{ parentMenu: menu, dismissMenu: handleDismiss }}>
 					{children}

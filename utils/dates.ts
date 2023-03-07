@@ -29,6 +29,7 @@ export const datesAreSameCalendarDate = (dateOne: Date, dateTwo: Date) =>
 	dateOne.toDateString() === dateTwo.toDateString();
 
 export const timeAgoBaseProps = {
+	title: false,
 	minPeriod: 60,
 	formatter: (value, unit, suffix) => {
 		if (unit === 'second') {

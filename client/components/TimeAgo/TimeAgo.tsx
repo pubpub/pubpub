@@ -8,7 +8,7 @@ type Props = {
 	date: number | string | Date;
 	useDateCutoffDays?: number;
 	className?: string;
-	now?: number | string | Date;
+	now?: number;
 };
 
 const TimeAgo = (props: Props) => {

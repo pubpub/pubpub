@@ -38,9 +38,9 @@ const PopoverButton = (props: Props) => {
 			<Popover
 				aria-label={ariaLabel}
 				className={className}
-				unstable_portal={true}
 				tabIndex={0}
 				{...popover}
+				modal={true}
 			>
 				<Card elevation={2}>{component()}</Card>
 			</Popover>

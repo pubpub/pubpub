@@ -50,6 +50,7 @@ const Popover = (props: Props) => {
 				preventBodyScroll={preventBodyScroll}
 				style={{ zIndex: 20 }}
 				{...popover}
+				modal
 			>
 				{(!lazy || popover.visible) && content}
 			</RkPopover>
