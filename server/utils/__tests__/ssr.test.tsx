@@ -1,5 +1,5 @@
 import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { shallow } from 'enzyme';
 import dataInitial from 'utils/storybook/data/dataInitial';
 import { pubData, attributionsData } from 'utils/storybook/data';

@@ -101,7 +101,7 @@ const Html = (props: Props) => {
 				className={classNames(
 					props.bodyClassPrefix && `${props.bodyClassPrefix}-body-wrapper`,
 					getActiveSlugClassName(props.initialData, props.viewData),
-					getUserClassName(props.initialData),
+					{ ...getUserClassName(props.initialData) },
 				)}
 			>
 				{/* This script tag is here to prevent FOUC in Firefox: https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer */}
