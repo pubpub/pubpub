@@ -18,3 +18,4 @@ imagemagick
 # libxml contains xmllint which is used to validate Datacite and Crossref deposits against an XSD schema
 
 libxml2
+libxml2-utils
