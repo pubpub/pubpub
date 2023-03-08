@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Button, ButtonProps, AnchorButton, ButtonProps } from '@blueprintjs/core';
+import { Button, ButtonProps, AnchorButton } from '@blueprintjs/core';
 import omit from 'lodash.omit';
 
 import { Callback } from 'types';
