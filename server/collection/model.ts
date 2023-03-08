@@ -1,5 +1,3 @@
-import { Community } from 'server/models';
-
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
 		'Collection',
@@ -42,6 +40,7 @@ export default (sequelize, dataTypes) => {
 						Collection,
 						CollectionAttribution,
 						CollectionPub,
+						Community,
 						CrossrefDepositRecord,
 						SubmissionWorkflow,
 						Member,
