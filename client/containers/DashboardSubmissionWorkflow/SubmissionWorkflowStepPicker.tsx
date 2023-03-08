@@ -51,7 +51,7 @@ const SubmissionWorkflowStepPicker = (props: Props) => {
 							reached && 'reached',
 							incomplete && 'incomplete',
 						)}
-						stopId={step}
+						// stopId={step}
 						onClick={() => onSelectStep(step as SubmissionWorkflowConfigStep)}
 					>
 						<div className="label">
