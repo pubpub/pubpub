@@ -1,5 +1,5 @@
 import React from 'react';
-import { IButtonProps } from '@blueprintjs/core';
+import { ButtonProps } from '@blueprintjs/core';
 
 import { MenuItem } from './MenuItem';
 import { MenuButton } from './MenuButton';
@@ -19,11 +19,11 @@ type Props<Value> = {
 	'aria-label': string;
 	defaultLabel?: React.ReactNode;
 	disabled?: boolean;
-	icon?: IButtonProps['icon'];
+	icon?: ButtonProps['icon'];
 	items: MenuSelectItems<Value>;
 	onSelectValue: (value: Value) => unknown;
 	prefix?: React.ReactNode;
-	rightIcon?: IButtonProps['rightIcon'];
+	rightIcon?: ButtonProps['rightIcon'];
 	showTickIcon?: boolean;
 	value: null | Value;
 	className?: string;
