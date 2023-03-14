@@ -60,21 +60,17 @@ const wrapUpdateAttrs = (updateAttrs, isFootnote: boolean) => {
 	};
 };
 
-const onSelectSuggestedCitation = (selectedCitation) => {
-	console.log({ selectedCitation });
-};
-
 const ControlsFootnoteCitation = (props: Props) => {
 	const { editorChangeObject, onClose, pendingAttrs } = props;
 	const { selectedNode } = editorChangeObject;
 	const { noteManager } = usePubContext();
-	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
-	const isFootnote = selectedNode.type.name === 'footnote';
+	const isFootnote = selectedNode?.type?.name === 'footnote';
 	const { commitChanges, hasPendingChanges, updateAttrs: rawUpdateAttrs, attrs } = pendingAttrs;
 	const { structuredValue, unstructuredValue, customLabel } = unwrapPendingAttrs(
 		attrs,
 		isFootnote,
 	);
+
 	const updateAttrs = wrapUpdateAttrs(rawUpdateAttrs, isFootnote);
 	const [renderedStructuredValue, setRenderedStructuredValue] = useState(
 		noteManager.getRenderedValueSync(structuredValue),
@@ -82,6 +78,12 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const html = renderedStructuredValue?.html;
 	const showPreview = html || unstructuredValue;
 	const [debouncedValue] = useDebounce(structuredValue, 250);
+
+	const onSelectSuggestedCitation = (selected) => {
+		if (selected.bibtex) {
+			updateAttrs({ structuredValue: selected.bibtex });
+		}
+	};
 
 	useEffect(() => {
 		noteManager.getRenderedValue(debouncedValue).then((val) => setRenderedStructuredValue(val));
@@ -122,10 +124,6 @@ const ControlsFootnoteCitation = (props: Props) => {
 		: [structuredSection, unstructuredSection];
 
 	const renderInlineStyleControls = () => {
-		if (isFootnote) {
-			return null;
-		}
-
 		const defaultLabel = getCitationInlineLabel({
 			...selectedNode,
 			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.

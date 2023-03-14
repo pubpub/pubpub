@@ -30,13 +30,10 @@ app.get('/api/citations/zotero', (req, res) => {
 			return myApi.items().get({ q, include });
 		})
 		.then((results) => {
-			const keyed = results.raw.reduce((memo, entry) => {
-				const structured = new Cite(entry.data).format('bibtex');
-				return {
-					...memo,
-					[entry.key]: { ...entry, structured },
-				};
-			}, {});
-			return res.status(200).json({ items: keyed });
+			const withStructuredValue = results.raw.map((entry) => ({
+				...entry,
+				bibtex: new Cite(entry.data).format('bibtex'),
+			}));
+			return res.status(200).json({ items: withStructuredValue });
 		});
 });

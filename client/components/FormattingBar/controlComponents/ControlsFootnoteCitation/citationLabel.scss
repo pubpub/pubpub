@@ -1,0 +1,8 @@
+.citation-label {
+	max-width: 300px;
+	span {
+		display: block;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+}

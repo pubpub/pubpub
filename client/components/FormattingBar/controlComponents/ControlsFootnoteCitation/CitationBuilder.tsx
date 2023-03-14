@@ -1,41 +1,40 @@
 import React, { useState, useEffect } from 'react';
+import sanitizeHTML from 'sanitize-html';
 import { useDebounce } from 'use-debounce';
 import { MenuItem, Spinner } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 
 import { apiFetch } from 'client/utils/apiFetch';
 
+require('./citationLabel.scss');
+
 type Props = {
 	onSelectCitation: (...args: any[]) => any;
 };
 
-const fetchCitations = (query: string) => apiFetch(`/api/citations/zotero?q=${query}`);
+const fetchCitations = (query: string, style: string) =>
+	apiFetch(`/api/citations/zotero?q=${query}&include=bib,citation,data&style=${style}`);
 
 type ZoteroCSLJSON = {
+	structured: string;
 	key: string;
-	data: {
-		DOI: string;
-		date: string;
-		key: string;
-		title: string;
-	};
-	meta: {
-		creatorSummary: string;
-	};
+	citation: string;
 };
 
 const CitationBuilder = (props: Props) => {
 	const [zoteroQuery, setZoteroQuery] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [debouncedZoteroQuery] = useDebounce(zoteroQuery, 300);
-	const [zoteroCitations, setZoteroCitations] = useState<any[]>([]);
+	const [zoteroCitations, setZoteroCitations] = useState<ZoteroCSLJSON[]>([]);
 
 	const renderItem = (itemProps: ZoteroCSLJSON) => {
+		const __html = sanitizeHTML(itemProps.citation, { allowedTags: ['span'] });
+		const itemLabel = <div className="citation-label" dangerouslySetInnerHTML={{ __html }} />;
 		return (
 			<MenuItem
 				key={itemProps.key}
-				text={itemProps.data.DOI || itemProps.meta.creatorSummary}
-				onClick={props.onSelectCitation}
+				text={itemLabel}
+				onClick={() => props.onSelectCitation(itemProps)}
 			/>
 		);
 	};
@@ -44,9 +43,9 @@ const CitationBuilder = (props: Props) => {
 		() => {
 			if (debouncedZoteroQuery) {
 				setIsLoading(true);
-				fetchCitations(debouncedZoteroQuery).then((results) => {
+				fetchCitations(debouncedZoteroQuery, 'apa').then(({ items }) => {
 					setIsLoading(false);
-					setZoteroCitations(results.items.raw);
+					setZoteroCitations(items);
 				});
 			} else {
 				setZoteroCitations([]);
@@ -59,12 +58,13 @@ const CitationBuilder = (props: Props) => {
 		<Suggest
 			query={zoteroQuery}
 			onQueryChange={setZoteroQuery}
-			items={zoteroCitations}
+			items={zoteroCitations.slice(0, 10)}
 			inputProps={{ placeholder: 'Search your zotero library', large: true }}
 			itemRenderer={renderItem}
 			closeOnSelect={false}
 			resetOnSelect={false}
 			inputValueRenderer={() => 'string'}
+			popoverProps={{ minimal: true }}
 			noResults={
 				zoteroQuery ? (
 					<MenuItem
