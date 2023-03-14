@@ -20,7 +20,7 @@ function getResourceKindForCollection(collection: Collection): ResourceKind {
 	switch (collection.kind) {
 		case 'tag':
 		case 'issue':
-			return 'Journal';
+			return 'JournalIssue';
 		case 'book':
 			return 'Book';
 		case 'conference':
@@ -80,6 +80,32 @@ export async function transformCollectionToResource(
 			identifierKind: 'DOI',
 			identifierValue: collection.doi,
 		});
+	}
+	if (collection.metadata) {
+		const { issn, isbn, printIssn, electronicIssn } = collection.metadata;
+		if (issn) {
+			collectionResource.identifiers.push({
+				identifierKind: 'ISSN',
+				identifierValue: issn,
+			});
+		} else if (printIssn) {
+			collectionResource.identifiers.push({
+				identifierKind: 'ISSN',
+				identifierValue: printIssn,
+			});
+		}
+		if (electronicIssn) {
+			collectionResource.identifiers.push({
+				identifierKind: 'EISSN',
+				identifierValue: electronicIssn,
+			});
+		}
+		if (isbn) {
+			collectionResource.identifiers.push({
+				identifierKind: 'ISBN',
+				identifierValue: isbn,
+			});
+		}
 	}
 	return collectionResource;
 }

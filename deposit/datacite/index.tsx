@@ -3,6 +3,8 @@
 /* eslint-disable react/no-unknown-property */
 import { x } from '@pubpub/deposit-utils/datacite';
 import {
+	getIdentifier,
+	getIdentifierValue,
 	isInterWorkRelationship,
 	isIntraWorkRelationship,
 	Resource,
@@ -132,8 +134,7 @@ function renderContributor(contribution: ResourceContribution) {
 
 function renderRelatedItem(relationship: ResourceRelationship) {
 	const identifier = expect(
-		relationship.resource.identifiers.find((i) => i.identifierKind === 'DOI') ??
-			relationship.resource.identifiers.find((i) => i.identifierKind === 'URL'),
+		getIdentifier(relationship.resource, 'DOI') ?? getIdentifier(relationship.resource, 'URL'),
 	);
 	return (
 		<relatedItem
@@ -178,18 +179,11 @@ export function createDeposit(resource: Resource) {
 	const publisher = expect(resource.meta.publisher);
 	const createdDate = expect(resource.meta['created-date']);
 	const updatedDate = resource.meta['updated-date'];
-	const { identifierValue: url } = expect(
-		resource.identifiers.find((identifier) => identifier.identifierKind === 'URL'),
-	);
-	const { identifierValue: doi } = expect(
-		resource.identifiers.find((identifier) => identifier.identifierKind === 'DOI'),
-	);
-	const issn = resource.identifiers.find(
-		(identifier) => identifier.identifierKind === 'ISSN',
-	)?.identifierValue;
-	const eissn = resource.identifiers.find(
-		(identifier) => identifier.identifierKind === 'EISSN',
-	)?.identifierValue;
+	const url = expect(getIdentifierValue(resource, 'URL'));
+	const doi = expect(getIdentifierValue(resource, 'DOI'));
+	const issn = getIdentifierValue(resource, 'ISSN');
+	const eissn = getIdentifierValue(resource, 'EISSN');
+	const isbn = getIdentifierValue(resource, 'ISBN');
 	return (
 		<resource xmlns="http://datacite.org/schema/kernel-4">
 			<resourceType
@@ -254,7 +248,7 @@ export function createDeposit(resource: Resource) {
 					.map(renderRelatedIdentifier)}
 				{issn && (
 					<relatedIdentifier
-						resourceTypeGeneral="Book"
+						resourceTypeGeneral="Journal"
 						relationType="IsPartOf"
 						relatedIdentifierType="ISSN"
 					>
@@ -263,11 +257,20 @@ export function createDeposit(resource: Resource) {
 				)}
 				{eissn && (
 					<relatedIdentifier
-						resourceTypeGeneral="Book"
+						resourceTypeGeneral="Journal"
 						relationType="IsPartOf"
 						relatedIdentifierType="EISSN"
 					>
 						{eissn}
+					</relatedIdentifier>
+				)}
+				{isbn && (
+					<relatedIdentifier
+						resourceTypeGeneral="Book"
+						relationType="IsPartOf"
+						relatedIdentifierType="ISBN"
+					>
+						{isbn}
 					</relatedIdentifier>
 				)}
 			</relatedIdentifiers>

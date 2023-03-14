@@ -91,6 +91,8 @@ const supportedAttributes = new Set([
 	'dateType',
 	'identifierType',
 	'alternateIdentifierType',
+	'relatedIdentifierType',
+	'resourceTypeGeneral',
 	'descriptionType',
 	'relatedItemType',
 	'relationType',

@@ -99,7 +99,7 @@ export type PartialResource = {
 	identifiers: ResourceIdentifier[];
 };
 
-export type ResourceIdentifierKind = 'URL' | 'DOI' | 'ISSN' | 'EISSN';
+export type ResourceIdentifierKind = 'URL' | 'DOI' | 'ISSN' | 'EISSN' | 'ISBN';
 
 export type ResourceIdentifier = {
 	identifierKind: ResourceIdentifierKind;
@@ -145,3 +145,10 @@ export const isInterWorkRelationship = (relationship: ResourceRelationship) =>
 
 export const getFirstIntraWorkRelationship = (resource: Resource) =>
 	resource.relationships.find(isIntraWorkRelationship);
+
+export const getIdentifier = (resource: AnyResource, identifierKind: ResourceIdentifierKind) =>
+	resource.identifiers.find((identifier) => identifier.identifierKind === identifierKind);
+
+export const getIdentifierValue = (resource: AnyResource, identifierKind: ResourceIdentifierKind) =>
+	resource.identifiers.find((identifier) => identifier.identifierKind === identifierKind)
+		?.identifierValue;
