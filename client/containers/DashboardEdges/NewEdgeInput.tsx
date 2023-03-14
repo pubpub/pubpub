@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MenuItem, Position, Spinner } from '@blueprintjs/core';
-import { Suggest } from '@blueprintjs/select';
+import { Suggest2 } from '@blueprintjs/select';
 import isUrl from 'is-url';
 
 import { PubMenuItem, PubTitle } from 'components';
@@ -131,7 +131,7 @@ const NewEdgeInput = (props: Props) => {
 	};
 
 	return (
-		<Suggest
+		<Suggest2
 			className="new-edge-input-component"
 			items={suggestedItems}
 			inputProps={{
@@ -153,7 +153,6 @@ const NewEdgeInput = (props: Props) => {
 					/>
 				) : null
 			}
-			// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 			popoverProps={suggestPopoverProps}
 		/>
 	);

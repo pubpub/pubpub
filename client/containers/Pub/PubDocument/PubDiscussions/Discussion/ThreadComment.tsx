@@ -117,7 +117,7 @@ const ThreadComment = (props: Props) => {
 						<span className="time">
 							{!isEditing && (
 								<TimeAgo
-									title={false}
+									title=""
 									minPeriod={60}
 									formatter={(value, unit, suffix) => {
 										if (unit === 'second') {

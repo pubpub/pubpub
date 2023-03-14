@@ -23,11 +23,7 @@ export const getHistoryButtonLabelForTimestamp = (timestamp, label, noTimestampL
 	if (timestamp) {
 		const now = Date.now();
 		const justNow = now - timestamp < 60 * 1000;
-		const timeAgo = justNow ? (
-			'just now'
-		) : (
-			<TimeAgo title={false} date={timestamp} minPeriod={60} />
-		);
+		const timeAgo = justNow ? 'just now' : <TimeAgo title="" date={timestamp} minPeriod={60} />;
 		return {
 			top: label,
 			bottom: timeAgo,
