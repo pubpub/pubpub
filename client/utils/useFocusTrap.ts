@@ -226,7 +226,7 @@ export const useFocusTrap = ({
 			rootElement.addEventListener('keydown', handleKeyDown);
 			return () => rootElement.removeEventListener('keydown', handleKeyDown);
 		}
-		return () => { };
+		return () => {};
 	}, [handleKeyDown, rootElement]);
 
 	useEffect(() => {
@@ -238,7 +238,7 @@ export const useFocusTrap = ({
 				rootElement.tabIndex = previousTabIndex;
 			};
 		}
-		return () => { };
+		return () => {};
 	}, [isActive, rootElement, tryToFocus]);
 
 	useEffect(() => {
