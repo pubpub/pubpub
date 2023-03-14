@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Classes, Icon, Spinner, Tooltip } from '@blueprintjs/core';
+import { Button, Classes, Icon, Spinner, Tooltip, SpinnerSize } from '@blueprintjs/core';
 
 import { Menu, MenuItem } from 'components/Menu';
 import { apiFetch } from 'client/utils/apiFetch';
@@ -156,7 +156,7 @@ const Download = (props: Props) => {
 						rightElement={
 							<span>
 								{isLoading && selectedType?.format === type.format && (
-									<Spinner size={Spinner.SIZE_SMALL} />
+									<Spinner size={SpinnerSize.SMALL} />
 								)}
 							</span>
 						}
