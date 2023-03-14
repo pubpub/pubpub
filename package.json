@@ -40,6 +40,7 @@
 		"@blueprintjs/core": "^3.24.0",
 		"@blueprintjs/icons": "^3.14.0",
 		"@blueprintjs/select": "^3.12.0",
+		"@citation-js/plugin-zotero-translation-server": "^0.2.0",
 		"@codemirror/autocomplete": "^0.20.0",
 		"@codemirror/commands": "^0.20.0",
 		"@codemirror/lang-cpp": "^0.20.0",
