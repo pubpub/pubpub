@@ -58,13 +58,28 @@ const CitationBuilder = (props: Props) => {
 		<Suggest
 			query={zoteroQuery}
 			onQueryChange={setZoteroQuery}
-			items={zoteroCitations.slice(0, 10)}
-			inputProps={{ placeholder: 'Search your zotero library', large: true }}
+			items={zoteroCitations}
+			inputProps={{ placeholder: 'Search your zotero library...', large: true }}
 			itemRenderer={renderItem}
 			closeOnSelect={false}
 			resetOnSelect={false}
-			inputValueRenderer={() => 'string'}
-			popoverProps={{ minimal: true }}
+			className="suggest-component"
+			popoverProps={{
+				minimal: true,
+				popoverClassName: 'citation-select',
+				usePortal: false,
+				fill: true,
+				modifiers: {
+					minWidth: {
+						enabled: true,
+						fn: (data) => {
+							data.styles.width = `${data.offsets.reference.width}px`;
+							return data;
+						},
+						order: 800,
+					},
+				},
+			}}
 			fill
 			noResults={
 				zoteroQuery ? (

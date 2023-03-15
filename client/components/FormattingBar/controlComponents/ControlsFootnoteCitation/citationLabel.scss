@@ -1,5 +1,9 @@
+.citation-select {
+	max-height: 400px;
+	overflow: scroll;
+}
+
 .citation-label {
-	max-width: 300px;
 	span {
 		display: block;
 		text-overflow: ellipsis;
