@@ -65,6 +65,7 @@ const CitationBuilder = (props: Props) => {
 			resetOnSelect={false}
 			inputValueRenderer={() => 'string'}
 			popoverProps={{ minimal: true }}
+			fill
 			noResults={
 				zoteroQuery ? (
 					<MenuItem
