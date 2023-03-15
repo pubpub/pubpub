@@ -46,6 +46,7 @@ require('./userNotification/api');
 require('./userNotificationPreferences/api');
 require('./userSubscription/api');
 require('./workerTask/api');
+require('./zoteroIntegration/api');
 
 if (!isProd()) {
 	// eslint-disable-next-line global-require

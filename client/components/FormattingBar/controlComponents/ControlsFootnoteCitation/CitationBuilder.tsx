@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import sanitizeHTML from 'sanitize-html';
 import { useDebounce } from 'use-debounce';
-import { MenuItem, Spinner } from '@blueprintjs/core';
+import { MenuItem, Spinner, AnchorButton } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./citationLabel.scss');
+require('./citationBuilder.scss');
 
 type Props = {
 	onSelectCitation: (...args: any[]) => any;
@@ -26,6 +26,7 @@ const CitationBuilder = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [debouncedZoteroQuery] = useDebounce(zoteroQuery, 300);
 	const [zoteroCitations, setZoteroCitations] = useState<ZoteroCSLJSON[]>([]);
+	const [hasZoteroIntegration, setHasZoteroIntegration] = useState(false);
 
 	const renderItem = (itemProps: ZoteroCSLJSON) => {
 		const __html = sanitizeHTML(itemProps.citation, { allowedTags: ['span'] });
@@ -39,59 +40,84 @@ const CitationBuilder = (props: Props) => {
 		);
 	};
 
+	useEffect(() => {
+		apiFetch('/api/zoteroIntegration').then((res) => {
+			setHasZoteroIntegration(res.id);
+		});
+	}, []);
+
 	useEffect(
 		() => {
-			if (debouncedZoteroQuery) {
-				setIsLoading(true);
-				fetchCitations(debouncedZoteroQuery, 'apa').then(({ items }) => {
+			if (hasZoteroIntegration) {
+				if (debouncedZoteroQuery) {
+					setIsLoading(true);
+					fetchCitations(debouncedZoteroQuery, 'apa').then(({ items }) => {
+						setIsLoading(false);
+						setZoteroCitations(items);
+					});
+				} else {
+					setZoteroCitations([]);
 					setIsLoading(false);
-					setZoteroCitations(items);
-				});
-			} else {
-				setZoteroCitations([]);
-				setIsLoading(false);
+				}
 			}
 		},
-		[debouncedZoteroQuery], // Only call effect if debounced search term changes
+		[debouncedZoteroQuery, hasZoteroIntegration], // Only call effect if debounced search term changes
 	);
 	return (
-		<Suggest
-			query={zoteroQuery}
-			onQueryChange={setZoteroQuery}
-			items={zoteroCitations}
-			inputProps={{ placeholder: 'Search your zotero library...', large: true }}
-			itemRenderer={renderItem}
-			closeOnSelect={false}
-			resetOnSelect={false}
-			className="suggest-component"
-			popoverProps={{
-				minimal: true,
-				popoverClassName: 'citation-select',
-				usePortal: false,
-				fill: true,
-				modifiers: {
-					minWidth: {
-						enabled: true,
-						fn: (data) => {
-							data.styles.width = `${data.offsets.reference.width}px`;
-							return data;
+		<div className="citation-builder-component">
+			<Suggest
+				disabled={!hasZoteroIntegration}
+				query={zoteroQuery}
+				onQueryChange={setZoteroQuery}
+				items={zoteroCitations}
+				inputProps={{
+					placeholder: hasZoteroIntegration
+						? 'Search your zotero library...'
+						: 'no zotero integration',
+					large: true,
+				}}
+				itemRenderer={renderItem}
+				closeOnSelect={false}
+				resetOnSelect={false}
+				className="suggest-component"
+				popoverProps={{
+					minimal: true,
+					popoverClassName: 'citation-select',
+					usePortal: false,
+					modifiers: {
+						minWidth: {
+							enabled: true,
+							fn: (data) => {
+								data.styles.width = `${data.offsets.reference.width}px`;
+								return data;
+							},
+							order: 800,
 						},
-						order: 800,
 					},
-				},
-			}}
-			fill
-			noResults={
-				zoteroQuery ? (
-					<MenuItem
-						disabled
-						className="loading-menu-item"
-						text={isLoading ? 'Loading...' : 'No results'}
-						icon={isLoading && <Spinner size={16} />}
-					/>
-				) : null
-			}
-		/>
+				}}
+				fill={hasZoteroIntegration}
+				noResults={
+					zoteroQuery ? (
+						<MenuItem
+							disabled
+							className="loading-menu-item"
+							text={isLoading ? 'Loading...' : 'No results'}
+							icon={isLoading && <Spinner size={16} />}
+						/>
+					) : null
+				}
+			/>
+			{!hasZoteroIntegration ? (
+				<AnchorButton
+					className="zotero-link-button"
+					minimal
+					active
+					outlined
+					href="/legal/settings"
+					text="Connect Zotero"
+				/>
+			) : null}
+		</div>
 	);
 };
 
