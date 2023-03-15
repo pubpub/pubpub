@@ -73,7 +73,7 @@ const CitationBuilder = (props: Props) => {
 				inputProps={{
 					placeholder: hasZoteroIntegration
 						? 'Search your zotero library...'
-						: 'no zotero integration',
+						: 'No zotero integration',
 					large: true,
 				}}
 				itemRenderer={renderItem}
@@ -109,10 +109,9 @@ const CitationBuilder = (props: Props) => {
 			/>
 			{!hasZoteroIntegration ? (
 				<AnchorButton
+					rightIcon="exchange"
+					intent="primary"
 					className="zotero-link-button"
-					minimal
-					active
-					outlined
 					href="/legal/settings"
 					text="Connect Zotero"
 				/>
