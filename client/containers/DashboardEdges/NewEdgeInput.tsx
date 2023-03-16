@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MenuItem, Position, Spinner } from '@blueprintjs/core';
 import { Suggest2 } from '@blueprintjs/select';
+// import { MenuItem2 } from "@blueprintjs/popover2"
 import isUrl from 'is-url';
 
 import { PubMenuItem, PubTitle } from 'components';
