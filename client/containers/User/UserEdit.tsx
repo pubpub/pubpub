@@ -5,6 +5,7 @@ import { GridWrapper } from 'components';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import { apiFetch } from 'client/utils/apiFetch';
+import { ORCID_PATTERN } from 'utils/orcid';
 
 require('./userEdit.scss');
 
@@ -107,6 +108,9 @@ const UserEdit = (props: Props) => {
 			});
 	};
 
+	const orcidMatches = orcid.match(ORCID_PATTERN);
+	const isOrcidInvalid = orcidMatches === null && orcid !== '';
+	const matchedOrcid = orcidMatches ? orcidMatches[0] : orcid;
 	const expandables = [
 		{
 			label: 'Location',
@@ -134,6 +138,10 @@ const UserEdit = (props: Props) => {
 			onChange: (evt) => {
 				setOrcid(evt.target.value);
 			},
+			onBlur: () => {
+				setOrcid(matchedOrcid);
+			},
+			placeholder: '0000-0000-0000-0000',
 		},
 		{
 			label: 'Github',
@@ -232,7 +240,13 @@ const UserEdit = (props: Props) => {
 								label={item.label}
 								value={item.value}
 								onChange={withHasChanged(item.onChange)}
+								onBlur={withHasChanged(item.onBlur)}
 								helperText={item.helperText}
+								error={
+									(item.label === 'Orcid' && isOrcidInvalid && 'Invalid Orcid') ||
+									undefined
+								}
+								placeholder={item.placeholder}
 							/>
 						);
 					})}
@@ -248,7 +262,7 @@ const UserEdit = (props: Props) => {
 								intent={Intent.PRIMARY}
 								text="Save Details"
 								onClick={handleSaveDetails}
-								disabled={!firstName || !lastName || !hasChanged}
+								disabled={!firstName || !lastName || !hasChanged || isOrcidInvalid}
 								loading={putUserIsLoading}
 							/>
 						</InputField>
