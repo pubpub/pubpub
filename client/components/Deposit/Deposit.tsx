@@ -192,7 +192,9 @@ export default function Deposit(props: Props) {
 							onSave={onSave}
 						/>
 					)}
-					<DataciteDeposit {...props} onDepositSuccess={onDepositSuccess} />
+					{!disabledDueToNoReleases && (
+						<DataciteDeposit {...props} onDepositSuccess={onDepositSuccess} />
+					)}
 				</>
 			);
 		}

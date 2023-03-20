@@ -24,18 +24,11 @@ type TreeAction =
 	| { type: 'SET_IS_EXPANDED'; payload: { path: NodePath; isExpanded: boolean } }
 	| { type: 'SET_IS_SELECTED'; payload: { path: NodePath; isSelected: boolean } };
 
-function forEachNode(nodes: ITreeNode[] | undefined, callback: (node: ITreeNode) => void) {
-	if (nodes === undefined) {
-		return;
-	}
-	nodes.forEach((node) => {
-		callback(node);
-		forEachNode(node.childNodes, callback);
-	});
-}
-
-function forNodeAtPath(nodes: ITreeNode[], path: NodePath, callback: (node: ITreeNode) => void) {
-	callback(Tree.nodeFromPath(path, nodes));
+function mapTreeNodes(node: ITreeNode, callback: (node: ITreeNode) => ITreeNode): ITreeNode {
+	return {
+		...callback(node),
+		childNodes: node.childNodes?.map((child) => mapTreeNodes(child, callback)),
+	};
 }
 
 function depositTreeReducer(state: ITreeNode[], action: TreeAction) {
@@ -43,27 +36,25 @@ function depositTreeReducer(state: ITreeNode[], action: TreeAction) {
 		case 'RESET':
 			return action.payload;
 		case 'DESELECT_ALL': {
-			// eslint-disable-next-line no-undef
-			const next = structuredClone(state);
-			forEachNode(next, (node) => {
-				node.isSelected = false;
-			});
-			return next;
+			return state.map((root) =>
+				mapTreeNodes(root, (node) => ({
+					...node,
+					isSelected: false,
+				})),
+			);
 		}
 		case 'SET_IS_EXPANDED': {
 			// eslint-disable-next-line no-undef
-			const next = structuredClone(state);
-			forNodeAtPath(next, action.payload.path, (node) => {
-				node.isExpanded = action.payload.isExpanded;
-			});
+			const next = [...state];
+			const node = Tree.nodeFromPath(action.payload.path, next);
+			node.isExpanded = action.payload.isExpanded;
 			return next;
 		}
 		case 'SET_IS_SELECTED': {
 			// eslint-disable-next-line no-undef
-			const next = structuredClone(state);
-			forNodeAtPath(next, action.payload.path, (node) => {
-				node.isSelected = action.payload.isSelected;
-			});
+			const next = [...state];
+			const node = Tree.nodeFromPath(action.payload.path, next);
+			node.isSelected = action.payload.isSelected;
 			return next;
 		}
 		default:

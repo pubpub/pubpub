@@ -14,6 +14,7 @@ import './dataciteDeposit.scss';
 
 type Props = ({ pub: Pub } | { collection: Collection }) & {
 	onDepositSuccess(): void;
+	canSubmit?: boolean;
 };
 
 const getDepositTypeTitle = (deposit: DepositNode) => {
@@ -103,7 +104,8 @@ export default function DataciteDeposit(props: Props) {
 				disabled={
 					status === SubmitDepositStatus.Previewing ||
 					status === SubmitDepositStatus.Depositing ||
-					status === SubmitDepositStatus.Deposited
+					status === SubmitDepositStatus.Deposited ||
+					(props.canSubmit === false && status === SubmitDepositStatus.Previewed)
 				}
 			/>
 		</div>
