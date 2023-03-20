@@ -22,7 +22,6 @@ type Props = {
 	pubData: any;
 	updatePubData: (...args: any[]) => any;
 	depositTarget?: DepositTarget;
-	disableCrossrefDeposit?: boolean;
 };
 
 const extractDoiSuffix = (doi: string, depositTarget?: DepositTarget) => {
@@ -411,7 +410,7 @@ class Doi extends Component<Props, State> {
 				{this.renderStatusMessage()}
 				{this.renderCollectionContextMessage()}
 				{this.renderDoi()}
-				{!this.props.disableCrossrefDeposit && this.renderCrossrefDeposit()}
+				{this.renderCrossrefDeposit()}
 			</>
 		);
 	}

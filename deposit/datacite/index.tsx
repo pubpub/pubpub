@@ -313,7 +313,7 @@ export async function createDataciteDoiWithMetadata(
 			attributes: { event: 'publish', doi: resourceDoi, url: resourceUrl, xml: encodedXml },
 		},
 	};
-	const response = await fetch('https://api.test.datacite.org/dois/', {
+	const response = await fetch(expect(process.env.DATACITE_DEPOSIT_URL), {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/vnd.api+json',
@@ -339,7 +339,7 @@ export async function updateDataciteDoiMetadata(
 			attributes: { event: 'publish', doi: resourceDoi, url: resourceUrl, xml: encodedXml },
 		},
 	};
-	const response = await fetch('https://api.test.datacite.org/dois/' + resourceDoi, {
+	const response = await fetch(expect(process.env.DATACITE_DEPOSIT_URL) + `/${resourceDoi}`, {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/vnd.api+json',
