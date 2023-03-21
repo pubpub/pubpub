@@ -45,6 +45,7 @@ export default function Deposit(props: Props) {
 	const { depositTarget } = props;
 	const [resource, setResource] = useState<Resource>();
 	const [doiSuffix, setDoiSuffix] = useState('');
+	const [persistingDoiSuffix, setPersistingDoiSuffix] = useState(false);
 	const [justSetDoi, setJustSetDoi] = useState(false);
 	const doiPrefix = depositTarget?.doiPrefix;
 	const fetchResource = async () => {
@@ -123,7 +124,9 @@ export default function Deposit(props: Props) {
 	};
 	const onSave = async () => {
 		const doi = `${doiPrefix}/${doiSuffix}`;
+		setPersistingDoiSuffix(true);
 		await persistDoi(doi);
+		setPersistingDoiSuffix(false);
 	};
 	const onDepositSuccess = () => {
 		setJustSetDoi(true);
@@ -186,6 +189,7 @@ export default function Deposit(props: Props) {
 							editable={
 								!isSupplementTo(resource) && !crossrefDepositRecordId && !justSetDoi
 							}
+							loading={persistingDoiSuffix}
 							onDelete={onDelete}
 							onGenerate={onGenerate}
 							onUpdate={onUpdate}
