@@ -1,4 +1,4 @@
-import { ZoteroIntegration } from './zoteroIntegration';
+import { ZoteroIntegration } from './zotero';
 
 export type IntegrationDataOAuth1 = {
 	id: string;

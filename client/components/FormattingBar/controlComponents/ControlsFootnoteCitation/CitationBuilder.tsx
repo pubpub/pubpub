@@ -5,6 +5,7 @@ import { MenuItem, Spinner, AnchorButton } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 
 import { apiFetch } from 'client/utils/apiFetch';
+import { ZoteroCSLJSON } from 'types';
 
 require('./citationBuilder.scss');
 
@@ -14,12 +15,6 @@ type Props = {
 
 const fetchCitations = (query: string, style: string) =>
 	apiFetch(`/api/citations/zotero?q=${query}&include=bib,citation,data&style=${style}`);
-
-type ZoteroCSLJSON = {
-	structured: string;
-	key: string;
-	citation: string;
-};
 
 const CitationBuilder = (props: Props) => {
 	const [zoteroQuery, setZoteroQuery] = useState('');

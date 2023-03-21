@@ -26,8 +26,11 @@ app.get('/api/citations/zotero', (req, res) => {
 				throw new Error('Zotero not authenticated');
 			}
 			const zoteroId = parseInt(zoteroIntegration.zoteroUserId, 10);
-			const myApi = zoteroClient(integrationDataOAuth1.accessToken).library('user', zoteroId);
-			return myApi.items().get({ q, include });
+			const zoteroAPI = zoteroClient(integrationDataOAuth1.accessToken).library(
+				'user',
+				zoteroId,
+			);
+			return zoteroAPI.items().get({ q, include });
 		})
 		.then((results) => {
 			const withStructuredValue = results.raw.map((entry) => ({

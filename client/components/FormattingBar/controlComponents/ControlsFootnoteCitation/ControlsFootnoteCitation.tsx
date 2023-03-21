@@ -4,6 +4,7 @@ import { useDebounce } from 'use-debounce';
 import { SimpleEditor, PubNoteContent } from 'components';
 import { getCitationInlineLabel } from 'components/Editor/utils/citation';
 import { usePubContext } from 'containers/Pub/pubHooks';
+import { StructuredZoteroCSLJSON } from 'types';
 
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 import CitationBuilder from './CitationBuilder';
@@ -79,9 +80,11 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const showPreview = html || unstructuredValue;
 	const [debouncedValue] = useDebounce(structuredValue, 250);
 
-	const onSelectSuggestedCitation = (selected) => {
+	const onSelectSuggestedCitation = (selected: StructuredZoteroCSLJSON) => {
 		if (selected.bibtex) {
 			updateAttrs({ structuredValue: selected.bibtex });
+		} else if (selected.citation) {
+			updateAttrs({ unstructuredValue: selected.citation });
 		}
 	};
 
