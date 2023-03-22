@@ -81,11 +81,7 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const [debouncedValue] = useDebounce(structuredValue, 250);
 
 	const onSelectSuggestedCitation = (selected: StructuredZoteroCSLJSON) => {
-		if (selected.bibtex) {
-			updateAttrs({ structuredValue: selected.bibtex });
-		} else if (selected.citation) {
-			updateAttrs({ unstructuredValue: selected.citation });
-		}
+		updateAttrs({ structuredValue: selected.bibtex });
 	};
 
 	useEffect(() => {
@@ -100,7 +96,10 @@ const ControlsFootnoteCitation = (props: Props) => {
 	const structuredSection = (
 		<div className="section" key="structured">
 			<div className="title">Structured Data</div>
-			<CitationBuilder onSelectCitation={onSelectSuggestedCitation} />
+			<CitationBuilder
+				onSelectCitation={onSelectSuggestedCitation}
+				citationStyle={noteManager.citationStyleKind}
+			/>
 			<textarea
 				className="structured-data"
 				placeholder="Enter bibtex, DOI, wikidata url, or bibjson..."

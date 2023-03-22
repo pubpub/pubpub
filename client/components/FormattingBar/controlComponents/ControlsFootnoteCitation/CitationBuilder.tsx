@@ -5,16 +5,18 @@ import { MenuItem, Spinner, AnchorButton } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 
 import { apiFetch } from 'client/utils/apiFetch';
+import { CitationStyleKind } from 'utils/citations';
 import { ZoteroCSLJSON } from 'types';
 
 require('./citationBuilder.scss');
 
 type Props = {
+	citationStyle: CitationStyleKind;
 	onSelectCitation: (...args: any[]) => any;
 };
 
 const fetchCitations = (query: string, style: string) =>
-	apiFetch(`/api/citations/zotero?q=${query}&include=bib,citation,data&style=${style}`);
+	apiFetch(`/api/citations/zotero?q=${query}&include=citation,bibtex&style=${style}`);
 
 const CitationBuilder = (props: Props) => {
 	const [zoteroQuery, setZoteroQuery] = useState('');
@@ -26,13 +28,7 @@ const CitationBuilder = (props: Props) => {
 	const renderItem = (itemProps: ZoteroCSLJSON) => {
 		const __html = sanitizeHTML(itemProps.citation, { allowedTags: ['span'] });
 		const itemLabel = <div className="citation-label" dangerouslySetInnerHTML={{ __html }} />;
-		return (
-			<MenuItem
-				key={itemProps.key}
-				text={itemLabel}
-				onClick={() => props.onSelectCitation(itemProps)}
-			/>
-		);
+		return <MenuItem key={itemProps.key} text={itemLabel} />;
 	};
 
 	useEffect(() => {
@@ -46,7 +42,7 @@ const CitationBuilder = (props: Props) => {
 			if (hasZoteroIntegration) {
 				if (debouncedZoteroQuery) {
 					setIsLoading(true);
-					fetchCitations(debouncedZoteroQuery, 'apa').then(({ items }) => {
+					fetchCitations(debouncedZoteroQuery, props.citationStyle).then(({ items }) => {
 						setIsLoading(false);
 						setZoteroCitations(items);
 					});
@@ -72,7 +68,10 @@ const CitationBuilder = (props: Props) => {
 					large: true,
 				}}
 				itemRenderer={renderItem}
-				closeOnSelect={false}
+				onItemSelect={(passed) => {
+					console.log({ passed });
+					props.onSelectCitation(passed);
+				}}
 				resetOnSelect={false}
 				className="suggest-component"
 				popoverProps={{
