@@ -15,6 +15,8 @@ type Props = {
 	onSelectCitation: (...args: any[]) => any;
 };
 
+type CitationResults = ZoteroCSLJSON[];
+
 const fetchCitations = (query: string, style: string) =>
 	apiFetch(`/api/citations/zotero?q=${query}&include=bib,bibtex&style=${style}`);
 
@@ -34,8 +36,8 @@ const renderMenuItem = (item: ZoteroCSLJSON, { handleClick }) => {
 const CitationBuilder = (props: Props) => {
 	const [zoteroQuery, setZoteroQuery] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
-	const [debouncedZoteroQuery] = useDebounce(zoteroQuery, 300);
-	const [zoteroCitations, setZoteroCitations] = useState<ZoteroCSLJSON[]>([]);
+	const [debouncedZoteroQuery] = useDebounce(zoteroQuery.trim(), 300);
+	const [zoteroCitations, setZoteroCitations] = useState<Record<string, CitationResults>>({});
 	const [hasZoteroIntegration, setHasZoteroIntegration] = useState(false);
 
 	useEffect(() => {
@@ -47,14 +49,13 @@ const CitationBuilder = (props: Props) => {
 	useEffect(
 		() => {
 			if (hasZoteroIntegration) {
-				if (debouncedZoteroQuery) {
+				if (debouncedZoteroQuery && !zoteroCitations[debouncedZoteroQuery]) {
 					setIsLoading(true);
 					fetchCitations(debouncedZoteroQuery, props.citationStyle).then(({ items }) => {
 						setIsLoading(false);
-						setZoteroCitations(items);
+						setZoteroCitations((prev) => ({ ...prev, [debouncedZoteroQuery]: items }));
 					});
 				} else {
-					setZoteroCitations([]);
 					setIsLoading(false);
 				}
 			}
@@ -67,7 +68,7 @@ const CitationBuilder = (props: Props) => {
 				disabled={!hasZoteroIntegration}
 				query={zoteroQuery}
 				onQueryChange={setZoteroQuery}
-				items={zoteroCitations}
+				items={zoteroCitations[debouncedZoteroQuery] || []}
 				inputProps={{
 					placeholder: hasZoteroIntegration
 						? 'Search your zotero library...'
