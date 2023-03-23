@@ -22,6 +22,7 @@ const renderMenuItem = (item: ZoteroCSLJSON, { handleClick }) => {
 	const label = (
 		<div
 			className="citation-label"
+			// eslint-disable-next-line react/no-danger
 			dangerouslySetInnerHTML={{
 				__html: sanitizeHTML(item.bib, { allowedTags: ['span', 'i', 'div'] }),
 			}}
@@ -58,7 +59,7 @@ const CitationBuilder = (props: Props) => {
 				}
 			}
 		},
-		[debouncedZoteroQuery, hasZoteroIntegration], // Only call effect if debounced search term changes
+		[debouncedZoteroQuery, hasZoteroIntegration, props.citationStyle], // Only call effect if debounced search term changes
 	);
 	return (
 		<div className="citation-builder-component">
