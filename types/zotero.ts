@@ -7,9 +7,8 @@ export type ZoteroIntegration = {
 };
 
 export type ZoteroCSLJSON = {
+	bib: string;
+	bibtex: string;
 	structured: string;
 	key: string;
-	citation: string;
 };
-
-export type StructuredZoteroCSLJSON = ZoteroCSLJSON & { bibtex: string };

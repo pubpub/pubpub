@@ -16,7 +16,19 @@ type Props = {
 };
 
 const fetchCitations = (query: string, style: string) =>
-	apiFetch(`/api/citations/zotero?q=${query}&include=citation,bibtex&style=${style}`);
+	apiFetch(`/api/citations/zotero?q=${query}&include=bib,bibtex&style=${style}`);
+
+const renderMenuItem = (item: ZoteroCSLJSON, { handleClick }) => {
+	const label = (
+		<div
+			className="citation-label"
+			dangerouslySetInnerHTML={{
+				__html: sanitizeHTML(item.bib, { allowedTags: ['span', 'i', 'div'] }),
+			}}
+		/>
+	);
+	return <MenuItem key={item.key} text={label} onClick={handleClick} />;
+};
 
 const CitationBuilder = (props: Props) => {
 	const [zoteroQuery, setZoteroQuery] = useState('');
@@ -24,12 +36,6 @@ const CitationBuilder = (props: Props) => {
 	const [debouncedZoteroQuery] = useDebounce(zoteroQuery, 300);
 	const [zoteroCitations, setZoteroCitations] = useState<ZoteroCSLJSON[]>([]);
 	const [hasZoteroIntegration, setHasZoteroIntegration] = useState(false);
-
-	const renderItem = (itemProps: ZoteroCSLJSON) => {
-		const __html = sanitizeHTML(itemProps.citation, { allowedTags: ['span'] });
-		const itemLabel = <div className="citation-label" dangerouslySetInnerHTML={{ __html }} />;
-		return <MenuItem key={itemProps.key} text={itemLabel} />;
-	};
 
 	useEffect(() => {
 		apiFetch('/api/zoteroIntegration').then((res) => {
@@ -67,13 +73,12 @@ const CitationBuilder = (props: Props) => {
 						: 'No zotero integration',
 					large: true,
 				}}
-				itemRenderer={renderItem}
-				onItemSelect={(passed) => {
-					console.log({ passed });
-					props.onSelectCitation(passed);
-				}}
+				itemRenderer={renderMenuItem}
+				onItemSelect={props.onSelectCitation}
+				closeOnSelect={false}
 				resetOnSelect={false}
 				className="suggest-component"
+				inputValueRenderer={() => ''}
 				popoverProps={{
 					minimal: true,
 					popoverClassName: 'citation-select',
