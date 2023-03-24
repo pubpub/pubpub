@@ -20,7 +20,7 @@ type CitationResults = ZoteroCSLJSON[];
 const fetchCitations = (query: string, style: string) =>
 	apiFetch(`/api/citations/zotero?q=${query}&include=bib,bibtex&style=${style}`);
 
-const renderMenuItem = (item: ZoteroCSLJSON, { handleClick }) => {
+const renderMenuItem = (item: ZoteroCSLJSON, { handleClick, modifiers }) => {
 	const label = (
 		<div
 			className="citation-label"
@@ -30,7 +30,15 @@ const renderMenuItem = (item: ZoteroCSLJSON, { handleClick }) => {
 			}}
 		/>
 	);
-	return <MenuItem key={item.key} text={label} onClick={handleClick} />;
+	return (
+		<MenuItem
+			key={item.key}
+			id={item.key}
+			text={label}
+			onClick={handleClick}
+			active={modifiers.active}
+		/>
+	);
 };
 
 const CitationBuilder = (props: Props) => {
