@@ -7,6 +7,10 @@ export type ZoteroIntegration = {
 };
 
 export type ZoteroCSLJSON = {
+	meta: {
+		parsedDate: string;
+		creatorSummary: string;
+	};
 	bib: string;
 	bibtex: string;
 	structured: string;

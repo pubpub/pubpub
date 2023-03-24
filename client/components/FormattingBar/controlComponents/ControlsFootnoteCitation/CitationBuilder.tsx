@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import sanitizeHTML from 'sanitize-html';
 import { useDebounce } from 'use-debounce';
 import { MenuItem, Spinner, AnchorButton } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
@@ -18,28 +17,17 @@ type Props = {
 type CitationResults = ZoteroCSLJSON[];
 
 const fetchCitations = (query: string, style: string) =>
-	apiFetch(`/api/citations/zotero?q=${query}&include=bib,bibtex&style=${style}`);
+	apiFetch(`/api/citations/zotero?q=${query}&include=bibtex&style=${style}`);
 
-const renderMenuItem = (item: ZoteroCSLJSON, { handleClick, modifiers }) => {
-	const label = (
-		<div
-			className="citation-label"
-			// eslint-disable-next-line react/no-danger
-			dangerouslySetInnerHTML={{
-				__html: sanitizeHTML(item.bib, { allowedTags: ['span', 'i', 'div'] }),
-			}}
-		/>
-	);
-	return (
-		<MenuItem
-			key={item.key}
-			id={item.key}
-			text={label}
-			onClick={handleClick}
-			active={modifiers.active}
-		/>
-	);
-};
+const renderMenuItem = (item: ZoteroCSLJSON, { handleClick, modifiers }) => (
+	<MenuItem
+		key={item.key}
+		id={item.key}
+		text={`${item.meta.creatorSummary} (${item.meta.parsedDate})`}
+		onClick={handleClick}
+		active={modifiers.active}
+	/>
+);
 
 const CitationBuilder = (props: Props) => {
 	const [zoteroQuery, setZoteroQuery] = useState('');
