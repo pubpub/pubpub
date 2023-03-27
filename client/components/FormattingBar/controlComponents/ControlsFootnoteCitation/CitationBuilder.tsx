@@ -56,7 +56,7 @@ const CitationBuilder = (props: Props) => {
 				}
 			}
 		},
-		[debouncedZoteroQuery, hasZoteroIntegration, props.citationStyle], // Only call effect if debounced search term changes
+		[debouncedZoteroQuery, hasZoteroIntegration, props.citationStyle, zoteroCitations], // Only call effect if debounced search term changes
 	);
 	return (
 		<div className="citation-builder-component">
