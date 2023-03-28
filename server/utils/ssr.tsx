@@ -65,6 +65,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		title: communityTitle,
 		citeAs: communityCiteAs,
 		publishAs: communityPublisher,
+		twitter: communityTwitter,
 	} = initialData.communityData;
 
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
@@ -194,6 +195,13 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		outputComponents = [
 			...outputComponents,
 			<meta key="a1" name="citation_abstract" content={textAbstract} />,
+		];
+	}
+
+	if (communityTwitter) {
+		outputComponents = [
+			...outputComponents,
+			<meta name="twitter:creator" content={`@${communityTwitter}`} />,
 		];
 	}
 
@@ -343,7 +351,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	outputComponents = [
 		...outputComponents,
 		<meta key="misc1" property="fb:app_id" content="924988584221879" />,
-		<meta key="misc2" name="twitter:card" content="summary" />,
+		<meta key="misc2" name="twitter:card" content="summary_large_image" />,
 		<meta key="misc3" name="twitter:site" content="@pubpub" />,
 	];
 
