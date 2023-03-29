@@ -24,7 +24,7 @@ const ControlsLink = (props: Props) => {
 	const { communityData } = usePageContext();
 	const { inPub, pubData } = usePubContext();
 	const [href, setHref] = useState(activeLink.attrs.href);
-	// const [openInNewTab, setOpenInNewTab] = useState(true); // this must change mark attrs on link node
+	const [target, setTarget] = useState(activeLink.attrs.target);
 	const [debouncedHref] = useDebounce(href, 250);
 	const inputRef = useRef();
 
@@ -36,14 +36,6 @@ const ControlsLink = (props: Props) => {
 		}
 		setHref(value);
 	};
-
-	// in actuality you would be updating mark attrs for the activeLink
-	// const target = openInNewTab ? '_blank' : '_self';
-
-	// check link to see mark attr for tyarget
-	// derive check in check box from this
-	// ex: if activeLink.attrs.target === _blank checked is true
-	// useEffect(()=>{if(activeLink.attrs) }, [target])
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => activeLink.updateAttrs({ href: debouncedHref }), [debouncedHref]);
@@ -69,10 +61,31 @@ const ControlsLink = (props: Props) => {
 		}
 	};
 
+	const checkedOpenInNewTab = activeLink.attrs.target === '_blank';
+
+	const handleChange = () => {
+		setTarget(activeLink.attrs.target === '_blank' ? '_self' : '_blank');
+		activeLink.updateAttrs({ target });
+	};
+
 	function ControlsLinkPopover() {
 		return (
 			<div>
-				<Checkbox label="Open in new tab" checked={true} />
+				<Checkbox
+					label="Open in new tab"
+					checked={checkedOpenInNewTab}
+					onChange={handleChange}
+				/>
+				{/* 
+				
+				if they check this then a new connection
+				will be made from the link
+				
+				to enable this we should use the link to add a candidate
+
+				on navigation away from component we should create the pub edge
+
+				*/}
 				<Checkbox label="Create a pub connection for this url" />
 				<div>Type: connection type dropdown</div>
 				<div>Direction: direction dropdown</div>
@@ -100,7 +113,6 @@ const ControlsLink = (props: Props) => {
 					icon="share"
 					href={href}
 					target="_blank"
-					// target={target}
 				/>
 				<Button
 					small
