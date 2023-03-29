@@ -73,6 +73,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	const useCollectionTitle = !isPub && collection?.title;
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
+	const twitterCardType = avatar ? 'summary_large_image' : 'summary';
 	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
 	let outputComponents: any[] = [];
 	if (!initialData.locationData.isBasePubPub) {
@@ -351,8 +352,8 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	outputComponents = [
 		...outputComponents,
 		<meta key="misc1" property="fb:app_id" content="924988584221879" />,
-		<meta key="misc2" name="twitter:card" content="summary_large_image" />,
 		<meta key="misc3" name="twitter:site" content="@pubpub" />,
+		<meta key="misc2" name="twitter:card" content={twitterCardType} />,
 	];
 
 	return outputComponents;
