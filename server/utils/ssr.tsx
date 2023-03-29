@@ -72,8 +72,8 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	const isPub = !!initialData.scopeData?.elements?.activePub;
 	const useCollectionTitle = !isPub && collection?.title;
 	const favicon = initialData.communityData.favicon;
-	const avatar = image || initialData.communityData.avatar;
-	const twitterCardType = avatar ? 'summary_large_image' : 'summary';
+	const imageOrAvatar = image || initialData.communityData.avatar;
+	const twitterCardType = image ? 'summary_large_image' : 'summary';
 	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
 	let outputComponents: any[] = [];
 	if (!initialData.locationData.isBasePubPub) {
@@ -215,13 +215,13 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		];
 	}
 
-	if (avatar) {
+	if (imageOrAvatar) {
 		outputComponents = [
 			...outputComponents,
-			<meta key="i1" property="og:image" content={avatar} />,
-			<meta key="i2" property="og:image:url" content={avatar} />,
+			<meta key="i1" property="og:image" content={imageOrAvatar} />,
+			<meta key="i2" property="og:image:url" content={imageOrAvatar} />,
 			<meta key="i3" property="og:image:width" content="500" />,
-			<meta key="i4" name="twitter:image" content={avatar} />,
+			<meta key="i4" name="twitter:image" content={imageOrAvatar} />,
 		];
 	}
 
@@ -307,9 +307,8 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	}
 
 	if (publishedAt) {
-		const googleScholarPublishedAt = `${publishedAt.getFullYear()}/${
-			publishedAt.getMonth() + 1
-		}/${publishedAt.getDate()}`;
+		const googleScholarPublishedAt = `${publishedAt.getFullYear()}/${publishedAt.getMonth() + 1
+			}/${publishedAt.getDate()}`;
 		const dcPublishedAt = `${publishedAt.getFullYear()}-${publishedAt.getMonth()}-${publishedAt.getDate()}`;
 		outputComponents = [
 			...outputComponents,
