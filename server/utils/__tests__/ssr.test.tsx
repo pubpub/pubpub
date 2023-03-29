@@ -182,7 +182,7 @@ describe('generateMetaComponents', () => {
 		    property="fb:app_id"
 		  />,
 		  <meta
-		    content="summary_large_image"
+		    content="summary"
 		    name="twitter:card"
 		  />,
 		  <meta

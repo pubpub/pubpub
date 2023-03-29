@@ -307,8 +307,9 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	}
 
 	if (publishedAt) {
-		const googleScholarPublishedAt = `${publishedAt.getFullYear()}/${publishedAt.getMonth() + 1
-			}/${publishedAt.getDate()}`;
+		const googleScholarPublishedAt = `${publishedAt.getFullYear()}/${
+			publishedAt.getMonth() + 1
+		}/${publishedAt.getDate()}`;
 		const dcPublishedAt = `${publishedAt.getFullYear()}-${publishedAt.getMonth()}-${publishedAt.getDate()}`;
 		outputComponents = [
 			...outputComponents,
@@ -351,8 +352,8 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	outputComponents = [
 		...outputComponents,
 		<meta key="misc1" property="fb:app_id" content="924988584221879" />,
-		<meta key="misc3" name="twitter:site" content="@pubpub" />,
 		<meta key="misc2" name="twitter:card" content={twitterCardType} />,
+		<meta key="misc3" name="twitter:site" content="@pubpub" />,
 	];
 
 	return outputComponents;
