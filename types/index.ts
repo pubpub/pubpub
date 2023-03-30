@@ -35,4 +35,4 @@ export * from './user';
 export * from './util';
 export * from './viewport';
 export * from './visibility';
-export * from './zoteroIntegration';
+export * from './zotero';
