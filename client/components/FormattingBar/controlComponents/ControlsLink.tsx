@@ -68,6 +68,29 @@ const ControlsLink = (props: Props) => {
 		activeLink.updateAttrs({ target });
 	};
 
+	/* 
+	
+	if they check this then a new connection
+	will be made from the link
+
+	to enable this we should use the link to add a candidate
+
+	on navigation away from component we should create the pub edge
+
+	TODO: Pieces of connections we need
+
+	Since we have the url, we dont need to form a selction on the active link. 
+	We need to make it a string and pass it to new edge editor
+		but the entire editor is not the preview method
+
+		so how do i extract the preview and what props does it require?
+
+		a link can be 
+	
+
+
+	*/
+
 	function ControlsLinkPopover() {
 		return (
 			<div>
@@ -76,20 +99,15 @@ const ControlsLink = (props: Props) => {
 					checked={checkedOpenInNewTab}
 					onChange={handleChange}
 				/>
-				{/* 
-				
-				if they check this then a new connection
-				will be made from the link
-				
-				to enable this we should use the link to add a candidate
-
-				on navigation away from component we should create the pub edge
-
-				*/}
 				<Checkbox label="Create a pub connection for this url" />
 				<div>Type: connection type dropdown</div>
 				<div>Direction: direction dropdown</div>
-				<Icon icon="info-sign" /> Preview
+				<div style={{ backgroundColor: 'orchid' }}>
+					<Icon icon="info-sign" /> Preview
+					<Button title="Save Connection" minimal icon="tick">
+						Save Connection
+					</Button>
+				</div>
 			</div>
 		);
 	}
@@ -105,7 +123,7 @@ const ControlsLink = (props: Props) => {
 				inputRef={inputRef}
 			/>
 			<div>
-				<AnchorButton small minimal title="Visit" icon="chevron-up" />
+				<AnchorButton small minimal title="Visit URL" icon="chevron-up" />
 				<AnchorButton
 					small
 					minimal
