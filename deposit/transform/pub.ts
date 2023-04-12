@@ -16,6 +16,7 @@ import { getWordAndCharacterCountsFromDoc } from 'utils/pub/metadata';
 import { sortByRank } from 'utils/rank';
 import {
 	AnyResource,
+	PartialResource,
 	Resource,
 	ResourceContribution,
 	ResourceContributorRole,
@@ -61,7 +62,7 @@ function transformPubAttributionToResourceContribution(
 	return {
 		contributor: {
 			name: attribution.user?.fullName ?? attribution.name,
-			orcid: attribution.orcid,
+			orcid: attribution.user?.orcid ?? attribution.orcid,
 		},
 		contributorAffiliation: attribution.affiliation,
 		contributorRole: transformAttributionRoleToResourceContributorRole(role),
@@ -133,8 +134,32 @@ async function transformEdgeToResourceRelationship(
 		isParent: inbound ? pubEdge.pubIsParent : !pubEdge.pubIsParent,
 		resource: pubEdge.externalPublication
 			? transformExternalPublicationToResource(pubEdge.externalPublication)
-			: await transformPubToResource(expect(pubEdge.targetPub), community),
+			: await transformPubToPartialResource(
+					expect(inbound ? pubEdge.pub : pubEdge.targetPub),
+					community,
+			  ),
 		relation: derivePubEdgeRelation(pubEdge),
+	};
+}
+
+export async function transformPubToPartialResource(
+	pub: types.Pub,
+	community: types.Community,
+): Promise<PartialResource> {
+	pub = sanitizePubEdges(pub, true);
+	const pubPrimaryParentEdge = getPrimaryParentPubEdge(pub);
+	const pubPrimaryCollection = pub.collectionPubs
+		? getPrimaryCollection(pub.collectionPubs)
+		: null;
+	return {
+		title: pub.title,
+		kind: derivePubResourceKind(pubPrimaryParentEdge, pubPrimaryCollection),
+		identifiers: [
+			{
+				identifierKind: 'URL',
+				identifierValue: pubUrl(community, pub),
+			},
+		],
 	};
 }
 
@@ -157,12 +182,14 @@ export async function transformPubToResource(
 			transformEdgeToResourceRelationship(pubEdge, community, true),
 		),
 	]);
-	const contributions: ResourceContribution[] = pub.attributions.flatMap(
-		(attribution) =>
-			attribution.roles?.map((role) =>
-				transformPubAttributionToResourceContribution(attribution, role),
-			) ?? transformPubAttributionToResourceContribution(attribution, 'Other'),
-	);
+	const contributions: ResourceContribution[] = pub.attributions
+		.sort((a, b) => a.order - b.order)
+		.map((attribution) =>
+			transformPubAttributionToResourceContribution(
+				attribution,
+				attribution.roles?.[0] ?? 'Other',
+			),
+		);
 	const pubResource: Resource = {
 		kind: derivePubResourceKind(pubPrimaryParentEdge, pubPrimaryCollection),
 		title: pub.title,
