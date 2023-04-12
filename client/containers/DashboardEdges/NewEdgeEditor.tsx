@@ -103,6 +103,7 @@ const NewEdgeEditor = (props: Props) => {
 
 	const handleCreateEdge = () => {
 		assert(pubEdge !== null);
+		console.log(pubEdge);
 		onSave(pubEdge);
 	};
 

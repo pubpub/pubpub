@@ -63,10 +63,26 @@ const ControlsLink = (props: Props) => {
 
 	const checkedOpenInNewTab = activeLink.attrs.target === '_blank';
 
-	const handleChange = () => {
+	const handleLinkAttr = () => {
 		setTarget(activeLink.attrs.target === '_blank' ? '_self' : '_blank');
 		activeLink.updateAttrs({ target });
 	};
+
+	// const handleConnection = () => {
+	// 	console.log(href);
+
+	// 	if (isConnection) {
+	// 		// call api to remove connection
+
+	// 		// setConnectionChecked to false
+
+	// 		return;
+	// 	}
+
+	// 	// call api to create a connection
+
+	// 	// setConnectionChecked to true
+	// };
 
 	/* 
 	
@@ -97,9 +113,12 @@ const ControlsLink = (props: Props) => {
 				<Checkbox
 					label="Open in new tab"
 					checked={checkedOpenInNewTab}
-					onChange={handleChange}
+					onChange={handleLinkAttr}
 				/>
-				<Checkbox label="Create a pub connection for this url" />
+				<Checkbox
+					label="Create a pub connection for this url"
+					// onChange={handleConnection}
+				/>
 				<div>Type: connection type dropdown</div>
 				<div>Direction: direction dropdown</div>
 				<div style={{ backgroundColor: 'orchid' }}>
