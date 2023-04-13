@@ -1,6 +1,7 @@
 import passport from 'passport';
 import app from 'server/server';
 import { User } from 'server/models';
+import { isDevelopment } from 'utils/environment';
 
 app.get(
 	'/auth/zotero',
@@ -18,8 +19,10 @@ app.get(
 // hand control to passport to use code to grab profile info
 app.get('/auth/zotero/redirect', (req, res, next) => {
 	const host = req.user?.authRedirectHost;
+	const urlBase = isDevelopment() ? 'http://lvh.me:9876' : `https://${host}`;
+
 	passport.authenticate('zotero', {
-		failureRedirect: `${host}/legal/settings?integration=fail`,
-		successRedirect: `${host}/legal/settings?integration=success`,
+		failureRedirect: `${urlBase}/legal/settings?integration=fail`,
+		successRedirect: `${urlBase}/legal/settings?integration=success`,
 	})(req, res, next);
 });
