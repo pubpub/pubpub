@@ -157,7 +157,7 @@ export async function transformPubToPartialResource(
 		identifiers: [
 			{
 				identifierKind: 'URL',
-				identifierValue: pubUrl(community, pub),
+				identifierValue: pubUrl(community, pub, { absolute: true }),
 			},
 		],
 	};
@@ -209,7 +209,7 @@ export async function transformPubToResource(
 		identifiers: [
 			{
 				identifierKind: 'URL',
-				identifierValue: pubUrl(community, pub),
+				identifierValue: pubUrl(community, pub, { absolute: true }),
 			},
 		],
 		meta: {},
