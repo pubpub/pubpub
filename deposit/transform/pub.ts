@@ -151,7 +151,7 @@ export async function transformPubToPartialResource(
 	const pubPrimaryCollection = pub.collectionPubs
 		? getPrimaryCollection(pub.collectionPubs)
 		: null;
-	return {
+	const pubResource: PartialResource = {
 		title: pub.title,
 		kind: derivePubResourceKind(pubPrimaryParentEdge, pubPrimaryCollection),
 		identifiers: [
@@ -161,6 +161,13 @@ export async function transformPubToPartialResource(
 			},
 		],
 	};
+	if (pub.doi) {
+		pubResource.identifiers.push({
+			identifierKind: 'DOI',
+			identifierValue: pub.doi,
+		});
+	}
+	return pubResource;
 }
 
 export async function transformPubToResource(
