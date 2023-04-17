@@ -24,9 +24,9 @@ type Props = {
 
 type SuggestedItem =
 	| {
-			targetPub?: Pub;
-			externalPublication?: ExternalPublication;
-	  }
+		targetPub?: Pub;
+		externalPublication?: ExternalPublication;
+	}
 	| { indeterminate: true }
 	| { createNewFromUrl: string };
 
@@ -83,6 +83,7 @@ const ControlsLink = (props: Props) => {
 		const obj = outboundEdges.find((outboundEdge) => {
 			return outboundEdge.externalPublication?.url === href;
 		});
+		console.log(obj);
 		if (isExistingEdge && obj) {
 			setExisitingEdgeEdge(obj);
 			setCheckedCreateConnection(true);
