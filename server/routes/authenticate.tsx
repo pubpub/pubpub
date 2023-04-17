@@ -8,7 +8,7 @@ app.get(
 	wrap(async (req) => {
 		if (req.user) {
 			const authRedirectHost = req.get('host');
-			User.update({ authRedirectHost }, { where: { id: req.user.id } });
+			await User.update({ authRedirectHost }, { where: { id: req.user.id } });
 		}
 	}),
 	passport.authenticate('zotero', { state: 'test' }),
