@@ -45,6 +45,7 @@ export const useDashboardEdges = (pubData: Pub) => {
 	};
 
 	const removeOutboundEdge = (outboundEdge) => {
+		console.log(outboundEdge);
 		pendingPromise(apiFetch.delete('/api/pubEdges', { pubEdgeId: outboundEdge.id }));
 		setOutboundEdges(outboundEdges.filter((edge) => edge.id !== outboundEdge.id));
 	};

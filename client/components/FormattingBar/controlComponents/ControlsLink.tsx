@@ -1,21 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import isUrl from 'is-url';
-import { Button, AnchorButton, InputGroup, Checkbox, Icon } from '@blueprintjs/core';
+import { Button, AnchorButton, InputGroup, Checkbox, Icon, MenuItem } from '@blueprintjs/core';
 
 import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { pubUrl } from 'utils/canonicalUrls';
-import { isDoi } from 'utils/crossref/parseDoi';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
-import { ExternalPublication, InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
+import { InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
-import {
-	createCandidateEdge,
-	stripMarkupFromString,
-} from 'containers/DashboardEdges/NewEdgeEditor';
+import { createCandidateEdge } from 'containers/DashboardEdges/NewEdgeEditor';
 import { assert } from 'utils/assert';
+import { MenuButton } from 'client/components/Menu';
+import { relationTypeDefinitions } from 'utils/pubEdge';
 
 type Props = {
 	editorChangeObject: {
@@ -25,14 +22,6 @@ type Props = {
 	onClose: (...args: any[]) => any;
 };
 
-type SuggestedItem =
-	| {
-			targetPub?: Pub;
-			externalPublication?: ExternalPublication;
-	  }
-	| { indeterminate: true }
-	| { createNewFromUrl: string };
-
 const ControlsLink = (props: Props) => {
 	const {
 		editorChangeObject: { activeLink, view },
@@ -40,25 +29,34 @@ const ControlsLink = (props: Props) => {
 	} = props;
 
 	const { communityData } = usePageContext();
-	const { inPub, pubData, updatePubData } = usePubContext();
+	const { inPub, pubData } = usePubContext();
 
 	const [href, setHref] = useState(activeLink.attrs.href);
 	const [target, setTarget] = useState(activeLink.attrs.target);
 	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
 	const [errorCreatingEdge, setErrorCreatingEdge] = useState<string>();
-	const [newEdge, setNewEdge] = useState<PubEdge | null>(null);
-	const [exisitingEdge, setExisitingEdgeEdge] = useState<OutboundEdge | null>(null);
-	const [checkedCreateConnection, setCheckedCreateConnection] = useState<boolean>();
-	const [proposedItem, setProposedItem] = useState<null | SuggestedItem>(null);
+	const [pubEdge, setPubEdge] = useState<PubEdge | null>(null);
 
 	const { pendingPromise } = usePendingChanges();
 
 	const [debouncedHref] = useDebounce(href, 250);
 	const inputRef = useRef();
 
-	const { addCreatedOutboundEdge, outboundEdges, removeOutboundEdge } = useDashboardEdges(
+	const { addCreatedOutboundEdge, removeOutboundEdge } = useDashboardEdges(
 		pubData as Pub & { outboundEdges: OutboundEdge[]; inboundEdges: InboundEdge[] },
 	);
+
+	useEffect(() => {
+		if (activeLink.attrs.pubEdgeId) {
+			pendingPromise(apiFetch.get(`/api/pubEdges/${activeLink.attrs.pubEdgeId}`))
+				.then((res) => {
+					setPubEdge(res);
+				})
+				.catch(() => {
+					setPubEdge(null);
+				});
+		}
+	}, [activeLink.attrs.pubEdgeId, pendingPromise]);
 
 	const setHashOrUrl = (value: string) => {
 		if (inPub) {
@@ -79,18 +77,6 @@ const ControlsLink = (props: Props) => {
 			inputRef.current.focus();
 		}
 	}, [href]);
-
-	useEffect(() => {
-		const isExistingEdge = outboundEdges.some((obj) => obj.externalPublication?.url === href);
-		const obj = outboundEdges.find((outboundEdge) => {
-			return outboundEdge.externalPublication?.url === href;
-		});
-		console.log('is an edge', isExistingEdge && obj);
-		if (isExistingEdge && obj) {
-			setExisitingEdgeEdge(obj);
-			setCheckedCreateConnection(true);
-		}
-	}, [outboundEdges, href]);
 
 	const restoreSelection = useCallback(() => {
 		view.focus();
@@ -114,7 +100,6 @@ const ControlsLink = (props: Props) => {
 
 	const createConnection = (edge: PubEdge) => {
 		setIsCreatingEdge(true);
-		console.log('Edge: ', edge);
 		pendingPromise(
 			apiFetch.post('/api/pubEdges', {
 				...edge,
@@ -124,70 +109,39 @@ const ControlsLink = (props: Props) => {
 			}),
 		)
 			.then((createdEdge: OutboundEdge) => {
-				setProposedItem(null);
 				addCreatedOutboundEdge(createdEdge);
-				updatePubData({ outboundEdges: [...outboundEdges, createdEdge] });
+				setPubEdge(createdEdge);
+				activeLink.updateAttrs({ pubEdgeId: createdEdge.id });
 				setIsCreatingEdge(false);
 			})
 			.catch((err: Error) => {
-				setProposedItem(null);
 				setIsCreatingEdge(false);
 				setErrorCreatingEdge(err.message);
 			});
 	};
 
-	const setConnectionToCreate = (item) => {
-		if (
-			'externalPublication' in item &&
-			item.externalPublication &&
-			item.externalPublication.title
-		) {
-			setNewEdge(
-				createCandidateEdge({
-					externalPublication: {
-						...item.externalPublication,
-						description: stripMarkupFromString(item.externalPublication.description),
-					},
-				}),
-			);
-		} else if ('createNewFromUrl' in item && item.createNewFromUrl) {
-			setNewEdge(
-				createCandidateEdge({
-					externalPublication: {
-						url: item.createNewFromUrl,
-						contributors: [],
-					},
-				}),
-			);
-		}
-	};
-
-	console.log('New Edge', newEdge);
 	const handleCreateEdge = () => {
-		setConnectionToCreate(proposedItem);
-		console.log('assert called b4 newedge');
-		assert(newEdge !== null);
-		// createConnection(newEdge);
+		assert(pubEdge !== null);
+		createConnection(pubEdge);
 	};
 
 	const handleConnection = () => {
-		if (checkedCreateConnection) {
-			console.log(exisitingEdge ? 'deleting existing edge' : 'delting newEdge');
-			removeOutboundEdge(exisitingEdge || newEdge);
-			setProposedItem(null);
-			setNewEdge(null);
-			setCheckedCreateConnection(false);
-		} else if (isUrl(href) || isDoi(href)) {
-			setProposedItem({ indeterminate: true });
-			apiFetch.get(`/api/pubEdgeProposal?object=${encodeURIComponent(href)}`).then((res) => {
-				if (res) {
-					setProposedItem(res);
-				} else {
-					setProposedItem({ createNewFromUrl: href });
-				}
+		if (pubEdge) {
+			removeOutboundEdge(pubEdge);
+			setPubEdge(null);
+			activeLink.updateAttrs({ pubEdgeId: null });
+		} else {
+			pendingPromise(
+				apiFetch.get(`/api/pubEdgeProposal?object=${encodeURIComponent(href)}`),
+			).then((res) => {
+				console.log(res);
+				setPubEdge(
+					createCandidateEdge({
+						targetPub: res.targetPub,
+						targetPubId: res.targetPub.id,
+					}),
+				);
 			});
-
-			setCheckedCreateConnection(true);
 		}
 	};
 
@@ -277,9 +231,42 @@ const ControlsLink = (props: Props) => {
 				<Checkbox
 					label={errorCreatingEdge || 'Create a pub connection for this url'}
 					onChange={handleConnection}
-					checked={checkedCreateConnection}
+					checked={!!pubEdge}
 					disabled={isCreatingEdge}
 				/>
+				{pubEdge && (
+					<>
+						<MenuButton
+							aria-label="Type: connection type dropdown"
+							buttonProps={{
+								rightIcon: 'chevron-down',
+							}}
+						>
+							{Object.entries(relationTypeDefinitions).map(
+								([relationType, definition]) => {
+									const { name } = definition;
+									const selected = pubEdge.relationType === relationType;
+									return (
+										<MenuItem
+											text={name}
+											onClick={() => {
+												console.log('relationship change');
+											}}
+											key={relationType}
+											icon={selected ? 'tick' : 'blank'}
+										/>
+									);
+								},
+							)}
+						</MenuButton>
+						<Button
+							icon="swap-vertical"
+							onClick={() => console.log('direction change')}
+						>
+							Direction: direction dropdown
+						</Button>
+					</>
+				)}{' '}
 				<div>Type: connection type dropdown</div>
 				<div>Direction: direction dropdown</div>
 				<div style={{ backgroundColor: 'orchid' }}>

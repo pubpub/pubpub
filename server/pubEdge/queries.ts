@@ -48,6 +48,10 @@ export const createPubEdge = async ({
 	});
 };
 
+export const getPubEdgeById = (pubEdgeId: string) => {
+	return PubEdge.findByPk(pubEdgeId);
+};
+
 export const updatePubEdge = async ({ pubEdgeId, ...update }) => {
 	const edge = await PubEdge.findOne({
 		where: { id: pubEdgeId },
