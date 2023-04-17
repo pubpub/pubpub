@@ -37,7 +37,7 @@ const ControlsLink = (props: Props) => {
 	} = props;
 
 	const { communityData } = usePageContext();
-	const { inPub, pubData } = usePubContext();
+	const { inPub, pubData, updatePubData } = usePubContext();
 
 	const [href, setHref] = useState(activeLink.attrs.href);
 	const [target, setTarget] = useState(activeLink.attrs.target);
@@ -83,6 +83,7 @@ const ControlsLink = (props: Props) => {
 		const obj = outboundEdges.find((outboundEdge) => {
 			return outboundEdge.externalPublication?.url === href;
 		});
+		console.log('is an edge', isExistingEdge && obj);
 		if (isExistingEdge && obj) {
 			setExisitingEdgeEdge(obj);
 			setCheckedCreateConnection(true);
@@ -119,6 +120,7 @@ const ControlsLink = (props: Props) => {
 
 	const createConnection = (edge: PubEdge) => {
 		setIsCreatingEdge(true);
+		console.log('Edge', edge);
 		pendingPromise(
 			apiFetch.post('/api/pubEdges', {
 				...edge,
@@ -127,10 +129,11 @@ const ControlsLink = (props: Props) => {
 				targetPub: undefined,
 			}),
 		)
-			.then((createdEdge: PubEdge) => {
+			.then((createdEdge: OutboundEdge) => {
 				setProposedItem(null);
-				setIsCreatingEdge(false);
 				addCreatedOutboundEdge(createdEdge);
+				updatePubData({ outboundEdges: [...outboundEdges, createdEdge] });
+				setIsCreatingEdge(false);
 			})
 			.catch((err: Error) => {
 				setProposedItem(null);
@@ -154,6 +157,7 @@ const ControlsLink = (props: Props) => {
 	};
 
 	const setConnectionToCreate = (item: SuggestedItem) => {
+		console.log('Item: ', item);
 		if (
 			'externalPublication' in item &&
 			item.externalPublication &&
@@ -181,33 +185,23 @@ const ControlsLink = (props: Props) => {
 		}
 	};
 
-	// two ways of getting known link
-	// rn we only are handling urls
-	// if the link is already a connection: we check for obj with val === href
-	// if so we delete it be grabbing the entire obj matching href and passingh to removeconnection
-
-	// if we want to delete the link we just made, simply call delete on newEdge
-
 	const handleConnection = () => {
 		if (checkedCreateConnection) {
+			console.log(exisitingEdge ? 'deleting existing edge' : 'delting newEdge');
 			removeOutboundEdge(exisitingEdge || newEdge);
 			setProposedItem(null);
 			setCheckedCreateConnection(false);
 		} else if (isUrl(href) || isDoi(href)) {
 			setProposedItem({ indeterminate: true });
-			apiFetch
-				.get(`/api/pubEdgeProposal?object=${encodeURIComponent(href)}`)
-				.then((res) => {
-					if (res) {
-						setProposedItem(res);
-					} else {
-						setProposedItem({ createNewFromUrl: href });
-					}
-				})
-				.then(() => {
-					console.log(proposedItem);
-					if (proposedItem) setConnectionToCreate(proposedItem);
-				});
+			apiFetch.get(`/api/pubEdgeProposal?object=${encodeURIComponent(href)}`).then((res) => {
+				if (res) {
+					setProposedItem(res);
+				} else {
+					setProposedItem({ createNewFromUrl: href });
+				}
+			});
+			console.log('Proposing but y null: ', proposedItem);
+			if (proposedItem) setConnectionToCreate(proposedItem);
 			setCheckedCreateConnection(true);
 		}
 	};
