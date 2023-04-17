@@ -1,17 +1,16 @@
 import passport from 'passport';
-import app from 'server/server';
+import app, { wrap } from 'server/server';
 import { User } from 'server/models';
 import { isDevelopment } from 'utils/environment';
 
 app.get(
 	'/auth/zotero',
-	(req, res, next) => {
+	wrap(async (req) => {
 		if (req.user) {
 			const authRedirectHost = req.get('host');
 			User.update({ authRedirectHost }, { where: { id: req.user.id } });
 		}
-		next();
-	},
+	}),
 	passport.authenticate('zotero', { state: 'test' }),
 );
 
