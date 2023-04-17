@@ -11,7 +11,10 @@ import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { ExternalPublication, InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
-import { RelationType } from 'utils/pubEdge';
+import {
+	createCandidateEdge,
+	stripMarkupFromString,
+} from 'containers/DashboardEdges/NewEdgeEditor';
 import { assert } from 'utils/assert';
 
 type Props = {
@@ -24,9 +27,9 @@ type Props = {
 
 type SuggestedItem =
 	| {
-		targetPub?: Pub;
-		externalPublication?: ExternalPublication;
-	}
+			targetPub?: Pub;
+			externalPublication?: ExternalPublication;
+	  }
 	| { indeterminate: true }
 	| { createNewFromUrl: string };
 
@@ -78,7 +81,6 @@ const ControlsLink = (props: Props) => {
 	}, [href]);
 
 	useEffect(() => {
-		// sets true if href is a url on connection
 		const isExistingEdge = outboundEdges.some((obj) => obj.externalPublication?.url === href);
 		const obj = outboundEdges.find((outboundEdge) => {
 			return outboundEdge.externalPublication?.url === href;
@@ -110,17 +112,9 @@ const ControlsLink = (props: Props) => {
 		activeLink.updateAttrs({ target });
 	};
 
-	const createCandidateEdge = (resource, relationType = RelationType.Reply) => {
-		return {
-			relationType,
-			pubIsParent: true,
-			...resource,
-		};
-	};
-
 	const createConnection = (edge: PubEdge) => {
 		setIsCreatingEdge(true);
-		console.log('Edge', edge);
+		console.log('Edge: ', edge);
 		pendingPromise(
 			apiFetch.post('/api/pubEdges', {
 				...edge,
@@ -142,42 +136,25 @@ const ControlsLink = (props: Props) => {
 			});
 	};
 
-	const handleCreateEdge = () => {
-		assert(newEdge !== null);
-		createConnection(newEdge);
-	};
-
-	const stripMarkupFromString = (string) => {
-		if (string) {
-			const div = document.createElement('div');
-			div.innerHTML = string;
-			return div.innerText;
-		}
-		return string;
-	};
-
-	const setConnectionToCreate = (item: SuggestedItem) => {
-		console.log('Item: ', item);
+	const setConnectionToCreate = (item) => {
 		if (
 			'externalPublication' in item &&
 			item.externalPublication &&
 			item.externalPublication.title
 		) {
-			const { externalPublication } = item;
 			setNewEdge(
 				createCandidateEdge({
 					externalPublication: {
-						...externalPublication,
-						description: stripMarkupFromString(externalPublication.description),
+						...item.externalPublication,
+						description: stripMarkupFromString(item.externalPublication.description),
 					},
 				}),
 			);
 		} else if ('createNewFromUrl' in item && item.createNewFromUrl) {
-			const { createNewFromUrl } = item;
 			setNewEdge(
 				createCandidateEdge({
 					externalPublication: {
-						url: createNewFromUrl,
+						url: item.createNewFromUrl,
 						contributors: [],
 					},
 				}),
@@ -185,11 +162,20 @@ const ControlsLink = (props: Props) => {
 		}
 	};
 
+	console.log('New Edge', newEdge);
+	const handleCreateEdge = () => {
+		setConnectionToCreate(proposedItem);
+		console.log('assert called b4 newedge');
+		assert(newEdge !== null);
+		// createConnection(newEdge);
+	};
+
 	const handleConnection = () => {
 		if (checkedCreateConnection) {
 			console.log(exisitingEdge ? 'deleting existing edge' : 'delting newEdge');
 			removeOutboundEdge(exisitingEdge || newEdge);
 			setProposedItem(null);
+			setNewEdge(null);
 			setCheckedCreateConnection(false);
 		} else if (isUrl(href) || isDoi(href)) {
 			setProposedItem({ indeterminate: true });
@@ -200,8 +186,7 @@ const ControlsLink = (props: Props) => {
 					setProposedItem({ createNewFromUrl: href });
 				}
 			});
-			console.log('Proposing but y null: ', proposedItem);
-			if (proposedItem) setConnectionToCreate(proposedItem);
+
 			setCheckedCreateConnection(true);
 		}
 	};
