@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { Button, AnchorButton, InputGroup, Checkbox, Icon, MenuItem } from '@blueprintjs/core';
-
+import { Select } from '@blueprintjs/select';
 import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { pubUrl } from 'utils/canonicalUrls';
@@ -11,7 +11,6 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
 import { createCandidateEdge } from 'containers/DashboardEdges/NewEdgeEditor';
 import { assert } from 'utils/assert';
-import { MenuButton } from 'client/components/Menu';
 import { relationTypeDefinitions } from 'utils/pubEdge';
 
 type Props = {
@@ -50,6 +49,7 @@ const ControlsLink = (props: Props) => {
 		if (activeLink.attrs.pubEdgeId) {
 			pendingPromise(apiFetch.get(`/api/pubEdges/${activeLink.attrs.pubEdgeId}`))
 				.then((res) => {
+					console.log(res);
 					setPubEdge(res);
 				})
 				.catch(() => {
@@ -110,8 +110,8 @@ const ControlsLink = (props: Props) => {
 		)
 			.then((createdEdge: OutboundEdge) => {
 				addCreatedOutboundEdge(createdEdge);
-				setPubEdge(createdEdge);
 				activeLink.updateAttrs({ pubEdgeId: createdEdge.id });
+				setPubEdge(createdEdge);
 				setIsCreatingEdge(false);
 			})
 			.catch((err: Error) => {
@@ -125,6 +125,7 @@ const ControlsLink = (props: Props) => {
 		createConnection(pubEdge);
 	};
 
+	console.log('edge being deleted', pubEdge);
 	const handleConnection = () => {
 		if (pubEdge) {
 			removeOutboundEdge(pubEdge);
@@ -134,7 +135,6 @@ const ControlsLink = (props: Props) => {
 			pendingPromise(
 				apiFetch.get(`/api/pubEdgeProposal?object=${encodeURIComponent(href)}`),
 			).then((res) => {
-				console.log(res);
 				setPubEdge(
 					createCandidateEdge({
 						targetPub: res.targetPub,
@@ -145,80 +145,28 @@ const ControlsLink = (props: Props) => {
 		}
 	};
 
-	// const renderNewEdgeControls = () => {
-	// 	assert(pubEdge !== null);
-	// 	const { externalPublication, targetPub } = pubEdge;
-	// 	const canCreateEdge = targetPub || (externalPublication && externalPublication.title);
-	// 	return (
-	// 		<div className="new-edge-controls">
-	// 			<div className="controls-row">
-	// 				<MenuButton
-	// 					aria-label="Select relationship type"
-	// 					buttonProps={{
-	// 						rightIcon: 'chevron-down',
-	// 						// @ts-expect-error ts-migrate(2322) FIXME: Type '{ rightIcon: string; children: string; }' is... Remove this comment to see the full error message
-	// 						children: `Type: ${currentRelationName}`,
-	// 					}}
-	// 				>
-	// 					{Object.entries(relationTypeDefinitions).map(
-	// 						([relationType, definition]) => {
-	// 							const { name } = definition;
-	// 							const selected = pubEdge.relationType === relationType;
-	// 							return (
-	// 								<MenuItem
-	// 									text={name}
-	// 									onClick={() => handleEdgeRelationTypeChange(relationType)}
-	// 									key={relationType}
-	// 									icon={selected ? 'tick' : 'blank'}
-	// 								/>
-	// 							);
-	// 						},
-	// 					)}
-	// 				</MenuButton>
-	// 				<Button icon="swap-vertical" onClick={handleEdgeDirectionSwitch}>
-	// 					Switch direction
-	// 				</Button>
-	// 			</div>
-	// 			<PubEdgeListingCard
-	// 				isInboundEdge={false}
-	// 				pubEdge={pubEdge}
-	// 				pubEdgeDescriptionIsVisible={pubEdgeDescriptionIsVisible}
-	// 				pubEdgeElement={
-	// 					externalPublication && (
-	// 						<PubEdgeEditor
-	// 							pubEdgeDescriptionIsVisible={pubEdgeDescriptionIsVisible}
-	// 							externalPublication={externalPublication}
-	// 							onUpdateExternalPublication={(update) =>
-	// 								onChange({
-	// 									...pubEdge,
-	// 									externalPublication: { ...externalPublication, ...update },
-	// 								})
-	// 							}
+	// {pubEdge && (
+	// 	<>
+	// 		<div aria-label="Type: connection type dropdown">
+	// 			{Object.entries(relationTypeDefinitions).map(
+	// 				([relationType, definition]) => {
+	// 					const { name } = definition;
+	// 					const selected = pubEdge.relationType === relationType;
+	// 					return (
+	// 						<MenuItem
+	// 							text={name}
+	// 							onClick={() => {
+	// 								console.log('relationship change');
+	// 							}}
+	// 							key={relationType}
+	// 							icon={selected ? 'tick' : 'blank'}
 	// 						/>
-	// 					)
-	// 				}
-	// 			/>
-	// 			{error && (
-	// 				<Callout intent="warning" className="error-callout">
-	// 					There was an error creating this Pub connection.
-	// 				</Callout>
+	// 					);
+	// 				},
 	// 			)}
-	// 			<div className="controls-row">
-	// 				<Button className="cancel-button" onClick={onCancel}>
-	// 					Cancel
-	// 				</Button>
-	// 				<Button
-	// 					intent="primary"
-	// 					onClick={handleCreateEdge}
-	// 					loading={loading}
-	// 					disabled={!canCreateEdge}
-	// 				>
-	// 					{saveButtonLabel ?? 'Add connection'}
-	// 				</Button>
-	// 			</div>
 	// 		</div>
-	// 	);
-	// };
+	// 	</>
+	// )}
 
 	function ControlsLinkPopover() {
 		return (
@@ -234,47 +182,49 @@ const ControlsLink = (props: Props) => {
 					checked={!!pubEdge}
 					disabled={isCreatingEdge}
 				/>
+
 				{pubEdge && (
 					<>
-						<MenuButton
-							aria-label="Type: connection type dropdown"
-							buttonProps={{
-								rightIcon: 'chevron-down',
-							}}
-						>
-							{Object.entries(relationTypeDefinitions).map(
-								([relationType, definition]) => {
+						<div style={{ backgroundColor: 'orchid' }}>
+							Connection Type:
+							<Select
+								items={Object.values(relationTypeDefinitions)}
+								itemRenderer={(definition, { handleClick }) => {
 									const { name } = definition;
-									const selected = pubEdge.relationType === relationType;
 									return (
-										<MenuItem
-											text={name}
-											onClick={() => {
-												console.log('relationship change');
-											}}
-											key={relationType}
-											icon={selected ? 'tick' : 'blank'}
-										/>
+										<MenuItem key={name} onClick={handleClick} text={name} />
 									);
-								},
-							)}
-						</MenuButton>
-						<Button
-							icon="swap-vertical"
-							onClick={() => console.log('direction change')}
-						>
-							Direction: direction dropdown
-						</Button>
+								}}
+								onItemSelect={() => {
+									console.log('role');
+								}}
+								filterable={false}
+							>
+								<Button text="Relationship" />
+							</Select>
+						</div>
+						<div style={{ backgroundColor: 'orchid' }}>
+							Direction:
+							<Button
+								icon="swap-vertical"
+								onClick={() => console.log('direction change')}
+							>
+								Switch direction
+							</Button>
+						</div>
+						<div style={{ backgroundColor: 'orchid' }}>
+							<Icon icon="info-sign" /> Preview
+							<Button
+								title="Save Connection"
+								minimal
+								icon="tick"
+								onClick={handleCreateEdge}
+							>
+								Save Connection
+							</Button>
+						</div>
 					</>
-				)}{' '}
-				<div>Type: connection type dropdown</div>
-				<div>Direction: direction dropdown</div>
-				<div style={{ backgroundColor: 'orchid' }}>
-					<Icon icon="info-sign" /> Preview
-					<Button title="Save Connection" minimal icon="tick" onClick={handleCreateEdge}>
-						Save Connection
-					</Button>
-				</div>
+				)}
 			</div>
 		);
 	}
