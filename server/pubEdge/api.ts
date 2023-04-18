@@ -13,7 +13,7 @@ app.get(
 	'/api/pubEdges/:id',
 	wrap(async (req, res) => {
 		const edgeId = req.params.id;
-		const edge = getPubEdgeById(edgeId);
+		const edge = await getPubEdgeById(edgeId);
 
 		if (edge) {
 			res.status(200).json(edge);
@@ -104,7 +104,6 @@ app.delete(
 	wrap(async (req, res) => {
 		const { pubEdgeId } = req.body;
 		const userId = req.user.id;
-		console.log(req.body, 'ody ody ody ody ody ody odyody ody ody dody ody ody');
 		const canDestroyEdge = await canUpdateOrDestroyPubEdge({
 			pubEdgeId,
 			userId,

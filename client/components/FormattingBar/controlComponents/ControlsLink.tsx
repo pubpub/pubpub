@@ -41,7 +41,7 @@ const ControlsLink = (props: Props) => {
 	const [debouncedHref] = useDebounce(href, 250);
 	const inputRef = useRef();
 
-	const { addCreatedOutboundEdge, removeOutboundEdge } = useDashboardEdges(
+	const { addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } = useDashboardEdges(
 		pubData as Pub & { outboundEdges: OutboundEdge[]; inboundEdges: InboundEdge[] },
 	);
 
@@ -49,14 +49,14 @@ const ControlsLink = (props: Props) => {
 		if (activeLink.attrs.pubEdgeId) {
 			pendingPromise(apiFetch.get(`/api/pubEdges/${activeLink.attrs.pubEdgeId}`))
 				.then((res) => {
-					console.log(res);
 					setPubEdge(res);
 				})
 				.catch(() => {
 					setPubEdge(null);
+					activeLink.updateAttrs({ pubEdgeId: null });
 				});
 		}
-	}, [activeLink.attrs.pubEdgeId, pendingPromise]);
+	}, [activeLink, pendingPromise]);
 
 	const setHashOrUrl = (value: string) => {
 		if (inPub) {
@@ -125,7 +125,6 @@ const ControlsLink = (props: Props) => {
 		createConnection(pubEdge);
 	};
 
-	console.log('edge being deleted', pubEdge);
 	const handleConnection = () => {
 		if (pubEdge) {
 			removeOutboundEdge(pubEdge);
@@ -168,6 +167,39 @@ const ControlsLink = (props: Props) => {
 	// 	</>
 	// )}
 
+	const renderButt = () => (
+		<div style={{ backgroundColor: 'orchid' }}>
+			Connection Type:
+			<Select
+				items={Object.values(relationTypeDefinitions)}
+				itemRenderer={(definition, { handleClick }) => {
+					const { name } = definition;
+					return <MenuItem key={name} onClick={handleClick} text={name} />;
+				}}
+				onItemSelect={() => {
+					console.log('role');
+				}}
+				filterable={false}
+			>
+				<Button text="Relationship" />
+			</Select>
+		</div>
+	);
+
+	const handleDirection = () => {
+		assert(pubEdge != null);
+		if (activeLink.attrs.pubEdgeId) {
+			updateOutboundEdge({
+				...pubEdge,
+				pubIsParent: !pubEdge.pubIsParent,
+			});
+		} else {
+			setPubEdge({
+				...pubEdge,
+				pubIsParent: !pubEdge.pubIsParent,
+			});
+		}
+	};
 	function ControlsLinkPopover() {
 		return (
 			<div>
@@ -185,35 +217,14 @@ const ControlsLink = (props: Props) => {
 
 				{pubEdge && (
 					<>
-						<div style={{ backgroundColor: 'orchid' }}>
-							Connection Type:
-							<Select
-								items={Object.values(relationTypeDefinitions)}
-								itemRenderer={(definition, { handleClick }) => {
-									const { name } = definition;
-									return (
-										<MenuItem key={name} onClick={handleClick} text={name} />
-									);
-								}}
-								onItemSelect={() => {
-									console.log('role');
-								}}
-								filterable={false}
-							>
-								<Button text="Relationship" />
-							</Select>
-						</div>
+						{renderButt()}
 						<div style={{ backgroundColor: 'orchid' }}>
 							Direction:
-							<Button
-								icon="swap-vertical"
-								onClick={() => console.log('direction change')}
-							>
+							<Button icon="swap-vertical" onClick={handleDirection}>
 								Switch direction
 							</Button>
 						</div>
 						<div style={{ backgroundColor: 'orchid' }}>
-							<Icon icon="info-sign" /> Preview
 							<Button
 								title="Save Connection"
 								minimal
@@ -223,6 +234,7 @@ const ControlsLink = (props: Props) => {
 								Save Connection
 							</Button>
 						</div>
+						<Icon icon="info-sign" /> Preview
 					</>
 				)}
 			</div>
