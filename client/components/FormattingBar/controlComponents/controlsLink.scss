@@ -1,3 +1,4 @@
+// @import 'styles/variables.scss';
 @use 'styles/vendor.scss';
 
 $bp: vendor.$bp-namespace;
@@ -6,13 +7,16 @@ $bp: vendor.$bp-namespace;
 	display: flex;
 	flex-direction: column;
 
-	.controls-row {
+	.controls-col {
 		margin-bottom: 20px;
-		margin-left: 10px;
+	}
+
+	.control-row {
+		padding-bottom: 10px;
 	}
 
 	.pub-edge {
-		margin-top: 15px;
+		margin-top: 25px;
 		background-color: white;
 		> .pub-edge-listing-card-component > .relation {
 			color: black;

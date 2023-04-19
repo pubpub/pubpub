@@ -204,6 +204,7 @@ const ControlsLink = (props: Props) => {
 				// @ts-expect-error ts-migrate(2322) FIXME: Type '{ rightIcon: string; children: string; }' is... Remove this comment to see the full error message
 				children: `Type: ${currentRelationName}`,
 			}}
+			className="buttons"
 		>
 			{Object.entries(relationTypeDefinitions).map(([relationType, definition]) => {
 				const { name } = definition;
@@ -223,7 +224,7 @@ const ControlsLink = (props: Props) => {
 
 	function ControlsLinkOptions() {
 		return (
-			<div>
+			<div className="connection">
 				<Checkbox
 					label="Open in new tab"
 					checked={checkedOpenInNewTab}
@@ -238,29 +239,34 @@ const ControlsLink = (props: Props) => {
 				/>
 				{pubEdge && (
 					<>
-						<div className="controls-row">
-							<div>Type: {renderRelationshipButton()}</div>
-							<div>
-								Direction:
-								<Button
-									className="buttons"
-									icon="swap-vertical"
-									onClick={handleDirection}
-								>
-									Switch direction
-								</Button>
+						<div className="controls-col">
+							<div className="control-row">
+								<div>Type: {renderRelationshipButton()}</div>
+								<div>
+									Direction:{' '}
+									<Button
+										className="buttons"
+										icon="swap-vertical"
+										onClick={handleDirection}
+									>
+										Switch direction
+									</Button>
+								</div>
 							</div>
-							<div>
-								<Button
-									className="buttons"
-									title="Save Connection"
-									minimal
-									icon="tick"
-									onClick={handleCreateEdge}
-								>
-									Save Connection
-								</Button>
+							<div className="control-row">
+								<div>
+									<Button
+										className="buttons"
+										title="Save Connection"
+										minimal
+										icon="tick"
+										onClick={handleCreateEdge}
+									>
+										Save Connection
+									</Button>
+								</div>
 							</div>
+
 							<div>
 								<Icon icon="info-sign" /> Preview &nbsp;
 							</div>
