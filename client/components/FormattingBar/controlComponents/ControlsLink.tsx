@@ -43,12 +43,11 @@ const ControlsLink = (props: Props) => {
 	const { inPub, pubData } = usePubContext();
 
 	const [href, setHref] = useState(activeLink.attrs.href);
-	const [target, setTarget] = useState(activeLink.attrs.target);
 	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const [errorCreatingEdge, setErrorCreatingEdge] = useState<string>();
 	const [pubEdge, setPubEdge] = useState<PubEdge | null>(null);
-
+	const [isLoadingAttr, setIsLoadingAttr] = useState(false);
 	const { pendingPromise } = usePendingChanges();
 
 	const [debouncedHref] = useDebounce(href, 250);
@@ -57,6 +56,15 @@ const ControlsLink = (props: Props) => {
 	const { addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } = useDashboardEdges(
 		pubData as Pub & { outboundEdges: OutboundEdge[]; inboundEdges: InboundEdge[] },
 	);
+
+	const setHashOrUrl = (value: string) => {
+		if (inPub) {
+			const basePubUrl = pubUrl(communityData, pubData);
+			const hashMatches = value.match(`^${basePubUrl}(.*)?#(.*)$`);
+			setHref(hashMatches ? `#${hashMatches[2]}` : value);
+		}
+		setHref(value);
+	};
 
 	useEffect(() => {
 		if (activeLink.attrs.pubEdgeId) {
@@ -70,15 +78,6 @@ const ControlsLink = (props: Props) => {
 				});
 		}
 	}, [activeLink, pendingPromise]);
-
-	const setHashOrUrl = (value: string) => {
-		if (inPub) {
-			const basePubUrl = pubUrl(communityData, pubData);
-			const hashMatches = value.match(`^${basePubUrl}(.*)?#(.*)$`);
-			setHref(hashMatches ? `#${hashMatches[2]}` : value);
-		}
-		setHref(value);
-	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => activeLink.updateAttrs({ href: debouncedHref }), [debouncedHref]);
@@ -107,8 +106,11 @@ const ControlsLink = (props: Props) => {
 	const checkedOpenInNewTab = activeLink.attrs.target === '_blank';
 
 	const handleLinkAttr = () => {
-		setTarget(activeLink.attrs.target === '_blank' ? '_self' : '_blank');
-		activeLink.updateAttrs({ target });
+		setIsLoadingAttr(true);
+		activeLink.updateAttrs({
+			target: activeLink.attrs.target === '_blank' ? '_self' : '_blank',
+		});
+		setIsLoadingAttr(false);
 	};
 
 	const createConnection = (edge: PubEdge) => {
@@ -225,6 +227,7 @@ const ControlsLink = (props: Props) => {
 					label="Open in new tab"
 					checked={checkedOpenInNewTab}
 					onChange={handleLinkAttr}
+					disabled={isLoadingAttr}
 				/>
 				<Checkbox
 					label={errorCreatingEdge || 'Create a pub connection for this url'}
@@ -232,7 +235,6 @@ const ControlsLink = (props: Props) => {
 					checked={!!pubEdge}
 					disabled={isCreatingEdge}
 				/>
-
 				{pubEdge && (
 					<>
 						<div className="controls-row">
@@ -291,7 +293,7 @@ const ControlsLink = (props: Props) => {
 					small
 					minimal
 					title="Options"
-					icon="chevron-up"
+					icon="chevron-down"
 					onClick={() => setIsOpen(!isOpen)}
 				/>
 				<Button

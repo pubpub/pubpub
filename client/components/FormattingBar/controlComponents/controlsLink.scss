@@ -6,13 +6,13 @@ $bp: vendor.$bp-namespace;
 	display: flex;
 	flex-direction: column;
 
-	.buttons {
-		background-color: white;
-		color: black;
+	.controls-row {
+		margin-bottom: 20px;
+		margin-left: 10px;
 	}
 
 	.pub-edge {
-		margin-top: 24px;
+		margin-top: 15px;
 		background-color: white;
 		> .pub-edge-listing-card-component > .relation {
 			color: black;
