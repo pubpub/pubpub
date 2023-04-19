@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, AnchorButton, InputGroup } from '@blueprintjs/core';
 import { useDebounce } from 'use-debounce';
-
 import {
 	Button,
 	AnchorButton,
