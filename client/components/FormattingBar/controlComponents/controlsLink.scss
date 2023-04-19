@@ -14,7 +14,7 @@ $bp: vendor.$bp-namespace;
     .pub-edge {
         margin-top: 24px;
         background-color: white;
-        &.relation {
+        >.pub-edge-listing-card-component > .relation{
             color: black;
         }
     }

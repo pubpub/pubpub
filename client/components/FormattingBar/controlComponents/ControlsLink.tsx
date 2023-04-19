@@ -114,6 +114,7 @@ const ControlsLink = (props: Props) => {
 		)
 			.then((createdEdge: OutboundEdge) => {
 				addCreatedOutboundEdge(createdEdge);
+
 				activeLink.updateAttrs({ pubEdgeId: createdEdge.id });
 				setPubEdge(createdEdge);
 				setIsCreatingEdge(false);
