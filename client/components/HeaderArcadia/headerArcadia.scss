@@ -1,0 +1,46 @@
+$arcadia-seafoam: #f9fcf0;
+$arcadia-charcoal: #484b50;
+
+.arcadia-header-component {
+  position: sticky;
+  background-color: $arcadia-seafoam;
+  border-bottom: 1px solid $arcadia-charcoal;
+
+  .container {
+    display: flex;
+    height: 90px;
+    align-items: center;
+
+    .logo {
+      flex: 1;
+      img {
+        color: $arcadia-charcoal;
+      }
+    }
+  
+    nav {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+  
+      > ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        display: flex;
+        gap: 15px;
+        line-height: 30px;
+
+        > li {
+          > a {
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+}
