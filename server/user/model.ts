@@ -38,6 +38,7 @@ export default (sequelize, dataTypes) => {
 					isLowercase: true,
 				},
 			},
+			authRedirectHost: { type: dataTypes.TEXT },
 			location: { type: dataTypes.TEXT },
 			website: { type: dataTypes.TEXT },
 			facebook: { type: dataTypes.TEXT },
@@ -58,7 +59,12 @@ export default (sequelize, dataTypes) => {
 		{
 			classMethods: {
 				associate: (models) => {
-					const { PubAttribution, Discussion, UserNotificationPreferences } = models;
+					const {
+						PubAttribution,
+						Discussion,
+						UserNotificationPreferences,
+						zoteroIntegration,
+					} = models;
 					User.hasMany(PubAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
@@ -73,6 +79,9 @@ export default (sequelize, dataTypes) => {
 						onDelete: 'CASCADE',
 						as: 'userNotificationPreferences',
 						foreignKey: 'userId',
+					});
+					User.hasOne(zoteroIntegration, {
+						foreignKey: { name: 'userId', allowNull: false },
 					});
 				},
 			},
