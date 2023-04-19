@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { Button, AnchorButton, InputGroup, Checkbox, Icon, MenuItem } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
+// import { Select } from '@blueprintjs/select';
 import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { pubUrl } from 'utils/canonicalUrls';
@@ -12,6 +12,10 @@ import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboard
 import { createCandidateEdge } from 'containers/DashboardEdges/NewEdgeEditor';
 import { assert } from 'utils/assert';
 import { relationTypeDefinitions } from 'utils/pubEdge';
+import { MenuButton } from 'client/components/Menu';
+import { PubEdgeListingCard } from 'components';
+
+require('./controlsLink.scss');
 
 type Props = {
 	editorChangeObject: {
@@ -144,48 +148,6 @@ const ControlsLink = (props: Props) => {
 		}
 	};
 
-	// {pubEdge && (
-	// 	<>
-	// 		<div aria-label="Type: connection type dropdown">
-	// 			{Object.entries(relationTypeDefinitions).map(
-	// 				([relationType, definition]) => {
-	// 					const { name } = definition;
-	// 					const selected = pubEdge.relationType === relationType;
-	// 					return (
-	// 						<MenuItem
-	// 							text={name}
-	// 							onClick={() => {
-	// 								console.log('relationship change');
-	// 							}}
-	// 							key={relationType}
-	// 							icon={selected ? 'tick' : 'blank'}
-	// 						/>
-	// 					);
-	// 				},
-	// 			)}
-	// 		</div>
-	// 	</>
-	// )}
-
-	const renderButt = () => (
-		<div style={{ backgroundColor: 'orchid' }}>
-			Connection Type:
-			<Select
-				items={Object.values(relationTypeDefinitions)}
-				itemRenderer={(definition, { handleClick }) => {
-					const { name } = definition;
-					return <MenuItem key={name} onClick={handleClick} text={name} />;
-				}}
-				onItemSelect={() => {
-					console.log('role');
-				}}
-				filterable={false}
-			>
-				<Button text="Relationship" />
-			</Select>
-		</div>
-	);
-
 	const handleDirection = () => {
 		assert(pubEdge != null);
 		if (activeLink.attrs.pubEdgeId) {
@@ -200,7 +162,53 @@ const ControlsLink = (props: Props) => {
 			});
 		}
 	};
-	function ControlsLinkPopover() {
+
+	const handleEdgeRelationTypeChange = (relationType: string) => {
+		assert(pubEdge != null);
+		if (activeLink.attrs.pubEdgeId) {
+			updateOutboundEdge({
+				...pubEdge,
+				relationType,
+			});
+		} else {
+			setPubEdge({
+				...pubEdge,
+				relationType,
+			});
+		}
+	};
+
+	const currentRelationName =
+		pubEdge &&
+		relationTypeDefinitions[pubEdge.relationType] &&
+		relationTypeDefinitions[pubEdge.relationType].name;
+
+	const renderRelationshipButton = () => (
+		<MenuButton
+			aria-label="Select relationship type"
+			buttonProps={{
+				rightIcon: 'chevron-down',
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '{ rightIcon: string; children: string; }' is... Remove this comment to see the full error message
+				children: `Type: ${currentRelationName}`,
+			}}
+		>
+			{Object.entries(relationTypeDefinitions).map(([relationType, definition]) => {
+				const { name } = definition;
+				assert(pubEdge != null);
+				const selected = pubEdge.relationType === relationType;
+				return (
+					<MenuItem
+						text={name}
+						onClick={() => handleEdgeRelationTypeChange(relationType)}
+						key={relationType}
+						icon={selected ? 'tick' : 'blank'}
+					/>
+				);
+			})}
+		</MenuButton>
+	);
+
+	function ControlsLinkOptions() {
 		return (
 			<div>
 				<Checkbox
@@ -217,24 +225,41 @@ const ControlsLink = (props: Props) => {
 
 				{pubEdge && (
 					<>
-						{renderButt()}
-						<div style={{ backgroundColor: 'orchid' }}>
-							Direction:
-							<Button icon="swap-vertical" onClick={handleDirection}>
-								Switch direction
-							</Button>
+						<div className="controls-row">
+							<div>Type: {renderRelationshipButton()}</div>
+							<div>
+								Direction:
+								<Button
+									className="buttons"
+									icon="swap-vertical"
+									onClick={handleDirection}
+								>
+									Switch direction
+								</Button>
+							</div>
+							<div>
+								<Button
+									className="buttons"
+									title="Save Connection"
+									minimal
+									icon="tick"
+									onClick={handleCreateEdge}
+								>
+									Save Connection
+								</Button>
+							</div>
+							<div>
+								<Icon icon="info-sign" /> Preview &nbsp;
+							</div>
 						</div>
-						<div style={{ backgroundColor: 'orchid' }}>
-							<Button
-								title="Save Connection"
-								minimal
-								icon="tick"
-								onClick={handleCreateEdge}
-							>
-								Save Connection
-							</Button>
+						<div className="pub-edge">
+							<PubEdgeListingCard
+								inPubBody={true}
+								isInboundEdge={false}
+								pubEdge={pubEdge}
+								pubEdgeDescriptionIsVisible={false}
+							/>
 						</div>
-						<Icon icon="info-sign" /> Preview
 					</>
 				)}
 			</div>
@@ -242,7 +267,7 @@ const ControlsLink = (props: Props) => {
 	}
 
 	return (
-		<div className="controls-link-component" style={{ flexDirection: 'column' }}>
+		<div className="controls-link-component">
 			<InputGroup
 				placeholder="Enter a URL"
 				value={href}
@@ -252,15 +277,7 @@ const ControlsLink = (props: Props) => {
 				inputRef={inputRef}
 			/>
 			<div>
-				<AnchorButton small minimal title="Visit URL" icon="chevron-up" />
-				<AnchorButton
-					small
-					minimal
-					title="Optiona"
-					icon="share"
-					href={href}
-					target="_blank"
-				/>
+				<AnchorButton small minimal title="Options" icon="chevron-up" />
 				<Button
 					small
 					minimal
@@ -268,8 +285,16 @@ const ControlsLink = (props: Props) => {
 					icon="disable"
 					onClick={activeLink.removeLink}
 				/>
+				<AnchorButton
+					small
+					minimal
+					title="Visit URL"
+					icon="share"
+					href={href}
+					target="_blank"
+				/>
 			</div>
-			<ControlsLinkPopover />
+			<ControlsLinkOptions />
 		</div>
 	);
 };

@@ -1,0 +1,21 @@
+@use 'styles/vendor.scss';
+
+$bp: vendor.$bp-namespace;
+
+.controls-link-component {
+    display: flex;
+    flex-direction: column;
+
+    .buttons {
+        background-color: white;
+        color: black;
+    }
+    
+    .pub-edge {
+        margin-top: 24px;
+        background-color: white;
+        &.relation {
+            color: black;
+        }
+    }
+}
