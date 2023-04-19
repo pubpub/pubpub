@@ -9,6 +9,7 @@ import {
 	MenuItem,
 	Collapse,
 } from '@blueprintjs/core';
+import { useUpdateEffect } from 'react-use';
 
 import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
@@ -80,7 +81,7 @@ const ControlsLink = (props: Props) => {
 	}, [activeLink, pendingPromise]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useEffect(() => activeLink.updateAttrs({ href: debouncedHref }), [debouncedHref]);
+	useUpdateEffect(() => activeLink.updateAttrs({ href: debouncedHref }), [debouncedHref]);
 
 	useEffect(() => {
 		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
