@@ -117,7 +117,6 @@ function linkRule(markType: MarkType) {
 			if (!resolvedStart.parent.type.allowsMarkType(markType)) return state.tr;
 			const attrs = { type: match[2] === '@' ? 'email' : 'uri' };
 			const link = match[0].substring(0, match[0].length - 1);
-			console.log(link);
 			const linkAttrs =
 				attrs.type === 'email'
 					? { href: 'mailto:' + link }
