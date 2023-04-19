@@ -5,9 +5,9 @@ import { knex } from 'knex';
 import { createSequelizeModelsFromFacetDefinitions } from './facets/create';
 
 // @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
-const useSSL = process.env.DATABASE_URL.indexOf('localhost') === -1;
+const useSSL = process.env.DATABASE_CONNECTION_POOL_URL.indexOf('localhost') === -1;
 // @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
-export const sequelize = new Sequelize(process.env.DATABASE_URL, {
+export const sequelize = new Sequelize(process.env.DATABASE_CONNECTION_POOL_URL, {
 	logging: false,
 	dialectOptions: { ssl: useSSL ? { rejectUnauthorized: false } : false },
 	pool: {
