@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import {
 	Header,
-	Footer,
+	MinimalFooter,
 	LegalBanner,
 	AccentStyle,
 	NavBar,
@@ -12,6 +12,7 @@ import {
 	MobileAware,
 	FacetsStateProvider,
 } from 'components';
+import { defaultMinimalFooterProps } from 'components/Footer/defaultMinimalFooterProps';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
 import MinimalHeader from 'client/layouts/MinimalHeader/MinimalHeader';
@@ -98,7 +99,7 @@ const App = (props: Props) => {
 						<div id="main-content" tabIndex="-1">
 							<ActiveComponent {...viewData} />
 						</div>
-						{showFooter && <Footer />}
+						{showFooter && <MinimalFooter {...defaultMinimalFooterProps} />}
 					</div>
 				</RKProvider>
 			</FacetsStateProvider>
