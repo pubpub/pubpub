@@ -14,6 +14,8 @@ import {
 } from 'components';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
+import MinimalHeader from 'client/layouts/MinimalHeader/MinimalHeader';
+import minimalHeaderData from 'client/layouts/MinimalHeader/minimalHeaderData';
 
 import SideMenu from './SideMenu';
 import Breadcrumbs from './Breadcrumbs';
@@ -35,7 +37,7 @@ type Props = {
 const App = (props: Props) => {
 	const { chunkName, initialData, viewData } = props;
 	const pageContextProps = usePageState(initialData, viewData);
-	const { communityData, locationData, scopeData } = pageContextProps;
+	const { communityData, locationData, scopeData, loginData } = pageContextProps;
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
 	const { ActiveComponent, hideNav, hideFooter, hideHeader, isDashboard } = pathObject;
@@ -46,9 +48,18 @@ const App = (props: Props) => {
 		window.__pubpub_pageContextProps__ = pageContextProps;
 	}
 
-	const showNav = !hideNav && !communityData.hideNav && !isDashboard;
+	const usingMinimalHeader = true;
+
+	const showNav = !hideNav && !communityData.hideNav && !isDashboard && !usingMinimalHeader;
 	const showFooter = !hideFooter && !isDashboard;
 	const showHeader = !hideHeader;
+
+	const header = usingMinimalHeader ? (
+		<MinimalHeader locationData={locationData} loginData={loginData} {...minimalHeaderData} />
+	) : (
+		<Header />
+	);
+
 	return (
 		<PageContext.Provider value={pageContextProps}>
 			<FacetsStateProvider
@@ -63,7 +74,7 @@ const App = (props: Props) => {
 						)}
 						<SkipLink targetId="main-content">Skip to main content</SkipLink>
 						<LegalBanner />
-						{showHeader && <Header />}
+						{showHeader && header}
 						{showNav && <NavBar />}
 						{isDashboard && (
 							<MobileAware
