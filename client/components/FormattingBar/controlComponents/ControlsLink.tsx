@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import { Button, AnchorButton, InputGroup, Checkbox, Icon, MenuItem } from '@blueprintjs/core';
-// import { Select } from '@blueprintjs/select';
+import {
+	Button,
+	AnchorButton,
+	InputGroup,
+	Checkbox,
+	Icon,
+	MenuItem,
+	Collapse,
+} from '@blueprintjs/core';
+
 import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { pubUrl } from 'utils/canonicalUrls';
@@ -37,6 +45,7 @@ const ControlsLink = (props: Props) => {
 	const [href, setHref] = useState(activeLink.attrs.href);
 	const [target, setTarget] = useState(activeLink.attrs.target);
 	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 	const [errorCreatingEdge, setErrorCreatingEdge] = useState<string>();
 	const [pubEdge, setPubEdge] = useState<PubEdge | null>(null);
 
@@ -278,7 +287,13 @@ const ControlsLink = (props: Props) => {
 				inputRef={inputRef}
 			/>
 			<div>
-				<AnchorButton small minimal title="Options" icon="chevron-up" />
+				<AnchorButton
+					small
+					minimal
+					title="Options"
+					icon="chevron-up"
+					onClick={() => setIsOpen(!isOpen)}
+				/>
 				<Button
 					small
 					minimal
@@ -295,7 +310,9 @@ const ControlsLink = (props: Props) => {
 					target="_blank"
 				/>
 			</div>
-			<ControlsLinkOptions />
+			<Collapse isOpen={isOpen} keepChildrenMounted={true}>
+				<ControlsLinkOptions />
+			</Collapse>
 		</div>
 	);
 };
