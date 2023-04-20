@@ -37,7 +37,7 @@ type Props = {
 const App = (props: Props) => {
 	const { chunkName, initialData, viewData } = props;
 	const pageContextProps = usePageState(initialData, viewData);
-	const { communityData, locationData, scopeData, loginData } = pageContextProps;
+	const { communityData, locationData, scopeData, loginData, featureFlags } = pageContextProps;
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
 	const { ActiveComponent, hideNav, hideFooter, hideHeader, isDashboard } = pathObject;
@@ -48,14 +48,14 @@ const App = (props: Props) => {
 		window.__pubpub_pageContextProps__ = pageContextProps;
 	}
 
-	const usingMinimalHeader = true;
+	const usingMinimalHeader = featureFlags['minimal-header'];
 
 	const showNav = !hideNav && !communityData.hideNav && !isDashboard && !usingMinimalHeader;
 	const showFooter = !hideFooter && !isDashboard;
 	const showHeader = !hideHeader;
 
 	const header = usingMinimalHeader ? (
-		<MinimalHeader locationData={locationData} loginData={loginData} {...minimalHeaderData} />
+		<MinimalHeader {...minimalHeaderData} locationData={locationData} loginData={loginData} />
 	) : (
 		<Header />
 	);

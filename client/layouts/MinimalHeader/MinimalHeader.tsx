@@ -11,7 +11,7 @@ type MinimalHeaderNavItem = {
 	url: string;
 };
 
-type Props = {
+type MinimalHeaderProps = {
 	logoUrl: string;
 	logoLabel: string;
 	navItems: MinimalHeaderNavItem[];
@@ -28,9 +28,18 @@ function MinimalHeaderLoginButton(props: { href: string }) {
 	);
 }
 
-export default function MinimalHeader(props: Props) {
+export default function MinimalHeader(props: MinimalHeaderProps) {
 	const isLoggedIn = Boolean(props.loginData.id);
-	const notifications = isLoggedIn ? (
+	const loginRedirectString = `?redirect=${props.locationData.path}${
+		props.locationData.queryString.length > 1 ? props.locationData.queryString : ''
+	}`;
+	const loginHref = `/login${loginRedirectString}`;
+	const user = isLoggedIn ? (
+		<UserMenu loginData={props.loginData} />
+	) : (
+		<MinimalHeaderLoginButton href={loginHref} />
+	);
+	const userNotifications = isLoggedIn ? (
 		<UserNotificationsPopover>
 			{({ hasUnreadNotifications }) =>
 				hasUnreadNotifications ? (
@@ -47,15 +56,6 @@ export default function MinimalHeader(props: Props) {
 			}
 		</UserNotificationsPopover>
 	) : null;
-	const loginRedirectString = `?redirect=${props.locationData.path}${
-		props.locationData.queryString.length > 1 ? props.locationData.queryString : ''
-	}`;
-	const loginHref = `/login${loginRedirectString}`;
-	const user = isLoggedIn ? (
-		<UserMenu loginData={props.loginData} />
-	) : (
-		<MinimalHeaderLoginButton href={loginHref} />
-	);
 
 	return (
 		<header className="minimal-header-component">
@@ -77,7 +77,7 @@ export default function MinimalHeader(props: Props) {
 								}
 							/>
 						</li>
-						{notifications}
+						{userNotifications}
 						<MobileAware desktop={<li>{user}</li>} mobile={null} />
 					</ul>
 				</nav>
