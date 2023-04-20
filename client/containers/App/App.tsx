@@ -12,7 +12,7 @@ import {
 	MobileAware,
 	FacetsStateProvider,
 } from 'components';
-import { MinimalFooter, minimalFooterData } from 'client/layouts';
+import { MinimalFooter, minimalFooterData } from 'client/layouts/MinimalFooter';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
 import MinimalHeader from 'client/layouts/MinimalHeader/MinimalHeader';
