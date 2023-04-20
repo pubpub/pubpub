@@ -8,6 +8,7 @@ import {
 	Icon,
 	MenuItem,
 	Collapse,
+	Spinner,
 } from '@blueprintjs/core';
 import { useUpdateEffect } from 'react-use';
 
@@ -49,10 +50,13 @@ const ControlsLink = (props: Props) => {
 
 	const [href, setHref] = useState(activeLink.attrs.href);
 	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
+	const [isLoadingAttr, setIsLoadingAttr] = useState(false);
+	const [isUpdatingDirection, setIsUpdatingDirection] = useState(false);
+	const [isUpdatingRelationshipType, setIsUpdatingRelationshipType] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const [errorCreatingEdge, setErrorCreatingEdge] = useState<string>();
+	const [errorUpdatingEdge, setErrorUpdatingEdge] = useState<string>();
 	const [pubEdge, setPubEdge] = useState<PubEdge | null>(null);
-	const [isLoadingAttr, setIsLoadingAttr] = useState(false);
 	const { pendingPromise } = usePendingChanges();
 
 	const [debouncedHref] = useDebounce(href, 250);
@@ -147,11 +151,33 @@ const ControlsLink = (props: Props) => {
 		assert(pubEdge !== null);
 		if (!activeLink.attrs.pubEdgeId) {
 			createConnection(pubEdge);
+		} else if (pubEdge && (isUpdatingDirection || isUpdatingRelationshipType)) {
+			setIsCreatingEdge(true);
+			pendingPromise(
+				apiFetch.put('/api/pubEdges', {
+					pubEdgeId: activeLink.attrs.pubEdgeId,
+					pubIsParent: pubEdge.pubIsParent,
+					relationType: pubEdge.relationType,
+				}),
+			)
+				.then((updatedEdge: OutboundEdge) => {
+					updateOutboundEdge(updatedEdge);
+					setPubEdge(updatedEdge);
+					setIsUpdatingRelationshipType(false);
+					setIsUpdatingDirection(false);
+					setIsCreatingEdge(false);
+				})
+				.catch((err) => {
+					setErrorUpdatingEdge(err.message);
+					setIsUpdatingRelationshipType(false);
+					setIsUpdatingDirection(false);
+					setIsCreatingEdge(false);
+				});
 		}
 	};
 
 	const handleConnection = () => {
-		if (pubEdge) {
+		if (activeLink.attrs.pubEdgeId) {
 			removeOutboundEdge(pubEdge);
 			setPubEdge(null);
 			activeLink.updateAttrs({ pubEdgeId: null });
@@ -185,7 +211,8 @@ const ControlsLink = (props: Props) => {
 	const handleDirection = () => {
 		assert(pubEdge != null);
 		if (activeLink.attrs.pubEdgeId) {
-			updateOutboundEdge({
+			setIsUpdatingDirection(true);
+			setPubEdge({
 				...pubEdge,
 				pubIsParent: !pubEdge.pubIsParent,
 			});
@@ -200,7 +227,8 @@ const ControlsLink = (props: Props) => {
 	const handleEdgeRelationTypeChange = (relationType: string) => {
 		assert(pubEdge != null);
 		if (activeLink.attrs.pubEdgeId) {
-			updateOutboundEdge({
+			setIsUpdatingRelationshipType(true);
+			setPubEdge({
 				...pubEdge,
 				relationType,
 			});
@@ -278,7 +306,11 @@ const ControlsLink = (props: Props) => {
 									icon="tick"
 									onClick={handleCreateEdge}
 								>
-									Save Connection
+									{!isCreatingEdge ? (
+										'Save Connection' || errorUpdatingEdge
+									) : (
+										<Spinner size={16} />
+									)}
 								</Button>
 							</div>
 						</div>
