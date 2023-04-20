@@ -83,8 +83,18 @@ const ControlsLink = (props: Props) => {
 		}
 	}, [activeLink, pendingPromise]);
 
+	function addHttpsProtocol(url: string) {
+		// eslint-disable-next-line no-useless-escape
+		if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
+			url = 'https://' + url;
+		}
+		return url;
+	}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useUpdateEffect(() => activeLink.updateAttrs({ href: debouncedHref }), [debouncedHref]);
+	useUpdateEffect(
+		() => activeLink.updateAttrs({ href: addHttpsProtocol(debouncedHref) }),
+		[debouncedHref],
+	);
 
 	useEffect(() => {
 		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
@@ -141,7 +151,10 @@ const ControlsLink = (props: Props) => {
 
 	const handleCreateEdge = () => {
 		assert(pubEdge !== null);
-		createConnection(pubEdge);
+		console.log(!activeLink.attrs.pubEdgeId);
+		if (!activeLink.attrs.pubEdgeId) {
+			createConnection(pubEdge);
+		}
 	};
 
 	const handleConnection = () => {
@@ -265,22 +278,20 @@ const ControlsLink = (props: Props) => {
 								</div>
 							</div>
 							<div className="control-row">
-								<div>
-									<Button
-										title="Save Connection"
-										minimal
-										icon="tick"
-										onClick={handleCreateEdge}
-									>
-										Save Connection
-									</Button>
-								</div>
+								<Button
+									title="Save Connection"
+									minimal
+									icon="tick"
+									onClick={handleCreateEdge}
+								>
+									Save Connection
+								</Button>
 							</div>
 						</div>
 
 						{!activeLink.attrs.pubEdgeId && (
 							<>
-								<div className="">
+								<div className="preview">
 									<Icon icon="info-sign" /> Preview &nbsp;
 								</div>
 								<div>

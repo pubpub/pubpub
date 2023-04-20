@@ -109,6 +109,14 @@ const HTTP_MAILTO_REGEX = new RegExp(
 	/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s$/,
 );
 
+function addHttpsProtocol(url: string) {
+	// eslint-disable-next-line no-useless-escape
+	if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
+		url = 'https://' + url;
+	}
+	return url;
+}
+
 function linkRule(markType: MarkType) {
 	return new InputRule(
 		HTTP_MAILTO_REGEX,
@@ -117,10 +125,11 @@ function linkRule(markType: MarkType) {
 			if (!resolvedStart.parent.type.allowsMarkType(markType)) return state.tr;
 			const attrs = { type: match[2] === '@' ? 'email' : 'uri' };
 			const link = match[0].substring(0, match[0].length - 1);
+
 			const linkAttrs =
 				attrs.type === 'email'
 					? { href: 'mailto:' + link }
-					: { href: link, target: '_blank' };
+					: { href: addHttpsProtocol(link), target: '_blank' };
 			const fragment = Fragment.fromArray([
 				state.schema.text(link, [state.schema.mark(markType, linkAttrs)]),
 				state.schema.text(' '),
