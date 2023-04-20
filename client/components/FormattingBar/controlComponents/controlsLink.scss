@@ -1,25 +1,26 @@
-// @import 'styles/variables.scss';
-@use 'styles/vendor.scss';
+.formatting-bar-controls-container-component .controls-link-component .bp3-button,
+.formatting-bar-controls-container-component .controls-link-component .bp3-button:hover {
+	color: black !important;
+}
 
-$bp: vendor.$bp-namespace;
+.controls-link-component .pub-edge-listing-card-component > .relation {
+	color: black;
+}
 
 .controls-link-component {
 	display: flex;
 	flex-direction: column;
 
 	.controls-col {
-		margin-bottom: 20px;
+		margin-bottom: 15px;
 	}
 
-	.control-row {
+	.connection {
+		max-width: 400px;
+		min-width: 300px;
+	}
+
+	.preview {
 		padding-bottom: 10px;
-	}
-
-	.pub-edge {
-		margin-top: 25px;
-		background-color: white;
-		> .pub-edge-listing-card-component > .relation {
-			color: black;
-		}
 	}
 }

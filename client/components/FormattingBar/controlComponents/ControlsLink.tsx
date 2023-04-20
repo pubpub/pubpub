@@ -18,7 +18,10 @@ import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
-import { createCandidateEdge } from 'containers/DashboardEdges/NewEdgeEditor';
+import {
+	createCandidateEdge,
+	stripMarkupFromString,
+} from 'containers/DashboardEdges/NewEdgeEditor';
 import { assert } from 'utils/assert';
 import { relationTypeDefinitions } from 'utils/pubEdge';
 import { MenuButton } from 'client/components/Menu';
@@ -126,7 +129,6 @@ const ControlsLink = (props: Props) => {
 		)
 			.then((createdEdge: OutboundEdge) => {
 				addCreatedOutboundEdge(createdEdge);
-
 				activeLink.updateAttrs({ pubEdgeId: createdEdge.id });
 				setPubEdge(createdEdge);
 				setIsCreatingEdge(false);
@@ -151,12 +153,25 @@ const ControlsLink = (props: Props) => {
 			pendingPromise(
 				apiFetch.get(`/api/pubEdgeProposal?object=${encodeURIComponent(href)}`),
 			).then((res) => {
-				setPubEdge(
-					createCandidateEdge({
-						targetPub: res.targetPub,
-						targetPubId: res.targetPub.id,
-					}),
-				);
+				if ('targetPub' in res && res.targetPub) {
+					setPubEdge(
+						createCandidateEdge({
+							targetPub: res.targetPub,
+							targetPubId: res.targetPub.id,
+						}),
+					);
+				} else if ('externalPublication' in res && res.externalPublication) {
+					setPubEdge(
+						createCandidateEdge({
+							externalPublication: {
+								...res.externalPublication,
+								description: stripMarkupFromString(
+									res.externalPublication.description,
+								),
+							},
+						}),
+					);
+				}
 			});
 		}
 	};
@@ -244,11 +259,7 @@ const ControlsLink = (props: Props) => {
 								<div>Type: {renderRelationshipButton()}</div>
 								<div>
 									Direction:{' '}
-									<Button
-										className="buttons"
-										icon="swap-vertical"
-										onClick={handleDirection}
-									>
+									<Button icon="swap-vertical" onClick={handleDirection}>
 										Switch direction
 									</Button>
 								</div>
@@ -256,7 +267,6 @@ const ControlsLink = (props: Props) => {
 							<div className="control-row">
 								<div>
 									<Button
-										className="buttons"
 										title="Save Connection"
 										minimal
 										icon="tick"
@@ -266,19 +276,23 @@ const ControlsLink = (props: Props) => {
 									</Button>
 								</div>
 							</div>
+						</div>
 
-							<div>
-								<Icon icon="info-sign" /> Preview &nbsp;
-							</div>
-						</div>
-						<div className="pub-edge">
-							<PubEdgeListingCard
-								inPubBody={true}
-								isInboundEdge={false}
-								pubEdge={pubEdge}
-								pubEdgeDescriptionIsVisible={false}
-							/>
-						</div>
+						{!activeLink.attrs.pubEdgeId && (
+							<>
+								<div className="">
+									<Icon icon="info-sign" /> Preview &nbsp;
+								</div>
+								<div>
+									<PubEdgeListingCard
+										inPubBody={true}
+										isInboundEdge={false}
+										pubEdge={pubEdge}
+										pubEdgeDescriptionIsVisible={false}
+									/>
+								</div>
+							</>
+						)}
 					</>
 				)}
 			</div>
