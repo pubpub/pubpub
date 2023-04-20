@@ -26,6 +26,7 @@ import { assert } from 'utils/assert';
 import { relationTypeDefinitions } from 'utils/pubEdge';
 import { MenuButton } from 'client/components/Menu';
 import { PubEdgeListingCard } from 'components';
+import { addHttpsProtocol } from 'utils/urls';
 
 require('./controlsLink.scss');
 
@@ -83,13 +84,6 @@ const ControlsLink = (props: Props) => {
 		}
 	}, [activeLink, pendingPromise]);
 
-	function addHttpsProtocol(url: string) {
-		// eslint-disable-next-line no-useless-escape
-		if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
-			url = 'https://' + url;
-		}
-		return url;
-	}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useUpdateEffect(
 		() => activeLink.updateAttrs({ href: addHttpsProtocol(debouncedHref) }),

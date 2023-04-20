@@ -11,6 +11,7 @@ import {
 } from 'prosemirror-inputrules';
 
 import { makeBlockMathInputRule, REGEX_BLOCK_MATH_DOLLARS } from '@benrbray/prosemirror-math';
+import { addHttpsProtocol } from 'utils/urls';
 
 // : (NodeType) → InputRule
 // Given a blockquote node type, returns an input rule that turns `"> "`
@@ -108,14 +109,6 @@ const HTTP_MAILTO_REGEX = new RegExp(
 	// eslint-disable-next-line no-useless-escape
 	/(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s$/,
 );
-
-function addHttpsProtocol(url: string) {
-	// eslint-disable-next-line no-useless-escape
-	if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
-		url = 'https://' + url;
-	}
-	return url;
-}
 
 function linkRule(markType: MarkType) {
 	return new InputRule(
