@@ -54,11 +54,16 @@ const App = (props: Props) => {
 	const showFooter = !hideFooter && !isDashboard;
 	const showHeader = !hideHeader;
 
-	const header = usingMinimalHeader ? (
-		<MinimalHeader {...minimalHeaderData} locationData={locationData} loginData={loginData} />
-	) : (
-		<Header />
-	);
+	const header =
+		usingMinimalHeader && !isDashboard ? (
+			<MinimalHeader
+				{...minimalHeaderData}
+				locationData={locationData}
+				loginData={loginData}
+			/>
+		) : (
+			<Header />
+		);
 
 	return (
 		<PageContext.Provider value={pageContextProps}>
