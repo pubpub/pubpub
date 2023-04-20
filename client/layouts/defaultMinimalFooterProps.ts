@@ -1,6 +1,6 @@
 import { MinimalFooterProps } from './MinimalFooter';
 
-export const defaultMinimalFooterProps: MinimalFooterProps = {
+const defaultMinimalFooterProps: MinimalFooterProps = {
 	leftItem: {
 		title: 'Arcadia Research',
 		url: '/',
@@ -24,3 +24,5 @@ export const defaultMinimalFooterProps: MinimalFooterProps = {
 	},
 	rightItem: { label: 'Twitter', url: 'https://twitter.com/arcadiascience', icon: 'twitter' },
 };
+
+export default defaultMinimalFooterProps;

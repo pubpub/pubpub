@@ -4,7 +4,6 @@ import classNames from 'classnames';
 
 import {
 	Header,
-	MinimalFooter,
 	LegalBanner,
 	AccentStyle,
 	NavBar,
@@ -12,7 +11,7 @@ import {
 	MobileAware,
 	FacetsStateProvider,
 } from 'components';
-import { defaultMinimalFooterProps } from 'components/Footer/defaultMinimalFooterProps';
+import { MinimalFooter, defaultMinimalFooterProps } from 'client/layouts';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
 import MinimalHeader from 'client/layouts/MinimalHeader/MinimalHeader';
@@ -95,8 +94,7 @@ const App = (props: Props) => {
 								)}
 							/>
 						)}
-						{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message */}
-						<div id="main-content" tabIndex="-1">
+						<div id="main-content" tabIndex={-1}>
 							<ActiveComponent {...viewData} />
 						</div>
 						{showFooter && <MinimalFooter {...defaultMinimalFooterProps} />}

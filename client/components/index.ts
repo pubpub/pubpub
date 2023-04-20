@@ -36,7 +36,6 @@ export {
 } from './FacetsStateProvider';
 export { default as FileUploadButton } from './FileUploadButton/FileUploadButton';
 export { default as Footer } from './Footer/Footer';
-export { default as MinimalFooter } from './Footer/MinimalFooter';
 export { default as FormattingBar } from './FormattingBar/FormattingBar';
 export { default as GlobalControls } from './GlobalControls';
 export { default as GridWrapper } from './GridWrapper/GridWrapper';

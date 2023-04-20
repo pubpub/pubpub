@@ -3,7 +3,7 @@ import React from 'react';
 import { GridWrapper, Icon, IconName } from 'components';
 import { usePageContext } from 'utils/hooks';
 
-require('./footer.scss');
+require('./minimalFooter.scss');
 
 type MinimalFooterLink = {
 	label: string;
@@ -35,9 +35,9 @@ const MinimalFooter = (props: MinimalFooterProps) => {
 			: '/static/logoWhite.svg';
 
 	return (
-		<div className="footer-component" style={{ color: 'white !important' }}>
+		<div className="minimal-footer-component" style={{ color: 'white !important' }}>
 			<GridWrapper>
-				<div className="left-col">
+				<div className="left">
 					<a
 						key={props.leftItem.title}
 						area-label={props.leftItem.title}
@@ -46,15 +46,15 @@ const MinimalFooter = (props: MinimalFooterProps) => {
 						<img alt="" src={props.leftItem.image} />
 					</a>
 				</div>
-				<div className="center-col">
-					<div className="top-row">
+				<div className="center">
+					<div className="top">
 						{props.centerItems.top.map((item: MinimalFooterLink) => (
 							<a key={item.label} href={item.url}>
 								{item.label}
 							</a>
 						))}
 					</div>
-					<div className="bottom-row">
+					<div className="bottom">
 						{props.centerItems.bottom.map((item: MinimalFooterLink) => (
 							<React.Fragment key={item.label}>{item.label}</React.Fragment>
 						))}
@@ -64,9 +64,9 @@ const MinimalFooter = (props: MinimalFooterProps) => {
 						</>
 					</div>
 				</div>
-				<div className="right-col">
+				<div className="right">
 					<a aria-label={props.rightItem.label} href={props.rightItem.url}>
-						<Icon icon={props.rightItem.icon} />
+						<Icon icon={props.rightItem.icon} iconSize={22} />
 					</a>
 				</div>
 			</GridWrapper>
