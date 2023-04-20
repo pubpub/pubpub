@@ -1,7 +1,7 @@
-.formatting-bar-controls-container-component .controls-link-component .bp3-button,
-.formatting-bar-controls-container-component .controls-link-component .bp3-button:hover {
-	color: black !important;
-}
+// .formatting-bar-controls-container-component .controls-link-component .bp3-button,
+// .formatting-bar-controls-container-component .controls-link-component .bp3-button:hover {
+// 	color: black !important;
+// }
 
 .controls-link-component .pub-edge-listing-card-component > .relation {
 	color: black;
@@ -22,5 +22,9 @@
 
 	.preview {
 		padding-bottom: 15px;
+	}
+
+	.controls-link-pub-edge {
+		background-color: white;
 	}
 }

@@ -151,7 +151,6 @@ const ControlsLink = (props: Props) => {
 
 	const handleCreateEdge = () => {
 		assert(pubEdge !== null);
-		console.log(!activeLink.attrs.pubEdgeId);
 		if (!activeLink.attrs.pubEdgeId) {
 			createConnection(pubEdge);
 		}
@@ -230,9 +229,10 @@ const ControlsLink = (props: Props) => {
 			buttonProps={{
 				rightIcon: 'chevron-down',
 				// @ts-expect-error ts-migrate(2322) FIXME: Type '{ rightIcon: string; children: string; }' is... Remove this comment to see the full error message
-				children: `Type: ${currentRelationName}`,
+				children: `${currentRelationName}`,
 			}}
 			className="buttons"
+			minimal
 		>
 			{Object.entries(relationTypeDefinitions).map(([relationType, definition]) => {
 				const { name } = definition;
@@ -272,7 +272,7 @@ const ControlsLink = (props: Props) => {
 								<div>Type: {renderRelationshipButton()}</div>
 								<div>
 									Direction:{' '}
-									<Button icon="swap-vertical" onClick={handleDirection}>
+									<Button icon="swap-vertical" minimal onClick={handleDirection}>
 										Switch direction
 									</Button>
 								</div>
@@ -294,7 +294,7 @@ const ControlsLink = (props: Props) => {
 								<div className="preview">
 									<Icon icon="info-sign" /> Preview &nbsp;
 								</div>
-								<div>
+								<div className="controls-link-pub-edge">
 									<PubEdgeListingCard
 										inPubBody={true}
 										isInboundEdge={false}
