@@ -2,14 +2,14 @@ import React from 'react';
 
 import { GridWrapper, Icon, IconName } from 'components';
 
-require('./threeColumnFooter.scss');
+require('./twoColumnFooter.scss');
 
-type ThreeColumnFooterLink = {
+type TwoColumnFooterLink = {
 	label: string;
 	url?: string;
 };
 
-export type ThreeColumnFooterProps = {
+export type TwoColumnFooterProps = {
 	communityData: any;
 	leftItem: {
 		title: string;
@@ -17,8 +17,8 @@ export type ThreeColumnFooterProps = {
 		url: string;
 	};
 	centerItems: {
-		top: ThreeColumnFooterLink[];
-		bottom: ThreeColumnFooterLink[];
+		top: TwoColumnFooterLink[];
+		bottom: TwoColumnFooterLink[];
 	};
 	rightItem: {
 		label: string;
@@ -27,7 +27,7 @@ export type ThreeColumnFooterProps = {
 	};
 };
 
-const ThreeColumnFooter = (props: ThreeColumnFooterProps) => {
+const TwoColumnFooter = (props: TwoColumnFooterProps) => {
 	const { communityData } = props;
 	const pubpubLogo =
 		communityData.headerColorType === 'light'
@@ -35,7 +35,7 @@ const ThreeColumnFooter = (props: ThreeColumnFooterProps) => {
 			: '/static/logoWhite.svg';
 
 	return (
-		<div className="three-column-footer-component">
+		<div className="two-column-footer-component">
 			<GridWrapper containerClassName="column-container">
 				<div className="left-column">
 					<a
@@ -48,14 +48,14 @@ const ThreeColumnFooter = (props: ThreeColumnFooterProps) => {
 				</div>
 				<div className="center-column">
 					<ul className="top-row">
-						{props.centerItems.top.map((item: ThreeColumnFooterLink) => (
+						{props.centerItems.top.map((item: TwoColumnFooterLink) => (
 							<li key={item.label}>
 								<a href={item.url}>{item.label}</a>
 							</li>
 						))}
 					</ul>
 					<div className="bottom-row">
-						{props.centerItems.bottom.map((item: ThreeColumnFooterLink) => (
+						{props.centerItems.bottom.map((item: TwoColumnFooterLink) => (
 							<span key={item.label}>{item.label}</span>
 						))}
 						<span className="built-on">
@@ -78,4 +78,4 @@ const ThreeColumnFooter = (props: ThreeColumnFooterProps) => {
 	);
 };
 
-export default ThreeColumnFooter;
+export default TwoColumnFooter;

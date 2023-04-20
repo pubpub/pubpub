@@ -1,6 +1,6 @@
-import { ThreeColumnFooterProps } from './ThreeColumnFooter';
+import { TwoColumnFooterProps } from './TwoColumnFooter';
 
-const defaultThreeColumnFooterProps: Omit<ThreeColumnFooterProps, 'communityData'> = {
+const defaultTwoColumnFooterProps: Omit<TwoColumnFooterProps, 'communityData'> = {
 	leftItem: {
 		title: 'Arcadia Research',
 		url: '/',
@@ -25,4 +25,4 @@ const defaultThreeColumnFooterProps: Omit<ThreeColumnFooterProps, 'communityData
 	rightItem: { label: 'Twitter', url: 'https://twitter.com/arcadiascience', icon: 'twitter' },
 };
 
-export default defaultThreeColumnFooterProps;
+export default defaultTwoColumnFooterProps;
