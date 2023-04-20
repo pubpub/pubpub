@@ -1,6 +1,6 @@
 import { MinimalFooterProps } from './MinimalFooter';
 
-const defaultMinimalFooterProps: MinimalFooterProps = {
+const defaultMinimalFooterProps: Omit<MinimalFooterProps, 'communityData'> = {
 	leftItem: {
 		title: 'Arcadia Research',
 		url: '/',

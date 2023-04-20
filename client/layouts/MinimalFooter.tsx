@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { GridWrapper, Icon, IconName } from 'components';
-import { usePageContext } from 'utils/hooks';
 
 require('./minimalFooter.scss');
 
@@ -11,6 +10,7 @@ type MinimalFooterLink = {
 };
 
 export type MinimalFooterProps = {
+	communityData: any;
 	leftItem: {
 		title: string;
 		image: string;
@@ -28,44 +28,48 @@ export type MinimalFooterProps = {
 };
 
 const MinimalFooter = (props: MinimalFooterProps) => {
-	const { communityData } = usePageContext();
+	const { communityData } = props;
 	const pubpubLogo =
 		communityData.headerColorType === 'light'
 			? '/static/logoBlack.svg'
 			: '/static/logoWhite.svg';
 
 	return (
-		<div className="minimal-footer-component" style={{ color: 'white !important' }}>
-			<GridWrapper>
-				<div className="left">
+		<div className="minimal-footer-component">
+			<GridWrapper containerClassName="column-container">
+				<div className="left-column">
 					<a
 						key={props.leftItem.title}
 						area-label={props.leftItem.title}
 						href={props.leftItem.url}
 					>
-						<img alt="" src={props.leftItem.image} />
+						<img alt={`${props.leftItem.title} logo`} src={props.leftItem.image} />
 					</a>
 				</div>
-				<div className="center">
-					<div className="top">
+				<div className="center-column">
+					<ul className="top-row">
 						{props.centerItems.top.map((item: MinimalFooterLink) => (
-							<a key={item.label} href={item.url}>
-								{item.label}
-							</a>
+							<li key={item.label}>
+								<a href={item.url}>{item.label}</a>
+							</li>
 						))}
-					</div>
-					<div className="bottom">
+					</ul>
+					<div className="bottom-row">
 						{props.centerItems.bottom.map((item: MinimalFooterLink) => (
-							<React.Fragment key={item.label}>{item.label}</React.Fragment>
+							<span key={item.label}>{item.label}</span>
 						))}
-						<>
+						<span className="built-on">
 							Published with
 							<img className="logo" src={pubpubLogo} alt="PubPub logo" />
-						</>
+						</span>
 					</div>
 				</div>
-				<div className="right">
-					<a aria-label={props.rightItem.label} href={props.rightItem.url}>
+				<div className="right-column">
+					<a
+						className="icon"
+						aria-label={props.rightItem.label}
+						href={props.rightItem.url}
+					>
 						<Icon icon={props.rightItem.icon} iconSize={22} />
 					</a>
 				</div>

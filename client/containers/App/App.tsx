@@ -8,10 +8,11 @@ import {
 	AccentStyle,
 	NavBar,
 	SkipLink,
+	Footer,
 	MobileAware,
 	FacetsStateProvider,
 } from 'components';
-import { MinimalFooter, defaultMinimalFooterProps } from 'client/layouts';
+import { MinimalFooter, minimalFooterData } from 'client/layouts';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
 import MinimalHeader from 'client/layouts/MinimalHeader/MinimalHeader';
@@ -65,6 +66,13 @@ const App = (props: Props) => {
 			<Header />
 		);
 
+	const usingMinimalFooter = featureFlags['minimal-footer'];
+	const footer =
+		usingMinimalFooter && isDashboard ? (
+			<MinimalFooter {...minimalFooterData} communityData={communityData} />
+		) : (
+			<Footer />
+		);
 	return (
 		<PageContext.Provider value={pageContextProps}>
 			<FacetsStateProvider
@@ -97,7 +105,7 @@ const App = (props: Props) => {
 						<div id="main-content" tabIndex={-1}>
 							<ActiveComponent {...viewData} />
 						</div>
-						{showFooter && <MinimalFooter {...defaultMinimalFooterProps} />}
+						{showFooter && footer}
 					</div>
 				</RKProvider>
 			</FacetsStateProvider>
