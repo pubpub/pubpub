@@ -51,7 +51,7 @@ const TwoColumnFooter = (props: TwoColumnFooterProps) => {
 		props;
 	return (
 		<div className="two-column-footer-component">
-			<div className="left-column">
+			<div className="column left">
 				<nav className="footer-navigation">
 					<ul className="footer-navigation__list">
 						{links.map((link) => (
@@ -107,7 +107,7 @@ const TwoColumnFooter = (props: TwoColumnFooterProps) => {
 				)}
 			</div>
 
-			<div className="right-column">
+			<div className="column right">
 				<div className="site-smallprint">
 					{smallPrints.map((smallPrint) => (
 						<small key={smallPrint.key}>{smallPrint.text}</small>

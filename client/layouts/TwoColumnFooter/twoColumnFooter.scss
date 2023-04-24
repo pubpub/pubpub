@@ -1,0 +1,30 @@
+.two-column-footer-component {
+  display: flex;
+	flex-wrap: wrap;
+	max-width: 70rem;
+	padding: 0 6%;
+
+	.column {
+		flex: 1 50%;
+		width: 50%;
+		padding-bottom: 1.5rem;
+
+		& .left {
+			float: left;
+		}
+
+		& .right {
+			float: right;
+		}
+	}
+
+	.footer-navigation__list {
+		column-count: 2;
+		list-style: none;
+	}
+
+	.social-links__list_item {
+		display: inline-block;
+		padding-right: 1.5rem;
+	}
+}
