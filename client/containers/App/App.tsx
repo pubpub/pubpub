@@ -14,8 +14,12 @@ import {
 } from 'components';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
-import MinimalHeader from 'client/layouts/MinimalHeader/MinimalHeader';
-import minimalHeaderData from 'client/layouts/MinimalHeader/minimalHeaderData';
+import {
+	MinimalHeader,
+	minimalHeaderData,
+	TwoColumnFooter,
+	twoColumnFooterData,
+} from 'client/layouts';
 
 import SideMenu from './SideMenu';
 import Breadcrumbs from './Breadcrumbs';
@@ -49,10 +53,20 @@ const App = (props: Props) => {
 	}
 
 	const usingMinimalHeader = featureFlags['minimal-header'];
+	const usingTwoColumnFooter = featureFlags['two-column-footer'];
 
 	const showNav = !hideNav && !communityData.hideNav && !isDashboard && !usingMinimalHeader;
 	const showFooter = !hideFooter && !isDashboard;
 	const showHeader = !hideHeader;
+
+	const testIt = true;
+
+	const footer =
+		(usingTwoColumnFooter && !isDashboard) || testIt ? (
+			<TwoColumnFooter {...twoColumnFooterData} />
+		) : (
+			<Footer />
+		);
 
 	const header =
 		usingMinimalHeader && !isDashboard ? (
@@ -98,7 +112,7 @@ const App = (props: Props) => {
 						<div id="main-content" tabIndex="-1">
 							<ActiveComponent {...viewData} />
 						</div>
-						{showFooter && <Footer />}
+						{showFooter && footer}
 					</div>
 				</RKProvider>
 			</FacetsStateProvider>
