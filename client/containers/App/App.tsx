@@ -59,10 +59,8 @@ const App = (props: Props) => {
 	const showFooter = !hideFooter && !isDashboard;
 	const showHeader = !hideHeader;
 
-	const testIt = true;
-
 	const footer =
-		(usingTwoColumnFooter && !isDashboard) || testIt ? (
+		usingTwoColumnFooter && !isDashboard ? (
 			<TwoColumnFooter {...twoColumnFooterData} />
 		) : (
 			<Footer />

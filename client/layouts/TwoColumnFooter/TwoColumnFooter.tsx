@@ -14,8 +14,7 @@ type IconLink = {
 		d: string;
 		id?: string;
 		fill?: string;
-		fillRule?: 'evenodd' | 'nonzero' | 'inherit';
-	};
+	} & Pick<React.SVGProps<SVGPathElement>, 'fillRule'>;
 };
 
 type Link = {
