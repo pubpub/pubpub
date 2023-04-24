@@ -6,6 +6,12 @@
 	display: flex;
 	flex-direction: column;
 
+	.actions {
+		display: flex;
+		gap: 5px;
+		margin: 5px 0;
+	}
+
 	.controls-col {
 		margin-bottom: 15px;
 	}
@@ -13,6 +19,10 @@
 	.connection {
 		max-width: 400px;
 		min-width: 300px;
+
+		> .bp3-control:last-child {
+			margin-bottom: 0;
+		}
 	}
 
 	.preview {

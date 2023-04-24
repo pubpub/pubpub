@@ -1,5 +1,5 @@
+import isUrl from 'is-url';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDebounce } from 'use-debounce';
 import {
 	Button,
 	AnchorButton,
@@ -11,11 +11,12 @@ import {
 	Spinner,
 } from '@blueprintjs/core';
 import { useUpdateEffect } from 'react-use';
+import { useDebounce } from 'use-debounce';
 
 import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { pubUrl } from 'utils/canonicalUrls';
-import { usePageContext, usePendingChanges } from 'utils/hooks';
+import { usePageContext } from 'utils/hooks';
 import { InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
@@ -27,7 +28,6 @@ import { assert } from 'utils/assert';
 import { relationTypeDefinitions } from 'utils/pubEdge';
 import { MenuButton } from 'client/components/Menu';
 import { PubEdgeListingCard } from 'components';
-import { addHttpsProtocol } from 'utils/urls';
 
 require('./controlsLink.scss');
 
@@ -39,6 +39,19 @@ type Props = {
 	onClose: (...args: any[]) => any;
 };
 
+enum Status {
+	LoadingEdge,
+	EditingLink,
+	EditingLinkExtra,
+	FetchingEdgeProposal,
+	EditingEdge,
+	UpdatingEdge,
+}
+
+function isStatus(status: Status, ...statuses: Status[]) {
+	return statuses.includes(status);
+}
+
 const ControlsLink = (props: Props) => {
 	const {
 		editorChangeObject: { activeLink, view },
@@ -48,18 +61,14 @@ const ControlsLink = (props: Props) => {
 	const { communityData } = usePageContext();
 	const { inPub, pubData } = usePubContext();
 
+	const [status, setStatus] = useState(Status.LoadingEdge);
 	const [href, setHref] = useState(activeLink.attrs.href);
-	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
-	const [isLoadingAttr, setIsLoadingAttr] = useState(false);
-	const [isUpdatingDirection, setIsUpdatingDirection] = useState(false);
-	const [isUpdatingRelationshipType, setIsUpdatingRelationshipType] = useState(false);
-	const [isOpen, setIsOpen] = useState(false);
+	const [debouncedHref] = useDebounce(href, 250);
 	const [errorCreatingEdge, setErrorCreatingEdge] = useState<string>();
 	const [errorUpdatingEdge, setErrorUpdatingEdge] = useState<string>();
 	const [pubEdge, setPubEdge] = useState<PubEdge | null>(null);
-	const { pendingPromise } = usePendingChanges();
+	const { pubEdgeId } = activeLink.attrs;
 
-	const [debouncedHref] = useDebounce(href, 250);
 	const inputRef = useRef();
 
 	const { addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } = useDashboardEdges(
@@ -76,23 +85,25 @@ const ControlsLink = (props: Props) => {
 	};
 
 	useEffect(() => {
-		if (activeLink.attrs.pubEdgeId) {
-			pendingPromise(apiFetch.get(`/api/pubEdges/${activeLink.attrs.pubEdgeId}`))
+		if (status !== Status.LoadingEdge) return;
+		if (pubEdgeId) {
+			apiFetch
+				.get(`/api/pubEdges/${pubEdgeId}`)
 				.then((res) => {
 					setPubEdge(res);
+					setStatus(Status.EditingEdge);
 				})
 				.catch(() => {
 					setPubEdge(null);
 					activeLink.updateAttrs({ pubEdgeId: null });
+					setStatus(Status.EditingLink);
 				});
+		} else {
+			setStatus(Status.EditingLink);
 		}
-	}, [activeLink, pendingPromise]);
+	}, [status, pubEdgeId]);
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useUpdateEffect(
-		() => activeLink.updateAttrs({ href: addHttpsProtocol(debouncedHref) }),
-		[debouncedHref],
-	);
+	useUpdateEffect(() => activeLink.updateAttrs({ href: debouncedHref }), [debouncedHref]);
 
 	useEffect(() => {
 		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
@@ -117,33 +128,31 @@ const ControlsLink = (props: Props) => {
 
 	const checkedOpenInNewTab = activeLink.attrs.target === '_blank';
 
-	const handleLinkAttr = () => {
-		setIsLoadingAttr(true);
+	const toggleOpenInNewTab = () => {
 		activeLink.updateAttrs({
 			target: activeLink.attrs.target === '_blank' ? '_self' : '_blank',
 		});
-		setIsLoadingAttr(false);
 	};
 
 	const createConnection = (edge: PubEdge) => {
-		setIsCreatingEdge(true);
-		pendingPromise(
-			apiFetch.post('/api/pubEdges', {
+		setStatus(Status.UpdatingEdge);
+		apiFetch
+			.post('/api/pubEdges', {
 				...edge,
 				pubId: pubData.id,
 				// Don't send the whole Pub, just the ID
 				targetPub: undefined,
-			}),
-		)
+			})
 			.then((createdEdge: OutboundEdge) => {
 				addCreatedOutboundEdge(createdEdge);
 				activeLink.updateAttrs({ pubEdgeId: createdEdge.id });
 				setPubEdge(createdEdge);
-				setIsCreatingEdge(false);
 			})
 			.catch((err: Error) => {
-				setIsCreatingEdge(false);
 				setErrorCreatingEdge(err.message);
+			})
+			.finally(() => {
+				setStatus(Status.EditingEdge);
 			});
 	};
 
@@ -151,93 +160,84 @@ const ControlsLink = (props: Props) => {
 		assert(pubEdge !== null);
 		if (!activeLink.attrs.pubEdgeId) {
 			createConnection(pubEdge);
-		} else if (pubEdge && (isUpdatingDirection || isUpdatingRelationshipType)) {
-			setIsCreatingEdge(true);
-			pendingPromise(
-				apiFetch.put('/api/pubEdges', {
+		} else if (pubEdge) {
+			setStatus(Status.UpdatingEdge);
+			apiFetch
+				.put('/api/pubEdges', {
 					pubEdgeId: activeLink.attrs.pubEdgeId,
 					pubIsParent: pubEdge.pubIsParent,
 					relationType: pubEdge.relationType,
-				}),
-			)
+				})
 				.then((updatedEdge: OutboundEdge) => {
 					updateOutboundEdge(updatedEdge);
 					setPubEdge(updatedEdge);
-					setIsUpdatingRelationshipType(false);
-					setIsUpdatingDirection(false);
-					setIsCreatingEdge(false);
 				})
 				.catch((err) => {
 					setErrorUpdatingEdge(err.message);
-					setIsUpdatingRelationshipType(false);
-					setIsUpdatingDirection(false);
-					setIsCreatingEdge(false);
+				})
+				.finally(() => {
+					setStatus(Status.EditingEdge);
 				});
 		}
 	};
 
-	const handleConnection = () => {
-		if (activeLink.attrs.pubEdgeId) {
-			removeOutboundEdge(pubEdge);
-			setPubEdge(null);
-			activeLink.updateAttrs({ pubEdgeId: null });
-		} else {
-			pendingPromise(
-				apiFetch.get(`/api/pubEdgeProposal?object=${encodeURIComponent(href)}`),
-			).then((res) => {
-				if ('targetPub' in res && res.targetPub) {
+	const togglePubEdge = async () => {
+		if (isStatus(status, Status.EditingEdge)) {
+			if (activeLink.attrs.pubEdgeId) {
+				activeLink.updateAttrs({ pubEdgeId: null });
+				removeOutboundEdge(pubEdge);
+				setPubEdge(null);
+			}
+			setStatus(Status.EditingLinkExtra);
+		} else if (isStatus(status, Status.EditingLinkExtra) && isUrl(href)) {
+			try {
+				setStatus(Status.FetchingEdgeProposal);
+				const pubEdgeProposal = await apiFetch.get(
+					`/api/pubEdgeProposal?object=${encodeURIComponent(href)}`,
+				);
+				if ('targetPub' in pubEdgeProposal && pubEdgeProposal.targetPub) {
 					setPubEdge(
 						createCandidateEdge({
-							targetPub: res.targetPub,
-							targetPubId: res.targetPub.id,
+							targetPub: pubEdgeProposal.targetPub,
+							targetPubId: pubEdgeProposal.targetPub.id,
 						}),
 					);
-				} else if ('externalPublication' in res && res.externalPublication) {
+				} else if (
+					'externalPublication' in pubEdgeProposal &&
+					pubEdgeProposal.externalPublication
+				) {
 					setPubEdge(
 						createCandidateEdge({
 							externalPublication: {
-								...res.externalPublication,
+								...pubEdgeProposal.externalPublication,
 								description: stripMarkupFromString(
-									res.externalPublication.description,
+									pubEdgeProposal.externalPublication.description,
 								),
 							},
 						}),
 					);
 				}
-			});
+				setStatus(Status.EditingEdge);
+			} catch (error) {
+				setStatus(Status.EditingLinkExtra);
+			}
 		}
 	};
 
 	const handleDirection = () => {
 		assert(pubEdge != null);
-		if (activeLink.attrs.pubEdgeId) {
-			setIsUpdatingDirection(true);
-			setPubEdge({
-				...pubEdge,
-				pubIsParent: !pubEdge.pubIsParent,
-			});
-		} else {
-			setPubEdge({
-				...pubEdge,
-				pubIsParent: !pubEdge.pubIsParent,
-			});
-		}
+		setPubEdge({
+			...pubEdge,
+			pubIsParent: !pubEdge.pubIsParent,
+		});
 	};
 
 	const handleEdgeRelationTypeChange = (relationType: string) => {
 		assert(pubEdge != null);
-		if (activeLink.attrs.pubEdgeId) {
-			setIsUpdatingRelationshipType(true);
-			setPubEdge({
-				...pubEdge,
-				relationType,
-			});
-		} else {
-			setPubEdge({
-				...pubEdge,
-				relationType,
-			});
-		}
+		setPubEdge({
+			...pubEdge,
+			relationType,
+		});
 	};
 
 	const currentRelationName =
@@ -272,22 +272,30 @@ const ControlsLink = (props: Props) => {
 		</MenuButton>
 	);
 
-	function ControlsLinkOptions() {
+	function ControlsLinkExtra() {
 		return (
 			<div className="connection">
 				<Checkbox
 					label="Open in new tab"
 					checked={checkedOpenInNewTab}
-					onChange={handleLinkAttr}
-					disabled={isLoadingAttr}
+					onChange={toggleOpenInNewTab}
 				/>
 				<Checkbox
-					label={errorCreatingEdge || 'Create a pub connection for this url'}
-					onChange={handleConnection}
-					checked={!!pubEdge}
-					disabled={isCreatingEdge}
+					label={errorCreatingEdge || 'Create a Pub Connection for this URL'}
+					onChange={togglePubEdge}
+					checked={isStatus(
+						status,
+						Status.FetchingEdgeProposal,
+						Status.EditingEdge,
+						Status.UpdatingEdge,
+					)}
+					disabled={
+						isStatus(status, Status.FetchingEdgeProposal, Status.UpdatingEdge) ||
+						!isUrl(href)
+					}
 				/>
-				{pubEdge && (
+				{isStatus(status, Status.FetchingEdgeProposal) && <Spinner />}
+				{isStatus(status, Status.EditingEdge, Status.UpdatingEdge) && (
 					<>
 						<div className="controls-col">
 							<div className="control-row">
@@ -295,7 +303,9 @@ const ControlsLink = (props: Props) => {
 								<div>
 									Direction:{' '}
 									<Button icon="swap-vertical" minimal onClick={handleDirection}>
-										Switch direction
+										{pubEdge && pubEdge.pubIsParent
+											? 'Parent → Child'
+											: 'Child → Parent'}
 									</Button>
 								</div>
 							</div>
@@ -306,15 +316,14 @@ const ControlsLink = (props: Props) => {
 									icon="tick"
 									onClick={handleCreateEdge}
 								>
-									{!isCreatingEdge ? (
-										'Save Connection' || errorUpdatingEdge
-									) : (
+									{isStatus(status, Status.UpdatingEdge) ? (
 										<Spinner size={16} />
+									) : (
+										'Save Connection' || errorUpdatingEdge
 									)}
 								</Button>
 							</div>
 						</div>
-
 						{!activeLink.attrs.pubEdgeId && (
 							<>
 								<div className="preview">
@@ -346,13 +355,31 @@ const ControlsLink = (props: Props) => {
 				// @ts-expect-error ts-migrate(2322) FIXME: Type 'MutableRefObject<undefined>' is not assignab... Remove this comment to see the full error message
 				inputRef={inputRef}
 			/>
-			<div>
+			<div className="actions">
 				<AnchorButton
 					small
 					minimal
 					title="Options"
-					icon="chevron-down"
-					onClick={() => setIsOpen(!isOpen)}
+					icon={
+						isStatus(
+							status,
+							Status.EditingLinkExtra,
+							Status.EditingEdge,
+							Status.UpdatingEdge,
+						)
+							? 'chevron-up'
+							: 'chevron-down'
+					}
+					onClick={() =>
+						setStatus(
+							isStatus(status, Status.EditingLinkExtra, Status.EditingEdge)
+								? Status.EditingLink
+								: pubEdge != null
+								? Status.EditingEdge
+								: Status.EditingLinkExtra,
+						)
+					}
+					disabled={isStatus(status, Status.UpdatingEdge)}
 				/>
 				<Button
 					small
@@ -370,8 +397,17 @@ const ControlsLink = (props: Props) => {
 					target="_blank"
 				/>
 			</div>
-			<Collapse isOpen={isOpen} keepChildrenMounted={true}>
-				<ControlsLinkOptions />
+			<Collapse
+				isOpen={isStatus(
+					status,
+					Status.EditingLinkExtra,
+					Status.FetchingEdgeProposal,
+					Status.EditingEdge,
+					Status.UpdatingEdge,
+				)}
+				keepChildrenMounted={true}
+			>
+				<ControlsLinkExtra />
 			</Collapse>
 		</div>
 	);
