@@ -21,6 +21,8 @@ import {
 	twoColumnFooterData,
 	MinimalFooter,
 	minimalFooterData,
+	CollapsibleHeader,
+	collapsibleHeaderData,
 } from 'client/layouts';
 
 import SideMenu from './SideMenu';
@@ -57,6 +59,7 @@ const App = (props: Props) => {
 	const usingMinimalHeader = featureFlags['minimal-header'];
 	const usingMinimalFooter = featureFlags['minimal-footer'];
 	const usingTwoColumnFooter = featureFlags['two-column-footer'];
+	const usingCollapsibleHeader = featureFlags['collapsible-header'];
 
 	const showNav = !hideNav && !communityData.hideNav && !isDashboard && !usingMinimalHeader;
 	const showFooter = !hideFooter && !isDashboard;
@@ -73,8 +76,14 @@ const App = (props: Props) => {
 				loginData={loginData}
 			/>
 		);
-	} else {
-		header = <Header />;
+	} else if (usingCollapsibleHeader && !isDashboard) {
+		header = (
+			<CollapsibleHeader
+				{...collapsibleHeaderData}
+				locationData={locationData}
+				loginData={loginData}
+			/>
+		);
 	}
 
 	if (usingMinimalFooter && !isDashboard) {

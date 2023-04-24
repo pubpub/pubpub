@@ -1,0 +1,9 @@
+@use 'styles/vendor.scss';
+
+$bp: vendor.$bp-namespace;
+
+.collapsible-header-component {
+}
+
+@media screen and (max-width: 539px) {
+}
