@@ -394,8 +394,9 @@ const ControlsLink = (props: Props) => {
 						)
 					}
 					disabled={isStatus(status, Status.UpdatingEdge)}
-				/>
-				options
+				>
+					OPTIONS
+				</AnchorButton>
 				<div className="actions-left">
 					<Button
 						small
@@ -403,8 +404,9 @@ const ControlsLink = (props: Props) => {
 						title="Remove"
 						icon="disable"
 						onClick={handleDestroyUsAll}
-					/>
-					remove
+					>
+						REMOVE
+					</Button>
 					<AnchorButton
 						small
 						minimal
@@ -413,8 +415,9 @@ const ControlsLink = (props: Props) => {
 						href={href}
 						target="_blank"
 						className="visit"
-					/>
-					visit url
+					>
+						VISIT URL
+					</AnchorButton>
 				</div>
 			</div>
 			<Collapse
