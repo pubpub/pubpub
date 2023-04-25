@@ -11,7 +11,6 @@ import {
 } from 'prosemirror-inputrules';
 
 import { makeBlockMathInputRule, REGEX_BLOCK_MATH_DOLLARS } from '@benrbray/prosemirror-math';
-import { addHttpsProtocol } from 'utils/urls';
 
 // : (NodeType) → InputRule
 // Given a blockquote node type, returns an input rule that turns `"> "`
@@ -122,7 +121,7 @@ function linkRule(markType: MarkType) {
 			const linkAttrs =
 				attrs.type === 'email'
 					? { href: 'mailto:' + link }
-					: { href: addHttpsProtocol(link), target: '_blank' };
+					: { href: link, target: '_blank' };
 			const fragment = Fragment.fromArray([
 				state.schema.text(link, [state.schema.mark(markType, linkAttrs)]),
 				state.schema.text(' '),
