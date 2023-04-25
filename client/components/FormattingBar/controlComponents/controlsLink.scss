@@ -5,8 +5,8 @@
 .controls-link-component {
 	display: flex;
 	flex-direction: column;
-	width: 400px;
-	max-width: 400px;
+	min-width: 400px;
+	max-width: 732px;
 
 	.actions {
 		display: flex;
