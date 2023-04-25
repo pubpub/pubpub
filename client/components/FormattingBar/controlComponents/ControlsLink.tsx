@@ -326,18 +326,20 @@ const ControlsLink = (props: Props) => {
 							</Card>
 						</div>
 						<div className="control-row">
-							<Button
-								title="Save Connection"
-								minimal
-								icon="tick"
-								onClick={handleCreateEdge}
-							>
-								{isStatus(status, Status.UpdatingEdge) ? (
-									<Spinner size={16} />
-								) : (
-									'Save Connection' || errorUpdatingEdge
-								)}
-							</Button>
+							<div className="save-button">
+								<Button
+									title="Save Connection"
+									minimal
+									icon="tick"
+									onClick={handleCreateEdge}
+								>
+									{isStatus(status, Status.UpdatingEdge) ? (
+										<Spinner size={16} />
+									) : (
+										'Save Connection' || errorUpdatingEdge
+									)}
+								</Button>
+							</div>
 						</div>
 					</>
 				)}
