@@ -12,6 +12,7 @@ import {
 	MobileAware,
 	FacetsStateProvider,
 } from 'components';
+import { MinimalFooter, minimalFooterData } from 'client/layouts/MinimalFooter';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
 import {
@@ -94,6 +95,13 @@ const App = (props: Props) => {
 		footer = <Footer />;
 	}
 
+	const usingMinimalFooter = featureFlags['minimal-footer'];
+	const footer =
+		usingMinimalFooter && isDashboard ? (
+			<MinimalFooter {...minimalFooterData} communityData={communityData} />
+		) : (
+			<Footer />
+		);
 	return (
 		<PageContext.Provider value={pageContextProps}>
 			<FacetsStateProvider
