@@ -9,6 +9,7 @@ import {
 	MenuItem,
 	Collapse,
 	Spinner,
+	Card,
 } from '@blueprintjs/core';
 import { useUpdateEffect } from 'react-use';
 import { useDebounce } from 'use-debounce';
@@ -48,9 +49,9 @@ enum Status {
 	UpdatingEdge,
 }
 
-function isStatus(status: Status, ...statuses: Status[]) {
+const isStatus = (status: Status, ...statuses: Status[]) => {
 	return statuses.includes(status);
-}
+};
 
 const ControlsLink = (props: Props) => {
 	const {
@@ -272,7 +273,7 @@ const ControlsLink = (props: Props) => {
 		</MenuButton>
 	);
 
-	function ControlsLinkExtra() {
+	const ControlsLinkExtra = () => {
 		return (
 			<div className="connection">
 				<Checkbox
@@ -330,13 +331,15 @@ const ControlsLink = (props: Props) => {
 									<Icon icon="info-sign" /> Preview &nbsp;
 								</div>
 								<div className="controls-link-pub-edge">
-									<PubEdgeListingCard
-										inPubBody={true}
-										isInboundEdge={false}
-										pubEdge={pubEdge}
-										pubEdgeDescriptionIsVisible={false}
-										showIcon={true}
-									/>
+									<Card>
+										<PubEdgeListingCard
+											inPubBody={true}
+											isInboundEdge={false}
+											pubEdge={pubEdge}
+											pubEdgeDescriptionIsVisible={false}
+											showIcon={true}
+										/>
+									</Card>
 								</div>
 							</>
 						)}
@@ -344,7 +347,17 @@ const ControlsLink = (props: Props) => {
 				)}
 			</div>
 		);
-	}
+	};
+
+	const handleDestroyUsAll = () => {
+		if (activeLink.attrs.pubEdgeId) {
+			activeLink.updateAttrs({ pubEdgeId: null });
+			removeOutboundEdge(pubEdge);
+			setPubEdge(null);
+			setStatus(Status.EditingLinkExtra);
+		}
+		activeLink.removeLink();
+	};
 
 	return (
 		<div className="controls-link-component">
@@ -389,7 +402,7 @@ const ControlsLink = (props: Props) => {
 						minimal
 						title="Remove"
 						icon="disable"
-						onClick={activeLink.removeLink}
+						onClick={handleDestroyUsAll}
 					/>
 					remove
 					<AnchorButton
