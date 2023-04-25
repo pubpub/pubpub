@@ -215,7 +215,7 @@
 		"uuid-validate": "0.0.3",
 		"valid-url": "^1.0.9",
 		"xmlbuilder": "^13.0.2",
-		"yaml": "^1.6.0",
+		"yaml": "^2.2.2",
 		"yargs": "^13.2.4",
 		"zod": "^3.17.3",
 		"zod-to-json-schema": "^3.17.0",
