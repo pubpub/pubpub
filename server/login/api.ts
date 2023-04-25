@@ -122,6 +122,7 @@ app.post('/api/login', (req, res, next) => {
 			if (unaunthenticatedValues.includes(err.message)) {
 				return res.status(401).json('Login attempt failed');
 			}
+			res.cookie('pp-cache', 'pp-no-cache');
 			return res.status(500).json(err.message);
 		});
 });
