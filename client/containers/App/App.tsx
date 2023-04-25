@@ -4,14 +4,15 @@ import classNames from 'classnames';
 
 import {
 	Header,
-	Footer,
 	LegalBanner,
 	AccentStyle,
 	NavBar,
 	SkipLink,
+	Footer,
 	MobileAware,
 	FacetsStateProvider,
 } from 'components';
+import { MinimalFooter, minimalFooterData } from 'client/layouts/MinimalFooter';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
 import MinimalHeader from 'client/layouts/MinimalHeader/MinimalHeader';
@@ -65,6 +66,13 @@ const App = (props: Props) => {
 			<Header />
 		);
 
+	const usingMinimalFooter = featureFlags['minimal-footer'];
+	const footer =
+		usingMinimalFooter && isDashboard ? (
+			<MinimalFooter {...minimalFooterData} communityData={communityData} />
+		) : (
+			<Footer />
+		);
 	return (
 		<PageContext.Provider value={pageContextProps}>
 			<FacetsStateProvider
@@ -94,11 +102,10 @@ const App = (props: Props) => {
 								)}
 							/>
 						)}
-						{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message */}
-						<div id="main-content" tabIndex="-1">
+						<div id="main-content" tabIndex={-1}>
 							<ActiveComponent {...viewData} />
 						</div>
-						{showFooter && <Footer />}
+						{showFooter && footer}
 					</div>
 				</RKProvider>
 			</FacetsStateProvider>
