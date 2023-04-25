@@ -101,7 +101,7 @@ const ControlsLink = (props: Props) => {
 		} else {
 			setStatus(Status.EditingLink);
 		}
-	}, [status, pubEdgeId]);
+	}, [status, pubEdgeId, activeLink]);
 
 	useUpdateEffect(() => activeLink.updateAttrs({ href: debouncedHref }), [debouncedHref]);
 
@@ -335,6 +335,7 @@ const ControlsLink = (props: Props) => {
 										isInboundEdge={false}
 										pubEdge={pubEdge}
 										pubEdgeDescriptionIsVisible={false}
+										showIcon={true}
 									/>
 								</div>
 							</>
@@ -381,21 +382,27 @@ const ControlsLink = (props: Props) => {
 					}
 					disabled={isStatus(status, Status.UpdatingEdge)}
 				/>
-				<Button
-					small
-					minimal
-					title="Remove"
-					icon="disable"
-					onClick={activeLink.removeLink}
-				/>
-				<AnchorButton
-					small
-					minimal
-					title="Visit URL"
-					icon="share"
-					href={href}
-					target="_blank"
-				/>
+				options
+				<div className="actions-left">
+					<Button
+						small
+						minimal
+						title="Remove"
+						icon="disable"
+						onClick={activeLink.removeLink}
+					/>
+					remove
+					<AnchorButton
+						small
+						minimal
+						title="Visit URL"
+						icon="share"
+						href={href}
+						target="_blank"
+						className="visit"
+					/>
+					visit url
+				</div>
 			</div>
 			<Collapse
 				isOpen={isStatus(

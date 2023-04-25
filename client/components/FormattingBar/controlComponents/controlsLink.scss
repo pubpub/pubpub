@@ -5,11 +5,21 @@
 .controls-link-component {
 	display: flex;
 	flex-direction: column;
+	width: 400px;
+	max-width: 400px;
 
 	.actions {
 		display: flex;
 		gap: 5px;
 		margin: 5px 0;
+		text-transform: uppercase;
+		justify-content: start;
+		.actions-left {
+			margin-left: auto;
+		}
+		.visit {
+			margin-left: 12px;
+		}
 	}
 
 	.controls-col {
@@ -17,9 +27,6 @@
 	}
 
 	.connection {
-		max-width: 400px;
-		min-width: 300px;
-
 		> .bp3-control:last-child {
 			margin-bottom: 0;
 		}
