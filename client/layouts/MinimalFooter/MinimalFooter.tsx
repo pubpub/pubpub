@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { GridWrapper, Icon, IconName } from 'components';
+import { Icon, IconName } from 'components';
 
 require('./minimalFooter.scss');
 
@@ -36,17 +36,17 @@ const MinimalFooter = (props: MinimalFooterProps) => {
 
 	return (
 		<div className="minimal-footer-component">
-			<GridWrapper containerClassName="column-container">
-				<div className="left-column">
-					<a
-						key={props.leftItem.title}
-						area-label={props.leftItem.title}
-						href={props.leftItem.url}
-					>
-						<img alt={`${props.leftItem.title} logo`} src={props.leftItem.image} />
-					</a>
-				</div>
-				<div className="center-column">
+			<div className="left-column">
+				<a
+					key={props.leftItem.title}
+					area-label={props.leftItem.title}
+					href={props.leftItem.url}
+				>
+					<img alt={`${props.leftItem.title} logo`} src={props.leftItem.image} />
+				</a>
+			</div>
+			<div className="right-column">
+				<div className="nav-column">
 					<ul className="top-row">
 						{props.centerItems.top.map((item: MinimalFooterLink) => (
 							<li key={item.label}>
@@ -58,13 +58,13 @@ const MinimalFooter = (props: MinimalFooterProps) => {
 						{props.centerItems.bottom.map((item: MinimalFooterLink) => (
 							<span key={item.label}>{item.label}</span>
 						))}
-						<span className="built-on">
-							Published with
+						<div className="built-on">
+							<span>Published with</span>{' '}
 							<img className="logo" src={pubpubLogo} alt="PubPub logo" />
-						</span>
+						</div>
 					</div>
 				</div>
-				<div className="right-column">
+				<div className="social-column">
 					<a
 						className="icon"
 						aria-label={props.rightItem.label}
@@ -73,7 +73,7 @@ const MinimalFooter = (props: MinimalFooterProps) => {
 						<Icon icon={props.rightItem.icon} iconSize={22} />
 					</a>
 				</div>
-			</GridWrapper>
+			</div>
 		</div>
 	);
 };
