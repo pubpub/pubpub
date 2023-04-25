@@ -310,39 +310,35 @@ const ControlsLink = (props: Props) => {
 									</Button>
 								</div>
 							</div>
-							<div className="control-row">
-								<Button
-									title="Save Connection"
-									minimal
-									icon="tick"
-									onClick={handleCreateEdge}
-								>
-									{isStatus(status, Status.UpdatingEdge) ? (
-										<Spinner size={16} />
-									) : (
-										'Save Connection' || errorUpdatingEdge
-									)}
-								</Button>
-							</div>
 						</div>
-						{!activeLink.attrs.pubEdgeId && (
-							<>
-								<div className="preview">
-									<Icon icon="info-sign" /> Preview &nbsp;
-								</div>
-								<div className="controls-link-pub-edge">
-									<Card>
-										<PubEdgeListingCard
-											inPubBody={true}
-											isInboundEdge={false}
-											pubEdge={pubEdge}
-											pubEdgeDescriptionIsVisible={false}
-											showIcon={true}
-										/>
-									</Card>
-								</div>
-							</>
-						)}
+						<div className="preview">
+							<Icon icon="info-sign" /> Preview &nbsp;
+						</div>
+						<div className="controls-link-pub-edge">
+							<Card>
+								<PubEdgeListingCard
+									inPubBody
+									isInboundEdge={false}
+									pubEdge={pubEdge}
+									pubEdgeDescriptionIsVisible={false}
+									showIcon
+								/>
+							</Card>
+						</div>
+						<div className="control-row">
+							<Button
+								title="Save Connection"
+								minimal
+								icon="tick"
+								onClick={handleCreateEdge}
+							>
+								{isStatus(status, Status.UpdatingEdge) ? (
+									<Spinner size={16} />
+								) : (
+									'Save Connection' || errorUpdatingEdge
+								)}
+							</Button>
+						</div>
 					</>
 				)}
 			</div>
@@ -428,7 +424,7 @@ const ControlsLink = (props: Props) => {
 					Status.EditingEdge,
 					Status.UpdatingEdge,
 				)}
-				keepChildrenMounted={true}
+				keepChildrenMounted
 			>
 				<ControlsLinkExtra />
 			</Collapse>

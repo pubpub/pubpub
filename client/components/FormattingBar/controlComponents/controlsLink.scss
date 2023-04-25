@@ -5,19 +5,27 @@
 .controls-link-component {
 	display: flex;
 	flex-direction: column;
-	min-width: 400px;
+	min-width: 350px;
 	max-width: 710px;
+	margin: 10px 0;
+
+	.bp3-input-group {
+		margin: 0 10px 10px 10px;
+	}
+
+	.bp3-collapse-body {
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		margin-top: 10px;
+	}
 
 	.actions {
 		display: flex;
-		gap: 5px;
-		margin: 5px 0;
-		justify-content: start;
-		.actions-left {
-			margin-left: auto;
-		}
-		.visit {
-			margin-left: 12px;
+		gap: 12px;
+		margin: 0 10px 0 10px;
+		justify-content: space-between;
+
+		.bp3-button-text {
+			font-size: 12px;
 		}
 	}
 
@@ -26,8 +34,11 @@
 	}
 
 	.connection {
-		> .bp3-control:last-child {
-			margin-bottom: 0;
+		margin-top: 10px;
+
+		> *:not(.controls-link-pub-edge) {
+			margin-left: 10px;
+			margin-right: 10px;
 		}
 	}
 
@@ -37,5 +48,16 @@
 
 	.controls-link-pub-edge {
 		background-color: white;
+		overflow: hidden;
+		margin-bottom: 10px;
+
+		.bp3-card {
+			padding: 20px 0 0;
+			box-shadow: none;
+
+			.pub-edge-listing-card-component {
+				border: none;
+			}
+		}
 	}
 }

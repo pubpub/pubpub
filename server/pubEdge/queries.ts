@@ -49,7 +49,9 @@ export const createPubEdge = async ({
 };
 
 export const getPubEdgeById = (pubEdgeId: string) => {
-	return PubEdge.findByPk(pubEdgeId);
+	return PubEdge.findByPk(pubEdgeId, {
+		include: getPubEdgeIncludes({ includeTargetPub: true }),
+	});
 };
 
 export const updatePubEdge = async ({ pubEdgeId, ...update }) => {
