@@ -28,7 +28,7 @@ $bp: vendor.$bp-namespace;
 
 			.primary {
 				margin-top: 8px;
-				margin-top: .5rem;
+				margin-top: 0.5rem;
 				background-color: #fff;
 				clear: right;
 				position: relative;
@@ -45,9 +45,9 @@ $bp: vendor.$bp-namespace;
 					padding: 0;
 
 					.item {
-						font-family: "Noto Sans",Arial,Helvetica,sans-serif;
+						font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
 						font-size: 14px;
-						font-size: .875rem;
+						font-size: 0.875rem;
 						line-height: 1.71429;
 						font-weight: bold;
 						color: #212121;
@@ -59,11 +59,7 @@ $bp: vendor.$bp-namespace;
 		}
 	}
 
-	.main-menu {
-		display: none;
-	}
-
-	.tab-to-show-component:not(:focus):not(:active):not(.hold-open) {
+	.tab-to-show-component:not(:focus):not(:active) {
 		position: fixed;
 		top: auto;
 		overflow: hidden;
@@ -84,8 +80,49 @@ $bp: vendor.$bp-namespace;
 			outline-offset: 2px;
 		}
 	}
+
 	.hidden {
 		display: none;
+	}
+
+	.main-menu {
+		width: 320px;
+		background-color: #fff;
+		box-sizing: border-box;
+		color: #212121;
+		float: left;
+		height: 100vh;
+		left: -3000px;
+		max-width: 100%;
+		overflow: auto;
+		position: fixed;
+		top: 0;
+		transform: translate3d(3000px, 0, 0);
+		width: 100%;
+		z-index: 40;
+
+		&:not(.hidden) {
+			display: block;
+		}
+	}
+
+	.overlay {
+		background-color: rgba(0, 0, 0, 0.8);
+		position: fixed;
+		min-height: 100vh;
+		top: 0;
+		width: 100vw;
+		z-index: 30;
+	}
+}
+
+@media screen and (min-width: 56.25em) {
+	.collapsible-header-component {
+		.main-menu {
+			.hidden-wide {
+				display: none;
+			}
+		}
 	}
 }
 

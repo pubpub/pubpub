@@ -35,6 +35,7 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 	const [isMenuExpanded, setIsmenuExpanded] = useState(false);
 	return (
 		<div className="collapsible-header-component">
+			<div className={classNames(['overlay', !isMenuExpanded && 'hidden'])} />
 			<header className="header">
 				<div className="logo">
 					<div>
@@ -84,7 +85,10 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 					</nav>
 				</div>
 			</header>
-			<div className="main-menu" aria-expanded={isMenuExpanded}>
+			<div
+				className={classNames(['main-menu', !isMenuExpanded && 'hidden'])}
+				aria-expanded={isMenuExpanded}
+			>
 				<div>
 					<button type="button" onClick={() => setIsmenuExpanded(false)}>
 						Close
