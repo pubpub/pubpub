@@ -38,7 +38,7 @@ export default {
 						size: Number(node.getAttribute('data-size')) || 50,
 						align: node.getAttribute('data-align') || 'center',
 						caption: node.firstChild.getAttribute('alt') || '',
-						loop: !!node.firstChild.getAttribute('loop') || false,
+						loop: !!node.firstChild.getAttribute('loop'),
 					};
 				},
 			},
