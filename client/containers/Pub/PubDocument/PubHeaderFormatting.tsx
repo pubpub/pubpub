@@ -51,6 +51,15 @@ const PubHeaderFormatting = (props: Props) => {
 				}}
 			/>
 			<div className="right-content">
+				<FormattingBar
+					buttons={buttons.suggestedEditsButtonSet}
+					editorChangeObject={editorChangeObject || ({} as any)}
+					showBlockTypes={false}
+					controlsConfiguration={{
+						container: editorWrapperRef.current!,
+						isAbsolutelyPositioned: true,
+					}}
+				/>
 				{state && <PubWordCountButton doc={state.doc} />}
 				<PubHeaderCollaborators collabData={collabData} />
 				<PubConnectionStatusIndicator />
