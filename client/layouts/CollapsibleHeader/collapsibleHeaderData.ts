@@ -8,11 +8,11 @@ export default {
 		titleText: 'eLife home page',
 		url: '/',
 		sourceProps: {
-			srcSet: '/assets/patterns/img/patterns/organisms/elife-logo-xs.fd623d00.svg',
+			srcSet: 'https://assets.pubpub.org/pm5kgkt7/41674145834317.svg',
 			type: 'image/svg+xml',
 		},
 		imgProps: {
-			src: '/assets/patterns/img/patterns/organisms/elife-logo-xs@1x.24c98c55.png',
+			src: 'https://assets.pubpub.org/pm5kgkt7/41674145834317.svg',
 			alt: 'eLife logo',
 		},
 	},

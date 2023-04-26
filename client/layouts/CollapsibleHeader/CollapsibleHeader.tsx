@@ -34,11 +34,16 @@ type CollapsibleHeaderProps = {
 const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 	const [isMenuExpanded, setIsmenuExpanded] = useState(false);
 	return (
-		<div>
-			<header id="siteHeader">
-				<div role="banner">
+		<div className="collapsible-header-component">
+			<header className="header">
+				<div className="logo">
 					<div>
-						<a href="#maincontent">Skip to Content</a>
+						<a
+							href="#maincontent"
+							className="tab-to-show-component skip-link-component"
+						>
+							Skip to Content
+						</a>
 					</div>
 					<a href={props.logo.url}>
 						<picture>
@@ -46,30 +51,28 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 							{/* eslint-disable-next-line jsx-a11y/alt-text */}
 							<img {...props.logo.imgProps} />
 						</picture>
-						<span>{props.logo.titleText}</span>
+						<span className="hidden">{props.logo.titleText}</span>
 					</a>
 				</div>
-				<div role="navigation" aria-label="Main navigation">
-					<div>
-						<nav>
-							<ul>
-								<li>
-									<button
-										type="button"
-										className="borgir"
-										onClick={() => setIsmenuExpanded(true)}
-									>
-										Menu
-									</button>
+				<div className="navigation" role="navigation" aria-label="Main navigation">
+					<nav className="primary">
+						<ul className="list">
+							<li className="item">
+								<button
+									type="button"
+									className="borgir"
+									onClick={() => setIsmenuExpanded(true)}
+								>
+									Menu
+								</button>
+							</li>
+							{props.bannerNavItems.map((item) => (
+								<li key={item.title}>
+									<a href={item.url}>{item.title}</a>
 								</li>
-								{props.bannerNavItems.map((item) => (
-									<li key={item.title}>
-										<a href={item.url}>{item.title}</a>
-									</li>
-								))}
-							</ul>
-						</nav>
-					</div>
+							))}
+						</ul>
+					</nav>
 					<nav>
 						<ul>
 							{props.iconLinks.map((link) => (
@@ -79,29 +82,6 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 							))}
 						</ul>
 					</nav>
-				</div>
-				<div>
-					<div>
-						<form id="search" action="/search" method="GET">
-							<fieldset>
-								<label>
-									<span>Search by keyword or author</span>
-									<input
-										type="search"
-										name="for"
-										value=""
-										placeholder="Search by keyword or author"
-									/>
-								</label>
-								<button type="button" name="reset">
-									<span>Reset form</span>
-								</button>
-								<button type="submit">
-									<span>Search</span>
-								</button>
-							</fieldset>
-						</form>
-					</div>
 				</div>
 			</header>
 			<div className="main-menu" aria-expanded={isMenuExpanded}>
