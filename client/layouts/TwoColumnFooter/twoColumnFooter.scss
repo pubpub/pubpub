@@ -5,6 +5,64 @@
 }
 
 .two-column-footer-component {
+	.email-cta {
+		border-top: 1px solid #e0e0e0;
+		padding-top: 3rem;
+		padding-bottom: 4.5rem;
+		text-align: center;
+	}
+
+	.email-cta__container {
+		box-sizing: content-box;
+		padding: 0 6%;
+		margin: 0 auto;
+		max-width: 27.5rem;
+	}
+
+	.email-cta__header_text {
+		font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+		font-weight: bold;
+		font-size: 1.625rem;
+		line-height: 1.15385;
+		font-size: 1.25rem;
+		line-height: 1.2;
+		padding-bottom: 1.5rem;
+		color: #212121;
+	}
+
+	.button {
+		border: none;
+		border-radius: 4px;
+		color: #fff;
+		display: inline-block;
+		font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+		font-size: 0.875rem;
+		line-height: 1;
+		font-weight: 500;
+		padding: 1.0625rem 2.5rem 1rem;
+		text-align: center;
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+
+	.button--default {
+		background-color: #087acc;
+		border: 1px solid #087acc;
+		color: #fff;
+		padding: 0.9375rem 2.25rem 0.875rem;
+	}
+
+	.email-cta__privacy {
+		display: block;
+		font-size: 12px;
+		font-size: 0.75rem;
+		line-height: 2;
+		margin-bottom: 4px;
+		margin-bottom: 0.25rem;
+		margin-top: 12px;
+		margin-top: 0.75rem;
+	}
+
 	a {
 		text-decoration: none;
 		&:hover {

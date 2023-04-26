@@ -41,6 +41,8 @@ export type TwoColumnFooterProps = {
 		path: string;
 		text: string;
 	};
+	showEmailCallToAction: boolean;
+	showInvestorLogos: boolean;
 	smallPrints: SmallPrint[];
 	iconLinks: IconLink[];
 	links: Link[];
@@ -49,54 +51,78 @@ export type TwoColumnFooterProps = {
 const TwoColumnFooter = (props: TwoColumnFooterProps) => {
 	const { copyright, addressLines, smallPrints, certification, iconLinks, links, fullWidthLink } =
 		props;
+	const emailCallToAction = props.showEmailCallToAction ? (
+		<section className="email-cta">
+			<div className="email-cta__container">
+				<header className="email-cta__header">
+					<h2 className="email-cta__header_text">
+						Be the first to read new articles from eLife
+					</h2>
+				</header>
+				<a href="/content-alerts" className="button button--default email-cta__button">
+					Sign up for email alerts
+				</a>
+				<div className="email-cta__privacy">
+					<a className="email-cta__privacy_link" href="/privacy">
+						Privacy notice
+					</a>
+				</div>
+			</div>
+		</section>
+	) : null;
+	const investorLogos = props.showInvestorLogos ? (
+		<ol className="investor-logos" aria-label="eLife is funded by these organisations">
+			<li className="investor-logos__item">
+				<div className="investor-logos__container">
+					<picture className="investor-logos__picture">
+						<img
+							src="https://elifesciences.org/assets/images/investors/hhmi.9d0951a2.svg"
+							alt="Howard Hughes Medical Institute"
+							className="investor-logos__img"
+						/>
+					</picture>
+				</div>
+			</li>
+			<li className="investor-logos__item">
+				<div className="investor-logos__container">
+					<picture className="investor-logos__picture">
+						<img
+							src="https://elifesciences.org/assets/images/investors/wellcome.813f8634.svg"
+							alt="Wellcome Trust"
+							className="investor-logos__img"
+						/>
+					</picture>
+				</div>
+			</li>
+			<li className="investor-logos__item">
+				<div className="investor-logos__container">
+					<picture className="investor-logos__picture">
+						<img
+							src="https://elifesciences.org/assets/images/investors/max.89cebd37.svg"
+							alt="Max-Planck-Gesellschaft"
+							className="investor-logos__img"
+						/>
+					</picture>
+				</div>
+			</li>
+			<li className="investor-logos__item">
+				<div className="investor-logos__container">
+					<picture className="investor-logos__picture">
+						<img
+							src="https://elifesciences.org/assets/images/investors/kaw.c1bb2e4b.svg"
+							alt="Knut and Alice Wallenberg Foundation"
+							className="investor-logos__img"
+						/>
+					</picture>
+				</div>
+			</li>
+		</ol>
+	) : null;
+
 	return (
 		<div className="two-column-footer-component">
-			<ol className="investor-logos" aria-label="eLife is funded by these organisations">
-				<li className="investor-logos__item">
-					<div className="investor-logos__container">
-						<picture className="investor-logos__picture">
-							<img
-								src="https://elifesciences.org/assets/images/investors/hhmi.9d0951a2.svg"
-								alt="Howard Hughes Medical Institute"
-								className="investor-logos__img"
-							/>
-						</picture>
-					</div>
-				</li>
-				<li className="investor-logos__item">
-					<div className="investor-logos__container">
-						<picture className="investor-logos__picture">
-							<img
-								src="https://elifesciences.org/assets/images/investors/wellcome.813f8634.svg"
-								alt="Wellcome Trust"
-								className="investor-logos__img"
-							/>
-						</picture>
-					</div>
-				</li>
-				<li className="investor-logos__item">
-					<div className="investor-logos__container">
-						<picture className="investor-logos__picture">
-							<img
-								src="https://elifesciences.org/assets/images/investors/max.89cebd37.svg"
-								alt="Max-Planck-Gesellschaft"
-								className="investor-logos__img"
-							/>
-						</picture>
-					</div>
-				</li>
-				<li className="investor-logos__item">
-					<div className="investor-logos__container">
-						<picture className="investor-logos__picture">
-							<img
-								src="https://elifesciences.org/assets/images/investors/kaw.c1bb2e4b.svg"
-								alt="Knut and Alice Wallenberg Foundation"
-								className="investor-logos__img"
-							/>
-						</picture>
-					</div>
-				</li>
-			</ol>
+			{emailCallToAction}
+			{investorLogos}
 			<div className="columns">
 				<div className="column left">
 					<nav className="footer-navigation">
@@ -172,7 +198,6 @@ const TwoColumnFooter = (props: TwoColumnFooterProps) => {
 							</address>
 						</p>
 					</div>
-
 					<div className="site-smallprint">
 						<small>
 							© <time>{copyright.date}</time> {copyright.attribution} Subject to a{' '}
