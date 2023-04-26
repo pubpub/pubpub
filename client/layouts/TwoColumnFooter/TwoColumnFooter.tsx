@@ -41,8 +41,8 @@ export type TwoColumnFooterProps = {
 		path: string;
 		text: string;
 	};
-	showEmailCallToAction: boolean;
-	showInvestorLogos: boolean;
+	showEmailCallToAction?: boolean;
+	showInvestorLogos?: boolean;
 	smallPrints: SmallPrint[];
 	iconLinks: IconLink[];
 	links: Link[];

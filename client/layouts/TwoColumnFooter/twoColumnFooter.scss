@@ -52,6 +52,12 @@
 		padding: 0.9375rem 2.25rem 0.875rem;
 	}
 
+	.button--default:hover {
+		background-color: #0769b0;
+		border: 1px solid #0769b0;
+		color: #fff;
+	}
+
 	.email-cta__privacy {
 		display: block;
 		font-size: 12px;
@@ -61,6 +67,11 @@
 		margin-bottom: 0.25rem;
 		margin-top: 12px;
 		margin-top: 0.75rem;
+	}
+
+	.email-cta__privacy_link {
+		color: #757575;
+		font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
 	}
 
 	a {
