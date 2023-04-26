@@ -5,14 +5,15 @@ const defaultTwoColumnFooterProps: TwoColumnFooterProps = {
 	certification: {
 		url: 'https://positiveplanet.uk/company-dashboards/elife-sciences/',
 		alt: 'Positive Planet - Certified Carbon Neutral',
-		imageUrl: '/assets/patterns/img/patterns/molecules/carbon-neutral.706efe6d.svg',
+		imageUrl:
+			'https://elifesciences.org/assets/patterns/img/patterns/molecules/carbon-neutral.706efe6d.svg',
 	},
 	copyright: {
 		date: '2023',
 		attribution: 'eLife Sciences Publications Ltd.',
 		url: 'https://creativecommons.org/licenses/by/4.0/',
 		type: 'Creative Commons Attribution license',
-		exception: ', except where otherwise noted.ISSN: &nbsp; 2050-084X',
+		exception: ', except where otherwise noted. ISSN: 2050-084X',
 	},
 	addressLines: [
 		'eLife Sciences Publications, Ltd',
