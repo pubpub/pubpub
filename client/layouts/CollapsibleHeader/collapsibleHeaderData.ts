@@ -1,4 +1,9 @@
 export default {
+	iconLinks: [
+		{ title: 'Search', url: '/search' },
+		{ title: 'Alerts', url: '/content-alerts' },
+		{ title: 'Submit your research', url: '/submit-your-research' },
+	],
 	logo: {
 		titleText: 'eLife home page',
 		url: '/',

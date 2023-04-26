@@ -1,105 +1,152 @@
-import { AnchorButton } from '@blueprintjs/core';
-import React from 'react';
+import React, { useState } from 'react';
+import classNames from 'classnames';
 
-import { Icon, MobileAware, UserNotificationsPopover } from 'components';
-import UserMenu from 'components/GlobalControls/UserMenu';
+// import { AnchorButton } from '@blueprintjs/core';
+// import { Icon, MobileAware, UserNotificationsPopover } from 'components';
+// import UserMenu from 'components/GlobalControls/UserMenu';
 
 import './collapsibleHeader.scss';
 
-type CollapsibleHeaderNavItem = {
-	title: string;
+type NavItem = {
 	url: string;
+	title: string;
+	isMobileOnly?: boolean;
 };
 
 type CollapsibleHeaderProps = {
-	logoUrl: string;
-	logoLabel: string;
-	navItems: CollapsibleHeaderNavItem[];
-	loginData: any;
-	locationData: any;
-	twitterUrl: string;
+	iconLinks: NavItem[];
+	logo: {
+		titleText: string;
+		url: string;
+		sourceProps: {
+			srcSet: string;
+			type: string;
+		};
+		imgProps: {
+			src: string;
+			alt: string;
+		};
+	};
+	bannerNavItems: NavItem[];
+	navItemGroups: NavItem[][];
 };
 
-function CollapsibleHeaderLoginButton(props: { href: string }) {
+const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
+	const [isMenuExpanded, setIsmenuExpanded] = useState(false);
 	return (
-		<a href={props.href} aria-label="Login">
-			<MobileAware desktop={<span>Login or Signup</span>} mobile={<span>Login</span>} />
-		</a>
-	);
-}
-
-export default function CollapsibleHeader(props: CollapsibleHeaderProps) {
-	const isLoggedIn = Boolean(props.loginData.id);
-	const loginRedirectString = `?redirect=${props.locationData.path}${props.locationData.queryString.length > 1 ? props.locationData.queryString : ''
-		}`;
-	const loginHref = `/login${loginRedirectString}`;
-	const user = isLoggedIn ? (
-		<UserMenu loginData={props.loginData} />
-	) : (
-		<CollapsibleHeaderLoginButton href={loginHref} />
-	);
-	const userNotifications = isLoggedIn ? (
-		<UserNotificationsPopover>
-			{({ hasUnreadNotifications }) =>
-				hasUnreadNotifications ? (
-					<li>
-						<AnchorButton
-							minimal
-							aria-label="Notifications inbox"
-							icon={hasUnreadNotifications ? 'inbox-update' : 'inbox'}
-						/>
-					</li>
-				) : (
-					<React.Fragment />
-				)
-			}
-		</UserNotificationsPopover>
-	) : null;
-
-	return (
-		<header className="collapsible-header-component">
-			<div className="container">
-				<div className="logo">
-					<a href="/" aria-label={props.logoLabel}>
-						<img src={props.logoUrl} alt={props.logoLabel} />
+		<div>
+			<header id="siteHeader">
+				<div role="banner">
+					<div>
+						<a href="#maincontent">Skip to Content</a>
+					</div>
+					<a href={props.logo.url}>
+						<picture>
+							<source {...props.logo.sourceProps} />
+							{/* eslint-disable-next-line jsx-a11y/alt-text */}
+							<img {...props.logo.imgProps} />
+						</picture>
+						<span>{props.logo.titleText}</span>
 					</a>
 				</div>
-				<nav className="global">
+				<div role="navigation" aria-label="Main navigation">
+					<div>
+						<nav>
+							<ul>
+								<li>
+									<button
+										type="button"
+										className="borgir"
+										onClick={() => setIsmenuExpanded(true)}
+									>
+										Menu
+									</button>
+								</li>
+								{props.bannerNavItems.map((item) => (
+									<li key={item.title}>
+										<a href={item.url}>{item.title}</a>
+									</li>
+								))}
+							</ul>
+						</nav>
+					</div>
+					<nav>
+						<ul>
+							{props.iconLinks.map((link) => (
+								<li key={link.title}>
+									<a href={link.url}>{link.title}</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				</div>
+				<div>
+					<div>
+						<form id="search" action="/search" method="GET">
+							<fieldset>
+								<label>
+									<span>Search by keyword or author</span>
+									<input
+										type="search"
+										name="for"
+										value=""
+										placeholder="Search by keyword or author"
+									/>
+								</label>
+								<button type="button" name="reset">
+									<span>Reset form</span>
+								</button>
+								<button type="submit">
+									<span>Search</span>
+								</button>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</header>
+			<div className="main-menu" aria-expanded={isMenuExpanded}>
+				<div>
+					<button type="button" onClick={() => setIsmenuExpanded(false)}>
+						Close
+					</button>
+					<div role="banner">
+						<div>
+							<a href="#maincontent">Skip to Content</a>
+						</div>
+						<a href={props.logo.url}>
+							<picture>
+								<source {...props.logo.sourceProps} />
+								{/* eslint-disable-next-line jsx-a11y/alt-text */}
+								<img {...props.logo.imgProps} />
+							</picture>
+							<span>{props.logo.titleText}</span>
+						</a>
+					</div>
+				</div>
+				<nav role="navigation">
+					<h3>Menu</h3>
 					<ul>
-						<li>
-							<MobileAware
-								mobile={<AnchorButton minimal href="/search" icon="search" />}
-								desktop={
-									<a href="/search" aria-label="Search">
-										Search
-									</a>
-								}
-							/>
-						</li>
-						{userNotifications}
-						<MobileAware desktop={<li>{user}</li>} mobile={null} />
+						{props.navItemGroups.map((itemGroup) =>
+							itemGroup.map((item, idx) => {
+								return (
+									<li
+										key={item.title}
+										className={classNames([
+											idx === itemGroup.length - 1 && 'end-of-group',
+											item.isMobileOnly && 'hidden-wide',
+										])}
+									>
+										<a href={item.url}>{item.title}</a>
+									</li>
+								);
+							}),
+						)}
 					</ul>
-				</nav>
-				<nav className="links">
-					<ul>
-						{props.navItems.map((navItem) => (
-							<li key={navItem.url}>
-								<a href={navItem.url} aria-label={navItem.title}>
-									{navItem.title}
-								</a>
-							</li>
-						))}
-						<li>
-							<AnchorButton
-								minimal
-								href={props.twitterUrl}
-								icon={<Icon icon="twitter" />}
-								aria-label="Twitter"
-							/>
-						</li>
-					</ul>
+					<a href="#siteHeader">Back to top</a>
 				</nav>
 			</div>
-		</header>
+		</div>
 	);
-}
+};
+
+export default CollapsibleHeader;
