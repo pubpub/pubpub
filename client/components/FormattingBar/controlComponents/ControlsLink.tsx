@@ -18,8 +18,9 @@ import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
-import { OutboundEdge, PubEdge } from 'types';
+import { InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
+import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
 import {
 	createCandidateEdge,
 	stripMarkupFromString,
@@ -59,8 +60,7 @@ const ControlsLink = (props: Props) => {
 	} = props;
 
 	const { communityData } = usePageContext();
-	const { inPub, pubData, addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } =
-		usePubContext();
+	const { inPub, pubData } = usePubContext();
 
 	const [status, setStatus] = useState(Status.LoadingEdge);
 	const [href, setHref] = useState(activeLink.attrs.href);
@@ -72,9 +72,9 @@ const ControlsLink = (props: Props) => {
 
 	const inputRef = useRef();
 
-	// const { addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } = useDashboardEdges(
-	// 	pubData as Pub & { outboundEdges: OutboundEdge[]; inboundEdges: InboundEdge[] },
-	// );
+	const { addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } = useDashboardEdges(
+		pubData as Pub & { outboundEdges: OutboundEdge[]; inboundEdges: InboundEdge[] },
+	);
 
 	const setHashOrUrl = (value: string) => {
 		if (inPub) {
@@ -281,20 +281,22 @@ const ControlsLink = (props: Props) => {
 					checked={checkedOpenInNewTab}
 					onChange={toggleOpenInNewTab}
 				/>
-				<Checkbox
-					label={errorCreatingEdge || 'Create a Pub Connection for this URL'}
-					onChange={togglePubEdge}
-					checked={isStatus(
-						status,
-						Status.FetchingEdgeProposal,
-						Status.EditingEdge,
-						Status.UpdatingEdge,
-					)}
-					disabled={
-						isStatus(status, Status.FetchingEdgeProposal, Status.UpdatingEdge) ||
-						!isUrl(href)
-					}
-				/>
+				{inPub && (
+					<Checkbox
+						label={errorCreatingEdge || 'Create a Pub Connection for this URL'}
+						onChange={togglePubEdge}
+						checked={isStatus(
+							status,
+							Status.FetchingEdgeProposal,
+							Status.EditingEdge,
+							Status.UpdatingEdge,
+						)}
+						disabled={
+							isStatus(status, Status.FetchingEdgeProposal, Status.UpdatingEdge) ||
+							!isUrl(href)
+						}
+					/>
+				)}
 				{isStatus(status, Status.FetchingEdgeProposal) && <Spinner />}
 				{isStatus(status, Status.EditingEdge, Status.UpdatingEdge) && (
 					<>
