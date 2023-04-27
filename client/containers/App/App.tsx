@@ -12,7 +12,6 @@ import {
 	MobileAware,
 	FacetsStateProvider,
 } from 'components';
-import { MinimalFooter, minimalFooterData } from 'client/layouts/MinimalFooter';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
 import {
@@ -20,6 +19,8 @@ import {
 	minimalHeaderData,
 	TwoColumnFooter,
 	twoColumnFooterData,
+	MinimalFooter,
+	minimalFooterData,
 } from 'client/layouts';
 
 import SideMenu from './SideMenu';
@@ -54,18 +55,12 @@ const App = (props: Props) => {
 	}
 
 	const usingMinimalHeader = featureFlags['minimal-header'];
+	const usingMinimalFooter = featureFlags['minimal-footer'];
 	const usingTwoColumnFooter = featureFlags['two-column-footer'];
 
 	const showNav = !hideNav && !communityData.hideNav && !isDashboard && !usingMinimalHeader;
 	const showFooter = !hideFooter && !isDashboard;
 	const showHeader = !hideHeader;
-
-	const footer =
-		usingTwoColumnFooter && !isDashboard ? (
-			<TwoColumnFooter {...twoColumnFooterData} />
-		) : (
-			<Footer />
-		);
 
 	const header =
 		usingMinimalHeader && !isDashboard ? (
@@ -78,13 +73,15 @@ const App = (props: Props) => {
 			<Header />
 		);
 
-	const usingMinimalFooter = featureFlags['minimal-footer'];
 	const footer =
-		usingMinimalFooter && isDashboard ? (
+		usingTwoColumnFooter && !isDashboard ? (
+			<TwoColumnFooter {...twoColumnFooterData} />
+		) : usingMinimalFooter && isDashboard ? (
 			<MinimalFooter {...minimalFooterData} communityData={communityData} />
 		) : (
 			<Footer />
 		);
+
 	return (
 		<PageContext.Provider value={pageContextProps}>
 			<FacetsStateProvider
