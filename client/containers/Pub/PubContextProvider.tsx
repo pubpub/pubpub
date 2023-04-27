@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { NoteManager } from 'client/utils/notes';
-import { PatchFn, PubPageData } from 'types';
+import { OutboundEdge, PatchFn, PubEdge, PubPageData } from 'types';
 
 import { useLazyRef } from 'client/utils/useLazyRef';
+import { apiFetch } from 'client/utils/apiFetch';
+import { sortByRank } from 'utils/rank';
 import { useFacetsQuery } from 'client/utils/useFacets';
 import { IdlePatchFn, useIdlyUpdatedState } from 'client/utils/useIdlyUpdatedState';
 import { getPubHeadings, PubHeading } from './PubHeader/headerUtils';
@@ -37,6 +39,9 @@ export type PubContextType = {
 	updateLocalData: UpdateLocalDataFn;
 	noteManager: NoteManager;
 	pubHeadings: PubHeading[];
+	addCreatedOutboundEdge: (x: any) => void;
+	updateOutboundEdge: (edges: PubEdge) => void;
+	removeOutboundEdge: (x: any) => void;
 };
 
 const shimPubContextProps = {
@@ -99,6 +104,28 @@ export const PubContextProvider = (props: Props) => {
 		[updatePubData],
 	);
 
+	const edges = pubData.outboundEdges ? pubData.outboundEdges : ([] as unknown as OutboundEdge[]);
+	const [outboundEdges, _setOutboundEdges] = useState(sortByRank(edges));
+
+	const setOutboundEdges = (nextOutboundEdges: OutboundEdge[]) => {
+		_setOutboundEdges(nextOutboundEdges);
+		updatePubData({ outboundEdges: nextOutboundEdges });
+	};
+	const addCreatedOutboundEdge = (createdOutboundEdge) => {
+		setOutboundEdges(sortByRank([...outboundEdges, createdOutboundEdge]));
+	};
+
+	const updateOutboundEdge = (outboundEdge: PubEdge) => {
+		const index = outboundEdges.findIndex((edge) => edge.id === outboundEdge.id);
+		const nextOutboundEdges = [...outboundEdges];
+		nextOutboundEdges[index] = outboundEdge;
+		setOutboundEdges(nextOutboundEdges);
+	};
+
+	const removeOutboundEdge = (outboundEdge) => {
+		apiFetch.delete('/api/pubEdges', { pubEdgeId: outboundEdge.id });
+		setOutboundEdges(outboundEdges.filter((edge) => edge.id !== outboundEdge.id));
+	};
 	const pubContext: PubContextType = {
 		inPub: true,
 		pubData,
@@ -112,6 +139,9 @@ export const PubContextProvider = (props: Props) => {
 		pubBodyState,
 		updateLocalData,
 		pubHeadings,
+		addCreatedOutboundEdge,
+		updateOutboundEdge,
+		removeOutboundEdge,
 	};
 	const suspendedPubContext: PubContextType = usePubSuspendWhileTyping(pubContext);
 

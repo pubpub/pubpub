@@ -18,9 +18,8 @@ import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
-import { InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
+import { OutboundEdge, PubEdge } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
-import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
 import {
 	createCandidateEdge,
 	stripMarkupFromString,
@@ -60,7 +59,8 @@ const ControlsLink = (props: Props) => {
 	} = props;
 
 	const { communityData } = usePageContext();
-	const { inPub, pubData } = usePubContext();
+	const { inPub, pubData, addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } =
+		usePubContext();
 
 	const [status, setStatus] = useState(Status.LoadingEdge);
 	const [href, setHref] = useState(activeLink.attrs.href);
@@ -72,9 +72,9 @@ const ControlsLink = (props: Props) => {
 
 	const inputRef = useRef();
 
-	const { addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } = useDashboardEdges(
-		pubData as Pub & { outboundEdges: OutboundEdge[]; inboundEdges: InboundEdge[] },
-	);
+	// const { addCreatedOutboundEdge, removeOutboundEdge, updateOutboundEdge } = useDashboardEdges(
+	// 	pubData as Pub & { outboundEdges: OutboundEdge[]; inboundEdges: InboundEdge[] },
+	// );
 
 	const setHashOrUrl = (value: string) => {
 		if (inPub) {
