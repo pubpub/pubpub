@@ -15,8 +15,12 @@ import {
 import { MinimalFooter, minimalFooterData } from 'client/layouts/MinimalFooter';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
-import MinimalHeader from 'client/layouts/MinimalHeader/MinimalHeader';
-import minimalHeaderData from 'client/layouts/MinimalHeader/minimalHeaderData';
+import {
+	MinimalHeader,
+	minimalHeaderData,
+	TwoColumnFooter,
+	twoColumnFooterData,
+} from 'client/layouts';
 
 import SideMenu from './SideMenu';
 import Breadcrumbs from './Breadcrumbs';
@@ -50,10 +54,18 @@ const App = (props: Props) => {
 	}
 
 	const usingMinimalHeader = featureFlags['minimal-header'];
+	const usingTwoColumnFooter = featureFlags['two-column-footer'];
 
 	const showNav = !hideNav && !communityData.hideNav && !isDashboard && !usingMinimalHeader;
 	const showFooter = !hideFooter && !isDashboard;
 	const showHeader = !hideHeader;
+
+	const footer =
+		usingTwoColumnFooter && !isDashboard ? (
+			<TwoColumnFooter {...twoColumnFooterData} />
+		) : (
+			<Footer />
+		);
 
 	const header =
 		usingMinimalHeader && !isDashboard ? (
