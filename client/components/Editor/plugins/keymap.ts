@@ -152,6 +152,8 @@ export default (schema) => {
 		);
 	}
 
+	const customBlockSplitter = splitBlockPreservingAttrs(['textAlign', 'rtl']);
+
 	// This command runs the link input rule (converting emails and urls into links) whenever the
 	// user presses enter. Adding this to our enter handler is a hack to make sure the input rule
 	// behavior still works even though input rules don't work across nodes (see
@@ -177,7 +179,7 @@ export default (schema) => {
 			// Call our custom split block command, then add the link marks as part of the same
 			// transaction. This should be safe to do without mapping the start and end positions
 			// because the changes caused by splitBlock will all be after the cursor
-			splitBlockPreservingAttrs(['textAlign', 'rtl'])(state, (tr) => {
+			customBlockSplitter(state, (tr) => {
 				const addLinkMark = linkRuleHandler(schema.marks.link, false, tr);
 				const start = $cursor.pos - match[0].length;
 				const end = $cursor.pos;
@@ -195,7 +197,7 @@ export default (schema) => {
 		newlineInCode,
 		createParagraphNear,
 		liftEmptyBlock,
-		splitBlockPreservingAttrs(['textAlign', 'rtl']),
+		customBlockSplitter,
 	);
 
 	return [keymap(keys), keymap({ ...baseKeymap, Enter: customEnterCommand })];
