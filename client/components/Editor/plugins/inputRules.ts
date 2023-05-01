@@ -126,11 +126,9 @@ export const linkRuleHandler = (
 		}
 		const emailOrUri = match.groups!.emailOrUri;
 
-		const linkAttrs = match.groups!.atSign
-			? { href: 'mailto:' + emailOrUri }
-			: { href: emailOrUri, target: '_blank' };
+		const href = `${match.groups!.atSign ? 'mailto:' : ''}${emailOrUri}`;
 
-		const link = state.schema.text(emailOrUri, [state.schema.mark(markType, linkAttrs)]);
+		const link = state.schema.text(emailOrUri, [state.schema.mark(markType, { href })]);
 
 		let content;
 		if (appendWhitespace) {
