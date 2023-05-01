@@ -121,8 +121,9 @@ export const linkRuleHandler = (
 ) => {
 	return (state: EditorState, match: RegExpMatchArray, start: number, end: number) => {
 		const resolvedStart = state.doc.resolve(start);
+		const tr = transaction ?? state.tr;
 		if (!resolvedStart.parent.type.allowsMarkType(markType)) {
-			return state.tr;
+			return tr;
 		}
 		const emailOrUri = match.groups!.emailOrUri;
 
@@ -137,8 +138,6 @@ export const linkRuleHandler = (
 		} else {
 			content = link;
 		}
-
-		const tr = transaction ?? state.tr;
 
 		return tr.replaceWith(start, end, content);
 	};
