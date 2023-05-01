@@ -161,7 +161,10 @@ export default (schema) => {
 	// https://github.com/ProseMirror/prosemirror-inputrules/pull/6#issuecomment-894107661 for
 	// context)
 	const addLinkCommand = (state: EditorState, dispatch?: Dispatch) => {
-		const $cursor = (state.selection as TextSelection).$cursor;
+		if (!(state.selection instanceof TextSelection)) {
+			return false;
+		}
+		const $cursor = state.selection.$cursor;
 		if (!$cursor) {
 			return false;
 		}
