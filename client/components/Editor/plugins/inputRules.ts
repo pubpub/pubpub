@@ -131,12 +131,11 @@ export const linkRuleHandler = (
 
 		const link = state.schema.text(emailOrUri, [state.schema.mark(markType, { href })]);
 
-		let content;
+		const content = [link];
+
 		if (appendWhitespace) {
 			const whitespace = state.schema.text(match.groups!.whitespace);
-			content = Fragment.fromArray([link, whitespace]);
-		} else {
-			content = link;
+			content.push(whitespace);
 		}
 
 		return tr.replaceWith(start, end, content);
