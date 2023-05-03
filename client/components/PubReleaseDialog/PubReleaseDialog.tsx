@@ -181,7 +181,7 @@ const PubReleaseDialog = (props: Props) => {
 	const handleSuggestedEditsResolve = (action: boolean) => {
 		if (action) {
 			// this block must iterate over the doc and apply all suggested edits
-			console.log('handle accpeting all changes');
+			console.log('handle accepting all changes');
 		} else {
 			// this block must iterate over the doc and remove all suggested edits
 			console.log('handle rmoving changes');
@@ -194,7 +194,8 @@ const PubReleaseDialog = (props: Props) => {
 			<React.Fragment>
 				<Callout className="text-info" intent="warning">
 					You still have pending edits. Would you like to accept the suggested changes or
-					ignore them (this will remove any suggested changes from your doc)?
+					ignore them (
+					<strong>this will remove any suggested changes from your doc</strong>)?
 				</Callout>
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 					<Button disabled={isCreatingRelease} onClick={onClose}>
@@ -207,7 +208,7 @@ const PubReleaseDialog = (props: Props) => {
 					/>
 					<Button
 						text="Accept All"
-						intent="primary"
+						intent="success"
 						onClick={() => handleSuggestedEditsResolve(true)}
 					/>
 				</div>
