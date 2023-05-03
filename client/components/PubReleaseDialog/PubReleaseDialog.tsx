@@ -178,6 +178,43 @@ const PubReleaseDialog = (props: Props) => {
 		return null;
 	};
 
+	const handleSuggestedEditsResolve = (action: boolean) => {
+		if (action) {
+			// this block must iterate over the doc and apply all suggested edits
+			console.log('handle accpeting all changes');
+		} else {
+			// this block must iterate over the doc and remove all suggested edits
+			console.log('handle rmoving changes');
+		}
+	};
+
+	//  this will need to render on the prescence of suggested edits to make in the doc
+	const renderSuggestedEditsPreRealeaseButtons = () => {
+		return (
+			<React.Fragment>
+				<Callout className="text-info" intent="warning">
+					You still have pending edits. Would you like to accept the suggested changes or
+					ignore them (this will remove any suggested changes from your doc)?
+				</Callout>
+				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+					<Button disabled={isCreatingRelease} onClick={onClose}>
+						Return to draft
+					</Button>
+					<Button
+						text="Ignore All"
+						intent="warning"
+						onClick={() => handleSuggestedEditsResolve(false)}
+					/>
+					<Button
+						text="Accept All"
+						intent="primary"
+						onClick={() => handleSuggestedEditsResolve(true)}
+					/>
+				</div>
+			</React.Fragment>
+		);
+	};
+
 	const renderPreReleaseButtons = () => {
 		return (
 			<React.Fragment>
@@ -236,6 +273,7 @@ const PubReleaseDialog = (props: Props) => {
 				{renderReleaseResult()}
 			</div>
 			<div className={Classes.DIALOG_FOOTER}>
+				<div>{renderSuggestedEditsPreRealeaseButtons()}</div>
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 					{createdRelease && renderPostReleaseButtons()}
 					{!createdRelease && renderPreReleaseButtons()}
