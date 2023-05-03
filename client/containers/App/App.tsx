@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
 
@@ -62,25 +62,28 @@ const App = (props: Props) => {
 	const showFooter = !hideFooter && !isDashboard;
 	const showHeader = !hideHeader;
 
-	const header =
-		usingMinimalHeader && !isDashboard ? (
+	let header: ReactNode;
+	let footer: ReactNode;
+
+	if (usingMinimalHeader && !isDashboard) {
+		header = (
 			<MinimalHeader
 				{...minimalHeaderData}
 				locationData={locationData}
 				loginData={loginData}
 			/>
-		) : (
-			<Header />
 		);
+	} else {
+		header = <Header />;
+	}
 
-	const footer =
-		usingTwoColumnFooter && !isDashboard ? (
-			<TwoColumnFooter {...twoColumnFooterData} />
-		) : usingMinimalFooter && isDashboard ? (
-			<MinimalFooter {...minimalFooterData} communityData={communityData} />
-		) : (
-			<Footer />
-		);
+	if (usingMinimalFooter && !isDashboard) {
+		footer = <MinimalFooter {...minimalFooterData} communityData={communityData} />;
+	} else if (usingTwoColumnFooter && !isDashboard) {
+		footer = <TwoColumnFooter {...twoColumnFooterData} />;
+	} else {
+		footer = <Footer />;
+	}
 
 	return (
 		<PageContext.Provider value={pageContextProps}>
