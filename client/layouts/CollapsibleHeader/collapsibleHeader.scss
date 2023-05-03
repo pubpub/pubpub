@@ -4,55 +4,113 @@ $bp: vendor.$bp-namespace;
 
 .collapsible-header-component {
 	.header {
-		max-height: 143px;
 		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		margin: 3.375rem 0rem 2.625rem 0rem;
 		position: relative;
 		z-index: 20;
 
 		.logo {
-			float: left;
-			position: relative;
-			width: 88px;
+			> a {
+				height: 35px;
+				display: block;
+
+				> picture {
+					height: 100%;
+
+					> img {
+						height: 100%;
+					}
+				}
+			}
 		}
 
 		.navigation {
-			background-color: #fff;
-			height: 35px;
 			display: flex;
 			justify-content: right;
-			margin-left: 1.25rem;
+			height: 35px;
+			flex: 1;
+			background-color: #fff;
+			border-left: 1px solid #ccc;
 			position: relative;
-			width: 100%;
-			z-index: 20;
 
-			.primary {
-				margin-top: 8px;
+			> nav {
 				margin-top: 0.5rem;
-				background-color: #fff;
-				clear: right;
-				position: relative;
-				z-index: 10;
-
-				// non-mobile only
-				border-left: 1px solid #e0e0e0;
 				height: 24px;
 
-				.list {
-					align-items: center;
+				> ul {
+					list-style-type: none;
 					display: flex;
+					align-items: center;
 					margin: 0;
 					padding: 0;
 
-					.item {
-						font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
-						font-size: 14px;
-						font-size: 0.875rem;
-						line-height: 1.71429;
-						font-weight: bold;
-						color: #212121;
-						float: left;
-						list-style-type: none;
+					> li {
+						margin-left: 1.5rem;
+
+						> a {
+							font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+							font-size: 0.875rem;
+							line-height: 1.71429;
+							font-weight: bold;
+							color: #212121;
+							text-decoration: none;
+						}
+					}
+				}
+
+				&.primary {
+					flex: 1;
+					margin-top: 0.5rem;
+					height: 24px;
+
+					> ul {
+						// Move the menu button to the right.
+						justify-content: flex-end;
+						// Hide every nav item except for the menu button.
+						> li:not(:first-of-type) {
+							display: none;
+						}
+					}
+				}
+
+				// Hide the entire right navigation.
+				&.secondary {
+					display: none;
+				}
+			}
+
+			.bp3-button {
+				min-height: 24px;
+				padding: 0;
+			}
+
+			.bp3-button:not(.bp3-minimal) {
+				border: none;
+				border-radius: 3px;
+				color: #fff;
+				display: inline-block;
+				font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+				font-size: 0.6875rem;
+				line-height: 2.1818181818;
+				font-weight: 500;
+				padding: 0rem 0.375rem;
+				text-align: center;
+				height: 1.5rem;
+				text-decoration: none;
+				text-transform: uppercase;
+				background-image: none;
+				background-color: #087acc;
+			}
+
+			a,
+			.bp3-button {
+				&:hover {
+					background-color: transparent;
+					color: #087acc;
+					> .bp3-icon {
+						color: inherit;
 					}
 				}
 			}
@@ -67,6 +125,7 @@ $bp: vendor.$bp-namespace;
 		transform: translateX(-4000px);
 		z-index: -999;
 	}
+
 	.skip-link-component {
 		display: block;
 		position: fixed;
@@ -81,44 +140,72 @@ $bp: vendor.$bp-namespace;
 		}
 	}
 
-	.hidden {
-		display: none;
-	}
-
-	.main-menu {
-		width: 320px;
+	.menu {
 		background-color: #fff;
 		box-sizing: border-box;
 		color: #212121;
 		float: left;
-		height: 100vh;
-		left: -3000px;
-		max-width: 100%;
-		overflow: auto;
+		width: 100%;
 		position: fixed;
 		top: 0;
-		transform: translate3d(3000px, 0, 0);
-		width: 100%;
+		transform: translateX(-100%);
+		height: 100vh;
 		z-index: 40;
-
-		&:not(.hidden) {
-			display: block;
-		}
 	}
 
-	.overlay {
+	.menu-overlay {
 		background-color: rgba(0, 0, 0, 0.8);
+		display: none;
 		position: fixed;
 		min-height: 100vh;
 		top: 0;
 		width: 100vw;
 		z-index: 30;
 	}
+
+	&.is-menu-open {
+		.menu {
+			display: block;
+			transform: translateX(0);
+		}
+		.menu-overlay {
+			display: block;
+		}
+	}
 }
 
-@media screen and (min-width: 56.25em) {
+@media only screen and (min-width: 56.25em) {
 	.collapsible-header-component {
-		.main-menu {
+		.header {
+			max-height: 119px;
+
+			.navigation {
+				margin-left: 20px;
+				margin-left: 1.25rem;
+
+				// Hide all icon button text.
+				.bp3-button.bp3-minimal .bp3-button-text {
+					display: none;
+				}
+
+				nav.primary > ul {
+					// Move the list items to the left.
+					justify-content: initial;
+					// Hide every nav item except for the menu button.
+					> li:not(:first-of-type) {
+						display: block;
+					}
+				}
+
+				nav.secondary {
+					display: flex;
+				}
+			}
+		}
+
+		.menu {
+			width: 320px;
+
 			.hidden-wide {
 				display: none;
 			}
@@ -126,5 +213,19 @@ $bp: vendor.$bp-namespace;
 	}
 }
 
-@media screen and (max-width: 539px) {
+@media only screen and (min-width: 75em) {
+	.collapsible-header-component {
+		.header {
+			max-height: 143px;
+
+			.navigation {
+				// Show secondary navigation icon button text.
+				nav.secondary {
+					.bp3-button.bp3-minimal .bp3-button-text {
+						display: block;
+					}
+				}
+			}
+		}
+	}
 }

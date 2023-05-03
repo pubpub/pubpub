@@ -1,9 +1,6 @@
+import { CollapsibleHeaderProps } from './CollapsibleHeader';
+
 export default {
-	iconLinks: [
-		{ title: 'Search', url: '/search' },
-		{ title: 'Alerts', url: '/content-alerts' },
-		{ title: 'Submit your research', url: '/submit-your-research' },
-	],
 	logo: {
 		titleText: 'eLife home page',
 		url: '/',
@@ -16,14 +13,18 @@ export default {
 			alt: 'eLife logo',
 		},
 	},
-	bannerNavItems: [
-		{ url: '', title: 'Menu' },
+	headerNavLeft: [
 		{ url: '/', title: 'Home' },
 		{ url: '/magazine', title: 'Magazine' },
 		{ url: '/community', title: 'Community' },
 		{ url: '/about', title: 'About' },
 	],
-	navItemGroups: [
+	headerNavRight: [
+		{ title: 'Search', url: '/search', icon: 'search' },
+		{ title: 'Alerts', url: '/content-alerts', icon: 'notifications' },
+		{ title: 'Submit your research', url: '/submit-your-research', isButton: true },
+	],
+	menuNav: [
 		[
 			{ isMobileOnly: true, url: '/', title: 'Home' },
 			{ isMobileOnly: true, url: '/magazine', title: 'Magazine' },
@@ -55,4 +56,4 @@ export default {
 		],
 	],
 	twitterUrl: '',
-};
+} as CollapsibleHeaderProps;

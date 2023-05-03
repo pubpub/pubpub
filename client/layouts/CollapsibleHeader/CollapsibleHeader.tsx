@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 
-// import { AnchorButton } from '@blueprintjs/core';
-// import { Icon, MobileAware, UserNotificationsPopover } from 'components';
-// import UserMenu from 'components/GlobalControls/UserMenu';
-
 import './collapsibleHeader.scss';
+import { AnchorButton, Button } from '@blueprintjs/core';
+import { IconName } from '@blueprintjs/icons';
 
-type NavItem = {
+export type NavItem = {
 	url: string;
 	title: string;
+	icon?: IconName;
+	isButton?: boolean;
 	isMobileOnly?: boolean;
 };
 
-type CollapsibleHeaderProps = {
-	iconLinks: NavItem[];
+export type CollapsibleHeaderProps = {
 	logo: {
 		titleText: string;
 		url: string;
@@ -27,15 +26,15 @@ type CollapsibleHeaderProps = {
 			alt: string;
 		};
 	};
-	bannerNavItems: NavItem[];
-	navItemGroups: NavItem[][];
+	headerNavLeft: NavItem[];
+	headerNavRight: NavItem[];
+	menuNav: NavItem[][];
 };
 
 const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
-	const [isMenuExpanded, setIsmenuExpanded] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	return (
-		<div className="collapsible-header-component">
-			<div className={classNames(['overlay', !isMenuExpanded && 'hidden'])} />
+		<div className={classNames('collapsible-header-component', isMenuOpen && 'is-menu-open')}>
 			<header className="header">
 				<div className="logo">
 					<div>
@@ -49,48 +48,50 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 					<a href={props.logo.url}>
 						<picture>
 							<source {...props.logo.sourceProps} />
-							{/* eslint-disable-next-line jsx-a11y/alt-text */}
-							<img {...props.logo.imgProps} />
+							<img {...props.logo.imgProps} alt={props.logo.titleText} />
 						</picture>
-						<span className="hidden">{props.logo.titleText}</span>
 					</a>
 				</div>
 				<div className="navigation" role="navigation" aria-label="Main navigation">
 					<nav className="primary">
 						<ul className="list">
 							<li className="item">
-								<button
-									type="button"
-									className="borgir"
-									onClick={() => setIsmenuExpanded(true)}
+								<Button
+									minimal
+									onClick={() => setIsMenuOpen(true)}
+									rightIcon="menu"
 								>
 									Menu
-								</button>
+								</Button>
 							</li>
-							{props.bannerNavItems.map((item) => (
+							{props.headerNavLeft.map((item) => (
 								<li key={item.title}>
 									<a href={item.url}>{item.title}</a>
 								</li>
 							))}
 						</ul>
 					</nav>
-					<nav>
+					<nav className="secondary">
 						<ul>
-							{props.iconLinks.map((link) => (
+							{props.headerNavRight.map((link) => (
 								<li key={link.title}>
-									<a href={link.url}>{link.title}</a>
+									<AnchorButton
+										minimal={!link.isButton}
+										href={link.url}
+										icon={link.icon}
+									>
+										{link.title}
+									</AnchorButton>
 								</li>
 							))}
 						</ul>
 					</nav>
 				</div>
 			</header>
-			<div
-				className={classNames(['main-menu', !isMenuExpanded && 'hidden'])}
-				aria-expanded={isMenuExpanded}
-			>
+			<div className="menu-overlay" />
+			<div className="menu" aria-expanded={isMenuOpen}>
 				<div>
-					<button type="button" onClick={() => setIsmenuExpanded(false)}>
+					<button type="button" onClick={() => setIsMenuOpen(false)}>
 						Close
 					</button>
 					<div role="banner">
@@ -110,7 +111,7 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 				<nav role="navigation">
 					<h3>Menu</h3>
 					<ul>
-						{props.navItemGroups.map((itemGroup) =>
+						{props.menuNav.map((itemGroup) =>
 							itemGroup.map((item, idx) => {
 								return (
 									<li
