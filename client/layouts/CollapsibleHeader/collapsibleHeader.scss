@@ -255,10 +255,33 @@ $bp: vendor.$bp-namespace;
 	}
 }
 
+@media only screen and (min-width: 30em) {
+	.collapsible-header-component {
+		.menu {
+			padding-left: 48px;
+			padding-right: 48px;
+		}
+	}
+}
+
+@media only all and (min-width: 45.625em) {
+	.collapsible-header-component {
+		.menu {
+			> header {
+				.title {
+					position: relative;
+					width: 88px;
+				}
+			}
+		}
+	}
+}
+
 @media only screen and (min-width: 56.25em) {
 	.collapsible-header-component {
 		.header {
 			max-height: 119px;
+			margin: 2.625rem 0rem;
 
 			.navigation {
 				border-left: 1px solid #e0e0e0;
@@ -286,6 +309,10 @@ $bp: vendor.$bp-namespace;
 		.menu {
 			width: 320px;
 
+			> header {
+				padding-top: 2.625rem;
+			}
+
 			.hidden-wide {
 				display: none;
 			}
@@ -295,6 +322,11 @@ $bp: vendor.$bp-namespace;
 
 @media only screen and (min-width: 75em) {
 	.collapsible-header-component {
+		.menu {
+			> header {
+				padding-top: 3.25rem;
+			}
+		}
 		.header {
 			max-height: 143px;
 			margin: 3.375rem 0rem 2.625rem 0rem;
@@ -307,57 +339,6 @@ $bp: vendor.$bp-namespace;
 					}
 				}
 			}
-		}
-	}
-}
-
-@media only screen and (min-width: 30em) {
-	.collapsible-header-component {
-		.menu {
-			padding-left: 48px;
-			padding-right: 48px;
-		}
-	}
-}
-
-@media only screen and (min-width: 75em) {
-	.collapsible-header-component {
-		.menu {
-			> header {
-				padding-top: 3.25rem;
-			}
-		}
-	}
-}
-
-@media only screen and (min-width: 56.25em) {
-	.collapsible-header-component {
-		.menu {
-			> header {
-				padding-top: 2.625rem;
-			}
-		}
-	}
-}
-
-@media only all and (min-width: 45.625em) {
-	.collapsible-header-component {
-		.menu {
-			> header {
-				.title {
-					position: relative;
-					width: 88px;
-				}
-			}
-		}
-	}
-}
-
-@media only screen and (min-width: 56.25em) {
-	.collapsible-header-component {
-		header.header {
-			margin: 42px 0px;
-			margin: 2.625rem 0rem;
 		}
 	}
 }
