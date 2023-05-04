@@ -94,7 +94,7 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 					</nav>
 				</div>
 			</header>
-			<div className="menu-overlay" onClick={() => setIsMenuOpen(false)} />
+			<div className="menu-overlay" onClick={() => setIsMenuOpen(false)} role="none" />
 			<div className="menu" aria-expanded={isMenuOpen}>
 				<header>
 					<Button
