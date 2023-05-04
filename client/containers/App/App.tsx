@@ -77,13 +77,9 @@ const App = (props: Props) => {
 			/>
 		);
 	} else if (usingCollapsibleHeader && !isDashboard) {
-		header = (
-			<CollapsibleHeader
-				{...collapsibleHeaderData}
-				locationData={locationData}
-				loginData={loginData}
-			/>
-		);
+		header = <CollapsibleHeader {...collapsibleHeaderData} />;
+	} else {
+		header = <Header />;
 	}
 
 	if (usingMinimalFooter && !isDashboard) {
