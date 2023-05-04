@@ -3,11 +3,106 @@
 $bp: vendor.$bp-namespace;
 
 .collapsible-header-component {
+	color: #212121;
+
+	// Link/button hover color
+	a,
+	.bp3-button {
+		color: #212121;
+		&:hover {
+			background-color: transparent;
+			color: #087acc;
+			> .bp3-icon {
+				color: inherit;
+			}
+		}
+	}
+
+	.menu {
+		overflow: auto;
+		display: none;
+
+		> header {
+			padding-top: 1.875rem;
+			padding-bottom: 1.875rem;
+
+			.title {
+				display: inline-block;
+				position: relative;
+				z-index: 21;
+
+				> a {
+					display: block;
+					> picture {
+						> img {
+							display: block;
+							height: 35px;
+							width: 88px;
+						}
+					}
+				}
+			}
+
+			.close {
+				font-size: 0.875rem;
+				line-height: 1.71429;
+				font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+				font-weight: bold;
+				float: right;
+				width: 68px;
+			}
+		}
+		> nav {
+			> h3 {
+				border: 0;
+				clip: rect(0 0 0 0);
+				height: 1px;
+				margin: -1px;
+				overflow: hidden;
+				padding: 0;
+				position: absolute;
+				width: 1px;
+			}
+			> ul {
+				list-style-type: none;
+				margin: 0 0 1.5rem 0;
+				padding: 0;
+
+				> li {
+					font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+					padding-bottom: 1.5rem;
+					font-size: 1rem;
+					display: block;
+					line-height: 0;
+					text-align: left;
+
+					> a {
+						font-size: 0.875rem;
+						line-height: 1.71429;
+						font-weight: bold;
+						text-decoration: none;
+					}
+
+					&:last-child {
+						padding-bottom: 3rem;
+					}
+
+					&.end-of-group:not(:last-of-type) {
+						margin-bottom: 1.5rem;
+						border-bottom: 1px solid #e0e0e0;
+					}
+				}
+			}
+		}
+	}
+
 	.header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin: 3.375rem 0rem 2.625rem 0rem;
+		margin: 30px 0px;
+		margin: 1.875rem 0rem;
+		max-height: 96px;
 		position: relative;
 		z-index: 20;
 
@@ -31,8 +126,7 @@ $bp: vendor.$bp-namespace;
 			justify-content: right;
 			height: 35px;
 			flex: 1;
-			background-color: #fff;
-			border-left: 1px solid #ccc;
+			margin-left: 1.25rem;
 			position: relative;
 
 			> nav {
@@ -49,12 +143,12 @@ $bp: vendor.$bp-namespace;
 					> li {
 						margin-left: 1.5rem;
 
-						> a {
+						> a,
+						button {
 							font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
 							font-size: 0.875rem;
 							line-height: 1.71429;
 							font-weight: bold;
-							color: #212121;
 							text-decoration: none;
 						}
 					}
@@ -103,17 +197,6 @@ $bp: vendor.$bp-namespace;
 				background-image: none;
 				background-color: #087acc;
 			}
-
-			a,
-			.bp3-button {
-				&:hover {
-					background-color: transparent;
-					color: #087acc;
-					> .bp3-icon {
-						color: inherit;
-					}
-				}
-			}
 		}
 	}
 
@@ -143,12 +226,10 @@ $bp: vendor.$bp-namespace;
 	.menu {
 		background-color: #fff;
 		box-sizing: border-box;
-		color: #212121;
-		float: left;
 		width: 100%;
 		position: fixed;
 		top: 0;
-		transform: translateX(-100%);
+		left: 0;
 		height: 100vh;
 		z-index: 40;
 	}
@@ -159,6 +240,7 @@ $bp: vendor.$bp-namespace;
 		position: fixed;
 		min-height: 100vh;
 		top: 0;
+		left: 0;
 		width: 100vw;
 		z-index: 30;
 	}
@@ -166,7 +248,6 @@ $bp: vendor.$bp-namespace;
 	&.is-menu-open {
 		.menu {
 			display: block;
-			transform: translateX(0);
 		}
 		.menu-overlay {
 			display: block;
@@ -180,8 +261,7 @@ $bp: vendor.$bp-namespace;
 			max-height: 119px;
 
 			.navigation {
-				margin-left: 20px;
-				margin-left: 1.25rem;
+				border-left: 1px solid #e0e0e0;
 
 				// Hide all icon button text.
 				.bp3-button.bp3-minimal .bp3-button-text {
@@ -217,6 +297,7 @@ $bp: vendor.$bp-namespace;
 	.collapsible-header-component {
 		.header {
 			max-height: 143px;
+			margin: 3.375rem 0rem 2.625rem 0rem;
 
 			.navigation {
 				// Show secondary navigation icon button text.
@@ -226,6 +307,57 @@ $bp: vendor.$bp-namespace;
 					}
 				}
 			}
+		}
+	}
+}
+
+@media only screen and (min-width: 30em) {
+	.collapsible-header-component {
+		.menu {
+			padding-left: 48px;
+			padding-right: 48px;
+		}
+	}
+}
+
+@media only screen and (min-width: 75em) {
+	.collapsible-header-component {
+		.menu {
+			> header {
+				padding-top: 3.25rem;
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 56.25em) {
+	.collapsible-header-component {
+		.menu {
+			> header {
+				padding-top: 2.625rem;
+			}
+		}
+	}
+}
+
+@media only all and (min-width: 45.625em) {
+	.collapsible-header-component {
+		.menu {
+			> header {
+				.title {
+					position: relative;
+					width: 88px;
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 56.25em) {
+	.collapsible-header-component {
+		header.header {
+			margin: 42px 0px;
+			margin: 2.625rem 0rem;
 		}
 	}
 }

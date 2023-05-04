@@ -34,7 +34,13 @@ export type CollapsibleHeaderProps = {
 const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	return (
-		<div className={classNames('collapsible-header-component', isMenuOpen && 'is-menu-open')}>
+		<div
+			className={classNames(
+				'collapsible-header-component',
+				'container',
+				isMenuOpen && 'is-menu-open',
+			)}
+		>
 			<header className="header">
 				<div className="logo">
 					<div>
@@ -90,24 +96,24 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 			</header>
 			<div className="menu-overlay" />
 			<div className="menu" aria-expanded={isMenuOpen}>
-				<div>
-					<button type="button" onClick={() => setIsMenuOpen(false)}>
+				<header>
+					<Button
+						minimal
+						onClick={() => setIsMenuOpen(false)}
+						className="close"
+						rightIcon="cross"
+					>
 						Close
-					</button>
-					<div role="banner">
-						<div>
-							<a href="#maincontent">Skip to Content</a>
-						</div>
+					</Button>
+					<div role="banner" className="title">
 						<a href={props.logo.url}>
 							<picture>
 								<source {...props.logo.sourceProps} />
-								{/* eslint-disable-next-line jsx-a11y/alt-text */}
-								<img {...props.logo.imgProps} />
+								<img {...props.logo.imgProps} alt={props.logo.titleText} />
 							</picture>
-							<span>{props.logo.titleText}</span>
 						</a>
 					</div>
-				</div>
+				</header>
 				<nav role="navigation">
 					<h3>Menu</h3>
 					<ul>
@@ -127,7 +133,6 @@ const CollapsibleHeader = (props: CollapsibleHeaderProps) => {
 							}),
 						)}
 					</ul>
-					<a href="#siteHeader">Back to top</a>
 				</nav>
 			</div>
 		</div>
