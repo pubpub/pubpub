@@ -5,8 +5,8 @@ import { isDuqDuq, isProd } from 'utils/environment';
 app.get('/api/logout', (req, res) => {
 	res.cookie('gdpr-consent-survives-login', 'no');
 	res.cookie('pp-cache', 'pp-cache', {
-		...(isProd() && { domain: '.pubpub.org' }),
-		...(isDuqDuq() && { domain: '.duqduq.org' }),
+		...(isProd() && req.hostname.indexOf('pubpub.org') > -1 && { domain: '.pubpub.org' }),
+		...(isDuqDuq() && req.hostname.indexOf('pubpub.org') > -1 && { domain: '.duqduq.org' }),
 	});
 	// @ts-expect-error
 	req.logout();
