@@ -115,8 +115,10 @@ app.post('/api/login', (req, res, next) => {
 					throw new Error(err);
 				}
 				res.cookie('pp-cache', 'pp-no-cache', {
-					...(isProd() && { domain: '.pubpub.org' }),
-					...(isDuqDuq() && { domain: '.duqduq.org' }),
+					...(isProd() &&
+						req.hostname.indexOf('pubpub.org') > -1 && { domain: '.pubpub.org' }),
+					...(isDuqDuq() &&
+						req.hostname.indexOf('pubpub.org') > -1 && { domain: '.duqduq.org' }),
 				});
 				return res.status(201).json('success');
 			});
