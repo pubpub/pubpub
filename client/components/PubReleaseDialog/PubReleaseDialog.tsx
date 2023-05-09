@@ -184,16 +184,15 @@ const PubReleaseDialog = (props: Props) => {
 	};
 
 	const hasSuggestions = (): boolean => {
-		if (!editorChangeObject) return false;
+		if (!editorChangeObject || !editorChangeObject.view) return false;
 		const doc = editorChangeObject.view.state.doc;
-		const presents: string[] = [];
+		let hasSugg = false;
 		doc.nodesBetween(0, doc.nodeSize - 2, (node) => {
+			if (hasSugg) return;
 			const present = getSuggestionAttrsForNode(node);
-			console.log(present);
-			if (present) presents.push('*');
+			if (present) hasSugg = true;
 		});
-		console.log(presents);
-		return presents.length > 0;
+		return hasSugg;
 	};
 
 	const handleSuggestedEditsAccept = () => {
