@@ -241,7 +241,7 @@ const UserEdit = (props: Props) => {
 								label={item.label}
 								value={item.value}
 								onChange={withHasChanged(item.onChange)}
-								onBlur={withHasChanged(item.onBlur)}
+								onBlur={item.onBlur && withHasChanged(item.onBlur)}
 								helperText={item.helperText}
 								error={
 									(item.label === 'Orcid' && isOrcidInvalid && 'Invalid Orcid') ||
