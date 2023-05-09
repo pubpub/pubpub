@@ -52,7 +52,8 @@ const UserEdit = (props: Props) => {
 	};
 
 	const onBioChange = (e) => {
-		setBio(e.target.substring(0, 280).replace(/\n/g, ' '));
+		const { value } = e.target;
+		setBio(value.substring(0, 280).replace(/\n/g, ' '));
 	};
 
 	const onAvatarChange = (val) => {
