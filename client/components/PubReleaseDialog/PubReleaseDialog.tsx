@@ -10,6 +10,7 @@ import {
 	Icon,
 	InputGroup,
 } from '@blueprintjs/core';
+import { EditorState, Transaction } from 'prosemirror-state';
 
 import { pubUrl } from 'utils/canonicalUrls';
 import { formatDate, timeAgoBaseProps } from 'utils/dates';
@@ -195,25 +196,25 @@ const PubReleaseDialog = (props: Props) => {
 		return hasSugg;
 	};
 
-	const handleSuggestedEditsAccept = () => {
+	const suggestedEditsAction = (action: {
+		(state: EditorState, from: number, to: number): Transaction;
+	}) => {
 		if (!hasSuggestions()) return;
 		if (!editorChangeObject) return;
 		const editorState = editorChangeObject.view.state;
 		const size = editorChangeObject.view.state.doc.nodeSize;
-		const tr = acceptSuggestions(editorState, 0, size - 2);
+		const tr = action(editorState, 0, size - 2);
 		editorChangeObject.view.dispatch(tr);
+	};
+
+	const handleSuggestedEditsAccept = () => {
+		suggestedEditsAction(acceptSuggestions);
 	};
 
 	const handleSuggestedEditsReject = () => {
-		if (!hasSuggestions()) return;
-		if (!editorChangeObject) return;
-		const editorState = editorChangeObject.view.state;
-		const size = editorChangeObject.view.state.doc.nodeSize;
-		const tr = rejectSuggestions(editorState, 0, size - 2);
-		editorChangeObject.view.dispatch(tr);
+		suggestedEditsAction(rejectSuggestions);
 	};
 
-	//  this will need to render on the prescence of suggested edits to make in the doc
 	const renderSuggestedEditsPreRealeaseButtons = () => {
 		return (
 			<React.Fragment>
