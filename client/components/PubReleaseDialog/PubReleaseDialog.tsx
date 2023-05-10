@@ -47,7 +47,7 @@ const createRelease = ({ historyKey, pubId, communityId, noteContent, noteText }
 
 const PubReleaseDialog = (props: Props) => {
 	const { isOpen, onClose, historyKey, pub, onCreateRelease } = props;
-	const { communityData } = usePageContext();
+	const { communityData, featureFlags } = usePageContext();
 	const { collabData } = usePubContext();
 	const [noteData, setNoteData] = useState<{ content?: {}; text?: string }>({});
 	const [isCreatingRelease, setIsCreatingRelease] = useState(false);
@@ -215,12 +215,12 @@ const PubReleaseDialog = (props: Props) => {
 		suggestedEditsAction(rejectSuggestions);
 	};
 
-	const renderSuggestedEditsPreRealeaseButtons = () => {
+	const renderSuggestedEditsActionButtons = () => {
 		return (
 			<React.Fragment>
 				<Callout className="text-info" intent="warning">
 					You still have pending edits. Would you like to accept the suggested changes or
-					ignore them (
+					reject them (
 					<strong>this will remove any suggested changes from your doc</strong>)?
 				</Callout>
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
@@ -228,8 +228,8 @@ const PubReleaseDialog = (props: Props) => {
 						Return to draft
 					</Button>
 					<Button
-						text="Ignore All"
-						intent="warning"
+						text="Reject All"
+						intent="danger"
 						onClick={handleSuggestedEditsReject}
 					/>
 					<Button
@@ -300,8 +300,8 @@ const PubReleaseDialog = (props: Props) => {
 				{renderReleaseResult()}
 			</div>
 			<div className={Classes.DIALOG_FOOTER}>
-				{hasSuggestions() ? (
-					<div>{renderSuggestedEditsPreRealeaseButtons()}</div>
+				{hasSuggestions() && featureFlags.suggestedEdits ? (
+					<div>{renderSuggestedEditsActionButtons()}</div>
 				) : (
 					<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 						{createdRelease && renderPostReleaseButtons()}
