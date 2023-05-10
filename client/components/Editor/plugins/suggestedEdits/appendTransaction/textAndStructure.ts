@@ -31,8 +31,8 @@ const getNetFragment = (fragment: Fragment, suggestionKind: SuggestionKind) => {
 	for (let i = 0; i < fragment.childCount; i++) {
 		const child = fragment.child(i);
 		if (shouldIncludeNodeInNetFragment(child, suggestionKind)) {
-			const newChildFramgent = getNetFragment(child.content, suggestionKind);
-			const newChild = child.copy(newChildFramgent);
+			const newChildFragment = getNetFragment(child.content, suggestionKind);
+			const newChild = child.copy(newChildFragment);
 			children.push(newChild);
 		}
 	}
