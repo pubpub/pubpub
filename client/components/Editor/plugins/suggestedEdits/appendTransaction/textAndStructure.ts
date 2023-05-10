@@ -107,23 +107,26 @@ export const indicateTextAndStructureChanges = (context: SuggestedEditsTransacti
 		// was created by Suggested Edits and is therefore safe to outright delete.
 		const netRemovalSlice = getNetSlice(removedSlice, 'removal');
 		if (netRemovalSlice.size > 0) {
+			const numSteps = newTransaction.steps.length;
 			// Add the net removal slice back in...
 			newTransaction.replace(newStart, newStart, netRemovalSlice);
 
-			// Map the positions, again being careful to choose position before any inserted content
-			newStart = newTransaction.mapping.map(change.fromB, -1);
-			const removalEnd = newStart + netRemovalSlice.size;
+			if (numSteps !== newTransaction.steps.length) {
+				// Map the positions, again being careful to choose position before any inserted content
+				newStart = newTransaction.mapping.map(change.fromB, -1);
+				const removalEnd = newStart + netRemovalSlice.size;
 
-			// Now mark it as a suggested removal...
-			if (newStart < removalEnd) {
-				addSuggestionToRange('removal', context, newStart, removalEnd);
-			}
-			// And do the same things to its constituent nodes, as we did above for additions.
-			newTransaction.doc.nodesBetween(newStart, removalEnd, (node: Node, pos: number) => {
-				if (pos >= newStart && pos <= removalEnd && node.isBlock) {
-					addSuggestionToNode('removal', context, pos, node);
+				// Now mark it as a suggested removal...
+				if (newStart < removalEnd) {
+					addSuggestionToRange('removal', context, newStart, removalEnd);
 				}
-			});
+				// And do the same things to its constituent nodes, as we did above for additions.
+				newTransaction.doc.nodesBetween(newStart, removalEnd, (node: Node, pos: number) => {
+					if (pos >= newStart && pos <= removalEnd && node.isBlock) {
+						addSuggestionToNode('removal', context, pos, node);
+					}
+				});
+			}
 		}
 	});
 };
