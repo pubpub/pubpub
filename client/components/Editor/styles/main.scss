@@ -67,3 +67,31 @@ sub {
 sup {
 	vertical-align: super;
 }
+
+/*
+ * Replace the list markers with equivalent ::before pseudo elements. This allows us to style them more
+ * freely than the ::marker pseudo element, which doesn't support properties like border and background
+ * that we use to indicate suggested edits. 
+ */
+
+li {
+	list-style-type: none;
+	position: relative;
+}
+
+li::before {
+	margin-left: -1em;
+	position: absolute;
+}
+
+ul > li::before {
+	content: "•";
+}
+
+ol {
+	counter-reset: olCounter;
+    > li::before {
+		counter-increment: olCounter;
+		content: counter(olCounter) ".";
+	}
+}
