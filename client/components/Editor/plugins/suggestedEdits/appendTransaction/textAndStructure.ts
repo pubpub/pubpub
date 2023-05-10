@@ -59,11 +59,18 @@ export const indicateTextAndStructureChanges = (context: SuggestedEditsTransacti
 			),
 		ChangeSet.create(existingTransactions[0].before),
 	);
-	// These are in reverse order -- we work from the back of the document so that adding our
-	// removal slices doesn't invalidate positions later in the array.
-	const orderedChanges = [...changeset.changes].sort((x, y) => y.fromB - x.fromB);
+
+	// Sort the changes from earliest in the document to latest, so the transaction map will account
+	// for any changes we create
+	const orderedChanges = [...changeset.changes].sort((x, y) => x.fromB - y.fromB);
 	orderedChanges.forEach((change: Change) => {
-		const { fromA: oldStart, toA: oldEnd, fromB: newStart, toB: newEnd } = change;
+		const { fromA: oldStart, toA: oldEnd } = change;
+
+		// map the B positions through the existing changes on our new transaction
+		// This is a no-op on the first invocation of this callback
+		let newStart = newTransaction.mapping.map(change.fromB);
+		const newEnd = newTransaction.mapping.map(change.toB);
+
 		const addedSlice = newTransaction.doc.slice(newStart, newEnd);
 		const netAdditionSlice = getNetSlice(addedSlice, 'addition');
 		let netNewEnd = newEnd;
@@ -72,6 +79,11 @@ export const indicateTextAndStructureChanges = (context: SuggestedEditsTransacti
 		// to hang forever trying to place it. In this case we should just bail out.
 		if (addedSlice.size !== netAdditionSlice.size && netAdditionSlice.size >= 0) {
 			newTransaction.replace(newStart, newEnd, netAdditionSlice);
+
+			// After this replacement, the document may have shifted, so we map the positions again
+			// Note the -1, which puts the mapped position before any content inserted directly at
+			// that point (as opposed to after)
+			newStart = newTransaction.mapping.map(change.fromB, -1);
 			netNewEnd = newStart + netAdditionSlice.size;
 		}
 		if (netAdditionSlice.size > 0) {
@@ -95,9 +107,13 @@ export const indicateTextAndStructureChanges = (context: SuggestedEditsTransacti
 		// was created by Suggested Edits and is therefore safe to outright delete.
 		const netRemovalSlice = getNetSlice(removedSlice, 'removal');
 		if (netRemovalSlice.size > 0) {
-			const removalEnd = newStart + netRemovalSlice.size;
 			// Add the net removal slice back in...
 			newTransaction.replace(newStart, newStart, netRemovalSlice);
+
+			// Map the positions, again being careful to choose position before any inserted content
+			newStart = newTransaction.mapping.map(change.fromB, -1);
+			const removalEnd = newStart + netRemovalSlice.size;
+
 			// Now mark it as a suggested removal...
 			if (newStart < removalEnd) {
 				addSuggestionToRange('removal', context, newStart, removalEnd);
