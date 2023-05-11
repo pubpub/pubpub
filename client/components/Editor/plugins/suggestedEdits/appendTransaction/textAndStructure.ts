@@ -111,6 +111,12 @@ export const indicateTextAndStructureChanges = (context: SuggestedEditsTransacti
 			// Add the net removal slice back in...
 			newTransaction.replace(newStart, newStart, netRemovalSlice);
 
+			// Sometimes the call to replace silently does nothing and no new step is added to the
+			// transaction. In these cases, we skip the mark/attr changes below, since no content
+			// has been added to the doc. This happens because prosemirror changeset will produce
+			// two changes when deleting some nodes (like lists): one for the opening token and one
+			// for the closing token. That means netRemovalSlice sometimes only contains the closing
+			// token of a node, which doesn't need to be explicitly readded to the doc.
 			if (numSteps !== newTransaction.steps.length) {
 				// Map the positions, again being careful to choose position before any inserted content
 				newStart = newTransaction.mapping.map(change.fromB, -1);
