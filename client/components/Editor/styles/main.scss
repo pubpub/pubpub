@@ -89,8 +89,8 @@ li::before {
 
 ul > li::before {
 	content: '●';
-    top: 0.2em;
-    font-size: 0.8em;
+	top: 0.2em;
+	font-size: 0.8em;
 }
 
 ul > li > ul > li::before {
@@ -98,10 +98,10 @@ ul > li > ul > li::before {
 }
 
 ul > li > ul > li > ul li::before {
-    content: "■";
-    top: 0.3em;
-    left: -1.2em;
-    font-size: 0.7em;
+	content: '■';
+	top: 0.3em;
+	left: -1.2em;
+	font-size: 0.7em;
 }
 
 [data-rtl='true'] ul > li > ul > li > ul li::before {
