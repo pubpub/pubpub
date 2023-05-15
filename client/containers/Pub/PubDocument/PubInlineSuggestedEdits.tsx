@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Classes } from '@blueprintjs/core';
 
-import { FormattingBar, buttons } from 'components/FormattingBar';
+import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
 import { isDescendantOf } from 'components/Editor';
 
 import { usePubContext } from '../pubHooks';
@@ -52,10 +52,9 @@ const PubInlineSuggestedEdits = (props: Props) => {
 			return null;
 		}
 		return (
-			<FormattingBar
+			<FormattingBarSuggestedEdits
 				buttons={buttons.suggestedEditsButtonSet}
 				editorChangeObject={editorChangeObject || ({} as any)}
-				showBlockTypes={false}
 				controlsConfiguration={{
 					container: editorWrapperRef.current!,
 					isAbsolutelyPositioned: true,
