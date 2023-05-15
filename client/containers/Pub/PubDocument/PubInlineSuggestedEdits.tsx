@@ -24,17 +24,18 @@ const PubInlineSuggestedEdits = (props: Props) => {
 	const { collabData, pubBodyState } = usePubContext();
 	const { editorChangeObject } = collabData;
 
-	const selection = collabData.editorChangeObject?.selection;
+	const selection = collabData.editorChangeObject!.selection;
 	const shouldHide = useMemo(() => {
 		return (
 			!selection ||
-			selection.empty ||
+			// selection.empty ||
 			(selection as any).$anchorCell ||
 			collabData.editorChangeObject!.selectedNode ||
 			isDescendantOf('code_block', collabData.editorChangeObject!.selection)
 		);
 	}, [collabData.editorChangeObject, selection]);
 
+	// range of editable editor space
 	const selectionBoundingBox: Record<string, any> =
 		collabData.editorChangeObject!.selectionBoundingBox || {};
 

@@ -84,7 +84,6 @@ const PubDocument = () => {
 					{!isViewingHistory && (
 						<PubInlineSuggestedEdits editorWrapperRef={editorWrapperRef} />
 					)}
-					PubInlineSuggestedEdits
 					<PubEdgeListing
 						className="bottom-pub-edges"
 						pubData={pubData}
