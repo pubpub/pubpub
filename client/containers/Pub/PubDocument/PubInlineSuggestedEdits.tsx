@@ -14,13 +14,7 @@ const shouldOpenBelowSelection = () => {
 	);
 };
 
-type Props = {
-	editorWrapperRef: React.RefObject<HTMLDivElement>;
-};
-
-const PubInlineSuggestedEdits = (props: Props) => {
-	const { editorWrapperRef } = props;
-
+const PubInlineSuggestedEdits = () => {
 	const { collabData, pubBodyState } = usePubContext();
 	const { editorChangeObject } = collabData;
 
@@ -55,10 +49,6 @@ const PubInlineSuggestedEdits = (props: Props) => {
 			<FormattingBarSuggestedEdits
 				buttons={buttons.suggestedEditsButtonSet}
 				editorChangeObject={editorChangeObject || ({} as any)}
-				controlsConfiguration={{
-					container: editorWrapperRef.current!,
-					isAbsolutelyPositioned: true,
-				}}
 			/>
 		);
 	};
