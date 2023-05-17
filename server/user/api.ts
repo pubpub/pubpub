@@ -1,7 +1,7 @@
 import passport from 'passport';
 
 import app, { wrap } from 'server/server';
-import { ForbiddenError, NotFoundError, BadRequestError } from 'server/utils/errors';
+import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 
 import { getPermissions } from './permissions';
 import { createUser, updateUser, getUser } from './queries';
@@ -47,7 +47,7 @@ app.get(
 		const user = getUser(req.body);
 		if (user) return res.status(201).json(user);
 
-		throw new BadRequestError();
+		throw new NotFoundError();
 	}),
 );
 
