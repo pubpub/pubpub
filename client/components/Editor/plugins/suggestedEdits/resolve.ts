@@ -131,8 +131,8 @@ export const rejectSuggestions = (state: EditorState, from: number, to: number) 
 export const acceptSuggestedEdits = (state: EditorState, dispatch?: Dispatch): boolean => {
 	const range = getResolvableRangeForSelection(state);
 	if (range) {
-		const tr = acceptSuggestions(state, range.from, range.to);
 		if (dispatch) {
+			const tr = acceptSuggestions(state, range.from, range.to);
 			dispatch(tr);
 		}
 		return true;
@@ -143,8 +143,8 @@ export const acceptSuggestedEdits = (state: EditorState, dispatch?: Dispatch): b
 export const rejectSuggestedEdits = (state: EditorState, dispatch?: Dispatch): boolean => {
 	const range = getResolvableRangeForSelection(state);
 	if (range) {
-		const tr = rejectSuggestions(state, range.from, range.to);
 		if (dispatch) {
+			const tr = rejectSuggestions(state, range.from, range.to);
 			dispatch(tr);
 		}
 		return true;
