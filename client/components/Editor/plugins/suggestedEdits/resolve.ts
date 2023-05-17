@@ -16,16 +16,16 @@ const getResolvableRangeForSelection = (
 	const suggestedEditsState = getSuggestedEditsState(state);
 	if (suggestedEditsState) {
 		const { suggestionRanges } = suggestedEditsState;
-		if (selection.from === selection.to) {
-			const suggestionRange = suggestionRanges.find(
-				(range) => range.from <= selection.from && selection.from <= range.to,
-			);
-			if (suggestionRange) {
-				return suggestionRange;
-			}
-			return null;
+		const suggestionRange = suggestionRanges.find((range) => {
+			const selectionStartIntersectsSuggestion =
+				range.from <= selection.from && selection.from <= range.to;
+			const selectionEndIntersectsSuggestion =
+				range.from <= selection.to && selection.to <= range.to;
+			return selectionStartIntersectsSuggestion || selectionEndIntersectsSuggestion;
+		});
+		if (suggestionRange) {
+			return selection.empty ? suggestionRange : selection;
 		}
-		return selection;
 	}
 	return null;
 };
