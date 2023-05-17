@@ -10,6 +10,7 @@ const models = modelize`
         completed: false
         count: 1
     }
+	User suggestionUser {}
 `;
 
 setup(beforeAll, models.resolve);
@@ -39,5 +40,14 @@ describe('/api/users', () => {
 		await agent.put('/api/users').send({ userId: user.id, isSuperAdmin: true }).expect(201);
 		const userNow = await User.findOne({ where: { id: user.id } });
 		expect(userNow.isSuperAdmin).toEqual(false);
+	});
+
+	it('allows an exisiting user to read another users profile info', async () => {
+		const { user, suggestionUser } = models;
+		const agent = await login(user);
+		const suggestedUser = await agent
+			.get('/api/users')
+			.send({ userId: user.id, suggestionUserId: suggestionUser.id });
+		expect(suggestedUser.id).toEqual(suggestionUser.id);
 	});
 });

@@ -59,9 +59,9 @@ export const createUser = (inputValues) => {
 };
 
 export const getUser = (req) => {
-	const { userId } = req;
+	const { suggestionUserId } = req;
 
-	return User.findOne({ where: { id: userId } });
+	return User.findOne({ where: { id: suggestionUserId } });
 };
 
 export const updateUser = (inputValues, updatePermissions, req) => {
