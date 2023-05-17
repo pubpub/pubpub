@@ -1,12 +1,11 @@
 import React, { useMemo } from 'react';
-import { Classes } from '@blueprintjs/core';
 
 import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
-import { isDescendantOf } from 'components/Editor';
+import { getSuggestionAttrsForNode } from 'components/Editor/plugins/suggestedEdits/operations';
 
 import { usePubContext } from '../pubHooks';
 
-require('./pubInlineMenu.scss');
+require('./pubInlineSuggestionMenu.scss');
 
 const shouldOpenBelowSelection = () => {
 	return ['Android', 'iPad', 'iPhone'].some((device) =>
@@ -19,14 +18,24 @@ const PubInlineSuggestedEdits = () => {
 	const { editorChangeObject } = collabData;
 
 	const selection = collabData.editorChangeObject!.selection;
+
 	const shouldHide = useMemo(() => {
-		return (
-			!selection ||
-			// selection.empty ||
-			(selection as any).$anchorCell ||
-			collabData.editorChangeObject!.selectedNode ||
-			isDescendantOf('code_block', collabData.editorChangeObject!.selection)
-		);
+		const selectionInSuggestionRange = (): boolean => {
+			if (!collabData.editorChangeObject || !collabData.editorChangeObject.view) return false;
+			const doc = collabData.editorChangeObject.view.state.doc;
+			let inSuggestionRange = false;
+
+			doc.nodesBetween(selection.$anchor.pos - 1, selection.$head.pos + 1, (node) => {
+				if (inSuggestionRange) return;
+				const present = getSuggestionAttrsForNode(node);
+				if (present) inSuggestionRange = true;
+			});
+			return inSuggestionRange;
+		};
+
+		const inRange = selectionInSuggestionRange();
+
+		return !inRange || !selection;
 	}, [collabData.editorChangeObject, selection]);
 
 	// range of editable editor space
@@ -55,7 +64,7 @@ const PubInlineSuggestedEdits = () => {
 
 	return (
 		<div
-			className={`pub-inline-menu-component ${Classes.ELEVATION_2}`}
+			className="pub-inline-suggested-edit-menu-component"
 			style={{ position: 'absolute', top: topPosition, left: selectionBoundingBox.left }}
 		>
 			{renderFormattingBar()}
