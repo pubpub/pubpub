@@ -3,7 +3,7 @@ import passport from 'passport';
 import app from 'server/server';
 
 import { getPermissions } from './permissions';
-import { createUser, updateUser } from './queries';
+import { createUser, updateUser, getUser } from './queries';
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
@@ -31,6 +31,24 @@ app.post('/api/users', (req, res) => {
 		})
 		.catch((err) => {
 			console.error('Error in postUser: ', err);
+			return res.status(500).json(err.message);
+		});
+});
+
+app.get('/api/users', (req, res) => {
+	const requestIds = getRequestIds(req);
+	getPermissions(requestIds)
+		.then((permissions) => {
+			if (!permissions.read) {
+				throw new Error('Not Authorized');
+			}
+			return getUser(req.body);
+		})
+		.then((user) => {
+			return res.status(201).json(user);
+		})
+		.catch((err) => {
+			console.error('Error in getting user: ', err);
 			return res.status(500).json(err.message);
 		});
 });

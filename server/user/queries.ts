@@ -58,6 +58,12 @@ export const createUser = (inputValues) => {
 		});
 };
 
+export const getUser = (req) => {
+	const { userId } = req;
+
+	return User.findOne({ where: { id: userId } });
+};
+
 export const updateUser = (inputValues, updatePermissions, req) => {
 	// Filter to only allow certain fields to be updated
 	const filteredValues: Record<string, any> = {};
