@@ -17,7 +17,7 @@ import PubBottom from './PubBottom/PubBottom';
 import PubFileImport from './PubFileImport';
 import PubHeaderFormatting from './PubHeaderFormatting';
 import PubHistoricalNotice from './PubHistoricalNotice';
-// import PubInlineMenu from './PubInlineMenu';
+import PubInlineMenu from './PubInlineMenu';
 import PubInlineSuggestedEdits from './PubInlineSuggestedEdits';
 import PubLinkController from './PubLinkController';
 import PubMaintenanceNotice from './PubMaintenanceNotice';
@@ -80,7 +80,7 @@ const PubDocument = () => {
 							updatePubData={updatePubData}
 						/>
 					)}
-					{/* {!isViewingHistory && <PubInlineMenu />} */}
+					{!isViewingHistory && <PubInlineMenu />}
 					{!isViewingHistory && <PubInlineSuggestedEdits />}
 					<PubEdgeListing
 						className="bottom-pub-edges"

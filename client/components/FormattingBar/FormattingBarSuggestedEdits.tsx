@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button } from 'reakit';
 
-import { Icon, Avatar } from 'components';
+import { Icon } from 'components';
 
 import { EditorChangeObject } from 'components/Editor';
 import { useRefMap } from 'client/utils/useRefMap';
 import { FormattingBarButtonData } from './types';
-import { suggestedEditsToggle, suggestedEditsReject, suggestedEditsAccept } from './buttons';
+import { suggestedEditsReject, suggestedEditsAccept } from './buttons';
 import { useCommandStates } from './hooks/useCommandStates';
 
 type Props = {
@@ -25,20 +25,8 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 		commands: buttons,
 	});
 
-	const handleToggle = () => {
-		const commandState = commandStates[suggestedEditsToggle.key];
-		commandState?.run();
-		view.focus();
-	};
-
-	const handleReject = () => {
-		const commandState = commandStates[suggestedEditsReject.key];
-		commandState?.run();
-		view.focus();
-	};
-
-	const handleAccept = () => {
-		const commandState = commandStates[suggestedEditsAccept.key];
+	const handleClick = (button: FormattingBarButtonData) => {
+		const commandState = commandStates[button.key];
 		commandState?.run();
 		view.focus();
 	};
@@ -46,33 +34,23 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 	return (
 		<div>
 			<Button
-				ref={buttonElementRefs.getRef(suggestedEditsToggle.key)}
-				role="button"
-				focusable
-				title={suggestedEditsToggle.title}
-				aria-label={suggestedEditsToggle.title}
-				onClick={handleToggle}
-			>
-				<Icon icon={suggestedEditsToggle.icon} iconSize={16} />
-			</Button>
-			<Button
 				ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
 				role="button"
 				focusable
 				title={suggestedEditsReject.title}
 				aria-label={suggestedEditsReject.title}
-				onClick={handleReject}
+				onClick={() => handleClick(suggestedEditsReject)}
 			>
 				<Icon icon={suggestedEditsReject.icon} iconSize={16} />
 			</Button>
-			<Avatar width={16} initials="Who Is this" />
+			|
 			<Button
 				ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
 				role="button"
 				focusable
 				title={suggestedEditsAccept.title}
 				aria-label={suggestedEditsAccept.title}
-				onClick={handleAccept}
+				onClick={() => handleClick(suggestedEditsAccept)}
 			>
 				<Icon icon={suggestedEditsAccept.icon} iconSize={16} />
 			</Button>
