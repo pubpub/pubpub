@@ -1,6 +1,7 @@
 import passport from 'passport';
 
-import app from 'server/server';
+import app, { wrap } from 'server/server';
+import { ForbiddenError, NotFoundError, BadRequestError } from 'server/utils/errors';
 
 import { getPermissions } from './permissions';
 import { createUser, updateUser, getUser } from './queries';
@@ -35,23 +36,20 @@ app.post('/api/users', (req, res) => {
 		});
 });
 
-app.get('/api/users', (req, res) => {
-	const requestIds = getRequestIds(req);
-	getPermissions(requestIds)
-		.then((permissions) => {
-			if (!permissions.read) {
-				throw new Error('Not Authorized');
-			}
-			return getUser(req.body);
-		})
-		.then((user) => {
-			return res.status(201).json(user);
-		})
-		.catch((err) => {
-			console.error('Error in getting user: ', err);
-			return res.status(500).json(err.message);
-		});
-});
+app.get(
+	'/api/users',
+	wrap(async (req, res) => {
+		const requestIds = getRequestIds(req);
+		const permissions = await getPermissions(requestIds);
+		if (!permissions.read) {
+			throw new ForbiddenError();
+		}
+		const user = getUser(req.body);
+		if (user) return res.status(201).json(user);
+
+		throw new BadRequestError();
+	}),
+);
 
 app.put('/api/users', (req, res) => {
 	getPermissions(getRequestIds(req))

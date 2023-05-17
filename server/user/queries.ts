@@ -58,10 +58,10 @@ export const createUser = (inputValues) => {
 		});
 };
 
-export const getUser = (req) => {
+export const getUser = async (req) => {
 	const { suggestionUserId } = req;
-
-	return User.findOne({ where: { id: suggestionUserId } });
+	const user = await User.findOne({ where: { id: suggestionUserId } });
+	return user;
 };
 
 export const updateUser = (inputValues, updatePermissions, req) => {
