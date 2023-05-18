@@ -58,7 +58,7 @@ export const createUser = (inputValues) => {
 		});
 };
 
-export const getUser = async (req) => {
+export const getUserAvatarInfo = async (req) => {
 	const { suggestionUserId } = req;
 	const user = await User.findOne({ where: { id: suggestionUserId } });
 	const { fullName, initials, avatar } = user;
