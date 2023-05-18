@@ -44,7 +44,7 @@ app.get(
 		if (!permissions.read) {
 			throw new ForbiddenError();
 		}
-		const user = getUser(req.body);
+		const user = await getUser(req.body);
 		if (user) return res.status(201).json(user);
 
 		throw new NotFoundError();
