@@ -17,11 +17,7 @@ const getResolvableRangeForSelection = (
 	if (suggestedEditsState) {
 		const { suggestionRanges } = suggestedEditsState;
 		const suggestionRange = suggestionRanges.find((range) => {
-			const selectionStartIntersectsSuggestion =
-				range.from <= selection.from && selection.from <= range.to;
-			const selectionEndIntersectsSuggestion =
-				range.from <= selection.to && selection.to <= range.to;
-			return selectionStartIntersectsSuggestion || selectionEndIntersectsSuggestion;
+			return range.from <= selection.to && selection.from <= range.to;
 		});
 		if (suggestionRange) {
 			return selection.empty ? suggestionRange : selection;
