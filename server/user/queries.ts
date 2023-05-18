@@ -61,7 +61,8 @@ export const createUser = (inputValues) => {
 export const getUser = async (req) => {
 	const { suggestionUserId } = req;
 	const user = await User.findOne({ where: { id: suggestionUserId } });
-	return user;
+	const { fullName, initials, avatar } = user;
+	return { fullName, initials, avatar };
 };
 
 export const updateUser = (inputValues, updatePermissions, req) => {

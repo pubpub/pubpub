@@ -10,7 +10,11 @@ const models = modelize`
         completed: false
         count: 1
     }
-	User suggestionUser {}
+	User suggestionUser {
+		fullName: Nosferatu Jenkins
+		initials: NJ
+		avatar: https://assets.pubpub.org/2spb2cnj/41536761690312.jpg
+	}
 `;
 
 setup(beforeAll, models.resolve);
@@ -48,7 +52,11 @@ describe('/api/users', () => {
 		const res = await agent
 			.get('/api/users')
 			.send({ userId: user.id, suggestionUserId: suggestionUser.id });
-		const suggestedUser = res.body;
-		expect(suggestedUser.id).toEqual(suggestionUser.id);
+		const suggestedUserInfo = res.body;
+		expect(suggestedUserInfo).toEqual({
+			fullName: suggestionUser.fullName,
+			initials: suggestionUser.initials,
+			avatar: suggestionUser.avatar,
+		});
 	});
 });
