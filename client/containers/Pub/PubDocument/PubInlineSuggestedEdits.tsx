@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
-import { getSuggestionAttrsForNode } from 'components/Editor/plugins/suggestedEdits/operations';
+import { acceptSuggestedEdits } from 'client/components/Editor/plugins/suggestedEdits/resolve';
 
 import { usePubContext } from '../pubHooks';
 
@@ -22,15 +22,8 @@ const PubInlineSuggestedEdits = () => {
 	const shouldHide = useMemo(() => {
 		const selectionInSuggestionRange = (): boolean => {
 			if (!collabData.editorChangeObject || !collabData.editorChangeObject.view) return false;
-			const doc = collabData.editorChangeObject.view.state.doc;
-			let inSuggestionRange = false;
-
-			doc.nodesBetween(selection.$anchor.pos - 1, selection.$head.pos + 1, (node) => {
-				if (inSuggestionRange) return;
-				const present = getSuggestionAttrsForNode(node);
-				if (present) inSuggestionRange = true;
-			});
-			return inSuggestionRange;
+			const state = collabData.editorChangeObject.view.state;
+			return acceptSuggestedEdits(state);
 		};
 
 		const inRange = selectionInSuggestionRange();
@@ -46,9 +39,9 @@ const PubInlineSuggestedEdits = () => {
 
 	const topPosition =
 		window.scrollY +
-		(shouldOpenBelowSelection()
-			? selectionBoundingBox.bottom + 10
-			: selectionBoundingBox.top - 50);
+		(!shouldOpenBelowSelection()
+			? selectionBoundingBox.bottom + 5
+			: selectionBoundingBox.top - 30);
 
 	const renderFormattingBar = () => {
 		if (pubBodyState.isReadOnly) {
