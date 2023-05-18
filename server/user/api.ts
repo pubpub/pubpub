@@ -4,7 +4,7 @@ import app, { wrap } from 'server/server';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 
 import { getPermissions } from './permissions';
-import { createUser, updateUser, getUser } from './queries';
+import { createUser, updateUser, getUserAvatarInfo } from './queries';
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
@@ -44,7 +44,7 @@ app.get(
 		if (!permissions.read) {
 			throw new ForbiddenError();
 		}
-		const userInfo = await getUser(req.body);
+		const userInfo = await getUserAvatarInfo(req.body);
 		if (userInfo) {
 			return res.status(201).json(userInfo);
 		}
