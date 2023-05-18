@@ -10,11 +10,7 @@ const models = modelize`
         completed: false
         count: 1
     }
-	User suggestionUser {
-		fullName: Nosferatu Jenkins
-		initials: NJ
-		avatar: https://assets.pubpub.org/2spb2cnj/41536761690312.jpg
-	}
+	User suggestionUser {}
 `;
 
 setup(beforeAll, models.resolve);
