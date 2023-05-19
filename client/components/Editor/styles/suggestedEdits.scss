@@ -46,6 +46,14 @@ $removal-light: #ffd7d7;
 	}
 }
 
+@mixin strikethrough() {
+	text-decoration-thickness: 2px;
+	text-decoration-color: $removal;
+	-webkit-text-decoration-color: $removal;
+	text-decoration-line: line-through;
+	-webkit-text-decoration-line: line-through;
+}
+
 $iconSize: 0.75em;
 
 @mixin highlight-range($color) {
@@ -83,6 +91,7 @@ span[data-suggestion-mark='true'][data-suggestion-kind='removal'] {
 	&::before {
 		font-weight: 900;
 	}
+	@include strikethrough();
 	padding: 0 0.3 * $iconSize;
 	margin: 0 1px;
 	@include highlight-range($removal);
@@ -104,6 +113,7 @@ li[data-suggestion-kind='removal']::before {
 	// @include block-border('removal', rgba($removal, 0.5));
 	// @include corner-icon('–', $removal, $removal-light);
 	@include highlight-range($removal);
+	@include strikethrough();
 }
 
 > *[data-suggestion-kind='addition'] {
