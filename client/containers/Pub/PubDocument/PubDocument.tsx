@@ -34,7 +34,7 @@ const PubDocument = () => {
 		pubBodyState: { isReadOnly, hidePubBody },
 	} = usePubContext();
 	const { isViewingHistory } = historyData;
-	const { communityData, scopeData } = usePageContext();
+	const { communityData, scopeData, featureFlags } = usePageContext();
 	const pubEdgeDisplay = useFacetsQuery((F) => F.PubEdgeDisplay);
 	const { canEdit, canEditDraft } = scopeData.activePermissions;
 	const { isReviewingPub } = pubData;
@@ -81,7 +81,9 @@ const PubDocument = () => {
 						/>
 					)}
 					{!isViewingHistory && <PubInlineMenu />}
-					{!isViewingHistory && <PubInlineSuggestedEdits />}
+					{featureFlags.suggestedEdits && !isViewingHistory && (
+						<PubInlineSuggestedEdits />
+					)}
 					<PubEdgeListing
 						className="bottom-pub-edges"
 						pubData={pubData}
