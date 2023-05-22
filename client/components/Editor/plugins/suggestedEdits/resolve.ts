@@ -20,7 +20,13 @@ export const getResolvableRangeForSelection = (
 			return range.from <= selection.to && selection.from <= range.to;
 		});
 		if (suggestionRange) {
-			return selection.empty ? suggestionRange : selection;
+			// In cases where the selection is a range (from !== to), this max/min logic expands the
+			// returned selection to include the full suggestion range. This ensures that the range
+			// includes any suggestions that were merged into the suggestions on either end.
+			return {
+				from: Math.min(suggestionRange.from, selection.from),
+				to: Math.max(suggestionRange.to, selection.to),
+			};
 		}
 	}
 	return null;
