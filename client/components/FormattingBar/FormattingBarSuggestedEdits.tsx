@@ -10,12 +10,13 @@ import { suggestedEditsReject, suggestedEditsAccept } from './buttons';
 import { useCommandStates } from './hooks/useCommandStates';
 
 type Props = {
-	editorChangeObject: EditorChangeObject;
+	avatar: any;
 	buttons: FormattingBarButtonData[][];
+	editorChangeObject: EditorChangeObject;
 };
 
 const FormattingBarSuggestedEdits = (props: Props) => {
-	const { editorChangeObject, buttons } = props;
+	const { avatar, buttons, editorChangeObject } = props;
 	const buttonElementRefs = useRefMap();
 	const { view } = editorChangeObject;
 
@@ -31,6 +32,9 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 		view.focus();
 	};
 
+	const idkHowTorenderChildCompoenntAgain = () => {
+		return avatar;
+	};
 	return (
 		<div>
 			<Button
@@ -43,7 +47,7 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 			>
 				<Icon icon={suggestedEditsReject.icon} iconSize={16} />
 			</Button>
-			|
+			{idkHowTorenderChildCompoenntAgain()}
 			<Button
 				ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
 				role="button"
