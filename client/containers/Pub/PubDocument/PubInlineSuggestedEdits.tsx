@@ -39,7 +39,7 @@ const PubInlineSuggestedEdits = () => {
 
 	const topPosition =
 		window.scrollY +
-		(!shouldOpenBelowSelection()
+		(shouldOpenBelowSelection()
 			? selectionBoundingBox.bottom + 5
 			: selectionBoundingBox.top - 30);
 
