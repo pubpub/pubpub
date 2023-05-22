@@ -23,15 +23,14 @@ const PubInlineSuggestedEdits = () => {
 		if (!collabData.editorChangeObject || !collabData.editorChangeObject.view || !selection)
 			return true;
 		const state = collabData.editorChangeObject.view.state;
-
-		console.log('has suggested edits', acceptSuggestedEdits(state));
 		const inRange = acceptSuggestedEdits(state);
 		return !inRange || !selection;
 	}, [collabData.editorChangeObject, selection]);
 
-	// range of editable editor space
+	// box around selection
 	const selectionBoundingBox: Record<string, any> =
 		collabData.editorChangeObject!.selectionBoundingBox || {};
+
 	if (shouldHide) return null;
 
 	const topPosition =
