@@ -42,7 +42,6 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 			<Button
 				ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
 				role="button"
-				focusable
 				title={suggestedEditsReject.title}
 				aria-label={suggestedEditsReject.title}
 				onClick={() => handleClick(suggestedEditsReject)}
@@ -54,7 +53,6 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 			<Button
 				ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
 				role="button"
-				focusable
 				title={suggestedEditsAccept.title}
 				aria-label={suggestedEditsAccept.title}
 				onClick={() => handleClick(suggestedEditsAccept)}

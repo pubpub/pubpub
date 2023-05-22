@@ -29,7 +29,6 @@ const PubInlineSuggestedEdits = () => {
 	const { editorChangeObject } = collabData;
 	const selection = collabData.editorChangeObject!.selection;
 	const [suggestedUserAvatarInfo, setSuggestedUserAvatarInfo] = useState<UserAvatar | null>(null);
-	const [error, setError] = useState('');
 
 	const shouldHide = useMemo(() => {
 		if (!collabData.editorChangeObject || !collabData.editorChangeObject.view || !selection)
@@ -57,17 +56,15 @@ const PubInlineSuggestedEdits = () => {
 	}, [editorChangeObject]);
 
 	const fetchSuggestedUserAvatarInfo = useCallback(async () => {
-		const suggestionUser: UserAvatar = await apiFetch
-			.get(`/api/users?suggestionUserId=${encodeURIComponent(suggestionUserForRange)}`)
-			.catch((err: Error) => {
-				setError(err.message);
-			});
-		setSuggestedUserAvatarInfo(suggestionUser);
+		const suggestionUser: UserAvatar = await apiFetch.get(
+			`/api/users?suggestionUserId=${encodeURIComponent(suggestionUserForRange)}`,
+		);
+		if (suggestionUser) setSuggestedUserAvatarInfo(suggestionUser);
 	}, [suggestionUserForRange]);
 
 	useEffect(() => {
-		fetchSuggestedUserAvatarInfo();
-	}, [fetchSuggestedUserAvatarInfo]);
+		if (suggestionUserForRange) fetchSuggestedUserAvatarInfo();
+	}, [fetchSuggestedUserAvatarInfo, suggestionUserForRange]);
 
 	const renderAvatar = suggestedUserAvatarInfo ? (
 		<Tooltip content={suggestedUserAvatarInfo.fullName}>
@@ -111,7 +108,7 @@ const PubInlineSuggestedEdits = () => {
 			className="pub-inline-suggested-edit-menu-component"
 			style={{ position: 'absolute', top: topPosition, left: selectionBoundingBox.left }}
 		>
-			{error || renderFormattingBar()}
+			{renderFormattingBar()}
 		</div>
 	);
 };
