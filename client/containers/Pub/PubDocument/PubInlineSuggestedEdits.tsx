@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 
 import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
 import { acceptSuggestedEdits } from 'client/components/Editor/plugins/suggestedEdits/resolve';
+import { getSuggestionAttrsForNode } from 'client/components/Editor/plugins/suggestedEdits/operations';
 
 import { usePubContext } from '../pubHooks';
 
@@ -31,6 +32,11 @@ const PubInlineSuggestedEdits = () => {
 		return !inRange || !selection;
 	}, [collabData.editorChangeObject, selection]);
 
+	const doc = editorChangeObject!.view.state.doc;
+	doc.nodesBetween(0, doc.nodeSize - 2, (node) => {
+		const present = getSuggestionAttrsForNode(node);
+		console.log(present);
+	});
 	// range of editable editor space
 	const selectionBoundingBox: Record<string, any> =
 		collabData.editorChangeObject!.selectionBoundingBox || {};
