@@ -45,9 +45,7 @@ describe('/api/users', () => {
 	it('allows an exisiting user to read another users profile info', async () => {
 		const { user, suggestionUser } = models;
 		const agent = await login(user);
-		const res = await agent
-			.get('/api/users')
-			.send({ userId: user.id, suggestionUserId: suggestionUser.id });
+		const res = await agent.get('/api/users').send({ suggestionUserId: suggestionUser.id });
 		const suggestedUserInfo = res.body;
 		expect(suggestedUserInfo).toEqual({
 			fullName: suggestionUser.fullName,
