@@ -20,21 +20,18 @@ const PubInlineSuggestedEdits = () => {
 	const selection = collabData.editorChangeObject!.selection;
 
 	const shouldHide = useMemo(() => {
-		const selectionInSuggestionRange = (): boolean => {
-			if (!collabData.editorChangeObject || !collabData.editorChangeObject.view) return false;
-			const state = collabData.editorChangeObject.view.state;
-			return acceptSuggestedEdits(state);
-		};
+		if (!collabData.editorChangeObject || !collabData.editorChangeObject.view || !selection)
+			return true;
+		const state = collabData.editorChangeObject.view.state;
 
-		const inRange = selectionInSuggestionRange();
-
+		console.log('has suggested edits', acceptSuggestedEdits(state));
+		const inRange = acceptSuggestedEdits(state);
 		return !inRange || !selection;
 	}, [collabData.editorChangeObject, selection]);
 
 	// range of editable editor space
 	const selectionBoundingBox: Record<string, any> =
 		collabData.editorChangeObject!.selectionBoundingBox || {};
-
 	if (shouldHide) return null;
 
 	const topPosition =
