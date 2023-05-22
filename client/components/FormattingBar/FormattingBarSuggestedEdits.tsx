@@ -9,6 +9,8 @@ import { FormattingBarButtonData } from './types';
 import { suggestedEditsReject, suggestedEditsAccept } from './buttons';
 import { useCommandStates } from './hooks/useCommandStates';
 
+require('./formattingBarSuggestedEdits.scss');
+
 type Props = {
 	avatar: any;
 	buttons: FormattingBarButtonData[][];
@@ -36,7 +38,7 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 		return avatar;
 	};
 	return (
-		<div>
+		<div className="formatting-bar-suggested-edits">
 			<Button
 				ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
 				role="button"
@@ -44,6 +46,7 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 				title={suggestedEditsReject.title}
 				aria-label={suggestedEditsReject.title}
 				onClick={() => handleClick(suggestedEditsReject)}
+				className="reject-button"
 			>
 				<Icon icon={suggestedEditsReject.icon} iconSize={16} />
 			</Button>
@@ -55,6 +58,7 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 				title={suggestedEditsAccept.title}
 				aria-label={suggestedEditsAccept.title}
 				onClick={() => handleClick(suggestedEditsAccept)}
+				className="accept-button"
 			>
 				<Icon icon={suggestedEditsAccept.icon} iconSize={16} />
 			</Button>
