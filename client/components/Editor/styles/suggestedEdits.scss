@@ -32,8 +32,7 @@ $removal-light: #ffd7d7;
 @mixin corner-triangle($size, $color) {
 	position: relative;
 	&:hover::before,
-	.is-selected-range &::before,
-	&.is-selected-range::before {
+	.selected::before {
 		content: '';
 		position: absolute;
 		top: 0;
@@ -63,8 +62,7 @@ $iconSize: 0.75em;
 @mixin corner-icon($character, $color, $color-light) {
 	position: relative;
 	&:hover::before,
-	.is-selected-range &::before,
-	&.is-selected-range::before {
+	.selected::before {
 		content: $character;
 		position: absolute;
 		background-color: $color-light;
@@ -164,10 +162,10 @@ p > *[data-suggestion-kind='modification'] {
 
 .tableWrapper:not([data-suggestion-kind='addition']) {
 	tr > *[data-suggestion-kind='addition'] {
-		@include corner-triangle(6px, $addition);
+		@include corner-icon('+', $addition, $addition-light);
 	}
 
 	tr > *[data-suggestion-kind='removal'] {
-		@include corner-triangle(6px, $removal);
+		@include corner-icon('–', $removal, $removal-light);
 	}
 }
