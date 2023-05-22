@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-
+import { Tooltip } from '@blueprintjs/core';
 import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
 import { Avatar } from 'components';
 import { UserAvatar } from 'types';
@@ -10,6 +10,8 @@ import {
 import { getSuggestionAttrsForNode } from 'client/components/Editor/plugins/suggestedEdits/operations';
 
 import { apiFetch } from 'client/utils/apiFetch';
+import { usePageContext } from 'utils/hooks';
+
 import { usePubContext } from '../pubHooks';
 
 require('./pubInlineSuggestionMenu.scss');
@@ -22,6 +24,8 @@ const shouldOpenBelowSelection = () => {
 
 const PubInlineSuggestedEdits = () => {
 	const { collabData, pubBodyState } = usePubContext();
+	const { communityData } = usePageContext();
+
 	const { editorChangeObject } = collabData;
 	const selection = collabData.editorChangeObject!.selection;
 	const [suggestedUserAvatarInfo, setSuggestedUserAvatarInfo] = useState<UserAvatar | null>(null);
@@ -56,10 +60,10 @@ const PubInlineSuggestedEdits = () => {
 	}, [editorChangeObject]);
 
 	const fetchSuggestedUserAvatarInfo = useCallback(async () => {
-		const suggestionUser = await apiFetch
+		const suggestionUser: UserAvatar = await apiFetch
 			.get(`/api/users?suggestionUserId=${encodeURIComponent(suggestionUserForRange)}`)
 			.catch((err: Error) => {
-				console.log(err.message);
+				console.log('Oh no', err.message);
 			});
 		console.log(suggestionUser);
 		setSuggestedUserAvatarInfo(suggestionUser);
@@ -70,11 +74,15 @@ const PubInlineSuggestedEdits = () => {
 	}, [fetchSuggestedUserAvatarInfo]);
 
 	const renderAvatar = suggestedUserAvatarInfo ? (
-		<Avatar
-			initials={suggestedUserAvatarInfo.initials}
-			avatar={suggestedUserAvatarInfo.avatar}
-			width={24}
-		/>
+		<Tooltip content={suggestedUserAvatarInfo.fullName}>
+			<Avatar
+				initials={suggestedUserAvatarInfo.initials}
+				avatar={suggestedUserAvatarInfo.avatar}
+				width={32}
+				borderColor={communityData.accentColorDark}
+				borderWidth={3}
+			/>
+		</Tooltip>
 	) : null;
 
 	// range of editable editor space
