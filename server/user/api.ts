@@ -44,7 +44,9 @@ app.get(
 		if (!permissions.read) {
 			throw new ForbiddenError();
 		}
-		const userInfo = await getUserAvatarInfo(req.body);
+		const { suggestionUserId } = req.query;
+
+		const userInfo = await getUserAvatarInfo(suggestionUserId);
 		if (userInfo) {
 			return res.status(201).json(userInfo);
 		}

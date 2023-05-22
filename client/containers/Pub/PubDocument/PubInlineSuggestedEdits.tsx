@@ -1,9 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 
 import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
-import { acceptSuggestedEdits } from 'client/components/Editor/plugins/suggestedEdits/resolve';
+import { Avatar } from 'components';
+import { UserAvatar } from 'types';
+import {
+	acceptSuggestedEdits,
+	getResolvableRangeForSelection,
+} from 'client/components/Editor/plugins/suggestedEdits/resolve';
 import { getSuggestionAttrsForNode } from 'client/components/Editor/plugins/suggestedEdits/operations';
 
+import { apiFetch } from 'client/utils/apiFetch';
 import { usePubContext } from '../pubHooks';
 
 require('./pubInlineSuggestionMenu.scss');
@@ -17,8 +23,8 @@ const shouldOpenBelowSelection = () => {
 const PubInlineSuggestedEdits = () => {
 	const { collabData, pubBodyState } = usePubContext();
 	const { editorChangeObject } = collabData;
-
 	const selection = collabData.editorChangeObject!.selection;
+	const [suggestedUserAvatarInfo, setSuggestedUserAvatarInfo] = useState<UserAvatar | null>(null);
 
 	const shouldHide = useMemo(() => {
 		const selectionInSuggestionRange = (): boolean => {
@@ -32,11 +38,45 @@ const PubInlineSuggestedEdits = () => {
 		return !inRange || !selection;
 	}, [collabData.editorChangeObject, selection]);
 
-	const doc = editorChangeObject!.view.state.doc;
-	doc.nodesBetween(0, doc.nodeSize - 2, (node) => {
-		const present = getSuggestionAttrsForNode(node);
-		console.log(present);
-	});
+	const suggestionUserForRange = useMemo(() => {
+		if (editorChangeObject && editorChangeObject.view) {
+			const doc = editorChangeObject!.view.state.doc;
+			const range = getResolvableRangeForSelection(editorChangeObject.view.state);
+			if (range) {
+				let attrs;
+				doc.nodesBetween(range.from, range.to, (node) => {
+					const present = getSuggestionAttrsForNode(node);
+					attrs = present;
+				});
+
+				return attrs.suggestionUserId;
+			}
+		}
+		return null;
+	}, [editorChangeObject]);
+
+	const fetchSuggestedUserAvatarInfo = useCallback(async () => {
+		const suggestionUser = await apiFetch
+			.get(`/api/users?suggestionUserId=${encodeURIComponent(suggestionUserForRange)}`)
+			.catch((err: Error) => {
+				console.log(err.message);
+			});
+		console.log(suggestionUser);
+		setSuggestedUserAvatarInfo(suggestionUser);
+	}, [suggestionUserForRange]);
+
+	useEffect(() => {
+		fetchSuggestedUserAvatarInfo();
+	}, [fetchSuggestedUserAvatarInfo]);
+
+	const renderAvatar = suggestedUserAvatarInfo ? (
+		<Avatar
+			initials={suggestedUserAvatarInfo.initials}
+			avatar={suggestedUserAvatarInfo.avatar}
+			width={24}
+		/>
+	) : null;
+
 	// range of editable editor space
 	const selectionBoundingBox: Record<string, any> =
 		collabData.editorChangeObject!.selectionBoundingBox || {};
@@ -55,6 +95,7 @@ const PubInlineSuggestedEdits = () => {
 		}
 		return (
 			<FormattingBarSuggestedEdits
+				avatar={renderAvatar}
 				buttons={buttons.suggestedEditsButtonSet}
 				editorChangeObject={editorChangeObject || ({} as any)}
 			/>
