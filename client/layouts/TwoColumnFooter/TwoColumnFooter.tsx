@@ -63,9 +63,7 @@ const TwoColumnFooter = (props: TwoColumnFooterProps) => {
 					Sign up for email alerts
 				</a>
 				<div className="email-cta__privacy">
-					<a className="email-cta__privacy_link" href="/privacy">
-						Privacy notice
-					</a>
+					<a href="/privacy">Privacy notice</a>
 				</div>
 			</div>
 		</section>
