@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button } from 'reakit';
+import { Button, Classes } from '@blueprintjs/core';
+
+// import { Button } from 'reakit';
 
 import { Icon } from 'components';
 
@@ -38,7 +40,7 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 		return avatar;
 	};
 	return (
-		<div className="formatting-bar-suggested-edits">
+		<div className={`formatting-bar-suggested-edits ${Classes.ELEVATION_2}`}>
 			<Button
 				ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
 				role="button"
@@ -46,9 +48,9 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 				aria-label={suggestedEditsReject.title}
 				onClick={() => handleClick(suggestedEditsReject)}
 				className="reject-button"
-			>
-				<Icon icon={suggestedEditsReject.icon} iconSize={16} />
-			</Button>
+				minimal={true}
+				icon={<Icon icon={suggestedEditsReject.icon} iconSize={16} />}
+			/>
 			{idkHowTorenderChildCompoenntAgain()}
 			<Button
 				ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
@@ -57,9 +59,9 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 				aria-label={suggestedEditsAccept.title}
 				onClick={() => handleClick(suggestedEditsAccept)}
 				className="accept-button"
-			>
-				<Icon icon={suggestedEditsAccept.icon} iconSize={16} />
-			</Button>
+				minimal={true}
+				icon={<Icon icon={suggestedEditsAccept.icon} iconSize={16} />}
+			/>
 		</div>
 	);
 };

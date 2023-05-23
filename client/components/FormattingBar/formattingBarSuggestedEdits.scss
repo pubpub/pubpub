@@ -1,23 +1,26 @@
 .formatting-bar-suggested-edits {
 	display: flex;
+	background-color: #444;
+	color: white;
+	padding: 0.25em;
+
 	.reject-button {
 		margin-right: 21px;
-		max-height: 27px;
-		background-color: #444;
-		color: white;
-		border-radius: 5px;
 	}
+
 	.accept-button {
 		margin-left: 21px;
+	}
+
+	.accept-button,
+	.reject-button {
 		max-height: 27px;
+		border-radius: 2px;
 		background-color: #444;
-		border-radius: 5px;
 		color: white;
 	}
 
-	.accept-button:hover {
-		filter: brightness(85%);
-	}
+	.accept-button:hover,
 	.reject-button:hover {
 		filter: brightness(85%);
 	}
