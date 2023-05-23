@@ -67,7 +67,7 @@ const PubInlineSuggestedEdits = () => {
 	}, [fetchSuggestedUserAvatarInfo, suggestionUserForRange]);
 
 	const renderAvatar = suggestedUserAvatarInfo ? (
-		<Tooltip content={suggestedUserAvatarInfo.fullName}>
+		<Tooltip content={`Suggested by ${suggestedUserAvatarInfo.fullName}`}>
 			<Avatar
 				initials={suggestedUserAvatarInfo.initials}
 				avatar={suggestedUserAvatarInfo.avatar}
