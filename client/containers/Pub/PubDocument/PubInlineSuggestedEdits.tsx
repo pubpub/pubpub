@@ -38,7 +38,7 @@ const PubInlineSuggestedEdits = () => {
 		return !inRange || !selection;
 	}, [collabData.editorChangeObject, selection]);
 
-	const suggestionUserForRange = useMemo(() => {
+	const suggestionAttrsForRange = useMemo(() => {
 		if (editorChangeObject && editorChangeObject.view) {
 			const doc = editorChangeObject!.view.state.doc;
 			const range = getResolvableRangeForSelection(editorChangeObject.view.state);
@@ -48,30 +48,34 @@ const PubInlineSuggestedEdits = () => {
 					const present = getSuggestionAttrsForNode(node);
 					attrs = present;
 				});
-
-				return attrs.suggestionUserId;
+				return attrs;
 			}
 		}
 		return null;
 	}, [editorChangeObject]);
 
 	const fetchSuggestedUserAvatarInfo = useCallback(async () => {
-		const suggestionUser: UserAvatar = await apiFetch.get(
-			`/api/users?suggestionUserId=${encodeURIComponent(suggestionUserForRange)}`,
-		);
-		if (suggestionUser) setSuggestedUserAvatarInfo(suggestionUser);
-	}, [suggestionUserForRange]);
+		if (suggestionAttrsForRange) {
+			const suggestionUser: UserAvatar = await apiFetch.get(
+				`/api/users?suggestionUserId=${encodeURIComponent(
+					suggestionAttrsForRange.suggestionUserId,
+				)}`,
+			);
+			console.log(suggestionAttrsForRange);
+			if (suggestionUser) setSuggestedUserAvatarInfo(suggestionUser);
+		}
+	}, [suggestionAttrsForRange]);
 
 	useEffect(() => {
-		if (suggestionUserForRange) fetchSuggestedUserAvatarInfo();
-	}, [fetchSuggestedUserAvatarInfo, suggestionUserForRange]);
+		fetchSuggestedUserAvatarInfo();
+	}, [fetchSuggestedUserAvatarInfo]);
 
 	const renderAvatar = suggestedUserAvatarInfo ? (
 		<Tooltip content={`Suggested by ${suggestedUserAvatarInfo.fullName}`}>
 			<Avatar
 				initials={suggestedUserAvatarInfo.initials}
 				avatar={suggestedUserAvatarInfo.avatar}
-				width={32}
+				width={38}
 				borderColor={communityData.accentColorDark}
 				borderWidth={3}
 			/>
@@ -86,6 +90,7 @@ const PubInlineSuggestedEdits = () => {
 
 	const topPosition =
 		window.scrollY +
+		-17 +
 		(shouldOpenBelowSelection()
 			? selectionBoundingBox.bottom + 5
 			: selectionBoundingBox.top - 30);
