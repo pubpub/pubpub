@@ -37,24 +37,36 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 
 	return (
 		<div>
-			<Tooltip content={`Reject suggestion made by ${suggestedUserInfo?.fullName}`}>
+			<Tooltip
+				content={
+					suggestedUserInfo
+						? `Reject suggestion made by ${suggestedUserInfo?.fullName}`
+						: suggestedEditsReject.title
+				}
+				usePortal={true}
+			>
 				<Button
 					ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
-					role="button"
-					title={suggestedEditsReject.title}
 					aria-label={suggestedEditsReject.title}
+					role="button"
 					onClick={() => handleClick(suggestedEditsReject)}
 					className="reject-button"
 				>
 					<Icon icon={suggestedEditsReject.icon} iconSize={16} />
 				</Button>
 			</Tooltip>
-			<Tooltip content={`Accept suggestion made by ${suggestedUserInfo?.fullName}`}>
+			<Tooltip
+				content={
+					suggestedUserInfo
+						? `Accept suggestion made by ${suggestedUserInfo?.fullName}`
+						: suggestedEditsReject.title
+				}
+				usePortal={true}
+			>
 				<Button
 					ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
-					role="button"
-					title={suggestedEditsAccept.title}
 					aria-label={suggestedEditsAccept.title}
+					role="button"
 					onClick={() => handleClick(suggestedEditsAccept)}
 					className="accept-button"
 				>
