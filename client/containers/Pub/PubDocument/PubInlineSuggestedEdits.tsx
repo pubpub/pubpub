@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { Tooltip } from '@blueprintjs/core';
 import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
-import { Avatar } from 'components';
-import { UserAvatar } from 'types';
+import { SuggestedEditsUser } from 'types';
 import {
 	acceptSuggestedEdits,
 	getResolvableRangeForSelection,
@@ -10,7 +8,6 @@ import {
 import { getSuggestionAttrsForNode } from 'client/components/Editor/plugins/suggestedEdits/operations';
 
 import { apiFetch } from 'client/utils/apiFetch';
-import { usePageContext } from 'utils/hooks';
 
 import { usePubContext } from '../pubHooks';
 
@@ -24,11 +21,10 @@ const shouldOpenBelowSelection = () => {
 
 const PubInlineSuggestedEdits = () => {
 	const { collabData, pubBodyState } = usePubContext();
-	const { communityData } = usePageContext();
 
 	const { editorChangeObject } = collabData;
 	const selection = collabData.editorChangeObject!.selection;
-	const [suggestedUserAvatarInfo, setSuggestedUserAvatarInfo] = useState<UserAvatar | null>(null);
+	const [suggestedEditsAttrs, setSuggestedEditsAttrs] = useState<SuggestedEditsUser>();
 
 	const shouldHide = useMemo(() => {
 		if (!collabData.editorChangeObject || !collabData.editorChangeObject.view || !selection)
@@ -54,33 +50,20 @@ const PubInlineSuggestedEdits = () => {
 		return null;
 	}, [editorChangeObject]);
 
-	const fetchSuggestedUserAvatarInfo = useCallback(async () => {
+	const fetchSuggestedEditsUserInfo = useCallback(async () => {
 		if (suggestionAttrsForRange) {
-			const suggestionUser: UserAvatar = await apiFetch.get(
+			const suggestionUser: SuggestedEditsUser = await apiFetch.get(
 				`/api/users?suggestionUserId=${encodeURIComponent(
 					suggestionAttrsForRange.suggestionUserId,
 				)}`,
 			);
-			console.log(suggestionAttrsForRange);
-			if (suggestionUser) setSuggestedUserAvatarInfo(suggestionUser);
+			if (suggestionUser) setSuggestedEditsAttrs(suggestionUser);
 		}
 	}, [suggestionAttrsForRange]);
 
 	useEffect(() => {
-		fetchSuggestedUserAvatarInfo();
-	}, [fetchSuggestedUserAvatarInfo]);
-
-	const renderAvatar = suggestedUserAvatarInfo ? (
-		<Tooltip content={`Suggested by ${suggestedUserAvatarInfo.fullName}`}>
-			<Avatar
-				initials={suggestedUserAvatarInfo.initials}
-				avatar={suggestedUserAvatarInfo.avatar}
-				width={38}
-				borderColor={communityData.accentColorDark}
-				borderWidth={3}
-			/>
-		</Tooltip>
-	) : null;
+		fetchSuggestedEditsUserInfo();
+	}, [fetchSuggestedEditsUserInfo]);
 
 	// box around selection
 	const selectionBoundingBox: Record<string, any> =
@@ -101,7 +84,7 @@ const PubInlineSuggestedEdits = () => {
 		}
 		return (
 			<FormattingBarSuggestedEdits
-				avatar={renderAvatar}
+				suggestedUserInfo={suggestedEditsAttrs}
 				buttons={buttons.suggestedEditsButtonSet}
 				editorChangeObject={editorChangeObject || ({} as any)}
 			/>

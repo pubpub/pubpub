@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button, Classes } from '@blueprintjs/core';
-
-// import { Button } from 'reakit';
-
+import { Tooltip } from '@blueprintjs/core';
+import { Button } from 'reakit';
 import { Icon } from 'components';
 
+import { SuggestedEditsUser } from 'types';
 import { EditorChangeObject } from 'components/Editor';
 import { useRefMap } from 'client/utils/useRefMap';
 import { FormattingBarButtonData } from './types';
@@ -14,13 +13,13 @@ import { useCommandStates } from './hooks/useCommandStates';
 require('./formattingBarSuggestedEdits.scss');
 
 type Props = {
-	avatar: any;
+	suggestedUserInfo?: SuggestedEditsUser;
 	buttons: FormattingBarButtonData[][];
 	editorChangeObject: EditorChangeObject;
 };
 
 const FormattingBarSuggestedEdits = (props: Props) => {
-	const { avatar, buttons, editorChangeObject } = props;
+	const { suggestedUserInfo, buttons, editorChangeObject } = props;
 	const buttonElementRefs = useRefMap();
 	const { view } = editorChangeObject;
 
@@ -36,32 +35,32 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 		view.focus();
 	};
 
-	const idkHowTorenderChildCompoenntAgain = () => {
-		return avatar;
-	};
 	return (
-		<div className={`formatting-bar-suggested-edits ${Classes.ELEVATION_2}`}>
-			<Button
-				ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
-				role="button"
-				title={suggestedEditsReject.title}
-				aria-label={suggestedEditsReject.title}
-				onClick={() => handleClick(suggestedEditsReject)}
-				className="reject-button"
-				minimal={true}
-				icon={<Icon icon={suggestedEditsReject.icon} iconSize={16} />}
-			/>
-			{idkHowTorenderChildCompoenntAgain()}
-			<Button
-				ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
-				role="button"
-				title={suggestedEditsAccept.title}
-				aria-label={suggestedEditsAccept.title}
-				onClick={() => handleClick(suggestedEditsAccept)}
-				className="accept-button"
-				minimal={true}
-				icon={<Icon icon={suggestedEditsAccept.icon} iconSize={16} />}
-			/>
+		<div>
+			<Tooltip content={`Reject suggestion made by ${suggestedUserInfo?.fullName}`}>
+				<Button
+					ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
+					role="button"
+					title={suggestedEditsReject.title}
+					aria-label={suggestedEditsReject.title}
+					onClick={() => handleClick(suggestedEditsReject)}
+					className="reject-button"
+				>
+					<Icon icon={suggestedEditsReject.icon} iconSize={16} />
+				</Button>
+			</Tooltip>
+			<Tooltip content={`Accept suggestion made by ${suggestedUserInfo?.fullName}`}>
+				<Button
+					ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
+					role="button"
+					title={suggestedEditsAccept.title}
+					aria-label={suggestedEditsAccept.title}
+					onClick={() => handleClick(suggestedEditsAccept)}
+					className="accept-button"
+				>
+					<Icon icon={suggestedEditsAccept.icon} iconSize={16} />
+				</Button>
+			</Tooltip>
 		</div>
 	);
 };

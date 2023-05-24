@@ -34,4 +34,4 @@ export type UserWithPrivateFields = User & {
 	resetHashExpiration: number;
 };
 
-export type UserAvatar = Pick<MinimalUser, 'avatar' | 'initials' | 'fullName'>;
+export type SuggestedEditsUser = Pick<MinimalUser, 'avatar' | 'initials' | 'fullName'>;
