@@ -1,4 +1,6 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import { Tooltip } from '@blueprintjs/core';
+
 import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
 import { SuggestedEditsUser } from 'types';
 import {
@@ -50,6 +52,8 @@ const PubInlineSuggestedEdits = () => {
 		return null;
 	}, [editorChangeObject]);
 
+	console.log(suggestionAttrsForRange);
+
 	const fetchSuggestedEditsUserInfo = useCallback(async () => {
 		if (suggestionAttrsForRange) {
 			const suggestionUser: SuggestedEditsUser = await apiFetch.get(
@@ -84,7 +88,6 @@ const PubInlineSuggestedEdits = () => {
 		}
 		return (
 			<FormattingBarSuggestedEdits
-				suggestedUserInfo={suggestedEditsAttrs}
 				buttons={buttons.suggestedEditsButtonSet}
 				editorChangeObject={editorChangeObject || ({} as any)}
 			/>
@@ -96,7 +99,18 @@ const PubInlineSuggestedEdits = () => {
 			className="pub-inline-suggested-edit-menu-component"
 			style={{ position: 'absolute', top: topPosition, left: selectionBoundingBox.left }}
 		>
-			{renderFormattingBar()}
+			<Tooltip
+				content={
+					suggestedEditsAttrs
+						? `Suggested by ${suggestedEditsAttrs?.fullName}`
+						: 'Suggestion by Pub editor'
+				}
+				isOpen={true}
+				position="bottom"
+				usePortal={true}
+			>
+				{renderFormattingBar()}
+			</Tooltip>
 		</div>
 	);
 };
