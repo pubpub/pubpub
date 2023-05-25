@@ -127,9 +127,7 @@ const TwoColumnFooter = (props: TwoColumnFooterProps) => {
 						<ul className="footer-navigation__list">
 							{links.map((link) => (
 								<li key={link.text} className="footer-navigation__list_item">
-									<a href={link.url} className="footer-navigation__list_link">
-										{link.text}
-									</a>
+									<a href={link.url}>{link.text}</a>
 								</li>
 							))}
 						</ul>
