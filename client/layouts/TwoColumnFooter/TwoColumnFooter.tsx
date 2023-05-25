@@ -136,11 +136,7 @@ const TwoColumnFooter = (props: TwoColumnFooterProps) => {
 						<ul className="social-links__list">
 							{iconLinks.map((link) => (
 								<li key={link.ariaLabel} className="social-links__list_item">
-									<a
-										href={link.url}
-										className="social-links__list_link"
-										aria-label={link.ariaLabel}
-									>
+									<a href={link.url} aria-label={link.ariaLabel}>
 										<svg width="28" height="28">
 											<path {...link.pathProps} />
 										</svg>
