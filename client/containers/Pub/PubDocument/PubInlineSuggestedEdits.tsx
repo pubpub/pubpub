@@ -77,7 +77,7 @@ const PubInlineSuggestedEdits = () => {
 
 	const topPosition =
 		window.scrollY +
-		-17 +
+		-47 +
 		(shouldOpenBelowSelection()
 			? selectionBoundingBox.bottom + 5
 			: selectionBoundingBox.top - 30);
@@ -105,8 +105,8 @@ const PubInlineSuggestedEdits = () => {
 						? `Suggested by ${suggestedEditsAttrs?.fullName}`
 						: 'Suggestion by Pub editor'
 				}
-				isOpen={true}
 				position="bottom"
+				className="tooltip-wrapper"
 				usePortal={true}
 			>
 				{renderFormattingBar()}
