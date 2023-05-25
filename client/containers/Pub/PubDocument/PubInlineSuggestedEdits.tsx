@@ -52,8 +52,6 @@ const PubInlineSuggestedEdits = () => {
 		return null;
 	}, [editorChangeObject]);
 
-	console.log(suggestionAttrsForRange);
-
 	const fetchSuggestedEditsUserInfo = useCallback(async () => {
 		if (suggestionAttrsForRange) {
 			const suggestionUser: SuggestedEditsUser = await apiFetch.get(
@@ -106,7 +104,6 @@ const PubInlineSuggestedEdits = () => {
 						: 'Suggestion by Pub editor'
 				}
 				position="bottom"
-				className="tooltip-wrapper"
 				usePortal={true}
 			>
 				{renderFormattingBar()}
