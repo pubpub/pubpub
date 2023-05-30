@@ -18,8 +18,8 @@ import {
 	PubAttribution,
 	PubEdge,
 	Release,
-	sequelize,
 } from 'server/models';
+import { sequelize } from 'server/sequelize';
 
 const pubsIdsQuery = `
 	WITH query_values (required_slugs, forbidden_slugs, published_before, published_after) AS (
@@ -138,7 +138,8 @@ export const getQueriedPubIds = async ({ communityId, limit, query }) => {
 			limit,
 		},
 	});
-	return rows.map((row) => row.pubId);
+	// TODO: remov any
+	return rows.map((row: any) => row.pubId);
 };
 
 export const getPubData = async (pubIds) => {

@@ -4,6 +4,7 @@ import { knex } from 'knex';
 const database_url = process.env.DATABASE_CONNECTION_POOL_URL || process.env.DATABASE_URL;
 
 class SequelizeWithId extends Sequelize {
+	/* Create standard id type for our database */
 	idType = {
 		primaryKey: true,
 		type: UUID,
@@ -36,7 +37,3 @@ export const knexInstance = knex({ client: 'pg' });
 if (process.env.NODE_ENV !== 'test') {
 	sequelize.sync({ force: false });
 }
-
-/* Create standard id type for our database */
-
-export default sequelize;

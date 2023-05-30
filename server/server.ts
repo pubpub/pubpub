@@ -21,7 +21,8 @@ import 'server/utils/serverModuleOverwrite';
 import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
 import { deduplicateSlash } from './middleware/deduplicateSlash';
 
-import { sequelize, User } from './models';
+import { User } from './models';
+import { sequelize } from './sequelize';
 import { zoteroAuthStrategy } from './zoteroIntegration/utils/auth';
 import './hooks';
 
