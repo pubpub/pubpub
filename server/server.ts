@@ -9,6 +9,7 @@ import express from 'express';
 import noSlash from 'no-slash';
 import passport from 'passport';
 import path from 'path';
+import CreateSequelizeStore from 'connect-session-sequelize';
 
 import { setEnvironment, setAppCommit, isProd, getAppCommit } from 'utils/environment';
 
@@ -80,8 +81,9 @@ app.use(cookieParser());
 /* --------------------- */
 /* Configure app session */
 /* --------------------- */
-const session = require('express-session');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
+import session from 'express-session';
+
+const SequelizeStore = CreateSequelizeStore(session.Store);
 
 app.use(
 	session({

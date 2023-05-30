@@ -99,7 +99,7 @@
 		"classnames": "^2.2.6",
 		"color": "^3.1.1",
 		"compression": "^1.7.4",
-		"connect-session-sequelize": "^6.0.0",
+		"connect-session-sequelize": "^7.1.7",
 		"cookie-parser": "^1.4.4",
 		"cors": "^2.8.5",
 		"crypto": "^1.0.1",

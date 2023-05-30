@@ -199,12 +199,12 @@ export const queryPubIds = async (query: PubsQuery): Promise<string[]> => {
 		return [];
 	}
 	const { sql, bindings } = getPubIdsQuery(query);
-	const results = await sequelize.query(
-		{ query: sql, values: bindings as unknown[] },
-		{
-			type: QueryTypes.SELECT,
-		},
-	);
+
+	const results = await sequelize.query(sql, {
+		type: QueryTypes.SELECT,
+		bind: bindings as unknown[],
+	});
+	console.log({ results });
 	// TODO: remove any
 	return results.map((r: any) => r.pubId);
 };
