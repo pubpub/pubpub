@@ -1,39 +1,8 @@
 /* eslint-disable global-require */
-import Sequelize from 'sequelize';
-import { knex } from 'knex';
+
+import sequelize from './sequelize';
 
 import { createSequelizeModelsFromFacetDefinitions } from './facets/create';
-
-const database_url = process.env.DATABASE_CONNECTION_POOL_URL || process.env.DATABASE_URL;
-// @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
-const useSSL = database_url.indexOf('localhost') === -1;
-// @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
-export const sequelize = new Sequelize(database_url, {
-	logging: false,
-	dialectOptions: { ssl: useSSL ? { rejectUnauthorized: false } : false },
-	pool: {
-		max: process.env.SEQUELIZE_MAX_CONNECTIONS
-			? parseInt(process.env.SEQUELIZE_MAX_CONNECTIONS, 10)
-			: 5, // Some migrations require this number to be 150
-		// idle: 20000,
-		// acquire: 20000,
-	},
-});
-
-export const knexInstance = knex({ client: 'pg' });
-
-/* Change to true to update the model in the database. */
-/* NOTE: This being set to true will erase your data. */
-if (process.env.NODE_ENV !== 'test') {
-	sequelize.sync({ force: false });
-}
-
-/* Create standard id type for our database */
-sequelize.idType = {
-	primaryKey: true,
-	type: Sequelize.UUID,
-	defaultValue: Sequelize.UUIDV4,
-};
 
 /* Import and create all models. */
 /* Also export them to make them available to other modules */
