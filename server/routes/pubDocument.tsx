@@ -130,7 +130,7 @@ const speedLimiter = slowDown({
 	windowMs: 60000, // 1 minute for requests to be kept in memory. value of 60000ms is default but expressed here for clarity
 	delayAfter: 60, // allow 60 requests per minute, then...
 	delayMs: 100, // 60th request has a 100ms delay, 7th has a 200ms delay, 8th gets 300ms, etc.
-	maxDelay: 20000, // max time of request delay will be 20secs
+	maxDelayMs: 20000, // max time of request delay will be 20secs
 });
 
 const checkHistoryKey = (key) => {
