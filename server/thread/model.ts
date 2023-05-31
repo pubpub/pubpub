@@ -11,13 +11,13 @@ export const Thread = sequelize.define(
 		// @ts-expect-error ts(2345): Argument of type '{ classMethods: { associate: (models: any) => void; }; }' is not assignable to parameter of type 'ModelOptions<Model<any, any>>'. Object literal may only specify known properties, and 'classMethods' does not exist in type 'ModelOptions<Model<any, any>>'.
 		classMethods: {
 			associate: (models) => {
-				const { Thread, ThreadComment, ThreadEvent } = models;
-				Thread.hasMany(ThreadComment, {
+				const { Thread: ThreadModel, ThreadComment, ThreadEvent } = models;
+				ThreadModel.hasMany(ThreadComment, {
 					onDelete: 'CASCADE',
 					as: 'comments',
 					foreignKey: 'threadId',
 				});
-				Thread.hasMany(ThreadEvent, {
+				ThreadModel.hasMany(ThreadEvent, {
 					onDelete: 'CASCADE',
 					as: 'events',
 					foreignKey: 'threadId',

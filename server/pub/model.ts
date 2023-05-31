@@ -56,7 +56,7 @@ export const Pub = sequelize.define(
 					Discussion,
 					Export,
 					Member,
-					Pub,
+					Pub: PubModel,
 					PubAttribution,
 					PubEdge,
 					PubVersion,
@@ -65,70 +65,70 @@ export const Pub = sequelize.define(
 					ScopeSummary,
 					Submission,
 				} = models;
-				Pub.hasMany(PubAttribution, {
+				PubModel.hasMany(PubAttribution, {
 					onDelete: 'CASCADE',
 					as: 'attributions',
 					foreignKey: 'pubId',
 				});
-				Pub.hasMany(CollectionPub, {
+				PubModel.hasMany(CollectionPub, {
 					onDelete: 'CASCADE',
 					hooks: true,
 					as: 'collectionPubs',
 					foreignKey: 'pubId',
 				});
-				Pub.belongsTo(Community, {
+				PubModel.belongsTo(Community, {
 					onDelete: 'CASCADE',
 					as: 'community',
 					foreignKey: 'communityId',
 				});
-				Pub.hasMany(Discussion, {
+				PubModel.hasMany(Discussion, {
 					onDelete: 'CASCADE',
 					as: 'discussions',
 					foreignKey: 'pubId',
 				});
-				Pub.hasMany(Export, {
+				PubModel.hasMany(Export, {
 					as: 'exports',
 					foreignKey: 'pubId',
 				});
-				Pub.hasMany(ReviewNew, {
+				PubModel.hasMany(ReviewNew, {
 					onDelete: 'CASCADE',
 					as: 'reviews',
 					foreignKey: 'pubId',
 				});
-				Pub.hasMany(Member, {
+				PubModel.hasMany(Member, {
 					onDelete: 'CASCADE',
 					as: 'members',
 					foreignKey: 'pubId',
 				});
-				Pub.hasMany(Release, {
+				PubModel.hasMany(Release, {
 					onDelete: 'CASCADE',
 					as: 'releases',
 					foreignKey: 'pubId',
 				});
-				Pub.hasMany(PubVersion, {
+				PubModel.hasMany(PubVersion, {
 					onDelete: 'CASCADE',
 					as: 'pubVersions',
 					foreignKey: 'pubId',
 				});
-				Pub.hasMany(PubEdge, {
+				PubModel.hasMany(PubEdge, {
 					onDelete: 'CASCADE',
 					as: 'outboundEdges',
 					foreignKey: 'pubId',
 				});
-				Pub.hasMany(PubEdge, {
+				PubModel.hasMany(PubEdge, {
 					onDelete: 'CASCADE',
 					as: 'inboundEdges',
 					foreignKey: 'targetPubId',
 				});
-				Pub.hasOne(Submission, {
+				PubModel.hasOne(Submission, {
 					as: 'submission',
 					foreignKey: 'pubId',
 				});
-				Pub.belongsTo(CrossrefDepositRecord, {
+				PubModel.belongsTo(CrossrefDepositRecord, {
 					as: 'crossrefDepositRecord',
 					foreignKey: 'crossrefDepositRecordId',
 				});
-				Pub.belongsTo(ScopeSummary, {
+				PubModel.belongsTo(ScopeSummary, {
 					as: 'scopeSummary',
 					foreignKey: 'scopeSummaryId',
 				});

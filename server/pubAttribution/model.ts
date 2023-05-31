@@ -21,13 +21,13 @@ export const PubAttribution = sequelize.define(
 		// @ts-expect-error ts(2345): Argument of type '{ classMethods: { associate: (models: any) => void; }; }' is not assignable to parameter of type 'ModelOptions<Model<any, any>>'. Object literal may only specify known properties, and 'classMethods' does not exist in type 'ModelOptions<Model<any, any>>'.
 		classMethods: {
 			associate: (models) => {
-				const { User, PubAttribution, Pub } = models;
-				PubAttribution.belongsTo(User, {
+				const { User, PubAttribution: PubAttributionModel, Pub } = models;
+				PubAttributionModel.belongsTo(User, {
 					onDelete: 'CASCADE',
 					as: 'user',
 					foreignKey: 'userId',
 				});
-				PubAttribution.belongsTo(Pub, {
+				PubAttributionModel.belongsTo(Pub, {
 					onDelete: 'CASCADE',
 					as: 'pub',
 					foreignKey: 'pubId',

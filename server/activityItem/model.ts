@@ -1,5 +1,5 @@
-import { sequelize } from '../sequelize';
 import { DataTypes as dataTypes, NOW } from 'sequelize';
+import { sequelize } from '../sequelize';
 
 export const ActivityItem = sequelize.define(
 	'ActivityItem',

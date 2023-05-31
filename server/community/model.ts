@@ -83,7 +83,7 @@ export const Community = sequelize.define(
 		classMethods: {
 			associate: (models) => {
 				const {
-					Community,
+					Community: CommunityModel,
 					DepositTarget,
 					Organization,
 					Collection,
@@ -92,36 +92,36 @@ export const Community = sequelize.define(
 					ScopeSummary,
 					SpamTag,
 				} = models;
-				Community.belongsTo(Organization, {
+				CommunityModel.belongsTo(Organization, {
 					onDelete: 'CASCADE',
 					as: 'organization',
 					foreignKey: 'organizationId',
 				});
-				Community.hasMany(Collection, {
+				CommunityModel.hasMany(Collection, {
 					onDelete: 'CASCADE',
 					as: 'collections',
 					foreignKey: 'communityId',
 				});
-				Community.hasMany(Pub, {
+				CommunityModel.hasMany(Pub, {
 					onDelete: 'CASCADE',
 					as: 'pubs',
 					foreignKey: 'communityId',
 				});
-				Community.hasMany(Page, {
+				CommunityModel.hasMany(Page, {
 					onDelete: 'CASCADE',
 					as: 'pages',
 					foreignKey: 'communityId',
 				});
-				Community.hasMany(DepositTarget, {
+				CommunityModel.hasMany(DepositTarget, {
 					onDelete: 'CASCADE',
 					as: 'depositTargets',
 					foreignKey: 'communityId',
 				});
-				Community.belongsTo(ScopeSummary, {
+				CommunityModel.belongsTo(ScopeSummary, {
 					as: 'scopeSummary',
 					foreignKey: 'scopeSummaryId',
 				});
-				Community.belongsTo(SpamTag, {
+				CommunityModel.belongsTo(SpamTag, {
 					as: 'spamTag',
 					foreignKey: 'spamTagId',
 				});

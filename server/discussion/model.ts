@@ -25,34 +25,41 @@ export const Discussion = sequelize.define(
 		// @ts-expect-error ts(2345): Argument of type '{ classMethods: { associate: (models: any) => void; }; }' is not assignable to parameter of type 'ModelOptions<Model<any, any>>'. Object literal may only specify known properties, and 'classMethods' does not exist in type 'ModelOptions<Model<any, any>>'.
 		classMethods: {
 			associate: (models) => {
-				const { Discussion, DiscussionAnchor, Visibility, Pub, User, Thread, Commenter } =
-					models;
-				Discussion.belongsTo(Thread, {
+				const {
+					Discussion: DiscussionModel,
+					DiscussionAnchor,
+					Visibility,
+					Pub,
+					User,
+					Thread,
+					Commenter,
+				} = models;
+				DiscussionModel.belongsTo(Thread, {
 					onDelete: 'CASCADE',
 					as: 'thread',
 					foreignKey: 'threadId',
 				});
-				Discussion.belongsTo(Visibility, {
+				DiscussionModel.belongsTo(Visibility, {
 					onDelete: 'CASCADE',
 					as: 'visibility',
 					foreignKey: 'visibilityId',
 				});
-				Discussion.belongsTo(User, {
+				DiscussionModel.belongsTo(User, {
 					onDelete: 'CASCADE',
 					as: 'author',
 					foreignKey: 'userId',
 				});
-				Discussion.belongsTo(Commenter, {
+				DiscussionModel.belongsTo(Commenter, {
 					onDelete: 'CASCADE',
 					as: 'commenter',
 					foreignKey: 'commenterId',
 				});
-				Discussion.belongsTo(Pub, {
+				DiscussionModel.belongsTo(Pub, {
 					onDelete: 'CASCADE',
 					as: 'pub',
 					foreignKey: 'pubId',
 				});
-				Discussion.hasMany(DiscussionAnchor, {
+				DiscussionModel.hasMany(DiscussionAnchor, {
 					onDelete: 'CASCADE',
 					as: 'anchors',
 					foreignKey: 'discussionId',

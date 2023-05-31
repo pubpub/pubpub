@@ -29,29 +29,36 @@ export const ReviewNew = sequelize.define(
 		// @ts-expect-error ts(2345): Argument of type '{ classMethods: { associate: (models: any) => void; }; }' is not assignable to parameter of type 'ModelOptions<Model<any, any>>'. Object literal may only specify known properties, and 'classMethods' does not exist in type 'ModelOptions<Model<any, any>>'.
 		classMethods: {
 			associate: (models) => {
-				const { ReviewNew, Reviewer, Visibility, Pub, User, Thread } = models;
-				ReviewNew.belongsTo(Thread, {
+				const {
+					ReviewNew: ReviewNewModel,
+					Reviewer,
+					Visibility,
+					Pub,
+					User,
+					Thread,
+				} = models;
+				ReviewNewModel.belongsTo(Thread, {
 					onDelete: 'CASCADE',
 					as: 'thread',
 					foreignKey: 'threadId',
 				});
-				ReviewNew.belongsTo(Visibility, {
+				ReviewNewModel.belongsTo(Visibility, {
 					onDelete: 'CASCADE',
 					as: 'visibility',
 					foreignKey: 'visibilityId',
 				});
-				ReviewNew.belongsTo(User, {
+				ReviewNewModel.belongsTo(User, {
 					onDelete: 'CASCADE',
 					as: 'author',
 					foreignKey: 'userId',
 					constraints: false,
 				});
-				ReviewNew.belongsTo(Pub, {
+				ReviewNewModel.belongsTo(Pub, {
 					onDelete: 'CASCADE',
 					as: 'pub',
 					foreignKey: 'pubId',
 				});
-				ReviewNew.hasMany(Reviewer, {
+				ReviewNewModel.hasMany(Reviewer, {
 					onDelete: 'CASCADE',
 					as: 'reviewers',
 					foreignKey: 'reviewId',

@@ -45,7 +45,7 @@ export const Collection = sequelize.define(
 		classMethods: {
 			associate: (models) => {
 				const {
-					Collection,
+					Collection: CollectionModel,
 					CollectionAttribution,
 					CollectionPub,
 					Community,
@@ -55,33 +55,33 @@ export const Collection = sequelize.define(
 					Page,
 					ScopeSummary,
 				} = models;
-				Collection.hasMany(CollectionAttribution, {
+				CollectionModel.hasMany(CollectionAttribution, {
 					onDelete: 'CASCADE',
 					as: 'attributions',
 					foreignKey: 'collectionId',
 				});
-				Collection.hasOne(SubmissionWorkflow, {
+				CollectionModel.hasOne(SubmissionWorkflow, {
 					as: 'submissionWorkflow',
 					foreignKey: 'collectionId',
 				});
-				Collection.hasMany(CollectionPub, {
+				CollectionModel.hasMany(CollectionPub, {
 					as: 'collectionPubs',
 					foreignKey: 'collectionId',
 				});
-				Collection.hasMany(Member, {
+				CollectionModel.hasMany(Member, {
 					as: 'members',
 					foreignKey: 'collectionId',
 				});
-				Collection.belongsTo(Page, { as: 'page', foreignKey: 'pageId' });
-				Collection.belongsTo(CrossrefDepositRecord, {
+				CollectionModel.belongsTo(Page, { as: 'page', foreignKey: 'pageId' });
+				CollectionModel.belongsTo(CrossrefDepositRecord, {
 					as: 'crossrefDepositRecord',
 					foreignKey: 'crossrefDepositRecordId',
 				});
-				Collection.belongsTo(ScopeSummary, {
+				CollectionModel.belongsTo(ScopeSummary, {
 					as: 'scopeSummary',
 					foreignKey: 'scopeSummaryId',
 				});
-				Collection.belongsTo(Community, {
+				CollectionModel.belongsTo(Community, {
 					as: 'community',
 					foreignKey: 'communityId',
 				});

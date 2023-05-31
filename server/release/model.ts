@@ -18,8 +18,8 @@ export const Release = sequelize.define(
 		// @ts-expect-error ts(2345): Argument of type '{ classMethods: { associate: (models: any) => void; }; }' is not assignable to parameter of type 'ModelOptions<Model<any, any>>'. Object literal may only specify known properties, and 'classMethods' does not exist in type 'ModelOptions<Model<any, any>>'.
 		classMethods: {
 			associate: (models) => {
-				const { Doc, Release } = models;
-				Release.belongsTo(Doc, {
+				const { Doc, Release: ReleaseModel } = models;
+				ReleaseModel.belongsTo(Doc, {
 					as: 'doc',
 					foreignKey: 'docId',
 				});
