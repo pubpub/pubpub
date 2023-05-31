@@ -67,6 +67,7 @@ const UserWithoutPassPort = sequelize.define(
 					Discussion,
 					UserNotificationPreferences,
 					zoteroIntegration,
+					User,
 				} = models;
 				User.hasMany(PubAttribution, {
 					onDelete: 'CASCADE',

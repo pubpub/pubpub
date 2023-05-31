@@ -204,7 +204,6 @@ export const queryPubIds = async (query: PubsQuery): Promise<string[]> => {
 		type: QueryTypes.SELECT,
 		bind: bindings as unknown[],
 	});
-	console.log({ results });
 	// TODO: remove any
 	return results.map((r: any) => r.pubId);
 };
