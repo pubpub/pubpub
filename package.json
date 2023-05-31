@@ -28,8 +28,9 @@
 		"continue": "concurrently --kill-others \"npm run api-dev\" \"npm run build-dev\"",
 		"start": "npm run build-dev-once && npm run continue",
 		"storybook": "start-storybook -p 9001 -c .storybook -s ./",
-		"test": "npm run lint && NODE_OPTIONS=--max-old-space-size=8192 firebase emulators:exec --only database --import .firebase/default-contents \"jest --forceExit --silent --runInBand\"",
+		"test": "npm run lint && npm run test-no-lint",
 		"test-dev": "jest --forceExit",
+		"test-no-lint": "NODE_OPTIONS=--max-old-space-size=8192 firebase emulators:exec --only database --import .firebase/default-contents \"jest --forceExit --silent --runInBand\"",
 		"tools": "NODE_PATH=./client:./ node -r ts-node/register/transpile-only -r esm --max-old-space-size=12000 ./tools",
 		"workers-dev": "SEQUELIZE_MAX_CONNECTIONS=1 NODE_PATH=./dist/server/client:./dist/server WORKER=true nodemon dist/server/workers/init --watch workers -e js",
 		"workers-prod": "SEQUELIZE_MAX_CONNECTIONS=1 NODE_PATH=./dist/server/client:./dist/server WORKER=true node dist/server/workers/init"

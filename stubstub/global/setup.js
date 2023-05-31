@@ -33,7 +33,7 @@ export default async () => {
 		process.env.DATABASE_URL = await setupTestDatabase();
 	}
 	await withSyncingDbFlagSet(async () => {
-		const { sequelize } = require('../../server/models');
+		const { sequelize } = require('../../server/sequelize');
 		await sequelize.sync({ force: false });
 	});
 };

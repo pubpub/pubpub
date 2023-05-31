@@ -1,3 +1,4 @@
+// @ts-check
 import * as models from '../../server/models';
 
 const { facetModels, ...restModels } = models;

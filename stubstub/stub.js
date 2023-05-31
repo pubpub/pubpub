@@ -1,3 +1,4 @@
+// @ts-check
 /* global beforeAll, afterAll */
 import sinon from 'sinon';
 

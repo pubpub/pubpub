@@ -1,4 +1,5 @@
 /* eslint-disable no-restricted-syntax */
+// @ts-check
 import uuid from 'uuid/v4';
 import * as graphlib from 'graphlib';
 
@@ -124,7 +125,7 @@ const getEdgeBetweenDefinitions = (a, b, associationName, isMandatory) => {
 			if (associations.length > 1) {
 				throw new Error(
 					`Cannot infer association between ${source.modelName} and ${target.modelName}` +
-						` because multiple such associations exist.`,
+					` because multiple such associations exist.`,
 				);
 			}
 			return resolveAssociation(source, target, associations[0]);
@@ -144,7 +145,7 @@ const getEdgeBetweenDefinitions = (a, b, associationName, isMandatory) => {
 		} else if (association.target !== bModel) {
 			throw new Error(
 				`Attempted to use association ${association} on ${aModel}` +
-					` to link to ${bModel}, but it links to ${association.target} instead.`,
+				` to link to ${bModel}, but it links to ${association.target} instead.`,
 			);
 		}
 		return resolveAssociation(a, b, association);
@@ -159,7 +160,7 @@ const getEdgeBetweenDefinitions = (a, b, associationName, isMandatory) => {
 
 	const belongsToEdge = [firstImplicitEdge, secondImplicitEdge]
 		.filter((x) => x)
-		.find((edge) => edge.association.associationType === 'BelongsTo');
+		.find((edge) => edge?.association?.associationType === 'BelongsTo');
 
 	if (belongsToEdge) {
 		return belongsToEdge;
