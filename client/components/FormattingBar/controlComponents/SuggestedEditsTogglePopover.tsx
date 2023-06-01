@@ -13,7 +13,7 @@ export const SuggestedEditsTogglePopover = () => {
 
 	return (
 		<p className="suggested-edits-toggle-popover-component">
-			While active, edits will create suggestions that must be resolved before publication.
+			Editing the document in this mode will create suggestions.
 		</p>
 	);
 };
