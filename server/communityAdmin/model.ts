@@ -7,10 +7,11 @@ export default (sequelize) => {
 		{
 			tableName: 'CommunityAdmins',
 			classMethods: {
-				associate: (models) => {
-					const { communityAdmin, user, community } = models;
-					communityAdmin.belongsTo(user, { foreignKey: { allowNull: false } });
-					communityAdmin.belongsTo(community, { foreignKey: { allowNull: false } });
+				associate: ({ communityAdmin, ...models }) => {
+					communityAdmin.belongsTo(models.user, { foreignKey: { allowNull: false } });
+					communityAdmin.belongsTo(models.community, {
+						foreignKey: { allowNull: false },
+					});
 				},
 			},
 		},

@@ -35,30 +35,19 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Collections',
 			classMethods: {
-				associate: (models) => {
-					const {
-						activityItem,
-						collectionAttribution,
-						submissionWorkflow,
-						collectionPub,
-						member,
-						page,
-						crossrefDepositRecord,
-						scopeSummary,
-						collection,
-					} = models;
-					collection.hasMany(activityItem);
-					collection.hasMany(collectionPub);
-					collection.hasMany(collectionAttribution, {
+				associate: ({ collection, ...models }) => {
+					collection.hasMany(models.activityItem);
+					collection.hasMany(models.collectionPub);
+					collection.hasMany(models.collectionAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
 						foreignKey: 'collectionId',
 					});
-					collection.belongsTo(crossrefDepositRecord);
-					collection.hasMany(member);
-					collection.belongsTo(page);
-					collection.hasOne(submissionWorkflow);
-					collection.belongsTo(scopeSummary);
+					collection.belongsTo(models.crossrefDepositRecord);
+					collection.hasMany(models.member);
+					collection.belongsTo(models.page);
+					collection.hasOne(models.submissionWorkflow);
+					collection.belongsTo(models.scopeSummary);
 				},
 			},
 		},

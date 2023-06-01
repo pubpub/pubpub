@@ -14,9 +14,10 @@ export default (sequelize, dataTypes) => {
 			tableName: 'DiscussionAnchors',
 			indexes: [{ fields: ['discussionId'], method: 'BTREE' }],
 			classMethods: {
-				associate: (models) => {
-					const { discussion, discussionAnchor } = models;
-					discussionAnchor.belongsTo(discussion, { foreignKey: { allowNull: false } });
+				associate: ({ discussionAnchor, ...models }) => {
+					discussionAnchor.belongsTo(models.discussion, {
+						foreignKey: { allowNull: false },
+					});
 				},
 			},
 		},

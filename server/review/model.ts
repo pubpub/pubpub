@@ -21,26 +21,25 @@ export default (sequelize, dataTypes) => {
 				{ fields: ['pubId'], method: 'BTREE' },
 			],
 			classMethods: {
-				associate: (models) => {
-					const { reviewNew, reviewer, visibility, pub, user, thread } = models;
-					reviewNew.belongsTo(thread, {
+				associate: ({ reviewNew, ...models }) => {
+					reviewNew.belongsTo(models.thread, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					reviewNew.belongsTo(visibility, {
+					reviewNew.belongsTo(models.visibility, {
 						foreignKey: { allowNull: false },
 						onDelete: 'CASCADE',
 					});
-					reviewNew.belongsTo(user, {
+					reviewNew.belongsTo(models.user, {
 						onDelete: 'CASCADE',
 						as: 'author',
 						foreignKey: 'userId',
 						constraints: false,
 					});
-					reviewNew.belongsTo(pub, {
+					reviewNew.belongsTo(models.pub, {
 						onDelete: 'CASCADE',
 					});
-					reviewNew.hasMany(reviewer, {
+					reviewNew.hasMany(models.reviewer, {
 						as: 'reviewers',
 						onDelete: 'CASCADE',
 						foreignKey: 'reviewId',

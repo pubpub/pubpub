@@ -17,10 +17,11 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'SubmissionWorkflows',
 			classMethods: {
-				associate: (models) => {
-					const { collection, submissionWorkflow, submission } = models;
-					submissionWorkflow.hasMany(submission);
-					submissionWorkflow.belongsTo(collection, { foreignKey: { allowNull: false } });
+				associate: ({ submissionWorkflow, ...models }) => {
+					submissionWorkflow.hasMany(models.submission);
+					submissionWorkflow.belongsTo(models.collection, {
+						foreignKey: { allowNull: false },
+					});
 				},
 			},
 		},

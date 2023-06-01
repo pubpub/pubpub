@@ -10,10 +10,10 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Exports',
 			classMethods: {
-				associate: (models) => {
-					const { workerTask, pub } = models;
-					models.export.belongsTo(workerTask);
-					models.export.belongsTo(pub, { foreignKey: { allowNull: false } });
+				// alias to exportModel as export is a keyword
+				associate: ({ export: exportModel, ...models }) => {
+					exportModel.belongsTo(models.workerTask);
+					exportModel.belongsTo(models.pub, { foreignKey: { allowNull: false } });
 				},
 			},
 		},

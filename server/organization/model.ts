@@ -30,9 +30,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Organizations',
 			classMethods: {
-				associate: (models) => {
-					const { organization, community } = models;
-					organization.hasMany(community, { onDelete: 'CASCADE' });
+				associate: ({ organization, ...models }) => {
+					organization.hasMany(models.community, { onDelete: 'CASCADE' });
 				},
 			},
 		},

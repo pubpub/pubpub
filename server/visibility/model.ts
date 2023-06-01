@@ -12,10 +12,9 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Visibilities',
 			classMethods: {
-				associate: (models) => {
-					const { visibility, visibilityUser, user, discussion } = models;
-					visibility.belongsToMany(user, { through: visibilityUser });
-					visibility.hasMany(discussion, { onDelete: 'CASCADE' });
+				associate: ({ visibility, ...models }) => {
+					visibility.belongsToMany(models.user, { through: models.visibilityUser });
+					visibility.hasMany(models.discussion, { onDelete: 'CASCADE' });
 				},
 			},
 		},

@@ -18,13 +18,12 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Members',
 			classMethods: {
-				associate: (models) => {
-					const { member, user, collection, community, pub, organization } = models;
-					member.belongsTo(user, { onDelete: 'CASCADE' });
-					member.belongsTo(community, { onDelete: 'CASCADE' });
-					member.belongsTo(pub, { onDelete: 'CASCADE' });
-					member.belongsTo(collection, { onDelete: 'CASCADE' });
-					member.belongsTo(organization);
+				associate: ({ member, ...models }) => {
+					member.belongsTo(models.user, { onDelete: 'CASCADE' });
+					member.belongsTo(models.community, { onDelete: 'CASCADE' });
+					member.belongsTo(models.pub, { onDelete: 'CASCADE' });
+					member.belongsTo(models.collection, { onDelete: 'CASCADE' });
+					member.belongsTo(models.organization);
 				},
 			},
 		},

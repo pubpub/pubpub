@@ -60,29 +60,19 @@ export default (sequelize, dataTypes) => {
 			tableName: 'Users',
 			classMethods: {
 				associate: (models) => {
-					const {
-						activityItem,
-						pubAttribution,
-						collectionAttribution,
-						discussion,
-						userNotificationPreferences,
-						visibility,
-						visibilityUser,
-						zoteroIntegration,
-					} = models;
-					user.belongsToMany(visibility, { through: visibilityUser });
-					user.hasMany(activityItem, { as: 'actor' });
-					user.hasMany(collectionAttribution, {
+					user.belongsToMany(models.visibility, { through: models.visibilityUser });
+					user.hasMany(models.activityItem, { as: 'actor' });
+					user.hasMany(models.collectionAttribution, {
 						onDelete: 'CASCADE',
 					});
-					user.hasMany(pubAttribution, {
+					user.hasMany(models.pubAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
 						foreignKey: 'userId',
 					});
-					user.hasOne(zoteroIntegration, { allowNull: false });
-					user.hasMany(discussion, { onDelete: 'CASCADE' });
-					user.hasOne(userNotificationPreferences, { onDelete: 'CASCADE' });
+					user.hasOne(models.zoteroIntegration, { allowNull: false });
+					user.hasMany(models.discussion, { onDelete: 'CASCADE' });
+					user.hasOne(models.userNotificationPreferences, { onDelete: 'CASCADE' });
 				},
 			},
 		},

@@ -7,10 +7,9 @@ export default (sequelize) => {
 		{
 			tableName: 'PubManagers',
 			classMethods: {
-				associate: (models) => {
-					const { pubManager, user, pub } = models;
-					pubManager.belongsTo(pub, { foreignKey: { allowNull: false } });
-					pubManager.belongsTo(user, {
+				associate: ({ pubManager, ...models }) => {
+					pubManager.belongsTo(models.pub, { foreignKey: { allowNull: false } });
+					pubManager.belongsTo(models.user, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});

@@ -19,9 +19,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Signups',
 			classMethods: {
-				associate: (models) => {
-					const { signup, community } = models;
-					signup.belongsTo(community);
+				associate: ({ signup, ...models }) => {
+					signup.belongsTo(models.community);
 				},
 			},
 		},

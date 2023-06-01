@@ -9,10 +9,9 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'ThreadEvents',
 			classMethods: {
-				associate: (models) => {
-					const { user, threadEvent, thread } = models;
-					threadEvent.belongsTo(thread, { foreignKey: { allowNull: false } });
-					threadEvent.belongsTo(user, {
+				associate: ({ threadEvent, ...models }) => {
+					threadEvent.belongsTo(models.thread, { foreignKey: { allowNull: false } });
+					threadEvent.belongsTo(models.user, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});

@@ -12,15 +12,14 @@ export default (sequelize) => {
 				{ fields: ['pubId'], method: 'BTREE' },
 			],
 			classMethods: {
-				associate: (models) => {
-					const { facetBinding, community, collection, pub } = models;
-					facetBinding.belongsTo(community, {
+				associate: ({ facetBinding, ...models }) => {
+					facetBinding.belongsTo(models.community, {
 						onDelete: 'CASCADE',
 					});
-					facetBinding.belongsTo(collection, {
+					facetBinding.belongsTo(models.collection, {
 						onDelete: 'CASCADE',
 					});
-					facetBinding.belongsTo(pub, {
+					facetBinding.belongsTo(models.pub, {
 						onDelete: 'CASCADE',
 					});
 				},

@@ -8,10 +8,9 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'FeatureFlagCommunities',
 			classMethods: {
-				associate: (models) => {
-					const { featureFlag, featureFlagCommunity, community } = models;
-					featureFlagCommunity.belongsTo(community, { onDelete: 'CASCADE' });
-					featureFlagCommunity.belongsTo(featureFlag, { onDelete: 'CASCADE' });
+				associate: ({ featureFlagCommunity, ...models }) => {
+					featureFlagCommunity.belongsTo(models.community, { onDelete: 'CASCADE' });
+					featureFlagCommunity.belongsTo(models.featureFlag, { onDelete: 'CASCADE' });
 				},
 			},
 		},

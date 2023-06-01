@@ -8,9 +8,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Commenters',
 			classMethods: {
-				associate: (models) => {
-					const { commenter, discussion } = models;
-					commenter.hasMany(discussion, { onDelete: 'CASCADE' });
+				associate: ({ commenter, ...models }) => {
+					commenter.hasMany(models.discussion, { onDelete: 'CASCADE' });
 				},
 			},
 		},

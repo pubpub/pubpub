@@ -9,9 +9,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'CustomScripts',
 			classMethods: {
-				associate: (models) => {
-					const { customScript, community } = models;
-					customScript.belongsTo(community);
+				associate: ({ customScript, ...models }) => {
+					customScript.belongsTo(models.community);
 				},
 			},
 		},

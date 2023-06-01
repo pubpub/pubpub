@@ -9,15 +9,14 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'ThreadComments',
 			classMethods: {
-				associate: (models) => {
-					const { commenter, threadComment, thread, user } = models;
-					threadComment.belongsTo(thread, { foreignKey: { allowNull: false } });
-					threadComment.belongsTo(user, {
+				associate: ({ threadComment, ...models }) => {
+					threadComment.belongsTo(models.thread, { foreignKey: { allowNull: false } });
+					threadComment.belongsTo(models.user, {
 						onDelete: 'CASCADE',
 						as: 'author',
 						foreignKey: 'userId',
 					});
-					threadComment.belongsTo(commenter, { onDelete: 'CASCADE' });
+					threadComment.belongsTo(models.commenter, { onDelete: 'CASCADE' });
 				},
 			},
 		},

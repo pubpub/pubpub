@@ -9,17 +9,16 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'ReviewEvents',
 			classMethods: {
-				associate: (models) => {
-					const { user, reviewEvent, reviewNew, pub } = models;
-					reviewEvent.belongsTo(user, {
+				associate: ({ reviewEvent, ...models }) => {
+					reviewEvent.belongsTo(models.user, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					reviewEvent.belongsTo(pub, {
+					reviewEvent.belongsTo(models.pub, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					reviewEvent.belongsTo(reviewNew, {
+					reviewEvent.belongsTo(models.reviewNew, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});

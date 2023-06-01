@@ -15,10 +15,9 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'PubAttributions',
 			classMethods: {
-				associate: (models) => {
-					const { user, pubAttribution, pub } = models;
-					pubAttribution.belongsTo(user, { onDelete: 'CASCADE' });
-					pubAttribution.belongsTo(pub, {
+				associate: ({ pubAttribution, ...models }) => {
+					pubAttribution.belongsTo(models.user, { onDelete: 'CASCADE' });
+					pubAttribution.belongsTo(models.pub, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});

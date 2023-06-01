@@ -8,9 +8,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'UserDismissables',
 			classMethods: {
-				associate: (models) => {
-					const { user, userDismissable } = models;
-					userDismissable.belongsTo(user, { foreignKey: { allowNull: false } });
+				associate: ({ userDismissable, ...models }) => {
+					userDismissable.belongsTo(models.user, { foreignKey: { allowNull: false } });
 				},
 			},
 			indexes: [{ fields: ['userId'], method: 'BTREE' }],

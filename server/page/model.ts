@@ -20,9 +20,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Pages',
 			classMethods: {
-				associate: (models) => {
-					const { page, community } = models;
-					page.belongsTo(community, { onDelete: 'CASCADE' });
+				associate: ({ page, ...models }) => {
+					page.belongsTo(models.community, { onDelete: 'CASCADE' });
 				},
 			},
 		},

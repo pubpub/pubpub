@@ -13,13 +13,12 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Submissions',
 			classMethods: {
-				associate: (models) => {
-					const { pub, submission, submissionWorkflow } = models;
-					submission.belongsTo(pub, {
+				associate: ({ submission, ...models }) => {
+					submission.belongsTo(models.pub, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					submission.belongsTo(submissionWorkflow, {
+					submission.belongsTo(models.submissionWorkflow, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});

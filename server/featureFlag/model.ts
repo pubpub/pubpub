@@ -11,14 +11,13 @@ export default (sequelize, dataTypes) => {
 			tableName: 'FeatureFlags',
 			indexes: [{ unique: true, fields: ['name'] }],
 			classMethods: {
-				associate: (models) => {
-					const { featureFlag, featureFlagUser, featureFlagCommunity } = models;
-					featureFlag.hasMany(featureFlagUser, {
+				associate: ({ featureFlag, ...models }) => {
+					featureFlag.hasMany(models.featureFlagUser, {
 						onDelete: 'CASCADE',
 						as: 'users',
 						foreignKey: 'featureFlagId',
 					});
-					featureFlag.hasMany(featureFlagCommunity, {
+					featureFlag.hasMany(models.featureFlagCommunity, {
 						onDelete: 'CASCADE',
 						as: 'communities',
 						foreignKey: 'featureFlagId',

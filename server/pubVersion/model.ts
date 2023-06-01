@@ -8,9 +8,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'PubVersions',
 			classMethods: {
-				associate: (models) => {
-					const { pubVersion, pub } = models;
-					pubVersion.belongsTo(pub, { onDelete: 'CASCADE' });
+				associate: ({ pubVersion, ...models }) => {
+					pubVersion.belongsTo(models.pub, { onDelete: 'CASCADE' });
 				},
 			},
 		},

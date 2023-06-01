@@ -17,13 +17,12 @@ export default (sequelize, dataTypes) => {
 				},
 			],
 			classMethods: {
-				associate: (models) => {
-					const { collectionPub, collection, pub } = models;
-					collectionPub.belongsTo(collection, {
+				associate: ({ collectionPub, ...models }) => {
+					collectionPub.belongsTo(models.collection, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					collectionPub.belongsTo(pub, {
+					collectionPub.belongsTo(models.pub, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});

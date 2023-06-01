@@ -9,9 +9,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Drafts',
 			classMethods: {
-				associate: (models) => {
-					const { pub, draft } = models;
-					draft.hasOne(pub);
+				associate: ({ draft, ...models }) => {
+					draft.hasOne(models.pub);
 				},
 			},
 		},

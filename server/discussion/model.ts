@@ -15,32 +15,23 @@ export default (sequelize, dataTypes) => {
 				{ fields: ['pubId'], method: 'BTREE' },
 			],
 			classMethods: {
-				associate: (models) => {
-					const {
-						discussion,
-						discussionAnchor,
-						visibility,
-						pub,
-						user,
-						thread,
-						commenter,
-					} = models;
-					discussion.belongsTo(thread, {
+				associate: ({ discussion, ...models }) => {
+					discussion.belongsTo(models.thread, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					discussion.belongsTo(visibility, {
+					discussion.belongsTo(models.visibility, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					discussion.belongsTo(user, {
+					discussion.belongsTo(models.user, {
 						onDelete: 'CASCADE',
 						as: 'author',
 						foreignKey: { name: 'userId' },
 					});
-					discussion.belongsTo(commenter, { onDelete: 'CASCADE' });
-					discussion.belongsTo(pub);
-					discussion.hasMany(discussionAnchor, {
+					discussion.belongsTo(models.commenter, { onDelete: 'CASCADE' });
+					discussion.belongsTo(models.pub);
+					discussion.hasMany(models.discussionAnchor, {
 						onDelete: 'CASCADE',
 						as: 'anchors',
 						foreignKey: 'discussionId',

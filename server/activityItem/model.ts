@@ -14,12 +14,11 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'ActivityItems',
 			classMethods: {
-				associate: (models) => {
-					const { activityItem, pub, collection, community, user } = models;
-					activityItem.belongsTo(user, { as: 'actor' });
-					activityItem.belongsTo(pub);
-					activityItem.belongsTo(collection);
-					activityItem.belongsTo(community, { foreignKey: { allowNull: false } });
+				associate: ({ activityItem, ...models }) => {
+					activityItem.belongsTo(models.user, { as: 'actor' });
+					activityItem.belongsTo(models.pub);
+					activityItem.belongsTo(models.collection);
+					activityItem.belongsTo(models.community, { foreignKey: { allowNull: false } });
 				},
 			},
 			indexes: [

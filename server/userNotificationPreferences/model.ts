@@ -34,9 +34,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'UserNotificationPreferences',
 			classMethods: {
-				associate: (models) => {
-					const { userNotificationPreferences, user } = models;
-					userNotificationPreferences.belongsTo(user, {
+				associate: ({ userNotificationPreferences, ...models }) => {
+					userNotificationPreferences.belongsTo(models.user, {
 						foreignKey: { allowNull: false },
 					});
 				},

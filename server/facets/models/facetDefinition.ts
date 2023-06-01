@@ -9,9 +9,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'FacetDefinitions',
 			classMethods: {
-				associate: (models) => {
-					const { facetDefinition, facetInstance } = models;
-					facetDefinition.hasMany(facetInstance, {
+				associate: ({ facetDefinition, ...models }) => {
+					facetDefinition.hasMany(models.facetInstance, {
 						onDelete: 'CASCADE',
 						as: 'instances',
 						foreignKey: 'facetDefinitionId',

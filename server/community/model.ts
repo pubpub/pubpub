@@ -75,28 +75,16 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Communities',
 			classMethods: {
-				associate: (models) => {
-					const {
-						activityItem,
-						community,
-						depositTarget,
-						organization,
-						collection,
-						page,
-						pub,
-						scopeSummary,
-						landingPageFeature,
-						spamTag,
-					} = models;
-					community.hasMany(activityItem, { foreignKey: { allowNull: false } });
-					community.hasMany(landingPageFeature, { onDelete: 'CASCADE' });
-					community.belongsTo(organization, { onDelete: 'CASCADE' });
-					community.hasMany(collection, { onDelete: 'CASCADE' });
-					community.hasMany(pub, { onDelete: 'CASCADE' });
-					community.hasMany(page, { onDelete: 'CASCADE' });
-					community.hasMany(depositTarget, { onDelete: 'CASCADE' });
-					community.belongsTo(scopeSummary);
-					community.belongsTo(spamTag);
+				associate: ({ community, ...models }) => {
+					community.hasMany(models.activityItem, { foreignKey: { allowNull: false } });
+					community.hasMany(models.landingPageFeature, { onDelete: 'CASCADE' });
+					community.belongsTo(models.organization, { onDelete: 'CASCADE' });
+					community.hasMany(models.collection, { onDelete: 'CASCADE' });
+					community.hasMany(models.pub, { onDelete: 'CASCADE' });
+					community.hasMany(models.page, { onDelete: 'CASCADE' });
+					community.hasMany(models.depositTarget, { onDelete: 'CASCADE' });
+					community.belongsTo(models.scopeSummary);
+					community.belongsTo(models.spamTag);
 				},
 			},
 		},

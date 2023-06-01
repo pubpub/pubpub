@@ -9,10 +9,9 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Merges',
 			classMethods: {
-				associate: (models) => {
-					const { user, merge, pub } = models;
-					merge.belongsTo(user, { onDelete: 'CASCADE' });
-					merge.belongsTo(pub, { foreignKey: { allowNull: false } });
+				associate: ({ merge, ...models }) => {
+					merge.belongsTo(models.user, { onDelete: 'CASCADE' });
+					merge.belongsTo(models.pub, { foreignKey: { allowNull: false } });
 				},
 			},
 		},

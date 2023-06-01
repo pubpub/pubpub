@@ -7,12 +7,11 @@ export default (sequelize) => {
 		{
 			tableName: 'UserScopeVisits',
 			classMethods: {
-				associate: (models) => {
-					const { userScopeVisit, user, pub, collection, community } = models;
-					userScopeVisit.belongsTo(user);
-					userScopeVisit.belongsTo(pub);
-					userScopeVisit.belongsTo(collection);
-					userScopeVisit.belongsTo(community);
+				associate: ({ userScopeVisit, ...models }) => {
+					userScopeVisit.belongsTo(models.user);
+					userScopeVisit.belongsTo(models.pub);
+					userScopeVisit.belongsTo(models.collection);
+					userScopeVisit.belongsTo(models.community);
 				},
 			},
 			indexes: [

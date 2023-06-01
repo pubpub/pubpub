@@ -11,11 +11,10 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Releases',
 			classMethods: {
-				associate: (models) => {
-					const { doc, release, pub, user } = models;
-					release.belongsTo(doc, { foreignKey: { allowNull: false } });
-					release.belongsTo(user, { foreignKey: { allowNull: false } });
-					release.belongsTo(pub, { foreignKey: { allowNull: false } });
+				associate: ({ release, ...models }) => {
+					release.belongsTo(models.doc, { foreignKey: { allowNull: false } });
+					release.belongsTo(models.user, { foreignKey: { allowNull: false } });
+					release.belongsTo(models.pub, { foreignKey: { allowNull: false } });
 				},
 			},
 		},

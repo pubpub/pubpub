@@ -8,9 +8,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Reviewers',
 			classMethods: {
-				associate: (models) => {
-					const { reviewer, reviewNew } = models;
-					reviewer.belongsTo(reviewNew, {
+				associate: ({ reviewer, ...models }) => {
+					reviewer.belongsTo(models.reviewNew, {
 						as: 'review',
 						onDelete: 'CASCADE',
 						foreignKey: { name: 'reviewId', allowNull: false },

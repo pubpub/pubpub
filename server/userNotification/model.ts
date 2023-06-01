@@ -10,17 +10,16 @@ export default (sequelize, dataTypes) => {
 			tableName: 'UserNotifications',
 			indexes: [{ fields: ['userId'], method: 'BTREE' }],
 			classMethods: {
-				associate: (models) => {
-					const { activityItem, user, userNotification, userSubscription } = models;
-					userNotification.belongsTo(activityItem, {
+				associate: ({ userNotification, ...models }) => {
+					userNotification.belongsTo(models.activityItem, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					userNotification.belongsTo(userSubscription, {
+					userNotification.belongsTo(models.userSubscription, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					userNotification.belongsTo(user, {
+					userNotification.belongsTo(models.user, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});

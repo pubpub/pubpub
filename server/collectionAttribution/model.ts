@@ -15,12 +15,11 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'CollectionAttributions',
 			classMethods: {
-				associate: (models) => {
-					const { collectionAttribution } = models;
-					collectionAttribution.belongsTo(models.user, {
+				associate: ({ collectionAttribution, ...models }) => {
+					collectionAttribution.belongsTo(models.models.user, {
 						onDelete: 'CASCADE',
 					});
-					collectionAttribution.belongsTo(models.collection, {
+					collectionAttribution.belongsTo(models.models.collection, {
 						foreignKey: { allowNull: false },
 						onDelete: 'CASCADE',
 					});

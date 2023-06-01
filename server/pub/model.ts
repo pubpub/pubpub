@@ -69,67 +69,49 @@ export default (sequelize, dataTypes) => {
 			tableName: 'Pubs',
 			indexes: [{ fields: ['communityId'], method: 'BTREE' }],
 			classMethods: {
-				associate: (models) => {
-					const {
-						activityItem,
-						collectionPub,
-						community,
-						crossrefDepositRecord,
-						draft,
-						discussion,
-						landingPageFeature,
-						member,
-						pub,
-						pubAttribution,
-						pubEdge,
-						pubVersion,
-						release,
-						reviewNew,
-						scopeSummary,
-						submission,
-					} = models;
-					pub.belongsTo(draft, { foreignKey: { allowNull: false } });
-					pub.hasMany(activityItem);
-					pub.hasMany(pubAttribution, {
+				associate: ({ pub, ...models }) => {
+					pub.belongsTo(models.draft, { foreignKey: { allowNull: false } });
+					pub.hasMany(models.activityItem);
+					pub.hasMany(models.pubAttribution, {
 						onDelete: 'CASCADE',
 						as: 'attributions',
 						foreignKey: 'pubId',
 					});
-					pub.hasMany(collectionPub, {
+					pub.hasMany(models.collectionPub, {
 						onDelete: 'CASCADE',
 						hooks: true,
 					});
-					pub.belongsTo(community, {
+					pub.belongsTo(models.community, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});
-					pub.hasMany(discussion, { onDelete: 'CASCADE' });
-					pub.hasMany(landingPageFeature, { onDelete: 'CASCADE' });
-					pub.hasMany(models.export);
-					pub.hasMany(reviewNew, {
+					pub.hasMany(models.discussion, { onDelete: 'CASCADE' });
+					pub.hasMany(models.landingPageFeature, { onDelete: 'CASCADE' });
+					pub.hasMany(models.models.export);
+					pub.hasMany(models.reviewNew, {
 						onDelete: 'CASCADE',
 						as: 'reviews',
 					});
-					pub.hasMany(member, {
+					pub.hasMany(models.member, {
 						onDelete: 'CASCADE',
 						as: 'members',
 						foreignKey: 'pubId',
 					});
-					pub.hasMany(release, { onDelete: 'CASCADE' });
-					pub.hasMany(pubVersion, { onDelete: 'CASCADE' });
-					pub.hasMany(pubEdge, {
+					pub.hasMany(models.release, { onDelete: 'CASCADE' });
+					pub.hasMany(models.pubVersion, { onDelete: 'CASCADE' });
+					pub.hasMany(models.pubEdge, {
 						onDelete: 'CASCADE',
 						as: 'outboundEdges',
 						foreignKey: 'pubId',
 					});
-					pub.hasMany(pubEdge, {
+					pub.hasMany(models.pubEdge, {
 						onDelete: 'CASCADE',
 						as: 'inboundEdges',
 						foreignKey: 'targetPubId',
 					});
-					pub.hasOne(submission);
-					pub.belongsTo(crossrefDepositRecord);
-					pub.belongsTo(scopeSummary);
+					pub.hasOne(models.submission);
+					pub.belongsTo(models.crossrefDepositRecord);
+					pub.belongsTo(models.scopeSummary);
 				},
 			},
 		},

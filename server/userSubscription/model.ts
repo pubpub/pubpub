@@ -14,11 +14,10 @@ export default (sequelize, dataTypes) => {
 				{ fields: ['threadId'], method: 'BTREE' },
 			],
 			classMethods: {
-				associate: (models) => {
-					const { pub, thread, user, userSubscription } = models;
-					userSubscription.belongsTo(pub, { onDelete: 'CASCADE' });
-					userSubscription.belongsTo(thread, { onDelete: 'CASCADE' });
-					userSubscription.belongsTo(user, {
+				associate: ({ userSubscription, ...models }) => {
+					userSubscription.belongsTo(models.pub, { onDelete: 'CASCADE' });
+					userSubscription.belongsTo(models.thread, { onDelete: 'CASCADE' });
+					userSubscription.belongsTo(models.user, {
 						onDelete: 'CASCADE',
 						foreignKey: { allowNull: false },
 					});

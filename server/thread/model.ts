@@ -8,15 +8,14 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'Threads',
 			classMethods: {
-				associate: (models) => {
-					const { discussion, thread, threadComment, threadEvent } = models;
-					thread.hasMany(discussion, { onDelete: 'CASCADE' });
-					thread.hasMany(threadComment, {
+				associate: ({ thread, ...models }) => {
+					thread.hasMany(models.discussion, { onDelete: 'CASCADE' });
+					thread.hasMany(models.threadComment, {
 						onDelete: 'CASCADE',
 						as: 'comments',
 						foreignKey: 'threadId',
 					});
-					thread.hasMany(threadEvent, {
+					thread.hasMany(models.threadEvent, {
 						onDelete: 'CASCADE',
 						as: 'events',
 						foreignKey: 'threadId',

@@ -19,10 +19,9 @@ export default (sequelize, dataTypes) => {
 				},
 			],
 			classMethods: {
-				associate: (models) => {
-					const { pub, community, landingPageFeature } = models;
-					landingPageFeature.belongsTo(pub, { onDelete: 'CASCADE' });
-					landingPageFeature.belongsTo(community, { onDelete: 'CASCADE' });
+				associate: ({ landingPageFeature, ...models }) => {
+					landingPageFeature.belongsTo(models.pub, { onDelete: 'CASCADE' });
+					landingPageFeature.belongsTo(models.community, { onDelete: 'CASCADE' });
 				},
 			},
 		},

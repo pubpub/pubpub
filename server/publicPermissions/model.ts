@@ -11,12 +11,11 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'PublicPermissions',
 			classMethods: {
-				associate: (models) => {
-					const { publicPermissions, pub, collection, community, organization } = models;
-					publicPermissions.belongsTo(pub, { onDelete: 'CASCADE' });
-					publicPermissions.belongsTo(collection);
-					publicPermissions.belongsTo(community);
-					publicPermissions.belongsTo(organization);
+				associate: ({ publicPermissions, ...models }) => {
+					publicPermissions.belongsTo(models.pub, { onDelete: 'CASCADE' });
+					publicPermissions.belongsTo(models.collection);
+					publicPermissions.belongsTo(models.community);
+					publicPermissions.belongsTo(models.organization);
 				},
 			},
 		},

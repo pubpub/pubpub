@@ -16,8 +16,8 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'DepositTargets',
 			classMethods: {
-				associate: (models) => {
-					models.depositTarget.belongsTo(models.community);
+				associate: ({ depositTarget, ...models }) => {
+					depositTarget.belongsTo(models.models.community);
 				},
 			},
 		},

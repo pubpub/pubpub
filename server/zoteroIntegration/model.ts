@@ -9,13 +9,12 @@ export default (sequelize, dataTypes) =>
 		{
 			tableName: 'ZoteroIntegrations',
 			classMethods: {
-				associate: (models) => {
-					const { User, zoteroIntegration, integrationDataOAuth1 } = models;
-					zoteroIntegration.belongsTo(User, {
+				associate: ({ zoteroIntegration, ...models }) => {
+					zoteroIntegration.belongsTo(models.User, {
 						as: 'user',
 						foreignKey: { allowNull: false },
 					});
-					zoteroIntegration.belongsTo(integrationDataOAuth1, {
+					zoteroIntegration.belongsTo(models.integrationDataOAuth1, {
 						foreignKey: { allowNull: false },
 						onDelete: 'CASCADE',
 					});

@@ -20,10 +20,9 @@ export default (sequelize, dataTypes) => {
 		{
 			tableName: 'ThreadUsers',
 			classMethods: {
-				associate: (models) => {
-					const { threadUser, user, thread } = models;
-					threadUser.belongsTo(user, { onDelete: 'CASCADE' });
-					threadUser.belongsTo(thread, { foreignkey: { allowNull: false } });
+				associate: ({ threadUser, ...models }) => {
+					threadUser.belongsTo(models.user, { onDelete: 'CASCADE' });
+					threadUser.belongsTo(models.thread, { foreignkey: { allowNull: false } });
 				},
 			},
 		},
