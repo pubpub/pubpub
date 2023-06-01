@@ -44,6 +44,7 @@ export default (sequelize, dataTypes) => {
 						foreignKey: 'collectionId',
 					});
 					collection.belongsTo(models.crossrefDepositRecord);
+					collection.belongsTo(models.community);
 					collection.hasMany(models.member);
 					collection.belongsTo(models.page);
 					collection.hasOne(models.submissionWorkflow);
