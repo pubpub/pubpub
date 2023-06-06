@@ -1,10 +1,16 @@
-export const buildProxyObject = (resolvePromise) => {
+import { Model } from 'sequelize';
+
+export const buildProxyObject = (
+	resolvePromise: Promise<{
+		[key: string]: Model;
+	}>,
+) => {
 	const target = {};
 	let hasResolved = false;
-	let resolveError = null;
-	let resolvedValues;
+	let resolveError: null | string = null;
+	let resolvedValues: Record<string, any>;
 
-	const getBoundValue = (identifier) => {
+	const getBoundValue = (identifier: string) => {
 		if (resolveError) {
 			throw new Error(`The modelize template failed to resolve: ${resolveError}`);
 		}
@@ -36,12 +42,18 @@ export const buildProxyObject = (resolvePromise) => {
 			resolveError = err;
 		});
 
-	return new Proxy(target, {
+	return new Proxy<
+		{
+			[key: string]: Model;
+		} & {
+			resolve: () => Promise<void>;
+		}
+	>(target, {
 		get: (_, name) => {
 			if (name === 'resolve') {
 				return () => resolvePromise.then(() => {});
 			}
-			if (name === 'toString' || name === Symbol.toStringTag) {
+			if (name === 'toString' || name === Symbol.toStringTag || typeof name === 'symbol') {
 				return toString();
 			}
 			return getBoundValue(name);

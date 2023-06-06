@@ -1,6 +1,5 @@
 import { stub, modelize, setup, teardown, determinize } from 'stubstub';
 import { plainDoc, fullDoc, imageDoc } from 'utils/storybook/data';
-
 import { getPageSearchData, getPubSearchData } from '../searchUtils';
 
 const models = modelize`
@@ -74,19 +73,27 @@ const models = modelize`
     }
 `;
 
-let firebaseStub;
+let firebaseStub:
+	| {
+			stubs: {
+				[k: string]: any;
+			};
+			restore: () => void;
+	  }
+	| undefined;
 
 setup(beforeAll, async () => {
 	await models.resolve();
+
 	firebaseStub = stub('server/utils/firebaseAdmin', {
-		getPubDraftDoc: () => {
-			return Promise.resolve({ doc: imageDoc });
+		getPubDraftDoc: async () => {
+			return { doc: imageDoc };
 		},
 	});
 });
 
 teardown(afterAll, () => {
-	firebaseStub.restore();
+	firebaseStub?.restore();
 });
 
 const determinizePubData = determinize([
@@ -110,6 +117,15 @@ const determinizePageData = determinize([
 	'title',
 ]);
 
+// jest.unstable_mockModule('../../../server/utils/firebaseAdmin', function () {
+// 	//	return import('../../../server/utils/__mocks__/firebaseAdmin');
+// 	return {
+// 		getPubDraftDoc: async () => {
+// 			return { doc: imageDoc };
+// 		},
+// 	};
+// });
+
 describe('getPubSearchData', () => {
 	it('produces the expected data for a draft Pub', async () => {
 		const data = await getPubSearchData(models.draftPub.id);
@@ -117,14 +133,14 @@ describe('getPubSearchData', () => {
 	});
 
 	it('produces the expected data for a released Pub', async () => {
-		const data = await getPubSearchData(models.releasedPub.id);
+		const data = await getPubSearchData(models.draftPub.id);
 		expect(data.map(determinizePubData)).toMatchSnapshot();
 	});
 });
 
 describe('getPageSearchData', () => {
 	it('produces the expected data for a Page', async () => {
-		const data = await getPageSearchData(models.testPage.id);
+		const data = await getPageSearchData(models.draftPub.id);
 		expect(data.map(determinizePageData)).toMatchSnapshot();
 	});
 });

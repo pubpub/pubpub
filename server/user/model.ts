@@ -1,7 +1,6 @@
 import { DataTypes as dataTypes } from 'sequelize';
+import passportLocalSequelize from 'passport-local-sequelize';
 import { sequelize } from '../sequelize';
-
-const passportLocalSequelize = require('passport-local-sequelize');
 
 const UserWithoutPassPort = sequelize.define(
 	'User',
@@ -67,24 +66,23 @@ const UserWithoutPassPort = sequelize.define(
 					Discussion,
 					UserNotificationPreferences,
 					zoteroIntegration,
-					User,
 				} = models;
-				User.hasMany(PubAttribution, {
+				UserWithoutPassPort.hasMany(PubAttribution, {
 					onDelete: 'CASCADE',
 					as: 'attributions',
 					foreignKey: 'userId',
 				});
-				User.hasMany(Discussion, {
+				UserWithoutPassPort.hasMany(Discussion, {
 					onDelete: 'CASCADE',
 					as: 'discussions',
 					foreignKey: 'userId',
 				});
-				User.hasOne(UserNotificationPreferences, {
+				UserWithoutPassPort.hasOne(UserNotificationPreferences, {
 					onDelete: 'CASCADE',
 					as: 'userNotificationPreferences',
 					foreignKey: 'userId',
 				});
-				User.hasOne(zoteroIntegration, {
+				UserWithoutPassPort.hasOne(zoteroIntegration, {
 					foreignKey: { name: 'userId', allowNull: false },
 				});
 			},
@@ -100,3 +98,28 @@ passportLocalSequelize.attachToUser(UserWithoutPassPort, {
 });
 
 export const User = UserWithoutPassPort;
+
+export const attributesPublicUser = [
+	'id',
+	'firstName',
+	'lastName',
+	'fullName',
+	'avatar',
+	'slug',
+	'initials',
+	'title',
+	'orcid',
+];
+
+export const includeUserModel = (() => {
+	return (options) => {
+		const { attributes: providedAttributes = [], ...restOptions } = options;
+		const attributes = [...new Set([...attributesPublicUser, ...providedAttributes])];
+		// eslint-disable-next-line pubpub-rules/no-user-model
+		return {
+			model: User,
+			attributes,
+			...restOptions,
+		};
+	};
+})();

@@ -1,11 +1,12 @@
 import supertest from 'supertest-as-promised';
+import { UserWithPrivateFieldsAndHashedPassword } from 'types';
 
 import app from '../server/server';
 
 const userToAgentMap = new Map();
 const loggedOutAgent = supertest.agent(app);
 
-export const login = (user) => {
+export const login = (user?: UserWithPrivateFieldsAndHashedPassword) => {
 	if (!user) {
 		return loggedOutAgent;
 	}

@@ -33,3 +33,7 @@ export type UserWithPrivateFields = User & {
 	resetHash: string;
 	resetHashExpiration: number;
 };
+
+export type UserWithPrivateFieldsAndHashedPassword = UserWithPrivateFields & {
+	sha3hashedPassword: string;
+};

@@ -276,9 +276,10 @@ export const buildOrQuery = (scopeElements) => {
 		if (activeCollection) {
 			collectionsList.push(activeCollection);
 		}
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 		orQuery.push({
 			collectionId: {
-				// @ts-expect-error ts-migrate(2418) FIXME: Type of computed property's value is 'any[]', whic... Remove this comment to see the full error message
+				// // @ts-expect-error ts-migrate(2418) FIXME: Type of computed property's value is 'any[]', whic... Remove this comment to see the full error message
 				[Op.in]: collectionsList.map((cl) => cl.id),
 			},
 		});

@@ -19,8 +19,6 @@ setup(beforeAll, models.resolve);
 teardown(afterAll);
 
 describe('/api/pubs/subscriptions', () => {
-	console.log('setup');
-	console.log(process.env);
 	it('allows a user to subscribe to a Pub', async () => {
 		const { user, pub } = models;
 		const agent = await login(user);

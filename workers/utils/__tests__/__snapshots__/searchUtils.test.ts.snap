@@ -1,8 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getPageSearchData produces the expected data for a Page 1`] = `
-Array [
-  Object {
+[
+  {
+    "avatar": "page.png",
+    "communityDomain": "tc1.pubpub.org",
+    "communityTitle": "Test Community",
+    "description": "You can put text or Pubs on me",
+    "slug": "test-page",
+    "title": "I am a test page",
+  },
+]
+`;
+
+exports[`getPageSearchData produces the expected data for a Page 2`] = `
+[
+  {
     "avatar": "page.png",
     "communityDomain": "tc1.pubpub.org",
     "communityTitle": "Test Community",
@@ -14,8 +27,8 @@ Array [
 `;
 
 exports[`getPubSearchData produces the expected data for a draft Pub 1`] = `
-Array [
-  Object {
+[
+  {
     "avatar": "shh.png",
     "byline": "by Test Testington",
     "communityDomain": "tc1.pubpub.org",
@@ -30,8 +43,8 @@ Array [
 `;
 
 exports[`getPubSearchData produces the expected data for a released Pub 1`] = `
-Array [
-  Object {
+[
+  {
     "avatar": "hello.png",
     "byline": "by First Author, Second Author, and Test Testington",
     "communityDomain": "tc1.pubpub.org",
@@ -42,7 +55,7 @@ Array [
     "slug": "a-released-pub",
     "title": "A Released Pub",
   },
-  Object {
+  {
     "avatar": "hello.png",
     "byline": "by First Author, Second Author, and Test Testington",
     "communityDomain": "tc1.pubpub.org",
@@ -52,6 +65,22 @@ Array [
     "isPublic": false,
     "slug": "a-released-pub",
     "title": "A Released Pub",
+  },
+]
+`;
+
+exports[`getPubSearchData produces the expected data for a released Pub 2`] = `
+[
+  {
+    "avatar": "shh.png",
+    "byline": "by Test Testington",
+    "communityDomain": "tc1.pubpub.org",
+    "communityTitle": "Test Community",
+    "content": "Hello hello.IntroductionWhateverOkay",
+    "description": "You probably cannot see me",
+    "isPublic": false,
+    "slug": "a-draft-pub",
+    "title": "A Draft Pub",
   },
 ]
 `;

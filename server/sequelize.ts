@@ -1,4 +1,4 @@
-import { Sequelize, UUID, UUIDV4 } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 import { knex } from 'knex';
 
 const database_url = process.env.DATABASE_CONNECTION_POOL_URL || process.env.DATABASE_URL;
@@ -7,8 +7,8 @@ class SequelizeWithId extends Sequelize {
 	/* Create standard id type for our database */
 	idType = {
 		primaryKey: true,
-		type: UUID,
-		defaultValue: UUIDV4,
+		type: DataTypes.UUID,
+		defaultValue: DataTypes.UUIDV4,
 	};
 }
 
