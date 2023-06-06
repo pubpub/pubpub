@@ -108,14 +108,15 @@ $bp: vendor.$bp-namespace;
 
 		.logo {
 			position: relative;
-			> a {
+			a {
+				width: 88px;
 				height: 35px;
 				display: block;
 
-				> picture {
+				picture {
 					height: 100%;
 
-					> img {
+					img {
 						height: 100%;
 					}
 				}
