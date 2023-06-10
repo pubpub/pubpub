@@ -75,7 +75,7 @@ $iconSize: 0.75em;
 		text-align: center;
 		left: -0.9 * $iconSize;
 		top: -0.5 * $iconSize;
-		outline: 0.5px solid $color;
+		box-shadow: 0 0 0 .5px $color;
 	}
 }
 
