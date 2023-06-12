@@ -1,4 +1,4 @@
-import { setup, modelize, expectCreatedActivityItem } from 'stubstub';
+import { setup, modelize, expectCreatedActivityItem, teardown } from 'stubstub';
 
 import { FacetsError } from 'facets';
 import { FacetBinding, facetModels } from 'server/models';
@@ -12,6 +12,7 @@ const models = modelize`
 `;
 
 setup(beforeAll, models.resolve);
+teardown(afterAll);
 
 const includeFacetBindingWhere = (where: Record<string, any>) => [
 	{
