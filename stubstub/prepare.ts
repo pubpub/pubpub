@@ -1,4 +1,4 @@
-import { Global } from '@jest/types';
+import type { Global } from '@jest/types';
 import { clearUserToAgentMap } from './userToAgentMap';
 import { sequelize } from '../server/sequelize';
 
@@ -35,6 +35,7 @@ export const teardown = (
 			await actionsFn();
 		}
 		clearUserToAgentMap();
+		await sequelize.close();
 		// global.gc?.();
 	});
 };

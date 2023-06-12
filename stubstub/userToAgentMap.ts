@@ -1,13 +1,19 @@
-import supertest from 'supertest';
+import supertest, { SuperTest, Test } from 'supertest';
 import { UserWithPrivateFieldsAndHashedPassword } from 'types';
 
+import type { Server } from 'http';
 import app from '../server/server';
 
 const userToAgentMap = new Map();
-const loggedOutAgent = supertest.agent(app);
 
-export const login = async (user?: UserWithPrivateFieldsAndHashedPassword) => {
+let server: Server | null = null;
+
+export const login = async (
+	user?: UserWithPrivateFieldsAndHashedPassword,
+): Promise<SuperTest<Test>> => {
+	server = server ?? app.listen();
 	if (!user) {
+		const loggedOutAgent = supertest.agent(server);
 		return loggedOutAgent;
 	}
 	if (userToAgentMap.get(user)) {
@@ -15,7 +21,7 @@ export const login = async (user?: UserWithPrivateFieldsAndHashedPassword) => {
 	}
 
 	const createAgent = async () => {
-		const agent = supertest.agent(app);
+		const agent = supertest.agent(server);
 		try {
 			await agent.post('/api/login').send({
 				email: user.email,
@@ -32,4 +38,7 @@ export const login = async (user?: UserWithPrivateFieldsAndHashedPassword) => {
 	return entry;
 };
 
-export const clearUserToAgentMap = () => userToAgentMap.clear();
+export const clearUserToAgentMap = () => {
+	userToAgentMap.clear();
+	server?.close();
+};

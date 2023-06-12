@@ -41,8 +41,6 @@ export default async () => {
 		process.env.DATABASE_URL = await setupTestDatabase();
 	}
 
-	// await withSyncingDbFlagSet(async () => {
-
 	process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB = 'true';
 	/**
 	 * Two things of note
@@ -58,5 +56,4 @@ export default async () => {
 	const { sequelize } = await import('../../server/models');
 	await sequelize.sync();
 	delete process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB;
-	// });
 };
