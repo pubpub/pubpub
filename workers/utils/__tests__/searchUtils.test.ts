@@ -117,15 +117,6 @@ const determinizePageData = determinize([
 	'title',
 ]);
 
-// jest.unstable_mockModule('../../../server/utils/firebaseAdmin', function () {
-// 	//	return import('../../../server/utils/__mocks__/firebaseAdmin');
-// 	return {
-// 		getPubDraftDoc: async () => {
-// 			return { doc: imageDoc };
-// 		},
-// 	};
-// });
-
 describe('getPubSearchData', () => {
 	it('produces the expected data for a draft Pub', async () => {
 		const data = await getPubSearchData(models.draftPub.id);
@@ -133,14 +124,14 @@ describe('getPubSearchData', () => {
 	});
 
 	it('produces the expected data for a released Pub', async () => {
-		const data = await getPubSearchData(models.draftPub.id);
+		const data = await getPubSearchData(models.releasedPub.id);
 		expect(data.map(determinizePubData)).toMatchSnapshot();
 	});
 });
 
 describe('getPageSearchData', () => {
 	it('produces the expected data for a Page', async () => {
-		const data = await getPageSearchData(models.draftPub.id);
+		const data = await getPageSearchData(models.testPage.id);
 		expect(data.map(determinizePageData)).toMatchSnapshot();
 	});
 });

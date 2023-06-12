@@ -43,7 +43,7 @@ export default async () => {
 
 	// await withSyncingDbFlagSet(async () => {
 
-	//	process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB = 'true';
+	process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB = 'true';
 	/**
 	 * Two things of note
 	 * 1. Dynamic import inline instead of top-level import in order to set
@@ -57,6 +57,6 @@ export default async () => {
 	 */
 	const { sequelize } = await import('../../server/models');
 	await sequelize.sync();
-	//	delete process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB;
+	delete process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB;
 	// });
 };

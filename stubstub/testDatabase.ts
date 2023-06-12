@@ -14,7 +14,7 @@ const testDbConfig = {
 };
 
 const exec = (command: string) =>
-	new Promise((resolve, reject) =>
+	new Promise((resolve, reject) => {
 		execWithCallback(
 			command,
 			{
@@ -29,8 +29,8 @@ const exec = (command: string) =>
 				}
 				return resolve(res);
 			},
-		),
-	);
+		);
+	});
 
 const createDbUrl = ({
 	name,
@@ -76,7 +76,7 @@ export const setupTestDatabase = async (config = testDbConfig) => {
 		throwBinariesWarning();
 	}
 	await blockForFile(path.join(pgDataPath, 'global/pg_filenode.map'));
-	await exec(`dropdb --if-exists ${config.name}`);
+	await exec(`dropdb --if-exists ${config.name} -f`);
 	await exec(`dropuser --if-exists ${config.username}`);
 	await exec(
 		`psql postgres -c "CREATE USER ${config.username} WITH PASSWORD '${config.password}';"`,

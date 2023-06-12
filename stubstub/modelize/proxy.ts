@@ -2,7 +2,7 @@ import { Model } from 'sequelize';
 
 export const buildProxyObject = (
 	resolvePromise: Promise<{
-		[key: string]: Model;
+		[key: string]: any;
 	}>,
 ) => {
 	const target = {};
@@ -44,7 +44,7 @@ export const buildProxyObject = (
 
 	return new Proxy<
 		{
-			[key: string]: Model;
+			[key: string]: any;
 		} & {
 			resolve: () => Promise<void>;
 		}

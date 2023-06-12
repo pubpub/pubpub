@@ -95,10 +95,10 @@ export const modelize = (strings: TemplateStringsArray, ...slots: any[]) => {
 	const ast = parse(query);
 	const { definitions, graph, subsets } = link(ast, parameters);
 	const resolvedModelsById: {
-		[key: string]: Model;
+		[key: string]: any;
 	} = {};
 	const resolvedModelsByBoundName: {
-		[key: string]: Model;
+		[key: string]: any;
 	} = {};
 	const definitionsById = indexDefinitionsById(definitions);
 

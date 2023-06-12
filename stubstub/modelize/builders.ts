@@ -101,7 +101,7 @@ export const builders = {
 		} = input;
 
 		const sha3hashedPassword = SHA3(password).toString(encHex);
-		return new Promise((resolve, reject) =>
+		return new Promise((resolve, reject) => {
 			User.register(
 				{
 					...(id && { id }),
@@ -123,8 +123,8 @@ export const builders = {
 					user.sha3hashedPassword = sha3hashedPassword;
 					return resolve(user);
 				},
-			),
-		);
+			);
+		});
 	},
 
 	Community: async (
@@ -254,12 +254,7 @@ export const builders = {
 		});
 	},
 
-	ActivityItem: ({
-		applyHooks = false,
-		...activityItem
-	}: {
-		applyHooks: false;
-	} & ActivityItemType) => {
+	ActivityItem: ({ applyHooks = false, ...activityItem }) => {
 		return ActivityItem.create(activityItem, { hooks: applyHooks });
 	},
 

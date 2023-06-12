@@ -1,6 +1,6 @@
 import { Global } from '@jest/types';
 import { clearUserToAgentMap } from './userToAgentMap';
-// import { sequelize } from '../server/sequelize';
+import { sequelize } from '../server/sequelize';
 
 export const setup = (
 	beforeFn: Global.HookBase,
@@ -14,7 +14,7 @@ export const setup = (
 	}
 	beforeFn(async () => {
 		if (actionsFn) {
-			// await sequelize.sync();
+			await sequelize.sync();
 			await actionsFn();
 		}
 	}, 30000);
@@ -35,6 +35,6 @@ export const teardown = (
 			await actionsFn();
 		}
 		clearUserToAgentMap();
-		global.gc?.();
+		// global.gc?.();
 	});
 };

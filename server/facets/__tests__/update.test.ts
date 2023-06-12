@@ -100,13 +100,13 @@ describe('updateFacetsForScope', () => {
 
 	it('creates an ActivityItem when it updates a facet', async () => {
 		const { activityItemTestPub } = models;
+		// This for some reason was not working anymore with awaiting it first
+		const created = await updateFacetsForScope(
+			{ pubId: activityItemTestPub.id },
+			{ License: { kind: 'cc-by-nc' } },
+		);
 		// Should be firing a License.afterCreate() hook
-		expectCreatedActivityItem(
-			updateFacetsForScope(
-				{ pubId: activityItemTestPub.id },
-				{ License: { kind: 'cc-by-nc' } },
-			),
-		).toMatchObject({
+		await expectCreatedActivityItem(Promise.resolve(created)).toMatchObject({
 			kind: 'facet-instance-updated',
 			payload: {
 				facetName: 'License',
@@ -119,9 +119,11 @@ describe('updateFacetsForScope', () => {
 			},
 		});
 		// Should be firing a License.afterUpdate() hook
-		expectCreatedActivityItem(
-			updateFacetsForScope({ pubId: activityItemTestPub.id }, { License: { kind: 'cc-0' } }),
-		).toMatchObject({
+		const updated = await updateFacetsForScope(
+			{ pubId: activityItemTestPub.id },
+			{ License: { kind: 'cc-0' } },
+		);
+		await expectCreatedActivityItem(Promise.resolve(updated)).toMatchObject({
 			kind: 'facet-instance-updated',
 			payload: {
 				facetName: 'License',

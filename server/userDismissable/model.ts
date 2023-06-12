@@ -9,6 +9,6 @@ export const UserDismissable = sequelize.define(
 		userId: { type: dataTypes.UUID, allowNull: false },
 	},
 	{
-		indexes: [{ fields: ['userId'], using: 'BTREE' }],
+		indexes: [{ fields: ['userId'], method: 'BTREE' }],
 	},
 ) as any;

@@ -35,6 +35,6 @@ export const UserNotificationPreferences = sequelize.define(
 		},
 	},
 	{
-		indexes: [{ fields: ['userId'], using: 'BTREE' }],
+		indexes: [{ fields: ['userId'], method: 'BTREE' }],
 	},
 ) as any;
