@@ -13,9 +13,9 @@ export const UserSubscription = sequelize.define(
 	},
 	{
 		indexes: [
-			{ fields: ['userId'], method: 'BTREE' },
-			{ fields: ['pubId'], method: 'BTREE' },
-			{ fields: ['threadId'], method: 'BTREE' },
+			{ fields: ['userId'], using: 'BTREE' },
+			{ fields: ['pubId'], using: 'BTREE' },
+			{ fields: ['threadId'], using: 'BTREE' },
 		],
 		// @ts-expect-error ts(2345): Argument of type '{ classMethods: { associate: (models: any) => void; }; }' is not assignable to parameter of type 'ModelOptions<Model<any, any>>'. Object literal may only specify known properties, and 'classMethods' does not exist in type 'ModelOptions<Model<any, any>>'.
 		classMethods: {

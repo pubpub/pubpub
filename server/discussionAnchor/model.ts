@@ -14,6 +14,6 @@ export const DiscussionAnchor = sequelize.define(
 		originalTextSuffix: { type: dataTypes.TEXT, allowNull: false },
 	},
 	{
-		indexes: [{ fields: ['discussionId'], method: 'BTREE' }],
+		indexes: [{ fields: ['discussionId'], using: 'BTREE' }],
 	},
 ) as any;

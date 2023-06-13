@@ -83,7 +83,6 @@ export const createCollection = async (
 			doi,
 			kind,
 			layout: generateDefaultCollectionLayout(),
-			// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 			...(id && { id }),
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {
