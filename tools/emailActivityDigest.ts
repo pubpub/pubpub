@@ -3,7 +3,7 @@
 import { Op } from 'sequelize';
 import mailgun from 'mailgun.js';
 
-import { asyncMap } from 'utils/async';
+import { asyncMapSeries } from 'utils/async';
 import { iterAllCommunities } from 'server/community/queries';
 import { Member, includeUserModel } from 'server/models';
 import { renderDigestEmail } from 'server/utils/email';
@@ -36,32 +36,28 @@ async function main() {
 				},
 				...memberQueryOptions,
 			});
-			// For each chunk of those users
-			return asyncMap(
-				members,
-				async ({ user }) => {
-					try {
-						const email = (user as any).email;
-						// eslint-disable-next-line no-console
-						console.log(`user ${user.id} ${email}`);
-						// Create an activity digest email
-						const scope = { communityId: community.id };
-						const digest = await renderDigestEmail(community, { scope, user });
-						if (digest === null) return;
-						await mg.messages.create('mg.pubpub.org', {
-							from: 'PubPub Team <hello@mg.pubpub.org>',
-							to: [email],
-							subject: `${community.title} daily activity digest`,
-							html: digest,
-							'h:Reply-To': 'hello@pubpub.org',
-						});
-					} catch (err) {
-						// eslint-disable-next-line no-console
-						console.log(`sending email failed: ${err}`);
-					}
-				},
-				{ concurrency: 10 },
-			);
+			// For each member
+			return asyncMapSeries(members, async ({ user }) => {
+				try {
+					const email = (user as any).email;
+					// eslint-disable-next-line no-console
+					console.log(`user ${user.id} ${email}`);
+					// Create an activity digest email
+					const scope = { communityId: community.id };
+					const digest = await renderDigestEmail(community, { scope, user });
+					if (digest === null) return;
+					await mg.messages.create('mg.pubpub.org', {
+						from: 'PubPub Team <hello@mg.pubpub.org>',
+						to: [email],
+						subject: `${community.title} daily activity digest`,
+						html: digest,
+						'h:Reply-To': 'hello@pubpub.org',
+					});
+				} catch (err) {
+					// eslint-disable-next-line no-console
+					console.log(`sending email failed: ${err}`);
+				}
+			});
 		});
 
 		// Wait for this batch of emails to send.

@@ -45,11 +45,14 @@ export const getDatabaseRef = (key: string): firebase.database.Reference => {
 	return database?.ref(key) as unknown as firebase.database.Reference;
 };
 
-export const getPubDraftRef = async (pubId: string) => {
-	const pub = await Pub.findOne({
-		where: { id: pubId },
-		include: [{ model: Draft, as: 'draft' }],
-	});
+export const getPubDraftRef = async (pubId: string, transaction: any = null) => {
+	const pub = await Pub.findOne(
+		{
+			where: { id: pubId },
+			include: [{ model: Draft, as: 'draft' }],
+		},
+		{ transaction },
+	);
 	return getDatabaseRef(pub.draft.firebasePath);
 };
 

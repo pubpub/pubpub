@@ -41,29 +41,35 @@ const createDiscussionAnchorsForRelease = async (
 	pubId: string,
 	previousRelease: Maybe<DefinitelyHas<ReleaseType, 'doc'>>,
 	currentHistoryKey: number,
-	sequelizeTransaction: any,
+	transaction: any,
 ) => {
-	const draftRef = await getPubDraftRef(pubId);
+	const draftRef = await getPubDraftRef(pubId, transaction);
 	if (previousRelease) {
 		const steps = await getStepsSinceLastRelease(draftRef, previousRelease, currentHistoryKey);
 		const flatSteps = steps.reduce((a, b) => [...a, ...b], []);
-		const discussions = await Discussion.findAll({
-			where: { pubId },
-			attributes: ['id'],
-		});
-		const existingAnchors = await DiscussionAnchor.findAll({
-			where: {
-				discussionId: { [Op.in]: discussions.map((d) => d.id) },
-				historyKey: previousRelease.historyKey,
+		const discussions = await Discussion.findAll(
+			{
+				where: { pubId },
+				attributes: ['id'],
 			},
-		});
+			{ transaction },
+		);
+		const existingAnchors = await DiscussionAnchor.findAll(
+			{
+				where: {
+					discussionId: { [Op.in]: discussions.map((d) => d.id) },
+					historyKey: previousRelease.historyKey,
+				},
+			},
+			{ transaction },
+		);
 		await Promise.all(
 			existingAnchors.map((anchor) =>
 				createUpdatedDiscussionAnchorForNewSteps(
 					anchor,
 					flatSteps,
 					currentHistoryKey,
-					sequelizeTransaction,
+					transaction,
 				).catch((err) => console.error('Failed to create updated discussion anchor', err)),
 			),
 		);
@@ -101,8 +107,8 @@ export const createRelease = async ({
 		throw new ReleaseQueryError('duplicate-release');
 	}
 
-	const release = await sequelize.transaction(async (txn) => {
-		const docModel = await createDoc(nextDoc, txn);
+	const release = await sequelize.transaction(async (transaction) => {
+		const docModel = await createDoc(nextDoc, transaction);
 		const [nextRelease] = await Promise.all([
 			Release.create(
 				{
@@ -113,9 +119,9 @@ export const createRelease = async ({
 					pubId,
 					docId: docModel.id,
 				},
-				{ transaction: txn },
+				{ transaction },
 			),
-			createDiscussionAnchorsForRelease(pubId, mostRecentRelease, historyKey, txn),
+			createDiscussionAnchorsForRelease(pubId, mostRecentRelease, historyKey, transaction),
 		]);
 		return nextRelease;
 	});

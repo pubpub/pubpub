@@ -12,13 +12,13 @@ import {
  * @param anchor an anchor model that will be updated and stored with a later history key
  * @param steps some steps to apply to the document to compute the new anchor position
  * @param historyKey the history key that (doc + steps) corresponds to
- * @param sequelizeTxn a Sequelize transaction with which to commit (or rollback) this item
+ * @param transaction a Sequelize transaction with which to commit (or rollback) this item
  */
 export const createUpdatedDiscussionAnchorForNewSteps = async (
 	anchor: DiscussionAnchorType,
 	steps: Step[],
 	historyKey: number,
-	sequelizeTxn: any = null,
+	transaction: any = null,
 ) => {
 	const { originalText, originalTextPrefix, originalTextSuffix, discussionId, selection } =
 		anchor;
@@ -33,7 +33,7 @@ export const createUpdatedDiscussionAnchorForNewSteps = async (
 			selection: nextSelection,
 			isOriginal: false,
 		},
-		{ transaction: sequelizeTxn },
+		{ transaction },
 	);
 };
 
