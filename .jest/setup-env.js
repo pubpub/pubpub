@@ -65,4 +65,11 @@ if (typeof window !== 'undefined') {
 }
 
 global.fetch = () => new Promise((resolve) => setTimeout(resolve), 1e4);
-global.setImmediateNode = setImmediate
+
+if (typeof window === 'undefined') {
+	/**
+	 * This is here because Jest overrides setImmediate in a strange way.
+	 * This fixes @see{../utils/async/__tests__/async.test.ts}
+	 */
+	global.setImmediateNode = setImmediate
+}

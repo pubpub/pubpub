@@ -11,7 +11,8 @@ let server: Server | null = null;
 export const login = async (
 	user?: UserWithPrivateFieldsAndHashedPassword,
 ): Promise<SuperTest<Test>> => {
-	server = server ?? app.listen();
+	server ??= app.listen();
+
 	if (!user) {
 		const loggedOutAgent = supertest.agent(server);
 		return loggedOutAgent;

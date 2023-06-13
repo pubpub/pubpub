@@ -1,8 +1,6 @@
 import { DataTypes as dataTypes } from 'sequelize';
 import { sequelize } from '../sequelize';
 
-// export type ReleaseAttributes = InferTypeFromAttributes<typeof attributes>;
-
 export const Release = sequelize.define(
 	'Release',
 	{
