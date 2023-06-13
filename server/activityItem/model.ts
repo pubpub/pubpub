@@ -25,4 +25,4 @@ export const ActivityItem = sequelize.define(
 			{ fields: ['actorId'], using: 'BTREE' },
 		],
 	},
-);
+) as any;

@@ -1,11 +1,13 @@
-import { Model } from 'sequelize';
-
 export const buildProxyObject = (
 	resolvePromise: Promise<{
 		[key: string]: any;
 	}>,
 ) => {
-	const target = {};
+	const target = {} as {
+		[key: string]: any;
+	} & {
+		resolve: () => Promise<void>;
+	};
 	let hasResolved = false;
 	let resolveError: null | string = null;
 	let resolvedValues: Record<string, any>;

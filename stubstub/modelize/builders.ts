@@ -254,7 +254,12 @@ export const builders = {
 		});
 	},
 
-	ActivityItem: ({ applyHooks = false, ...activityItem }) => {
+	ActivityItem: ({
+		applyHooks = false,
+		...activityItem
+	}: {
+		applyHooks?: boolean;
+	} & ActivityItemType) => {
 		return ActivityItem.create(activityItem, { hooks: applyHooks });
 	},
 

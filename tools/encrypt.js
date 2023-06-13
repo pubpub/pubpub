@@ -3,7 +3,7 @@ import { aes256Encrypt, aes256Decrypt } from '../utils/crypto';
 
 // usage: npm run tools encrypt -- --text=text_to_encrypt
 try {
-	require('../config.js');
+	require('../config');
 } catch {
 	console.log('Using environment for AES_ENCRYPTION_KEY');
 }
