@@ -2,7 +2,9 @@
 import { Branch } from '../../server/models';
 
 const firebaseAdmin = require('firebase-admin');
-require('../../config.js');
+// FIXME: Weird eslint issue where either with or without the extension is an error
+// eslint-disable-next-line import/extensions
+require('../../config');
 
 const serviceAccount = JSON.parse(
 	Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString(),
@@ -11,12 +13,12 @@ const firebaseApp =
 	firebaseAdmin.apps.length > 0
 		? firebaseAdmin.apps[0]
 		: firebaseAdmin.initializeApp(
-			{
-				credential: firebaseAdmin.credential.cert(serviceAccount),
-				databaseURL: 'https://pubpub-v6-prod.firebaseio.com',
-			},
-			'firebase-pub-new',
-		);
+				{
+					credential: firebaseAdmin.credential.cert(serviceAccount),
+					databaseURL: 'https://pubpub-v6-prod.firebaseio.com',
+				},
+				'firebase-pub-new',
+		  );
 const database = firebaseApp.database();
 // TODO: There are a set of pubs (e.g. designandscience) that have changes written on their merge branch.
 // As such, there is not an associated Merge of PubVersion object. We will need to go through firebase,
@@ -128,12 +130,14 @@ export default async () => {
 			// const realSteps = .filter((step) => !!step);
 			if (Object.values(val)[0].cId.indexOf('b242f616-7aaa-479c-8ee5-3933dcf70859') > -1) {
 				console.log(
-					`${publicBranches[i].pubId} has ${Object.values(val).length
+					`${publicBranches[i].pubId} has ${
+						Object.values(val).length
 					} changes. Needs migration`,
 				);
 			} else {
 				console.log(
-					`${publicBranches[i].pubId} has ${Object.values(val).length
+					`${publicBranches[i].pubId} has ${
+						Object.values(val).length
 					} changes. Can delete ${Object.values(val)[0].cId}`,
 				);
 			}

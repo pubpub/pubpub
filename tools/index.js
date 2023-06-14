@@ -5,6 +5,8 @@
 
 /* eslint-disable global-require */
 if (process.env.NODE_ENV !== 'production') {
+	// FIXME: Weird eslint issue where either with or without the extension is an error
+	// eslint-disable-next-line import/extensions
 	require('../config.js');
 }
 
