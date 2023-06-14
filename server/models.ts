@@ -20,6 +20,10 @@ export const sequelize = new Sequelize(database_url, {
 		idle: 10000,
 		acquire: 60000,
 	},
+	retry: {
+		max: 3,
+		match: [/Deadlock/i, Sequelize.ConnectionError],
+	},
 });
 
 export const knexInstance = knex({ client: 'pg' });
