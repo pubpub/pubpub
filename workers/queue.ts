@@ -127,7 +127,9 @@ amqplib
 				ch.consume(taskQueueName, processTask(ch), { noAck: false });
 				console.log(
 					` ==> Sequelize Max Connections: ${
-						process.env.SEQUELIZE_MAX_CONNECTIONS
+						process.env.WORKER
+							? 2
+							: process.env.SEQUELIZE_MAX_CONNECTIONS
 							? parseInt(process.env.SEQUELIZE_MAX_CONNECTIONS, 10)
 							: 5
 					}`,
