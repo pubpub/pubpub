@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import { knex } from 'knex';
 
-const database_url = process.env.DATABASE_CONNECTION_POOL_URL || process.env.DATABASE_URL;
+const database_url = process.env.DATABASE_URL;
 
 class SequelizeWithId extends Sequelize {
 	/* Create standard id type for our database */
@@ -25,8 +25,9 @@ export const sequelize = new SequelizeWithId(database_url, {
 		max: process.env.SEQUELIZE_MAX_CONNECTIONS
 			? parseInt(process.env.SEQUELIZE_MAX_CONNECTIONS, 10)
 			: 5, // Some migrations require this number to be 150
-		// idle: 20000,
-		// acquire: 20000,
+		min: 0,
+		idle: 10000,
+		acquire: 60000,
 	},
 });
 
