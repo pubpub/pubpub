@@ -13,29 +13,12 @@ const {
 const { exportTask } = require('./tasks/export');
 const { importTask } = require('./tasks/import');
 
-const cleanup = () => sequelize.close();
-
-process.on('exit', cleanup);
-
-[
-	'SIGHUP',
-	'SIGINT',
-	'SIGQUIT',
-	'SIGKILL',
-	'SIGTRAP',
-	'SIGABRT',
-	'SIGBUS',
-	'SIGFPE',
-	'SIGUSR1',
-	'SIGSEGV',
-	'SIGUSR2',
-	'SIGTERM',
-].forEach((sig) => process.on(sig, cleanup));
-
 if (isMainThread) {
 	// Don't run outside of a thread spawned by worker_threads in queue.js
 	process.exit(1);
 }
+
+const cleanup = () => sequelize.close();
 
 const taskMap = {
 	export: exportTask,
@@ -75,6 +58,7 @@ const main = async (taskData) => {
 		parentPort.postMessage({ result: taskResult });
 		process.exit(0);
 	} catch (error) {
+		await cleanup();
 		parentPort.postMessage({ error });
 		process.exit(1);
 	}
