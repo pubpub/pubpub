@@ -1,7 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import { Tooltip } from '@blueprintjs/core';
 
 import { buttons, FormattingBarSuggestedEdits } from 'components/FormattingBar';
-import { acceptSuggestedEdits } from 'client/components/Editor/plugins/suggestedEdits/resolve';
+import { SuggestedEditsUser } from 'types';
+import {
+	acceptSuggestedEdits,
+	getResolvableRangeForSelection,
+} from 'client/components/Editor/plugins/suggestedEdits/resolve';
+import { getSuggestionAttrsForNode } from 'client/components/Editor/plugins/suggestedEdits/operations';
+
+import { apiFetch } from 'client/utils/apiFetch';
 
 import { usePubContext } from '../pubHooks';
 
@@ -15,9 +23,10 @@ const shouldOpenBelowSelection = () => {
 
 const PubInlineSuggestedEdits = () => {
 	const { collabData, pubBodyState } = usePubContext();
-	const { editorChangeObject } = collabData;
 
+	const { editorChangeObject } = collabData;
 	const selection = collabData.editorChangeObject!.selection;
+	const [suggestedEditsAttrs, setSuggestedEditsAttrs] = useState<SuggestedEditsUser>();
 
 	const shouldHide = useMemo(() => {
 		if (!collabData.editorChangeObject || !collabData.editorChangeObject.view || !selection)
@@ -27,6 +36,37 @@ const PubInlineSuggestedEdits = () => {
 		return !inRange || !selection;
 	}, [collabData.editorChangeObject, selection]);
 
+	const suggestionAttrsForRange = useMemo(() => {
+		if (editorChangeObject && editorChangeObject.view) {
+			const doc = editorChangeObject!.view.state.doc;
+			const range = getResolvableRangeForSelection(editorChangeObject.view.state);
+			if (range) {
+				let attrs;
+				doc.nodesBetween(range.from, range.to, (node) => {
+					const present = getSuggestionAttrsForNode(node);
+					attrs = present;
+				});
+				return attrs;
+			}
+		}
+		return null;
+	}, [editorChangeObject]);
+
+	const fetchSuggestedEditsUserInfo = useCallback(async () => {
+		if (suggestionAttrsForRange) {
+			const suggestionUser: SuggestedEditsUser = await apiFetch.get(
+				`/api/users?suggestionUserId=${encodeURIComponent(
+					suggestionAttrsForRange.suggestionUserId,
+				)}`,
+			);
+			if (suggestionUser) setSuggestedEditsAttrs(suggestionUser);
+		}
+	}, [suggestionAttrsForRange]);
+
+	useEffect(() => {
+		fetchSuggestedEditsUserInfo();
+	}, [fetchSuggestedEditsUserInfo]);
+
 	// box around selection
 	const selectionBoundingBox: Record<string, any> =
 		collabData.editorChangeObject!.selectionBoundingBox || {};
@@ -35,6 +75,7 @@ const PubInlineSuggestedEdits = () => {
 
 	const topPosition =
 		window.scrollY +
+		-47 +
 		(shouldOpenBelowSelection()
 			? selectionBoundingBox.bottom + 5
 			: selectionBoundingBox.top - 30);
@@ -56,7 +97,17 @@ const PubInlineSuggestedEdits = () => {
 			className="pub-inline-suggested-edit-menu-component"
 			style={{ position: 'absolute', top: topPosition, left: selectionBoundingBox.left }}
 		>
-			{renderFormattingBar()}
+			<Tooltip
+				content={
+					suggestedEditsAttrs
+						? `Suggested by ${suggestedEditsAttrs?.fullName}`
+						: 'Suggestion by Pub editor'
+				}
+				position="bottom"
+				usePortal={true}
+			>
+				{renderFormattingBar()}
+			</Tooltip>
 		</div>
 	);
 };

@@ -1,6 +1,6 @@
 import React from 'react';
+import { Tooltip } from '@blueprintjs/core';
 import { Button } from 'reakit';
-
 import { Icon } from 'components';
 
 import { EditorChangeObject } from 'components/Editor';
@@ -9,13 +9,15 @@ import { FormattingBarButtonData } from './types';
 import { suggestedEditsReject, suggestedEditsAccept } from './buttons';
 import { useCommandStates } from './hooks/useCommandStates';
 
+require('./formattingBarSuggestedEdits.scss');
+
 type Props = {
-	editorChangeObject: EditorChangeObject;
 	buttons: FormattingBarButtonData[][];
+	editorChangeObject: EditorChangeObject;
 };
 
 const FormattingBarSuggestedEdits = (props: Props) => {
-	const { editorChangeObject, buttons } = props;
+	const { buttons, editorChangeObject } = props;
 	const buttonElementRefs = useRefMap();
 	const { view } = editorChangeObject;
 
@@ -33,27 +35,28 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 
 	return (
 		<div>
-			<Button
-				ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
-				role="button"
-				focusable
-				title={suggestedEditsReject.title}
-				aria-label={suggestedEditsReject.title}
-				onClick={() => handleClick(suggestedEditsReject)}
-			>
-				<Icon icon={suggestedEditsReject.icon} iconSize={16} />
-			</Button>
-			|
-			<Button
-				ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
-				role="button"
-				focusable
-				title={suggestedEditsAccept.title}
-				aria-label={suggestedEditsAccept.title}
-				onClick={() => handleClick(suggestedEditsAccept)}
-			>
-				<Icon icon={suggestedEditsAccept.icon} iconSize={16} />
-			</Button>
+			<Tooltip content="Reject suggestion" usePortal={true}>
+				<Button
+					ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
+					aria-label={suggestedEditsReject.title}
+					role="button"
+					onClick={() => handleClick(suggestedEditsReject)}
+					className="reject-button"
+				>
+					<Icon icon={suggestedEditsReject.icon} iconSize={16} />
+				</Button>
+			</Tooltip>
+			<Tooltip content="Accept suggestion" usePortal={true}>
+				<Button
+					ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
+					aria-label={suggestedEditsAccept.title}
+					role="button"
+					onClick={() => handleClick(suggestedEditsAccept)}
+					className="accept-button"
+				>
+					<Icon icon={suggestedEditsAccept.icon} iconSize={16} />
+				</Button>
+			</Tooltip>
 		</div>
 	);
 };
