@@ -37,3 +37,4 @@ export type UserWithPrivateFields = User & {
 export type UserWithPrivateFieldsAndHashedPassword = UserWithPrivateFields & {
 	sha3hashedPassword: string;
 };
+export type SuggestedEditsUser = Pick<MinimalUser, 'avatar' | 'initials' | 'fullName'>;

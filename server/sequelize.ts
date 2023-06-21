@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { Sequelize, DataTypes, ConnectionError } from 'sequelize';
 import { knex } from 'knex';
 
 const database_url = process.env.DATABASE_URL;
@@ -18,16 +18,29 @@ if (!database_url) {
 
 const useSSL = database_url.indexOf('localhost') === -1;
 
+const poolOptions = process.env.WORKER
+	? {
+			max: 2,
+			min: 0,
+			idle: 0,
+			acquire: 10000,
+	  }
+	: {
+			max: process.env.SEQUELIZE_MAX_CONNECTIONS
+				? parseInt(process.env.SEQUELIZE_MAX_CONNECTIONS, 10)
+				: 5, // Some migrations require this number to be 150
+			min: 0,
+			idle: 10000,
+			acquire: 60000,
+	  };
+
 export const sequelize = new SequelizeWithId(database_url, {
 	logging: false,
 	dialectOptions: { ssl: useSSL ? { rejectUnauthorized: false } : false },
-	pool: {
-		max: process.env.SEQUELIZE_MAX_CONNECTIONS
-			? parseInt(process.env.SEQUELIZE_MAX_CONNECTIONS, 10)
-			: 5, // Some migrations require this number to be 150
-		min: 0,
-		idle: 10000,
-		acquire: 60000,
+	pool: poolOptions,
+	retry: {
+		max: 3,
+		match: [/Deadlock/i, ConnectionError],
 	},
 });
 
