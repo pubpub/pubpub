@@ -4,7 +4,7 @@ import { FacetBinding } from './models/facetBinding';
 import { ALL_FACET_DEFINITIONS, FacetName, FacetProp, FacetProps } from '../../facets';
 
 type Column = {
-	type: typeof DataTypes[keyof typeof DataTypes];
+	type: (typeof DataTypes)[keyof typeof DataTypes];
 	allowNull: true;
 	defaultValue: null;
 };
@@ -29,7 +29,6 @@ const getSequelizePropsDefinition = (props: FacetProps) => {
 };
 
 export const createSequelizeModelsFromFacetDefinitions = (sequelize: Sequelize) => {
-	// const FacetBinding = sequelize.import('./models/facetBinding') as any;
 	const modelsByName: Record<string, any> = {};
 	Object.values(ALL_FACET_DEFINITIONS).forEach((facet) => {
 		const { name, props } = facet;

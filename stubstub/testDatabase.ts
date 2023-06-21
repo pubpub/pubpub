@@ -76,7 +76,7 @@ export const setupTestDatabase = async (config = testDbConfig) => {
 		throwBinariesWarning();
 	}
 	await blockForFile(path.join(pgDataPath, 'global/pg_filenode.map'));
-	await exec(`dropdb --if-exists ${config.name} -f`);
+	await exec(`dropdb --if-exists ${config.name}`);
 	await exec(`dropuser --if-exists ${config.username}`);
 	await exec(
 		`psql postgres -c "CREATE USER ${config.username} WITH PASSWORD '${config.password}';"`,

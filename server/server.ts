@@ -110,7 +110,6 @@ app.use((req, res, next) => {
 	/* creating communities. */
 	const hostname = req.headers.communityhostname || req.hostname;
 	if (hostname.indexOf('.pubpub.org') > -1) {
-		// // @ts-expect-error
 		req.session.cookie.domain = '.pubpub.org';
 	}
 	next();
