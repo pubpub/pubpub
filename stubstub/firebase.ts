@@ -9,6 +9,8 @@ export const editFirebaseDraft = (refKey: string = uuid()) => {
 };
 
 export const editPub = async (pubId: string) => {
+	console.log('editingpub');
 	const draftRef = await getPubDraftRef(pubId);
+	console.log('got pub draft ref');
 	return editFirebaseDraftByRef(draftRef, stubstubClientId);
 };

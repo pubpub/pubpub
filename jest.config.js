@@ -27,5 +27,7 @@ module.exports = {
 	runtime: '@side/jest-runtime',
 	setupFiles: ['<rootDir>/.jest/setup-env.js'],
 	testPathIgnorePatterns: ['__tests__/data'],
-	testSequencer: '<rootDir>/custom-sequencer.js',
+	logHeapUsage: true,
+	forceExit: true,
+	silent: false,
 };

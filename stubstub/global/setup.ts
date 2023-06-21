@@ -1,12 +1,7 @@
 /* eslint-disable no-console, global-require */
-// require('ts-node').register({
-// 	transpileOnly: true,
-// 	project: require('path').join(process.cwd(), 'tsconfig.server.json'),
-// });
 
 import { ChildProcessWithoutNullStreams } from 'child_process';
 import { setupTestDatabase, startTestDatabaseServer, initTestDatabase } from '../testDatabase';
-// import { sequelize } from '../../server/sequelize';
 
 // HACK(ian): The PUBPUB_SYNCING_MODELS_FOR_TEST_DB flag tells the code that we're only going to use
 // it to sync Sequelize to a test database, and that it's safe to skip certain operations.
@@ -17,12 +12,6 @@ import { setupTestDatabase, startTestDatabaseServer, initTestDatabase } from '..
 // the handful of utilities that it must import.
 //
 // This is absurd, but it works. If you know how to fix this, please do!
-
-// const withSyncingDbFlagSet = async (fn) => {
-// 	process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB = 'true';
-// 	await fn();
-// 	delete process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB;
-// };
 
 // So we can set `global.testDbServerProcess` below
 declare namespace global {
@@ -41,6 +30,7 @@ export default async () => {
 		process.env.DATABASE_URL = await setupTestDatabase();
 	}
 
+	// see hack comment above
 	process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB = 'true';
 	/**
 	 * Two things of note
@@ -55,5 +45,21 @@ export default async () => {
 	 */
 	const { sequelize } = await import('../../server/models');
 	await sequelize.sync();
+
+	/**
+	 * This is here because the tests in `server/routes` rely on the
+	 * `customScripts` feature flag being present in the database.
+	 *
+	 * If this is not here, then the tests will fail.
+	 */
+	const { FeatureFlag } = await import('../../server/models');
+
+	await FeatureFlag.create({
+		name: 'customScripts',
+	});
+
 	delete process.env.PUBPUB_SYNCING_MODELS_FOR_TEST_DB;
+
+	// close this connection to the database after setup properly clean up the connection
+	await sequelize.close();
 };
