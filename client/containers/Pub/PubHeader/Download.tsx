@@ -82,7 +82,6 @@ const Download = (props: Props) => {
 			return;
 		}
 		setIsError(false);
-
 		// Kicks off an export task on the backend
 		apiFetch('/api/export', {
 			method: 'POST',
