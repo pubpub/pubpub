@@ -6,9 +6,8 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { pingTask } from 'client/utils/pingTask';
 import { usePageContext } from 'utils/hooks';
 import { ExportFormat } from 'utils/export/formats';
-import { nodeContentsWithSuggestionsRejected } from 'client/components/Editor/plugins/suggestedEdits/resolve';
 
-import { usePubContext, usePubHistory } from '../pubHooks';
+import { usePubHistory } from '../pubHooks';
 import { getFormattedDownload } from './headerUtils';
 
 require('./download.scss');
@@ -47,9 +46,7 @@ const Download = (props: Props) => {
 	const [downloadUrl, setDownloadUrl] = useState<null | string>(null);
 	const { latestKey } = usePubHistory();
 	const { communityData, locationData } = usePageContext();
-	const { collabData } = usePubContext();
 	const formattedDownload = getFormattedDownload(downloads);
-	const { editorChangeObject } = collabData;
 
 	const download = (url) => {
 		setIsLoading(false);
@@ -71,16 +68,6 @@ const Download = (props: Props) => {
 		}
 	};
 
-	const resolveSuggestions = () => {
-		if (!editorChangeObject || !editorChangeObject.view) return;
-
-		const editorState = editorChangeObject.view.state;
-		const size = editorChangeObject.view.state.doc.nodeSize;
-		const content = nodeContentsWithSuggestionsRejected(editorState, 0, size - 2);
-
-		if (content) editorChangeObject.view.state.tr.replaceWith(0, size - 2, content);
-	};
-
 	useEffect(() => {
 		const downloadOrShowButton = (url) => {
 			if (mustShowDownloadButton()) {
@@ -95,9 +82,6 @@ const Download = (props: Props) => {
 			return;
 		}
 		setIsError(false);
-
-		// strip SE here
-		resolveSuggestions();
 
 		// Kicks off an export task on the backend
 		apiFetch('/api/export', {
