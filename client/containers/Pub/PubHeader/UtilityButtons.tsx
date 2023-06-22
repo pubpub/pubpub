@@ -81,7 +81,13 @@ const UtilityButtons = (props: Props) => {
 				</Social>
 			)}
 			<Download pubData={pubData}>
-				<SmallHeaderButton label="Download" labelPosition="left" icon="download2" />
+				<PopoverButton
+					component={() => <div>Nuhuh say the lucky word</div>}
+					className="pub-header-popover"
+					aria-label="Download this Pub"
+				>
+					<SmallHeaderButton label="Download" labelPosition="left" icon="download2" />
+				</PopoverButton>
 			</Download>
 			<PubToc>
 				<SmallHeaderButton label="Contents" labelPosition="left" icon="toc" />
