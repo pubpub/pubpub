@@ -153,3 +153,27 @@ export const rejectSuggestedEdits = (state: EditorState, dispatch?: Dispatch): b
 	}
 	return false;
 };
+
+export const nodeContentsWithSuggestionsRejected = (
+	state: EditorState,
+	from: number,
+	to: number,
+) => {
+	let shouldResolveSuggestions = false;
+	const suggestedEditsState = getSuggestedEditsState(state);
+	if (suggestedEditsState) {
+		const range = getResolvableRangeForSelection(state);
+
+		if (range) {
+			shouldResolveSuggestions = true;
+		}
+	}
+
+	if (shouldResolveSuggestions) {
+		const tr = rejectSuggestions(state, from, to);
+		// const newContent = tr.doc.nodeAt(from)?.textContent;
+		// return newContent;
+		return tr.doc;
+	}
+	return null;
+};
