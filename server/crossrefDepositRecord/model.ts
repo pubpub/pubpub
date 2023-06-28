@@ -3,5 +3,5 @@ import { sequelize } from '../sequelize';
 
 export const CrossrefDepositRecord = sequelize.define('CrossrefDepositRecord', {
 	id: sequelize.idType,
-	depositJson: dataTypes.JSONB,
+	depositJson: { type: dataTypes.JSONB },
 }) as any;

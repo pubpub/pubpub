@@ -5,7 +5,7 @@ export const IntegrationDataOAuth1 = sequelize.define(
 	'integrationDataOAuth1',
 	{
 		id: sequelize.idType,
-		accessToken: dataTypes.TEXT,
+		accessToken: { type: dataTypes.TEXT },
 	},
 	{
 		tableName: 'IntegrationDataOAuth1',
@@ -15,6 +15,7 @@ export const IntegrationDataOAuth1 = sequelize.define(
 				const { integrationDataOAuth1, zoteroIntegration } = models;
 				integrationDataOAuth1.hasOne(zoteroIntegration, {
 					foreignKey: { allowNull: false },
+					as: 'zoteroIntegration',
 					onDelete: 'CASCADE',
 				});
 			},

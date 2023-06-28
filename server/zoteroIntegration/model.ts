@@ -5,8 +5,8 @@ export const ZoteroIntegration = sequelize.define(
 	'zoteroIntegration',
 	{
 		id: sequelize.idType,
-		zoteroUsername: dataTypes.TEXT,
-		zoteroUserId: dataTypes.TEXT,
+		zoteroUsername: { type: dataTypes.TEXT },
+		zoteroUserId: { type: dataTypes.TEXT },
 	},
 	{
 		tableName: 'ZoteroIntegrations',
@@ -16,10 +16,11 @@ export const ZoteroIntegration = sequelize.define(
 				const { User, zoteroIntegration, integrationDataOAuth1 } = models;
 				zoteroIntegration.belongsTo(User, {
 					as: 'user',
-					foreignKey: { allowNull: false },
+					foreignKey: { allowNull: false, name: 'userId' },
 				});
 				zoteroIntegration.belongsTo(integrationDataOAuth1, {
-					foreignKey: { allowNull: false },
+					foreignKey: { allowNull: false, name: 'userId' },
+					as: 'integrationDataOAuth1',
 					onDelete: 'CASCADE',
 				});
 			},
