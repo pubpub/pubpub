@@ -1,0 +1,96 @@
+import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, IsLowercase, Length, Is, HasMany, HasOne, BelongsTo } from 'sequelize-typescript';
+import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { CollectionAttribution, SubmissionWorkflow, CollectionPub, Member, Page, CrossrefDepositRecord, ScopeSummary, Community } from '../models';
+
+@Table
+export class Collection extends Model<InferAttributes<Collection>, InferCreationAttributes<Collection>> {
+
+	@Default(DataType.UUIDV4)
+	@PrimaryKey
+	@Column(DataType.UUID)
+	id!: CreationOptional<string>;
+
+	@Column(DataType.TEXT)
+	title?: string | null;
+
+	@AllowNull(false)
+	@IsLowercase
+	@Length({ min: 1, max: 280 })
+	@Is(/^[a-zA-Z0-9-]+$/)
+	@Column(DataType.TEXT)
+	slug!: string;
+
+	@Column(DataType.TEXT)
+	avatar?: string | null;
+
+	@Column(DataType.BOOLEAN)
+	isRestricted?: boolean | null;
+
+	@Column(DataType.BOOLEAN)
+	isPublic?: boolean | null;
+
+	@Column(DataType.STRING)
+	viewHash?: string | null;
+
+	@Column(DataType.STRING)
+	editHash?: string | null;
+
+	@Column(DataType.JSONB)
+	metadata?: object | null;
+
+	@Column(DataType.TEXT)
+	kind?: string | null;
+
+	@Column(DataType.TEXT)
+	doi?: string | null;
+
+	@Default("choose-best")
+	@Column(DataType.ENUM('none', 'minimal', 'medium', 'choose-best'))
+	readNextPreviewSize?: CreationOptional<string | null>;
+
+	@AllowNull(false)
+	@Default({})
+	@Column(DataType.JSONB)
+	layout!: CreationOptional<object>;
+
+	@AllowNull(false)
+	@Default(false)
+	@Column(DataType.BOOLEAN)
+	layoutAllowsDuplicatePubs!: CreationOptional<boolean>;
+
+	@Column(DataType.UUID)
+	pageId?: string | null;
+
+	@Column(DataType.UUID)
+	communityId?: string | null;
+
+	@Column(DataType.UUID)
+	scopeSummaryId?: string | null;
+
+	@Column(DataType.UUID)
+	crossrefDepositRecordId?: string | null;
+
+	@HasMany(() => CollectionAttribution, {"onDelete":"CASCADE","as":"attributions","foreignKey":"collectionId"})
+	attributions?: CollectionAttribution[];
+
+	@HasOne(() => SubmissionWorkflow, {"as":"submissionWorkflow","foreignKey":"collectionId"})
+	submissionWorkflow?: SubmissionWorkflow;
+
+	@HasMany(() => CollectionPub, {"as":"collectionPubs","foreignKey":"collectionId"})
+	collectionPubs?: CollectionPub[];
+
+	@HasMany(() => Member, {"as":"members","foreignKey":"collectionId"})
+	members?: Member[];
+
+	@BelongsTo(() => Page, {"as":"page","foreignKey":"pageId"})
+	page?: Page;
+
+	@BelongsTo(() => CrossrefDepositRecord, {"as":"crossrefDepositRecord","foreignKey":"crossrefDepositRecordId"})
+	crossrefDepositRecord?: CrossrefDepositRecord;
+
+	@BelongsTo(() => ScopeSummary, {"as":"scopeSummary","foreignKey":"scopeSummaryId"})
+	scopeSummary?: ScopeSummary;
+
+	@BelongsTo(() => Community, {"as":"community","foreignKey":"communityId"})
+	community?: Community;
+}
