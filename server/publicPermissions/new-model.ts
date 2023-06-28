@@ -1,10 +1,20 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Pub } from '../models';
 
 @Table
-export class PublicPermissions extends Model<InferAttributes<PublicPermissions>, InferCreationAttributes<PublicPermissions>> {
-
+export class PublicPermissions extends Model<
+	InferAttributes<PublicPermissions>,
+	InferCreationAttributes<PublicPermissions>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -34,8 +44,6 @@ export class PublicPermissions extends Model<InferAttributes<PublicPermissions>,
 	@Column(DataType.UUID)
 	organizationId?: string | null;
 
-
-
-	@BelongsTo(() => Pub, {"onDelete":"CASCADE","as":"pub","foreignKey":"pubId"})
+	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;
 }

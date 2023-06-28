@@ -1,10 +1,20 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User, FeatureFlag } from '../models';
 
 @Table
-export class FeatureFlagUser extends Model<InferAttributes<FeatureFlagUser>, InferCreationAttributes<FeatureFlagUser>> {
-
+export class FeatureFlagUser extends Model<
+	InferAttributes<FeatureFlagUser>,
+	InferCreationAttributes<FeatureFlagUser>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -19,11 +29,13 @@ export class FeatureFlagUser extends Model<InferAttributes<FeatureFlagUser>, Inf
 	@Column(DataType.BOOLEAN)
 	enabled?: boolean | null;
 
-
-
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"user","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;
 
-	@BelongsTo(() => FeatureFlag, {"onDelete":"CASCADE","as":"featureFlag","foreignKey":"featureFlagId"})
+	@BelongsTo(() => FeatureFlag, {
+		onDelete: 'CASCADE',
+		as: 'featureFlag',
+		foreignKey: 'featureFlagId',
+	})
 	featureFlag?: FeatureFlag;
 }

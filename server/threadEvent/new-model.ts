@@ -1,10 +1,21 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User } from '../models';
 
 @Table
-export class ThreadEvent extends Model<InferAttributes<ThreadEvent>, InferCreationAttributes<ThreadEvent>> {
-
+export class ThreadEvent extends Model<
+	InferAttributes<ThreadEvent>,
+	InferCreationAttributes<ThreadEvent>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -24,8 +35,6 @@ export class ThreadEvent extends Model<InferAttributes<ThreadEvent>, InferCreati
 	@Column(DataType.UUID)
 	threadId!: string;
 
-
-
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"user","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;
 }

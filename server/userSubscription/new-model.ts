@@ -1,10 +1,22 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, Index, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	Index,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Pub, Thread, User } from '../models';
 
 @Table
-export class UserSubscription extends Model<InferAttributes<UserSubscription>, InferCreationAttributes<UserSubscription>> {
-
+export class UserSubscription extends Model<
+	InferAttributes<UserSubscription>,
+	InferCreationAttributes<UserSubscription>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -18,27 +30,25 @@ export class UserSubscription extends Model<InferAttributes<UserSubscription>, I
 	@Column(DataType.STRING)
 	status!: string;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@AllowNull(false)
 	@Column(DataType.UUID)
 	userId!: string;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
 	pubId?: string | null;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
 	threadId?: string | null;
 
-
-
-	@BelongsTo(() => Pub, {"onDelete":"CASCADE","as":"pub","foreignKey":"pubId"})
+	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;
 
-	@BelongsTo(() => Thread, {"onDelete":"CASCADE","as":"thread","foreignKey":"threadId"})
+	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
 	thread?: Thread;
 
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"user","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;
 }

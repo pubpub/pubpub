@@ -4,7 +4,6 @@ import { ThreadComment, ThreadEvent } from '../models';
 
 @Table
 export class Thread extends Model<InferAttributes<Thread>, InferCreationAttributes<Thread>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -13,11 +12,9 @@ export class Thread extends Model<InferAttributes<Thread>, InferCreationAttribut
 	@Column(DataType.BOOLEAN)
 	isLocked?: boolean | null;
 
-
-
-	@HasMany(() => ThreadComment, {"onDelete":"CASCADE","as":"comments","foreignKey":"threadId"})
+	@HasMany(() => ThreadComment, { onDelete: 'CASCADE', as: 'comments', foreignKey: 'threadId' })
 	comments?: ThreadComment[];
 
-	@HasMany(() => ThreadEvent, {"onDelete":"CASCADE","as":"events","foreignKey":"threadId"})
+	@HasMany(() => ThreadEvent, { onDelete: 'CASCADE', as: 'events', foreignKey: 'threadId' })
 	events?: ThreadEvent[];
 }

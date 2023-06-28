@@ -1,10 +1,18 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User } from '../models';
 
 @Table
 export class Merge extends Model<InferAttributes<Merge>, InferCreationAttributes<Merge>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -24,8 +32,6 @@ export class Merge extends Model<InferAttributes<Merge>, InferCreationAttributes
 	@Column(DataType.UUID)
 	pubId!: string;
 
-
-
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"user","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;
 }

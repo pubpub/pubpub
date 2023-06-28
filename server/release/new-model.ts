@@ -1,10 +1,18 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Doc } from '../models';
 
 @Table
 export class Release extends Model<InferAttributes<Release>, InferCreationAttributes<Release>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -37,8 +45,6 @@ export class Release extends Model<InferAttributes<Release>, InferCreationAttrib
 	@Column(DataType.BOOLEAN)
 	historyKeyMissing!: CreationOptional<boolean>;
 
-
-
-	@BelongsTo(() => Doc, {"as":"doc","foreignKey":"docId"})
+	@BelongsTo(() => Doc, { as: 'doc', foreignKey: 'docId' })
 	doc?: Doc;
 }

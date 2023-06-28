@@ -1,10 +1,18 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Community } from '../models';
 
 @Table
 export class Page extends Model<InferAttributes<Page>, InferCreationAttributes<Page>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -48,8 +56,6 @@ export class Page extends Model<InferAttributes<Page>, InferCreationAttributes<P
 	@Column(DataType.UUID)
 	communityId!: string;
 
-
-
-	@BelongsTo(() => Community, {"onDelete":"CASCADE","as":"community","foreignKey":"communityId"})
+	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	community?: Community;
 }

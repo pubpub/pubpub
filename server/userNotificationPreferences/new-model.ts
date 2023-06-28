@@ -1,16 +1,26 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, Index, AllowNull } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	Index,
+	AllowNull,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
-
 @Table
-export class UserNotificationPreferences extends Model<InferAttributes<UserNotificationPreferences>, InferCreationAttributes<UserNotificationPreferences>> {
-
+export class UserNotificationPreferences extends Model<
+	InferAttributes<UserNotificationPreferences>,
+	InferCreationAttributes<UserNotificationPreferences>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@AllowNull(false)
 	@Column(DataType.UUID)
 	userId!: string;
@@ -44,11 +54,7 @@ export class UserNotificationPreferences extends Model<InferAttributes<UserNotif
 	notificationCadence!: CreationOptional<number>;
 
 	@AllowNull(false)
-	@Default("clicked-through")
+	@Default('clicked-through')
 	@Column(DataType.STRING)
 	markReadTrigger!: CreationOptional<string>;
-
-
-
-
 }

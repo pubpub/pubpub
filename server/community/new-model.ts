@@ -1,10 +1,34 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, IsLowercase, Length, Is, Unique, BelongsTo, HasMany } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	IsLowercase,
+	Length,
+	Is,
+	Unique,
+	BelongsTo,
+	HasMany,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { Organization, Collection, Pub, Page, DepositTarget, ScopeSummary, SpamTag } from '../models';
+import {
+	Organization,
+	Collection,
+	Pub,
+	Page,
+	DepositTarget,
+	ScopeSummary,
+	SpamTag,
+} from '../models';
 
 @Table
-export class Community extends Model<InferAttributes<Community>, InferCreationAttributes<Community>> {
-
+export class Community extends Model<
+	InferAttributes<Community>,
+	InferCreationAttributes<Community>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -57,8 +81,8 @@ export class Community extends Model<InferAttributes<Community>, InferCreationAt
 	@Column(DataType.JSONB)
 	headerLinks?: object | null;
 
-	@Default("dark")
-	@Column(DataType.ENUM("light", "dark", "custom"))
+	@Default('dark')
+	@Column(DataType.ENUM('light', 'dark', 'custom'))
 	headerColorType?: CreationOptional<string | null>;
 
 	@Column(DataType.BOOLEAN)
@@ -164,24 +188,36 @@ export class Community extends Model<InferAttributes<Community>, InferCreationAt
 	@Column(DataType.UUID)
 	scopeSummaryId?: string | null;
 
-	@BelongsTo(() => Organization, {"onDelete":"CASCADE","as":"organization","foreignKey":"organizationId"})
+	@BelongsTo(() => Organization, {
+		onDelete: 'CASCADE',
+		as: 'organization',
+		foreignKey: 'organizationId',
+	})
 	organization?: Organization;
 
-	@HasMany(() => Collection, {"onDelete":"CASCADE","as":"collections","foreignKey":"communityId"})
+	@HasMany(() => Collection, {
+		onDelete: 'CASCADE',
+		as: 'collections',
+		foreignKey: 'communityId',
+	})
 	collections?: Collection[];
 
-	@HasMany(() => Pub, {"onDelete":"CASCADE","as":"pubs","foreignKey":"communityId"})
+	@HasMany(() => Pub, { onDelete: 'CASCADE', as: 'pubs', foreignKey: 'communityId' })
 	pubs?: Pub[];
 
-	@HasMany(() => Page, {"onDelete":"CASCADE","as":"pages","foreignKey":"communityId"})
+	@HasMany(() => Page, { onDelete: 'CASCADE', as: 'pages', foreignKey: 'communityId' })
 	pages?: Page[];
 
-	@HasMany(() => DepositTarget, {"onDelete":"CASCADE","as":"depositTargets","foreignKey":"communityId"})
+	@HasMany(() => DepositTarget, {
+		onDelete: 'CASCADE',
+		as: 'depositTargets',
+		foreignKey: 'communityId',
+	})
 	depositTargets?: DepositTarget[];
 
-	@BelongsTo(() => ScopeSummary, {"as":"scopeSummary","foreignKey":"scopeSummaryId"})
+	@BelongsTo(() => ScopeSummary, { as: 'scopeSummary', foreignKey: 'scopeSummaryId' })
 	scopeSummary?: ScopeSummary;
 
-	@BelongsTo(() => SpamTag, {"as":"spamTag","foreignKey":"spamTagId"})
+	@BelongsTo(() => SpamTag, { as: 'spamTag', foreignKey: 'spamTagId' })
 	spamTag?: SpamTag;
 }

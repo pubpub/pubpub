@@ -3,8 +3,10 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { ZoteroIntegration } from '../models';
 
 @Table
-export class IntegrationDataOAuth1 extends Model<InferAttributes<IntegrationDataOAuth1>, InferCreationAttributes<IntegrationDataOAuth1>> {
-
+export class IntegrationDataOAuth1 extends Model<
+	InferAttributes<IntegrationDataOAuth1>,
+	InferCreationAttributes<IntegrationDataOAuth1>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -13,8 +15,10 @@ export class IntegrationDataOAuth1 extends Model<InferAttributes<IntegrationData
 	@Column(DataType.TEXT)
 	accessToken?: string | null;
 
-
-
-	@HasOne(() => ZoteroIntegration, {"foreignKey":{"allowNull":false},"as":"zoteroIntegration","onDelete":"CASCADE"})
+	@HasOne(() => ZoteroIntegration, {
+		foreignKey: { allowNull: false },
+		as: 'zoteroIntegration',
+		onDelete: 'CASCADE',
+	})
 	zoteroIntegration?: ZoteroIntegration;
 }

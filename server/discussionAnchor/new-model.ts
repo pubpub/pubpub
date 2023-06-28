@@ -1,10 +1,20 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, Index } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	Index,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
-
 @Table
-export class DiscussionAnchor extends Model<InferAttributes<DiscussionAnchor>, InferCreationAttributes<DiscussionAnchor>> {
-
+export class DiscussionAnchor extends Model<
+	InferAttributes<DiscussionAnchor>,
+	InferCreationAttributes<DiscussionAnchor>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -14,7 +24,7 @@ export class DiscussionAnchor extends Model<InferAttributes<DiscussionAnchor>, I
 	@Column(DataType.BOOLEAN)
 	isOriginal!: boolean;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@AllowNull(false)
 	@Column(DataType.UUID)
 	discussionId!: string;
@@ -37,8 +47,4 @@ export class DiscussionAnchor extends Model<InferAttributes<DiscussionAnchor>, I
 	@AllowNull(false)
 	@Column(DataType.TEXT)
 	originalTextSuffix!: string;
-
-
-
-
 }

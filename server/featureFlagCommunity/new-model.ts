@@ -1,10 +1,20 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Community, FeatureFlag } from '../models';
 
 @Table
-export class FeatureFlagCommunity extends Model<InferAttributes<FeatureFlagCommunity>, InferCreationAttributes<FeatureFlagCommunity>> {
-
+export class FeatureFlagCommunity extends Model<
+	InferAttributes<FeatureFlagCommunity>,
+	InferCreationAttributes<FeatureFlagCommunity>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -19,11 +29,13 @@ export class FeatureFlagCommunity extends Model<InferAttributes<FeatureFlagCommu
 	@Column(DataType.BOOLEAN)
 	enabled?: boolean | null;
 
-
-
-	@BelongsTo(() => Community, {"onDelete":"CASCADE","as":"community","foreignKey":"communityId"})
+	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	community?: Community;
 
-	@BelongsTo(() => FeatureFlag, {"onDelete":"CASCADE","as":"featureFlag","foreignKey":"featureFlagId"})
+	@BelongsTo(() => FeatureFlag, {
+		onDelete: 'CASCADE',
+		as: 'featureFlag',
+		foreignKey: 'featureFlagId',
+	})
 	featureFlag?: FeatureFlag;
 }

@@ -1,10 +1,19 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
-
 @Table
-export class ScopeSummary extends Model<InferAttributes<ScopeSummary>, InferCreationAttributes<ScopeSummary>> {
-
+export class ScopeSummary extends Model<
+	InferAttributes<ScopeSummary>,
+	InferCreationAttributes<ScopeSummary>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -34,8 +43,4 @@ export class ScopeSummary extends Model<InferAttributes<ScopeSummary>, InferCrea
 	@Default(0)
 	@Column(DataType.INTEGER)
 	submissions!: CreationOptional<number>;
-
-
-
-
 }

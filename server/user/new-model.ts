@@ -1,10 +1,24 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, IsLowercase, Length, Is, Unique, IsEmail, HasMany, HasOne } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	IsLowercase,
+	Length,
+	Is,
+	Unique,
+	IsEmail,
+	HasMany,
+	HasOne,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { PubAttribution, Discussion, UserNotificationPreferences } from '../models';
 
 @Table
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -111,16 +125,20 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	@Column(DataType.BOOLEAN)
 	isSuperAdmin!: CreationOptional<boolean>;
 
-
-
-	@HasMany(() => PubAttribution, {"onDelete":"CASCADE","as":"attributions","foreignKey":"userId"})
+	@HasMany(() => PubAttribution, {
+		onDelete: 'CASCADE',
+		as: 'attributions',
+		foreignKey: 'userId',
+	})
 	attributions?: PubAttribution[];
 
-	@HasMany(() => Discussion, {"onDelete":"CASCADE","as":"discussions","foreignKey":"userId"})
+	@HasMany(() => Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: 'userId' })
 	discussions?: Discussion[];
 
-	@HasOne(() => UserNotificationPreferences, {"onDelete":"CASCADE","as":"userNotificationPreferences","foreignKey":"userId"})
+	@HasOne(() => UserNotificationPreferences, {
+		onDelete: 'CASCADE',
+		as: 'userNotificationPreferences',
+		foreignKey: 'userId',
+	})
 	userNotificationPreferences?: UserNotificationPreferences;
-
-
 }

@@ -1,10 +1,39 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, IsLowercase, Length, Is, Unique, Index, HasMany, BelongsTo, HasOne } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	IsLowercase,
+	Length,
+	Is,
+	Unique,
+	Index,
+	HasMany,
+	BelongsTo,
+	HasOne,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { PubAttribution, CollectionPub, Community, Discussion, Export, ReviewNew, Member, Release, PubVersion, PubEdge, Submission, CrossrefDepositRecord, ScopeSummary } from '../models';
+import {
+	PubAttribution,
+	CollectionPub,
+	Community,
+	Discussion,
+	Export,
+	ReviewNew,
+	Member,
+	Release,
+	PubVersion,
+	PubEdge,
+	Submission,
+	CrossrefDepositRecord,
+	ScopeSummary,
+} from '../models';
 
 @Table
 export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -67,7 +96,7 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	@Column(DataType.UUID)
 	draftId!: string;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@AllowNull(false)
 	@Column(DataType.UUID)
 	communityId!: string;
@@ -78,45 +107,53 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	@Column(DataType.UUID)
 	scopeSummaryId?: string | null;
 
-	@HasMany(() => PubAttribution, {"onDelete":"CASCADE","as":"attributions","foreignKey":"pubId"})
+	@HasMany(() => PubAttribution, { onDelete: 'CASCADE', as: 'attributions', foreignKey: 'pubId' })
 	attributions?: PubAttribution[];
 
-	@HasMany(() => CollectionPub, {"onDelete":"CASCADE","hooks":true,"as":"collectionPubs","foreignKey":"pubId"})
+	@HasMany(() => CollectionPub, {
+		onDelete: 'CASCADE',
+		hooks: true,
+		as: 'collectionPubs',
+		foreignKey: 'pubId',
+	})
 	collectionPubs?: CollectionPub[];
 
-	@BelongsTo(() => Community, {"onDelete":"CASCADE","as":"community","foreignKey":"communityId"})
+	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	community?: Community;
 
-	@HasMany(() => Discussion, {"onDelete":"CASCADE","as":"discussions","foreignKey":"pubId"})
+	@HasMany(() => Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: 'pubId' })
 	discussions?: Discussion[];
 
-	@HasMany(() => Export, {"as":"exports","foreignKey":"pubId"})
+	@HasMany(() => Export, { as: 'exports', foreignKey: 'pubId' })
 	exports?: Export[];
 
-	@HasMany(() => ReviewNew, {"onDelete":"CASCADE","as":"reviews","foreignKey":"pubId"})
+	@HasMany(() => ReviewNew, { onDelete: 'CASCADE', as: 'reviews', foreignKey: 'pubId' })
 	reviews?: ReviewNew[];
 
-	@HasMany(() => Member, {"onDelete":"CASCADE","as":"members","foreignKey":"pubId"})
+	@HasMany(() => Member, { onDelete: 'CASCADE', as: 'members', foreignKey: 'pubId' })
 	members?: Member[];
 
-	@HasMany(() => Release, {"onDelete":"CASCADE","as":"releases","foreignKey":"pubId"})
+	@HasMany(() => Release, { onDelete: 'CASCADE', as: 'releases', foreignKey: 'pubId' })
 	releases?: Release[];
 
-	@HasMany(() => PubVersion, {"onDelete":"CASCADE","as":"pubVersions","foreignKey":"pubId"})
+	@HasMany(() => PubVersion, { onDelete: 'CASCADE', as: 'pubVersions', foreignKey: 'pubId' })
 	pubVersions?: PubVersion[];
 
-	@HasMany(() => PubEdge, {"onDelete":"CASCADE","as":"outboundEdges","foreignKey":"pubId"})
+	@HasMany(() => PubEdge, { onDelete: 'CASCADE', as: 'outboundEdges', foreignKey: 'pubId' })
 	outboundEdges?: PubEdge[];
 
-	@HasMany(() => PubEdge, {"onDelete":"CASCADE","as":"inboundEdges","foreignKey":"targetPubId"})
+	@HasMany(() => PubEdge, { onDelete: 'CASCADE', as: 'inboundEdges', foreignKey: 'targetPubId' })
 	inboundEdges?: PubEdge[];
 
-	@HasOne(() => Submission, {"as":"submission","foreignKey":"pubId"})
+	@HasOne(() => Submission, { as: 'submission', foreignKey: 'pubId' })
 	submission?: Submission;
 
-	@BelongsTo(() => CrossrefDepositRecord, {"as":"crossrefDepositRecord","foreignKey":"crossrefDepositRecordId"})
+	@BelongsTo(() => CrossrefDepositRecord, {
+		as: 'crossrefDepositRecord',
+		foreignKey: 'crossrefDepositRecordId',
+	})
 	crossrefDepositRecord?: CrossrefDepositRecord;
 
-	@BelongsTo(() => ScopeSummary, {"as":"scopeSummary","foreignKey":"scopeSummaryId"})
+	@BelongsTo(() => ScopeSummary, { as: 'scopeSummary', foreignKey: 'scopeSummaryId' })
 	scopeSummary?: ScopeSummary;
 }

@@ -1,16 +1,28 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, Index, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	Index,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { ActivityItem, UserSubscription, User } from '../models';
 
 @Table
-export class UserNotification extends Model<InferAttributes<UserNotification>, InferCreationAttributes<UserNotification>> {
-
+export class UserNotification extends Model<
+	InferAttributes<UserNotification>,
+	InferCreationAttributes<UserNotification>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@AllowNull(false)
 	@Column(DataType.UUID)
 	userId!: string;
@@ -33,14 +45,20 @@ export class UserNotification extends Model<InferAttributes<UserNotification>, I
 	@Column(DataType.BOOLEAN)
 	manuallySetIsRead!: CreationOptional<boolean>;
 
-
-
-	@BelongsTo(() => ActivityItem, {"onDelete":"CASCADE","as":"activityItem","foreignKey":"activityItemId"})
+	@BelongsTo(() => ActivityItem, {
+		onDelete: 'CASCADE',
+		as: 'activityItem',
+		foreignKey: 'activityItemId',
+	})
 	activityItem?: ActivityItem;
 
-	@BelongsTo(() => UserSubscription, {"onDelete":"CASCADE","as":"userSubscription","foreignKey":"userSubscriptionId"})
+	@BelongsTo(() => UserSubscription, {
+		onDelete: 'CASCADE',
+		as: 'userSubscription',
+		foreignKey: 'userSubscriptionId',
+	})
 	userSubscription?: UserSubscription;
 
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"user","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;
 }

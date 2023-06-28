@@ -422,38 +422,3 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	//         return new LocalStrategy(options, this.authenticate());
 	//     };
 }
-
-passportLocalSequelize.attachToUser(User, {
-	usernameField: 'email',
-	hashField: 'hash',
-	saltField: 'salt',
-	digest: 'sha512',
-	iterations: 25000,
-});
-
-//export const User = UserWithoutPassPort;
-
-export const attributesPublicUser = [
-	'id',
-	'firstName',
-	'lastName',
-	'fullName',
-	'avatar',
-	'slug',
-	'initials',
-	'title',
-	'orcid',
-] as const;
-
-export const includeUserModel = (() => {
-	return (options) => {
-		const { attributes: providedAttributes = [], ...restOptions } = options;
-		const attributes = [...new Set([...attributesPublicUser, ...providedAttributes])];
-		// eslint-disable-next-line pubpub-rules/no-user-model
-		return {
-			model: User,
-			attributes,
-			...restOptions,
-		};
-	};
-})();

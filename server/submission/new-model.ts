@@ -1,10 +1,21 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Pub, SubmissionWorkflow } from '../models';
 
 @Table
-export class Submission extends Model<InferAttributes<Submission>, InferCreationAttributes<Submission>> {
-
+export class Submission extends Model<
+	InferAttributes<Submission>,
+	InferCreationAttributes<Submission>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -28,11 +39,13 @@ export class Submission extends Model<InferAttributes<Submission>, InferCreation
 	@Column(DataType.JSONB)
 	abstract?: object | null;
 
-
-
-	@BelongsTo(() => Pub, {"onDelete":"CASCADE","as":"pub","foreignKey":"pubId"})
+	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;
 
-	@BelongsTo(() => SubmissionWorkflow, {"onDelete":"CASCADE","as":"submissionWorkflow","foreignKey":"submissionWorkflowId"})
+	@BelongsTo(() => SubmissionWorkflow, {
+		onDelete: 'CASCADE',
+		as: 'submissionWorkflow',
+		foreignKey: 'submissionWorkflowId',
+	})
 	submissionWorkflow?: SubmissionWorkflow;
 }

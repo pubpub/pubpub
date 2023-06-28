@@ -1,10 +1,35 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, IsLowercase, Length, Is, HasMany, HasOne, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	IsLowercase,
+	Length,
+	Is,
+	HasMany,
+	HasOne,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { CollectionAttribution, SubmissionWorkflow, CollectionPub, Member, Page, CrossrefDepositRecord, ScopeSummary, Community } from '../models';
+import {
+	CollectionAttribution,
+	SubmissionWorkflow,
+	CollectionPub,
+	Member,
+	Page,
+	CrossrefDepositRecord,
+	ScopeSummary,
+	Community,
+} from '../models';
 
 @Table
-export class Collection extends Model<InferAttributes<Collection>, InferCreationAttributes<Collection>> {
-
+export class Collection extends Model<
+	InferAttributes<Collection>,
+	InferCreationAttributes<Collection>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -44,7 +69,7 @@ export class Collection extends Model<InferAttributes<Collection>, InferCreation
 	@Column(DataType.TEXT)
 	doi?: string | null;
 
-	@Default("choose-best")
+	@Default('choose-best')
 	@Column(DataType.ENUM('none', 'minimal', 'medium', 'choose-best'))
 	readNextPreviewSize?: CreationOptional<string | null>;
 
@@ -70,27 +95,34 @@ export class Collection extends Model<InferAttributes<Collection>, InferCreation
 	@Column(DataType.UUID)
 	crossrefDepositRecordId?: string | null;
 
-	@HasMany(() => CollectionAttribution, {"onDelete":"CASCADE","as":"attributions","foreignKey":"collectionId"})
+	@HasMany(() => CollectionAttribution, {
+		onDelete: 'CASCADE',
+		as: 'attributions',
+		foreignKey: 'collectionId',
+	})
 	attributions?: CollectionAttribution[];
 
-	@HasOne(() => SubmissionWorkflow, {"as":"submissionWorkflow","foreignKey":"collectionId"})
+	@HasOne(() => SubmissionWorkflow, { as: 'submissionWorkflow', foreignKey: 'collectionId' })
 	submissionWorkflow?: SubmissionWorkflow;
 
-	@HasMany(() => CollectionPub, {"as":"collectionPubs","foreignKey":"collectionId"})
+	@HasMany(() => CollectionPub, { as: 'collectionPubs', foreignKey: 'collectionId' })
 	collectionPubs?: CollectionPub[];
 
-	@HasMany(() => Member, {"as":"members","foreignKey":"collectionId"})
+	@HasMany(() => Member, { as: 'members', foreignKey: 'collectionId' })
 	members?: Member[];
 
-	@BelongsTo(() => Page, {"as":"page","foreignKey":"pageId"})
+	@BelongsTo(() => Page, { as: 'page', foreignKey: 'pageId' })
 	page?: Page;
 
-	@BelongsTo(() => CrossrefDepositRecord, {"as":"crossrefDepositRecord","foreignKey":"crossrefDepositRecordId"})
+	@BelongsTo(() => CrossrefDepositRecord, {
+		as: 'crossrefDepositRecord',
+		foreignKey: 'crossrefDepositRecordId',
+	})
 	crossrefDepositRecord?: CrossrefDepositRecord;
 
-	@BelongsTo(() => ScopeSummary, {"as":"scopeSummary","foreignKey":"scopeSummaryId"})
+	@BelongsTo(() => ScopeSummary, { as: 'scopeSummary', foreignKey: 'scopeSummaryId' })
 	scopeSummary?: ScopeSummary;
 
-	@BelongsTo(() => Community, {"as":"community","foreignKey":"communityId"})
+	@BelongsTo(() => Community, { as: 'community', foreignKey: 'communityId' })
 	community?: Community;
 }

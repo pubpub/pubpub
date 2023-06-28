@@ -1,10 +1,18 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Pub, ExternalPublication } from '../models';
 
 @Table
 export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttributes<PubEdge>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -36,14 +44,16 @@ export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttrib
 	@Column(DataType.BOOLEAN)
 	approvedByTarget!: boolean;
 
-
-
-	@BelongsTo(() => Pub, {"onDelete":"CASCADE","as":"pub","foreignKey":"pubId"})
+	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;
 
-	@BelongsTo(() => Pub, {"onDelete":"CASCADE","as":"targetPub","foreignKey":"targetPubId"})
+	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'targetPub', foreignKey: 'targetPubId' })
 	targetPub?: Pub;
 
-	@BelongsTo(() => ExternalPublication, {"onDelete":"CASCADE","as":"externalPublication","foreignKey":"externalPublicationId"})
+	@BelongsTo(() => ExternalPublication, {
+		onDelete: 'CASCADE',
+		as: 'externalPublication',
+		foreignKey: 'externalPublicationId',
+	})
 	externalPublication?: ExternalPublication;
 }

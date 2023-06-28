@@ -1,10 +1,19 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
-
 @Table
-export class ExternalPublication extends Model<InferAttributes<ExternalPublication>, InferCreationAttributes<ExternalPublication>> {
-
+export class ExternalPublication extends Model<
+	InferAttributes<ExternalPublication>,
+	InferCreationAttributes<ExternalPublication>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -32,8 +41,4 @@ export class ExternalPublication extends Model<InferAttributes<ExternalPublicati
 
 	@Column(DataType.DATE)
 	publicationDate?: Date | null;
-
-
-
-
 }

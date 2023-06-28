@@ -1,10 +1,18 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { ReviewNew } from '../models';
 
 @Table
 export class Reviewer extends Model<InferAttributes<Reviewer>, InferCreationAttributes<Reviewer>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -17,8 +25,6 @@ export class Reviewer extends Model<InferAttributes<Reviewer>, InferCreationAttr
 	@Column(DataType.UUID)
 	reviewId!: string;
 
-
-
-	@BelongsTo(() => ReviewNew, {"onDelete":"CASCADE","as":"review","foreignKey":"reviewId"})
+	@BelongsTo(() => ReviewNew, { onDelete: 'CASCADE', as: 'review', foreignKey: 'reviewId' })
 	review?: ReviewNew;
 }

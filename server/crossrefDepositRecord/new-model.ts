@@ -1,10 +1,11 @@
 import { Model, Table, Column, DataType, PrimaryKey, Default } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
-
 @Table
-export class CrossrefDepositRecord extends Model<InferAttributes<CrossrefDepositRecord>, InferCreationAttributes<CrossrefDepositRecord>> {
-
+export class CrossrefDepositRecord extends Model<
+	InferAttributes<CrossrefDepositRecord>,
+	InferCreationAttributes<CrossrefDepositRecord>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -12,8 +13,4 @@ export class CrossrefDepositRecord extends Model<InferAttributes<CrossrefDeposit
 
 	@Column(DataType.JSONB)
 	depositJson?: object | null;
-
-
-
-
 }

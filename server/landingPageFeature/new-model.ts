@@ -1,20 +1,32 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, Index, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	Index,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Pub, Community } from '../models';
 
 @Table
-export class LandingPageFeature extends Model<InferAttributes<LandingPageFeature>, InferCreationAttributes<LandingPageFeature>> {
-
+export class LandingPageFeature extends Model<
+	InferAttributes<LandingPageFeature>,
+	InferCreationAttributes<LandingPageFeature>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
-	@Index({"unique":true})
+	@Index({ unique: true })
 	@Column(DataType.UUID)
 	communityId?: string | null;
 
-	@Index({"unique":true})
+	@Index({ unique: true })
 	@Column(DataType.UUID)
 	pubId?: string | null;
 
@@ -25,11 +37,9 @@ export class LandingPageFeature extends Model<InferAttributes<LandingPageFeature
 	@Column(DataType.JSONB)
 	payload?: object | null;
 
-
-
-	@BelongsTo(() => Pub, {"onDelete":"CASCADE","as":"pub","foreignKey":"pubId"})
+	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;
 
-	@BelongsTo(() => Community, {"onDelete":"CASCADE","as":"community","foreignKey":"communityId"})
+	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	community?: Community;
 }

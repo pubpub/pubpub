@@ -1,10 +1,19 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
-
 @Table
-export class WorkerTask extends Model<InferAttributes<WorkerTask>, InferCreationAttributes<WorkerTask>> {
-
+export class WorkerTask extends Model<
+	InferAttributes<WorkerTask>,
+	InferCreationAttributes<WorkerTask>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -31,8 +40,4 @@ export class WorkerTask extends Model<InferAttributes<WorkerTask>, InferCreation
 
 	@Column(DataType.INTEGER)
 	priority?: number | null;
-
-
-
-
 }

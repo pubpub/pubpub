@@ -1,10 +1,21 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User, Commenter } from '../models';
 
 @Table
-export class ThreadComment extends Model<InferAttributes<ThreadComment>, InferCreationAttributes<ThreadComment>> {
-
+export class ThreadComment extends Model<
+	InferAttributes<ThreadComment>,
+	InferCreationAttributes<ThreadComment>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -26,11 +37,9 @@ export class ThreadComment extends Model<InferAttributes<ThreadComment>, InferCr
 	@Column(DataType.UUID)
 	commenterId?: string | null;
 
-
-
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"author","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'userId' })
 	author?: User;
 
-	@BelongsTo(() => Commenter, {"onDelete":"CASCADE","as":"commenter","foreignKey":"commenterId"})
+	@BelongsTo(() => Commenter, { onDelete: 'CASCADE', as: 'commenter', foreignKey: 'commenterId' })
 	commenter?: Commenter;
 }

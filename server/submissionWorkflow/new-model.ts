@@ -1,10 +1,22 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, HasMany, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	HasMany,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Submission, Collection } from '../models';
 
 @Table
-export class SubmissionWorkflow extends Model<InferAttributes<SubmissionWorkflow>, InferCreationAttributes<SubmissionWorkflow>> {
-
+export class SubmissionWorkflow extends Model<
+	InferAttributes<SubmissionWorkflow>,
+	InferCreationAttributes<SubmissionWorkflow>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -56,11 +68,9 @@ export class SubmissionWorkflow extends Model<InferAttributes<SubmissionWorkflow
 	@Column(DataType.BOOLEAN)
 	requireDescription!: CreationOptional<boolean>;
 
-
-
-	@HasMany(() => Submission, {"as":"submissions","foreignKey":"submissionWorkflowId"})
+	@HasMany(() => Submission, { as: 'submissions', foreignKey: 'submissionWorkflowId' })
 	submissions?: Submission[];
 
-	@BelongsTo(() => Collection, {"as":"collection","foreignKey":"collectionId"})
+	@BelongsTo(() => Collection, { as: 'collection', foreignKey: 'collectionId' })
 	collection?: Collection;
 }

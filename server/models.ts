@@ -1,12 +1,13 @@
 /* eslint-disable global-require */
 
+import passportLocalSequelize from 'passport-local-sequelize';
 import { createSequelizeModelsFromFacetDefinitions } from './facets/create';
 import { sequelize } from './sequelize';
 
 /* Import and create all models. */
 /* Also import them to make them available to other modules */
 
-import { Collection } from './collection/sequelize-model';
+import { Collection } from './collection/new-model';
 
 import { CollectionAttribution } from './collectionAttribution/new-model';
 import { CollectionPub } from './collectionPub/new-model';
@@ -50,7 +51,8 @@ import { Reviewer } from './reviewer/new-model';
 import { Thread } from './thread/new-model';
 import { ThreadComment } from './threadComment/new-model';
 import { ThreadEvent } from './threadEvent/new-model';
-import { User, attributesPublicUser, includeUserModel } from './user/new-model';
+import { User } from './user/new-model-with-declare';
+// import { attributesPublicUser, includeUserModel } from './user/model';
 import { UserDismissable } from './userDismissable/new-model';
 import { UserNotification } from './userNotification/new-model';
 import { UserNotificationPreferences } from './userNotificationPreferences/new-model';
@@ -108,8 +110,8 @@ sequelize.addModels([
 	ThreadComment,
 	ThreadEvent,
 	User,
-	attributesPublicUser,
-	includeUserModel,
+	//	attributesPublicUser,
+	//	includeUserModel,
 	UserDismissable,
 	UserNotification,
 	UserNotificationPreferences,
@@ -121,15 +123,48 @@ sequelize.addModels([
 	WorkerTask,
 ]);
 
-/* Create associations for models that have associate function */
-Object.values(sequelize.models).forEach((model) => {
-	console.log(model);
-	// @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
-	const classMethods = model.options.classMethods || {};
-	if (classMethods.associate) {
-		classMethods.associate(sequelize.models);
-	}
+passportLocalSequelize.attachToUser(User, {
+	usernameField: 'email',
+	hashField: 'hash',
+	saltField: 'salt',
+	digest: 'sha512',
+	iterations: 25000,
 });
+
+export const attributesPublicUser = [
+	'id',
+	'firstName',
+	'lastName',
+	'fullName',
+	'avatar',
+	'slug',
+	'initials',
+	'title',
+	'orcid',
+] as const;
+
+export const includeUserModel = (() => {
+	return (options) => {
+		const { attributes: providedAttributes = [], ...restOptions } = options;
+		const attributes = [...new Set([...attributesPublicUser, ...providedAttributes])];
+		// eslint-disable-next-line pubpub-rules/no-user-model
+		return {
+			model: User,
+			attributes,
+			...restOptions,
+		};
+	};
+})();
+
+/* Create associations for models that have associate function */
+// Object.values(sequelize.models).forEach((model) => {
+// 	console.log(model);
+// 	// @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
+// 	const classMethods = model.options.classMethods || {};
+// 	if (classMethods.associate) {
+// 		classMethods.associate(sequelize.models);
+// 	}
+// });
 
 export {
 	Collection,
@@ -176,8 +211,6 @@ export {
 	ThreadComment,
 	ThreadEvent,
 	User,
-	attributesPublicUser,
-	includeUserModel,
 	UserDismissable,
 	UserNotification,
 	UserNotificationPreferences,

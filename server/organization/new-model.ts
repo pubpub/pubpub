@@ -1,10 +1,25 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, IsLowercase, Length, Is, Unique, HasMany } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	IsLowercase,
+	Length,
+	Is,
+	Unique,
+	HasMany,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Community } from '../models';
 
 @Table
-export class Organization extends Model<InferAttributes<Organization>, InferCreationAttributes<Organization>> {
-
+export class Organization extends Model<
+	InferAttributes<Organization>,
+	InferCreationAttributes<Organization>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -36,8 +51,10 @@ export class Organization extends Model<InferAttributes<Organization>, InferCrea
 	@Column(DataType.TEXT)
 	favicon?: string | null;
 
-
-
-	@HasMany(() => Community, {"onDelete":"CASCADE","as":"communities","foreignKey":"organizationId"})
+	@HasMany(() => Community, {
+		onDelete: 'CASCADE',
+		as: 'communities',
+		foreignKey: 'organizationId',
+	})
 	communities?: Community[];
 }

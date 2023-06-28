@@ -1,10 +1,23 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, Index, BelongsTo, HasMany } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	Index,
+	BelongsTo,
+	HasMany,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Thread, Visibility, User, Commenter, Pub, DiscussionAnchor } from '../models';
 
 @Table
-export class Discussion extends Model<InferAttributes<Discussion>, InferCreationAttributes<Discussion>> {
-
+export class Discussion extends Model<
+	InferAttributes<Discussion>,
+	InferCreationAttributes<Discussion>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -31,37 +44,43 @@ export class Discussion extends Model<InferAttributes<Discussion>, InferCreation
 	@Column(DataType.UUID)
 	visibilityId!: string;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
 	userId?: string | null;
 
 	@Column(DataType.UUID)
 	anchorId?: string | null;
 
-	@Index({"using":"BTREE"})
+	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
 	pubId?: string | null;
 
 	@Column(DataType.UUID)
 	commenterId?: string | null;
 
-
-
-	@BelongsTo(() => Thread, {"onDelete":"CASCADE","as":"thread","foreignKey":"threadId"})
+	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
 	thread?: Thread;
 
-	@BelongsTo(() => Visibility, {"onDelete":"CASCADE","as":"visibility","foreignKey":"visibilityId"})
+	@BelongsTo(() => Visibility, {
+		onDelete: 'CASCADE',
+		as: 'visibility',
+		foreignKey: 'visibilityId',
+	})
 	visibility?: Visibility;
 
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"author","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'userId' })
 	author?: User;
 
-	@BelongsTo(() => Commenter, {"onDelete":"CASCADE","as":"commenter","foreignKey":"commenterId"})
+	@BelongsTo(() => Commenter, { onDelete: 'CASCADE', as: 'commenter', foreignKey: 'commenterId' })
 	commenter?: Commenter;
 
-	@BelongsTo(() => Pub, {"onDelete":"CASCADE","as":"pub","foreignKey":"pubId"})
+	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;
 
-	@HasMany(() => DiscussionAnchor, {"onDelete":"CASCADE","as":"anchors","foreignKey":"discussionId"})
+	@HasMany(() => DiscussionAnchor, {
+		onDelete: 'CASCADE',
+		as: 'anchors',
+		foreignKey: 'discussionId',
+	})
 	anchors?: DiscussionAnchor[];
 }

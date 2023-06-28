@@ -1,10 +1,18 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { WorkerTask } from '../models';
 
 @Table
 export class Export extends Model<InferAttributes<Export>, InferCreationAttributes<Export>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -28,8 +36,10 @@ export class Export extends Model<InferAttributes<Export>, InferCreationAttribut
 	@Column(DataType.UUID)
 	workerTaskId?: string | null;
 
-
-
-	@BelongsTo(() => WorkerTask, {"onDelete":"SET NULL","as":"workerTask","foreignKey":"workerTaskId"})
+	@BelongsTo(() => WorkerTask, {
+		onDelete: 'SET NULL',
+		as: 'workerTask',
+		foreignKey: 'workerTaskId',
+	})
 	workerTask?: WorkerTask;
 }

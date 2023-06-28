@@ -1,10 +1,18 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { DraftModel } from '../models';
 
 @Table
 export class Draft extends Model<InferAttributes<Draft>, InferCreationAttributes<Draft>> {
-
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -20,6 +28,6 @@ export class Draft extends Model<InferAttributes<Draft>, InferCreationAttributes
 	@Column(DataType.UUID)
 	draftId?: string | null;
 
-	@BelongsTo(() => DraftModel, {"as":"draft","foreignKey":"draftId"})
+	@BelongsTo(() => DraftModel, { as: 'draft', foreignKey: 'draftId' })
 	draft?: DraftModel;
 }

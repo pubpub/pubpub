@@ -1,17 +1,30 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, IsLowercase, IsEmail, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	IsLowercase,
+	IsEmail,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User } from '../models';
 
 @Table
-export class ThreadUser extends Model<InferAttributes<ThreadUser>, InferCreationAttributes<ThreadUser>> {
-
+export class ThreadUser extends Model<
+	InferAttributes<ThreadUser>,
+	InferCreationAttributes<ThreadUser>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
-	@Default("viewer")
-	@Column(DataType.ENUM("viewer", "reviewer"))
+	@Default('viewer')
+	@Column(DataType.ENUM('viewer', 'reviewer'))
 	type?: CreationOptional<string | null>;
 
 	@IsLowercase
@@ -29,8 +42,6 @@ export class ThreadUser extends Model<InferAttributes<ThreadUser>, InferCreation
 	@Column(DataType.UUID)
 	threadId!: string;
 
-
-
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"user","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;
 }

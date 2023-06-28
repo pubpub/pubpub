@@ -1,10 +1,21 @@
-import { Model, Table, Column, DataType, PrimaryKey, Default, AllowNull, BelongsTo } from 'sequelize-typescript';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+	BelongsTo,
+} from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User, Pub } from '../models';
 
 @Table
-export class PubAttribution extends Model<InferAttributes<PubAttribution>, InferCreationAttributes<PubAttribution>> {
-
+export class PubAttribution extends Model<
+	InferAttributes<PubAttribution>,
+	InferCreationAttributes<PubAttribution>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -41,11 +52,9 @@ export class PubAttribution extends Model<InferAttributes<PubAttribution>, Infer
 	@Column(DataType.UUID)
 	pubId!: string;
 
-
-
-	@BelongsTo(() => User, {"onDelete":"CASCADE","as":"user","foreignKey":"userId"})
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;
 
-	@BelongsTo(() => Pub, {"onDelete":"CASCADE","as":"pub","foreignKey":"pubId"})
+	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;
 }
