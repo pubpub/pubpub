@@ -4,67 +4,126 @@ import { createSequelizeModelsFromFacetDefinitions } from './facets/create';
 import { sequelize } from './sequelize';
 
 /* Import and create all models. */
-/* Also export them to make them available to other modules */
+/* Also import them to make them available to other modules */
 
-export { Collection } from './collection/model';
-export { CollectionAttribution } from './collectionAttribution/model';
-export { CollectionPub } from './collectionPub/model';
-export { Commenter } from './commenter/model';
-export { Community } from './community/model';
-export { CommunityAdmin } from './communityAdmin/model';
-export { CrossrefDepositRecord } from './crossrefDepositRecord/model';
-export { CustomScript } from './customScript/model';
-export { DepositTarget } from './depositTarget/model';
-export { Discussion } from './discussion/model';
-export { DiscussionAnchor } from './discussionAnchor/model';
-export { Doc } from './doc/model';
-export { Draft } from './draft/model';
-export { Export } from './export/model';
-export { ExternalPublication } from './externalPublication/model';
-export { FeatureFlag } from './featureFlag/model';
-export { FeatureFlagUser } from './featureFlagUser/model';
-export { FeatureFlagCommunity } from './featureFlagCommunity/model';
-export { ZoteroIntegration } from './zoteroIntegration/model';
-export { IntegrationDataOAuth1 } from './integrationDataOAuth1/model';
-export { LandingPageFeature } from './landingPageFeature/model';
-export { Member } from './member/model';
-export { Merge } from './merge/model';
-export { Organization } from './organization/model';
-export { Page } from './page/model';
-export { Pub } from './pub/model';
-export { PubAttribution } from './pubAttribution/model';
-export { PubEdge } from './pubEdge/model';
-export { PubManager } from './pubManager/model';
-export { PubVersion } from './pubVersion/model';
-export { PublicPermissions } from './publicPermissions/model';
-export { Release } from './release/model';
-export { ReviewEvent } from './reviewEvent/model';
-export { ScopeSummary } from './scopeSummary/model';
-export { Submission } from './submission/model';
-export { Signup } from './signup/model';
-export { SpamTag } from './spamTag/model';
-export { SubmissionWorkflow } from './submissionWorkflow/model';
-export { ReviewNew } from './review/model';
-export { Reviewer } from './reviewer/model';
-export { Thread } from './thread/model';
-export { ThreadComment } from './threadComment/model';
-export { ThreadEvent } from './threadEvent/model';
-export { User } from './user/model';
-export { attributesPublicUser, includeUserModel } from './user/model';
-export { UserDismissable } from './userDismissable/model';
-export { UserNotification } from './userNotification/model';
-export { UserNotificationPreferences } from './userNotificationPreferences/model';
-export { UserScopeVisit } from './userScopeVisit/model';
-export { UserSubscription } from './userSubscription/model';
-export { ActivityItem } from './activityItem/model';
-export { Visibility } from './visibility/model';
-export { VisibilityUser } from './visibilityUser/model';
-export { WorkerTask } from './workerTask/model';
+import { Collection } from './collection/sequelize-model';
+
+import { CollectionAttribution } from './collectionAttribution/new-model';
+import { CollectionPub } from './collectionPub/new-model';
+import { Commenter } from './commenter/new-model';
+import { Community } from './community/new-model';
+import { CommunityAdmin } from './communityAdmin/new-model';
+import { CrossrefDepositRecord } from './crossrefDepositRecord/new-model';
+import { CustomScript } from './customScript/new-model';
+import { DepositTarget } from './depositTarget/new-model';
+import { Discussion } from './discussion/new-model';
+import { DiscussionAnchor } from './discussionAnchor/new-model';
+import { Doc } from './doc/new-model';
+import { Draft } from './draft/new-model';
+import { Export } from './export/new-model';
+import { ExternalPublication } from './externalPublication/new-model';
+import { FeatureFlag } from './featureFlag/new-model';
+import { FeatureFlagUser } from './featureFlagUser/new-model';
+import { FeatureFlagCommunity } from './featureFlagCommunity/new-model';
+import { ZoteroIntegration } from './zoteroIntegration/new-model';
+import { IntegrationDataOAuth1 } from './integrationDataOAuth1/new-model';
+import { LandingPageFeature } from './landingPageFeature/new-model';
+import { Member } from './member/new-model';
+import { Merge } from './merge/new-model';
+import { Organization } from './organization/new-model';
+import { Page } from './page/new-model';
+import { Pub } from './pub/new-model';
+import { PubAttribution } from './pubAttribution/new-model';
+import { PubEdge } from './pubEdge/new-model';
+import { PubManager } from './pubManager/new-model';
+import { PubVersion } from './pubVersion/new-model';
+import { PublicPermissions } from './publicPermissions/new-model';
+import { Release } from './release/new-model';
+import { ReviewEvent } from './reviewEvent/new-model';
+import { ScopeSummary } from './scopeSummary/new-model';
+import { Submission } from './submission/new-model';
+import { Signup } from './signup/new-model';
+import { SpamTag } from './spamTag/new-model';
+import { SubmissionWorkflow } from './submissionWorkflow/new-model';
+import { ReviewNew } from './review/new-model';
+import { Reviewer } from './reviewer/new-model';
+import { Thread } from './thread/new-model';
+import { ThreadComment } from './threadComment/new-model';
+import { ThreadEvent } from './threadEvent/new-model';
+import { User, attributesPublicUser, includeUserModel } from './user/new-model';
+import { UserDismissable } from './userDismissable/new-model';
+import { UserNotification } from './userNotification/new-model';
+import { UserNotificationPreferences } from './userNotificationPreferences/new-model';
+import { UserScopeVisit } from './userScopeVisit/new-model';
+import { UserSubscription } from './userSubscription/new-model';
+import { ActivityItem } from './activityItem/new-model';
+import { Visibility } from './visibility/new-model';
+import { VisibilityUser } from './visibilityUser/new-model';
+import { WorkerTask } from './workerTask/new-model';
 
 export const { facetModels, FacetBinding } = createSequelizeModelsFromFacetDefinitions(sequelize);
 
+sequelize.addModels([
+	Collection,
+	CollectionAttribution,
+	CollectionPub,
+	Commenter,
+	Community,
+	CommunityAdmin,
+	CrossrefDepositRecord,
+	CustomScript,
+	DepositTarget,
+	Discussion,
+	DiscussionAnchor,
+	Doc,
+	Draft,
+	Export,
+	ExternalPublication,
+	FeatureFlag,
+	FeatureFlagUser,
+	FeatureFlagCommunity,
+	ZoteroIntegration,
+	IntegrationDataOAuth1,
+	LandingPageFeature,
+	Member,
+	Merge,
+	Organization,
+	Page,
+	Pub,
+	PubAttribution,
+	PubEdge,
+	PubManager,
+	PubVersion,
+	PublicPermissions,
+	Release,
+	ReviewEvent,
+	ScopeSummary,
+	Submission,
+	Signup,
+	SpamTag,
+	SubmissionWorkflow,
+	ReviewNew,
+	Reviewer,
+	Thread,
+	ThreadComment,
+	ThreadEvent,
+	User,
+	attributesPublicUser,
+	includeUserModel,
+	UserDismissable,
+	UserNotification,
+	UserNotificationPreferences,
+	UserScopeVisit,
+	UserSubscription,
+	ActivityItem,
+	Visibility,
+	VisibilityUser,
+	WorkerTask,
+]);
+
 /* Create associations for models that have associate function */
 Object.values(sequelize.models).forEach((model) => {
+	console.log(model);
 	// @ts-expect-error (interpreting this file as vanilla JavaScript from test runner)
 	const classMethods = model.options.classMethods || {};
 	if (classMethods.associate) {
@@ -72,7 +131,65 @@ Object.values(sequelize.models).forEach((model) => {
 	}
 });
 
-/** This export is here to guarantee that when you import the `sequelize` object
+export {
+	Collection,
+	CollectionAttribution,
+	CollectionPub,
+	Commenter,
+	Community,
+	CommunityAdmin,
+	CrossrefDepositRecord,
+	CustomScript,
+	DepositTarget,
+	Discussion,
+	DiscussionAnchor,
+	Doc,
+	Draft,
+	Export,
+	ExternalPublication,
+	FeatureFlag,
+	FeatureFlagUser,
+	FeatureFlagCommunity,
+	ZoteroIntegration,
+	IntegrationDataOAuth1,
+	LandingPageFeature,
+	Member,
+	Merge,
+	Organization,
+	Page,
+	Pub,
+	PubAttribution,
+	PubEdge,
+	PubManager,
+	PubVersion,
+	PublicPermissions,
+	Release,
+	ReviewEvent,
+	ScopeSummary,
+	Submission,
+	Signup,
+	SpamTag,
+	SubmissionWorkflow,
+	ReviewNew,
+	Reviewer,
+	Thread,
+	ThreadComment,
+	ThreadEvent,
+	User,
+	attributesPublicUser,
+	includeUserModel,
+	UserDismissable,
+	UserNotification,
+	UserNotificationPreferences,
+	UserScopeVisit,
+	UserSubscription,
+	ActivityItem,
+	Visibility,
+	VisibilityUser,
+	WorkerTask,
+};
+
+/** This import is here to guarantee that when you import the `sequelize` object
     all the models will be defined on it.
 
     In previous versions of Sequelize, the models were defined by importing it
