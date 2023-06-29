@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import * as ReactBeautifulDnD from 'react-beautiful-dnd';
 import { Collection, InitialData, Attribution } from 'types';
+import { isProd } from 'utils/environment';
 
 export const renderToNodeStream = (res, reactElement) => {
 	res.setHeader('content-type', 'text/html');
@@ -61,6 +62,11 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		notes,
 		canonicalUrl,
 	} = metaProps;
+
+	if (!isProd()) {
+		metaProps.unlisted = true;
+	}
+
 	const {
 		title: communityTitle,
 		citeAs: communityCiteAs,
