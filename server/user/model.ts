@@ -83,6 +83,7 @@ const UserWithoutPassPort = sequelize.define(
 					foreignKey: 'userId',
 				});
 				UserWithoutPassPort.hasOne(zoteroIntegration, {
+					as: 'zoteroIntegration',
 					foreignKey: { name: 'userId', allowNull: false },
 				});
 			},

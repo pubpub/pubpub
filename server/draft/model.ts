@@ -13,8 +13,8 @@ export const Draft = sequelize.define(
 		classMethods: {
 			associate: (models) => {
 				const { Pub, Draft: DraftModel } = models;
-				Pub.belongsTo(DraftModel, {
-					as: 'draft',
+				DraftModel.hasOne(Pub, {
+					as: 'pub',
 					foreignKey: 'draftId',
 				});
 			},

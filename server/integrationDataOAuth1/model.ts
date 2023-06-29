@@ -14,7 +14,7 @@ export const IntegrationDataOAuth1 = sequelize.define(
 			associate: (models) => {
 				const { integrationDataOAuth1, zoteroIntegration } = models;
 				integrationDataOAuth1.hasOne(zoteroIntegration, {
-					foreignKey: { allowNull: false },
+					foreignKey: { allowNull: false, name: 'integrationDataOAuth1Id' },
 					as: 'zoteroIntegration',
 					onDelete: 'CASCADE',
 				});

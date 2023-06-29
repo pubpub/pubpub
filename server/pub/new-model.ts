@@ -20,6 +20,7 @@ import {
 	PubAttribution,
 	CollectionPub,
 	Community,
+	Draft,
 	Discussion,
 	Export,
 	ReviewNew,
@@ -120,6 +121,9 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	community?: Community;
+
+	@BelongsTo(() => Draft, { as: 'draft', foreignKey: 'draftId' })
+	draft?: Draft;
 
 	@HasMany(() => Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: 'pubId' })
 	discussions?: Discussion[];

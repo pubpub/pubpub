@@ -29,11 +29,14 @@ export class ZoteroIntegration extends Model<
 	@Column(DataType.UUID)
 	userId?: string | null;
 
+	@Column(DataType.UUID)
+	integrationDataOAuth1Id?: string | null;
+
 	@BelongsTo(() => User, { as: 'user', foreignKey: { allowNull: false, name: 'userId' } })
 	user?: User;
 
 	@BelongsTo(() => IntegrationDataOAuth1, {
-		foreignKey: { allowNull: false, name: 'userId' },
+		foreignKey: { allowNull: false, name: 'integrationDataOAuth1Id' },
 		as: 'integrationDataOAuth1',
 		onDelete: 'CASCADE',
 	})

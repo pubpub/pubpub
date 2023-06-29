@@ -15,7 +15,12 @@ import {
 	HasOne,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { PubAttribution, Discussion, UserNotificationPreferences } from '../models';
+import {
+	PubAttribution,
+	Discussion,
+	UserNotificationPreferences,
+	ZoteroIntegration,
+} from '../models';
 
 @Table
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -141,4 +146,10 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 		foreignKey: 'userId',
 	})
 	userNotificationPreferences?: UserNotificationPreferences;
+
+	@HasOne(() => ZoteroIntegration, {
+		as: 'zoteroIntegration',
+		foreignKey: { name: 'userId', allowNull: false },
+	})
+	zoteroIntegration?: ZoteroIntegration;
 }

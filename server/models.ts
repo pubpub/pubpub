@@ -60,10 +60,9 @@ import { UserScopeVisit } from './userScopeVisit/new-model';
 import { UserSubscription } from './userSubscription/new-model';
 import { ActivityItem } from './activityItem/new-model';
 import { Visibility } from './visibility/new-model';
+import { FacetBinding as FacetBindingModel } from './facets/models/new-facetBinding';
 import { VisibilityUser } from './visibilityUser/new-model';
 import { WorkerTask } from './workerTask/new-model';
-
-export const { facetModels, FacetBinding } = createSequelizeModelsFromFacetDefinitions(sequelize);
 
 sequelize.addModels([
 	Collection,
@@ -81,6 +80,7 @@ sequelize.addModels([
 	Draft,
 	Export,
 	ExternalPublication,
+	FacetBindingModel,
 	FeatureFlag,
 	FeatureFlagUser,
 	FeatureFlagCommunity,
@@ -122,6 +122,8 @@ sequelize.addModels([
 	VisibilityUser,
 	WorkerTask,
 ]);
+
+export const { facetModels, FacetBinding } = createSequelizeModelsFromFacetDefinitions(sequelize);
 
 passportLocalSequelize.attachToUser(User, {
 	usernameField: 'email',

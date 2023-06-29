@@ -24,9 +24,9 @@ export class Visibility extends Model<
 	@Column(DataType.ENUM('private', 'members', 'public'))
 	access?: CreationOptional<string | null>;
 
-	@BelongsToMany(() => User, () => VisibilityUser, {
+	@BelongsToMany(() => User, {
 		as: 'users',
-		through: 'VisibilityUser',
+		through: () => VisibilityUser,
 		foreignKey: 'visibilityId',
 	})
 	users?: User[];

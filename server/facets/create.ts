@@ -1,10 +1,10 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { FacetBinding } from './models/facetBinding';
+import { FacetBinding } from './models/new-facetBinding';
 
 import { ALL_FACET_DEFINITIONS, FacetName, FacetProp, FacetProps } from '../../facets';
 
 type Column = {
-	type: typeof DataTypes[keyof typeof DataTypes];
+	type: (typeof DataTypes)[keyof typeof DataTypes];
 	allowNull: true;
 	defaultValue: null;
 };

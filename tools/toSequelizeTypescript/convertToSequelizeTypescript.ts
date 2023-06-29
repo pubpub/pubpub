@@ -244,10 +244,11 @@ function convertContent(content: string) {
 
 		if (asMatch) {
 			serverImports.add(associatedModel);
-			return `\t@${associationType}(() => ${associatedModel}${
-				associationType === 'BelongsToMany' && through ? `, () => ${through}` : ''
-			}, ${
-				JSON.stringify(properties)
+			const throughStatement =
+				//	associationType === 'BelongsToMany' && through ? `, () => ${through}` : '';
+				'';
+			return `\t@${associationType}(() => ${associatedModel}${throughStatement}, ${
+				JSON.stringify(properties).replace(/"through":"(\w+)"/, '"through": () => $1')
 				// foreignKey || onDelete
 				// 	? `, { ${foreignKey ? `foreignKey: ${JSON.stringify(foreignKey)}` : ''}${
 				// 			onDelete
@@ -342,7 +343,7 @@ function convertContent(content: string) {
 
 async function convertSequelizeFile(filePath: string) {
 	try {
-		const newFilePath = filePath.replace(/model\.ts$/, 'new-model.ts');
+		const newFilePath = filePath.replace(/(\w*?)\.ts$/, 'new-$1.ts');
 		const oldContent = await readFile(filePath, 'utf-8');
 
 		const newContent = convertContent(oldContent);
@@ -360,7 +361,10 @@ const parseDirectory = async (dir: string) => {
 		const fileStat = await lstat(absoluteFilePath);
 		if (fileStat.isDirectory()) {
 			await parseDirectory(absoluteFilePath);
-		} else if (path.extname(file) === '.ts' && file === 'model.ts') {
+		} else if (
+			path.extname(file) === '.ts' &&
+			(file === 'model.ts' || file === 'facetBinding.ts' || file === 'facetDefinition.ts')
+		) {
 			await convertSequelizeFile(absoluteFilePath);
 		}
 	}

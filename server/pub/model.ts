@@ -53,6 +53,7 @@ export const Pub = sequelize.define(
 					CollectionPub,
 					Community,
 					CrossrefDepositRecord,
+					Draft,
 					Discussion,
 					Export,
 					Member,
@@ -80,6 +81,10 @@ export const Pub = sequelize.define(
 					onDelete: 'CASCADE',
 					as: 'community',
 					foreignKey: 'communityId',
+				});
+				PubModel.belongsTo(Draft, {
+					as: 'draft',
+					foreignKey: 'draftId',
 				});
 				PubModel.hasMany(Discussion, {
 					onDelete: 'CASCADE',

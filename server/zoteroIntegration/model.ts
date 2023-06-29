@@ -19,7 +19,7 @@ export const ZoteroIntegration = sequelize.define(
 					foreignKey: { allowNull: false, name: 'userId' },
 				});
 				zoteroIntegration.belongsTo(integrationDataOAuth1, {
-					foreignKey: { allowNull: false, name: 'userId' },
+					foreignKey: { allowNull: false, name: 'integrationDataOAuth1Id' },
 					as: 'integrationDataOAuth1',
 					onDelete: 'CASCADE',
 				});
