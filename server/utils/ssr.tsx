@@ -340,7 +340,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		});
 		outputComponents = [...outputComponents, citationNoteTags];
 	}
-	if (unlisted || !isProd()) {
+	if (!isProd() || unlisted) {
 		outputComponents = [
 			...outputComponents,
 			<meta key="un1" name="robots" content="noindex,nofollow" />,
