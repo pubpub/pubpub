@@ -63,10 +63,6 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		canonicalUrl,
 	} = metaProps;
 
-	if (!isProd()) {
-		metaProps.unlisted = true;
-	}
-
 	const {
 		title: communityTitle,
 		citeAs: communityCiteAs,
@@ -344,7 +340,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		});
 		outputComponents = [...outputComponents, citationNoteTags];
 	}
-	if (unlisted) {
+	if (unlisted || !isProd()) {
 		outputComponents = [
 			...outputComponents,
 			<meta key="un1" name="robots" content="noindex,nofollow" />,
