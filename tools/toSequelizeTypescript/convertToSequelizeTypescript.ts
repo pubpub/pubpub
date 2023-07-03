@@ -59,7 +59,7 @@ function convertContent(content: string) {
 		.replace(/dataTypes\.(.*?\))/g, '"DataType.$1"')
 		.replace(/dataTypes\.(\w*)/g, '"DataType.$1"')
 		.replace(/sequelize\.(\w*)/g, '"sequelize.$1"')
-		.replace(/NOW/g, 'new Date()');
+		.replace(/NOW/g, 'DataType.NOW');
 	try {
 		properties = vm.runInNewContext(`({${properties}})`);
 	} catch (e) {

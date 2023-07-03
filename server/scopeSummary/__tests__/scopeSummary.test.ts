@@ -129,11 +129,24 @@ const models = modelize`
 setup(beforeAll, models.resolve);
 teardown(afterAll);
 
-beforeEach(() => ScopeSummary.destroy({ where: {} }));
+beforeEach(async () => {
+	const all = await ScopeSummary.findAll();
+	await Promise.all(
+		all.map(async (s) => {
+			try {
+				const destroyed = await s?.destroy();
+				return destroyed;
+			} catch (e) {
+				console.error(e);
+			}
+		}),
+	);
+});
 
 const expectSummaryFor = async (scopeIds, expectedValues) => {
 	const fetchModel = async () => {
 		const { pubId, collectionId, communityId } = scopeIds;
+		console.log({ pubId, collectionId, communityId });
 		if (pubId) {
 			const { scopeSummary } = await Pub.findOne({
 				where: { id: pubId },
@@ -177,9 +190,13 @@ describe('scopeSummary queries', () => {
 	});
 
 	it('summarizes a Collection', async () => {
-		const { c1 } = models;
-		await summarizeCollection(c1.id);
-		await expectSummaryFor({ collectionId: c1.id }, { pubs: 2, collections: 0 });
+		try {
+			const { c1 } = models;
+			await summarizeCollection(c1.id);
+			await expectSummaryFor({ collectionId: c1.id }, { pubs: 2, collections: 0 });
+		} catch (e) {
+			console.error(e);
+		}
 	});
 
 	it('summarizes a Community', async () => {

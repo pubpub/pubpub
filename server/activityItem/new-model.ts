@@ -32,7 +32,7 @@ export class ActivityItem extends Model<
 	payload?: object | null;
 
 	@AllowNull(false)
-	@Default('2023-06-29T16:27:23.524Z')
+	@Default(DataType.NOW)
 	@Column(DataType.DATE)
 	timestamp!: CreationOptional<Date>;
 
