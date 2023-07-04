@@ -7,6 +7,7 @@ import {
 	Default,
 	AllowNull,
 	Index,
+	Validate,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
@@ -34,7 +35,11 @@ export class DiscussionAnchor extends Model<
 	historyKey!: number;
 
 	@Column(DataType.JSONB)
-	selection?: object | null;
+	selection?: {
+		head: number;
+		type: 'text';
+		anchor: number;
+	} | null;
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
