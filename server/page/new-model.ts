@@ -9,6 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { LayoutBlock } from 'utils/layout';
 import { Community } from '../models';
 
 @Table
@@ -43,9 +44,10 @@ export class Page extends Model<InferAttributes<Page>, InferCreationAttributes<P
 	@Column(DataType.TEXT)
 	viewHash?: string | null;
 
+	// TODO: Add @IsArray validation
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	layout!: object;
+	layout!: LayoutBlock[];
 
 	@AllowNull(false)
 	@Default(false)
