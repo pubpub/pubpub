@@ -33,7 +33,7 @@ export class WorkerTask extends Model<
 	attemptCount?: number | null;
 
 	@Column(DataType.JSONB)
-	error?: object | null;
+	error?: string | null;
 
 	@Column(DataType.JSONB)
 	output?: object | null;
