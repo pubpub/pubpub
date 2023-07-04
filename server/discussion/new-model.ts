@@ -34,7 +34,7 @@ export class Discussion extends Model<
 	isClosed?: boolean | null;
 
 	@Column(DataType.JSONB)
-	labels?: object | null;
+	labels?: string[] | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
