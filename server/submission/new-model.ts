@@ -9,6 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SubmissionStatus } from 'types';
 import { Pub, SubmissionWorkflow } from '../models';
 
 @Table
@@ -21,9 +22,10 @@ export class Submission extends Model<
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
+	// TODO: This should be an ENUM
 	@AllowNull(false)
 	@Column(DataType.TEXT)
-	status!: string;
+	status!: SubmissionStatus;
 
 	@Column(DataType.DATE)
 	submittedAt?: Date | null;
