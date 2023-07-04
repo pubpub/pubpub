@@ -9,6 +9,7 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { ActivityItemPayload } from 'types';
 
 @Table
 export class ActivityItem extends Model<
@@ -29,7 +30,7 @@ export class ActivityItem extends Model<
 	pubId?: string | null;
 
 	@Column(DataType.JSONB)
-	payload?: object | null;
+	payload?: ActivityItemPayload | null;
 
 	@AllowNull(false)
 	@Default(DataType.NOW)
