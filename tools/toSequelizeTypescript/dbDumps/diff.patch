@@ -1,0 +1,328 @@
+--- sequelize_typescript.sql	2023-07-05 21:40:24.421279289 +0200
++++ sequelize_old.sql	2023-07-05 21:40:06.926984271 +0200
+@@ -198,9 +198,9 @@
+     "pageId" uuid,
+     "communityId" uuid,
+     "scopeSummaryId" uuid,
+-    "crossrefDepositRecordId" uuid,
+     "createdAt" timestamp with time zone NOT NULL,
+-    "updatedAt" timestamp with time zone NOT NULL
++    "updatedAt" timestamp with time zone NOT NULL,
++    "crossrefDepositRecordId" uuid
+ );
+ 
+ 
+@@ -273,9 +273,9 @@
+     "defaultPubCollections" jsonb,
+     "spamTagId" uuid,
+     "organizationId" uuid,
+-    "scopeSummaryId" uuid,
+     "createdAt" timestamp with time zone NOT NULL,
+-    "updatedAt" timestamp with time zone NOT NULL
++    "updatedAt" timestamp with time zone NOT NULL,
++    "scopeSummaryId" uuid
+ );
+ 
+ 
+@@ -520,10 +520,10 @@
+ ALTER TABLE public."FeatureFlags" OWNER TO testuser;
+ 
+ --
+--- Name: IntegrationDataOAuth1s; Type: TABLE; Schema: public; Owner: testuser
++-- Name: IntegrationDataOAuth1; Type: TABLE; Schema: public; Owner: testuser
+ --
+ 
+-CREATE TABLE public."IntegrationDataOAuth1s" (
++CREATE TABLE public."IntegrationDataOAuth1" (
+     id uuid NOT NULL,
+     "accessToken" text,
+     "createdAt" timestamp with time zone NOT NULL,
+@@ -531,7 +531,7 @@
+ );
+ 
+ 
+-ALTER TABLE public."IntegrationDataOAuth1s" OWNER TO testuser;
++ALTER TABLE public."IntegrationDataOAuth1" OWNER TO testuser;
+ 
+ --
+ -- Name: LandingPageFeatures; Type: TABLE; Schema: public; Owner: testuser
+@@ -815,10 +815,10 @@
+     "commentHash" character varying(255),
+     "draftId" uuid NOT NULL,
+     "communityId" uuid NOT NULL,
+-    "crossrefDepositRecordId" uuid,
+-    "scopeSummaryId" uuid,
+     "createdAt" timestamp with time zone NOT NULL,
+-    "updatedAt" timestamp with time zone NOT NULL
++    "updatedAt" timestamp with time zone NOT NULL,
++    "crossrefDepositRecordId" uuid,
++    "scopeSummaryId" uuid
+ );
+ 
+ 
+@@ -1167,7 +1167,7 @@
+     hash text NOT NULL,
+     salt text NOT NULL,
+     "gdprConsent" boolean,
+-    "isSuperAdmin" boolean NOT NULL,
++    "isSuperAdmin" boolean DEFAULT false NOT NULL,
+     "createdAt" timestamp with time zone NOT NULL,
+     "updatedAt" timestamp with time zone NOT NULL
+ );
+@@ -1198,7 +1198,8 @@
+     "userId" uuid NOT NULL,
+     "visibilityId" uuid NOT NULL,
+     "createdAt" timestamp with time zone NOT NULL,
+-    "updatedAt" timestamp with time zone NOT NULL
++    "updatedAt" timestamp with time zone NOT NULL,
++    "UserId" uuid
+ );
+ 
+ 
+@@ -1232,10 +1233,10 @@
+     id uuid NOT NULL,
+     "zoteroUsername" text,
+     "zoteroUserId" text,
+-    "userId" uuid NOT NULL,
+-    "integrationDataOAuth1Id" uuid NOT NULL,
+     "createdAt" timestamp with time zone NOT NULL,
+-    "updatedAt" timestamp with time zone NOT NULL
++    "updatedAt" timestamp with time zone NOT NULL,
++    "userId" uuid NOT NULL,
++    "integrationDataOAuth1Id" uuid NOT NULL
+ );
+ 
+ 
+@@ -1277,7 +1278,7 @@
+ -- Data for Name: Collections; Type: TABLE DATA; Schema: public; Owner: testuser
+ --
+ 
+-COPY public."Collections" (id, title, slug, avatar, "isRestricted", "isPublic", "viewHash", "editHash", metadata, kind, doi, "readNextPreviewSize", layout, "layoutAllowsDuplicatePubs", "pageId", "communityId", "scopeSummaryId", "crossrefDepositRecordId", "createdAt", "updatedAt") FROM stdin;
++COPY public."Collections" (id, title, slug, avatar, "isRestricted", "isPublic", "viewHash", "editHash", metadata, kind, doi, "readNextPreviewSize", layout, "layoutAllowsDuplicatePubs", "pageId", "communityId", "scopeSummaryId", "createdAt", "updatedAt", "crossrefDepositRecordId") FROM stdin;
+ \.
+ 
+ 
+@@ -1293,7 +1294,7 @@
+ -- Data for Name: Communities; Type: TABLE DATA; Schema: public; Owner: testuser
+ --
+ 
+-COPY public."Communities" (id, subdomain, domain, title, "citeAs", "publishAs", description, avatar, favicon, "accentColorLight", "accentColorDark", "hideCreatePubButton", "headerLogo", "headerLinks", "headerColorType", "useHeaderTextAccent", "hideHero", "hideHeaderLogo", "heroLogo", "heroBackgroundImage", "heroBackgroundColor", "heroTextColor", "useHeaderGradient", "heroImage", "heroTitle", "heroText", "heroPrimaryButton", "heroSecondaryButton", "heroAlign", navigation, "hideNav", "navLinks", "footerLinks", "footerLogoLink", "footerTitle", "footerImage", website, facebook, twitter, email, issn, "isFeatured", "viewHash", "editHash", "premiumLicenseFlag", "defaultPubCollections", "spamTagId", "organizationId", "scopeSummaryId", "createdAt", "updatedAt") FROM stdin;
++COPY public."Communities" (id, subdomain, domain, title, "citeAs", "publishAs", description, avatar, favicon, "accentColorLight", "accentColorDark", "hideCreatePubButton", "headerLogo", "headerLinks", "headerColorType", "useHeaderTextAccent", "hideHero", "hideHeaderLogo", "heroLogo", "heroBackgroundImage", "heroBackgroundColor", "heroTextColor", "useHeaderGradient", "heroImage", "heroTitle", "heroText", "heroPrimaryButton", "heroSecondaryButton", "heroAlign", navigation, "hideNav", "navLinks", "footerLinks", "footerLogoLink", "footerTitle", "footerImage", website, facebook, twitter, email, issn, "isFeatured", "viewHash", "editHash", "premiumLicenseFlag", "defaultPubCollections", "spamTagId", "organizationId", "createdAt", "updatedAt", "scopeSummaryId") FROM stdin;
+ \.
+ 
+ 
+@@ -1406,15 +1407,15 @@
+ --
+ 
+ COPY public."FeatureFlags" (id, name, "enabledUsersFraction", "enabledCommunitiesFraction", "createdAt", "updatedAt") FROM stdin;
+-f583f299-79b2-4762-8097-06552ef7ecc2	customScripts	0	0	2023-07-05 21:40:16.122+02	2023-07-05 21:40:16.122+02
++959c82da-39c3-460b-8a69-7ac3a80d1db1	customScripts	0	0	2023-07-05 21:39:50.861+02	2023-07-05 21:39:50.861+02
+ \.
+ 
+ 
+ --
+--- Data for Name: IntegrationDataOAuth1s; Type: TABLE DATA; Schema: public; Owner: testuser
++-- Data for Name: IntegrationDataOAuth1; Type: TABLE DATA; Schema: public; Owner: testuser
+ --
+ 
+-COPY public."IntegrationDataOAuth1s" (id, "accessToken", "createdAt", "updatedAt") FROM stdin;
++COPY public."IntegrationDataOAuth1" (id, "accessToken", "createdAt", "updatedAt") FROM stdin;
+ \.
+ 
+ 
+@@ -1534,7 +1535,7 @@
+ -- Data for Name: Pubs; Type: TABLE DATA; Schema: public; Owner: testuser
+ --
+ 
+-COPY public."Pubs" (id, slug, title, "htmlTitle", description, "htmlDescription", avatar, "customPublishedAt", doi, labels, downloads, metadata, "viewHash", "editHash", "reviewHash", "commentHash", "draftId", "communityId", "crossrefDepositRecordId", "scopeSummaryId", "createdAt", "updatedAt") FROM stdin;
++COPY public."Pubs" (id, slug, title, "htmlTitle", description, "htmlDescription", avatar, "customPublishedAt", doi, labels, downloads, metadata, "viewHash", "editHash", "reviewHash", "commentHash", "draftId", "communityId", "createdAt", "updatedAt", "crossrefDepositRecordId", "scopeSummaryId") FROM stdin;
+ \.
+ 
+ 
+@@ -1694,7 +1695,7 @@
+ -- Data for Name: VisibilityUsers; Type: TABLE DATA; Schema: public; Owner: testuser
+ --
+ 
+-COPY public."VisibilityUsers" (id, "userId", "visibilityId", "createdAt", "updatedAt") FROM stdin;
++COPY public."VisibilityUsers" (id, "userId", "visibilityId", "createdAt", "updatedAt", "UserId") FROM stdin;
+ \.
+ 
+ 
+@@ -1710,7 +1711,7 @@
+ -- Data for Name: ZoteroIntegrations; Type: TABLE DATA; Schema: public; Owner: testuser
+ --
+ 
+-COPY public."ZoteroIntegrations" (id, "zoteroUsername", "zoteroUserId", "userId", "integrationDataOAuth1Id", "createdAt", "updatedAt") FROM stdin;
++COPY public."ZoteroIntegrations" (id, "zoteroUsername", "zoteroUserId", "createdAt", "updatedAt", "userId", "integrationDataOAuth1Id") FROM stdin;
+ \.
+ 
+ 
+@@ -1899,11 +1900,11 @@
+ 
+ 
+ --
+--- Name: IntegrationDataOAuth1s IntegrationDataOAuth1s_pkey; Type: CONSTRAINT; Schema: public; Owner: testuser
++-- Name: IntegrationDataOAuth1 IntegrationDataOAuth1_pkey; Type: CONSTRAINT; Schema: public; Owner: testuser
+ --
+ 
+-ALTER TABLE ONLY public."IntegrationDataOAuth1s"
+-    ADD CONSTRAINT "IntegrationDataOAuth1s_pkey" PRIMARY KEY (id);
++ALTER TABLE ONLY public."IntegrationDataOAuth1"
++    ADD CONSTRAINT "IntegrationDataOAuth1_pkey" PRIMARY KEY (id);
+ 
+ 
+ --
+@@ -2235,11 +2236,11 @@
+ 
+ 
+ --
+--- Name: VisibilityUsers VisibilityUsers_userId_visibilityId_key; Type: CONSTRAINT; Schema: public; Owner: testuser
++-- Name: VisibilityUsers VisibilityUsers_visibilityId_UserId_key; Type: CONSTRAINT; Schema: public; Owner: testuser
+ --
+ 
+ ALTER TABLE ONLY public."VisibilityUsers"
+-    ADD CONSTRAINT "VisibilityUsers_userId_visibilityId_key" UNIQUE ("userId", "visibilityId");
++    ADD CONSTRAINT "VisibilityUsers_visibilityId_UserId_key" UNIQUE ("visibilityId", "UserId");
+ 
+ 
+ --
+@@ -2259,27 +2260,6 @@
+ 
+ 
+ --
+--- Name: CollectionPub_collectionId_pubId; Type: INDEX; Schema: public; Owner: testuser
+---
+-
+-CREATE UNIQUE INDEX "CollectionPub_collectionId_pubId" ON public."CollectionPubs" USING btree ("pubId", "collectionId");
+-
+-
+---
+--- Name: UserScopeVisit_userId_collectionId; Type: INDEX; Schema: public; Owner: testuser
+---
+-
+-CREATE UNIQUE INDEX "UserScopeVisit_userId_collectionId" ON public."UserScopeVisits" USING btree ("userId", "collectionId");
+-
+-
+---
+--- Name: UserScopeVisit_userId_pubId; Type: INDEX; Schema: public; Owner: testuser
+---
+-
+-CREATE UNIQUE INDEX "UserScopeVisit_userId_pubId" ON public."UserScopeVisits" USING btree ("userId", "pubId");
+-
+-
+---
+ -- Name: activity_items_actor_id; Type: INDEX; Schema: public; Owner: testuser
+ --
+ 
+@@ -2308,6 +2288,13 @@
+ 
+ 
+ --
++-- Name: collection_pubs_collection_id_pub_id; Type: INDEX; Schema: public; Owner: testuser
++--
++
++CREATE UNIQUE INDEX collection_pubs_collection_id_pub_id ON public."CollectionPubs" USING btree ("collectionId", "pubId");
++
++
++--
+ -- Name: discussion_anchors_discussion_id; Type: INDEX; Schema: public; Owner: testuser
+ --
+ 
+@@ -2413,6 +2400,20 @@
+ 
+ 
+ --
++-- Name: user_scope_visits_user_id_collection_id; Type: INDEX; Schema: public; Owner: testuser
++--
++
++CREATE UNIQUE INDEX user_scope_visits_user_id_collection_id ON public."UserScopeVisits" USING btree ("userId", "collectionId");
++
++
++--
++-- Name: user_scope_visits_user_id_pub_id; Type: INDEX; Schema: public; Owner: testuser
++--
++
++CREATE UNIQUE INDEX user_scope_visits_user_id_pub_id ON public."UserScopeVisits" USING btree ("userId", "pubId");
++
++
++--
+ -- Name: user_subscriptions_pub_id; Type: INDEX; Schema: public; Owner: testuser
+ --
+ 
+@@ -2486,7 +2487,7 @@
+ --
+ 
+ ALTER TABLE ONLY public."Collections"
+-    ADD CONSTRAINT "Collections_crossrefDepositRecordId_fkey" FOREIGN KEY ("crossrefDepositRecordId") REFERENCES public."CrossrefDepositRecords"(id) ON UPDATE CASCADE;
++    ADD CONSTRAINT "Collections_crossrefDepositRecordId_fkey" FOREIGN KEY ("crossrefDepositRecordId") REFERENCES public."CrossrefDepositRecords"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+ 
+ 
+ --
+@@ -2502,7 +2503,7 @@
+ --
+ 
+ ALTER TABLE ONLY public."Collections"
+-    ADD CONSTRAINT "Collections_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE;
++    ADD CONSTRAINT "Collections_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+ 
+ 
+ --
+@@ -2518,7 +2519,7 @@
+ --
+ 
+ ALTER TABLE ONLY public."Communities"
+-    ADD CONSTRAINT "Communities_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE;
++    ADD CONSTRAINT "Communities_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+ 
+ 
+ --
+@@ -2830,7 +2831,7 @@
+ --
+ 
+ ALTER TABLE ONLY public."Pubs"
+-    ADD CONSTRAINT "Pubs_crossrefDepositRecordId_fkey" FOREIGN KEY ("crossrefDepositRecordId") REFERENCES public."CrossrefDepositRecords"(id) ON UPDATE CASCADE;
++    ADD CONSTRAINT "Pubs_crossrefDepositRecordId_fkey" FOREIGN KEY ("crossrefDepositRecordId") REFERENCES public."CrossrefDepositRecords"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+ 
+ 
+ --
+@@ -2838,7 +2839,7 @@
+ --
+ 
+ ALTER TABLE ONLY public."Pubs"
+-    ADD CONSTRAINT "Pubs_draftId_fkey" FOREIGN KEY ("draftId") REFERENCES public."Drafts"(id) ON UPDATE CASCADE ON DELETE CASCADE;
++    ADD CONSTRAINT "Pubs_draftId_fkey" FOREIGN KEY ("draftId") REFERENCES public."Drafts"(id) ON UPDATE CASCADE;
+ 
+ 
+ --
+@@ -2846,7 +2847,7 @@
+ --
+ 
+ ALTER TABLE ONLY public."Pubs"
+-    ADD CONSTRAINT "Pubs_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE;
++    ADD CONSTRAINT "Pubs_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+ 
+ 
+ --
+@@ -3034,11 +3035,11 @@
+ 
+ 
+ --
+--- Name: VisibilityUsers VisibilityUsers_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: testuser
++-- Name: VisibilityUsers VisibilityUsers_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: testuser
+ --
+ 
+ ALTER TABLE ONLY public."VisibilityUsers"
+-    ADD CONSTRAINT "VisibilityUsers_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."Users"(id) ON UPDATE CASCADE ON DELETE CASCADE;
++    ADD CONSTRAINT "VisibilityUsers_UserId_fkey" FOREIGN KEY ("UserId") REFERENCES public."Users"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ 
+ 
+ --
+@@ -3054,7 +3055,7 @@
+ --
+ 
+ ALTER TABLE ONLY public."ZoteroIntegrations"
+-    ADD CONSTRAINT "ZoteroIntegrations_integrationDataOAuth1Id_fkey" FOREIGN KEY ("integrationDataOAuth1Id") REFERENCES public."IntegrationDataOAuth1s"(id) ON UPDATE CASCADE ON DELETE CASCADE;
++    ADD CONSTRAINT "ZoteroIntegrations_integrationDataOAuth1Id_fkey" FOREIGN KEY ("integrationDataOAuth1Id") REFERENCES public."IntegrationDataOAuth1"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ 
+ 
+ --
