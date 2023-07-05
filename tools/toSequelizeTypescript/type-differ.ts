@@ -4,28 +4,10 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable no-restricted-syntax */
 // ./type-printer.ts
-import { checkServerIdentity } from 'tls';
 import * as ts from 'typescript';
 import fs from 'fs';
 import { join } from 'path';
 import { diffWordsWithSpace, diffLines } from 'diff';
-
-function findFlags(flag: number): string[] {
-	const flagValues = Object.values(ts.TypeFlags) as number[];
-	const matchingFlags: string[] = [];
-
-	flagValues.forEach((flagValue: number) => {
-		if ((flagValue & flag) !== 0) {
-			matchingFlags.push(ts.TypeFlags[flagValue]);
-		}
-	});
-
-	return matchingFlags;
-}
-
-function hasFlag(flag: number, flagToCheck: number): boolean {
-	return (flag & flagToCheck) !== 0;
-}
 
 function extractTypeSignature(filename: string) {
 	const program = ts.createProgram([filename], { emitDeclarationOnly: true });
@@ -74,20 +56,19 @@ function extractTypeSignature(filename: string) {
 				const fields = type.getProperties().map((prop: ts.Symbol) => {
 					const name: string = prop.getName();
 					const decl = prop.getDeclarations()![0];
+					// @ts-expect-error shh
 					const optional = typeChecker.isOptionalParameter(decl);
 
 					// consttypeChecker.getTypeAtLocation(prop.valueDeclaration);
 					const propType: ts.Type = typeChecker.getTypeOfSymbolAtLocation(
 						prop,
+						// @ts-expect-error shh
 						prop.declarations?.[0],
 					);
 
 					const propTypeName: string = typeChecker.typeToString(propType, undefined);
-					if (name === 'htmlTitle') {
-						console.dir(propType.isUnion());
-						// console.dir(prop.declarations?.[0]?.type.types, { depth: 4 });
-					}
 					const hasNull = (declaration: ts.PropertyDeclaration) => {
+						// @ts-expect-error shh
 						const types = declaration.type?.types;
 						if (!types) {
 							return false;
@@ -102,6 +83,7 @@ function extractTypeSignature(filename: string) {
 					};
 
 					return `${name}${optional ? '?' : ''}: ${propTypeName}${
+						// @ts-expect-error shh
 						hasNull(prop.declarations?.[0]) ? ' | null' : ''
 					};`;
 				});
@@ -113,7 +95,7 @@ function extractTypeSignature(filename: string) {
 	return types;
 }
 
-const typeBSignature = extractTypeSignature('./example.ts');
+const typeBSignature = extractTypeSignature(join(__dirname, 'example.ts'));
 
 const diffs = [typeBSignature, typeBSignature].map((sig, idx) =>
 	sig.map((s) => {
@@ -131,8 +113,6 @@ const diffs = [typeBSignature, typeBSignature].map((sig, idx) =>
 		return { name: s.name, type: generateDiff(s1, s2, !!idx) };
 	}),
 );
-
-// write to file or console log
 
 diffs.forEach((diff, idx) => {
 	if (idx === 0) {
