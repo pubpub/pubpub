@@ -31,7 +31,7 @@ $removal-light: #ffd7d7;
 
 @mixin corner-triangle($size, $color) {
 	position: relative;
-	&:hover::before,
+	&::before,
 	.selected::before {
 		content: '';
 		position: absolute;
@@ -42,6 +42,11 @@ $removal-light: #ffd7d7;
 		border-style: solid;
 		border-width: $size $size 0 0;
 		border-color: $color transparent transparent transparent;
+		opacity: 0;
+	}
+	&:hover::before,
+	.selected::before {
+		opacity: 1;
 	}
 }
 
@@ -61,7 +66,7 @@ $iconSize: 0.75em;
 
 @mixin corner-icon($character, $color, $color-light) {
 	position: relative;
-	&:hover::before,
+	&::before,
 	.selected::before {
 		content: $character;
 		position: absolute;
@@ -76,6 +81,11 @@ $iconSize: 0.75em;
 		left: -0.9 * $iconSize;
 		top: -0.5 * $iconSize;
 		box-shadow: 0 0 0 .5px $color;
+		opacity: 0;
+	}
+	&:hover::before,
+	.selected::before {
+		opacity: 1;
 	}
 }
 
