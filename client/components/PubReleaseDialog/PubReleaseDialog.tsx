@@ -24,7 +24,7 @@ import {
 	acceptSuggestions,
 	rejectSuggestions,
 } from 'components/Editor/plugins/suggestedEdits/resolve';
-import { hasSuggestions } from 'client/utils/suggestedEdits';
+import { hasSuggestions, RejectSuggestions, AcceptSuggestions } from 'client/utils/suggestedEdits';
 
 require('./pubReleaseDialog.scss');
 
@@ -228,6 +228,8 @@ const PubReleaseDialog = (props: Props) => {
 						intent="success"
 						onClick={handleSuggestedEditsAccept}
 					/>
+					{RejectSuggestions(editorChangeObject)}
+					{AcceptSuggestions(editorChangeObject)}
 				</div>
 			</React.Fragment>
 		);
