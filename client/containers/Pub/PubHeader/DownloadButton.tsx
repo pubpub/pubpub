@@ -4,7 +4,6 @@ import { EditorState, Transaction } from 'prosemirror-state';
 
 import { PopoverButton } from 'components';
 import { hasSuggestions } from 'client/utils/suggestedEdits';
-import { pubData } from 'utils/storybook/data';
 import { usePageContext } from 'utils/hooks';
 import {
 	acceptSuggestions,
@@ -15,10 +14,15 @@ import Download from './Download';
 import { usePubContext } from '../pubHooks';
 import SmallHeaderButton from './SmallHeaderButton';
 
+type Props = {
+	pubData: any;
+};
+
 const ConditionalWrapper = ({ condition, wrapper, children }) =>
 	condition ? wrapper(children) : children;
 
-const DowloadButton = () => {
+const DowloadButton = (props: Props) => {
+	const { pubData } = props;
 	const { featureFlags } = usePageContext();
 	const { collabData } = usePubContext();
 	const { editorChangeObject } = collabData;
@@ -66,6 +70,7 @@ const DowloadButton = () => {
 			</React.Fragment>
 		);
 	};
+
 	return (
 		<ConditionalWrapper
 			condition={hasSuggestions(editorChangeObject) && featureFlags.suggestedEdits}
