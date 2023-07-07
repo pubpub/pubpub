@@ -11,6 +11,8 @@ import SmallHeaderButton from './SmallHeaderButton';
 import Social from './Social';
 import DowloadButton from './DownloadButton';
 
+import Download from './Download';
+
 type Props = {
 	onShowHeaderDetails: Callback;
 	pubData: PubPageData;
@@ -81,7 +83,7 @@ const UtilityButtons = (props: Props) => {
 					<SmallHeaderButton label="Social" labelPosition="left" icon="share2" />
 				</Social>
 			)}
-			<DowloadButton />
+			<DowloadButton pubData={pubData} />
 			<PubToc>
 				<SmallHeaderButton label="Contents" labelPosition="left" icon="toc" />
 			</PubToc>
