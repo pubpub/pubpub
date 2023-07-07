@@ -11,8 +11,6 @@ import SmallHeaderButton from './SmallHeaderButton';
 import Social from './Social';
 import DowloadButton from './DownloadButton';
 
-import Download from './Download';
-
 type Props = {
 	onShowHeaderDetails: Callback;
 	pubData: PubPageData;
