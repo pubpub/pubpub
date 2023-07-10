@@ -2,7 +2,9 @@ import { Model, Table, Column, DataType, PrimaryKey, Default, HasOne } from 'seq
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { ZoteroIntegration } from '../models';
 
-@Table
+@Table({
+	tableName: 'IntegrationDataOAuth1',
+})
 export class IntegrationDataOAuth1 extends Model<
 	InferAttributes<IntegrationDataOAuth1>,
 	InferCreationAttributes<IntegrationDataOAuth1>

@@ -15,8 +15,12 @@ import {
 	Unique,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import passportLocalSequelize from 'passport-local-sequelize';
-import { PubAttribution, Discussion, UserNotificationPreferences } from '../models';
+import {
+	PubAttribution,
+	Discussion,
+	UserNotificationPreferences,
+	ZoteroIntegration,
+} from '../models';
 
 @Table
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -25,11 +29,11 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
-	@Unique
 	@AllowNull(false)
 	@IsLowercase
 	@Length({ min: 1, max: 280 })
 	@Is(/^[a-zA-Z0-9-]+$/)
+	@Unique
 	@Column(DataType.TEXT)
 	slug!: string;
 
@@ -58,10 +62,10 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	@Column(DataType.TEXT)
 	title?: string | null;
 
-	@Unique
 	@AllowNull(false)
 	@IsLowercase
 	@IsEmail
+	@Unique
 	@Column(DataType.TEXT)
 	email!: string;
 
@@ -117,12 +121,14 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	@Column(DataType.TEXT)
 	salt!: string;
 
+	@Default(null)
 	@Column(DataType.BOOLEAN)
-	gdprConsent?: boolean | null;
+	gdprConsent?: CreationOptional<boolean | null>;
 
 	@AllowNull(false)
+	@Default(false)
 	@Column(DataType.BOOLEAN)
-	isSuperAdmin!: boolean;
+	isSuperAdmin!: CreationOptional<boolean>;
 
 	@HasMany(() => PubAttribution, {
 		onDelete: 'CASCADE',
@@ -140,6 +146,12 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 		foreignKey: 'userId',
 	})
 	userNotificationPreferences?: UserNotificationPreferences;
+
+	@HasOne(() => ZoteroIntegration, {
+		as: 'zoteroIntegration',
+		foreignKey: { name: 'userId', allowNull: false },
+	})
+	zoteroIntegration?: ZoteroIntegration;
 
 	// declare beforeCreate(function(user, op, next) {
 	//     // if specified, convert the username to lowercase

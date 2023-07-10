@@ -520,10 +520,10 @@ CREATE TABLE public."FeatureFlags" (
 ALTER TABLE public."FeatureFlags" OWNER TO testuser;
 
 --
--- Name: IntegrationDataOAuth1s; Type: TABLE; Schema: public; Owner: testuser
+-- Name: IntegrationDataOAuth1; Type: TABLE; Schema: public; Owner: testuser
 --
 
-CREATE TABLE public."IntegrationDataOAuth1s" (
+CREATE TABLE public."IntegrationDataOAuth1" (
     id uuid NOT NULL,
     "accessToken" text,
     "createdAt" timestamp with time zone NOT NULL,
@@ -531,7 +531,7 @@ CREATE TABLE public."IntegrationDataOAuth1s" (
 );
 
 
-ALTER TABLE public."IntegrationDataOAuth1s" OWNER TO testuser;
+ALTER TABLE public."IntegrationDataOAuth1" OWNER TO testuser;
 
 --
 -- Name: LandingPageFeatures; Type: TABLE; Schema: public; Owner: testuser
@@ -1167,7 +1167,7 @@ CREATE TABLE public."Users" (
     hash text NOT NULL,
     salt text NOT NULL,
     "gdprConsent" boolean,
-    "isSuperAdmin" boolean NOT NULL,
+    "isSuperAdmin" boolean DEFAULT false NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL
 );
@@ -1406,15 +1406,15 @@ COPY public."FeatureFlagUsers" (id, "featureFlagId", "userId", enabled, "created
 --
 
 COPY public."FeatureFlags" (id, name, "enabledUsersFraction", "enabledCommunitiesFraction", "createdAt", "updatedAt") FROM stdin;
-f583f299-79b2-4762-8097-06552ef7ecc2	customScripts	0	0	2023-07-05 21:40:16.122+02	2023-07-05 21:40:16.122+02
+b1318338-392c-4765-b108-7a200f512b40	customScripts	0	0	2023-07-10 13:40:42.99+02	2023-07-10 13:40:42.99+02
 \.
 
 
 --
--- Data for Name: IntegrationDataOAuth1s; Type: TABLE DATA; Schema: public; Owner: testuser
+-- Data for Name: IntegrationDataOAuth1; Type: TABLE DATA; Schema: public; Owner: testuser
 --
 
-COPY public."IntegrationDataOAuth1s" (id, "accessToken", "createdAt", "updatedAt") FROM stdin;
+COPY public."IntegrationDataOAuth1" (id, "accessToken", "createdAt", "updatedAt") FROM stdin;
 \.
 
 
@@ -1899,11 +1899,11 @@ ALTER TABLE ONLY public."FeatureFlags"
 
 
 --
--- Name: IntegrationDataOAuth1s IntegrationDataOAuth1s_pkey; Type: CONSTRAINT; Schema: public; Owner: testuser
+-- Name: IntegrationDataOAuth1 IntegrationDataOAuth1_pkey; Type: CONSTRAINT; Schema: public; Owner: testuser
 --
 
-ALTER TABLE ONLY public."IntegrationDataOAuth1s"
-    ADD CONSTRAINT "IntegrationDataOAuth1s_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public."IntegrationDataOAuth1"
+    ADD CONSTRAINT "IntegrationDataOAuth1_pkey" PRIMARY KEY (id);
 
 
 --
@@ -3054,7 +3054,7 @@ ALTER TABLE ONLY public."VisibilityUsers"
 --
 
 ALTER TABLE ONLY public."ZoteroIntegrations"
-    ADD CONSTRAINT "ZoteroIntegrations_integrationDataOAuth1Id_fkey" FOREIGN KEY ("integrationDataOAuth1Id") REFERENCES public."IntegrationDataOAuth1s"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "ZoteroIntegrations_integrationDataOAuth1Id_fkey" FOREIGN KEY ("integrationDataOAuth1Id") REFERENCES public."IntegrationDataOAuth1"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
