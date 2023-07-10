@@ -24,6 +24,8 @@ import {
 	ScopeSummary,
 	Community,
 } from '../models';
+import { CollectionKind, ReadNextPreviewSize } from 'types';
+import { CollectionLayout } from 'utils/layout';
 
 @Table
 export class Collection extends Model<
@@ -60,23 +62,26 @@ export class Collection extends Model<
 	@Column(DataType.STRING)
 	editHash?: string | null;
 
+	// TODO: Add validation for this field
 	@Column(DataType.JSONB)
-	metadata?: object | null;
+	metadata?: Record<string, any> | null;
 
+	// TODO: Add validation for this field
 	@Column(DataType.TEXT)
-	kind?: string | null;
+	kind?: CollectionKind | null;
 
 	@Column(DataType.TEXT)
 	doi?: string | null;
 
 	@Default('choose-best')
 	@Column(DataType.ENUM('none', 'minimal', 'medium', 'choose-best'))
-	readNextPreviewSize?: CreationOptional<string | null>;
+	readNextPreviewSize?: CreationOptional<ReadNextPreviewSize | null>;
 
+	// TODO: Add validation for this field
 	@AllowNull(false)
 	@Default({})
 	@Column(DataType.JSONB)
-	layout!: CreationOptional<object>;
+	layout!: CreationOptional<CollectionLayout>;
 
 	@AllowNull(false)
 	@Default(false)

@@ -10,6 +10,7 @@ import {
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User, Collection } from '../models';
+import { MinimalUser } from 'types';
 
 @Table
 export class CollectionAttribution extends Model<
@@ -36,8 +37,9 @@ export class CollectionAttribution extends Model<
 	@Column(DataType.BOOLEAN)
 	isAuthor?: boolean | null;
 
+	// TODO: Add validation for roles
 	@Column(DataType.JSONB)
-	roles?: object | null;
+	roles?: string[] | null;
 
 	@Column(DataType.TEXT)
 	affiliation?: string | null;
@@ -53,7 +55,7 @@ export class CollectionAttribution extends Model<
 	collectionId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	user?: User;
+	user?: MinimalUser;
 
 	@BelongsTo(() => Collection, {
 		onDelete: 'CASCADE',

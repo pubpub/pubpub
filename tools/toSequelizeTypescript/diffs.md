@@ -4,7 +4,7 @@
 ```diff
 id: string
 - kind: "community-created" | "community-updated" | "collection-created" | "collection-updated" | "collection-removed" | "collection-pub-created" | "collection-pub-removed" | "facet-instance-updated" | ... 16 more ... | "submission-status-updated"
-+ kind: string
++ kind: ActivityItemKind
 - pubId?: string
 + pubId?: string | null
 - payload: any
@@ -45,15 +45,15 @@ slug: string
 - editHash?: string
 + editHash?: string | null
 - metadata?: { [k: string]: any
-+ metadata?: object | null
-- kind: "tag" | "issue" | "book" | "conference"
-+ kind?: string | null
++ metadata?: Record<string, any> | null
+- kind: CollectionKind
++ kind?: any | null
 - doi?: string
 + doi?: string | null
-- readNextPreviewSize: "none" | "minimal" | "medium" | "choose-best"
-+ readNextPreviewSize?: string
+- readNextPreviewSize: ReadNextPreviewSize
++ readNextPreviewSize?: any
 - layout: CollectionLayout
-+ layout: object
++ layout: any
 - layoutAllowsDuplicatePubs: boolean
 + layoutAllowsDuplicatePubs: CreationOptional<boolean>
 pageId?: string | null
@@ -97,7 +97,7 @@ id: string
 - isAuthor?: boolean
 + isAuthor?: boolean | null
 - roles?: string[]
-+ roles?: object | null
++ roles?: string[] | null
 - affiliation?: string
 + affiliation?: string | null
 - orcid?: string
@@ -105,8 +105,7 @@ id: string
 - userId?: string
 + userId?: string | null
 collectionId: string
-- user?: MinimalUser
-+ user?: User
+user?: MinimalUser
 + collection?: Collection
 - createdAt: string
 + createdAt?: any
@@ -180,9 +179,9 @@ title: string
 - headerLogo?: string
 + headerLogo?: string | null
 - headerLinks?: CommunityHeaderLink[]
-+ headerLinks?: object | null
++ headerLinks?: CommunityHeaderLink[] | null
 - headerColorType?: "light" | "dark" | "custom"
-+ headerColorType?: string
++ headerColorType?: CreationOptional<"light" | "dark" | "custom">
 - useHeaderTextAccent?: boolean
 + useHeaderTextAccent?: boolean | null
 - hideHero?: boolean
@@ -206,18 +205,18 @@ title: string
 - heroText?: string
 + heroText?: string | null
 - heroPrimaryButton?: CommunityHeroButton
-+ heroPrimaryButton?: object | null
++ heroPrimaryButton?: any | null
 - heroSecondaryButton?: CommunityHeroButton
-+ heroSecondaryButton?: object | null
++ heroSecondaryButton?: any | null
 - heroAlign?: string
 + heroAlign?: string | null
 - navigation: CommunityNavigationEntry[]
-+ navigation?: object | null
++ navigation?: CommunityNavigationEntry[] | null
 - hideNav?: boolean
 + hideNav?: boolean | null
-+ navLinks?: object | null
++ navLinks?: CommunityNavigationEntry[] | null
 - footerLinks?: CommunityNavigationEntry[]
-+ footerLinks?: object | null
++ footerLinks?: CommunityNavigationEntry[] | null
 - footerLogoLink?: string
 + footerLogoLink?: string | null
 - footerTitle?: string
@@ -243,7 +242,7 @@ title: string
 - premiumLicenseFlag?: boolean
 + premiumLicenseFlag?: CreationOptional<boolean>
 - defaultPubCollections: string[]
-+ defaultPubCollections?: object | null
++ defaultPubCollections?: string[] | null
 - spamTagId: string | null
 + spamTagId?: string | null
 - organizationId?: string
@@ -258,12 +257,12 @@ depositTargets?: DepositTarget[]
 scopeSummary?: ScopeSummary
 - spamTag?: SpamTag | null
 + spamTag?: SpamTag
+accentTextColor: string
 - createdAt: string
 + createdAt?: any
 + updatedAt?: any
 + deletedAt?: any
 + version?: any
-- accentTextColor: string
 ```
 
 
@@ -293,7 +292,7 @@ id: string
 - doiPrefix: string
 + doiPrefix?: string | null
 - service: "crossref" | "datacite"
-+ service?: string
++ service?: CreationOptional<"crossref" | "datacite">
 - username: string
 + username?: string | null
 - password: string
@@ -304,7 +303,6 @@ id: string
 + updatedAt?: any
 + deletedAt?: any
 + version?: any
-- isPubPubManaged?: boolean
 ```
 
 
@@ -353,9 +351,9 @@ isOriginal: boolean
 discussionId: string
 historyKey: number
 - selection: { type: "text"
-+ selection?: { head: number
-+ type: "text"
++ selection?: { type: "text"
 anchor: number
+head: number
 originalText: string
 originalTextPrefix: string
 originalTextSuffix: string
@@ -363,7 +361,6 @@ originalTextSuffix: string
 + updatedAt?: any
 + deletedAt?: any
 + version?: any
-- head: number
 ```
 
 
@@ -373,8 +370,7 @@ originalTextSuffix: string
 
 ```diff
 id: string
-- content: DocJson
-+ content: object
+content: DocJson
 - createdAt: string
 + createdAt?: any
 - updatedAt: string
@@ -409,8 +405,7 @@ id: string
 format: string
 - url?: string
 + url?: string | null
-- historyKey: string
-+ historyKey: number
+historyKey: number
 + pubId: string
 - workerTaskId?: string
 + workerTaskId?: string | null
@@ -431,7 +426,7 @@ id: string
 title: string
 url: string
 - contributors?: string[]
-+ contributors?: object | null
++ contributors?: string[] | null
 - doi?: string
 + doi?: string | null
 - description?: string
@@ -516,7 +511,9 @@ community?: Community
 
 ```diff
 id: string
+- zoteroUsername: string
 + zoteroUsername?: string | null
+- zoteroUserId: string
 + zoteroUserId?: string | null
 - userId: string
 + userId?: string | null
@@ -528,8 +525,6 @@ id: string
 + updatedAt?: any
 + deletedAt?: any
 + version?: any
-- externalUsername: string
-- externalUserId: string
 ```
 
 
@@ -563,7 +558,7 @@ id: string
 + pubId?: string | null
 rank: string
 - payload: Record<string, any> | null
-+ payload?: object | null
++ payload?: Record<string, any> | null
 - pub?: any | null
 + pub?: Pub
 - community?: any | null
@@ -584,7 +579,7 @@ rank: string
 ```diff
 id: string
 - permissions: MemberPermission
-+ permissions?: string
++ permissions?: any
 - isOwner?: boolean
 + isOwner?: boolean | null
 - subscribedToActivityDigest: boolean
@@ -662,9 +657,9 @@ title: string
 - doi: string | null
 + doi?: string | null
 - labels?: string[]
-+ labels?: object | null
++ labels?: string[] | null
 - downloads?: any[]
-+ downloads?: object | null
++ downloads?: any[] | null
 - metadata?: {}
 + metadata?: object | null
 - viewHash?: string
@@ -696,9 +691,9 @@ members?: Member[]
 + releases?: Release[]
 pubVersions?: PubVersion[]
 - outboundEdges?: OutboundEdge[]
-+ outboundEdges?: PubEdge[]
++ outboundEdges?: Omit<PubEdge, "pub">[]
 - inboundEdges?: InboundEdge[]
-+ inboundEdges?: PubEdge[]
++ inboundEdges?: Omit<PubEdge, "targetPub">[]
 submission?: Submission
 - crossrefDepositRecord?: DepositRecord
 + crossrefDepositRecord?: CrossrefDepositRecord
@@ -730,7 +725,7 @@ id: string
 - isAuthor?: boolean
 + isAuthor?: boolean | null
 - roles?: string[]
-+ roles?: object | null
++ roles?: string[] | null
 - affiliation?: string
 + affiliation?: string | null
 - orcid?: string
@@ -799,7 +794,7 @@ id: string
 ```diff
 id: string
 - noteContent?: {}
-+ noteContent?: object | null
++ noteContent?: Record<string, any> | null
 - noteText?: string
 + noteText?: string | null
 pubId: string
@@ -865,11 +860,11 @@ submissionWorkflow?: SubmissionWorkflow
 ```diff
 id: string
 - status: SpamStatus
-+ status: string
++ status: any
 - statusUpdatedAt: string | null
 + statusUpdatedAt?: Date | null
 - fields: Record<string, string[]>
-+ fields: object
++ fields: Record<string, any>
 spamScore: number
 - spamScoreComputedAt: string
 + spamScoreComputedAt: Date
@@ -894,16 +889,11 @@ title: string
 enabled: boolean
 - instructionsText: DocJson
 + instructionsText: object
-- acceptedText: DocJson
-+ acceptedText: object
-- declinedText: DocJson
-+ declinedText: object
-- receivedEmailText: DocJson
-+ receivedEmailText: object
-- introText: DocJson
-+ introText: object
-- targetEmailAddresses: string[]
-+ targetEmailAddresses: object
+acceptedText: DocJson
+declinedText: DocJson
+receivedEmailText: DocJson
+introText: DocJson
+targetEmailAddresses: string[]
 - requireAbstract: boolean
 + requireAbstract: CreationOptional<boolean>
 - requireDescription: boolean
@@ -966,7 +956,7 @@ id: string
 - text: string
 + text?: string | null
 - content: DocJson
-+ content?: object | null
++ content?: any | null
 - userId: string | null
 + userId?: string | null
 threadId: string
@@ -994,7 +984,7 @@ id: string
 - type?: string
 + type?: string | null
 - data?: {}
-+ data?: object | null
++ data?: Record<string, any> | null
 userId: string
 threadId: string
 + user?: User
@@ -1055,6 +1045,9 @@ salt: string
 + gdprConsent?: CreationOptional<boolean>
 - isSuperAdmin: boolean
 + isSuperAdmin: CreationOptional<boolean>
+isShadowUser?: boolean
+feedback?: string
+sha3hashedPassword: string
 + attributions?: PubAttribution[]
 + discussions?: Discussion[]
 + userNotificationPreferences?: UserNotificationPreferences
@@ -1063,9 +1056,6 @@ salt: string
 + updatedAt?: any
 + deletedAt?: any
 + version?: any
-- isShadowUser?: boolean
-- feedback?: string
-- sha3hashedPassword: string
 ```
 
 
@@ -1113,7 +1103,7 @@ userId: string
 + subscribeToPubsAsContributor: CreationOptional<boolean>
 notificationCadence: number
 - markReadTrigger: UserNotificationMarkReadTrigger
-+ markReadTrigger: string
++ markReadTrigger: any
 - createdAt: string
 + createdAt?: any
 - updatedAt: string
@@ -1152,8 +1142,7 @@ id: string
 ```diff
 id: string
 setAutomatically: boolean
-- status: UserSubscriptionStatus
-+ status: string
+status: UserSubscriptionStatus
 userId: string
 - pubId: string | null
 + pubId?: string | null
@@ -1178,9 +1167,9 @@ userId: string
 ```diff
 id: string
 - access: VisibilityAccess
-+ access?: string
++ access?: any
 - users: VisibilityUser[]
-+ users?: User[]
++ users?: VisibilityUser[]
 + createdAt?: any
 + updatedAt?: any
 + deletedAt?: any

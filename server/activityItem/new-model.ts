@@ -9,7 +9,7 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { ActivityItemPayload } from 'types';
+import { ActivityItemKind, ActivityItemPayload } from 'types';
 
 @Table
 export class ActivityItem extends Model<
@@ -23,7 +23,7 @@ export class ActivityItem extends Model<
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
-	kind!: string;
+	kind!: ActivityItemKind;
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)

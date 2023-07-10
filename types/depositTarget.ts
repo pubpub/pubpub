@@ -6,5 +6,4 @@ export type DepositTarget = {
 	username: string;
 	password: string;
 	passwordInitVec: string;
-	isPubPubManaged?: boolean;
 };

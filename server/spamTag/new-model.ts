@@ -8,6 +8,7 @@ import {
 	AllowNull,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { SpamStatus } from 'types';
 
 @Table
 export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttributes<SpamTag>> {
@@ -16,17 +17,41 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
+	// TODO: this should probably be an enum
 	@AllowNull(false)
 	@Default('unreviewed')
 	@Column(DataType.STRING)
-	status!: CreationOptional<string>;
+	status!: CreationOptional<SpamStatus>;
 
 	@Column(DataType.DATE)
 	statusUpdatedAt?: Date | null;
 
+	/**
+	 * TODO: add validation and better type for fields
+	 * Should probably be
+	 * {
+  heroText: [
+    "casino"
+  ],
+  description?: [
+    "casino"
+  ]
+} | 
+	{
+  title: [
+    "buy"
+  ],
+  heroTitle?: [
+    "buy"
+  ],
+  subdomain?: [
+    "buy"
+  ]
+}
+	 */
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	fields!: object;
+	fields!: Record<string, any>;
 
 	@AllowNull(false)
 	@Column(DataType.DOUBLE)

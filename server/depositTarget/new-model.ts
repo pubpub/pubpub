@@ -19,7 +19,7 @@ export class DepositTarget extends Model<
 
 	@Default('crossref')
 	@Column(DataType.ENUM('crossref', 'datacite'))
-	service?: CreationOptional<string | null>;
+	service?: CreationOptional<'crossref' | 'datacite' | null>;
 
 	@Column(DataType.STRING)
 	username?: string | null;

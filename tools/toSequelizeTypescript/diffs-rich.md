@@ -4,7 +4,7 @@
 <pre>
 {
   id: string
-  kind: <del style="background:red">"community-created" | "community-updated" | "collection-created" | "collection-updated" | "collection-removed" | "collection-pub-created" | "collection-pub-removed" | "facet-instance-updated" | ... 16 more ... | "submission-status-updated"</del><ins style="background:green">string</ins>
+  kind: <del style="background:red">"community-created" | "community-updated" | "collection-created" | "collection-updated" | "collection-removed" | "collection-pub-created" | "collection-pub-removed" | "facet-instance-updated" | ... 16 more ... | "submission-status-updated"</del><ins style="background:green">ActivityItemKind</ins>
   pubId?: string<ins style="background:green"> | null</ins>
   payload<del style="background:red">:</del><ins style="background:green">?:</ins> any<ins style="background:green"> | null</ins>
   timestamp: <del style="background:red">string</del><ins style="background:green">Date</ins>
@@ -33,11 +33,11 @@
   isPublic<del style="background:red">:</del><ins style="background:green">?:</ins> boolean<ins style="background:green"> | null</ins>
   viewHash?: string<ins style="background:green"> | null</ins>
   editHash?: string<ins style="background:green"> | null</ins>
-  metadata?: <del style="background:red">{</del><ins style="background:green">object</ins> <del style="background:red">[k:</del><ins style="background:green">|</ins> <del style="background:red">string]: any</del><ins style="background:green">null</ins>
-  kind<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">"tag"</del><ins style="background:green">string</ins> | <del style="background:red">"issue" | "book" | "conference"</del><ins style="background:green">null</ins>
+  metadata?: <del style="background:red">{</del><ins style="background:green">Record<string,</ins> <del style="background:red">[k:</del><ins style="background:green">any></ins> <del style="background:red">string]:</del><ins style="background:green">|</ins> <del style="background:red">any</del><ins style="background:green">null</ins>
+  kind<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">CollectionKind</del><ins style="background:green">any | null</ins>
   doi?: string<ins style="background:green"> | null</ins>
-  readNextPreviewSize<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">"none" | "minimal" | "medium" | "choose-best"</del><ins style="background:green">string</ins>
-  layout: <del style="background:red">CollectionLayout</del><ins style="background:green">object</ins>
+  readNextPreviewSize<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">ReadNextPreviewSize</del><ins style="background:green">any</ins>
+  layout: <del style="background:red">CollectionLayout</del><ins style="background:green">any</ins>
   layoutAllowsDuplicatePubs: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
   pageId?: string | null
   communityId<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
@@ -71,12 +71,12 @@
   title?: string<ins style="background:green"> | null</ins>
   order<del style="background:red">:</del><ins style="background:green">?:</ins> number<ins style="background:green"> | null</ins>
   isAuthor?: boolean<ins style="background:green"> | null</ins>
-  roles?: <del style="background:red">string[]</del><ins style="background:green">object | null</ins>
+  roles?: string[]<ins style="background:green"> | null</ins>
   affiliation?: string<ins style="background:green"> | null</ins>
   orcid?: string<ins style="background:green"> | null</ins>
   userId?: string<ins style="background:green"> | null</ins>
   collectionId: string
-  user?: <del style="background:red">MinimalUser</del><ins style="background:green">User</ins>
+  user?: MinimalUser
   <ins style="background:green">collection?: Collection</ins>
   createdAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">any</ins>
   <ins style="background:green">updatedAt?: any</ins>
@@ -143,8 +143,8 @@
   accentColorDark<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   hideCreatePubButton?: boolean<ins style="background:green"> | null</ins>
   headerLogo?: string<ins style="background:green"> | null</ins>
-  headerLinks?: <del style="background:red">CommunityHeaderLink[]</del><ins style="background:green">object | null</ins>
-  headerColorType?: <del style="background:red">"light" | "dark" | "custom"</del><ins style="background:green">string</ins>
+  headerLinks?: CommunityHeaderLink[]<ins style="background:green"> | null</ins>
+  headerColorType?: <ins style="background:green">CreationOptional<</ins>"light" | "dark" | "custom"<ins style="background:green">></ins>
   useHeaderTextAccent?: boolean<ins style="background:green"> | null</ins>
   hideHero?: boolean<ins style="background:green"> | null</ins>
   hideHeaderLogo?: boolean<ins style="background:green"> | null</ins>
@@ -156,13 +156,13 @@
   heroImage?: string<ins style="background:green"> | null</ins>
   heroTitle?: string<ins style="background:green"> | null</ins>
   heroText?: string<ins style="background:green"> | null</ins>
-  heroPrimaryButton?: <del style="background:red">CommunityHeroButton</del><ins style="background:green">object | null</ins>
-  heroSecondaryButton?: <del style="background:red">CommunityHeroButton</del><ins style="background:green">object | null</ins>
+  heroPrimaryButton?: <del style="background:red">CommunityHeroButton</del><ins style="background:green">any | null</ins>
+  heroSecondaryButton?: <del style="background:red">CommunityHeroButton</del><ins style="background:green">any | null</ins>
   heroAlign?: string<ins style="background:green"> | null</ins>
-  navigation<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">CommunityNavigationEntry[]</del><ins style="background:green">object | null</ins>
+  navigation<del style="background:red">:</del><ins style="background:green">?:</ins> CommunityNavigationEntry[]<ins style="background:green"> | null</ins>
   hideNav?: boolean<ins style="background:green"> | null</ins>
-  <ins style="background:green">navLinks?: object | null</ins>
-  footerLinks?: <del style="background:red">CommunityNavigationEntry[]</del><ins style="background:green">object | null</ins>
+  <ins style="background:green">navLinks?: CommunityNavigationEntry[] | null</ins>
+  footerLinks?: CommunityNavigationEntry[]<ins style="background:green"> | null</ins>
   footerLogoLink?: string<ins style="background:green"> | null</ins>
   footerTitle?: string<ins style="background:green"> | null</ins>
   footerImage?: string<ins style="background:green"> | null</ins>
@@ -175,7 +175,7 @@
   viewHash?: string<ins style="background:green"> | null</ins>
   editHash?: string<ins style="background:green"> | null</ins>
   premiumLicenseFlag?: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
-  defaultPubCollections<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string[]</del><ins style="background:green">object | null</ins>
+  defaultPubCollections<del style="background:red">:</del><ins style="background:green">?:</ins> string[]<ins style="background:green"> | null</ins>
   spamTagId<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
   organizationId?: string<ins style="background:green"> | null</ins>
   scopeSummaryId<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
@@ -186,11 +186,11 @@
   depositTargets?: DepositTarget[]
   scopeSummary?: ScopeSummary
   spamTag?: SpamTag<del style="background:red"> | null</del>
+  accentTextColor: string
   createdAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">any</ins>
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>
   <ins style="background:green">version?: any</ins>
-  <del style="background: red">accentTextColor: string</del>
 }</pre>
 
 
@@ -220,7 +220,7 @@
   id: string
   communityId<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   doiPrefix<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
-  service<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">"crossref" | "datacite"</del><ins style="background:green">string</ins>
+  service<del style="background:red">:</del><ins style="background:green">?:</ins> <ins style="background:green">CreationOptional<</ins>"crossref" | "datacite"<ins style="background:green">></ins>
   username<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   password<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   passwordInitVec<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
@@ -228,7 +228,6 @@
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>
   <ins style="background:green">version?: any</ins>
-  <del style="background: red">isPubPubManaged?: boolean</del>
 }</pre>
 
 
@@ -274,9 +273,9 @@
   isOriginal: boolean
   discussionId: string
   historyKey: number
-  selection<del style="background:red">:</del><ins style="background:green">?:</ins> { <del style="background:red">type</del><ins style="background:green">head</ins>: <del style="background:red">"text"</del><ins style="background:green">number</ins>
-  <ins style="background:green">type: "text"</ins>
+  selection<del style="background:red">:</del><ins style="background:green">?:</ins> { type: "text"
   anchor: number
+  head: number
   originalText: string
   originalTextPrefix: string
   originalTextSuffix: string
@@ -284,7 +283,6 @@
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>
   <ins style="background:green">version?: any</ins>
-  <del style="background: red">head: number</del>
 }</pre>
 
 
@@ -296,7 +294,7 @@
 <pre>
 {
   id: string
-  content: <del style="background:red">DocJson</del><ins style="background:green">object</ins>
+  content: DocJson
   createdAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">any</ins>
   updatedAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">any</ins>
   <ins style="background:green">deletedAt?: any</ins>
@@ -331,7 +329,7 @@
   id: string
   format: string
   url?: string<ins style="background:green"> | null</ins>
-  historyKey: <del style="background:red">string</del><ins style="background:green">number</ins>
+  historyKey: number
   <ins style="background:green">pubId: string</ins>
   workerTaskId?: string<ins style="background:green"> | null</ins>
   <ins style="background:green">workerTask?: WorkerTask</ins>
@@ -352,7 +350,7 @@
   id: string
   title: string
   url: string
-  contributors?: <del style="background:red">string[]</del><ins style="background:green">object | null</ins>
+  contributors?: string[]<ins style="background:green"> | null</ins>
   doi?: string<ins style="background:green"> | null</ins>
   description?: string<ins style="background:green"> | null</ins>
   avatar?: string<ins style="background:green"> | null</ins>
@@ -432,8 +430,8 @@
 <pre>
 {
   id: string
-  <ins style="background:green">zoteroUsername?: string | null</ins>
-  <ins style="background:green">zoteroUserId?: string | null</ins>
+  zoteroUsername<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
+  zoteroUserId<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   userId<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   integrationDataOAuth1Id<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   <ins style="background:green">user?: User</ins>
@@ -442,8 +440,6 @@
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>
   <ins style="background:green">version?: any</ins>
-  <del style="background: red">externalUsername: string</del>
-  <del style="background: red">externalUserId: string</del>
 }</pre>
 
 
@@ -477,7 +473,7 @@
   communityId<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
   pubId<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
   rank: string
-  payload<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">Record<string,</del><ins style="background:green">object</ins> <del style="background:red">any> </del>| null
+  payload<del style="background:red">:</del><ins style="background:green">?:</ins> Record<string, any> | null
   pub?: <del style="background:red">any | null</del><ins style="background:green">Pub</ins>
   community?: <del style="background:red">any | null</del><ins style="background:green">Community</ins>
   createdAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">any</ins>
@@ -495,7 +491,7 @@
 <pre>
 {
   id: string
-  permissions<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">MemberPermission</del><ins style="background:green">string</ins>
+  permissions<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">MemberPermission</del><ins style="background:green">any</ins>
   isOwner?: boolean<ins style="background:green"> | null</ins>
   subscribedToActivityDigest: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
   userId: string
@@ -556,8 +552,8 @@
   avatar?: string<ins style="background:green"> | null</ins>
   customPublishedAt?: <del style="background:red">string</del><ins style="background:green">Date | null</ins>
   doi<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
-  labels?: <del style="background:red">string[]</del><ins style="background:green">object | null</ins>
-  downloads?: <del style="background:red">any[]</del><ins style="background:green">object | null</ins>
+  labels?: string[]<ins style="background:green"> | null</ins>
+  downloads?: any[]<ins style="background:green"> | null</ins>
   metadata?: <del style="background:red">{}</del><ins style="background:green">object | null</ins>
   viewHash?: string<ins style="background:green"> | null</ins>
   editHash?: string<ins style="background:green"> | null</ins>
@@ -577,8 +573,8 @@
   members?: Member[]
   releases<del style="background:red">:</del><ins style="background:green">?:</ins> Release[]
   pubVersions?: PubVersion[]
-  outboundEdges?: <del style="background:red">OutboundEdge</del><ins style="background:green">PubEdge</ins>[]
-  inboundEdges?: <del style="background:red">InboundEdge</del><ins style="background:green">PubEdge</ins>[]
+  outboundEdges?: <del style="background:red">OutboundEdge</del><ins style="background:green">Omit<PubEdge, "pub"></ins>[]
+  inboundEdges?: <del style="background:red">InboundEdge</del><ins style="background:green">Omit<PubEdge, "targetPub"></ins>[]
   submission?: Submission
   crossrefDepositRecord?: <del style="background:red">DepositRecord</del><ins style="background:green">CrossrefDepositRecord</ins>
   scopeSummary<del style="background:red">:</del><ins style="background:green">?:</ins> ScopeSummary
@@ -602,7 +598,7 @@
   title?: string<ins style="background:green"> | null</ins>
   order<del style="background:red">:</del><ins style="background:green">?:</ins> number<ins style="background:green"> | null</ins>
   isAuthor?: boolean<ins style="background:green"> | null</ins>
-  roles?: <del style="background:red">string[]</del><ins style="background:green">object | null</ins>
+  roles?: string[]<ins style="background:green"> | null</ins>
   affiliation?: string<ins style="background:green"> | null</ins>
   orcid?: string<ins style="background:green"> | null</ins>
   userId?: string<ins style="background:green"> | null</ins>
@@ -667,7 +663,7 @@
 <pre>
 {
   id: string
-  noteContent?: <del style="background:red">{}</del><ins style="background:green">object | null</ins>
+  noteContent?: <del style="background:red">{}</del><ins style="background:green">Record<string, any> | null</ins>
   noteText?: string<ins style="background:green"> | null</ins>
   pubId: string
   userId: string
@@ -732,9 +728,9 @@
 <pre>
 {
   id: string
-  status: <del style="background:red">SpamStatus</del><ins style="background:green">string</ins>
+  status: <del style="background:red">SpamStatus</del><ins style="background:green">any</ins>
   statusUpdatedAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">Date</ins> | null
-  fields: <del style="background:red">Record<string, string[]></del><ins style="background:green">object</ins>
+  fields: Record<string, <del style="background:red">string[]</del><ins style="background:green">any</ins>>
   spamScore: number
   spamScoreComputedAt: <del style="background:red">string</del><ins style="background:green">Date</ins>
   spamScoreVersion<del style="background:red">:</del><ins style="background:green">?:</ins> number
@@ -757,11 +753,11 @@
   collectionId<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   enabled: boolean
   instructionsText: <del style="background:red">DocJson</del><ins style="background:green">object</ins>
-  acceptedText: <del style="background:red">DocJson</del><ins style="background:green">object</ins>
-  declinedText: <del style="background:red">DocJson</del><ins style="background:green">object</ins>
-  receivedEmailText: <del style="background:red">DocJson</del><ins style="background:green">object</ins>
-  introText: <del style="background:red">DocJson</del><ins style="background:green">object</ins>
-  targetEmailAddresses: <del style="background:red">string[]</del><ins style="background:green">object</ins>
+  acceptedText: DocJson
+  declinedText: DocJson
+  receivedEmailText: DocJson
+  introText: DocJson
+  targetEmailAddresses: string[]
   requireAbstract: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
   requireDescription: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
   <ins style="background:green">submissions?: Submission[]</ins>
@@ -819,7 +815,7 @@
 {
   id: string
   text<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
-  content<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">DocJson</del><ins style="background:green">object | null</ins>
+  content<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">DocJson</del><ins style="background:green">any | null</ins>
   userId<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
   threadId: string
   commenterId<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
@@ -841,7 +837,7 @@
 {
   id: string
   type?: string<ins style="background:green"> | null</ins>
-  data?: <del style="background:red">{}</del><ins style="background:green">object | null</ins>
+  data?: <del style="background:red">{}</del><ins style="background:green">Record<string, any> | null</ins>
   userId: string
   threadId: string
   <ins style="background:green">user?: User</ins>
@@ -887,6 +883,9 @@
   salt: string
   <ins style="background:green">gdprConsent?: CreationOptional<boolean></ins>
   isSuperAdmin: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
+  isShadowUser?: boolean
+  feedback?: string
+  sha3hashedPassword: string
   <ins style="background:green">attributions?: PubAttribution[]</ins>
   <ins style="background:green">discussions?: Discussion[]</ins>
   <ins style="background:green">userNotificationPreferences?: UserNotificationPreferences</ins>
@@ -895,9 +894,6 @@
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>
   <ins style="background:green">version?: any</ins>
-  <del style="background: red">isShadowUser?: boolean</del>
-  <del style="background: red">feedback?: string</del>
-  <del style="background: red">sha3hashedPassword: string</del>
 }</pre>
 
 
@@ -939,7 +935,7 @@
   subscribeToPubsAsMember: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
   subscribeToPubsAsContributor: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
   notificationCadence: number
-  markReadTrigger: <del style="background:red">UserNotificationMarkReadTrigger</del><ins style="background:green">string</ins>
+  markReadTrigger: <del style="background:red">UserNotificationMarkReadTrigger</del><ins style="background:green">any</ins>
   createdAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">any</ins>
   updatedAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">any</ins>
   <ins style="background:green">deletedAt?: any</ins>
@@ -975,7 +971,7 @@
 {
   id: string
   setAutomatically: boolean
-  status: <del style="background:red">UserSubscriptionStatus</del><ins style="background:green">string</ins>
+  status: UserSubscriptionStatus
   userId: string
   pubId<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
   threadId<del style="background:red">:</del><ins style="background:green">?:</ins> string | null
@@ -997,8 +993,8 @@
 <pre>
 {
   id: string
-  access<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">VisibilityAccess</del><ins style="background:green">string</ins>
-  users<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">VisibilityUser</del><ins style="background:green">User</ins>[]
+  access<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">VisibilityAccess</del><ins style="background:green">any</ins>
+  users<del style="background:red">:</del><ins style="background:green">?:</ins> VisibilityUser[]
   <ins style="background:green">createdAt?: any</ins>
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>

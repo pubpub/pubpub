@@ -9,6 +9,7 @@ import {
 	AllowNull,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { UserNotificationMarkReadTrigger } from 'types';
 
 @Table
 export class UserNotificationPreferences extends Model<
@@ -53,8 +54,9 @@ export class UserNotificationPreferences extends Model<
 	@Column(DataType.INTEGER)
 	notificationCadence!: CreationOptional<number>;
 
+	// TODO: Add validation for this, or make enum
 	@AllowNull(false)
 	@Default('clicked-through')
 	@Column(DataType.STRING)
-	markReadTrigger!: CreationOptional<string>;
+	markReadTrigger!: CreationOptional<UserNotificationMarkReadTrigger>;
 }

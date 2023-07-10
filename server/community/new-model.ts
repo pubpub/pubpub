@@ -23,6 +23,8 @@ import {
 	ScopeSummary,
 	SpamTag,
 } from '../models';
+import { CommunityHeaderLink, CommunityHeroButton } from 'types';
+import { CommunityNavigationEntry } from 'client/utils/navigation';
 
 @Table
 export class Community extends Model<
@@ -78,12 +80,13 @@ export class Community extends Model<
 	@Column(DataType.TEXT)
 	headerLogo?: string | null;
 
+	// TODO: Add validation for headerLinks
 	@Column(DataType.JSONB)
-	headerLinks?: object | null;
+	headerLinks?: CommunityHeaderLink[] | null;
 
 	@Default('dark')
 	@Column(DataType.ENUM('light', 'dark', 'custom'))
-	headerColorType?: CreationOptional<string | null>;
+	headerColorType?: CreationOptional<'light' | 'dark' | 'custom' | null>;
 
 	@Column(DataType.BOOLEAN)
 	useHeaderTextAccent?: boolean | null;
@@ -118,26 +121,31 @@ export class Community extends Model<
 	@Column(DataType.TEXT)
 	heroText?: string | null;
 
+	// TODO: Add validation for heroPrimaryButton
 	@Column(DataType.JSONB)
-	heroPrimaryButton?: object | null;
+	heroPrimaryButton?: CommunityHeroButton | null;
 
+	// TODO: Add validation for heroSecondaryButton
 	@Column(DataType.JSONB)
-	heroSecondaryButton?: object | null;
+	heroSecondaryButton?: CommunityHeroButton | null;
 
 	@Column(DataType.TEXT)
 	heroAlign?: string | null;
 
+	// TODO: Add validation for navigation
 	@Column(DataType.JSONB)
-	navigation?: object | null;
+	navigation?: CommunityNavigationEntry[] | null;
 
 	@Column(DataType.BOOLEAN)
 	hideNav?: boolean | null;
 
+	// TODO: Add validation for navLinks
 	@Column(DataType.JSONB)
-	navLinks?: object | null;
+	navLinks?: CommunityNavigationEntry[] | null;
 
+	// TODO: Add validation for footerLinks
 	@Column(DataType.JSONB)
-	footerLinks?: object | null;
+	footerLinks?: CommunityNavigationEntry[] | null;
 
 	@Column(DataType.TEXT)
 	footerLogoLink?: string | null;
@@ -176,8 +184,9 @@ export class Community extends Model<
 	@Column(DataType.BOOLEAN)
 	premiumLicenseFlag?: CreationOptional<boolean | null>;
 
+	// TODO: Add validation for defaultPubCollections
 	@Column(DataType.JSONB)
-	defaultPubCollections?: object | null;
+	defaultPubCollections?: string[] | null;
 
 	@Column(DataType.UUID)
 	spamTagId?: string | null;
@@ -224,4 +233,6 @@ export class Community extends Model<
 
 	@BelongsTo(() => SpamTag, { as: 'spamTag', foreignKey: 'spamTagId' })
 	spamTag?: SpamTag;
+
+	declare accentTextColor: CreationOptional<string>;
 }

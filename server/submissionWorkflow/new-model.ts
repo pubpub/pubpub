@@ -11,6 +11,8 @@ import {
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Submission, Collection } from '../models';
+import { DocJson } from 'types';
+import { Doc } from 'dist/server/server/doc/new-model';
 
 @Table
 export class SubmissionWorkflow extends Model<
@@ -37,26 +39,31 @@ export class SubmissionWorkflow extends Model<
 	@Column(DataType.JSONB)
 	instructionsText!: object;
 
+	// TODO: Add validation for this
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	acceptedText!: object;
+	acceptedText!: DocJson;
 
+	// TODO: Add validation for this
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	declinedText!: object;
+	declinedText!: DocJson;
 
+	// TODO: Add validation for this
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	receivedEmailText!: object;
+	receivedEmailText!: DocJson;
 
+	// TODO: Add validation for this
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	introText!: object;
+	introText!: DocJson;
 
+	// TODO: Add validation for this
 	@AllowNull(false)
 	@Default([])
 	@Column(DataType.JSONB)
-	targetEmailAddresses!: CreationOptional<object>;
+	targetEmailAddresses!: CreationOptional<string[]>;
 
 	@AllowNull(false)
 	@Default(false)

@@ -38,6 +38,10 @@ export class Submission extends Model<
 	@Column(DataType.UUID)
 	pubId!: string;
 
+	/**
+	 * TODO: add validation and better type for abstract
+	 * Should probably be DocJSON
+	 */
 	@Column(DataType.JSONB)
 	abstract?: object | null;
 

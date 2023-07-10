@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-dupe-class-members */
+/* eslint-disable lines-between-class-members */
 import {
 	Model,
 	Table,
@@ -15,7 +18,18 @@ import {
 	BelongsTo,
 	HasOne,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type {
+	InferAttributes,
+	InferCreationAttributes,
+	CreationOptional,
+	BuildOptions,
+	Logging,
+	Silent,
+	Transactionable,
+	Hookable,
+	TruncateOptions,
+	Paranoid,
+} from 'sequelize';
 import {
 	PubAttribution,
 	CollectionPub,
@@ -32,6 +46,29 @@ import {
 	CrossrefDepositRecord,
 	ScopeSummary,
 } from '../models';
+
+declare module 'sequelize' {
+	export interface CreateOptions<TAttributes = any>
+		extends BuildOptions,
+			Logging,
+			Silent,
+			Transactionable,
+			Hookable {
+		actorId?: string;
+	}
+
+	export interface DestroyOptions<TAttributes = any> extends TruncateOptions<TAttributes> {
+		actorId?: string;
+	}
+
+	export interface UpdateOptions<TAttributes = any>
+		extends Logging,
+			Transactionable,
+			Paranoid,
+			Hookable {
+		actorId?: string;
+	}
+}
 
 @Table
 export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
@@ -72,11 +109,21 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	@Column(DataType.TEXT)
 	doi?: string | null;
 
+	// TODO: add validation for labels
 	@Column(DataType.JSONB)
-	labels?: object | null;
+	labels?: string[] | null;
 
+	/**  TODO: add validation for downloads
+	// Should be something like
+ *   {
+    "url": "https://assets.pubpub.org/44k2vnvm/61595701771772.pdf",
+    "type": "formatted",
+    "branchId": null,
+    "createdAt": "2020-07-25T18:29:32.319Z"
+  }
+ */
 	@Column(DataType.JSONB)
-	downloads?: object | null;
+	downloads?: any[] | null;
 
 	@Column(DataType.JSONB)
 	metadata?: object | null;
@@ -144,10 +191,10 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	pubVersions?: PubVersion[];
 
 	@HasMany(() => PubEdge, { onDelete: 'CASCADE', as: 'outboundEdges', foreignKey: 'pubId' })
-	outboundEdges?: PubEdge[];
+	outboundEdges?: Omit<PubEdge, 'pub'>[];
 
 	@HasMany(() => PubEdge, { onDelete: 'CASCADE', as: 'inboundEdges', foreignKey: 'targetPubId' })
-	inboundEdges?: PubEdge[];
+	inboundEdges?: Omit<PubEdge, 'targetPub'>[];
 
 	@HasOne(() => Submission, { as: 'submission', foreignKey: 'pubId' })
 	submission?: Submission;

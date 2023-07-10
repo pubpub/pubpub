@@ -36,8 +36,9 @@ export class PubAttribution extends Model<
 	@Column(DataType.BOOLEAN)
 	isAuthor?: boolean | null;
 
+	// TODO: Add validation for roles
 	@Column(DataType.JSONB)
-	roles?: object | null;
+	roles?: string[] | null;
 
 	@Column(DataType.TEXT)
 	affiliation?: string | null;

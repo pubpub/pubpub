@@ -34,8 +34,9 @@ export class LandingPageFeature extends Model<
 	@Column(DataType.TEXT)
 	rank!: string;
 
+	// TODO: add validation for payload
 	@Column(DataType.JSONB)
-	payload?: object | null;
+	payload?: Record<string, any> | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;

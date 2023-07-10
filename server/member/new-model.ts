@@ -9,6 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { MemberPermission } from 'types';
 import { User, Community, Pub, Collection } from '../models';
 
 @Table
@@ -20,7 +21,7 @@ export class Member extends Model<InferAttributes<Member>, InferCreationAttribut
 
 	@Default('view')
 	@Column(DataType.ENUM('view', 'edit', 'manage', 'admin'))
-	permissions?: CreationOptional<string | null>;
+	permissions?: CreationOptional<MemberPermission | null>;
 
 	@Column(DataType.BOOLEAN)
 	isOwner?: boolean | null;

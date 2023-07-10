@@ -24,8 +24,9 @@ export class ThreadEvent extends Model<
 	@Column(DataType.STRING)
 	type?: string | null;
 
+	// TODO: Add validation for this
 	@Column(DataType.JSONB)
-	data?: object | null;
+	data?: Record<string, any> | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)

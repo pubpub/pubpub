@@ -18,8 +18,9 @@ export class Release extends Model<InferAttributes<Release>, InferCreationAttrib
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
+	// TODO: add validation for noteContent
 	@Column(DataType.JSONB)
-	noteContent?: object | null;
+	noteContent?: Record<string, any> | null;
 
 	@Column(DataType.TEXT)
 	noteText?: string | null;

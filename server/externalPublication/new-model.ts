@@ -27,8 +27,9 @@ export class ExternalPublication extends Model<
 	@Column(DataType.TEXT)
 	url!: string;
 
+	// TODO: add validation for contributors
 	@Column(DataType.JSONB)
-	contributors?: object | null;
+	contributors?: string[] | null;
 
 	@Column(DataType.TEXT)
 	doi?: string | null;

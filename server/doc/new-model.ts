@@ -8,6 +8,7 @@ import {
 	AllowNull,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { DocJson } from 'types';
 
 @Table
 export class Doc extends Model<InferAttributes<Doc>, InferCreationAttributes<Doc>> {
@@ -16,7 +17,8 @@ export class Doc extends Model<InferAttributes<Doc>, InferCreationAttributes<Doc
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
+	// TODO: add validation for content
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	content!: object;
+	content!: DocJson;
 }

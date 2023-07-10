@@ -10,6 +10,7 @@ import {
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User, Commenter } from '../models';
+import { DocJson } from 'types';
 
 @Table
 export class ThreadComment extends Model<
@@ -24,8 +25,9 @@ export class ThreadComment extends Model<
 	@Column(DataType.TEXT)
 	text?: string | null;
 
+	// TODO: Add validation for this
 	@Column(DataType.JSONB)
-	content?: object | null;
+	content?: DocJson | null;
 
 	@Column(DataType.UUID)
 	userId?: string | null;

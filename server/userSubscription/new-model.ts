@@ -10,6 +10,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { UserSubscriptionStatus } from 'types';
 import { Pub, Thread, User } from '../models';
 
 @Table
@@ -28,7 +29,7 @@ export class UserSubscription extends Model<
 
 	@AllowNull(false)
 	@Column(DataType.STRING)
-	status!: string;
+	status!: UserSubscriptionStatus;
 
 	@Index({ using: 'BTREE' })
 	@AllowNull(false)

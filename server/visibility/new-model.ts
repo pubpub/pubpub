@@ -8,6 +8,7 @@ import {
 	BelongsToMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { VisibilityAccess } from 'types';
 import { VisibilityUser, User } from '../models';
 
 @Table
@@ -22,12 +23,12 @@ export class Visibility extends Model<
 
 	@Default('private')
 	@Column(DataType.ENUM('private', 'members', 'public'))
-	access?: CreationOptional<string | null>;
+	access?: CreationOptional<VisibilityAccess | null>;
 
 	@BelongsToMany(() => User, {
 		as: 'users',
 		through: () => VisibilityUser,
 		foreignKey: 'visibilityId',
 	})
-	users?: User[];
+	users?: VisibilityUser[];
 }
