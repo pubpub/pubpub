@@ -215,7 +215,11 @@ export class Community extends Model<
 	})
 	depositTargets?: DepositTarget[];
 
-	@BelongsTo(() => ScopeSummary, { as: 'scopeSummary', foreignKey: 'scopeSummaryId' })
+	@BelongsTo(() => ScopeSummary, {
+		as: 'scopeSummary',
+		foreignKey: 'scopeSummaryId',
+		onDelete: 'SET NULL',
+	})
 	scopeSummary?: ScopeSummary;
 
 	@BelongsTo(() => SpamTag, { as: 'spamTag', foreignKey: 'spamTagId' })

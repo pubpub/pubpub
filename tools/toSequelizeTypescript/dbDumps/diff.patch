@@ -1,5 +1,5 @@
 --- sequelize_old.sql	2023-07-05 21:40:06.926984271 +0200
-+++ sequelize_typescript.sql	2023-07-10 13:40:45.597516784 +0200
++++ sequelize_typescript.sql	2023-07-10 18:59:28.934462580 +0200
 @@ -198,9 +198,9 @@
      "pageId" uuid,
      "communityId" uuid,
@@ -85,7 +85,7 @@
  
  COPY public."FeatureFlags" (id, name, "enabledUsersFraction", "enabledCommunitiesFraction", "createdAt", "updatedAt") FROM stdin;
 -959c82da-39c3-460b-8a69-7ac3a80d1db1	customScripts	0	0	2023-07-05 21:39:50.861+02	2023-07-05 21:39:50.861+02
-+b1318338-392c-4765-b108-7a200f512b40	customScripts	0	0	2023-07-10 13:40:42.99+02	2023-07-10 13:40:42.99+02
++b2012b56-49cc-460f-8a24-69e57039d892	customScripts	0	0	2023-07-10 18:59:25.785+02	2023-07-10 18:59:25.785+02
  \.
  
  
@@ -130,120 +130,12 @@
  
  
  --
-@@ -2260,6 +2259,27 @@
- 
- 
- --
-+-- Name: CollectionPub_collectionId_pubId; Type: INDEX; Schema: public; Owner: testuser
-+--
-+
-+CREATE UNIQUE INDEX "CollectionPub_collectionId_pubId" ON public."CollectionPubs" USING btree ("pubId", "collectionId");
-+
-+
-+--
-+-- Name: UserScopeVisit_userId_collectionId; Type: INDEX; Schema: public; Owner: testuser
-+--
-+
-+CREATE UNIQUE INDEX "UserScopeVisit_userId_collectionId" ON public."UserScopeVisits" USING btree ("userId", "collectionId");
-+
-+
-+--
-+-- Name: UserScopeVisit_userId_pubId; Type: INDEX; Schema: public; Owner: testuser
-+--
-+
-+CREATE UNIQUE INDEX "UserScopeVisit_userId_pubId" ON public."UserScopeVisits" USING btree ("userId", "pubId");
-+
-+
-+--
- -- Name: activity_items_actor_id; Type: INDEX; Schema: public; Owner: testuser
+@@ -2291,7 +2290,7 @@
+ -- Name: collection_pubs_collection_id_pub_id; Type: INDEX; Schema: public; Owner: testuser
  --
  
-@@ -2288,13 +2308,6 @@
- 
- 
- --
---- Name: collection_pubs_collection_id_pub_id; Type: INDEX; Schema: public; Owner: testuser
----
--
 -CREATE UNIQUE INDEX collection_pubs_collection_id_pub_id ON public."CollectionPubs" USING btree ("collectionId", "pubId");
--
--
----
- -- Name: discussion_anchors_discussion_id; Type: INDEX; Schema: public; Owner: testuser
- --
- 
-@@ -2400,20 +2413,6 @@
- 
- 
- --
---- Name: user_scope_visits_user_id_collection_id; Type: INDEX; Schema: public; Owner: testuser
----
--
--CREATE UNIQUE INDEX user_scope_visits_user_id_collection_id ON public."UserScopeVisits" USING btree ("userId", "collectionId");
--
--
----
---- Name: user_scope_visits_user_id_pub_id; Type: INDEX; Schema: public; Owner: testuser
----
--
--CREATE UNIQUE INDEX user_scope_visits_user_id_pub_id ON public."UserScopeVisits" USING btree ("userId", "pubId");
--
--
----
- -- Name: user_subscriptions_pub_id; Type: INDEX; Schema: public; Owner: testuser
- --
- 
-@@ -2487,7 +2486,7 @@
- --
- 
- ALTER TABLE ONLY public."Collections"
--    ADD CONSTRAINT "Collections_crossrefDepositRecordId_fkey" FOREIGN KEY ("crossrefDepositRecordId") REFERENCES public."CrossrefDepositRecords"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-+    ADD CONSTRAINT "Collections_crossrefDepositRecordId_fkey" FOREIGN KEY ("crossrefDepositRecordId") REFERENCES public."CrossrefDepositRecords"(id) ON UPDATE CASCADE;
- 
- 
- --
-@@ -2503,7 +2502,7 @@
- --
- 
- ALTER TABLE ONLY public."Collections"
--    ADD CONSTRAINT "Collections_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-+    ADD CONSTRAINT "Collections_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE;
- 
- 
- --
-@@ -2519,7 +2518,7 @@
- --
- 
- ALTER TABLE ONLY public."Communities"
--    ADD CONSTRAINT "Communities_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-+    ADD CONSTRAINT "Communities_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE;
- 
- 
- --
-@@ -2831,7 +2830,7 @@
- --
- 
- ALTER TABLE ONLY public."Pubs"
--    ADD CONSTRAINT "Pubs_crossrefDepositRecordId_fkey" FOREIGN KEY ("crossrefDepositRecordId") REFERENCES public."CrossrefDepositRecords"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-+    ADD CONSTRAINT "Pubs_crossrefDepositRecordId_fkey" FOREIGN KEY ("crossrefDepositRecordId") REFERENCES public."CrossrefDepositRecords"(id) ON UPDATE CASCADE;
- 
- 
- --
-@@ -2839,7 +2838,7 @@
- --
- 
- ALTER TABLE ONLY public."Pubs"
--    ADD CONSTRAINT "Pubs_draftId_fkey" FOREIGN KEY ("draftId") REFERENCES public."Drafts"(id) ON UPDATE CASCADE;
-+    ADD CONSTRAINT "Pubs_draftId_fkey" FOREIGN KEY ("draftId") REFERENCES public."Drafts"(id) ON UPDATE CASCADE ON DELETE CASCADE;
- 
- 
- --
-@@ -2847,7 +2846,7 @@
- --
- 
- ALTER TABLE ONLY public."Pubs"
--    ADD CONSTRAINT "Pubs_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-+    ADD CONSTRAINT "Pubs_scopeSummaryId_fkey" FOREIGN KEY ("scopeSummaryId") REFERENCES public."ScopeSummaries"(id) ON UPDATE CASCADE;
++CREATE UNIQUE INDEX collection_pubs_collection_id_pub_id ON public."CollectionPubs" USING btree ("pubId", "collectionId");
  
  
  --

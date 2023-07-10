@@ -155,9 +155,14 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	@BelongsTo(() => CrossrefDepositRecord, {
 		as: 'crossrefDepositRecord',
 		foreignKey: 'crossrefDepositRecordId',
+		onDelete: 'SET NULL',
 	})
 	crossrefDepositRecord?: CrossrefDepositRecord;
 
-	@BelongsTo(() => ScopeSummary, { as: 'scopeSummary', foreignKey: 'scopeSummaryId' })
+	@BelongsTo(() => ScopeSummary, {
+		as: 'scopeSummary',
+		foreignKey: 'scopeSummaryId',
+		onDelete: 'SET NULL',
+	})
 	scopeSummary?: ScopeSummary;
 }

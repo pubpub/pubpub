@@ -22,12 +22,12 @@ export class CollectionPub extends Model<
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
-	@Index({ unique: true, name: 'CollectionPub_collectionId_pubId' })
+	@Index({ unique: true, name: 'collection_pubs_collection_id_pub_id' })
 	@AllowNull(false)
 	@Column(DataType.UUID)
 	pubId!: string;
 
-	@Index({ unique: true, name: 'CollectionPub_collectionId_pubId' })
+	@Index({ unique: true, name: 'collection_pubs_collection_id_pub_id' })
 	@AllowNull(false)
 	@Column(DataType.UUID)
 	collectionId!: string;

@@ -117,10 +117,15 @@ export class Collection extends Model<
 	@BelongsTo(() => CrossrefDepositRecord, {
 		as: 'crossrefDepositRecord',
 		foreignKey: 'crossrefDepositRecordId',
+		onDelete: 'SET NULL',
 	})
 	crossrefDepositRecord?: CrossrefDepositRecord;
 
-	@BelongsTo(() => ScopeSummary, { as: 'scopeSummary', foreignKey: 'scopeSummaryId' })
+	@BelongsTo(() => ScopeSummary, {
+		as: 'scopeSummary',
+		foreignKey: 'scopeSummaryId',
+		onDelete: 'SET NULL',
+	})
 	scopeSummary?: ScopeSummary;
 
 	@BelongsTo(() => Community, { as: 'community', foreignKey: 'communityId' })

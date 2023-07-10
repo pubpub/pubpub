@@ -393,7 +393,6 @@ id: string
 - latestKeyAt?: string
 + latestKeyAt?: Date | null
 firebasePath: string
-+ pub?: Pub
 + createdAt?: any
 + updatedAt?: any
 + deletedAt?: any
@@ -1053,11 +1052,13 @@ email: string
 + passwordDigest?: string | null
 hash: string
 salt: string
-+ gdprConsent?: boolean | null
-isSuperAdmin: boolean
++ gdprConsent?: CreationOptional<boolean>
+- isSuperAdmin: boolean
++ isSuperAdmin: CreationOptional<boolean>
 + attributions?: PubAttribution[]
 + discussions?: Discussion[]
 + userNotificationPreferences?: UserNotificationPreferences
++ zoteroIntegration?: ZoteroIntegration
 + createdAt?: any
 + updatedAt?: any
 + deletedAt?: any

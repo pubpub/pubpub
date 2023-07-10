@@ -11,16 +11,16 @@ export class UserScopeVisit extends Model<
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
-	@Index({ unique: true, name: 'UserScopeVisit_userId_collectionId' })
-	@Index({ unique: true, name: 'UserScopeVisit_userId_pubId' })
+	@Index({ unique: true, name: 'user_scope_visits_user_id_collection_id' })
+	@Index({ unique: true, name: 'user_scope_visits_user_id_pub_id' })
 	@Column(DataType.UUID)
 	userId?: string | null;
 
-	@Index({ unique: true, name: 'UserScopeVisit_userId_pubId' })
+	@Index({ unique: true, name: 'user_scope_visits_user_id_pub_id' })
 	@Column(DataType.UUID)
 	pubId?: string | null;
 
-	@Index({ unique: true, name: 'UserScopeVisit_userId_collectionId' })
+	@Index({ unique: true, name: 'user_scope_visits_user_id_collection_id' })
 	@Column(DataType.UUID)
 	collectionId?: string | null;
 

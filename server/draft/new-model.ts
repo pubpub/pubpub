@@ -6,10 +6,10 @@ import {
 	PrimaryKey,
 	Default,
 	AllowNull,
-	HasOne,
+	//	HasOne,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { Pub } from '../models';
+// import { Pub } from '../models';
 
 @Table
 export class Draft extends Model<InferAttributes<Draft>, InferCreationAttributes<Draft>> {
@@ -25,6 +25,6 @@ export class Draft extends Model<InferAttributes<Draft>, InferCreationAttributes
 	@Column(DataType.STRING)
 	firebasePath!: string;
 
-	@HasOne(() => Pub, { as: 'pub', foreignKey: 'draftId' })
-	pub?: Pub;
+	// @HasOne(() => Pub, { as: 'pub', foreignKey: 'draftId' })
+	// pub?: Pub;
 }

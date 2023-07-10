@@ -314,7 +314,6 @@
   id: string
   latestKeyAt?: <del style="background:red">string</del><ins style="background:green">Date | null</ins>
   firebasePath: string
-  <ins style="background:green">pub?: Pub</ins>
   <ins style="background:green">createdAt?: any</ins>
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>
@@ -886,11 +885,12 @@
   passwordDigest<del style="background:red">:</del><ins style="background:green">?:</ins> string<ins style="background:green"> | null</ins>
   hash: string
   salt: string
-  <ins style="background:green">gdprConsent?: boolean | null</ins>
-  isSuperAdmin: boolean
+  <ins style="background:green">gdprConsent?: CreationOptional<boolean></ins>
+  isSuperAdmin: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
   <ins style="background:green">attributions?: PubAttribution[]</ins>
   <ins style="background:green">discussions?: Discussion[]</ins>
   <ins style="background:green">userNotificationPreferences?: UserNotificationPreferences</ins>
+  <ins style="background:green">zoteroIntegration?: ZoteroIntegration</ins>
   <ins style="background:green">createdAt?: any</ins>
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>
