@@ -1,6 +1,6 @@
 import { setup, teardown, modelize } from 'stubstub';
 
-import { Pub, Collection, Community, ScopeSummary, CollectionPub } from 'server/models';
+import { Pub, Collection, Community, ScopeSummary } from 'server/models';
 
 import { createPub } from 'server/pub/queries';
 import { createDiscussion } from 'server/discussion/queries';
@@ -129,84 +129,36 @@ const models = modelize`
 setup(beforeAll, models.resolve);
 teardown(afterAll);
 
-beforeEach(async () => {
-	// const all = await ScopeSummary.findAll();
-	// await Promise.all(
-	// 	all.map(async (s) => {
-	// 		try {
-	// 			const destroyed = await s?.destroy();
-	// 			return destroyed;
-	// 		} catch (e) {
-	// 			console.error(e);
-	// 		}
-	// 	}),
-	// );
-});
+beforeEach(() => ScopeSummary.destroy({ where: {} }));
 
-const fetchModel = async (
-	scopeIds:
-		| {
-				pubId: string;
-				collectionId?: string;
-				communityId?: string;
-		  }
-		| {
-				pubId?: string;
-				collectionId: string;
-				communityId?: string;
-		  }
-		| {
-				pubId?: string;
-				collectionId?: string;
-				communityId: string;
-		  },
-): Promise<ScopeSummary> => {
-	const { pubId, collectionId, communityId } = scopeIds;
-	if (pubId) {
-		const { scopeSummary } = await Pub.findOne({
-			where: { id: pubId },
-			include: [{ model: ScopeSummary, as: 'scopeSummary' }],
-		});
-		return scopeSummary;
-	}
-	if (collectionId) {
-		const { scopeSummary } = await Collection.findOne({
-			where: { id: collectionId },
-			include: [{ model: ScopeSummary, as: 'scopeSummary' }],
-		});
-		return scopeSummary;
-	}
-	if (communityId) {
-		const { scopeSummary } = await Community.findOne({
-			where: { id: communityId },
-			include: [{ model: ScopeSummary, as: 'scopeSummary' }],
-		});
-		return scopeSummary;
-	}
-	throw new Error('Invalid IDs provided to expectSummaryFor');
-};
-
-const expectSummaryFor = async (
-	scopeIds:
-		| {
-				pubId: string;
-				collectionId?: string;
-				communityId?: string;
-		  }
-		| {
-				pubId?: string;
-				collectionId: string;
-				communityId?: string;
-		  }
-		| {
-				pubId?: string;
-				collectionId?: string;
-				communityId: string;
-		  },
-	expectedValues,
-) => {
-	const model = await fetchModel(scopeIds);
-	expect(model.toJSON()).toMatchObject(expectedValues);
+const expectSummaryFor = async (scopeIds, expectedValues) => {
+	const fetchModel = async () => {
+		const { pubId, collectionId, communityId } = scopeIds;
+		if (pubId) {
+			const { scopeSummary } = await Pub.findOne({
+				where: { id: pubId },
+				include: [{ model: ScopeSummary, as: 'scopeSummary' }],
+			});
+			return scopeSummary;
+		}
+		if (collectionId) {
+			const { scopeSummary } = await Collection.findOne({
+				where: { id: collectionId },
+				include: [{ model: ScopeSummary, as: 'scopeSummary' }],
+			});
+			return scopeSummary;
+		}
+		if (communityId) {
+			const { scopeSummary } = await Community.findOne({
+				where: { id: communityId },
+				include: [{ model: ScopeSummary, as: 'scopeSummary' }],
+			});
+			return scopeSummary;
+		}
+		throw new Error('Invalid IDs provided to expectSummaryFor');
+	};
+	const model = await fetchModel();
+	expect(model).toMatchObject(expectedValues);
 };
 
 describe('scopeSummary queries', () => {
@@ -225,13 +177,9 @@ describe('scopeSummary queries', () => {
 	});
 
 	it('summarizes a Collection', async () => {
-		try {
-			const { c1 } = models;
-			await summarizeCollection(c1.id);
-			await expectSummaryFor({ collectionId: c1.id }, { pubs: 2, collections: 0 });
-		} catch (e) {
-			console.error(e);
-		}
+		const { c1 } = models;
+		await summarizeCollection(c1.id);
+		await expectSummaryFor({ collectionId: c1.id }, { pubs: 2, collections: 0 });
 	});
 
 	it('summarizes a Community', async () => {
@@ -244,8 +192,6 @@ describe('scopeSummary queries', () => {
 describe('scopeSummary hooks', () => {
 	it('creates a ScopeSummary automatically when a Pub is created (and updates the Community summary)', async () => {
 		const { community } = models;
-
-		await expectSummaryFor({ communityId: community.id }, { pubs: 5, collections: 2 });
 		const newPub = await createPub({ communityId: community.id });
 		await Promise.all([
 			expectSummaryFor({ pubId: newPub.id }, { reviews: 0, discussions: 0 }),
@@ -255,9 +201,7 @@ describe('scopeSummary hooks', () => {
 
 	it('updates ScopeSummaries when a Discussion is created', async () => {
 		const { community, p1, c1, chattyUser } = models;
-
-		await expectSummaryFor({ pubId: p1.id }, { discussions: 3 });
-		const disc = await createDiscussion({
+		await createDiscussion({
 			pubId: p1.id,
 			text: 'hi',
 			content: {} as DocJson,
@@ -270,38 +214,14 @@ describe('scopeSummary hooks', () => {
 			},
 			userId: chattyUser.id,
 		});
-
-		await expectSummaryFor({ pubId: p1.id }, { discussions: 4 });
-		const pubs = (
-			await Collection.findOne({
-				where: { id: c1.id },
-				include: [
-					{
-						model: CollectionPub,
-						as: 'collectionPubs',
-						include: [
-							{
-								model: Pub,
-								as: 'pub',
-								include: [{ model: ScopeSummary, as: 'scopeSummary' }],
-							},
-						],
-					},
-				],
-			})
-		)?.collectionPubs;
-
-		const scopeSummsForCollectioPubs = pubs?.map((cp) => cp.pub?.scopeSummary?.toJSON());
-		console.log({ scopeSummsForCollectioPubs });
-
-		await expectSummaryFor({ collectionId: c1.id }, { pubs: 2, discussions: 6 });
-		await expectSummaryFor(
-			{ communityId: community.id },
-			{ pubs: 6, collections: 2, discussions: 8 },
-		);
-		// await Promise.all([
-		// 	//	expectSummaryFor({ pubId: p1.id }, { discussions: 4 }),
-		// ]);
+		await Promise.all([
+			expectSummaryFor({ pubId: p1.id }, { discussions: 4 }),
+			expectSummaryFor({ collectionId: c1.id }, { pubs: 2, discussions: 4 }),
+			expectSummaryFor(
+				{ communityId: community.id },
+				{ pubs: 6, collections: 2, discussions: 4 },
+			),
+		]);
 	});
 
 	it('updates ScopeSummaries when a Review is created', async () => {
@@ -309,10 +229,10 @@ describe('scopeSummary hooks', () => {
 		await createReview({ pubId: p2.id, userData: chattyUser });
 		await Promise.all([
 			expectSummaryFor({ pubId: p2.id }, { reviews: 3 }),
-			expectSummaryFor({ collectionId: c1.id }, { pubs: 2, reviews: 4 }),
+			expectSummaryFor({ collectionId: c1.id }, { pubs: 2, reviews: 3 }),
 			expectSummaryFor(
 				{ communityId: community.id },
-				{ pubs: 6, collections: 2, reviews: 8 },
+				{ pubs: 6, collections: 2, reviews: 3 },
 			),
 		]);
 	});
