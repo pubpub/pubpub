@@ -45,29 +45,6 @@ import {
 	ScopeSummary,
 } from '../models';
 
-// declare module 'sequelize' {
-// 	export interface CreateOptions<TAttributes = any>
-// 		extends BuildOptions,
-// 			Logging,
-// 			Silent,
-// 			Transactionable,
-// 			Hookable {
-// 		actorId?: string | null;
-// 	}
-
-// 	export interface DestroyOptions<TAttributes = any> extends TruncateOptions<TAttributes> {
-// 		actorId?: string | null;
-// 	}
-
-// 	export interface UpdateOptions<TAttributes = any>
-// 		extends Logging,
-// 			Transactionable,
-// 			Paranoid,
-// 			Hookable {
-// 		actorId?: string | null;
-// 	}
-// }
-
 @Table
 export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
 	@Default(DataType.UUIDV4)
