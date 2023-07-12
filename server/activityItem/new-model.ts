@@ -9,7 +9,10 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { ActivityItemKind, ActivityItemPayload } from 'types';
+import {
+	ActivityItemKind,
+	//	ActivityItemPayload
+} from 'types';
 
 @Table
 class ActivityItem extends Model<
@@ -29,6 +32,7 @@ class ActivityItem extends Model<
 	@Column(DataType.UUID)
 	pubId?: string | null;
 
+	// TODO: Add validation for payload
 	@Column(DataType.JSONB)
 	// 	payload?: ActivityItemPayload | null;
 	payload?: any;

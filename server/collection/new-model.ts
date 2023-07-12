@@ -14,7 +14,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { CollectionKind, ReadNextPreviewSize } from 'types';
+// import { CollectionKind, ReadNextPreviewSize } from 'types';
 import { CollectionLayout } from 'utils/layout';
 import {
 	CollectionAttribution,

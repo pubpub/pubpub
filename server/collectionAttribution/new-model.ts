@@ -9,8 +9,8 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+// import { MinimalUser } from 'types';
 import { User, Collection } from '../models';
-import { MinimalUser } from 'types';
 
 @Table
 class CollectionAttribution extends Model<
