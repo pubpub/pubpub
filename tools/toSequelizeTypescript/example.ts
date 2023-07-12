@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-nocheck
 import { Attributes, Model } from 'sequelize';
 import type * as Types from '../../types';
 import type * as Models from '../../server/models';

@@ -1,5 +1,5 @@
 --- sequelize_old.sql	2023-07-05 21:40:06.926984271 +0200
-+++ sequelize_typescript.sql	2023-07-10 18:59:28.934462580 +0200
++++ sequelize_typescript.sql	2023-07-12 14:14:06.741295725 +0200
 @@ -198,9 +198,9 @@
      "pageId" uuid,
      "communityId" uuid,
@@ -85,7 +85,7 @@
  
  COPY public."FeatureFlags" (id, name, "enabledUsersFraction", "enabledCommunitiesFraction", "createdAt", "updatedAt") FROM stdin;
 -959c82da-39c3-460b-8a69-7ac3a80d1db1	customScripts	0	0	2023-07-05 21:39:50.861+02	2023-07-05 21:39:50.861+02
-+b2012b56-49cc-460f-8a24-69e57039d892	customScripts	0	0	2023-07-10 18:59:25.785+02	2023-07-10 18:59:25.785+02
++37369279-e122-47ac-b077-c1cf33befdca	customScripts	0	0	2023-07-12 14:13:37.527+02	2023-07-12 14:13:37.527+02
  \.
  
  

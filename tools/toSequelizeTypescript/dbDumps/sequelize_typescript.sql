@@ -1406,7 +1406,7 @@ COPY public."FeatureFlagUsers" (id, "featureFlagId", "userId", enabled, "created
 --
 
 COPY public."FeatureFlags" (id, name, "enabledUsersFraction", "enabledCommunitiesFraction", "createdAt", "updatedAt") FROM stdin;
-b2012b56-49cc-460f-8a24-69e57039d892	customScripts	0	0	2023-07-10 18:59:25.785+02	2023-07-10 18:59:25.785+02
+37369279-e122-47ac-b077-c1cf33befdca	customScripts	0	0	2023-07-12 14:13:37.527+02	2023-07-12 14:13:37.527+02
 \.
 
 
