@@ -5,7 +5,7 @@ import { ZoteroIntegration } from '../models';
 @Table({
 	tableName: 'IntegrationDataOAuth1',
 })
-class IntegrationDataOAuth1 extends Model<
+export class IntegrationDataOAuth1 extends Model<
 	InferAttributes<IntegrationDataOAuth1>,
 	InferCreationAttributes<IntegrationDataOAuth1>
 > {
@@ -22,8 +22,5 @@ class IntegrationDataOAuth1 extends Model<
 		as: 'zoteroIntegration',
 		onDelete: 'CASCADE',
 	})
-	// 	zoteroIntegration?: ZoteroIntegration;
-	zoteroIntegration?: any;
+	zoteroIntegration?: ZoteroIntegration;
 }
-
-export const IntegrationDataOAuth1AnyModel = IntegrationDataOAuth1 as any;

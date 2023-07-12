@@ -11,7 +11,7 @@ import {
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class DiscussionAnchor extends Model<
+export class DiscussionAnchor extends Model<
 	InferAttributes<DiscussionAnchor>,
 	InferCreationAttributes<DiscussionAnchor>
 > {
@@ -49,5 +49,3 @@ class DiscussionAnchor extends Model<
 	@Column(DataType.TEXT)
 	originalTextSuffix!: string;
 }
-
-export const DiscussionAnchorAnyModel = DiscussionAnchor as any;

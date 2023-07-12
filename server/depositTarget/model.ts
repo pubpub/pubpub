@@ -2,7 +2,7 @@ import { Model, Table, Column, DataType, PrimaryKey, Default } from 'sequelize-t
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class DepositTarget extends Model<
+export class DepositTarget extends Model<
 	InferAttributes<DepositTarget>,
 	InferCreationAttributes<DepositTarget>
 > {
@@ -19,8 +19,7 @@ class DepositTarget extends Model<
 
 	@Default('crossref')
 	@Column(DataType.ENUM('crossref', 'datacite'))
-	// 	service?: CreationOptional<'crossref' | 'datacite' | null>;
-	service?: any;
+	service?: CreationOptional<'crossref' | 'datacite' | null>;
 
 	@Column(DataType.STRING)
 	username?: string | null;
@@ -31,5 +30,3 @@ class DepositTarget extends Model<
 	@Column(DataType.TEXT)
 	passwordInitVec?: string | null;
 }
-
-export const DepositTargetAnyModel = DepositTarget as any;

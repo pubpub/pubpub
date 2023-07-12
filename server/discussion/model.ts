@@ -14,7 +14,10 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Thread, Visibility, User, Commenter, Pub, DiscussionAnchor } from '../models';
 
 @Table
-class Discussion extends Model<InferAttributes<Discussion>, InferCreationAttributes<Discussion>> {
+export class Discussion extends Model<
+	InferAttributes<Discussion>,
+	InferCreationAttributes<Discussion>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -56,36 +59,28 @@ class Discussion extends Model<InferAttributes<Discussion>, InferCreationAttribu
 	commenterId?: string | null;
 
 	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
-	// 	thread?: Thread;
-	thread?: any;
+	thread?: Thread;
 
 	@BelongsTo(() => Visibility, {
 		onDelete: 'CASCADE',
 		as: 'visibility',
 		foreignKey: 'visibilityId',
 	})
-	// 	visibility?: Visibility;
-	visibility?: any;
+	visibility?: Visibility;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'userId' })
-	// 	author?: User;
-	author?: any;
+	author?: User;
 
 	@BelongsTo(() => Commenter, { onDelete: 'CASCADE', as: 'commenter', foreignKey: 'commenterId' })
-	// 	commenter?: Commenter;
-	commenter?: any;
+	commenter?: Commenter;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	// 	pub?: Pub;
-	pub?: any;
+	pub?: Pub;
 
 	@HasMany(() => DiscussionAnchor, {
 		onDelete: 'CASCADE',
 		as: 'anchors',
 		foreignKey: 'discussionId',
 	})
-	// 	anchors?: DiscussionAnchor[];
-	anchors?: any;
+	anchors?: DiscussionAnchor[];
 }
-
-export const DiscussionAnyModel = Discussion as any;

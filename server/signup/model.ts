@@ -13,7 +13,7 @@ import {
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class Signup extends Model<InferAttributes<Signup>, InferCreationAttributes<Signup>> {
+export class Signup extends Model<InferAttributes<Signup>, InferCreationAttributes<Signup>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -38,5 +38,3 @@ class Signup extends Model<InferAttributes<Signup>, InferCreationAttributes<Sign
 	@Column(DataType.UUID)
 	communityId?: string | null;
 }
-
-export const SignupAnyModel = Signup as any;

@@ -11,7 +11,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Community, FeatureFlag } from '../models';
 
 @Table
-class FeatureFlagCommunity extends Model<
+export class FeatureFlagCommunity extends Model<
 	InferAttributes<FeatureFlagCommunity>,
 	InferCreationAttributes<FeatureFlagCommunity>
 > {
@@ -30,16 +30,12 @@ class FeatureFlagCommunity extends Model<
 	enabled?: boolean | null;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
-	// 	community?: Community;
-	community?: any;
+	community?: Community;
 
 	@BelongsTo(() => FeatureFlag, {
 		onDelete: 'CASCADE',
 		as: 'featureFlag',
 		foreignKey: 'featureFlagId',
 	})
-	// 	featureFlag?: FeatureFlag;
-	featureFlag?: any;
+	featureFlag?: FeatureFlag;
 }
-
-export const FeatureFlagCommunityAnyModel = FeatureFlagCommunity as any;

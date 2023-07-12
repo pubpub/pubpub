@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { ReviewNew } from '../models';
 
 @Table
-class Reviewer extends Model<InferAttributes<Reviewer>, InferCreationAttributes<Reviewer>> {
+export class Reviewer extends Model<InferAttributes<Reviewer>, InferCreationAttributes<Reviewer>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -26,8 +26,5 @@ class Reviewer extends Model<InferAttributes<Reviewer>, InferCreationAttributes<
 	reviewId!: string;
 
 	@BelongsTo(() => ReviewNew, { onDelete: 'CASCADE', as: 'review', foreignKey: 'reviewId' })
-	// 	review?: ReviewNew;
-	review?: any;
+	review?: ReviewNew;
 }
-
-export const ReviewerAnyModel = Reviewer as any;

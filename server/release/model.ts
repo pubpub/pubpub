@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Doc } from '../models';
 
 @Table
-class Release extends Model<InferAttributes<Release>, InferCreationAttributes<Release>> {
+export class Release extends Model<InferAttributes<Release>, InferCreationAttributes<Release>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -20,8 +20,7 @@ class Release extends Model<InferAttributes<Release>, InferCreationAttributes<Re
 
 	// TODO: add validation for noteContent
 	@Column(DataType.JSONB)
-	// 	noteContent?: Record<string, any> | null;
-	noteContent?: any;
+	noteContent?: Record<string, any> | null;
 
 	@Column(DataType.TEXT)
 	noteText?: string | null;
@@ -48,8 +47,5 @@ class Release extends Model<InferAttributes<Release>, InferCreationAttributes<Re
 	historyKeyMissing!: CreationOptional<boolean>;
 
 	@BelongsTo(() => Doc, { as: 'doc', foreignKey: 'docId' })
-	// 	doc?: Doc;
-	doc?: any;
+	doc?: Doc;
 }
-
-export const ReleaseAnyModel = Release as any;

@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { UserNotificationMarkReadTrigger } from 'types';
 
 @Table
-class UserNotificationPreferences extends Model<
+export class UserNotificationPreferences extends Model<
 	InferAttributes<UserNotificationPreferences>,
 	InferCreationAttributes<UserNotificationPreferences>
 > {
@@ -32,8 +32,7 @@ class UserNotificationPreferences extends Model<
 	receiveNotifications!: CreationOptional<boolean>;
 
 	@Column(DataType.DATE)
-	// 	lastReceivedNotificationsAt?: Date | null;
-	lastReceivedNotificationsAt?: any;
+	lastReceivedNotificationsAt?: Date | null;
 
 	@AllowNull(false)
 	@Default(true)
@@ -61,5 +60,3 @@ class UserNotificationPreferences extends Model<
 	@Column(DataType.STRING)
 	markReadTrigger!: CreationOptional<UserNotificationMarkReadTrigger>;
 }
-
-export const UserNotificationPreferencesAnyModel = UserNotificationPreferences as any;

@@ -14,7 +14,10 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Thread, Visibility, User, Pub, Reviewer } from '../models';
 
 @Table
-class ReviewNew extends Model<InferAttributes<ReviewNew>, InferCreationAttributes<ReviewNew>> {
+export class ReviewNew extends Model<
+	InferAttributes<ReviewNew>,
+	InferCreationAttributes<ReviewNew>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -29,8 +32,7 @@ class ReviewNew extends Model<InferAttributes<ReviewNew>, InferCreationAttribute
 
 	@Default('open')
 	@Column(DataType.ENUM('open', 'closed', 'completed'))
-	// 	status?: CreationOptional<'open' | 'closed' | 'completed' | null>;
-	status?: any;
+	status?: CreationOptional<'open' | 'closed' | 'completed' | null>;
 
 	@Column(DataType.BOOLEAN)
 	releaseRequested?: boolean | null;
@@ -58,16 +60,14 @@ class ReviewNew extends Model<InferAttributes<ReviewNew>, InferCreationAttribute
 	reviewContent?: object | null;
 
 	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
-	// 	thread?: Thread;
-	thread?: any;
+	thread?: Thread;
 
 	@BelongsTo(() => Visibility, {
 		onDelete: 'CASCADE',
 		as: 'visibility',
 		foreignKey: 'visibilityId',
 	})
-	// 	visibility?: Visibility;
-	visibility?: any;
+	visibility?: Visibility;
 
 	@BelongsTo(() => User, {
 		onDelete: 'CASCADE',
@@ -75,16 +75,11 @@ class ReviewNew extends Model<InferAttributes<ReviewNew>, InferCreationAttribute
 		foreignKey: 'userId',
 		constraints: false,
 	})
-	// 	author?: User;
-	author?: any;
+	author?: User;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	// 	pub?: Pub;
-	pub?: any;
+	pub?: Pub;
 
 	@HasMany(() => Reviewer, { onDelete: 'CASCADE', as: 'reviewers', foreignKey: 'reviewId' })
-	// 	reviewers?: Reviewer[];
-	reviewers?: any;
+	reviewers?: Reviewer[];
 }
-
-export const ReviewNewAnyModel = ReviewNew as any;

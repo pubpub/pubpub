@@ -9,11 +9,11 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-// import { MemberPermission } from 'types';
+import { MemberPermission } from 'types';
 import { User, Community, Pub, Collection } from '../models';
 
 @Table
-class Member extends Model<InferAttributes<Member>, InferCreationAttributes<Member>> {
+export class Member extends Model<InferAttributes<Member>, InferCreationAttributes<Member>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -21,8 +21,7 @@ class Member extends Model<InferAttributes<Member>, InferCreationAttributes<Memb
 
 	@Default('view')
 	@Column(DataType.ENUM('view', 'edit', 'manage', 'admin'))
-	// 	permissions?: CreationOptional<MemberPermission | null>;
-	permissions?: any;
+	permissions?: CreationOptional<MemberPermission | null>;
 
 	@Column(DataType.BOOLEAN)
 	isOwner?: boolean | null;
@@ -49,24 +48,18 @@ class Member extends Model<InferAttributes<Member>, InferCreationAttributes<Memb
 	organizationId?: string | null;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	// 	user?: User;
-	user?: any;
+	user?: User;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
-	// 	community?: Community;
-	community?: any;
+	community?: Community;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	// 	pub?: Pub;
-	pub?: any;
+	pub?: Pub;
 
 	@BelongsTo(() => Collection, {
 		onDelete: 'CASCADE',
 		as: 'collection',
 		foreignKey: 'collectionId',
 	})
-	// 	collection?: Collection;
-	collection?: any;
+	collection?: Collection;
 }
-
-export const MemberAnyModel = Member as any;

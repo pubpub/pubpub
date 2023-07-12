@@ -10,7 +10,7 @@ import {
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class ScopeSummary extends Model<
+export class ScopeSummary extends Model<
 	InferAttributes<ScopeSummary>,
 	InferCreationAttributes<ScopeSummary>
 > {
@@ -44,5 +44,3 @@ class ScopeSummary extends Model<
 	@Column(DataType.INTEGER)
 	submissions!: CreationOptional<number>;
 }
-
-export const ScopeSummaryAnyModel = ScopeSummary as any;

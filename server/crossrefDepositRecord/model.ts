@@ -2,7 +2,7 @@ import { Model, Table, Column, DataType, PrimaryKey, Default } from 'sequelize-t
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class CrossrefDepositRecord extends Model<
+export class CrossrefDepositRecord extends Model<
 	InferAttributes<CrossrefDepositRecord>,
 	InferCreationAttributes<CrossrefDepositRecord>
 > {
@@ -14,5 +14,3 @@ class CrossrefDepositRecord extends Model<
 	@Column(DataType.JSONB)
 	depositJson?: object | null;
 }
-
-export const CrossrefDepositRecordAnyModel = CrossrefDepositRecord as any;

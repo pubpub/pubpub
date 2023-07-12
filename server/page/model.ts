@@ -13,7 +13,7 @@ import type { LayoutBlock } from 'utils/layout';
 import { Community } from '../models';
 
 @Table
-class Page extends Model<InferAttributes<Page>, InferCreationAttributes<Page>> {
+export class Page extends Model<InferAttributes<Page>, InferCreationAttributes<Page>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -59,8 +59,5 @@ class Page extends Model<InferAttributes<Page>, InferCreationAttributes<Page>> {
 	communityId!: string;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
-	// 	community?: Community;
-	community?: any;
+	community?: Community;
 }
-
-export const PageAnyModel = Page as any;

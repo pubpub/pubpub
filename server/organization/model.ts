@@ -16,7 +16,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Community } from '../models';
 
 @Table
-class Organization extends Model<
+export class Organization extends Model<
 	InferAttributes<Organization>,
 	InferCreationAttributes<Organization>
 > {
@@ -56,8 +56,5 @@ class Organization extends Model<
 		as: 'communities',
 		foreignKey: 'organizationId',
 	})
-	// 	communities?: Community[];
-	communities?: any;
+	communities?: Community[];
 }
-
-export const OrganizationAnyModel = Organization as any;

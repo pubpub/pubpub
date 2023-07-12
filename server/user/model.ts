@@ -23,7 +23,7 @@ import {
 } from '../models';
 
 @Table
-class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -99,8 +99,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 	googleScholar?: string | null;
 
 	@Column(DataType.DATE)
-	// 	resetHashExpiration?: Date | null;
-	resetHashExpiration?: any;
+	resetHashExpiration?: Date | null;
 
 	@Column(DataType.TEXT)
 	resetHash?: string | null;
@@ -124,8 +123,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
 	@Default(null)
 	@Column(DataType.BOOLEAN)
-	// 	gdprConsent?: CreationOptional<boolean | null>;
-	gdprConsent?: any;
+	gdprConsent?: CreationOptional<boolean | null>;
 
 	@AllowNull(false)
 	@Default(false)
@@ -143,27 +141,23 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 		as: 'attributions',
 		foreignKey: 'userId',
 	})
-	// 	attributions?: PubAttribution[];
-	attributions?: any;
+	attributions?: PubAttribution[];
 
 	@HasMany(() => Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: 'userId' })
-	// 	discussions?: Discussion[];
-	discussions?: any;
+	discussions?: Discussion[];
 
 	@HasOne(() => UserNotificationPreferences, {
 		onDelete: 'CASCADE',
 		as: 'userNotificationPreferences',
 		foreignKey: 'userId',
 	})
-	// 	userNotificationPreferences?: UserNotificationPreferences;
-	userNotificationPreferences?: any;
+	userNotificationPreferences?: UserNotificationPreferences;
 
 	@HasOne(() => ZoteroIntegration, {
 		as: 'zoteroIntegration',
 		foreignKey: { name: 'userId', allowNull: false },
 	})
-	// 	zoteroIntegration?: ZoteroIntegration;
-	zoteroIntegration?: any;
+	zoteroIntegration?: ZoteroIntegration;
 
 	declare setPassword: (password: string, cb: (err: any, user?: any) => void) => void;
 
@@ -175,7 +169,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 	) => void;
 
 	// @ts-expect-error
-	// eslint-disable-next-line no-dupe-class-members
+	// eslint-disable-next-line no-dupe-export class-members
 	declare authenticate: () => (
 		username: string,
 		password: string,
@@ -208,5 +202,3 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
 	declare createStrategy: () => any;
 }
-
-export const UserAnyModel = User as any;

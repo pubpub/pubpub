@@ -2,7 +2,7 @@ import { Model, Table, Column, DataType, PrimaryKey, Default } from 'sequelize-t
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class CustomScript extends Model<
+export class CustomScript extends Model<
 	InferAttributes<CustomScript>,
 	InferCreationAttributes<CustomScript>
 > {
@@ -20,5 +20,3 @@ class CustomScript extends Model<
 	@Column(DataType.TEXT)
 	content?: string | null;
 }
-
-export const CustomScriptAnyModel = CustomScript as any;

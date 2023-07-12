@@ -9,11 +9,11 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-// import { MinimalUser } from 'types';
+import { MinimalUser } from 'types';
 import { User, Collection } from '../models';
 
 @Table
-class CollectionAttribution extends Model<
+export class CollectionAttribution extends Model<
 	InferAttributes<CollectionAttribution>,
 	InferCreationAttributes<CollectionAttribution>
 > {
@@ -55,16 +55,12 @@ class CollectionAttribution extends Model<
 	collectionId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	// 	user?: MinimalUser;
-	user?: any;
+	user?: MinimalUser;
 
 	@BelongsTo(() => Collection, {
 		onDelete: 'CASCADE',
 		as: 'collection',
 		foreignKey: 'collectionId',
 	})
-	// 	collection?: Collection;
-	collection?: any;
+	collection?: Collection;
 }
-
-export const CollectionAttributionAnyModel = CollectionAttribution as any;

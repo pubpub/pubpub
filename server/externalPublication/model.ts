@@ -10,7 +10,7 @@ import {
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class ExternalPublication extends Model<
+export class ExternalPublication extends Model<
 	InferAttributes<ExternalPublication>,
 	InferCreationAttributes<ExternalPublication>
 > {
@@ -41,8 +41,5 @@ class ExternalPublication extends Model<
 	avatar?: string | null;
 
 	@Column(DataType.DATE)
-	// 	publicationDate?: Date | null;
-	publicationDate?: any;
+	publicationDate?: Date | null;
 }
-
-export const ExternalPublicationAnyModel = ExternalPublication as any;

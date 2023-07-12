@@ -10,7 +10,7 @@ import {
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class CommunityAdmin extends Model<
+export class CommunityAdmin extends Model<
 	InferAttributes<CommunityAdmin>,
 	InferCreationAttributes<CommunityAdmin>
 > {
@@ -27,5 +27,3 @@ class CommunityAdmin extends Model<
 	@Column(DataType.UUID)
 	communityId!: string;
 }
-
-export const CommunityAdminAnyModel = CommunityAdmin as any;

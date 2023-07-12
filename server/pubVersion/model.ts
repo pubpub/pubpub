@@ -11,7 +11,10 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Pub } from '../models';
 
 @Table
-class PubVersion extends Model<InferAttributes<PubVersion>, InferCreationAttributes<PubVersion>> {
+export class PubVersion extends Model<
+	InferAttributes<PubVersion>,
+	InferCreationAttributes<PubVersion>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -24,8 +27,5 @@ class PubVersion extends Model<InferAttributes<PubVersion>, InferCreationAttribu
 	pubId?: string | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	// 	pub?: Pub;
-	pub?: any;
+	pub?: Pub;
 }
-
-export const PubVersionAnyModel = PubVersion as any;

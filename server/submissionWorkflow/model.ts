@@ -14,7 +14,7 @@ import { DocJson } from 'types';
 import { Submission, Collection } from '../models';
 
 @Table
-class SubmissionWorkflow extends Model<
+export class SubmissionWorkflow extends Model<
 	InferAttributes<SubmissionWorkflow>,
 	InferCreationAttributes<SubmissionWorkflow>
 > {
@@ -75,12 +75,8 @@ class SubmissionWorkflow extends Model<
 	requireDescription!: CreationOptional<boolean>;
 
 	@HasMany(() => Submission, { as: 'submissions', foreignKey: 'submissionWorkflowId' })
-	// 	submissions?: Submission[];
-	submissions?: any;
+	submissions?: Submission[];
 
 	@BelongsTo(() => Collection, { as: 'collection', foreignKey: 'collectionId' })
-	// 	collection?: Collection;
-	collection?: any;
+	collection?: Collection;
 }
-
-export const SubmissionWorkflowAnyModel = SubmissionWorkflow as any;

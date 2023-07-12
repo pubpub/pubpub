@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User } from '../models';
 
 @Table
-class ReviewEvent extends Model<
+export class ReviewEvent extends Model<
 	InferAttributes<ReviewEvent>,
 	InferCreationAttributes<ReviewEvent>
 > {
@@ -40,8 +40,5 @@ class ReviewEvent extends Model<
 	reviewId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	// 	user?: User;
-	user?: any;
+	user?: User;
 }
-
-export const ReviewEventAnyModel = ReviewEvent as any;

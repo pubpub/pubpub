@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User } from '../models';
 
 @Table
-class Merge extends Model<InferAttributes<Merge>, InferCreationAttributes<Merge>> {
+export class Merge extends Model<InferAttributes<Merge>, InferCreationAttributes<Merge>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -33,8 +33,5 @@ class Merge extends Model<InferAttributes<Merge>, InferCreationAttributes<Merge>
 	pubId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	// 	user?: User;
-	user?: any;
+	user?: User;
 }
-
-export const MergeAnyModel = Merge as any;

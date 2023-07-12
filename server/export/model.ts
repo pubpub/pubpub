@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { WorkerTask } from '../models';
 
 @Table
-class Export extends Model<InferAttributes<Export>, InferCreationAttributes<Export>> {
+export class Export extends Model<InferAttributes<Export>, InferCreationAttributes<Export>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -41,8 +41,5 @@ class Export extends Model<InferAttributes<Export>, InferCreationAttributes<Expo
 		as: 'workerTask',
 		foreignKey: 'workerTaskId',
 	})
-	// 	workerTask?: WorkerTask;
-	workerTask?: any;
+	workerTask?: WorkerTask;
 }
-
-export const ExportAnyModel = Export as any;

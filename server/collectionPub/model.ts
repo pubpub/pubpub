@@ -13,7 +13,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Collection, Pub } from '../models';
 
 @Table
-class CollectionPub extends Model<
+export class CollectionPub extends Model<
 	InferAttributes<CollectionPub>,
 	InferCreationAttributes<CollectionPub>
 > {
@@ -48,12 +48,8 @@ class CollectionPub extends Model<
 		as: 'collection',
 		foreignKey: 'collectionId',
 	})
-	// 	collection?: Collection;
-	collection?: any;
+	collection?: Collection;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	// 	pub?: Pub;
-	pub?: any;
+	pub?: Pub;
 }
-
-export const CollectionPubAnyModel = CollectionPub as any;

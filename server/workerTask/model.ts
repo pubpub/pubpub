@@ -10,7 +10,10 @@ import {
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-class WorkerTask extends Model<InferAttributes<WorkerTask>, InferCreationAttributes<WorkerTask>> {
+export class WorkerTask extends Model<
+	InferAttributes<WorkerTask>,
+	InferCreationAttributes<WorkerTask>
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -41,5 +44,3 @@ class WorkerTask extends Model<InferAttributes<WorkerTask>, InferCreationAttribu
 	@Column(DataType.INTEGER)
 	priority?: number | null;
 }
-
-export const WorkerTaskAnyModel = WorkerTask as any;

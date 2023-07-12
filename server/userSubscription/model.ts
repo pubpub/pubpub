@@ -14,7 +14,7 @@ import { UserSubscriptionStatus } from 'types';
 import { Pub, Thread, User } from '../models';
 
 @Table
-class UserSubscription extends Model<
+export class UserSubscription extends Model<
 	InferAttributes<UserSubscription>,
 	InferCreationAttributes<UserSubscription>
 > {
@@ -45,16 +45,11 @@ class UserSubscription extends Model<
 	threadId?: string | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	// 	pub?: Pub;
-	pub?: any;
+	pub?: Pub;
 
 	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
-	// 	thread?: Thread;
-	thread?: any;
+	thread?: Thread;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	// 	user?: User;
-	user?: any;
+	user?: User;
 }
-
-export const UserSubscriptionAnyModel = UserSubscription as any;
