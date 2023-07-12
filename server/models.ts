@@ -58,7 +58,7 @@ import { UserScopeVisitAnyModel as UserScopeVisit } from './userScopeVisit/model
 import { UserSubscriptionAnyModel as UserSubscription } from './userSubscription/model';
 import { ActivityItemAnyModel as ActivityItem } from './activityItem/model';
 import { VisibilityAnyModel as Visibility } from './visibility/model';
-import { FacetBindingAnyModel as FacetBindingModel } from './facets/models/new-facetBinding';
+import { FacetBindingAnyModel as FacetBindingModel } from './facets/models/facetBinding';
 import { VisibilityUserAnyModel as VisibilityUser } from './visibilityUser/model';
 import { WorkerTaskAnyModel as WorkerTask } from './workerTask/model';
 
