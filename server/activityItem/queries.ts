@@ -26,8 +26,6 @@ import {
 
 import { getScopeIdForFacetBinding } from 'server/facets';
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
-import { assert, exists } from 'utils/assert';
-import { CollectionType } from 'server/collection/sequelize-model';
 
 const resolvePartialMemberItem = async (member: types.Member) => {
 	if (member.pubId) {
@@ -46,13 +44,11 @@ const resolvePartialMemberItem = async (member: types.Member) => {
 		} as const;
 	}
 	if (member.collectionId) {
-		const collection = await Collection.findOne({
+		const collection: types.Collection = await Collection.findOne({
 			where: {
 				id: member.collectionId,
 			},
 		});
-
-		assert(collection != null, 'Collection should exist');
 		return {
 			tag: 'collection',
 			value: {
@@ -220,8 +216,7 @@ export const createCollectionActivityItem = async (
 	actorId: null | string,
 	collectionId: string,
 ) => {
-	const collection = await Collection.findOne({ where: { id: collectionId } });
-	assert(collection != null, 'Collection should exist');
+	const collection: types.Collection = await Collection.findOne({ where: { id: collectionId } });
 	const { title } = collection;
 	return createActivityItem({
 		kind,
@@ -239,10 +234,9 @@ export const createCollectionActivityItem = async (
 export const createCollectionUpdatedActivityItem = async (
 	actorId: null | string,
 	collectionId: string,
-	oldCollection: CollectionType,
+	oldCollection: types.Collection,
 ) => {
-	const collection = await Collection.findOne({ where: { id: collectionId } });
-	assert(collection != null, 'Collection should exist');
+	const collection: types.Collection = await Collection.findOne({ where: { id: collectionId } });
 	const { title } = collection;
 	const diffs = getDiffsForPayload(collection, oldCollection, [
 		'isPublic',
