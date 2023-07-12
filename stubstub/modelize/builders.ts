@@ -76,7 +76,7 @@ export const builders = {
 		args?: WithOptional<UserType, 'firstName' | 'lastName' | 'email' | 'slug' | 'initials'> & {
 			password?: string;
 		},
-	): Promise<typeof User> => {
+	): Promise<User> => {
 		const uniqueness = uuid.v4();
 		const defaults = {
 			firstName: 'Test',
@@ -115,7 +115,7 @@ export const builders = {
 					passwordDigest: 'sha512',
 				},
 				sha3hashedPassword,
-				(err: any, user: typeof User) => {
+				(err, user) => {
 					if (err) {
 						return reject(err);
 					}

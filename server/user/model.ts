@@ -14,7 +14,13 @@ import {
 	HasMany,
 	HasOne,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type {
+	InferAttributes,
+	InferCreationAttributes,
+	CreationOptional,
+	CreationAttributes,
+} from 'sequelize';
+import type { Strategy } from 'passport';
 import {
 	PubAttribution,
 	Discussion,
@@ -22,8 +28,89 @@ import {
 	ZoteroIntegration,
 } from '../models';
 
+/**
+ * Basically typings for passport-local-sequelize
+ */
+declare abstract class ModelWithPassport<
+	T extends {} = any,
+	C extends {} = T,
+	User = any,
+> extends Model<T, C> {
+	declare setPassword: (password: string, cb: (err: any, user?: User) => void) => void;
+
+	declare setActivationKey: (cb: (err: any, user?: User) => void) => void;
+
+	declare authenticate: (
+		password: string,
+		cb: ((err: any, user?: boolean, info?: any) => void) &
+			((err: any, user?: User, info?: any) => void),
+	) => void;
+
+	declare static authenticate: () => (
+		username: string,
+		password: string,
+		cb: ((err: any, user?: boolean, info?: any) => void) &
+			((err: any, user?: InstanceType<typeof ModelWithPassport>, info?: any) => void),
+	) => void;
+
+	declare static serializeUser: () => (
+		user: InstanceType<typeof ModelWithPassport>,
+		cb: (err: any, id?: string) => void,
+	) => void;
+
+	declare static deserializeUser: () => (
+		username: string,
+		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+	) => void;
+
+	declare static register: (
+		user:
+			| InstanceType<typeof ModelWithPassport>
+			| string
+			| CreationAttributes<ModelWithPassport>,
+		password: string,
+		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+	) => void;
+
+	declare static activate: (
+		username: string,
+		password: string,
+		activationKey: string,
+		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+	) => void;
+
+	declare static findByUsername: (
+		username: string,
+		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+	) => void;
+
+	declare static setResetPasswordKey: (
+		username: string,
+		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+	) => void;
+
+	declare static resetPassword: (
+		username: string,
+		password: string,
+		resetPasswordKey: string,
+		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+	) => void;
+
+	declare static createStrategy: () => Strategy;
+
+	declare isShadowUser?: boolean;
+
+	declare feedback?: string;
+
+	declare sha3hashedPassword: CreationOptional<string>;
+}
+
 @Table
-export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+export class User extends ModelWithPassport<
+	InferAttributes<User>,
+	InferCreationAttributes<User>,
+	User
+> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -115,11 +202,11 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
-	hash!: string;
+	hash!: CreationOptional<string>;
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
-	salt!: string;
+	salt!: CreationOptional<string>;
 
 	@Default(null)
 	@Column(DataType.BOOLEAN)
@@ -129,12 +216,6 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	@Default(false)
 	@Column(DataType.BOOLEAN)
 	isSuperAdmin!: CreationOptional<boolean>;
-
-	declare isShadowUser?: boolean;
-
-	declare feedback?: string;
-
-	declare sha3hashedPassword: CreationOptional<string>;
 
 	@HasMany(() => PubAttribution, {
 		onDelete: 'CASCADE',
@@ -158,47 +239,4 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 		foreignKey: { name: 'userId', allowNull: false },
 	})
 	zoteroIntegration?: ZoteroIntegration;
-
-	declare setPassword: (password: string, cb: (err: any, user?: any) => void) => void;
-
-	declare setActivationKey: (cb: (err: any, user?: any) => void) => void;
-
-	declare authenticate: (
-		password: string,
-		cb: (err: any, user?: any, info?: any) => void,
-	) => void;
-
-	// @ts-expect-error
-	// eslint-disable-next-line no-dupe-export class-members
-	declare authenticate: () => (
-		username: string,
-		password: string,
-		cb: (err: any, user?: any, info?: any) => void,
-	) => void;
-
-	declare serializeUser: () => (user: User, cb: (err: any, id?: any) => void) => User[];
-
-	declare deserializeUser: () => (username: string, cb: (err: any, user?: any) => void) => User;
-
-	declare register: (user: User, password: string, cb: (err: any, user?: any) => void) => User;
-
-	declare activate: (
-		username: string,
-		password: string,
-		activationKey: string,
-		cb: (err: any, user?: any) => void,
-	) => void;
-
-	declare findByUsername: (username: string, cb: (err: any, user?: any) => void) => void;
-
-	declare setResetPasswordKey: (username: string, cb: (err: any, user?: any) => void) => void;
-
-	declare resetPassword: (
-		username: string,
-		password: string,
-		resetPasswordKey: string,
-		cb: (err: any, user?: any) => void,
-	) => void;
-
-	declare createStrategy: () => any;
 }
