@@ -20,6 +20,7 @@ class WorkerTask extends Model<InferAttributes<WorkerTask>, InferCreationAttribu
 	@Column(DataType.TEXT)
 	type!: string;
 
+	// TODO: Add validation for input and enrich with type information
 	@Column(DataType.JSONB)
 	input?: object | null;
 
@@ -29,9 +30,11 @@ class WorkerTask extends Model<InferAttributes<WorkerTask>, InferCreationAttribu
 	@Column(DataType.INTEGER)
 	attemptCount?: number | null;
 
+	// TODO: Add validation for error and enrich with type information
 	@Column(DataType.JSONB)
 	error?: string | null;
 
+	// TODO: Add validation for output and enrich with type information
 	@Column(DataType.JSONB)
 	output?: object | null;
 
