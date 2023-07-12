@@ -195,6 +195,7 @@
 		"reakit": "1.0.0-beta.14",
 		"rebound": "^0.1.0",
 		"recharts": "^2.1.14",
+		"reflect-metadata": "^0.1.13",
 		"request": "^2.88.0",
 		"request-promise": "^4.2.4",
 		"rss": "^1.2.2",
@@ -220,10 +221,10 @@
 		"xmlbuilder": "^13.0.2",
 		"yaml": "^1.6.0",
 		"yargs": "^13.2.4",
+		"zod": "^3.21.4",
 		"zod-to-json-schema": "^3.17.0",
 		"zotero-api-client": "^0.40.0",
-		"zustand": "^4.0.0-rc.1",
-		"zod": "^3.21.4"
+		"zustand": "^4.0.0-rc.1"
 	},
 	"engines": {
 		"node": "18.7.0"

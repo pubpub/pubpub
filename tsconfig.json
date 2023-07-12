@@ -94,6 +94,7 @@
 		"forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
 		"resolveJsonModule": true,
 		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
 		"pretty": true,
 		"incremental": true
 	}
