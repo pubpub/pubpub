@@ -23,7 +23,7 @@ export class Visibility extends Model<
 
 	@Default('private')
 	@Column(DataType.ENUM('private', 'members', 'public'))
-	access?: CreationOptional<VisibilityAccess | null>;
+	access!: CreationOptional<VisibilityAccess | null>;
 
 	@BelongsToMany(() => User, {
 		as: 'users',

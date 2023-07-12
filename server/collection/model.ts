@@ -38,7 +38,7 @@ export class Collection extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.TEXT)
-	title?: string | null;
+	title!: string | null;
 
 	@AllowNull(false)
 	@IsLowercase
@@ -48,34 +48,34 @@ export class Collection extends Model<
 	slug!: string;
 
 	@Column(DataType.TEXT)
-	avatar?: string | null;
+	avatar!: string | null;
 
 	@Column(DataType.BOOLEAN)
-	isRestricted?: boolean | null;
+	isRestricted!: boolean | null;
 
 	@Column(DataType.BOOLEAN)
-	isPublic?: boolean | null;
+	isPublic!: boolean | null;
 
 	@Column(DataType.STRING)
-	viewHash?: string | null;
+	viewHash!: string | null;
 
 	@Column(DataType.STRING)
-	editHash?: string | null;
+	editHash!: string | null;
 
 	// TODO: Add validation for this field
 	@Column(DataType.JSONB)
-	metadata?: Record<string, any> | null;
+	metadata!: Record<string, any> | null;
 
 	// TODO: Add validation for this field
 	@Column(DataType.TEXT)
-	kind?: CollectionKind | null;
+	kind!: CollectionKind | null;
 
 	@Column(DataType.TEXT)
-	doi?: string | null;
+	doi!: string | null;
 
 	@Default('choose-best')
 	@Column(DataType.ENUM('none', 'minimal', 'medium', 'choose-best'))
-	readNextPreviewSize?: CreationOptional<ReadNextPreviewSize | null>;
+	readNextPreviewSize!: CreationOptional<ReadNextPreviewSize | null>;
 
 	// TODO: Add validation for this field
 	@AllowNull(false)
@@ -89,16 +89,16 @@ export class Collection extends Model<
 	layoutAllowsDuplicatePubs!: CreationOptional<boolean>;
 
 	@Column(DataType.UUID)
-	pageId?: string | null;
+	pageId!: string | null;
 
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 
 	@Column(DataType.UUID)
-	scopeSummaryId?: string | null;
+	scopeSummaryId!: string | null;
 
 	@Column(DataType.UUID)
-	crossrefDepositRecordId?: string | null;
+	crossrefDepositRecordId!: string | null;
 
 	@HasMany(() => CollectionAttribution, {
 		onDelete: 'CASCADE',

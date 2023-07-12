@@ -96,20 +96,20 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 
 	@Length({ min: 0, max: 280 })
 	@Column(DataType.TEXT)
-	htmlDescription?: string | null;
+	htmlDescription!: string | null;
 
 	@Column(DataType.TEXT)
-	avatar?: string | null;
+	avatar!: string | null;
 
 	@Column(DataType.DATE)
-	customPublishedAt?: Date | null;
+	customPublishedAt!: Date | null;
 
 	@Column(DataType.TEXT)
-	doi?: string | null;
+	doi!: string | null;
 
 	// TODO: add validation for labels
 	@Column(DataType.JSONB)
-	labels?: string[] | null;
+	labels!: string[] | null;
 
 	/**  TODO: add validation for downloads
 	// Should be something like
@@ -121,22 +121,22 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
   }
  */
 	@Column(DataType.JSONB)
-	downloads?: any[] | null;
+	downloads!: any[] | null;
 
 	@Column(DataType.JSONB)
-	metadata?: object | null;
+	metadata!: object | null;
 
 	@Column(DataType.STRING)
-	viewHash?: string | null;
+	viewHash!: string | null;
 
 	@Column(DataType.STRING)
-	editHash?: string | null;
+	editHash!: string | null;
 
 	@Column(DataType.STRING)
-	reviewHash?: string | null;
+	reviewHash!: string | null;
 
 	@Column(DataType.STRING)
-	commentHash?: string | null;
+	commentHash!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
@@ -148,10 +148,10 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	communityId!: string;
 
 	@Column(DataType.UUID)
-	crossrefDepositRecordId?: string | null;
+	crossrefDepositRecordId!: string | null;
 
 	@Column(DataType.UUID)
-	scopeSummaryId?: string | null;
+	scopeSummaryId!: string | null;
 
 	@HasMany(() => PubAttribution, { onDelete: 'CASCADE', as: 'attributions', foreignKey: 'pubId' })
 	attributions?: PubAttribution[];

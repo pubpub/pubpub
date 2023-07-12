@@ -25,18 +25,18 @@ export class ThreadUser extends Model<
 
 	@Default('viewer')
 	@Column(DataType.ENUM('viewer', 'reviewer'))
-	type?: CreationOptional<string | null>;
+	type!: CreationOptional<string | null>;
 
 	@IsLowercase
 	@IsEmail
 	@Column(DataType.TEXT)
-	email?: string | null;
+	email!: string | null;
 
 	@Column(DataType.TEXT)
-	hash?: string | null;
+	hash!: string | null;
 
 	@Column(DataType.UUID)
-	userId?: string | null;
+	userId!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)

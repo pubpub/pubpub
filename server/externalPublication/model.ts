@@ -29,17 +29,17 @@ export class ExternalPublication extends Model<
 
 	// TODO: add validation for contributors
 	@Column(DataType.JSONB)
-	contributors?: string[] | null;
+	contributors!: string[] | null;
 
 	@Column(DataType.TEXT)
-	doi?: string | null;
+	doi!: string | null;
 
 	@Column(DataType.TEXT)
-	description?: string | null;
+	description!: string | null;
 
 	@Column(DataType.TEXT)
-	avatar?: string | null;
+	avatar!: string | null;
 
 	@Column(DataType.DATE)
-	publicationDate?: Date | null;
+	publicationDate!: Date | null;
 }

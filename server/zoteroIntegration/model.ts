@@ -21,16 +21,16 @@ export class ZoteroIntegration extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.TEXT)
-	zoteroUsername?: string | null;
+	zoteroUsername!: string | null;
 
 	@Column(DataType.TEXT)
-	zoteroUserId?: string | null;
+	zoteroUserId!: string | null;
 
 	@Column(DataType.UUID)
-	userId?: string | null;
+	userId!: string | null;
 
 	@Column(DataType.UUID)
-	integrationDataOAuth1Id?: string | null;
+	integrationDataOAuth1Id!: string | null;
 
 	@BelongsTo(() => User, { as: 'user', foreignKey: { allowNull: false, name: 'userId' } })
 	user?: User;

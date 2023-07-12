@@ -22,11 +22,11 @@ export class ThreadEvent extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.STRING)
-	type?: string | null;
+	type!: string | null;
 
 	// TODO: Add validation for this
 	@Column(DataType.JSONB)
-	data?: Record<string, any> | null;
+	data!: Record<string, any> | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)

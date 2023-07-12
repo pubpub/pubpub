@@ -38,11 +38,11 @@ export class UserSubscription extends Model<
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	threadId?: string | null;
+	threadId!: string | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;

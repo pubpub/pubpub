@@ -12,21 +12,21 @@ export class DepositTarget extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 
 	@Column(DataType.STRING)
-	doiPrefix?: string | null;
+	doiPrefix!: string | null;
 
 	@Default('crossref')
 	@Column(DataType.ENUM('crossref', 'datacite'))
-	service?: CreationOptional<'crossref' | 'datacite' | null>;
+	service!: CreationOptional<'crossref' | 'datacite' | null>;
 
 	@Column(DataType.STRING)
-	username?: string | null;
+	username!: string | null;
 
 	@Column(DataType.STRING)
-	password?: string | null;
+	password!: string | null;
 
 	@Column(DataType.TEXT)
-	passwordInitVec?: string | null;
+	passwordInitVec!: string | null;
 }

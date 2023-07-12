@@ -28,10 +28,10 @@ export class Page extends Model<InferAttributes<Page>, InferCreationAttributes<P
 	slug!: string;
 
 	@Column(DataType.TEXT)
-	description?: string | null;
+	description!: string | null;
 
 	@Column(DataType.TEXT)
-	avatar?: string | null;
+	avatar!: string | null;
 
 	@AllowNull(false)
 	@Default(false)
@@ -39,10 +39,10 @@ export class Page extends Model<InferAttributes<Page>, InferCreationAttributes<P
 	isPublic!: CreationOptional<boolean>;
 
 	@Column(DataType.BOOLEAN)
-	isNarrowWidth?: boolean | null;
+	isNarrowWidth!: boolean | null;
 
 	@Column(DataType.TEXT)
-	viewHash?: string | null;
+	viewHash!: string | null;
 
 	// TODO: Add @IsArray validation
 	@AllowNull(false)

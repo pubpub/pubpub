@@ -24,11 +24,11 @@ export class LandingPageFeature extends Model<
 
 	@Index({ unique: true })
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 
 	@Index({ unique: true })
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
@@ -36,7 +36,7 @@ export class LandingPageFeature extends Model<
 
 	// TODO: add validation for payload
 	@Column(DataType.JSONB)
-	payload?: Record<string, any> | null;
+	payload!: Record<string, any> | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;

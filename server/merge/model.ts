@@ -19,10 +19,10 @@ export class Merge extends Model<InferAttributes<Merge>, InferCreationAttributes
 	id!: CreationOptional<string>;
 
 	@Column(DataType.JSONB)
-	noteContent?: object | null;
+	noteContent!: object | null;
 
 	@Column(DataType.TEXT)
-	noteText?: string | null;
+	noteText!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)

@@ -27,14 +27,14 @@ export class Signup extends Model<InferAttributes<Signup>, InferCreationAttribut
 	email!: string;
 
 	@Column(DataType.TEXT)
-	hash?: string | null;
+	hash!: string | null;
 
 	@Column(DataType.INTEGER)
-	count?: number | null;
+	count!: number | null;
 
 	@Column(DataType.BOOLEAN)
-	completed?: boolean | null;
+	completed!: boolean | null;
 
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 }

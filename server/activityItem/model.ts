@@ -27,11 +27,11 @@ export class ActivityItem extends Model<
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	// TODO: Add validation for payload
 	@Column(DataType.JSONB)
-	payload?: ActivityItemPayload | null;
+	payload!: ActivityItemPayload | null;
 
 	@AllowNull(false)
 	@Default(DataType.NOW)
@@ -45,9 +45,9 @@ export class ActivityItem extends Model<
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	actorId?: string | null;
+	actorId!: string | null;
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	collectionId?: string | null;
+	collectionId!: string | null;
 }

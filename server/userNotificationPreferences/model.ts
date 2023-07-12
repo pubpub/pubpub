@@ -32,7 +32,7 @@ export class UserNotificationPreferences extends Model<
 	receiveNotifications!: CreationOptional<boolean>;
 
 	@Column(DataType.DATE)
-	lastReceivedNotificationsAt?: Date | null;
+	lastReceivedNotificationsAt!: Date | null;
 
 	@AllowNull(false)
 	@Default(true)

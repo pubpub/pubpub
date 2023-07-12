@@ -12,5 +12,5 @@ export class CrossrefDepositRecord extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.JSONB)
-	depositJson?: object | null;
+	depositJson!: object | null;
 }

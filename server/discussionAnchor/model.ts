@@ -35,7 +35,7 @@ export class DiscussionAnchor extends Model<
 
 	// TODO: Add validation for selection
 	@Column(DataType.JSONB)
-	selection?: null | { type: 'text'; anchor: number; head: number };
+	selection!: null | { type: 'text'; anchor: number; head: number };
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)

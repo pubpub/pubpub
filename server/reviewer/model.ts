@@ -19,7 +19,7 @@ export class Reviewer extends Model<InferAttributes<Reviewer>, InferCreationAttr
 	id!: CreationOptional<string>;
 
 	@Column(DataType.TEXT)
-	name?: string | null;
+	name!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)

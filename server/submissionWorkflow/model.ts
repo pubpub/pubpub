@@ -28,7 +28,7 @@ export class SubmissionWorkflow extends Model<
 	title!: string;
 
 	@Column(DataType.UUID)
-	collectionId?: string | null;
+	collectionId!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.BOOLEAN)

@@ -54,13 +54,13 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	initials!: string;
 
 	@Column(DataType.TEXT)
-	avatar?: string | null;
+	avatar!: string | null;
 
 	@Column(DataType.TEXT)
-	bio?: string | null;
+	bio!: string | null;
 
 	@Column(DataType.TEXT)
-	title?: string | null;
+	title!: string | null;
 
 	@AllowNull(false)
 	@IsLowercase
@@ -72,46 +72,46 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	@IsLowercase
 	@IsEmail
 	@Column(DataType.TEXT)
-	publicEmail?: string | null;
+	publicEmail!: string | null;
 
 	@Column(DataType.TEXT)
-	authRedirectHost?: string | null;
+	authRedirectHost!: string | null;
 
 	@Column(DataType.TEXT)
-	location?: string | null;
+	location!: string | null;
 
 	@Column(DataType.TEXT)
-	website?: string | null;
+	website!: string | null;
 
 	@Column(DataType.TEXT)
-	facebook?: string | null;
+	facebook!: string | null;
 
 	@Column(DataType.TEXT)
-	twitter?: string | null;
+	twitter!: string | null;
 
 	@Column(DataType.TEXT)
-	github?: string | null;
+	github!: string | null;
 
 	@Column(DataType.TEXT)
-	orcid?: string | null;
+	orcid!: string | null;
 
 	@Column(DataType.TEXT)
-	googleScholar?: string | null;
+	googleScholar!: string | null;
 
 	@Column(DataType.DATE)
-	resetHashExpiration?: Date | null;
+	resetHashExpiration!: Date | null;
 
 	@Column(DataType.TEXT)
-	resetHash?: string | null;
+	resetHash!: string | null;
 
 	@Column(DataType.BOOLEAN)
-	inactive?: boolean | null;
+	inactive!: boolean | null;
 
 	@Column(DataType.INTEGER)
-	pubpubV3Id?: number | null;
+	pubpubV3Id!: number | null;
 
 	@Column(DataType.TEXT)
-	passwordDigest?: string | null;
+	passwordDigest!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
@@ -123,7 +123,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 
 	@Default(null)
 	@Column(DataType.BOOLEAN)
-	gdprConsent?: CreationOptional<boolean | null>;
+	gdprConsent!: CreationOptional<boolean | null>;
 
 	@AllowNull(false)
 	@Default(false)

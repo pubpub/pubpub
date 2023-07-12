@@ -15,7 +15,7 @@ export class IntegrationDataOAuth1 extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.TEXT)
-	accessToken?: string | null;
+	accessToken!: string | null;
 
 	@HasOne(() => ZoteroIntegration, {
 		foreignKey: { allowNull: false, name: 'integrationDataOAuth1Id' },

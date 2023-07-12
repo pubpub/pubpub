@@ -23,10 +23,10 @@ export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttrib
 	pubId!: string;
 
 	@Column(DataType.UUID)
-	externalPublicationId?: string | null;
+	externalPublicationId!: string | null;
 
 	@Column(DataType.UUID)
-	targetPubId?: string | null;
+	targetPubId!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.STRING)

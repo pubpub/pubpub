@@ -21,10 +21,10 @@ export class Member extends Model<InferAttributes<Member>, InferCreationAttribut
 
 	@Default('view')
 	@Column(DataType.ENUM('view', 'edit', 'manage', 'admin'))
-	permissions?: CreationOptional<MemberPermission | null>;
+	permissions!: CreationOptional<MemberPermission | null>;
 
 	@Column(DataType.BOOLEAN)
-	isOwner?: boolean | null;
+	isOwner!: boolean | null;
 
 	@AllowNull(false)
 	@Default(false)
@@ -36,16 +36,16 @@ export class Member extends Model<InferAttributes<Member>, InferCreationAttribut
 	userId!: string;
 
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	@Column(DataType.UUID)
-	collectionId?: string | null;
+	collectionId!: string | null;
 
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 
 	@Column(DataType.UUID)
-	organizationId?: string | null;
+	organizationId!: string | null;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;

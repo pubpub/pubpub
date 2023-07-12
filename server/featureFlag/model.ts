@@ -23,15 +23,15 @@ export class FeatureFlag extends Model<
 
 	@Index({ unique: true })
 	@Column(DataType.STRING)
-	name?: string | null;
+	name!: string | null;
 
 	@Default(0)
 	@Column(DataType.DOUBLE)
-	enabledUsersFraction?: CreationOptional<number | null>;
+	enabledUsersFraction!: CreationOptional<number | null>;
 
 	@Default(0)
 	@Column(DataType.DOUBLE)
-	enabledCommunitiesFraction?: CreationOptional<number | null>;
+	enabledCommunitiesFraction!: CreationOptional<number | null>;
 
 	@HasMany(() => FeatureFlagUser, {
 		onDelete: 'CASCADE',
