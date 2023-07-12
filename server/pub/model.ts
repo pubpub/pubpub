@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	Model,
 	Table,
@@ -16,18 +15,7 @@ import {
 	BelongsTo,
 	HasOne,
 } from 'sequelize-typescript';
-import type {
-	InferAttributes,
-	InferCreationAttributes,
-	CreationOptional,
-	BuildOptions,
-	Logging,
-	Silent,
-	Transactionable,
-	Hookable,
-	TruncateOptions,
-	Paranoid,
-} from 'sequelize';
+import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import {
 	PubAttribution,
 	CollectionPub,
