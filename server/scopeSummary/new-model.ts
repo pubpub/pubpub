@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Collection, Pub, Community } from '../models';
 
 @Table
-export class ScopeSummary extends Model<
+class ScopeSummary extends Model<
 	InferAttributes<ScopeSummary>,
 	InferCreationAttributes<ScopeSummary>
 > {
@@ -51,11 +51,16 @@ export class ScopeSummary extends Model<
 	// 	foreignKey: 'scopeSummaryId',
 	// 	onDelete: 'CASCADE',
 	// })
-	// collection?: Collection;
+	// 	// collection?: Collection;
+	// collection?: any;
 
 	// @HasOne(() => Pub, { as: 'pub', foreignKey: 'scopeSummaryId', onDelete: 'CASCADE' })
-	// pub?: Pub;
+	// 	// pub?: Pub;
+	// pub?: any;
 
 	// @HasOne(() => Community, { as: 'community', foreignKey: 'scopeSummaryId', onDelete: 'CASCADE' })
-	// community?: Community;
+	// 	// community?: Community;
+	// community?: any;
 }
+
+export const ScopeSummaryAnyModel = ScopeSummary as any;

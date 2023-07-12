@@ -11,7 +11,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User, IntegrationDataOAuth1 } from '../models';
 
 @Table
-export class ZoteroIntegration extends Model<
+class ZoteroIntegration extends Model<
 	InferAttributes<ZoteroIntegration>,
 	InferCreationAttributes<ZoteroIntegration>
 > {
@@ -33,12 +33,16 @@ export class ZoteroIntegration extends Model<
 	integrationDataOAuth1Id?: string | null;
 
 	@BelongsTo(() => User, { as: 'user', foreignKey: { allowNull: false, name: 'userId' } })
-	user?: User;
+	// 	user?: User;
+	user?: any;
 
 	@BelongsTo(() => IntegrationDataOAuth1, {
 		foreignKey: { allowNull: false, name: 'integrationDataOAuth1Id' },
 		as: 'integrationDataOAuth1',
 		onDelete: 'CASCADE',
 	})
-	integrationDataOAuth1?: IntegrationDataOAuth1;
+	// 	integrationDataOAuth1?: IntegrationDataOAuth1;
+	integrationDataOAuth1?: any;
 }
+
+export const ZoteroIntegrationAnyModel = ZoteroIntegration as any;

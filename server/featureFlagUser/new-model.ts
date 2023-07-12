@@ -11,7 +11,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User, FeatureFlag } from '../models';
 
 @Table
-export class FeatureFlagUser extends Model<
+class FeatureFlagUser extends Model<
 	InferAttributes<FeatureFlagUser>,
 	InferCreationAttributes<FeatureFlagUser>
 > {
@@ -30,12 +30,16 @@ export class FeatureFlagUser extends Model<
 	enabled?: boolean | null;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	user?: User;
+	// 	user?: User;
+	user?: any;
 
 	@BelongsTo(() => FeatureFlag, {
 		onDelete: 'CASCADE',
 		as: 'featureFlag',
 		foreignKey: 'featureFlagId',
 	})
-	featureFlag?: FeatureFlag;
+	// 	featureFlag?: FeatureFlag;
+	featureFlag?: any;
 }
+
+export const FeatureFlagUserAnyModel = FeatureFlagUser as any;

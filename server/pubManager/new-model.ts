@@ -12,10 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User } from '../models';
 
 @Table
-export class PubManager extends Model<
-	InferAttributes<PubManager>,
-	InferCreationAttributes<PubManager>
-> {
+class PubManager extends Model<InferAttributes<PubManager>, InferCreationAttributes<PubManager>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -30,5 +27,8 @@ export class PubManager extends Model<
 	pubId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	user?: User;
+	// 	user?: User;
+	user?: any;
 }
+
+export const PubManagerAnyModel = PubManager as any;

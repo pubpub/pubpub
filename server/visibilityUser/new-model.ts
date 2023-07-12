@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User, Visibility } from '../models';
 
 @Table
-export class VisibilityUser extends Model<
+class VisibilityUser extends Model<
 	InferAttributes<VisibilityUser>,
 	InferCreationAttributes<VisibilityUser>
 > {
@@ -31,3 +31,5 @@ export class VisibilityUser extends Model<
 	@Column(DataType.UUID)
 	visibilityId!: string;
 }
+
+export const VisibilityUserAnyModel = VisibilityUser as any;

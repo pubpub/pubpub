@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Pub, ExternalPublication } from '../models';
 
 @Table
-export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttributes<PubEdge>> {
+class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttributes<PubEdge>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -45,15 +45,20 @@ export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttrib
 	approvedByTarget!: boolean;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	pub?: Pub;
+	// 	pub?: Pub;
+	pub?: any;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'targetPub', foreignKey: 'targetPubId' })
-	targetPub?: Pub;
+	// 	targetPub?: Pub;
+	targetPub?: any;
 
 	@BelongsTo(() => ExternalPublication, {
 		onDelete: 'CASCADE',
 		as: 'externalPublication',
 		foreignKey: 'externalPublicationId',
 	})
-	externalPublication?: ExternalPublication;
+	// 	externalPublication?: ExternalPublication;
+	externalPublication?: any;
 }
+
+export const PubEdgeAnyModel = PubEdge as any;

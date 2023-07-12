@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { ActivityItemKind, ActivityItemPayload } from 'types';
 
 @Table
-export class ActivityItem extends Model<
+class ActivityItem extends Model<
 	InferAttributes<ActivityItem>,
 	InferCreationAttributes<ActivityItem>
 > {
@@ -30,7 +30,8 @@ export class ActivityItem extends Model<
 	pubId?: string | null;
 
 	@Column(DataType.JSONB)
-	payload?: ActivityItemPayload | null;
+	// 	payload?: ActivityItemPayload | null;
+	payload?: any;
 
 	@AllowNull(false)
 	@Default(DataType.NOW)
@@ -50,3 +51,5 @@ export class ActivityItem extends Model<
 	@Column(DataType.UUID)
 	collectionId?: string | null;
 }
+
+export const ActivityItemAnyModel = ActivityItem as any;

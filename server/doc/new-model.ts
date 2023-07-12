@@ -11,7 +11,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { DocJson } from 'types';
 
 @Table
-export class Doc extends Model<InferAttributes<Doc>, InferCreationAttributes<Doc>> {
+class Doc extends Model<InferAttributes<Doc>, InferCreationAttributes<Doc>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -22,3 +22,5 @@ export class Doc extends Model<InferAttributes<Doc>, InferCreationAttributes<Doc
 	@Column(DataType.JSONB)
 	content!: DocJson;
 }
+
+export const DocAnyModel = Doc as any;

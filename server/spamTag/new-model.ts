@@ -11,7 +11,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { SpamStatus } from 'types';
 
 @Table
-export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttributes<SpamTag>> {
+class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttributes<SpamTag>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -24,7 +24,8 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 	status!: CreationOptional<SpamStatus>;
 
 	@Column(DataType.DATE)
-	statusUpdatedAt?: Date | null;
+	// 	statusUpdatedAt?: Date | null;
+	statusUpdatedAt?: any;
 
 	/**
 	 * TODO: add validation and better type for fields
@@ -63,5 +64,8 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 
 	@Default(1)
 	@Column(DataType.INTEGER)
-	spamScoreVersion?: CreationOptional<number | null>;
+	// 	spamScoreVersion?: CreationOptional<number | null>;
+	spamScoreVersion?: any;
 }
+
+export const SpamTagAnyModel = SpamTag as any;

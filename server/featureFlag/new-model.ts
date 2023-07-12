@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { FeatureFlagUser, FeatureFlagCommunity } from '../models';
 
 @Table
-export class FeatureFlag extends Model<
+class FeatureFlag extends Model<
 	InferAttributes<FeatureFlag>,
 	InferCreationAttributes<FeatureFlag>
 > {
@@ -27,23 +27,29 @@ export class FeatureFlag extends Model<
 
 	@Default(0)
 	@Column(DataType.DOUBLE)
-	enabledUsersFraction?: CreationOptional<number | null>;
+	// 	enabledUsersFraction?: CreationOptional<number | null>;
+	enabledUsersFraction?: any;
 
 	@Default(0)
 	@Column(DataType.DOUBLE)
-	enabledCommunitiesFraction?: CreationOptional<number | null>;
+	// 	enabledCommunitiesFraction?: CreationOptional<number | null>;
+	enabledCommunitiesFraction?: any;
 
 	@HasMany(() => FeatureFlagUser, {
 		onDelete: 'CASCADE',
 		as: 'users',
 		foreignKey: 'featureFlagId',
 	})
-	users?: FeatureFlagUser[];
+	// 	users?: FeatureFlagUser[];
+	users?: any;
 
 	@HasMany(() => FeatureFlagCommunity, {
 		onDelete: 'CASCADE',
 		as: 'communities',
 		foreignKey: 'featureFlagId',
 	})
-	communities?: FeatureFlagCommunity[];
+	// 	communities?: FeatureFlagCommunity[];
+	communities?: any;
 }
+
+export const FeatureFlagAnyModel = FeatureFlag as any;

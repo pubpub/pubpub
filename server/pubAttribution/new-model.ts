@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User, Pub } from '../models';
 
 @Table
-export class PubAttribution extends Model<
+class PubAttribution extends Model<
 	InferAttributes<PubAttribution>,
 	InferCreationAttributes<PubAttribution>
 > {
@@ -54,8 +54,12 @@ export class PubAttribution extends Model<
 	pubId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	user?: User;
+	// 	user?: User;
+	user?: any;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	pub?: Pub;
+	// 	pub?: Pub;
+	pub?: any;
 }
+
+export const PubAttributionAnyModel = PubAttribution as any;

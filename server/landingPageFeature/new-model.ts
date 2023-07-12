@@ -13,7 +13,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Pub, Community } from '../models';
 
 @Table
-export class LandingPageFeature extends Model<
+class LandingPageFeature extends Model<
 	InferAttributes<LandingPageFeature>,
 	InferCreationAttributes<LandingPageFeature>
 > {
@@ -36,11 +36,16 @@ export class LandingPageFeature extends Model<
 
 	// TODO: add validation for payload
 	@Column(DataType.JSONB)
-	payload?: Record<string, any> | null;
+	// 	payload?: Record<string, any> | null;
+	payload?: any;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	pub?: Pub;
+	// 	pub?: Pub;
+	pub?: any;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
-	community?: Community;
+	// 	community?: Community;
+	community?: any;
 }
+
+export const LandingPageFeatureAnyModel = LandingPageFeature as any;

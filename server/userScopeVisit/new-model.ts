@@ -2,7 +2,7 @@ import { Model, Table, Column, DataType, PrimaryKey, Default, Index } from 'sequ
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-export class UserScopeVisit extends Model<
+class UserScopeVisit extends Model<
 	InferAttributes<UserScopeVisit>,
 	InferCreationAttributes<UserScopeVisit>
 > {
@@ -27,3 +27,5 @@ export class UserScopeVisit extends Model<
 	@Column(DataType.UUID)
 	communityId?: string | null;
 }
+
+export const UserScopeVisitAnyModel = UserScopeVisit as any;

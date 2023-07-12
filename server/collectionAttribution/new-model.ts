@@ -13,7 +13,7 @@ import { User, Collection } from '../models';
 import { MinimalUser } from 'types';
 
 @Table
-export class CollectionAttribution extends Model<
+class CollectionAttribution extends Model<
 	InferAttributes<CollectionAttribution>,
 	InferCreationAttributes<CollectionAttribution>
 > {
@@ -55,12 +55,16 @@ export class CollectionAttribution extends Model<
 	collectionId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	user?: MinimalUser;
+	// 	user?: MinimalUser;
+	user?: any;
 
 	@BelongsTo(() => Collection, {
 		onDelete: 'CASCADE',
 		as: 'collection',
 		foreignKey: 'collectionId',
 	})
-	collection?: Collection;
+	// 	collection?: Collection;
+	collection?: any;
 }
+
+export const CollectionAttributionAnyModel = CollectionAttribution as any;

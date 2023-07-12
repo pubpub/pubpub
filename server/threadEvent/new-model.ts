@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User } from '../models';
 
 @Table
-export class ThreadEvent extends Model<
+class ThreadEvent extends Model<
 	InferAttributes<ThreadEvent>,
 	InferCreationAttributes<ThreadEvent>
 > {
@@ -26,7 +26,8 @@ export class ThreadEvent extends Model<
 
 	// TODO: Add validation for this
 	@Column(DataType.JSONB)
-	data?: Record<string, any> | null;
+	// 	data?: Record<string, any> | null;
+	data?: any;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
@@ -37,5 +38,8 @@ export class ThreadEvent extends Model<
 	threadId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	user?: User;
+	// 	user?: User;
+	user?: any;
 }
+
+export const ThreadEventAnyModel = ThreadEvent as any;

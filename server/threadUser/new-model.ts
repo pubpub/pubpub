@@ -14,10 +14,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { User } from '../models';
 
 @Table
-export class ThreadUser extends Model<
-	InferAttributes<ThreadUser>,
-	InferCreationAttributes<ThreadUser>
-> {
+class ThreadUser extends Model<InferAttributes<ThreadUser>, InferCreationAttributes<ThreadUser>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -25,7 +22,8 @@ export class ThreadUser extends Model<
 
 	@Default('viewer')
 	@Column(DataType.ENUM('viewer', 'reviewer'))
-	type?: CreationOptional<string | null>;
+	// 	type?: CreationOptional<string | null>;
+	type?: any;
 
 	@IsLowercase
 	@IsEmail
@@ -43,5 +41,8 @@ export class ThreadUser extends Model<
 	threadId!: string;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	user?: User;
+	// 	user?: User;
+	user?: any;
 }
+
+export const ThreadUserAnyModel = ThreadUser as any;

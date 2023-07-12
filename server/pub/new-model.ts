@@ -47,31 +47,31 @@ import {
 	ScopeSummary,
 } from '../models';
 
-declare module 'sequelize' {
-	export interface CreateOptions<TAttributes = any>
-		extends BuildOptions,
-			Logging,
-			Silent,
-			Transactionable,
-			Hookable {
-		actorId?: string;
-	}
+// declare module 'sequelize' {
+// 	export interface CreateOptions<TAttributes = any>
+// 		extends BuildOptions,
+// 			Logging,
+// 			Silent,
+// 			Transactionable,
+// 			Hookable {
+// 		actorId?: string | null;
+// 	}
 
-	export interface DestroyOptions<TAttributes = any> extends TruncateOptions<TAttributes> {
-		actorId?: string;
-	}
+// 	export interface DestroyOptions<TAttributes = any> extends TruncateOptions<TAttributes> {
+// 		actorId?: string | null;
+// 	}
 
-	export interface UpdateOptions<TAttributes = any>
-		extends Logging,
-			Transactionable,
-			Paranoid,
-			Hookable {
-		actorId?: string;
-	}
-}
+// 	export interface UpdateOptions<TAttributes = any>
+// 		extends Logging,
+// 			Transactionable,
+// 			Paranoid,
+// 			Hookable {
+// 		actorId?: string | null;
+// 	}
+// }
 
 @Table
-export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
+class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -90,11 +90,11 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	title!: string;
 
 	@Column(DataType.TEXT)
-	htmlTitle?: string | null;
+	htmlTitle!: string | null;
 
 	@Length({ min: 0, max: 280 })
 	@Column(DataType.TEXT)
-	description?: string | null;
+	description!: string | null;
 
 	@Length({ min: 0, max: 280 })
 	@Column(DataType.TEXT)
@@ -104,7 +104,8 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	avatar?: string | null;
 
 	@Column(DataType.DATE)
-	customPublishedAt?: Date | null;
+	// 	customPublishedAt?: Date | null;
+	customPublishedAt?: any;
 
 	@Column(DataType.TEXT)
 	doi?: string | null;
@@ -156,7 +157,8 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	scopeSummaryId?: string | null;
 
 	@HasMany(() => PubAttribution, { onDelete: 'CASCADE', as: 'attributions', foreignKey: 'pubId' })
-	attributions?: PubAttribution[];
+	// 	attributions?: PubAttribution[];
+	attributions?: any;
 
 	@HasMany(() => CollectionPub, {
 		onDelete: 'CASCADE',
@@ -164,52 +166,68 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 		as: 'collectionPubs',
 		foreignKey: 'pubId',
 	})
-	collectionPubs?: CollectionPub[];
+	// 	collectionPubs?: CollectionPub[];
+	collectionPubs?: any;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
-	community?: Community;
+	// 	community?: Community;
+	community?: any;
 
 	@BelongsTo(() => Draft, { as: 'draft', foreignKey: 'draftId' })
-	draft?: Draft;
+	// 	draft?: Draft;
+	draft?: any;
 
 	@HasMany(() => Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: 'pubId' })
-	discussions?: Discussion[];
+	// 	discussions?: Discussion[];
+	discussions?: any;
 
 	@HasMany(() => Export, { as: 'exports', foreignKey: 'pubId' })
-	exports?: Export[];
+	// 	exports?: Export[];
+	exports?: any;
 
 	@HasMany(() => ReviewNew, { onDelete: 'CASCADE', as: 'reviews', foreignKey: 'pubId' })
-	reviews?: ReviewNew[];
+	// 	reviews?: ReviewNew[];
+	reviews?: any;
 
 	@HasMany(() => Member, { onDelete: 'CASCADE', as: 'members', foreignKey: 'pubId' })
-	members?: Member[];
+	// 	members?: Member[];
+	members?: any;
 
 	@HasMany(() => Release, { onDelete: 'CASCADE', as: 'releases', foreignKey: 'pubId' })
-	releases?: Release[];
+	// 	releases?: Release[];
+	releases?: any;
 
 	@HasMany(() => PubVersion, { onDelete: 'CASCADE', as: 'pubVersions', foreignKey: 'pubId' })
-	pubVersions?: PubVersion[];
+	// 	pubVersions?: PubVersion[];
+	pubVersions?: any;
 
 	@HasMany(() => PubEdge, { onDelete: 'CASCADE', as: 'outboundEdges', foreignKey: 'pubId' })
-	outboundEdges?: Omit<PubEdge, 'pub'>[];
+	// 	outboundEdges?: Omit<PubEdge, 'pub'>[];
+	outboundEdges?: any;
 
 	@HasMany(() => PubEdge, { onDelete: 'CASCADE', as: 'inboundEdges', foreignKey: 'targetPubId' })
-	inboundEdges?: Omit<PubEdge, 'targetPub'>[];
+	// 	inboundEdges?: Omit<PubEdge, 'targetPub'>[];
+	inboundEdges?: any;
 
 	@HasOne(() => Submission, { as: 'submission', foreignKey: 'pubId' })
-	submission?: Submission;
+	// 	submission?: Submission;
+	submission?: any;
 
 	@BelongsTo(() => CrossrefDepositRecord, {
 		as: 'crossrefDepositRecord',
 		foreignKey: 'crossrefDepositRecordId',
 		onDelete: 'SET NULL',
 	})
-	crossrefDepositRecord?: CrossrefDepositRecord;
+	// 	crossrefDepositRecord?: CrossrefDepositRecord;
+	crossrefDepositRecord?: any;
 
 	@BelongsTo(() => ScopeSummary, {
 		as: 'scopeSummary',
 		foreignKey: 'scopeSummaryId',
 		onDelete: 'SET NULL',
 	})
-	scopeSummary?: ScopeSummary;
+	// 	scopeSummary?: ScopeSummary;
+	scopeSummary?: any;
 }
+
+export const PubAnyModel = Pub as any;

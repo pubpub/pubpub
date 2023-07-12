@@ -10,10 +10,10 @@ import {
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { User, Commenter } from '../models';
-import { DocJson } from 'types';
+// import { DocJson } from 'types';
 
 @Table
-export class ThreadComment extends Model<
+class ThreadComment extends Model<
 	InferAttributes<ThreadComment>,
 	InferCreationAttributes<ThreadComment>
 > {
@@ -27,7 +27,8 @@ export class ThreadComment extends Model<
 
 	// TODO: Add validation for this
 	@Column(DataType.JSONB)
-	content?: DocJson | null;
+	// 	content?: DocJson | null;
+	content?: any;
 
 	@Column(DataType.UUID)
 	userId?: string | null;
@@ -40,8 +41,12 @@ export class ThreadComment extends Model<
 	commenterId?: string | null;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'userId' })
-	author?: User;
+	// 	author?: User;
+	author?: any;
 
 	@BelongsTo(() => Commenter, { onDelete: 'CASCADE', as: 'commenter', foreignKey: 'commenterId' })
-	commenter?: Commenter;
+	// 	commenter?: Commenter;
+	commenter?: any;
 }
+
+export const ThreadCommentAnyModel = ThreadComment as any;

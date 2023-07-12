@@ -14,10 +14,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Thread, Visibility, User, Pub, Reviewer } from '../models';
 
 @Table
-export class ReviewNew extends Model<
-	InferAttributes<ReviewNew>,
-	InferCreationAttributes<ReviewNew>
-> {
+class ReviewNew extends Model<InferAttributes<ReviewNew>, InferCreationAttributes<ReviewNew>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -32,7 +29,8 @@ export class ReviewNew extends Model<
 
 	@Default('open')
 	@Column(DataType.ENUM('open', 'closed', 'completed'))
-	status?: CreationOptional<'open' | 'closed' | 'completed' | null>;
+	// 	status?: CreationOptional<'open' | 'closed' | 'completed' | null>;
+	status?: any;
 
 	@Column(DataType.BOOLEAN)
 	releaseRequested?: boolean | null;
@@ -60,14 +58,16 @@ export class ReviewNew extends Model<
 	reviewContent?: object | null;
 
 	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
-	thread?: Thread;
+	// 	thread?: Thread;
+	thread?: any;
 
 	@BelongsTo(() => Visibility, {
 		onDelete: 'CASCADE',
 		as: 'visibility',
 		foreignKey: 'visibilityId',
 	})
-	visibility?: Visibility;
+	// 	visibility?: Visibility;
+	visibility?: any;
 
 	@BelongsTo(() => User, {
 		onDelete: 'CASCADE',
@@ -75,11 +75,16 @@ export class ReviewNew extends Model<
 		foreignKey: 'userId',
 		constraints: false,
 	})
-	author?: User;
+	// 	author?: User;
+	author?: any;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	pub?: Pub;
+	// 	pub?: Pub;
+	pub?: any;
 
 	@HasMany(() => Reviewer, { onDelete: 'CASCADE', as: 'reviewers', foreignKey: 'reviewId' })
-	reviewers?: Reviewer[];
+	// 	reviewers?: Reviewer[];
+	reviewers?: any;
 }
+
+export const ReviewNewAnyModel = ReviewNew as any;

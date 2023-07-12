@@ -11,7 +11,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Pub } from '../models';
 
 @Table
-export class PublicPermissions extends Model<
+class PublicPermissions extends Model<
 	InferAttributes<PublicPermissions>,
 	InferCreationAttributes<PublicPermissions>
 > {
@@ -45,5 +45,8 @@ export class PublicPermissions extends Model<
 	organizationId?: string | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	pub?: Pub;
+	// 	pub?: Pub;
+	pub?: any;
 }
+
+export const PublicPermissionsAnyModel = PublicPermissions as any;

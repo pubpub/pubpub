@@ -14,6 +14,8 @@ import {
 	HasMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { CommunityHeaderLink, CommunityHeroButton } from 'types';
+import { CommunityNavigationEntry } from 'client/utils/navigation';
 import {
 	Organization,
 	Collection,
@@ -23,14 +25,9 @@ import {
 	ScopeSummary,
 	SpamTag,
 } from '../models';
-import { CommunityHeaderLink, CommunityHeroButton } from 'types';
-import { CommunityNavigationEntry } from 'client/utils/navigation';
 
 @Table
-export class Community extends Model<
-	InferAttributes<Community>,
-	InferCreationAttributes<Community>
-> {
+class Community extends Model<InferAttributes<Community>, InferCreationAttributes<Community>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -82,11 +79,13 @@ export class Community extends Model<
 
 	// TODO: Add validation for headerLinks
 	@Column(DataType.JSONB)
-	headerLinks?: CommunityHeaderLink[] | null;
+	// 	headerLinks?: CommunityHeaderLink[] | null;
+	headerLinks?: any;
 
 	@Default('dark')
 	@Column(DataType.ENUM('light', 'dark', 'custom'))
-	headerColorType?: CreationOptional<'light' | 'dark' | 'custom' | null>;
+	// 	headerColorType?: CreationOptional<'light' | 'dark' | 'custom' | null>;
+	headerColorType?: any;
 
 	@Column(DataType.BOOLEAN)
 	useHeaderTextAccent?: boolean | null;
@@ -123,29 +122,34 @@ export class Community extends Model<
 
 	// TODO: Add validation for heroPrimaryButton
 	@Column(DataType.JSONB)
-	heroPrimaryButton?: CommunityHeroButton | null;
+	// 	heroPrimaryButton?: CommunityHeroButton | null;
+	heroPrimaryButton?: any;
 
 	// TODO: Add validation for heroSecondaryButton
 	@Column(DataType.JSONB)
-	heroSecondaryButton?: CommunityHeroButton | null;
+	// 	heroSecondaryButton?: CommunityHeroButton | null;
+	heroSecondaryButton?: any;
 
 	@Column(DataType.TEXT)
 	heroAlign?: string | null;
 
 	// TODO: Add validation for navigation
 	@Column(DataType.JSONB)
-	navigation?: CommunityNavigationEntry[] | null;
+	// 	navigation?: CommunityNavigationEntry[] | null;
+	navigation?: any;
 
 	@Column(DataType.BOOLEAN)
 	hideNav?: boolean | null;
 
 	// TODO: Add validation for navLinks
 	@Column(DataType.JSONB)
-	navLinks?: CommunityNavigationEntry[] | null;
+	// 	navLinks?: CommunityNavigationEntry[] | null;
+	navLinks?: any;
 
 	// TODO: Add validation for footerLinks
 	@Column(DataType.JSONB)
-	footerLinks?: CommunityNavigationEntry[] | null;
+	// 	footerLinks?: CommunityNavigationEntry[] | null;
+	footerLinks?: any;
 
 	@Column(DataType.TEXT)
 	footerLogoLink?: string | null;
@@ -182,7 +186,8 @@ export class Community extends Model<
 
 	@Default(false)
 	@Column(DataType.BOOLEAN)
-	premiumLicenseFlag?: CreationOptional<boolean | null>;
+	// 	premiumLicenseFlag?: CreationOptional<boolean | null>;
+	premiumLicenseFlag?: any;
 
 	// TODO: Add validation for defaultPubCollections
 	@Column(DataType.JSONB)
@@ -202,37 +207,46 @@ export class Community extends Model<
 		as: 'organization',
 		foreignKey: 'organizationId',
 	})
-	organization?: Organization;
+	// 	organization?: Organization;
+	organization?: any;
 
 	@HasMany(() => Collection, {
 		onDelete: 'CASCADE',
 		as: 'collections',
 		foreignKey: 'communityId',
 	})
-	collections?: Collection[];
+	// 	collections?: Collection[];
+	collections?: any;
 
 	@HasMany(() => Pub, { onDelete: 'CASCADE', as: 'pubs', foreignKey: 'communityId' })
-	pubs?: Pub[];
+	// 	pubs?: Pub[];
+	pubs?: any;
 
 	@HasMany(() => Page, { onDelete: 'CASCADE', as: 'pages', foreignKey: 'communityId' })
-	pages?: Page[];
+	// 	pages?: Page[];
+	pages?: any;
 
 	@HasMany(() => DepositTarget, {
 		onDelete: 'CASCADE',
 		as: 'depositTargets',
 		foreignKey: 'communityId',
 	})
-	depositTargets?: DepositTarget[];
+	// 	depositTargets?: DepositTarget[];
+	depositTargets?: any;
 
 	@BelongsTo(() => ScopeSummary, {
 		as: 'scopeSummary',
 		foreignKey: 'scopeSummaryId',
 		onDelete: 'SET NULL',
 	})
-	scopeSummary?: ScopeSummary;
+	// 	scopeSummary?: ScopeSummary;
+	scopeSummary?: any;
 
 	@BelongsTo(() => SpamTag, { as: 'spamTag', foreignKey: 'spamTagId' })
-	spamTag?: SpamTag;
+	// 	spamTag?: SpamTag;
+	spamTag?: any;
 
 	declare accentTextColor: CreationOptional<string>;
 }
+
+export const CommunityAnyModel = Community as any;

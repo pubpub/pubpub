@@ -13,10 +13,7 @@ import type { SubmissionStatus } from 'types';
 import { Pub, SubmissionWorkflow } from '../models';
 
 @Table
-export class Submission extends Model<
-	InferAttributes<Submission>,
-	InferCreationAttributes<Submission>
-> {
+class Submission extends Model<InferAttributes<Submission>, InferCreationAttributes<Submission>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -28,7 +25,8 @@ export class Submission extends Model<
 	status!: SubmissionStatus;
 
 	@Column(DataType.DATE)
-	submittedAt?: Date | null;
+	// 	submittedAt?: Date | null;
+	submittedAt?: any;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
@@ -46,12 +44,16 @@ export class Submission extends Model<
 	abstract?: object | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	pub?: Pub;
+	// 	pub?: Pub;
+	pub?: any;
 
 	@BelongsTo(() => SubmissionWorkflow, {
 		onDelete: 'CASCADE',
 		as: 'submissionWorkflow',
 		foreignKey: 'submissionWorkflowId',
 	})
-	submissionWorkflow?: SubmissionWorkflow;
+	// 	submissionWorkflow?: SubmissionWorkflow;
+	submissionWorkflow?: any;
 }
+
+export const SubmissionAnyModel = Submission as any;

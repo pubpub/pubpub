@@ -11,7 +11,7 @@ import {
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-export class UserDismissable extends Model<
+class UserDismissable extends Model<
 	InferAttributes<UserDismissable>,
 	InferCreationAttributes<UserDismissable>
 > {
@@ -29,3 +29,5 @@ export class UserDismissable extends Model<
 	@Column(DataType.UUID)
 	userId!: string;
 }
+
+export const UserDismissableAnyModel = UserDismissable as any;

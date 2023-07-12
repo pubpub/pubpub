@@ -13,7 +13,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { ActivityItem, UserSubscription, User } from '../models';
 
 @Table
-export class UserNotification extends Model<
+class UserNotification extends Model<
 	InferAttributes<UserNotification>,
 	InferCreationAttributes<UserNotification>
 > {
@@ -50,15 +50,20 @@ export class UserNotification extends Model<
 		as: 'activityItem',
 		foreignKey: 'activityItemId',
 	})
-	activityItem?: ActivityItem;
+	// 	activityItem?: ActivityItem;
+	activityItem?: any;
 
 	@BelongsTo(() => UserSubscription, {
 		onDelete: 'CASCADE',
 		as: 'userSubscription',
 		foreignKey: 'userSubscriptionId',
 	})
-	userSubscription?: UserSubscription;
+	// 	userSubscription?: UserSubscription;
+	userSubscription?: any;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
-	user?: User;
+	// 	user?: User;
+	user?: any;
 }
+
+export const UserNotificationAnyModel = UserNotification as any;

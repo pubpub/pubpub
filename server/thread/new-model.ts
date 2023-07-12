@@ -3,7 +3,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { ThreadComment, ThreadEvent } from '../models';
 
 @Table
-export class Thread extends Model<InferAttributes<Thread>, InferCreationAttributes<Thread>> {
+class Thread extends Model<InferAttributes<Thread>, InferCreationAttributes<Thread>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -13,8 +13,12 @@ export class Thread extends Model<InferAttributes<Thread>, InferCreationAttribut
 	isLocked?: boolean | null;
 
 	@HasMany(() => ThreadComment, { onDelete: 'CASCADE', as: 'comments', foreignKey: 'threadId' })
-	comments?: ThreadComment[];
+	// 	comments?: ThreadComment[];
+	comments?: any;
 
 	@HasMany(() => ThreadEvent, { onDelete: 'CASCADE', as: 'events', foreignKey: 'threadId' })
-	events?: ThreadEvent[];
+	// 	events?: ThreadEvent[];
+	events?: any;
 }
+
+export const ThreadAnyModel = Thread as any;

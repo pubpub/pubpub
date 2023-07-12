@@ -2,10 +2,7 @@ import { Model, Table, Column, DataType, PrimaryKey, Default } from 'sequelize-t
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 @Table
-export class Commenter extends Model<
-	InferAttributes<Commenter>,
-	InferCreationAttributes<Commenter>
-> {
+class Commenter extends Model<InferAttributes<Commenter>, InferCreationAttributes<Commenter>> {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -14,3 +11,5 @@ export class Commenter extends Model<
 	@Column(DataType.TEXT)
 	name?: string | null;
 }
+
+export const CommenterAnyModel = Commenter as any;

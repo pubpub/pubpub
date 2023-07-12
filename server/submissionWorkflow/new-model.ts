@@ -10,12 +10,11 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { Submission, Collection } from '../models';
 import { DocJson } from 'types';
-import { Doc } from 'dist/server/server/doc/new-model';
+import { Submission, Collection } from '../models';
 
 @Table
-export class SubmissionWorkflow extends Model<
+class SubmissionWorkflow extends Model<
 	InferAttributes<SubmissionWorkflow>,
 	InferCreationAttributes<SubmissionWorkflow>
 > {
@@ -76,8 +75,12 @@ export class SubmissionWorkflow extends Model<
 	requireDescription!: CreationOptional<boolean>;
 
 	@HasMany(() => Submission, { as: 'submissions', foreignKey: 'submissionWorkflowId' })
-	submissions?: Submission[];
+	// 	submissions?: Submission[];
+	submissions?: any;
 
 	@BelongsTo(() => Collection, { as: 'collection', foreignKey: 'collectionId' })
-	collection?: Collection;
+	// 	collection?: Collection;
+	collection?: any;
 }
+
+export const SubmissionWorkflowAnyModel = SubmissionWorkflow as any;
