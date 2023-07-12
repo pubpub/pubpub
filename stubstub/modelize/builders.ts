@@ -97,7 +97,6 @@ export const builders = {
 			initials = firstName.slice(0, 1).toUpperCase() + lastName.slice(0, 1).toUpperCase(),
 			password = 'password123',
 			id,
-			isSuperAdmin = false,
 		} = input;
 
 		const sha3hashedPassword = SHA3(password).toString(encHex);
@@ -111,7 +110,6 @@ export const builders = {
 					email,
 					slug,
 					initials,
-					isSuperAdmin,
 					passwordDigest: 'sha512',
 				},
 				sha3hashedPassword,
