@@ -40,7 +40,6 @@ export const createUser = (inputValues) => {
 				googleScholar: inputValues.googleScholar,
 				gdprConsent: inputValues.gdprConsent,
 				passwordDigest: 'sha512',
-				isSuperAdmin: false,
 			};
 
 			const userRegister = promisify(User.register.bind(User));
