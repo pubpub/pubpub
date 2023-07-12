@@ -11,7 +11,7 @@ import {
 	PossiblyNullableTypeOfFacetPropType,
 } from 'facets';
 
-type RenderFn<Props> = (props: Props) => JSX.Element; // React.ReactElement;
+type RenderFn<Props> = (props: Props) => React.ReactElement;
 
 export type PropTypeEditorComponent<
 	PropType extends FacetPropType,

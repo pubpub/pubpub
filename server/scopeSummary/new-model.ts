@@ -6,10 +6,8 @@ import {
 	PrimaryKey,
 	Default,
 	AllowNull,
-	HasOne,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { Collection, Pub, Community } from '../models';
 
 @Table
 class ScopeSummary extends Model<
@@ -45,22 +43,6 @@ class ScopeSummary extends Model<
 	@Default(0)
 	@Column(DataType.INTEGER)
 	submissions!: CreationOptional<number>;
-
-	// @HasOne(() => Collection, {
-	// 	as: 'collection',
-	// 	foreignKey: 'scopeSummaryId',
-	// 	onDelete: 'CASCADE',
-	// })
-	// 	// collection?: Collection;
-	// collection?: any;
-
-	// @HasOne(() => Pub, { as: 'pub', foreignKey: 'scopeSummaryId', onDelete: 'CASCADE' })
-	// 	// pub?: Pub;
-	// pub?: any;
-
-	// @HasOne(() => Community, { as: 'community', foreignKey: 'scopeSummaryId', onDelete: 'CASCADE' })
-	// 	// community?: Community;
-	// community?: any;
 }
 
 export const ScopeSummaryAnyModel = ScopeSummary as any;
