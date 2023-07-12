@@ -12,7 +12,7 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { Community, Collection, Pub } from '../../models';
 
 @Table
-export class FacetBinding extends Model<
+class FacetBinding extends Model<
 	InferAttributes<FacetBinding>,
 	InferCreationAttributes<FacetBinding>
 > {
@@ -34,15 +34,20 @@ export class FacetBinding extends Model<
 	communityId?: string | null;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
-	community?: Community;
+	// 	community?: Community;
+	community?: any;
 
 	@BelongsTo(() => Collection, {
 		onDelete: 'CASCADE',
 		as: 'collection',
 		foreignKey: 'collectionId',
 	})
-	collection?: Collection;
+	// 	collection?: Collection;
+	collection?: any;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	pub?: Pub;
+	// 	pub?: Pub;
+	pub?: any;
 }
+
+export const FacetBindingAnyModel = FacetBinding as any;
