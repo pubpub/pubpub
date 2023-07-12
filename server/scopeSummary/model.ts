@@ -1,40 +1,48 @@
-import { DataTypes as dataTypes } from 'sequelize';
-import { sequelize } from '../sequelize';
+import {
+	Model,
+	Table,
+	Column,
+	DataType,
+	PrimaryKey,
+	Default,
+	AllowNull,
+} from 'sequelize-typescript';
+import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
-export const ScopeSummary = sequelize.define(
-	'ScopeSummary',
-	{
-		id: sequelize.idType,
-		collections: { type: dataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-		pubs: { type: dataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-		discussions: { type: dataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-		reviews: { type: dataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-		submissions: { type: dataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-	},
-	{
-		// @ts-expect-error blaah
-		classMethods: {
-			associate: (models) => {
-				const { ScopeSummary: ScopeSummaryModel, Collection, Pub, Community } = models;
+@Table
+class ScopeSummary extends Model<
+	InferAttributes<ScopeSummary>,
+	InferCreationAttributes<ScopeSummary>
+> {
+	@Default(DataType.UUIDV4)
+	@PrimaryKey
+	@Column(DataType.UUID)
+	id!: CreationOptional<string>;
 
-				ScopeSummaryModel.hasOne(Collection, {
-					as: 'collection',
-					foreignKey: 'scopeSummaryId',
-					onDelete: 'CASCADE',
-				});
+	@AllowNull(false)
+	@Default(0)
+	@Column(DataType.INTEGER)
+	collections!: CreationOptional<number>;
 
-				ScopeSummaryModel.hasOne(Pub, {
-					as: 'pub',
-					onDelete: 'CASCADE',
-					foreignKey: 'scopeSummaryId',
-				});
+	@AllowNull(false)
+	@Default(0)
+	@Column(DataType.INTEGER)
+	pubs!: CreationOptional<number>;
 
-				ScopeSummaryModel.hasOne(Community, {
-					as: 'community',
-					onDelete: 'CASCADE',
-					foreignKey: 'scopeSummaryId',
-				});
-			},
-		},
-	},
-) as any;
+	@AllowNull(false)
+	@Default(0)
+	@Column(DataType.INTEGER)
+	discussions!: CreationOptional<number>;
+
+	@AllowNull(false)
+	@Default(0)
+	@Column(DataType.INTEGER)
+	reviews!: CreationOptional<number>;
+
+	@AllowNull(false)
+	@Default(0)
+	@Column(DataType.INTEGER)
+	submissions!: CreationOptional<number>;
+}
+
+export const ScopeSummaryAnyModel = ScopeSummary as any;
