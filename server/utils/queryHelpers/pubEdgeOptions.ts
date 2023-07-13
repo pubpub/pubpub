@@ -37,19 +37,31 @@ export const getPubEdgeIncludes = ({
 	includePub = false,
 }: PubEdgeIncludesOptions = {}) => {
 	return [
-		includeTargetPub && {
-			model: Pub,
-			as: 'targetPub',
-			include: getOptionsForIncludedPub({ includeCommunity: includeCommunityForPubs }),
-		},
-		includePub && {
-			model: Pub,
-			as: 'pub',
-			include: getOptionsForIncludedPub({ includeCommunity: includeCommunityForPubs }),
-		},
+		...(includeTargetPub
+			? [
+					{
+						model: Pub,
+						as: 'targetPub' as const,
+						include: getOptionsForIncludedPub({
+							includeCommunity: includeCommunityForPubs,
+						}),
+					},
+			  ]
+			: []),
+		...(includePub
+			? [
+					{
+						model: Pub,
+						as: 'pub' as const,
+						include: getOptionsForIncludedPub({
+							includeCommunity: includeCommunityForPubs,
+						}),
+					},
+			  ]
+			: []),
 		{
 			model: ExternalPublication,
 			as: 'externalPublication',
 		},
-	].filter((x) => x);
+	];
 };

@@ -165,10 +165,14 @@ const findPubOptions = buildPubOptions({
 	getCollections: true,
 });
 
-export const findCollection = (
-	collectionId: string,
-): Promise<types.DefinitelyHas<types.Collection, 'attributions'>> =>
-	Collection.findOne({ where: { id: collectionId }, ...findCollectionOptions });
+export const findCollection = async (collectionId: string) =>
+	Collection.findOne({
+		where: { id: collectionId },
+		...findCollectionOptions,
+	}) as Promise<types.DefinitelyHas<Collection, 'attributions'> | null>;
 
-export const findPub = (pubId: string): Promise<types.DefinitelyHas<types.Pub, 'community'>> =>
-	Pub.findOne({ where: { id: pubId }, ...findPubOptions });
+export const findPub = (pubId: string) =>
+	Pub.findOne({ where: { id: pubId }, ...findPubOptions }) as Promise<types.DefinitelyHas<
+		types.Pub,
+		'community'
+	> | null>;

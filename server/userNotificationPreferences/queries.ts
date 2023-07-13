@@ -17,9 +17,7 @@ type UpdateOptions = {
 	preferences: Partial<types.UserNotificationPreferences>;
 };
 
-export const getOrCreateUserNotificationPreferences = async (
-	userId: string,
-): Promise<types.SequelizeModel<types.UserNotificationPreferences>> => {
+export const getOrCreateUserNotificationPreferences = async (userId: string) => {
 	const found = await UserNotificationPreferences.findOne({ where: { userId } });
 	if (found) {
 		return found;
