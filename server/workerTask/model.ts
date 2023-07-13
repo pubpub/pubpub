@@ -25,22 +25,22 @@ export class WorkerTask extends Model<
 
 	// TODO: Add validation for input and enrich with type information
 	@Column(DataType.JSONB)
-	input?: object | null;
+	input!: object | null;
 
 	@Column(DataType.BOOLEAN)
-	isProcessing?: boolean | null;
+	isProcessing!: boolean | null;
 
 	@Column(DataType.INTEGER)
-	attemptCount?: number | null;
+	attemptCount!: number | null;
 
 	// TODO: Add validation for error and enrich with type information
 	@Column(DataType.JSONB)
-	error?: string | null;
+	error!: string | null;
 
 	// TODO: Add validation for output and enrich with type information
 	@Column(DataType.JSONB)
-	output?: object | null;
+	output!: object | null;
 
 	@Column(DataType.INTEGER)
-	priority?: number | null;
+	priority!: number | null;
 }

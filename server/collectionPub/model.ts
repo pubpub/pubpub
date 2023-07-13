@@ -33,7 +33,7 @@ export class CollectionPub extends Model<
 	collectionId!: string;
 
 	@Column(DataType.TEXT)
-	contextHint?: string | null;
+	contextHint!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)

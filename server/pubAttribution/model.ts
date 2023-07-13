@@ -22,32 +22,32 @@ export class PubAttribution extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.TEXT)
-	name?: string | null;
+	name!: string | null;
 
 	@Column(DataType.TEXT)
-	avatar?: string | null;
+	avatar!: string | null;
 
 	@Column(DataType.TEXT)
-	title?: string | null;
+	title!: string | null;
 
 	@Column(DataType.DOUBLE)
-	order?: number | null;
+	order!: number | null;
 
 	@Column(DataType.BOOLEAN)
-	isAuthor?: boolean | null;
+	isAuthor!: boolean | null;
 
 	// TODO: Add validation for roles
 	@Column(DataType.JSONB)
-	roles?: string[] | null;
+	roles!: string[] | null;
 
 	@Column(DataType.TEXT)
-	affiliation?: string | null;
+	affiliation!: string | null;
 
 	@Column(DataType.STRING)
-	orcid?: string | null;
+	orcid!: string | null;
 
 	@Column(DataType.UUID)
-	userId?: string | null;
+	userId!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)

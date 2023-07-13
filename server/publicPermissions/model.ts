@@ -21,28 +21,28 @@ export class PublicPermissions extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.BOOLEAN)
-	canCreateReviews?: boolean | null;
+	canCreateReviews!: boolean | null;
 
 	@Column(DataType.BOOLEAN)
-	canCreateDiscussions?: boolean | null;
+	canCreateDiscussions!: boolean | null;
 
 	@Column(DataType.BOOLEAN)
-	canViewDraft?: boolean | null;
+	canViewDraft!: boolean | null;
 
 	@Column(DataType.BOOLEAN)
-	canEditDraft?: boolean | null;
+	canEditDraft!: boolean | null;
 
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	@Column(DataType.UUID)
-	collectionId?: string | null;
+	collectionId!: string | null;
 
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 
 	@Column(DataType.UUID)
-	organizationId?: string | null;
+	organizationId!: string | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;

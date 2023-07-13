@@ -35,7 +35,7 @@ export class Organization extends Model<
 
 	@Unique
 	@Column(DataType.TEXT)
-	domain?: string | null;
+	domain!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
@@ -43,13 +43,13 @@ export class Organization extends Model<
 
 	@Length({ min: 0, max: 280 })
 	@Column(DataType.TEXT)
-	description?: string | null;
+	description!: string | null;
 
 	@Column(DataType.TEXT)
-	avatar?: string | null;
+	avatar!: string | null;
 
 	@Column(DataType.TEXT)
-	favicon?: string | null;
+	favicon!: string | null;
 
 	@HasMany(() => Community, {
 		onDelete: 'CASCADE',

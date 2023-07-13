@@ -12,5 +12,5 @@ export class Commenter extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.TEXT)
-	name?: string | null;
+	name!: string | null;
 }

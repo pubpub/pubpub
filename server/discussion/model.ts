@@ -24,17 +24,17 @@ export class Discussion extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.TEXT)
-	title?: string | null;
+	title!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.INTEGER)
 	number!: number;
 
 	@Column(DataType.BOOLEAN)
-	isClosed?: boolean | null;
+	isClosed!: boolean | null;
 
 	@Column(DataType.JSONB)
-	labels?: string[] | null;
+	labels!: string[] | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
@@ -46,17 +46,17 @@ export class Discussion extends Model<
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	userId?: string | null;
+	userId!: string | null;
 
 	@Column(DataType.UUID)
-	anchorId?: string | null;
+	anchorId!: string | null;
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	@Column(DataType.UUID)
-	commenterId?: string | null;
+	commenterId!: string | null;
 
 	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
 	thread?: Thread;

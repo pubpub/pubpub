@@ -24,7 +24,7 @@ export class ReviewNew extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.TEXT)
-	title?: string | null;
+	title!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.INTEGER)
@@ -32,13 +32,13 @@ export class ReviewNew extends Model<
 
 	@Default('open')
 	@Column(DataType.ENUM('open', 'closed', 'completed'))
-	status?: CreationOptional<'open' | 'closed' | 'completed' | null>;
+	status!: CreationOptional<'open' | 'closed' | 'completed' | null>;
 
 	@Column(DataType.BOOLEAN)
-	releaseRequested?: boolean | null;
+	releaseRequested!: boolean | null;
 
 	@Column(DataType.JSONB)
-	labels?: object | null;
+	labels!: object | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
@@ -50,14 +50,14 @@ export class ReviewNew extends Model<
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	userId?: string | null;
+	userId!: string | null;
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	@Column(DataType.JSONB)
-	reviewContent?: object | null;
+	reviewContent!: object | null;
 
 	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
 	thread?: Thread;

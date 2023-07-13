@@ -23,15 +23,15 @@ export class FacetBinding extends Model<
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	collectionId?: string | null;
+	collectionId!: string | null;
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	community?: Community;

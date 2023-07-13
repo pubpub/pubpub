@@ -22,10 +22,10 @@ export class ReviewEvent extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.STRING)
-	type?: string | null;
+	type!: string | null;
 
 	@Column(DataType.JSONB)
-	data?: object | null;
+	data!: object | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)

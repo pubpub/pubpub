@@ -10,7 +10,7 @@ export class Thread extends Model<InferAttributes<Thread>, InferCreationAttribut
 	id!: CreationOptional<string>;
 
 	@Column(DataType.BOOLEAN)
-	isLocked?: boolean | null;
+	isLocked!: boolean | null;
 
 	@HasMany(() => ThreadComment, { onDelete: 'CASCADE', as: 'comments', foreignKey: 'threadId' })
 	comments?: ThreadComment[];
