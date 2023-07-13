@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	Model,
 	Table,
@@ -16,18 +15,7 @@ import {
 	BelongsTo,
 	HasOne,
 } from 'sequelize-typescript';
-import type {
-	InferAttributes,
-	InferCreationAttributes,
-	CreationOptional,
-	BuildOptions,
-	Logging,
-	Silent,
-	Transactionable,
-	Hookable,
-	TruncateOptions,
-	Paranoid,
-} from 'sequelize';
+import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import {
 	PubAttribution,
 	CollectionPub,
@@ -44,29 +32,6 @@ import {
 	CrossrefDepositRecord,
 	ScopeSummary,
 } from '../models';
-
-// declare module 'sequelize' {
-// 	export interface CreateOptions<TAttributes = any>
-// 		extends BuildOptions,
-// 			Logging,
-// 			Silent,
-// 			Transactionable,
-// 			Hookable {
-// 		actorId?: string | null;
-// 	}
-
-// 	export interface DestroyOptions<TAttributes = any> extends TruncateOptions<TAttributes> {
-// 		actorId?: string | null;
-// 	}
-
-// 	export interface UpdateOptions<TAttributes = any>
-// 		extends Logging,
-// 			Transactionable,
-// 			Paranoid,
-// 			Hookable {
-// 		actorId?: string | null;
-// 	}
-// }
 
 @Table
 export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {

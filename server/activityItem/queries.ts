@@ -22,6 +22,7 @@ import {
 	ThreadComment,
 	SubmissionWorkflow,
 	FacetBinding,
+	ActivityItem,
 } from 'server/models';
 
 import { getScopeIdForFacetBinding } from 'server/facets';
@@ -575,7 +576,7 @@ export const createSubmissionUpdatedActivityItem = async (
 	actorId: null | string,
 	submissionId: string,
 	oldSubmission: types.Submission,
-) => {
+): Promise<ActivityItem | void> => {
 	const submission: types.DefinitelyHas<types.Submission, 'pub' | 'submissionWorkflow'> =
 		await Submission.findOne({
 			where: { id: submissionId },
@@ -591,24 +592,25 @@ export const createSubmissionUpdatedActivityItem = async (
 			],
 		});
 
-	if (submission.status !== oldSubmission.status) {
-		return createActivityItem({
-			actorId,
-			communityId: submission.pub.communityId,
-			collectionId: submission.submissionWorkflow.collectionId,
-			pubId: submission.pub.id,
-			kind: 'submission-status-updated' as const,
-			payload: {
-				submissionId,
-				pub: {
-					title: submission.pub.title,
-				},
-				status: { from: oldSubmission.status, to: submission.status },
-			},
-		});
+	if (submission.status === oldSubmission.status) {
+		return;
 	}
 
-	return null;
+	// eslint-disable-next-line consistent-return
+	return createActivityItem({
+		actorId,
+		communityId: submission.pub.communityId,
+		collectionId: submission.submissionWorkflow.collectionId,
+		pubId: submission.pub.id,
+		kind: 'submission-status-updated' as const,
+		payload: {
+			submissionId,
+			pub: {
+				title: submission.pub.title,
+			},
+			status: { from: oldSubmission.status, to: submission.status },
+		},
+	});
 };
 
 // Before there's an actual facet instance associated with a scope in the DB, we treat that scope

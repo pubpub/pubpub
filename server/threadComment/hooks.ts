@@ -46,5 +46,7 @@ ThreadComment.afterCreate(async (threadComment: types.ThreadComment) => {
 		}
 	}
 
-	defer(() => createActivityItem(threadComment));
+	defer(async () => {
+		createActivityItem(threadComment);
+	});
 });
