@@ -12,11 +12,11 @@ export class CustomScript extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 
 	@Column(DataType.STRING)
-	type?: string | null;
+	type!: string | null;
 
 	@Column(DataType.TEXT)
-	content?: string | null;
+	content!: string | null;
 }

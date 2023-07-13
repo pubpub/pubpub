@@ -28,7 +28,7 @@ export class Submission extends Model<
 	status!: SubmissionStatus;
 
 	@Column(DataType.DATE)
-	submittedAt?: Date | null;
+	submittedAt!: Date | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
@@ -43,7 +43,7 @@ export class Submission extends Model<
 	 * Should probably be DocJSON
 	 */
 	@Column(DataType.JSONB)
-	abstract?: object | null;
+	abstract!: object | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;

@@ -21,10 +21,10 @@ export class PubVersion extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.INTEGER)
-	historyKey?: number | null;
+	historyKey!: number | null;
 
 	@Column(DataType.UUID)
-	pubId?: string | null;
+	pubId!: string | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;

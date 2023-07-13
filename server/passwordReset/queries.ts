@@ -69,7 +69,7 @@ export const updatePasswordReset = (
 	return User.findOne({
 		where: whereQuery,
 	})
-		.then((userData: types.UserWithPrivateFields | null) => {
+		.then((userData) => {
 			if (!userData) {
 				throw new Error("User doesn't exist");
 			}
@@ -78,7 +78,7 @@ export const updatePasswordReset = (
 			}
 
 			/* Promisify the setPassword function, and use .update to match API convention */
-			const setPassword = promisify((userData as any).setPassword.bind(userData));
+			const setPassword = promisify(userData.setPassword.bind(userData));
 			return setPassword(inputValues.password);
 		})
 		.then((passwordResetData: PasswordResetData) => {

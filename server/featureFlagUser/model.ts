@@ -21,13 +21,13 @@ export class FeatureFlagUser extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.UUID)
-	featureFlagId?: string | null;
+	featureFlagId!: string | null;
 
 	@Column(DataType.UUID)
-	userId?: string | null;
+	userId!: string | null;
 
 	@Column(DataType.BOOLEAN)
-	enabled?: boolean | null;
+	enabled!: boolean | null;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	user?: User;

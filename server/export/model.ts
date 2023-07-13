@@ -23,7 +23,7 @@ export class Export extends Model<InferAttributes<Export>, InferCreationAttribut
 	format!: string;
 
 	@Column(DataType.STRING)
-	url?: string | null;
+	url!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.INTEGER)
@@ -34,7 +34,7 @@ export class Export extends Model<InferAttributes<Export>, InferCreationAttribut
 	pubId!: string;
 
 	@Column(DataType.UUID)
-	workerTaskId?: string | null;
+	workerTaskId!: string | null;
 
 	@BelongsTo(() => WorkerTask, {
 		onDelete: 'SET NULL',

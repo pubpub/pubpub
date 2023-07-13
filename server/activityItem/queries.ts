@@ -1,10 +1,5 @@
 import * as types from 'types';
-import {
-	createEmptyFacetInstance,
-	FacetDefinition,
-	FacetInstanceWithBinding,
-	parsePartialFacetInstance,
-} from 'facets';
+import { createEmptyFacetInstance, FacetDefinition, parsePartialFacetInstance } from 'facets';
 import {
 	Collection,
 	CollectionPub,
@@ -25,8 +20,8 @@ import {
 } from 'server/models';
 
 import { getScopeIdForFacetBinding } from 'server/facets';
-import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
 import { expect } from 'utils/assert';
+import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
 
 const resolvePartialMemberItem = async (member: types.Member) => {
 	if (member.pubId) {
@@ -308,18 +303,22 @@ export const createPageUpdatedActivityItem = async (
 };
 
 export const createPubReviewCreatedActivityItem = async (reviewId: string) => {
-	const review: types.DefinitelyHas<types.Review, 'thread'> = await ReviewNew.findOne({
-		where: { id: reviewId },
-		include: [
-			{
-				model: Thread,
-				as: 'thread',
-				include: [{ model: ThreadComment, as: 'comments', order: [['createdAt', 'ASC']] }],
-			},
-		],
-	});
-	const threadComment: types.ThreadComment = review.thread.comments[0];
-	const pub = expect(await Pub.findOne({ where: { id: review.pubId } }));
+	const review = expect(
+		await ReviewNew.findOne({
+			where: { id: reviewId },
+			include: [
+				{
+					model: Thread,
+					as: 'thread',
+					include: [
+						{ model: ThreadComment, as: 'comments', order: [['createdAt', 'ASC']] },
+					],
+				},
+			],
+		}),
+	);
+	const threadComment = expect(review.thread?.comments?.[0]);
+	const pub = expect(await Pub.findOne({ where: { id: expect(review.pubId) } }));
 
 	const payloadThreadComment = threadComment && {
 		id: threadComment.id,
@@ -336,7 +335,7 @@ export const createPubReviewCreatedActivityItem = async (reviewId: string) => {
 		payload: {
 			review: {
 				id: review.id,
-				title: review.title,
+				title: expect(review.title),
 			},
 			threadId: review.threadId,
 			isReply: false,
@@ -609,27 +608,27 @@ export const createSubmissionUpdatedActivityItem = async (
 		}),
 	) as types.DefinitelyHas<Submission, 'pub' | 'submissionWorkflow'>;
 
-	if (submission.status !== oldSubmission.status) {
-		return createActivityItem({
-			actorId,
-			communityId: submission.pub.communityId,
-			collectionId: expect(submission.submissionWorkflow.collectionId),
-			pubId: submission.pub.id,
-			kind: 'submission-status-updated' as const,
-			payload: {
-				submissionId,
-				pub: {
-					title: submission.pub.title,
-				},
-				status: { from: oldSubmission.status, to: submission.status },
-			},
-		});
+	if (submission.status === oldSubmission.status) {
+		return;
 	}
 
-	return null;
+	// eslint-disable-next-line consistent-return
+	return createActivityItem({
+		actorId,
+		communityId: submission.pub.communityId,
+		collectionId: expect(submission.submissionWorkflow.collectionId),
+		pubId: submission.pub.id,
+		kind: 'submission-status-updated' as const,
+		payload: {
+			submissionId,
+			pub: {
+				title: submission.pub.title,
+			},
+			status: { from: oldSubmission.status, to: submission.status },
+		},
+	});
 };
 
-//: types.SequelizeModel<FacetInstanceWithBinding<any>>
 // Before there's an actual facet instance associated with a scope in the DB, we treat that scope
 // as having a totally empty facet instance (with all null props). So we don't bother to treat
 // creating and updating facet instances as two separate kinds of events -- they're all "updates"

@@ -19,7 +19,7 @@ export class Draft extends Model<InferAttributes<Draft>, InferCreationAttributes
 	id!: CreationOptional<string>;
 
 	@Column(DataType.DATE)
-	latestKeyAt?: Date | null;
+	latestKeyAt!: Date | null;
 
 	@AllowNull(false)
 	@Column(DataType.STRING)

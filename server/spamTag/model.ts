@@ -24,7 +24,7 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 	status!: CreationOptional<SpamStatus>;
 
 	@Column(DataType.DATE)
-	statusUpdatedAt?: Date | null;
+	statusUpdatedAt!: Date | null;
 
 	/**
 	 * TODO: add validation and better type for fields
@@ -63,5 +63,5 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 
 	@Default(1)
 	@Column(DataType.INTEGER)
-	spamScoreVersion?: CreationOptional<number | null>;
+	spamScoreVersion!: CreationOptional<number | null>;
 }

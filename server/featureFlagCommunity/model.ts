@@ -21,13 +21,13 @@ export class FeatureFlagCommunity extends Model<
 	id!: CreationOptional<string>;
 
 	@Column(DataType.UUID)
-	featureFlagId?: string | null;
+	featureFlagId!: string | null;
 
 	@Column(DataType.UUID)
-	communityId?: string | null;
+	communityId!: string | null;
 
 	@Column(DataType.BOOLEAN)
-	enabled?: boolean | null;
+	enabled!: boolean | null;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	community?: Community;
