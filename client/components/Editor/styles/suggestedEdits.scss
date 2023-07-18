@@ -122,25 +122,45 @@ li[data-suggestion-kind='removal']::before {
 > *[data-suggestion-kind='addition'] {
 	@include block-border('addition', rgba($addition, 0.5));
 	@include corner-icon('+', $addition, $addition-light);
+	&::before {
+		opacity: 1;
+		left: 0;
+	}
 }
 
 > *[data-suggestion-kind='removal'] {
 	@include block-border('removal', rgba($removal, 0.5));
 	@include corner-icon('–', $removal, $removal-light);
+	&::before {
+		opacity: 1;
+		left: 0;
+	}
 }
 
 > *[data-suggestion-kind='modification'] {
 	@include block-border('modification', rgba($modification, 0.5));
 	@include corner-triangle(10px, $modification);
+	&::before {
+		opacity: 1;
+		left: 0;
+	}
 }
 
 ol,
 ul {
 	&[data-suggestion-kind='addition'] {
 		@include corner-icon('+', $addition, $addition-light);
+		&::before {
+			opacity: 1;
+			left: 0;
+		}
 	}
 	&[data-suggestion-kind='removal'] {
 		@include corner-icon('–', $removal, $removal-light);
+		&::before {
+			opacity: 1;
+			left: 0;
+		}
 	}
 }
 
@@ -168,9 +188,17 @@ p > *[data-suggestion-kind='modification'] {
 .tableWrapper:not([data-suggestion-kind='addition']) {
 	tr > *[data-suggestion-kind='addition'] {
 		@include corner-icon('+', $addition, $addition-light);
+		&::before {
+			opacity: 1;
+			left: 0;
+		}
 	}
 
 	tr > *[data-suggestion-kind='removal'] {
 		@include corner-icon('–', $removal, $removal-light);
+		&::before {
+			opacity: 1;
+			left: 0;
+		}
 	}
 }
