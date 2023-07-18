@@ -42,8 +42,7 @@ const SubmissionEmail = (props: Props) => {
 		if (kind === 'received') {
 			return (
 				<>
-					{submissionNounPhrase} has been received. You may reply to this email thread to
-					reach us.
+					{submissionNounPhrase} has been received.
 				</>
 			);
 		}
