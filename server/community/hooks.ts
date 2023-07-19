@@ -15,11 +15,11 @@ createActivityHooks({
 
 Community.afterCreate((community) =>
 	defer(async () => {
-		addSpamTagToCommunity(community.id);
+		await addSpamTagToCommunity(community.id);
 	}),
 );
 Community.afterUpdate((community) =>
 	defer(async () => {
-		addSpamTagToCommunity(community.id);
+		await addSpamTagToCommunity(community.id);
 	}),
 );
