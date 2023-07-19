@@ -15,6 +15,7 @@ import { getReadableDateInYear } from 'utils/dates';
 import { createDiscussionAnchor } from 'server/discussionAnchor/queries';
 import { createThreadComment } from 'server/threadComment/queries';
 import { createThread } from 'server/thread/queries';
+import { expect } from 'utils/assert';
 
 const findDiscussionWithUser = (id) =>
 	Discussion.findOne({
@@ -150,10 +151,13 @@ export const updateDiscussion = async (values, permissions) => {
 		permissions;
 	const updatedValues: { [k: string]: any } = {};
 
-	const [discussion, pub] = await Promise.all([
+	const finders = await Promise.all([
 		Discussion.findOne({ where: { id: discussionId } }),
 		Pub.findOne({ where: { id: pubId }, attributes: ['id', 'labels'] }),
 	]);
+
+	const discussion = expect(finders[0]);
+	const pub = expect(finders[1]);
 
 	if ('title' in values) {
 		if (canTitle) {
@@ -176,7 +180,7 @@ export const updateDiscussion = async (values, permissions) => {
 		const labels: any[] = [];
 		const existingLabels = discussion.labels || [];
 		const hasRemovedManagedLabels = existingLabels.some((labelId) => {
-			const labelDefinition = pub.labels.find((label) => label.id === labelId);
+			const labelDefinition = expect(pub.labels).find((label) => label.id === labelId);
 			const missingFromUpdate = !values.labels.includes(labelId);
 			return labelDefinition && !labelDefinition.publicApply && missingFromUpdate;
 		});

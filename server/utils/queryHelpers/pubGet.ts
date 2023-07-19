@@ -2,6 +2,7 @@ import { InitialData, PubGetOptions } from 'types';
 import { Pub } from 'server/models';
 import { fetchFacetsForScope } from 'server/facets';
 
+import { expect } from 'utils/assert';
 import sanitizePub from './pubSanitize';
 import buildPubOptions from './pubOptions';
 
@@ -22,7 +23,8 @@ const getFacetsForPub = async (options: PubGetOptions, where: GetPubWhere) => {
 		const pubId =
 			'id' in where
 				? where.id
-				: (await Pub.findOne({ where, attributes: ['slug', 'communityId', 'id'] })).id;
+				: expect(await Pub.findOne({ where, attributes: ['slug', 'communityId', 'id'] }))
+						.id;
 		return { facets: await fetchFacetsForScope({ kind: 'pub', id: pubId }) };
 	}
 	return null;

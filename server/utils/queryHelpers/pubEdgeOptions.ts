@@ -10,7 +10,7 @@ import {
 
 import { PubEdgeIncludesOptions } from 'types';
 
-export const getOptionsForIncludedPub = ({ includeCommunity }) => {
+export const getOptionsForIncludedPub = ({ includeCommunity }: { includeCommunity?: boolean }) => {
 	return [
 		includeCommunity && { model: Community, as: 'community' },
 		{

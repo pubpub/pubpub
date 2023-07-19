@@ -74,7 +74,14 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 
 	// TODO: add validation for labels
 	@Column(DataType.JSONB)
-	labels!: string[] | null;
+	labels!:
+		| {
+				id: string;
+				color: string;
+				title: string;
+				publicApply: boolean;
+		  }[]
+		| null;
 
 	/**  TODO: add validation for downloads
 	// Should be something like

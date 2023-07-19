@@ -95,7 +95,7 @@ app.post(
 		const permissions = await getPermissions({
 			userId: req.user.id,
 			collectionId,
-			communityId: collection.communityId,
+			communityId: expect(collection.communityId),
 		});
 		if (!permissions.update) {
 			throw new ForbiddenError();

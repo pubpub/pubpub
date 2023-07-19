@@ -17,15 +17,24 @@ import {
 import { isUserSuperAdmin } from 'server/user/queries';
 import { FacetsError } from 'facets';
 import { fetchFacetsForScope } from 'server/facets';
+import { expect } from 'utils/assert';
 import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
 import { getCollection } from './collectionGet';
 
-let getScopeElements;
-let getPublicPermissionsData;
-let getScopeMemberData;
-let getActivePermissions;
+// let getScopeElements;
+// let getPublicPermissionsData;
+// let getScopeMemberData;
+// let getActivePermissions;
 
-const getScopeIdsObject = ({ pubId, collectionId, communityId }): ScopeId => {
+const getScopeIdsObject = ({
+	pubId,
+	collectionId,
+	communityId,
+}: {
+	pubId?: string;
+	collectionId?: string;
+	communityId: string;
+}): ScopeId => {
 	if (pubId) {
 		return { pubId, communityId };
 	}
@@ -35,7 +44,7 @@ const getScopeIdsObject = ({ pubId, collectionId, communityId }): ScopeId => {
 	return { communityId };
 };
 
-const getActiveSubmissionsCount = ({ activeCollection }) => {
+const getActiveSubmissionsCount = ({ activeCollection }: { activeCollection: Collection }) => {
 	if (activeCollection) {
 		return Submission.count({
 			where: {
@@ -54,7 +63,15 @@ const getActiveSubmissionsCount = ({ activeCollection }) => {
 	return 0;
 };
 
-const getActiveReviewsCount = ({ activeCommunity, activeCollection, activePub }) => {
+const getActiveReviewsCount = ({
+	activeCommunity,
+	activeCollection,
+	activePub,
+}: {
+	activeCommunity: Community;
+	activeCollection?: Collection;
+	activePub?: Pub;
+}) => {
 	if (activePub) {
 		return ReviewNew.count({ where: { status: 'open', pubId: activePub.id } });
 	}
@@ -110,43 +127,6 @@ const getFacets = async (includeFacets: boolean, scopeElements: ScopeData['eleme
 	return null;
 };
 
-/* getScopeData can be called from either a route (e.g. to authenticate */
-/* whether a user has access to /pub/example), or it can be called from */
-/* an API route to verify a user's permissions. When called from a route */
-/* it is likely that collectionSlug and pubSlug will be used. */
-/* When called from an API endpoint, it is likely that collectionId and pubId will be used. */
-export default async (scopeInputs) => {
-	/* scopeInputs = 
-		{
-			collectionId, collectionSlug,
-			pubId, pubSlug,
-			accessHash,
-			loginId,
-			isDashboard,
-		}
-	*/
-
-	const scopeElements = await getScopeElements(scopeInputs);
-	const facets = await getFacets(scopeInputs.includeFacets, scopeElements);
-
-	const publicPermissionsData = await getPublicPermissionsData(scopeElements);
-	const scopeMemberData = await getScopeMemberData(scopeInputs, scopeElements);
-	const [activePermissions, activeCounts] = await Promise.all([
-		getActivePermissions(scopeInputs, scopeElements, publicPermissionsData, scopeMemberData),
-		getActiveCounts(scopeInputs.isDashboard, scopeElements),
-	]);
-
-	return {
-		elements: scopeElements,
-		optionsData: publicPermissionsData,
-		memberData: scopeMemberData,
-		activePermissions,
-		activeCounts,
-		scope: getScopeIdsObject(scopeElements.activeIds),
-		...facets,
-	};
-};
-
 const getActiveIds = ({ activePub, activeCollection, activeCommunity }) => {
 	return {
 		pubId: activePub && activePub.id,
@@ -155,14 +135,14 @@ const getActiveIds = ({ activePub, activeCollection, activeCommunity }) => {
 	};
 };
 
-getScopeElements = async (scopeInputs) => {
+const getScopeElements = async (scopeInputs) => {
 	const { communityId, collectionId, collectionSlug, pubId, pubSlug } = scopeInputs;
-	let activeTarget;
-	let activePub;
-	let activeCollection;
-	let inactiveCollections = [];
-	let activeCommunity = null;
-	let activeTargetType = 'community';
+	let activeTarget: Pub | Collection | Community | null = null;
+	let activePub: Pub | null = null;
+	let activeCollection: Collection | null = null;
+	let inactiveCollections: Collection[] = [];
+	let activeCommunity: Community | null = null;
+	let activeTargetType: 'community' | 'pub' | 'collection' = 'community';
 	if (pubSlug || pubId) {
 		activeTargetType = 'pub';
 	} else if (collectionSlug || collectionId) {
@@ -170,44 +150,47 @@ getScopeElements = async (scopeInputs) => {
 	}
 
 	if (!activeCommunity && communityId) {
-		activeCommunity = await Community.findOne({
-			where: { id: communityId },
-		});
+		activeCommunity = expect(
+			await Community.findOne({
+				where: { id: communityId },
+			}),
+		);
 	}
 
 	if (activeTargetType === 'pub') {
-		activePub = await Pub.findOne({
-			where: stripFalsyIdsFromQuery({
-				// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'never'.
-				communityId: activeCommunity && activeCommunity.id,
-				slug: pubSlug,
-				id: pubId,
+		activePub = expect(
+			await Pub.findOne({
+				where: stripFalsyIdsFromQuery({
+					communityId: activeCommunity && activeCommunity.id,
+					slug: pubSlug,
+					id: pubId,
+				}),
+				include: [
+					{
+						model: CollectionPub,
+						as: 'collectionPubs',
+						attributes: ['id', 'pubId', 'collectionId', 'pubRank'],
+						include: [
+							{
+								model: Collection,
+								as: 'collection',
+								attributes: ['kind', 'isPublic'],
+							},
+						],
+					},
+					{
+						model: Release,
+						as: 'releases',
+						attributes: ['id', 'historyKey'],
+					},
+					{
+						model: Submission,
+						as: 'submission',
+						attributes: ['id'],
+					},
+				],
 			}),
-			include: [
-				{
-					model: CollectionPub,
-					as: 'collectionPubs',
-					attributes: ['id', 'pubId', 'collectionId', 'pubRank'],
-					include: [
-						{
-							model: Collection,
-							as: 'collection',
-							attributes: ['kind', 'isPublic'],
-						},
-					],
-				},
-				{
-					model: Release,
-					as: 'releases',
-					attributes: ['id', 'historyKey'],
-				},
-				{
-					model: Submission,
-					as: 'submission',
-					attributes: ['id'],
-				},
-			],
-		});
+		);
 		activeTarget = activePub;
 		if (!activePub) {
 			throw new Error('Pub Not Found');
@@ -227,18 +210,19 @@ getScopeElements = async (scopeInputs) => {
 	}
 
 	if (activeTargetType === 'collection') {
-		activeCollection = await getCollection({
-			collectionSlug,
-			collectionId,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'never'.
-			communityId: activeCommunity && activeCommunity.id,
-		});
+		activeCollection = expect(
+			await getCollection({
+				collectionSlug,
+				collectionId,
+				communityId: expect(activeCommunity?.id),
+			}),
+		);
 		activeTarget = activeCollection;
 	}
 
 	if (!activeCommunity && activeTarget) {
 		activeCommunity = await Community.findOne({
-			where: { id: activeTarget.communityId },
+			where: { id: expect(activeTarget.communityId) },
 		});
 	}
 
@@ -286,7 +270,7 @@ export const buildOrQuery = (scopeElements) => {
 	return orQuery;
 };
 
-getPublicPermissionsData = async (scopeElements) => {
+const getPublicPermissionsData = async (scopeElements) => {
 	const orQuery = buildOrQuery(scopeElements);
 	return PublicPermissions.findAll({
 		where: {
@@ -295,7 +279,7 @@ getPublicPermissionsData = async (scopeElements) => {
 	});
 };
 
-getScopeMemberData = async (scopeInputs, scopeElements) => {
+const getScopeMemberData = async (scopeInputs, scopeElements) => {
 	const { loginId } = scopeInputs;
 	if (!loginId) {
 		return [];
@@ -309,7 +293,7 @@ getScopeMemberData = async (scopeInputs, scopeElements) => {
 	});
 };
 
-getActivePermissions = async (
+const getActivePermissions = async (
 	scopeInputs,
 	scopeElements,
 	publicPermissionsData,
@@ -417,5 +401,42 @@ getActivePermissions = async (
 		canEditCommunity,
 		...activePublicPermissions,
 		canCreateReviews,
+	};
+};
+
+/* getScopeData can be called from either a route (e.g. to authenticate */
+/* whether a user has access to /pub/example), or it can be called from */
+/* an API route to verify a user's permissions. When called from a route */
+/* it is likely that collectionSlug and pubSlug will be used. */
+/* When called from an API endpoint, it is likely that collectionId and pubId will be used. */
+export default async (scopeInputs) => {
+	/* scopeInputs = 
+		{
+			collectionId, collectionSlug,
+			pubId, pubSlug,
+			accessHash,
+			loginId,
+			isDashboard,
+		}
+	*/
+
+	const scopeElements = await getScopeElements(scopeInputs);
+	const facets = await getFacets(scopeInputs.includeFacets, scopeElements);
+
+	const publicPermissionsData = await getPublicPermissionsData(scopeElements);
+	const scopeMemberData = await getScopeMemberData(scopeInputs, scopeElements);
+	const [activePermissions, activeCounts] = await Promise.all([
+		getActivePermissions(scopeInputs, scopeElements, publicPermissionsData, scopeMemberData),
+		getActiveCounts(scopeInputs.isDashboard, scopeElements),
+	]);
+
+	return {
+		elements: scopeElements,
+		optionsData: publicPermissionsData,
+		memberData: scopeMemberData,
+		activePermissions,
+		activeCounts,
+		scope: getScopeIdsObject(scopeElements.activeIds),
+		...facets,
 	};
 };

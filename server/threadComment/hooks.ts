@@ -32,7 +32,7 @@ const createActivityItem = async (threadComment: types.ThreadComment) => {
 	return null;
 };
 
-ThreadComment.afterCreate(async (threadComment: types.ThreadComment) => {
+ThreadComment.afterCreate(async (threadComment) => {
 	const { userId, threadId } = threadComment;
 	if (userId) {
 		const userNotificationPreferences = await getOrCreateUserNotificationPreferences(userId);

@@ -29,7 +29,7 @@ const resolvePartialMemberItem = async (member: types.Member) => {
 		return {
 			tag: 'pub',
 			value: {
-				communityId: pub.communityId,
+				communityId: expect(pub.communityId),
 				pubId: pub.id,
 				payload: {
 					pub: {
@@ -50,7 +50,7 @@ const resolvePartialMemberItem = async (member: types.Member) => {
 		return {
 			tag: 'collection',
 			value: {
-				communityId: collection.communityId,
+				communityId: expect(collection.communityId),
 				collectionId: collection.id,
 				payload: {
 					collection: {
@@ -249,10 +249,10 @@ export const createCollectionUpdatedActivityItem = async (
 		kind: 'collection-updated' as const,
 		collectionId,
 		actorId,
-		communityId: expect(collection.communityId),
+		communityId: collection.communityId,
 		payload: {
 			collection: {
-				title: expect(title),
+				title: title,
 			},
 			...flags,
 			...diffs,
@@ -317,7 +317,7 @@ export const createPubReviewCreatedActivityItem = async (reviewId: string) => {
 			],
 		}),
 	);
-	const threadComment = expect(review.thread?.comments?.[0]);
+	const threadComment = expect(expect(review.thread).comments)[0];
 	const pub = expect(await Pub.findOne({ where: { id: expect(review.pubId) } }));
 
 	const payloadThreadComment = threadComment && {
@@ -335,7 +335,7 @@ export const createPubReviewCreatedActivityItem = async (reviewId: string) => {
 		payload: {
 			review: {
 				id: review.id,
-				title: expect(review.title),
+				title: review.title,
 			},
 			threadId: review.threadId,
 			isReply: false,
@@ -362,21 +362,21 @@ export const createPubReviewCommentAddedActivityItem = async (
 	const pub = expect(await Pub.findOne({ where: { id: expect(review.pubId) } }));
 	return createActivityItem({
 		communityId: pub.communityId,
-		actorId: expect(threadComment.userId),
+		actorId: threadComment.userId,
 		kind: 'pub-review-comment-added' as const,
 		pubId: pub.id,
 		payload: {
 			review: {
 				id: review.id,
-				title: expect(review.title),
+				title: review.title,
 			},
 			threadId: review.threadId,
 			isReply: true,
 			threadComment: {
 				id: threadComment.id,
-				text: expect(threadComment.text),
-				userId: expect(threadComment.userId),
-				commenterId: expect(threadComment.commenterId),
+				text: threadComment.text,
+				userId: threadComment.userId,
+				commenterId: threadComment.commenterId,
 			},
 			pub: { title: pub.title },
 		},
@@ -403,7 +403,7 @@ export const createPubReviewUpdatedActivityItem = async (
 			},
 			review: {
 				id: review.id,
-				title: expect(review.title),
+				title: review.title,
 			},
 		},
 	});
@@ -428,14 +428,14 @@ export const createCollectionPubActivityItem = async (
 		pubId: collectionPub.pubId,
 		collectionId: collectionPub.collectionId,
 		actorId,
-		communityId: expect(collectionPub.collection.communityId),
+		communityId: collectionPub.collection.communityId,
 		payload: {
 			collectionPubId,
 			pub: {
 				title: collectionPub.pub.title,
 			},
 			collection: {
-				title: expect(collectionPub.collection.title),
+				title: collectionPub.collection.title,
 			},
 		},
 	});
@@ -579,9 +579,9 @@ export const createPubDiscussionCommentAddedActivityItem = async (
 			isReply,
 			threadComment: {
 				id: threadCommentId,
-				text: expect(threadComment.text),
-				userId: expect(threadComment.userId),
-				commenterId: expect(threadComment.commenterId),
+				text: threadComment.text,
+				userId: threadComment.userId,
+				commenterId: threadComment.commenterId,
 			},
 		},
 	});

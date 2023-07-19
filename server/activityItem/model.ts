@@ -9,12 +9,12 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { ActivityItemKind, ActivityItemPayload } from 'types';
+import { ActivityItemKind, ActivityItem as ActivityItemType } from 'types';
 
 @Table
-export class ActivityItem extends Model<
-	InferAttributes<ActivityItem>,
-	InferCreationAttributes<ActivityItem>
+export class ActivityItem<Kind extends ActivityItemKind = ActivityItemKind> extends Model<
+	InferAttributes<ActivityItem<Kind>>,
+	InferCreationAttributes<ActivityItem<Kind>>
 > {
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
@@ -23,7 +23,7 @@ export class ActivityItem extends Model<
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
-	kind!: ActivityItemKind;
+	kind!: Kind;
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
@@ -31,7 +31,7 @@ export class ActivityItem extends Model<
 
 	// TODO: Add validation for payload
 	@Column(DataType.JSONB)
-	payload!: ActivityItemPayload | null;
+	payload!: (ActivityItemType & { kind: Kind })['payload'] | null;
 
 	@AllowNull(false)
 	@Default(DataType.NOW)

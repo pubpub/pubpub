@@ -4,6 +4,7 @@ import * as types from 'types';
 import { UserNotification, UserSubscription, UserNotificationPreferences } from 'server/models';
 import { indexByProperty, splitArrayOn } from 'utils/arrays';
 import { filterUsersWhoCanSeeThread } from 'server/thread/queries';
+import { expect } from 'utils/assert';
 
 type ActivityItemResponder<Kind extends types.ActivityItemKind> = (
 	item: types.ActivityItemOfKind<Kind>,
@@ -13,25 +14,23 @@ const createNotificationsForThreadComment = async (
 	item: types.ActivityItemOfKind<'pub-discussion-comment-added' | 'pub-review-comment-added'>,
 	includePubLevelSubscribers: boolean,
 ) => {
-	const {
-		actorId,
-		pubId,
-		payload: { threadId },
-	} = item;
+	const { actorId, pubId } = item;
+
+	const threadId = expect(item.payload?.threadId);
 
 	const subscriptionWhereQueries = includePubLevelSubscribers
 		? [{ pubId }, { threadId }]
 		: [{ threadId }];
 
-	const subscriptions: types.UserSubscription[] = await UserSubscription.findAll({
+	const subscriptions = await UserSubscription.findAll({
 		where: {
 			[Op.or]: subscriptionWhereQueries,
-			userId: { [Op.not]: actorId },
+			userId: { [Op.not]: expect(actorId) },
 			status: { [Op.not]: 'inactive' },
 		},
 	});
 
-	const notificationPreferencesOptingOutOfNotifications: types.UserNotificationPreferences[] =
+	const notificationPreferencesOptingOutOfNotifications =
 		await UserNotificationPreferences.findAll({
 			where: {
 				userId: { [Op.in]: [...new Set(subscriptions.map((s) => s.userId))] },

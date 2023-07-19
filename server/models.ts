@@ -139,7 +139,7 @@ export const attributesPublicUser = [
 	'initials',
 	'title',
 	'orcid',
-];
+] as const;
 
 export const includeUserModel = (() => {
 	return (options) => {
