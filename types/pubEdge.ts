@@ -1,29 +1,12 @@
-import { Pub } from './pub';
+import { Attributes } from 'sequelize';
+import {
+	ExternalPublication as ExternalPublicationModel,
+	PubEdge as PubEdgeModel,
+} from 'server/models';
 
-export type ExternalPublication = {
-	id: string;
-	title: string;
-	url: string;
-	contributors?: string[];
-	doi?: string;
-	description?: string;
-	avatar?: string;
-	publicationDate?: string;
-};
+export type ExternalPublication = Attributes<ExternalPublicationModel>;
 
-export type PubEdge = {
-	id: string;
-	pubId: string;
-	externalPublicationId?: number;
-	targetPubId?: string;
-	relationType: string;
-	rank: string;
-	pubIsParent: boolean;
-	approvedByTarget: boolean;
-	externalPublication?: ExternalPublication;
-	targetPub?: Pub;
-	pub?: Pub;
-};
+export type PubEdge = Attributes<PubEdgeModel>;
 
 export type OutboundEdge = Omit<PubEdge, 'pub'>;
 export type InboundEdge = Omit<PubEdge, 'targetPub'>;
