@@ -1,8 +1,4 @@
-import { ZoteroIntegration } from './zotero';
+import { Attributes } from 'sequelize';
+import { IntegrationDataOAuth1 as IntegrationDataOAuth1Model } from 'server/models';
 
-export type IntegrationDataOAuth1 = {
-	id: string;
-	integrationId: string;
-	accessToken: string;
-	integration?: ZoteroIntegration;
-};
+export type IntegrationDataOAuth1 = Attributes<IntegrationDataOAuth1Model>;
