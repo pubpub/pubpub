@@ -29,4 +29,6 @@ export class DepositTarget extends Model<
 
 	@Column(DataType.TEXT)
 	passwordInitVec!: string | null;
+
+	declare isPubPubManaged?: boolean;
 }
