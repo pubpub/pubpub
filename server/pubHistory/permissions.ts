@@ -1,6 +1,16 @@
 import { getScope } from 'server/utils/queryHelpers';
 
-export const getPermissions = async ({ userId, pubId, accessHash, historyKey }) => {
+export const getPermissions = async ({
+	userId,
+	pubId,
+	accessHash,
+	historyKey,
+}: {
+	userId: string;
+	pubId: string;
+	accessHash: string;
+	historyKey: number;
+}) => {
 	const {
 		elements: { activePub },
 		activePermissions: { canView, canViewDraft, canEdit },

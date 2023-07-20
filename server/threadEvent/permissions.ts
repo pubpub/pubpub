@@ -1,6 +1,16 @@
 import { getScope } from 'server/utils/queryHelpers';
 
-export const getPermissions = async ({ userId, communityId, pubId, threadId }) => {
+export const getPermissions = async ({
+	userId,
+	communityId,
+	pubId,
+	threadId,
+}: {
+	userId?: string;
+	communityId?: string;
+	pubId?: string;
+	threadId?: string;
+}) => {
 	if (!userId || !communityId || !pubId || !threadId) {
 		return {};
 	}
@@ -29,4 +39,10 @@ export const getPermissions = async ({ userId, communityId, pubId, threadId }) =
 		update: false,
 		destroy: false,
 	};
+};
+
+export type ThreadEventPermissions = {
+	create?: boolean;
+	update?: false;
+	destroy?: false;
 };
