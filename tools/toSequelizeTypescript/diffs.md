@@ -648,7 +648,10 @@ htmlTitle: string | null
 + customPublishedAt: Date | null
 doi: string | null
 - labels?: string[]
-+ labels: string[] | null
++ labels: { id: string
++ color: string
+title: string
++ publicApply: boolean
 - downloads?: any[]
 + downloads: any[] | null
 - metadata?: {}
@@ -1032,13 +1035,13 @@ salt: string
 + gdprConsent: CreationOptional<boolean>
 - isSuperAdmin: boolean
 + isSuperAdmin: CreationOptional<boolean>
-isShadowUser?: boolean
-feedback?: string
-sha3hashedPassword: string
 + attributions?: PubAttribution[]
 + discussions?: Discussion[]
 + userNotificationPreferences?: UserNotificationPreferences
 + zoteroIntegration?: ZoteroIntegration
+isShadowUser?: boolean
+feedback?: string
+sha3hashedPassword: string
 + createdAt?: any
 + updatedAt?: any
 + deletedAt?: any
@@ -1059,7 +1062,8 @@ activityItemId: string
 + isRead: CreationOptional<boolean>
 - manuallySetIsRead: boolean
 + manuallySetIsRead: CreationOptional<boolean>
-activityItem?: ActivityItem
+- activityItem?: ActivityItem
++ activityItem?: ActivityItem<ActivityItemKind>
 userSubscription?: UserSubscription
 user?: User
 - createdAt: string
