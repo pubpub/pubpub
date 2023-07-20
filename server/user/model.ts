@@ -31,11 +31,7 @@ import {
 /**
  * Basically typings for passport-local-sequelize
  */
-declare abstract class ModelWithPassport<
-	T extends {} = any,
-	C extends {} = T,
-	User = any,
-> extends Model<T, C> {
+class ModelWithPassport<T extends {} = any, C extends {} = T, User = any> extends Model<T, C> {
 	declare setPassword: (password: string, cb: (err: any, user?: User) => void) => void;
 
 	declare setActivationKey: (cb: (err: any, user?: User) => void) => void;
