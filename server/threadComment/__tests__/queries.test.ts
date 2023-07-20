@@ -3,8 +3,8 @@ import { modelize, setup, teardown } from 'stubstub';
 import { UserSubscription } from 'server/models';
 
 import { DocJson } from 'types';
-import { createThreadComment } from '../queries';
 import { finishDeferredTasks } from 'server/utils/deferred';
+import { createThreadComment } from '../queries';
 
 const models = modelize`
     User willBeSubscribed {
