@@ -10,6 +10,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { DefinitelyHas } from 'types';
 import { Pub, Community } from '../models';
 
 @Table
@@ -39,7 +40,7 @@ export class LandingPageFeature extends Model<
 	payload!: Record<string, any> | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
-	pub?: Pub;
+	pub?: DefinitelyHas<Pub, 'attributions' | 'collectionPubs' | 'community' | 'releases'>;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	community?: Community;
