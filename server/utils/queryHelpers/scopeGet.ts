@@ -127,7 +127,15 @@ const getFacets = async (includeFacets: boolean, scopeElements: ScopeData['eleme
 	return null;
 };
 
-const getActiveIds = ({ activePub, activeCollection, activeCommunity }) => {
+const getActiveIds = ({
+	activePub,
+	activeCollection,
+	activeCommunity,
+}: {
+	activePub: Pub | null;
+	activeCollection: Collection | null;
+	activeCommunity: Community;
+}) => {
 	return {
 		pubId: activePub && activePub.id,
 		collectionId: activeCollection && activeCollection.id,
@@ -135,7 +143,13 @@ const getActiveIds = ({ activePub, activeCollection, activeCommunity }) => {
 	};
 };
 
-const getScopeElements = async (scopeInputs) => {
+const getScopeElements = async (scopeInputs: {
+	communityId?: string | null;
+	collectionId?: string | null;
+	collectionSlug?: string | null;
+	pubId?: string | null;
+	pubSlug?: string | null;
+}) => {
 	const { communityId, collectionId, collectionSlug, pubId, pubSlug } = scopeInputs;
 	let activeTarget: Pub | Collection | Community | null = null;
 	let activePub: Pub | null = null;
@@ -158,39 +172,37 @@ const getScopeElements = async (scopeInputs) => {
 	}
 
 	if (activeTargetType === 'pub') {
-		activePub = expect(
-			await Pub.findOne({
-				where: stripFalsyIdsFromQuery({
-					communityId: activeCommunity && activeCommunity.id,
-					slug: pubSlug,
-					id: pubId,
-				}),
-				include: [
-					{
-						model: CollectionPub,
-						as: 'collectionPubs',
-						attributes: ['id', 'pubId', 'collectionId', 'pubRank'],
-						include: [
-							{
-								model: Collection,
-								as: 'collection',
-								attributes: ['kind', 'isPublic'],
-							},
-						],
-					},
-					{
-						model: Release,
-						as: 'releases',
-						attributes: ['id', 'historyKey'],
-					},
-					{
-						model: Submission,
-						as: 'submission',
-						attributes: ['id'],
-					},
-				],
+		activePub = await Pub.findOne({
+			where: stripFalsyIdsFromQuery({
+				communityId: activeCommunity && activeCommunity.id,
+				slug: pubSlug,
+				id: pubId,
 			}),
-		);
+			include: [
+				{
+					model: CollectionPub,
+					as: 'collectionPubs',
+					attributes: ['id', 'pubId', 'collectionId', 'pubRank'],
+					include: [
+						{
+							model: Collection,
+							as: 'collection',
+							attributes: ['kind', 'isPublic'],
+						},
+					],
+				},
+				{
+					model: Release,
+					as: 'releases',
+					attributes: ['id', 'historyKey'],
+				},
+				{
+					model: Submission,
+					as: 'submission',
+					attributes: ['id'],
+				},
+			],
+		});
 		activeTarget = activePub;
 		if (!activePub) {
 			throw new Error('Pub Not Found');
@@ -210,19 +222,17 @@ const getScopeElements = async (scopeInputs) => {
 	}
 
 	if (activeTargetType === 'collection') {
-		activeCollection = expect(
-			await getCollection({
-				collectionSlug,
-				collectionId,
-				communityId: expect(activeCommunity?.id),
-			}),
-		);
+		activeCollection = await getCollection({
+			collectionSlug,
+			collectionId,
+			communityId: activeCommunity?.id,
+		});
 		activeTarget = activeCollection;
 	}
 
 	if (!activeCommunity && activeTarget) {
 		activeCommunity = await Community.findOne({
-			where: { id: expect(activeTarget.communityId) },
+			where: { id: activeTarget.communityId },
 		});
 	}
 
@@ -233,7 +243,7 @@ const getScopeElements = async (scopeInputs) => {
 	return ensureSerialized({
 		activeTargetType,
 		activeTargetName: activeTargetType.charAt(0).toUpperCase() + activeTargetType.slice(1),
-		activeTarget,
+		activeTarget: activeTarget as Community | Collection | Pub,
 		activePub,
 		activeCollection,
 		activeIds: getActiveIds({
@@ -409,7 +419,17 @@ const getActivePermissions = async (
 /* an API route to verify a user's permissions. When called from a route */
 /* it is likely that collectionSlug and pubSlug will be used. */
 /* When called from an API endpoint, it is likely that collectionId and pubId will be used. */
-export default async (scopeInputs) => {
+export default async (scopeInputs: {
+	communityId?: string;
+	pubId?: string;
+	pubSlug?: string;
+	collectionId?: string;
+	collectionSlug?: string;
+	accessHash?: string;
+	loginId?: string;
+	isDashboard?: boolean;
+	includeFacets?: boolean;
+}) => {
 	/* scopeInputs = 
 		{
 			collectionId, collectionSlug,
@@ -421,7 +441,7 @@ export default async (scopeInputs) => {
 	*/
 
 	const scopeElements = await getScopeElements(scopeInputs);
-	const facets = await getFacets(scopeInputs.includeFacets, scopeElements);
+	const facets = await getFacets(!!scopeInputs.includeFacets, scopeElements);
 
 	const publicPermissionsData = await getPublicPermissionsData(scopeElements);
 	const scopeMemberData = await getScopeMemberData(scopeInputs, scopeElements);
