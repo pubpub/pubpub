@@ -1,39 +1,17 @@
-import { MinimalUser, User } from './user';
+import { Attributes } from 'sequelize';
+import {
+	PubAttribution as PubAttributionModel,
+	CollectionAttribution as CollectionAttributionModel,
+} from 'server/models';
 
-export type PubAttribution = {
-	id: string;
-	name: string;
-	avatar?: string;
-	title?: string;
-	order: number;
-	isAuthor?: boolean;
-	roles?: string[];
-	affiliation?: string;
-	orcid?: string;
-	userId?: string;
-	user?: MinimalUser;
-	createdAt: string;
-	pubId: string;
-};
+import { DefinitelyHas } from './util';
 
-export type CollectionAttribution = {
-	id: string;
-	name: string;
-	avatar?: string;
-	title?: string;
-	order: number;
-	isAuthor?: boolean;
-	roles?: string[];
-	affiliation?: string;
-	orcid?: string;
-	userId?: string;
-	user?: MinimalUser;
-	createdAt: string;
-	collectionId: string;
-};
+export type PubAttribution = Attributes<PubAttributionModel>;
+
+export type CollectionAttribution = Attributes<CollectionAttributionModel>;
 
 export type Attribution = CollectionAttribution | PubAttribution;
-export type AttributionWithUser = Attribution & { user: MinimalUser | User };
+export type AttributionWithUser = DefinitelyHas<Attribution, 'user'>;
 
 export const isAttributionWithUser = (
 	attribution: Attribution,
