@@ -12,6 +12,8 @@ import {
 } from 'server/models';
 import { defer } from 'server/utils/deferred';
 import * as urls from 'utils/canonicalUrls';
+import { discussionTitle } from 'client/utils/activity/titles';
+import { ActivityRenderContext } from 'client/utils/activity/types';
 
 const mg = mailgun.client({
 	username: 'api',
@@ -19,18 +21,34 @@ const mg = mailgun.client({
 });
 
 const template = async (activityItem: types.PubDiscussionCommentAddedActivityItem) => {
-	const community = await Community.findByPk(activityItem.communityId);
+	const actor: types.User = await User.findByPk(activityItem.actorId);
+	const community: types.Community = await Community.findByPk(activityItem.communityId);
 	const communityUrl = urls.communityUrl(community);
-	const pub = await Pub.findByPk(activityItem.pubId);
-	const pubUrl = urls.pubUrl(community, pub, {
-		discussionId: activityItem.payload.discussionId,
-	});
+	const pub: types.Pub = await Pub.findByPk(activityItem.pubId);
+	const pubUrl = urls.pubUrl(community, pub);
+	const pubTitle = pub.htmlTitle ?? pub.title;
+	const { href, title } = discussionTitle(activityItem, {
+		scope: {
+			communityId: activityItem.communityId,
+			pubId: activityItem.pubId,
+		},
+		associations: {
+			pub: {
+				[pub.id]: pub,
+			},
+			community: {
+				[community.id]: community,
+			},
+		},
+		userId: activityItem.actorId,
+	} as ActivityRenderContext);
 	return stripIndent(`
-    <p>A comment was added to a discussion you are participating in on PubPub:</p>
     <p>
-      <a href="${pubUrl}">View Discussion</a>
-    </p>
-    </p><a href="${communityUrl}/legal/settings#notifications">Unsubscribe</a></p>
+			${actor.fullName} added <a href="${href}">${title}</a> to <a href="${pubUrl}">${pubTitle}</a>.
+		</p>
+    <p>
+			<a href="${communityUrl}/legal/settings#notifications">Unsubscribe</a>
+		</p>
   `);
 };
 
@@ -41,7 +59,7 @@ const createEmailForUserNotification = async (notification: types.UserNotificati
 				userId: notification.userId,
 			},
 		});
-	if (!userNotificationPreferences?.receiveNotifications) {
+	if (!userNotificationPreferences?.receiveDiscussionThreadEmails) {
 		return;
 	}
 	const user: types.UserWithPrivateFields = await User.findByPk(notification.userId);
