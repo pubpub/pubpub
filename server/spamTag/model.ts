@@ -51,7 +51,7 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 	 */
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	fields!: Record<string, any>;
+	fields!: Record<string, string[]>;
 
 	@AllowNull(false)
 	@Column(DataType.DOUBLE)
