@@ -9,7 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SubmissionStatus } from 'types';
+import type { DocJson, SubmissionStatus } from 'types';
 import { Pub, SubmissionWorkflow } from '../models';
 
 @Table
@@ -43,7 +43,7 @@ export class Submission extends Model<
 	 * Should probably be DocJSON
 	 */
 	@Column(DataType.JSONB)
-	abstract!: object | null;
+	abstract!: DocJson | null;
 
 	@BelongsTo(() => Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' })
 	pub?: Pub;

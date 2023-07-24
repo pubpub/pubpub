@@ -5,6 +5,7 @@ import { defer } from 'server/utils/deferred';
 import { getPub } from 'server/utils/queryHelpers';
 import { getEmptyDoc } from 'client/components/Editor';
 
+import { expect } from 'utils/assert';
 import { sendSubmissionEmail } from './emails';
 import { appendAbstractToPubDraft } from './abstract';
 
@@ -27,7 +28,7 @@ type UpdateOptions = Partial<types.Submission> & {
 export const getSubmissionById = async (
 	id: string,
 ): Promise<null | (types.Submission & { pub: types.DefinitelyHas<types.Pub, 'members'> })> => {
-	const submission: null | types.SequelizeModel<types.Submission> = await Submission.findOne({
+	const submission = await Submission.findOne({
 		where: { id },
 	});
 	if (submission) {
@@ -40,17 +41,16 @@ export const getSubmissionById = async (
 	return null;
 };
 
-export const createSubmission = async ({
-	userId,
-	submissionWorkflowId,
-}: CreateOptions): Promise<types.SequelizeModel<types.Submission>> => {
-	const { collection } = await SubmissionWorkflow.findOne({
-		where: { id: submissionWorkflowId },
-		include: [{ model: Collection, as: 'collection' }],
-	});
+export const createSubmission = async ({ userId, submissionWorkflowId }: CreateOptions) => {
+	const { collection } = expect(
+		await SubmissionWorkflow.findOne({
+			where: { id: submissionWorkflowId },
+			include: [{ model: Collection, as: 'collection' }],
+		}),
+	) as types.DefinitelyHas<SubmissionWorkflow, 'collection'>;
 	const pub = await createPub(
 		{
-			communityId: collection.communityId,
+			communityId: expect(collection.communityId),
 			collectionIds: [collection.id],
 			titleKind: 'New Submission',
 		},
