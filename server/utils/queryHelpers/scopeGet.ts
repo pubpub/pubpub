@@ -143,13 +143,21 @@ const getActiveIds = ({
 	};
 };
 
-const getScopeElements = async (scopeInputs: {
-	communityId?: string | null;
-	collectionId?: string | null;
-	collectionSlug?: string | null;
-	pubId?: string | null;
-	pubSlug?: string | null;
-}) => {
+const getScopeElements = async (
+	scopeInputs: {
+		communityId: string | null;
+		collectionId: string | null;
+		collectionSlug: string | null;
+		pubId: string | null;
+		pubSlug: string | null;
+	} = {
+		communityId: null,
+		collectionId: null,
+		collectionSlug: null,
+		pubId: null,
+		pubSlug: null,
+	},
+) => {
 	const { communityId, collectionId, collectionSlug, pubId, pubSlug } = scopeInputs;
 	let activeTarget: Pub | Collection | Community | null = null;
 	let activePub: Pub | null = null;
@@ -225,14 +233,14 @@ const getScopeElements = async (scopeInputs: {
 		activeCollection = await getCollection({
 			collectionSlug,
 			collectionId,
-			communityId: activeCommunity?.id,
+			communityId: expect(activeCommunity?.id),
 		});
 		activeTarget = activeCollection;
 	}
 
 	if (!activeCommunity && activeTarget) {
 		activeCommunity = await Community.findOne({
-			where: { id: activeTarget.communityId },
+			where: { id: expect(activeTarget.communityId) },
 		});
 	}
 
@@ -447,7 +455,7 @@ export default async (scopeInputs: {
 	const scopeMemberData = await getScopeMemberData(scopeInputs, scopeElements);
 	const [activePermissions, activeCounts] = await Promise.all([
 		getActivePermissions(scopeInputs, scopeElements, publicPermissionsData, scopeMemberData),
-		getActiveCounts(scopeInputs.isDashboard, scopeElements),
+		getActiveCounts(!!scopeInputs.isDashboard, scopeElements),
 	]);
 
 	return {

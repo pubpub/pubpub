@@ -14,11 +14,11 @@ export const renderToNodeStream = (res, reactElement) => {
 type MetaProps = {
 	initialData: InitialData;
 	title: string;
-	contextTitle?: string;
-	description?: string;
-	image?: string;
+	contextTitle?: string | null;
+	description?: string | null;
+	image?: string | null;
 	attributions?: Attribution[];
-	doi?: string;
+	doi?: string | null;
 	publishedAt?: null | Date;
 	unlisted?: boolean;
 	collection?: Collection;
