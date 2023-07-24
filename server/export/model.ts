@@ -13,6 +13,10 @@ import { WorkerTask } from '../models';
 
 @Table
 export class Export extends Model<InferAttributes<Export>, InferCreationAttributes<Export>> {
+	// this overrides the default Date type to be compatible with existing code
+	declare createdAt: CreationOptional<string>;
+	declare updatedAt: CreationOptional<string>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

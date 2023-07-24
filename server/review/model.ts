@@ -12,12 +12,17 @@ import {
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import { Thread, Visibility, User, Pub, Reviewer } from '../models';
+import { DocJson } from 'types';
 
 @Table
 export class ReviewNew extends Model<
 	InferAttributes<ReviewNew>,
 	InferCreationAttributes<ReviewNew>
 > {
+	// this overrides the default Date type to be compatible with existing code
+	declare createdAt: CreationOptional<string>;
+	declare updatedAt: CreationOptional<string>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -56,8 +61,9 @@ export class ReviewNew extends Model<
 	@Column(DataType.UUID)
 	pubId!: string | null;
 
+	// TODO: Add validation
 	@Column(DataType.JSONB)
-	reviewContent!: object | null;
+	reviewContent!: DocJson | null;
 
 	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
 	thread?: Thread;

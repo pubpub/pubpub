@@ -35,6 +35,10 @@ import {
 
 @Table
 export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
+	// this overrides the default Date type to be compatible with existing code
+	declare createdAt: CreationOptional<string>;
+	declare updatedAt: CreationOptional<string>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -67,7 +71,7 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	avatar!: string | null;
 
 	@Column(DataType.DATE)
-	customPublishedAt!: Date | null;
+	customPublishedAt!: string | null;
 
 	@Column(DataType.TEXT)
 	doi!: string | null;

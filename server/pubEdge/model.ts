@@ -13,6 +13,10 @@ import { Pub, ExternalPublication } from '../models';
 
 @Table
 export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttributes<PubEdge>> {
+	// this overrides the default Date type to be compatible with existing code
+	declare createdAt: CreationOptional<string>;
+	declare updatedAt: CreationOptional<string>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

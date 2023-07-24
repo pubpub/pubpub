@@ -18,6 +18,10 @@ export class LandingPageFeature extends Model<
 	InferAttributes<LandingPageFeature>,
 	InferCreationAttributes<LandingPageFeature>
 > {
+	// this overrides the default Date type to be compatible with existing code
+	declare createdAt: CreationOptional<string>;
+	declare updatedAt: CreationOptional<string>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

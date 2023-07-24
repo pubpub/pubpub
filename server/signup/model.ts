@@ -14,6 +14,10 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 
 @Table
 export class Signup extends Model<InferAttributes<Signup>, InferCreationAttributes<Signup>> {
+	// this overrides the default Date type to be compatible with existing code
+	declare createdAt: CreationOptional<string>;
+	declare updatedAt: CreationOptional<string>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

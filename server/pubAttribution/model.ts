@@ -16,6 +16,10 @@ export class PubAttribution extends Model<
 	InferAttributes<PubAttribution>,
 	InferCreationAttributes<PubAttribution>
 > {
+	// this overrides the default Date type to be compatible with existing code
+	declare createdAt: CreationOptional<string>;
+	declare updatedAt: CreationOptional<string>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
