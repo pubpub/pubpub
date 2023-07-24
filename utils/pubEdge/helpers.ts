@@ -19,7 +19,7 @@ export const getUrlForPub = (pubData: Pub, communityData: Community) => {
 	if (communityData.id === pubData.communityId) {
 		return pubUrl(communityData, pubData);
 	}
-	if ((pubData as any).community) {
+	if (pubData.community) {
 		return pubUrl(pubData.communityId, pubData);
 	}
 	return pubShortUrl(pubData);
