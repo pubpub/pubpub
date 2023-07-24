@@ -1,8 +1,8 @@
-import { Attributes } from 'sequelize';
 import { LandingPageFeature as LandingPageFeatureModel } from 'server/models';
 import { DefinitelyHas, DocJson } from 'types';
+import { RecursiveAttributes } from './recursiveAttributes';
 
-export type LandingPageFeature = Attributes<LandingPageFeatureModel>;
+export type LandingPageFeature = RecursiveAttributes<LandingPageFeatureModel>;
 
 export type LandingPageFeatureKind = 'pub' | 'community';
 

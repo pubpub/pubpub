@@ -1,12 +1,12 @@
-import { Attributes } from 'sequelize';
 import {
 	ExternalPublication as ExternalPublicationModel,
 	PubEdge as PubEdgeModel,
 } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 
-export type ExternalPublication = Attributes<ExternalPublicationModel>;
+export type ExternalPublication = RecursiveAttributes<ExternalPublicationModel>;
 
-export type PubEdge = Attributes<PubEdgeModel>;
+export type PubEdge = RecursiveAttributes<PubEdgeModel>;
 
 export type OutboundEdge = Omit<PubEdge, 'pub'>;
 export type InboundEdge = Omit<PubEdge, 'targetPub'>;

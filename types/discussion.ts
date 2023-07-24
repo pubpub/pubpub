@@ -1,8 +1,8 @@
-import { Attributes } from 'sequelize';
 import {
 	Discussion as DiscussionModel,
 	DiscussionAnchor as DiscussionAnchorModel,
 } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 
-export type DiscussionAnchor = Attributes<DiscussionAnchorModel>;
-export type Discussion = Attributes<DiscussionModel>;
+export type DiscussionAnchor = RecursiveAttributes<DiscussionAnchorModel>;
+export type Discussion = RecursiveAttributes<DiscussionModel>;

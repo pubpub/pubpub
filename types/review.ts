@@ -1,6 +1,6 @@
-import { Attributes } from 'sequelize';
 import { ReviewNew as ReviewNewModel, Reviewer as ReviewerModel } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 
-export type Review = Attributes<ReviewNewModel>;
+export type Review = RecursiveAttributes<ReviewNewModel>;
 
-export type Reviewer = Attributes<ReviewerModel>;
+export type Reviewer = RecursiveAttributes<ReviewerModel>;

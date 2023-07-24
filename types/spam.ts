@@ -1,9 +1,9 @@
-import { Attributes } from 'sequelize';
 import { SpamTag as SpamTagModel } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 
 export type SpamStatus = 'unreviewed' | 'confirmed-spam' | 'confirmed-not-spam';
 
-export type SpamTag = Attributes<SpamTagModel>;
+export type SpamTag = RecursiveAttributes<SpamTagModel>;
 
 export type SpamVerdict = Pick<
 	SpamTag,

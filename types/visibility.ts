@@ -1,16 +1,16 @@
-import { Attributes } from 'sequelize';
 import {
 	Visibility as VisibilityModel,
 	VisibilityUser as VisibilityUserModel,
 } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 import { Discussion } from './discussion';
 import { Review } from './review';
 
 export type VisibilityAccess = 'private' | 'members' | 'public';
 
-export type VisibilityUser = Attributes<VisibilityUserModel>;
+export type VisibilityUser = RecursiveAttributes<VisibilityUserModel>;
 
-export type Visibility = Attributes<VisibilityModel>;
+export type Visibility = RecursiveAttributes<VisibilityModel>;
 
 export type TaggedVisibilityParent =
 	| { type: 'discussion'; value: Discussion }

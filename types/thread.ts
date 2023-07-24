@@ -1,9 +1,9 @@
-import { Attributes } from 'sequelize';
 import {
 	ThreadEvent as ThreadEventModel,
 	ThreadComment as ThreadCommentModel,
 	Thread as ThreadModel,
 } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 import { Discussion } from './discussion';
 import { Review } from './review';
 
@@ -12,11 +12,11 @@ export type Commenter = {
 	name: string;
 };
 
-export type ThreadEvent = Attributes<ThreadEventModel>;
+export type ThreadEvent = RecursiveAttributes<ThreadEventModel>;
 
-export type ThreadComment = Attributes<ThreadCommentModel>;
+export type ThreadComment = RecursiveAttributes<ThreadCommentModel>;
 
-export type Thread = Attributes<ThreadModel>;
+export type Thread = RecursiveAttributes<ThreadModel>;
 
 export type TaggedThreadParent<T = {}> =
 	| { type: 'discussion'; value: T & Discussion }

@@ -1,8 +1,8 @@
-import { Attributes } from 'sequelize';
 import { SubmissionWorkflow as SubmissionWorkflowModel } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 // import { Collection, DocJson } from 'types';
 
-export type SubmissionWorkflow = Attributes<SubmissionWorkflowModel>;
+export type SubmissionWorkflow = RecursiveAttributes<SubmissionWorkflowModel>;
 // {
 // 	id: string;
 // 	createdAt: string;

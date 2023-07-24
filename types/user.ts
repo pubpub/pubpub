@@ -1,7 +1,7 @@
-import { Attributes } from 'sequelize';
 import { User as UserModel } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 
-type UserType = Attributes<UserModel>;
+type UserType = RecursiveAttributes<UserModel>;
 
 export type MinimalUser = Pick<
 	UserType,

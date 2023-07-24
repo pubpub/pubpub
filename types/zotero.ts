@@ -1,7 +1,7 @@
-import { Attributes } from 'sequelize';
 import { ZoteroIntegration as ZoteroIntegrationModel } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 
-export type ZoteroIntegration = Attributes<ZoteroIntegrationModel>;
+export type ZoteroIntegration = RecursiveAttributes<ZoteroIntegrationModel>;
 
 export type ZoteroCSLJSON = {
 	meta: {

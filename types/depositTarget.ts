@@ -1,4 +1,4 @@
-import { Attributes } from 'sequelize';
 import { DepositTarget as DepositTargetModel } from 'server/models';
+import { RecursiveAttributes } from './recursiveAttributes';
 
-export type DepositTarget = Attributes<DepositTargetModel>;
+export type DepositTarget = RecursiveAttributes<DepositTargetModel>;
