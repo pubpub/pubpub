@@ -2,6 +2,7 @@ import { fetchFacetsForScope } from 'server/facets';
 import { Collection, CollectionAttribution, Community } from 'types';
 import { collectionUrl } from 'utils/canonicalUrls';
 import { licenseDetailsByKind } from 'utils/licenses';
+import { expect } from 'utils/assert';
 import { ResourceKind, ResourceContribution, ResourceContributorRole, Resource } from '../resource';
 
 const attributionRoleToResourceContributorRole: Record<string, ResourceContributorRole> = {
@@ -62,7 +63,7 @@ export async function transformCollectionToResource(
 			) ?? [];
 	const collectionResource: Resource = {
 		kind: getResourceKindForCollection(collection),
-		title: collection.title,
+		title: expect(collection.title),
 		identifiers: [
 			{
 				identifierKind: 'URL',

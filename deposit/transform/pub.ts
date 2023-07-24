@@ -189,8 +189,8 @@ export async function transformPubToResource(
 			transformEdgeToResourceRelationship(pubEdge, community, true),
 		),
 	]);
-	const contributions: ResourceContribution[] = pub.attributions
-		.sort((a, b) => a.order - b.order)
+	const contributions: ResourceContribution[] = (pub.attributions ?? [])
+		.sort((a, b) => (!a.order || !b.order ? 0 : a.order - b.order))
 		.map((attribution) =>
 			transformPubAttributionToResourceContribution(
 				attribution,
@@ -228,10 +228,10 @@ export async function transformPubToResource(
 		});
 	}
 
-	const release = pub.releases[pub.releases.length - 1];
+	const release = pub.releases?.[pub.releases.length - 1];
 
 	if (release) {
-		const releaseDoc = await Doc.findByPk(release.docId);
+		const releaseDoc = expect(await Doc.findByPk(release.docId));
 		const releaseDocNode = Node.fromJSON(schema, releaseDoc.content);
 		pubResource.summaries.push({
 			kind: 'WordCount',
@@ -239,7 +239,7 @@ export async function transformPubToResource(
 			lang: 'eng',
 		});
 		const depositJson = pub.crossrefDepositRecord?.depositJson;
-		pubResource.meta['created-date'] = expect(pub.releases[0]).createdAt.toString();
+		pubResource.meta['created-date'] = expect(pub.releases?.[0]).createdAt.toString();
 		if (depositJson) {
 			const dateOfLastDeposit = new Date(depositJson.data.attributes.updated);
 			const dateOfLatestRelease = new Date(release.createdAt);
