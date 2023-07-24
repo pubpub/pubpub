@@ -106,7 +106,7 @@ const PubPreview = (props: Props) => {
 					{showUpperByline && (
 						<div
 							className="authors"
-							style={{ color: localCommunityData.accentColorDark }}
+							style={{ color: localCommunityData.accentColorDark ?? undefined }}
 						>
 							{renderByline()}
 						</div>

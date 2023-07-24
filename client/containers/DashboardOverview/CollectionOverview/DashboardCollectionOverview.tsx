@@ -240,7 +240,7 @@ const DashboardCollectionOverview = (props: Props) => {
 	};
 
 	const lighterAccentColor = useMemo(
-		() => Color(communityData.accentColorDark).alpha(0.1),
+		() => Color(communityData.accentColorDark ?? undefined).alpha(0.1),
 		[communityData.accentColorDark],
 	);
 

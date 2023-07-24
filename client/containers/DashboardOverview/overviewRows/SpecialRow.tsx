@@ -22,7 +22,7 @@ const SpecialRow = React.forwardRef((props: Props, ref: any) => {
 			{...restProps}
 			ref={ref}
 			className={classNames('special-row-component', isDark && 'dark', className)}
-			style={isDark ? { background: accentColorDark, color: 'white' } : {}}
+			style={isDark ? { background: accentColorDark ?? undefined, color: 'white' } : {}}
 		>
 			<div className="inner">{children}</div>
 		</div>

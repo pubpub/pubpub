@@ -77,13 +77,16 @@ const DiscussionNav = (props: Props) => {
 	const [isOverflowShown, setOverflowShown] = useState(false);
 
 	const accentStyle = {
-		color: communityData.accentColorDark,
+		color: communityData.accentColorDark ?? undefined,
 		borderBottom: activeThread
 			? `1px solid ${communityData.accentColorDark}`
 			: '1px solid transparent',
 	};
 
-	const fadedAccentColorDark = Color(communityData.accentColorDark).fade(0.5).rgb().string();
+	const fadedAccentColorDark = Color(communityData.accentColorDark ?? undefined)
+		.fade(0.5)
+		.rgb()
+		.string();
 
 	const getHandlersForDiscussion = (discussion) => ({
 		onMouseEnter: () => {

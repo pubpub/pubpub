@@ -17,7 +17,7 @@ type Scope = {
 	icon: IconName;
 	iconSize?: number;
 	title: string;
-	avatar: undefined | string;
+	avatar: undefined | string | null;
 	slugs?: {
 		collectionSlug?: string;
 		pubSlug?: string;

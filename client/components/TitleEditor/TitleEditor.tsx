@@ -14,7 +14,7 @@ require('./titleEditor.scss');
 
 type Props = {
 	isReadOnly?: boolean;
-	initialValue?: string;
+	initialValue?: string | null;
 	onChange?: (html: string, text: string) => void;
 	onInput?: (html: string, text: string) => void;
 	className?: string;

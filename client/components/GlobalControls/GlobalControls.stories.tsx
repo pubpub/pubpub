@@ -18,7 +18,7 @@ const WrappedGlobalControls = (props: Props) => {
 			<div
 				style={{
 					width: '100%',
-					backgroundColor: communityData.accentColorDark,
+					backgroundColor: communityData.accentColorDark ?? undefined,
 					display: 'flex',
 					alignItems: 'center',
 					justifyContent: 'flex-end',

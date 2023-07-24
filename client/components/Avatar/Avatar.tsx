@@ -9,7 +9,7 @@ require('./avatar.scss');
 type Props = {
 	width: number;
 	initials?: string;
-	avatar?: string;
+	avatar?: string | null;
 	instanceNumber?: number;
 	borderColor?: string;
 	borderWidth?: number | string;
@@ -39,7 +39,7 @@ const Avatar = (props: Props) => {
 		borderColor,
 		borderWidth: borderColor ? borderWidth || Math.floor(width / 50) + 1 : 0,
 		fontSize: isBlock ? Math.floor(width / 1.5) : Math.floor(width / 2.5),
-		backgroundColor: communityData.accentColorDark,
+		backgroundColor: communityData.accentColorDark ?? undefined,
 		zIndex: typeof instanceNumber === 'number' ? -1 * instanceNumber : 'initial',
 		borderRadius: isBlock ? '2px' : '50%',
 	};

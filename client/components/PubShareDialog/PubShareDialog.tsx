@@ -61,7 +61,7 @@ const AccessHashOptions = (props: SharedProps) => {
 	};
 	const isDraft = !isRelease;
 
-	const createAccessUrl = (accessHash: string | undefined, options?: UrlOptions) =>
+	const createAccessUrl = (accessHash: string | undefined | null, options?: UrlOptions) =>
 		pubUrl(communityData, pubData, { accessHash, ...options });
 
 	return (

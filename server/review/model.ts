@@ -40,7 +40,7 @@ export class ReviewNew extends Model<
 
 	@Default('open')
 	@Column(DataType.ENUM('open', 'closed', 'completed'))
-	status!: CreationOptional<'open' | 'closed' | 'completed' | null>;
+	status!: CreationOptional<'open' | 'closed' | 'completed'>;
 
 	@Column(DataType.BOOLEAN)
 	releaseRequested!: boolean | null;

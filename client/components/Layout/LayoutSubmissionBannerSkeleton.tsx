@@ -18,7 +18,9 @@ const LayoutSubmissionBannerSkeleton = (props: Props) => {
 		communityData: { accentColorDark },
 	} = usePageContext();
 
-	const backgroundColor = Color(accentColorDark).alpha(0.2).toString();
+	const backgroundColor = Color(accentColorDark ?? undefined)
+		.alpha(0.2)
+		.toString();
 
 	return (
 		<div
