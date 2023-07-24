@@ -10,6 +10,7 @@ import {
 	InitialData,
 	SanitizedPubData,
 	DocJson,
+	PubEdge as PubEdgeType,
 } from 'types';
 
 import { expect } from 'utils/assert';
@@ -97,7 +98,7 @@ export const getPubCitations = async (
 export const getPubEdges = async (pubData: SanitizedPubData, initialData: InitialData) => {
 	const inboundEdges = expect(pubData.inboundEdges);
 	const outboundEdges = expect(pubData.outboundEdges);
-	const sanitizeEdgeHere = (edge: PubEdge) => sanitizePubEdge(initialData, edge);
+	const sanitizeEdgeHere = (edge: PubEdgeType) => sanitizePubEdge(initialData, edge);
 
 	const sanitizedInboundEdges = inboundEdges.map(sanitizeEdgeHere).filter((x) => x);
 	const sanitizedOutboundEdges = outboundEdges.map(sanitizeEdgeHere).filter((x) => x);

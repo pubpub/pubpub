@@ -9,6 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { RecursiveAttributes } from 'types';
 import { DocJson } from 'types';
 import { User, Commenter } from '../models';
 
@@ -20,6 +21,8 @@ export class ThreadComment extends Model<
 	// this overrides the default Date type to be compatible with existing code
 	declare createdAt: CreationOptional<string>;
 	declare updatedAt: CreationOptional<string>;
+
+	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

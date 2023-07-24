@@ -9,6 +9,7 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { RecursiveAttributes } from 'types';
 
 @Table
 export class UserDismissable extends Model<
@@ -18,6 +19,8 @@ export class UserDismissable extends Model<
 	// this overrides the default Date type to be compatible with existing code
 	declare createdAt: CreationOptional<string>;
 	declare updatedAt: CreationOptional<string>;
+
+	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

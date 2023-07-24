@@ -15,6 +15,7 @@ import {
 import { getPrimaryCollectionPub } from 'utils/collections/primary';
 import { getCommunityDepositTarget } from 'server/depositTarget/queries';
 
+import { expect } from 'utils/assert';
 import { submitDoiData } from './submit';
 
 const collectionIncludes = [
@@ -63,17 +64,19 @@ const findCommunity = (communityId) =>
 
 export const persistCrossrefDepositRecord = async (ids, depositJson) => {
 	const { collectionId, pubId } = ids;
-	const targetModel = pubId
-		? await Pub.findOne({
-				where: {
-					id: pubId,
-				},
-		  })
-		: await Collection.findOne({
-				where: {
-					id: collectionId,
-				},
-		  });
+	const targetModel = expect(
+		pubId
+			? await Pub.findOne({
+					where: {
+						id: pubId,
+					},
+			  })
+			: await Collection.findOne({
+					where: {
+						id: collectionId,
+					},
+			  }),
+	);
 	const { crossrefDepositRecordId } = targetModel;
 
 	if (crossrefDepositRecordId) {
@@ -125,7 +128,7 @@ export const getDoiData = (
 			{
 				collectionPub,
 				collection: resolvedCollection?.toJSON(),
-				community: community.toJSON(),
+				community: community?.toJSON(),
 				pub: pub?.toJSON(),
 				contentVersion,
 				reviewType,
