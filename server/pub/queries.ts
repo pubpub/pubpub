@@ -173,6 +173,6 @@ export const findCollection = async (collectionId: string) =>
 
 export const findPub = (pubId: string) =>
 	Pub.findOne({ where: { id: pubId }, ...findPubOptions }) as Promise<types.DefinitelyHas<
-		types.Pub,
+		Pub,
 		'community'
 	> | null>;

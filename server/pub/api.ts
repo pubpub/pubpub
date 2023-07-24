@@ -144,11 +144,7 @@ app.get(
 		if (!pub) {
 			throw new NotFoundError();
 		}
-		const resource = await transformPubToResource(
-			// @ts-expect-error
-			pub.get({ plain: true }),
-			pub.community,
-		);
+		const resource = await transformPubToResource(pub.get({ plain: true }), pub.community);
 		return res.status(200).json(resource);
 	}),
 );
@@ -175,11 +171,7 @@ app.post(
 					'pub',
 				)
 			).pub;
-		const resource = await transformPubToResource(
-			// @ts-expect-error
-			pub.get({ plain: true }),
-			pub.community,
-		);
+		const resource = await transformPubToResource(pub.get({ plain: true }), pub.community);
 		try {
 			assertValidResource(resource);
 		} catch (error) {
@@ -206,7 +198,7 @@ app.post(
 		} catch {
 			throw new ForbiddenError();
 		}
-		const pub = await findPub(pubId);
+		const pub = expect(await findPub(pubId));
 		const pubDoi =
 			pub.doi ??
 			(
@@ -215,11 +207,7 @@ app.post(
 					'pub',
 				)
 			).pub;
-		const resource = await transformPubToResource(
-			// @ts-expect-error
-			pub.get({ plain: true }),
-			pub.community,
-		);
+		const resource = await transformPubToResource(pub.get({ plain: true }), pub.community);
 		try {
 			assertValidResource(resource);
 		} catch (error) {
