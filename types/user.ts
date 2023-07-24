@@ -19,32 +19,6 @@ export type MinimalUser = Pick<
 	| 'feedback'
 >;
 
-// export type MinimalUser = {
-// 	id: string;
-// 	slug?: string;
-// 	initials: string;
-// 	fullName: string;
-// 	firstName: string;
-// 	lastName: string;
-// 	avatar?: string;
-// 	title?: string;
-// 	orcid?: string;
-// 	isShadowUser?: boolean;
-// 	publicEmail?: string;
-// 	feedback?: string;
-// };
-
-// export type User = MinimalUser & {
-// 	bio: string;
-// 	location: string;
-// 	website: string;
-// 	facebook: string;
-// 	twitter: string;
-// 	github: string;
-// 	googleScholar: string;
-// 	authRedirectHost?: string;
-// };
-
 export type User = Pick<
 	UserType,
 	| 'bio'
@@ -74,17 +48,4 @@ export type UserWithPrivateFieldsAndHashedPassword = Pick<
 	keyof UserWithPrivateFields | 'sha3hashedPassword'
 >;
 
-// export type UserWithPrivateFields = User & {
-// 	isSuperAdmin: boolean;
-// 	passwordDigest: string;
-// 	hash: string;
-// 	salt: string;
-// 	email: string;
-// 	resetHash: string;
-// 	resetHashExpiration: number;
-// };
-
-// export type UserWithPrivateFieldsAndHashedPassword = UserWithPrivateFields & {
-// 	sha3hashedPassword: string;
-// };
 export type SuggestedEditsUser = Pick<MinimalUser, 'avatar' | 'initials' | 'fullName'>;
