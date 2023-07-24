@@ -32,7 +32,7 @@ export class Submission extends Model<
 	status!: SubmissionStatus;
 
 	@Column(DataType.DATE)
-	submittedAt!: Date | null;
+	submittedAt!: string | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
