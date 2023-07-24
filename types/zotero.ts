@@ -1,10 +1,7 @@
-export type ZoteroIntegration = {
-	id: string;
-	userId: string;
-	zoteroUsername: string;
-	zoteroUserId: string;
-	integrationDataOAuth1Id: string;
-};
+import { Attributes } from 'sequelize';
+import { ZoteroIntegration as ZoteroIntegrationModel } from 'server/models';
+
+export type ZoteroIntegration = Attributes<ZoteroIntegrationModel>;
 
 export type ZoteroCSLJSON = {
 	meta: {
