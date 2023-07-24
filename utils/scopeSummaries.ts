@@ -1,6 +1,6 @@
 import { ScopeSummary } from 'types';
 
-export const addScopeSummaries = (...summaries: ScopeSummary[]): ScopeSummary => {
+export const addScopeSummaries = (...summaries: ScopeSummary[]) => {
 	let discussions = 0;
 	let reviews = 0;
 	let pubs = 0;

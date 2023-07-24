@@ -3,7 +3,7 @@ import { formatDate, getLocalDateMatchingUtcCalendarDate } from 'utils/dates';
 import { Maybe, Pub } from 'types';
 
 export const getPubLatestReleasedDate = (pub: Pub) => {
-	if (pub.releases.length === 0) {
+	if (!pub.releases || pub.releases?.length === 0) {
 		return null;
 	}
 	return pub.releases
@@ -22,7 +22,7 @@ export const getPubPublishedDate = (pub: Pub, includeCustomPublishedAt = true) =
 		return getLocalDateMatchingUtcCalendarDate(pub.customPublishedAt);
 	}
 	const { releases } = pub;
-	if (releases.length > 0) {
+	if (releases && releases.length > 0) {
 		const [firstRelease] = releases;
 		return new Date(firstRelease.createdAt);
 	}
@@ -33,12 +33,15 @@ export const getPubPublishedDateString = (pub: Pub): string | null => {
 	const publishedDate = getPubPublishedDate(pub, true);
 	let publishedDateString = '';
 	if (publishedDate) publishedDateString = formatDate(publishedDate);
-	if (publishedDate && pub.releases.length === 0) publishedDateString += ' (Not yet released)';
+	if (publishedDate && pub.releases?.length === 0) publishedDateString += ' (Not yet released)';
 	return publishedDateString || null;
 };
 
 export const getPubLatestReleaseDate = (pub: Pub, { excludeFirstRelease = false } = {}) => {
 	const { releases } = pub;
+	if (!releases) {
+		return null;
+	}
 	if (releases.length === 1 && excludeFirstRelease) {
 		return null;
 	}

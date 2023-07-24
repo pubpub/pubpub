@@ -6,6 +6,9 @@ import { getPrimaryCollection } from 'utils/collections/primary';
 
 const orderedContributors = (maybeContributors: Attribution[] | undefined | null) =>
 	(maybeContributors || []).concat().sort((a, b) => {
+		if (!a.order || !b.order) {
+			return 0;
+		}
 		if (a.order !== b.order) {
 			return a.order - b.order;
 		}

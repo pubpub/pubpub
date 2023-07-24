@@ -28,7 +28,7 @@ export class Member extends Model<InferAttributes<Member>, InferCreationAttribut
 
 	@Default('view')
 	@Column(DataType.ENUM('view', 'edit', 'manage', 'admin'))
-	permissions!: CreationOptional<MemberPermission | null>;
+	permissions!: CreationOptional<MemberPermission>;
 
 	@Column(DataType.BOOLEAN)
 	isOwner!: boolean | null;
