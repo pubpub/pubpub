@@ -14,6 +14,7 @@ import {
 } from '../threadEvent/queries';
 import { createRelease } from '../release/queries';
 import { createThreadComment, CreateThreadCommentOptions } from '../threadComment/queries';
+import { expect } from 'utils/assert';
 
 type CreateReviewOptions = {
 	pubId: string;
@@ -92,10 +93,12 @@ export const createReview = async ({
 };
 
 export const createReviewRelease = async (inputValues, userData) => {
-	const pubData = await Pub.findOne({
-		where: { id: inputValues.pubId },
-		attributes: ['id', 'slug'],
-	});
+	const pubData = expect(
+		await Pub.findOne({
+			where: { id: inputValues.pubId },
+			attributes: ['id', 'slug'],
+		}),
+	);
 	const latestKey = await getLatestKeyInPubDraft(inputValues.pubId);
 	const updateResult = await ReviewNew.update(
 		{ status: 'completed' },

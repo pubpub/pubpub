@@ -11,8 +11,8 @@ import {
 	HasMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { Thread, Visibility, User, Pub, Reviewer } from '../models';
 import { DocJson } from 'types';
+import { Thread, Visibility, User, Pub, Reviewer } from '../models';
 
 @Table
 export class ReviewNew extends Model<

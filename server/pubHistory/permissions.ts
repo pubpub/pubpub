@@ -9,7 +9,7 @@ export const getPermissions = async ({
 	userId: string;
 	pubId: string;
 	accessHash: string;
-	historyKey: number;
+	historyKey?: number | null;
 }) => {
 	const {
 		elements: { activePub },

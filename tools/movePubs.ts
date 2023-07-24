@@ -8,7 +8,7 @@ import { createCollectionPub } from 'server/collectionPub/queries';
 
 import { promptOkay } from './utils/prompt';
 
-type MovablePub = types.SequelizeModel<types.DefinitelyHas<types.Pub, 'community'>>;
+type MovablePub = types.DefinitelyHas<Pub, 'community'>;
 
 const {
 	argv: {
@@ -30,10 +30,10 @@ const getPubs = async () => {
 	const slugs = getPubSlugs();
 	return Promise.all(
 		slugs.map(async (slug) => {
-			const pub: null | MovablePub = await Pub.findOne({
+			const pub = (await Pub.findOne({
 				where: { slug },
 				include: [{ model: Community, as: 'community' }],
-			});
+			})) as null | MovablePub;
 			if (!pub) {
 				throw new Error(`Pub ${slug} not found`);
 			}
