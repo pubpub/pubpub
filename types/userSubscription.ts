@@ -1,3 +1,6 @@
+import { Attributes } from 'sequelize';
+import { UserSubscription as UserSubscriptionModel } from 'server/models';
+
 export type UserSubscriptionTarget = { pubId: string } | { threadId: string };
 
 export type UserSubscriptionStatus =
@@ -11,16 +14,7 @@ export type UserSubscriptionStatus =
 	// Active: this subscription will actively generate notifications for this item
 	| 'active';
 
-export type UserSubscription = {
-	id: string;
-	updatedAt: string;
-	createdAt: string;
-	userId: string;
-	status: UserSubscriptionStatus;
-	setAutomatically: boolean;
-	pubId: null | string;
-	threadId: null | string;
-};
+export type UserSubscription = Attributes<UserSubscriptionModel>;
 
 export type UniqueUserSubscriptionQuery =
 	| Pick<UserSubscription, 'id'>
