@@ -80,6 +80,7 @@ const createNotificationsForThreadComment = async (
 				activityItemId: item.id,
 			};
 		}),
+		{ individualHooks: true },
 	);
 };
 

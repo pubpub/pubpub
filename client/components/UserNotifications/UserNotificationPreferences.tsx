@@ -31,6 +31,7 @@ const UserNotificationPreferences = (props: Props) => {
 	const { preferences, onUpdatePreferences, onClose } = props;
 	const {
 		receiveNotifications,
+		receiveDiscussionThreadEmails,
 		subscribeToThreadsAsCommenter,
 		subscribeToPubsAsMember,
 		subscribeToPubsAsContributor,
@@ -50,6 +51,11 @@ const UserNotificationPreferences = (props: Props) => {
 					label="Receive notifications from PubPub"
 					checked={receiveNotifications}
 					onChange={() => toggle('receiveNotifications')}
+				/>
+				<Switch
+					label="Receive discussion thread emails from PubPub"
+					checked={receiveDiscussionThreadEmails}
+					onChange={() => toggle('receiveDiscussionThreadEmails')}
 				/>
 			</p>
 			<FormGroup label="Automatically subscribe me to..." disabled={!receiveNotifications}>
