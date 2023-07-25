@@ -16,7 +16,7 @@ export const createPubAttribution = async ({
 }: {
 	userId: string;
 	pubId: string;
-	name: string;
+	name: string | null;
 	order: number;
 	isAuthor: boolean;
 }) => {

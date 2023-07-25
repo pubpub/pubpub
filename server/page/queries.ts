@@ -101,7 +101,7 @@ export const updatePage = async (
 			activeElementId: inputValues.pageId,
 		});
 		if (slugStatus !== 'available') {
-			throw new PubPubError.ForbiddenSlugError(filteredValues.slug, slugStatus);
+			throw new PubPubError.ForbiddenSlugError(filteredValues.slug!, slugStatus);
 		}
 	}
 	if (filteredValues.layout) {

@@ -1,3 +1,4 @@
+import { Includeable } from 'sequelize';
 import {
 	Community,
 	CollectionPub,
@@ -12,7 +13,7 @@ import { PubEdgeIncludesOptions } from 'types';
 
 export const getOptionsForIncludedPub = ({ includeCommunity }: { includeCommunity?: boolean }) => {
 	return [
-		includeCommunity && { model: Community, as: 'community' },
+		...(includeCommunity ? [{ model: Community, as: 'community' }] : []),
 		{
 			model: CollectionPub,
 			as: 'collectionPubs',
@@ -28,7 +29,7 @@ export const getOptionsForIncludedPub = ({ includeCommunity }: { includeCommunit
 			order: [['order', 'ASC']],
 			include: [includeUserModel({ as: 'user' })],
 		},
-	].filter((x) => x);
+	] as Includeable[];
 };
 
 export const getPubEdgeIncludes = ({
@@ -63,5 +64,5 @@ export const getPubEdgeIncludes = ({
 			model: ExternalPublication,
 			as: 'externalPublication',
 		},
-	];
+	] as Includeable[];
 };
