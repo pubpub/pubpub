@@ -1,7 +1,12 @@
 import { Op } from 'sequelize';
 
 import * as types from 'types';
-import { UserNotification, UserSubscription, UserNotificationPreferences } from 'server/models';
+import {
+	UserNotification,
+	UserSubscription,
+	UserNotificationPreferences,
+	ActivityItem,
+} from 'server/models';
 import { indexByProperty, splitArrayOn } from 'utils/arrays';
 import { filterUsersWhoCanSeeThread } from 'server/thread/queries';
 import { expect } from 'utils/assert';
@@ -82,16 +87,18 @@ const createNotificationsForThreadComment = async (
 	);
 };
 
-const notificationCreatorsByKind: Partial<{
-	[Kind in types.ActivityItemKind]: ActivityItemResponder<Kind>;
-}> = {
+const notificationCreatorsByKind = {
 	'pub-discussion-comment-added': (item) => createNotificationsForThreadComment(item, true),
 	'pub-review-comment-added': (item) => createNotificationsForThreadComment(item, false),
-};
+} satisfies Partial<{
+	[Kind in types.ActivityItemKind]: ActivityItemResponder<Kind>;
+}>;
 
-export const createNotificationsForActivityItem = async (item: types.ActivityItem) => {
-	const creator = notificationCreatorsByKind[item.kind] as ActivityItemResponder<any>;
-	if (creator) {
-		await creator(item);
+export const createNotificationsForActivityItem = async <A extends ActivityItem>(item: A) => {
+	if (item.kind in notificationCreatorsByKind) {
+		const creator = notificationCreatorsByKind[item.kind];
+		if (creator) {
+			await creator(item);
+		}
 	}
 };

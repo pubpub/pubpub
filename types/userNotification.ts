@@ -1,19 +1,16 @@
 import { CascadedFacetsForScopes } from 'facets';
 import {
 	UserNotification as UserNotificationModel,
-	ActivityItem as ActivityItemModel,
 	UserNotificationPreferences as UserNotificationPreferencesModel,
 } from 'server/models';
 import { RecursiveAttributes } from './recursiveAttributes';
-import { ActivityAssociations } from './activity';
+import { ActivityAssociations, ActivityItemOfKind } from './activity';
 import { UserSubscription } from './userSubscription';
 
 export type UserNotification = RecursiveAttributes<UserNotificationModel>;
 
 export type UserNotificationWithActivityItemModel = UserNotificationModel & {
-	activityItem:
-		| ActivityItemModel<'pub-discussion-comment-added'>
-		| ActivityItemModel<'pub-review-comment-added'>;
+	activityItem: ActivityItemOfKind<'pub-discussion-comment-added' | 'pub-review-comment-added'>;
 };
 
 export type UserNotificationWithActivityItem =

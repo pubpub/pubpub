@@ -117,7 +117,7 @@ export const createCommunityCreatedActivityItem = async (
 export const createCommunityUpdatedActivityItem = async (
 	actorId: null | string,
 	communityId: string,
-	oldCommunity: types.Community,
+	oldCommunity: Community,
 ) => {
 	const community = expect(await Community.findOne({ where: { id: communityId } }));
 	const diffs = getDiffsForPayload(community, oldCommunity, ['title', 'subdomain']);
@@ -186,7 +186,7 @@ export const createMemberRemovedActivityItem = async (actorId: null | string, me
 export const createMemberUpdatedActivityItem = async (
 	actorId: null | string,
 	memberId: string,
-	oldMember: types.Member,
+	oldMember: Member,
 ) => {
 	const member = expect(await Member.findOne({ where: { id: memberId } }));
 	const partial = await resolvePartialMemberItem(member);
@@ -234,7 +234,7 @@ export const createCollectionActivityItem = async (
 export const createCollectionUpdatedActivityItem = async (
 	actorId: null | string,
 	collectionId: string,
-	oldCollection: types.Collection,
+	oldCollection: Collection,
 ) => {
 	const collection = expect(await Collection.findOne({ where: { id: collectionId } }));
 	const { title } = collection;
@@ -249,10 +249,10 @@ export const createCollectionUpdatedActivityItem = async (
 		kind: 'collection-updated' as const,
 		collectionId,
 		actorId,
-		communityId: collection.communityId,
+		communityId: expect(collection.communityId),
 		payload: {
 			collection: {
-				title: title,
+				title: expect(title),
 			},
 			...flags,
 			...diffs,
@@ -282,7 +282,7 @@ export const createPageActivityItem = async (
 export const createPageUpdatedActivityItem = async (
 	actorId: null | string,
 	pageId: string,
-	oldPage: types.Page,
+	oldPage: Page,
 ) => {
 	const page = expect(await Page.findOne({ where: { id: pageId } }));
 	const diffs = getDiffsForPayload(page, oldPage, ['isPublic', 'title', 'slug', 'description']);
@@ -322,7 +322,7 @@ export const createPubReviewCreatedActivityItem = async (reviewId: string) => {
 
 	const payloadThreadComment = threadComment && {
 		id: threadComment.id,
-		text: threadComment.text,
+		text: expect(threadComment.text),
 		userId: threadComment.userId,
 		commenterId: threadComment.commenterId,
 	};
@@ -374,7 +374,7 @@ export const createPubReviewCommentAddedActivityItem = async (
 			isReply: true,
 			threadComment: {
 				id: threadComment.id,
-				text: threadComment.text,
+				text: expect(threadComment.text),
 				userId: threadComment.userId,
 				commenterId: threadComment.commenterId,
 			},
@@ -386,7 +386,7 @@ export const createPubReviewCommentAddedActivityItem = async (
 export const createPubReviewUpdatedActivityItem = async (
 	actorId: null | string,
 	reviewId: string,
-	oldReview: types.Review,
+	oldReview: ReviewNew,
 ) => {
 	const review = expect(await ReviewNew.findOne({ where: { id: reviewId } }));
 	const pub = expect(await Pub.findOne({ where: { id: expect(review.pubId) } }));
@@ -428,14 +428,14 @@ export const createCollectionPubActivityItem = async (
 		pubId: collectionPub.pubId,
 		collectionId: collectionPub.collectionId,
 		actorId,
-		communityId: collectionPub.collection.communityId,
+		communityId: expect(collectionPub.collection.communityId),
 		payload: {
 			collectionPubId,
 			pub: {
 				title: collectionPub.pub.title,
 			},
 			collection: {
-				title: collectionPub.collection.title,
+				title: expect(collectionPub.collection.title),
 			},
 		},
 	});
@@ -579,7 +579,7 @@ export const createPubDiscussionCommentAddedActivityItem = async (
 			isReply,
 			threadComment: {
 				id: threadCommentId,
-				text: threadComment.text,
+				text: expect(threadComment.text),
 				userId: threadComment.userId,
 				commenterId: threadComment.commenterId,
 			},

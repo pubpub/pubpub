@@ -119,9 +119,7 @@ export const fetchUserNotifications = async (
 	};
 };
 
-export const createUserNotification = async (
-	options: CreateOptions,
-): Promise<types.SequelizeModel<types.UserNotification>> => {
+export const createUserNotification = async (options: CreateOptions) => {
 	const { activityItemId, userId, userSubscriptionId } = options;
 	return UserNotification.create({ activityItemId, userId, userSubscriptionId });
 };
