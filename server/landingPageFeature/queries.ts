@@ -42,9 +42,7 @@ type CreateLandingPageFeatureOptions = {
 	rank: string;
 };
 
-export const createLandingPageFeature = async (
-	options: CreateLandingPageFeatureOptions,
-): Promise<types.LandingPageFeature> => {
+export const createLandingPageFeature = async (options: CreateLandingPageFeatureOptions) => {
 	const { pubId, communityId, rank } = options;
 	const newFeature = await LandingPageFeature.create({ pubId, communityId, rank });
 	return LandingPageFeature.findOne({

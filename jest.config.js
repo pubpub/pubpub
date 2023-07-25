@@ -30,4 +30,5 @@ module.exports = {
 	logHeapUsage: true,
 	forceExit: true,
 	silent: false,
+	runInBand: true,
 };

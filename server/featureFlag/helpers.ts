@@ -4,6 +4,7 @@ import {
 	FeatureFlagOverrideState,
 	FeatureFlagCommunity,
 } from 'types';
+import { expect } from 'utils/assert';
 import { getPsuedorandomFractionForUuid } from 'utils/psuedorandom';
 
 type FeatureFlagOverride = FeatureFlagUser | FeatureFlagCommunity;
@@ -60,7 +61,7 @@ export const isFeatureFlagEnabledForUserInCommunity = (
 		return true;
 	}
 	return (
-		passesThresholdFraction(featureFlagId, userId, enabledUsersFraction) ||
-		passesThresholdFraction(featureFlagId, communityId, enabledCommunitiesFraction)
+		passesThresholdFraction(featureFlagId, userId, expect(enabledUsersFraction)) ||
+		passesThresholdFraction(featureFlagId, communityId, expect(enabledCommunitiesFraction))
 	);
 };
