@@ -189,7 +189,7 @@ export class User extends ModelWithPassport<
 	googleScholar!: string | null;
 
 	@Column(DataType.DATE)
-	resetHashExpiration!: Date | null;
+	resetHashExpiration!: number | null;
 
 	@Column(DataType.TEXT)
 	resetHash!: string | null;

@@ -15,13 +15,6 @@ type UpdatePasswordResetInputValues = {
 	password: string;
 };
 
-type PasswordResetData = {
-	dataValues: {
-		hash: string;
-		salt: string;
-	};
-};
-
 export const createPasswordReset = (
 	inputValues: CreatePasswordResetInputValues,
 	user: types.User,
@@ -32,7 +25,7 @@ export const createPasswordReset = (
 	return User.findOne({
 		where: email ? { email } : { id: user.id },
 	})
-		.then((userData: types.UserWithPrivateFields) => {
+		.then((userData) => {
 			if (!userData) {
 				throw new Error("User doesn't exist");
 			}
@@ -47,7 +40,7 @@ export const createPasswordReset = (
 				individualHooks: true,
 			});
 		})
-		.then((updatedUserData: types.UserWithPrivateFields[][]) => {
+		.then((updatedUserData) => {
 			const updatedUser = updatedUserData[1][0];
 			return sendPasswordResetEmail({
 				toEmail: updatedUser.email,
@@ -73,7 +66,12 @@ export const updatePasswordReset = (
 			if (!userData) {
 				throw new Error("User doesn't exist");
 			}
-			if (!user.id && resetHash && userData.resetHashExpiration < currentTime) {
+			if (
+				!user.id &&
+				resetHash &&
+				userData.resetHashExpiration &&
+				userData.resetHashExpiration < currentTime
+			) {
 				throw new Error('Hash is expired');
 			}
 
@@ -81,10 +79,10 @@ export const updatePasswordReset = (
 			const setPassword = promisify(userData.setPassword.bind(userData));
 			return setPassword(inputValues.password);
 		})
-		.then((passwordResetData: PasswordResetData) => {
+		.then((passwordResetData) => {
 			const updateData = {
-				hash: passwordResetData.dataValues.hash,
-				salt: passwordResetData.dataValues.salt,
+				hash: passwordResetData?.dataValues.hash,
+				salt: passwordResetData?.dataValues.salt,
 				resetHash: '',
 				resetHashExpiration: currentTime,
 				passwordDigest: 'sha512',
