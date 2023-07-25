@@ -7,9 +7,9 @@ export const getCollection = async ({
 	collectionId = null,
 	collectionSlug = null,
 }: {
-	communityId: string;
-	collectionId: string | null;
-	collectionSlug: string | null;
+	communityId?: string | null;
+	collectionId?: string | null;
+	collectionSlug?: string | null;
 }) => {
 	return Collection.findOne({
 		where: stripFalsyIdsFromQuery({

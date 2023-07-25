@@ -134,22 +134,22 @@ const getActiveIds = ({
 }: {
 	activePub: Pub | null;
 	activeCollection: Collection | null;
-	activeCommunity: Community;
+	activeCommunity?: Community | null;
 }) => {
 	return {
 		pubId: activePub && activePub.id,
 		collectionId: activeCollection && activeCollection.id,
-		communityId: activeCommunity.id,
+		communityId: activeCommunity?.id,
 	};
 };
 
 const getScopeElements = async (
 	scopeInputs: {
-		communityId: string | null;
-		collectionId: string | null;
-		collectionSlug: string | null;
-		pubId: string | null;
-		pubSlug: string | null;
+		communityId?: string | null;
+		collectionId?: string | null;
+		collectionSlug?: string | null;
+		pubId?: string | null;
+		pubSlug?: string | null;
 	} = {
 		communityId: null,
 		collectionId: null,
@@ -233,7 +233,7 @@ const getScopeElements = async (
 		activeCollection = await getCollection({
 			collectionSlug,
 			collectionId,
-			communityId: expect(activeCommunity?.id),
+			communityId: activeCommunity?.id,
 		});
 		activeTarget = activeCollection;
 	}
@@ -428,15 +428,15 @@ const getActivePermissions = async (
 /* it is likely that collectionSlug and pubSlug will be used. */
 /* When called from an API endpoint, it is likely that collectionId and pubId will be used. */
 export default async (scopeInputs: {
-	communityId?: string;
-	pubId?: string;
-	pubSlug?: string;
-	collectionId?: string;
-	collectionSlug?: string;
-	accessHash?: string;
-	loginId?: string;
-	isDashboard?: boolean;
-	includeFacets?: boolean;
+	communityId?: string | null;
+	pubId?: string | null;
+	pubSlug?: string | null;
+	collectionId?: string | null;
+	collectionSlug?: string | null;
+	accessHash?: string | null;
+	loginId?: string | null;
+	isDashboard?: boolean | null;
+	includeFacets?: boolean | null;
 }) => {
 	/* scopeInputs = 
 		{
