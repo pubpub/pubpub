@@ -1,5 +1,5 @@
-import { Attributes } from 'sequelize';
-import { ThreadEvent, User, attributesPublicUser } from 'server/models';
+import { ThreadEvent, attributesPublicUser } from 'server/models';
+import * as types from 'types';
 import { ThreadEventPermissions } from './permissions';
 
 export const createThreadEvent = async (
@@ -8,7 +8,7 @@ export const createThreadEvent = async (
 		type: string;
 		data: Record<string, any>;
 	},
-	userData: Attributes<User>,
+	userData: types.User,
 ) => {
 	const newThreadEvent = await ThreadEvent.create({
 		type: inputValues.type,
@@ -29,7 +29,7 @@ export const createThreadEvent = async (
 };
 
 export const updateThreadEvent = async (
-	inputValues: Attributes<ThreadEvent> & { threadEventId: string },
+	inputValues: types.ThreadEvent & { threadEventId: string },
 	updatePermissions: ThreadEventPermissions['update'],
 ) => {
 	// Filter to only allow certain fields to be updated
@@ -54,7 +54,7 @@ export const destroyThreadEvent = (inputValues: { threadEventId: string }) => {
 
 /* Event helpers */
 /* ------------- */
-export const createCreatedThreadEvent = (userData: Attributes<User>, threadId: string) => {
+export const createCreatedThreadEvent = (userData: types.User, threadId: string) => {
 	return createThreadEvent(
 		{
 			threadId,
@@ -65,7 +65,7 @@ export const createCreatedThreadEvent = (userData: Attributes<User>, threadId: s
 	);
 };
 
-export const createClosedThreadEvent = (userData: Attributes<User>, threadId: string) => {
+export const createClosedThreadEvent = (userData: types.User, threadId: string) => {
 	return createThreadEvent(
 		{
 			threadId,
@@ -76,7 +76,7 @@ export const createClosedThreadEvent = (userData: Attributes<User>, threadId: st
 	);
 };
 
-export const createCompletedThreadEvent = (userData: Attributes<User>, threadId: string) => {
+export const createCompletedThreadEvent = (userData: types.User, threadId: string) => {
 	return createThreadEvent(
 		{
 			threadId,
@@ -87,7 +87,7 @@ export const createCompletedThreadEvent = (userData: Attributes<User>, threadId:
 	);
 };
 
-export const createMergedEvent = (userData: Attributes<User>, threadId: string) => {
+export const createMergedEvent = (userData: types.User, threadId: string) => {
 	return createThreadEvent(
 		{
 			threadId,
@@ -99,7 +99,7 @@ export const createMergedEvent = (userData: Attributes<User>, threadId: string) 
 };
 
 export const createReleasedEvent = (
-	userData: Attributes<User>,
+	userData: types.User,
 	threadId: string,
 	pubSlug: string,
 	releaseId: string,

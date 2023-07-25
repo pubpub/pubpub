@@ -6,6 +6,7 @@ import { createReviewer } from 'server/reviewer/queries';
 import { getLatestKeyInPubDraft } from 'server/utils/firebaseAdmin';
 
 import { DocJson, User } from 'types';
+import { expect } from 'utils/assert';
 import {
 	createCreatedThreadEvent,
 	createClosedThreadEvent,
@@ -14,7 +15,6 @@ import {
 } from '../threadEvent/queries';
 import { createRelease } from '../release/queries';
 import { createThreadComment, CreateThreadCommentOptions } from '../threadComment/queries';
-import { expect } from 'utils/assert';
 
 type CreateReviewOptions = {
 	pubId: string;
@@ -143,19 +143,19 @@ export const updateReview = async (inputValues, updatePermissions, userData) => 
 		where: { id: inputValues.reviewId },
 		returning: true,
 	})
-		.then((updatedReview) => {
+		.then(async (updatedReview) => {
 			if (!updatedReview[0]) {
 				return {};
 			}
 			const nextValues = updatedReview[1][0].get();
-			const prevStatus = previousReview.status;
+			const prevStatus = (await previousReview)?.status;
 			const wasClosed = prevStatus !== 'closed' && nextValues.status === 'closed';
 			const wasCompleted = prevStatus !== 'completed' && nextValues.status === 'completed';
 			if (wasClosed) {
-				return Promise.all[createClosedThreadEvent(userData, nextValues.threadId)];
+				return Promise.all([createClosedThreadEvent(userData, nextValues.threadId)]);
 			}
 			if (wasCompleted) {
-				return Promise.all[createCompletedThreadEvent(userData, nextValues.threadId)];
+				return Promise.all([createCompletedThreadEvent(userData, nextValues.threadId)]);
 			}
 			return [];
 		})

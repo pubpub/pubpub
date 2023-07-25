@@ -10,9 +10,9 @@ export const getPermissions = async ({
 	communityId?: string;
 	pubId?: string;
 	threadId?: string;
-}) => {
+}): Promise<ThreadEventPermissions> => {
 	if (!userId || !communityId || !pubId || !threadId) {
-		return {};
+		return {} as ThreadEventPermissions;
 	}
 	const scopeData = await getScope({
 		communityId,
@@ -22,14 +22,14 @@ export const getPermissions = async ({
 
 	const { activePub } = scopeData.elements;
 	if (!activePub || activePub.id !== pubId) {
-		return {};
+		return {} as ThreadEventPermissions;
 	}
 
 	const threadParent = [activePub.discussions, activePub.reviews].find((item) => {
 		return item.threadId === threadId;
 	});
 	if (!threadParent) {
-		return {};
+		return {} as ThreadEventPermissions;
 	}
 
 	const { canManage } = scopeData.activePermissions;

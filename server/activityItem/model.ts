@@ -9,8 +9,7 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
-import { ActivityItemKind, ActivityItem as ActivityItemType } from 'types';
+import { ActivityItemKind, KindPayloadMap, ActivityItem as ActivityItemType } from 'types';
 
 @Table
 export class ActivityItem<Kind extends ActivityItemKind = ActivityItemKind> extends Model<
@@ -21,7 +20,7 @@ export class ActivityItem<Kind extends ActivityItemKind = ActivityItemKind> exte
 	declare createdAt: CreationOptional<string>;
 	declare updatedAt: CreationOptional<string>;
 
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: () => ActivityItemType<Kind>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
@@ -38,7 +37,7 @@ export class ActivityItem<Kind extends ActivityItemKind = ActivityItemKind> exte
 
 	// TODO: Add validation for payload
 	@Column(DataType.JSONB)
-	payload!: (ActivityItemType & { kind: Kind })['payload'] | null;
+	payload!: KindPayloadMap[Kind] | null;
 
 	@AllowNull(false)
 	@Default(DataType.NOW)

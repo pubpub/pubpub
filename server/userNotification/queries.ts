@@ -90,10 +90,10 @@ export const fetchUserNotifications = async (
 		}),
 	]);
 
-	const allNotifications: types.DefinitelyHas<
-		types.SequelizeModel<types.UserNotificationWithActivityItem>,
-		'activityItem'
-	>[] = [...(maybeUnreadNotifications || []), ...readNotifications];
+	const allNotifications = [
+		...(maybeUnreadNotifications || []),
+		...readNotifications,
+	] as types.UserNotificationWithActivityItemModel[];
 
 	const allPubIds = allNotifications.map((n) => n.activityItem.pubId);
 

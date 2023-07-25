@@ -12,7 +12,7 @@ export const addSpamTagToCommunity = async (communityId: string) => {
 			where: { id: communityId },
 			include: [{ model: SpamTag, as: 'spamTag' }],
 		}),
-	) as types.DefinitelyHas<types.Community, 'spamTag'>;
+	) as types.DefinitelyHas<Community, 'spamTag'>;
 	const verdict = getSuspectedCommunitySpamVerdict(community);
 	const { spamTag } = community;
 	if (spamTag) {
@@ -43,7 +43,7 @@ export const getSpamTagForCommunity = async (communityId: string) => {
 		(await Community.findOne({
 			where: { id: communityId },
 			include: [{ model: SpamTag, as: 'spamTag' }],
-		})) as types.DefinitelyHas<types.Community, 'spamTag'>,
+		})) as types.DefinitelyHas<Community, 'spamTag'>,
 	);
 	return spamTag ?? null;
 };

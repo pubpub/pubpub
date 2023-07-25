@@ -1,9 +1,5 @@
-import { Attributes } from 'sequelize';
+import { Attributes, CreationAttributes } from 'sequelize';
 import { Model } from 'sequelize-typescript';
-
-export type NoRelationsSerizialized<T extends Model, S extends Attributes<T> = Attributes<T>> = {
-	[P in keyof S]: S[P] extends Model | Model[] | undefined ? never : S[P];
-};
 
 type Prettify<T> = {
 	[P in keyof T]: T[P];
@@ -11,11 +7,16 @@ type Prettify<T> = {
 
 export type RecursiveAttributes<
 	T extends Model,
-	S extends Attributes<T> = Attributes<T>,
+	C extends boolean = false,
+	S extends C extends false ? Attributes<T> : CreationAttributes<T> = C extends false
+		? Attributes<T>
+		: CreationAttributes<T>,
 > = Prettify<{
 	[P in keyof S]: S[P] extends Model | Model[] | undefined
 		? S[P] extends Array<infer M extends Model> | undefined
-			? RecursiveAttributes<M>[] | undefined
-			: RecursiveAttributes<NonNullable<S[P]>> | undefined
+			? RecursiveAttributes<M, C>[] | undefined
+			: RecursiveAttributes<NonNullable<S[P]>, C> | undefined
 		: S[P];
 }>;
+
+export type RecursiveCreationAttributes<T extends Model> = RecursiveAttributes<T, true>;

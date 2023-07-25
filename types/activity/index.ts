@@ -1,3 +1,5 @@
+import { ActivityItem as ActivityItemModel } from 'server/models';
+
 import { ScopeId } from '../scope';
 
 import { CommunityActivityItem } from './community';
@@ -8,6 +10,7 @@ import { PubActivityItem } from './pub';
 import { MemberActivityItem } from './member';
 import { ActivityAssociations } from './associations';
 import { SubmissionActivityItem } from './submission';
+import { RecursiveAttributes, RecursiveCreationAttributes } from '../recursiveAttributes';
 
 export * from './community';
 export * from './collection';
@@ -26,16 +29,38 @@ export type InsertableActivityItem =
 	| MemberActivityItem
 	| SubmissionActivityItem;
 
-export type ActivityItem = InsertableActivityItem & {
-	id: string;
-	createdAt: string;
-	updatedAt: string;
-	timestamp: string;
+// export type ActivityItem = InsertableActivityItem & {
+// 	id: string;
+// 	createdAt: string;
+// 	updatedAt: string;
+// 	timestamp: string;
+// };
+// export type ActivityItem = RecursiveAttributes<ActivityItemModel>;
+
+export type ActivityItemKind = InsertableActivityItem['kind'];
+export type ActivityItemPayload = InsertableActivityItem['payload'];
+
+export type KindPayloadMap = {
+	[K in ActivityItemKind]: (InsertableActivityItem & { kind: K })['payload'];
 };
 
-export type ActivityItemKind = ActivityItem['kind'];
-export type ActivityItemPayload = ActivityItem['payload'];
-export type ActivityItemOfKind<Kind extends ActivityItemKind> = ActivityItem & { kind: Kind };
+type KindPayloadMapMap = {
+	[K in ActivityItemKind]: {
+		kind: K;
+		payload: KindPayloadMap[K];
+	};
+};
+
+export type ActivityItem<A extends ActivityItemKind = ActivityItemKind> = RecursiveAttributes<
+	Exclude<ActivityItemModel, 'kind' | 'payload'>
+> &
+	(A extends A ? KindPayloadMapMap[A] : never);
+
+export type ActivityItemCreationAttributes<A extends ActivityItemKind = ActivityItemKind> =
+	RecursiveCreationAttributes<Exclude<ActivityItemModel, 'kind' | 'payload'>> &
+		(A extends A ? KindPayloadMapMap[A] : never);
+
+export type ActivityItemOfKind<Kind extends ActivityItemKind> = ActivityItem<Kind>;
 
 export {
 	ActivityAssociationIds,

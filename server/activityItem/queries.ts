@@ -463,7 +463,7 @@ export const createPubActivityItem = async (
 export const createPubUpdatedActivityItem = async (
 	actorId: null | string,
 	pubId: string,
-	oldPub: types.Pub,
+	oldPub: Pub,
 ) => {
 	const pub = expect(await Pub.findOne({ where: { id: pubId } }));
 	const diffs = getDiffsForPayload(pub, oldPub, ['title', 'doi', 'slug']);
