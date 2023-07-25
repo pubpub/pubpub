@@ -14,13 +14,13 @@ export const collectionUpdatePremission = [
 ] as const;
 
 export const getPermissions = async ({
-	userId,
-	communityId,
-	collectionId,
+	userId = null,
+	communityId = null,
+	collectionId = null,
 }: {
-	userId?: string;
-	communityId: string;
-	collectionId: string;
+	userId: string | null;
+	communityId: string | null;
+	collectionId: string | null;
 }): Promise<Permissions> => {
 	if (!userId) {
 		return {};
