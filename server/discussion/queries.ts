@@ -125,7 +125,14 @@ export const createDiscussion = async (options: CreateDiscussionOpts) => {
 	});
 
 	if (commenterId) {
-		await Discussion.update({ commenterId });
+		await Discussion.update(
+			{ commenterId },
+			{
+				where: {
+					id: newDiscussion.id,
+				},
+			},
+		);
 	}
 
 	if (initAnchorData) {
@@ -189,7 +196,7 @@ export const updateDiscussion = async (values, permissions) => {
 		}
 		for (const labelId of values.labels) {
 			const isExistingLabel = existingLabels.includes(labelId);
-			const labelDefinition = pub.labels.find((label) => label.id === labelId);
+			const labelDefinition = pub.labels?.find((label) => label.id === labelId);
 			if (labelDefinition) {
 				const { publicApply } = labelDefinition;
 				const canLabel = publicApply ? canApplyPublicLabels : canApplyManagedLabels;

@@ -1,42 +1,52 @@
-import { ThreadEvent, attributesPublicUser } from 'server/models';
+import { Attributes } from 'sequelize';
+import { ThreadEvent, User, attributesPublicUser } from 'server/models';
+import { ThreadEventPermissions } from './permissions';
 
-export const createThreadEvent = (inputValues, userData) => {
-	return ThreadEvent.create({
+export const createThreadEvent = async (
+	inputValues: {
+		threadId: string;
+		type: string;
+		data: Record<string, any>;
+	},
+	userData: Attributes<User>,
+) => {
+	const newThreadEvent = await ThreadEvent.create({
 		type: inputValues.type,
 		data: inputValues.data,
 		userId: userData.id,
 		threadId: inputValues.threadId,
-	}).then((newThreadEvent) => {
-		/* Populate user data so it can be inserted into */
-		/* existing pubData client-side */
-		const cleanedUserData = {};
-		attributesPublicUser.forEach((key) => {
-			cleanedUserData[key] = userData[key];
-		});
-		return {
-			...newThreadEvent.toJSON(),
-			user: cleanedUserData,
-		};
 	});
+	/* Populate user data so it can be inserted into */
+	/* existing pubData client-side */
+	const cleanedUserData = {};
+	attributesPublicUser.forEach((key) => {
+		cleanedUserData[key] = userData[key];
+	});
+	return {
+		...newThreadEvent.toJSON(),
+		user: cleanedUserData,
+	};
 };
 
-export const updateThreadEvent = (inputValues, updatePermissions) => {
+export const updateThreadEvent = async (
+	inputValues: Attributes<ThreadEvent> & { threadEventId: string },
+	updatePermissions: ThreadEventPermissions['update'],
+) => {
 	// Filter to only allow certain fields to be updated
 	const filteredValues = {};
 	Object.keys(inputValues).forEach((key) => {
-		if (updatePermissions.includes(key)) {
+		if (updatePermissions && updatePermissions?.includes(key)) {
 			filteredValues[key] = inputValues[key];
 		}
 	});
 
-	return ThreadEvent.update(filteredValues, {
+	await ThreadEvent.update(filteredValues, {
 		where: { id: inputValues.threadEventId },
-	}).then(() => {
-		return filteredValues;
 	});
+	return filteredValues;
 };
 
-export const destroyThreadEvent = (inputValues) => {
+export const destroyThreadEvent = (inputValues: { threadEventId: string }) => {
 	return ThreadEvent.destroy({
 		where: { id: inputValues.threadEventId },
 	});
@@ -44,7 +54,7 @@ export const destroyThreadEvent = (inputValues) => {
 
 /* Event helpers */
 /* ------------- */
-export const createCreatedThreadEvent = (userData, threadId) => {
+export const createCreatedThreadEvent = (userData: Attributes<User>, threadId: string) => {
 	return createThreadEvent(
 		{
 			threadId,
@@ -55,7 +65,7 @@ export const createCreatedThreadEvent = (userData, threadId) => {
 	);
 };
 
-export const createClosedThreadEvent = (userData, threadId) => {
+export const createClosedThreadEvent = (userData: Attributes<User>, threadId: string) => {
 	return createThreadEvent(
 		{
 			threadId,
@@ -66,7 +76,7 @@ export const createClosedThreadEvent = (userData, threadId) => {
 	);
 };
 
-export const createCompletedThreadEvent = (userData, threadId) => {
+export const createCompletedThreadEvent = (userData: Attributes<User>, threadId: string) => {
 	return createThreadEvent(
 		{
 			threadId,
@@ -77,7 +87,7 @@ export const createCompletedThreadEvent = (userData, threadId) => {
 	);
 };
 
-export const createMergedEvent = (userData, threadId) => {
+export const createMergedEvent = (userData: Attributes<User>, threadId: string) => {
 	return createThreadEvent(
 		{
 			threadId,
@@ -88,7 +98,12 @@ export const createMergedEvent = (userData, threadId) => {
 	);
 };
 
-export const createReleasedEvent = (userData, threadId, pubSlug, releaseId) => {
+export const createReleasedEvent = (
+	userData: Attributes<User>,
+	threadId: string,
+	pubSlug: string,
+	releaseId: string,
+) => {
 	return createThreadEvent(
 		{
 			threadId,
