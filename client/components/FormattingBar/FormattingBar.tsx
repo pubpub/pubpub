@@ -7,6 +7,7 @@ import { usePageContext } from 'utils/hooks';
 import { useRefMap } from 'client/utils/useRefMap';
 import { EditorChangeObject } from 'components/Editor';
 
+import { expect } from 'utils/assert';
 import BlockTypeSelector from './BlockTypeSelector';
 import FormattingBarButton from './FormattingBarButton';
 import FormattingBarControlsContainer from './FormattingBarControlsContainer';
@@ -129,7 +130,7 @@ const FormattingBar = (props: Props) => {
 				<FormattingBarControlsContainer
 					controlsConfiguration={resolvedControlsConfiguration}
 					editorChangeObject={editorChangeObject}
-					accentColor={communityData.accentColorDark}
+					accentColor={expect(communityData.accentColorDark)}
 					onClose={() => setOpenedButton(null)}
 				>
 					<ControlsComponent

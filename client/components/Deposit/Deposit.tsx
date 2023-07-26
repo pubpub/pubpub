@@ -141,7 +141,8 @@ export default function Deposit(props: Props) {
 	);
 
 	const firstIntraWorkRelationship = resource && getFirstIntraWorkRelationship(resource);
-	const disabledDueToNoReleases = 'pub' in props && props.pub.releases.length === 0;
+	const disabledDueToNoReleases =
+		'pub' in props && props.pub.releases && props.pub.releases.length === 0;
 	const crossrefDepositRecordId =
 		'pub' in props
 			? props.pub.crossrefDepositRecordId
