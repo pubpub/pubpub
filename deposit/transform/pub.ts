@@ -61,7 +61,7 @@ function transformPubAttributionToResourceContribution(
 ): ResourceContribution {
 	return {
 		contributor: {
-			name: attribution.user?.fullName ?? attribution.name,
+			name: attribution.user?.fullName ?? expect(attribution.name),
 			orcid: attribution.user?.orcid ?? attribution.orcid,
 		},
 		contributorAffiliation: attribution.affiliation,
@@ -241,6 +241,7 @@ export async function transformPubToResource(
 		const depositJson = pub.crossrefDepositRecord?.depositJson;
 		pubResource.meta['created-date'] = expect(pub.releases?.[0]).createdAt.toString();
 		if (depositJson) {
+			// @ts-expect-error FIXME: Property 'deposit' does not exist on type 'object'.
 			const dateOfLastDeposit = new Date(depositJson.data.attributes.updated);
 			const dateOfLatestRelease = new Date(release.createdAt);
 			if (dateOfLastDeposit.getTime() !== dateOfLatestRelease.getTime()) {

@@ -54,7 +54,7 @@ export async function transformCollectionToResource(
 	const license = licenseDetailsByKind[facets.License.value.kind];
 	const contributions: ResourceContribution[] =
 		collection.attributions
-			?.sort((a, b) => a.order - b.order)
+			?.sort((a, b) => (a.order && b.order ? a.order - b.order : 0))
 			.map((attribution) =>
 				transformCollectionAttributionToResourceContribution(
 					attribution,
@@ -113,6 +113,7 @@ export async function transformCollectionToResource(
 	const depositJson = collection.crossrefDepositRecord?.depositJson;
 	collectionResource.meta['created-date'] = collection.createdAt.toString();
 	if (depositJson) {
+		// @ts-expect-error FIXME: Property 'deposit' does not exist on type 'object'.
 		const dateOfLastDeposit = new Date(depositJson.data.attributes.updated);
 		const dateOfLatestUpdate = new Date(collection.updatedAt);
 		if (dateOfLastDeposit.getTime() !== dateOfLatestUpdate.getTime()) {
