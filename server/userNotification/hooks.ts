@@ -47,7 +47,7 @@ const template = async (activityItem: types.PubDiscussionCommentAddedActivityIte
 			${actor.fullName} added <a href="${href}">${title}</a> to <a href="${pubUrl}">${pubTitle}</a>.
 		</p>
     <p>
-			<a href="${communityUrl}/legal/settings#notifications">Unsubscribe</a>
+			<a href="${communityUrl}/legal/settings#notification-preferences">Unsubscribe</a>
 		</p>
   `);
 };
