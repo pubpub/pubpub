@@ -17,7 +17,7 @@ app.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 			? await getCustomScriptsForCommunity(initialData.communityData.id)
 			: undefined;
 		const userData = expect(await getUser(req.params.slug, initialData));
-		const isNewishUser = Date.now() - userData.createdAt.valueOf() < 1000 * 86400 * 30;
+		const isNewishUser = Date.now() - Number(userData.createdAt.valueOf()) < 1000 * 86400 * 30;
 
 		if (!initialData.locationData.isBasePubPub) {
 			const isThisUserAPartOfThisCommunity = await isUserAffiliatedWithCommunity(

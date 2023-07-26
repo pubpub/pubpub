@@ -24,7 +24,7 @@ app.get(['/password-reset', '/password-reset/:resetHash/:slug'], (req, res, next
 			if (
 				userData &&
 				userData.resetHashExpiration &&
-				userData.resetHashExpiration < new Date()
+				userData.resetHashExpiration < Number(new Date())
 			) {
 				hashIsValid = false;
 			}
