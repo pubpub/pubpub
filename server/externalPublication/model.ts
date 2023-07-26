@@ -48,5 +48,5 @@ export class ExternalPublication extends Model<
 	avatar!: string | null;
 
 	@Column(DataType.DATE)
-	publicationDate!: Date | null;
+	publicationDate!: string | null;
 }
