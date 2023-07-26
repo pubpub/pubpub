@@ -37,7 +37,7 @@ function transformCollectionAttributionToResourceContribution(
 ): ResourceContribution {
 	return {
 		contributor: {
-			name: attribution.user?.fullName ?? attribution.name,
+			name: attribution.user?.fullName ?? expect(attribution.name),
 			orcid: attribution.orcid,
 		},
 		contributorAffiliation: attribution.affiliation,
