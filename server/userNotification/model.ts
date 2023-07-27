@@ -10,7 +10,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
+import type { InsertableActivityItem, RecursiveAttributes } from 'types';
 import { ActivityItem, UserSubscription, User } from '../models';
 
 @Table
@@ -52,7 +52,7 @@ export class UserNotification extends Model<
 	@Column(DataType.BOOLEAN)
 	manuallySetIsRead!: CreationOptional<boolean>;
 
-	@BelongsTo(() => ActivityItem, {
+	@BelongsTo(() => ActivityItem<InsertableActivityItem>, {
 		onDelete: 'CASCADE',
 		as: 'activityItem',
 		foreignKey: 'activityItemId',

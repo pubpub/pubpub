@@ -82,7 +82,7 @@ export class Collection extends Model<
 
 	@Default('choose-best')
 	@Column(DataType.ENUM('none', 'minimal', 'medium', 'choose-best'))
-	readNextPreviewSize!: CreationOptional<ReadNextPreviewSize | null>;
+	readNextPreviewSize!: CreationOptional<ReadNextPreviewSize>;
 
 	// TODO: Add validation for this field
 	@AllowNull(false)

@@ -46,7 +46,7 @@ export class ActivityItem<T extends InsertableActivityItem = InsertableActivityI
 	@AllowNull(false)
 	@Default(DataType.NOW)
 	@Column(DataType.DATE)
-	timestamp!: CreationOptional<Date>;
+	timestamp!: CreationOptional<string>;
 
 	@Index({ using: 'BTREE' })
 	@AllowNull(false)

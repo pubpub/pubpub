@@ -3,6 +3,7 @@ import React from 'react';
 import { usePageContext } from 'utils/hooks';
 import { RenderedNote } from 'utils/notes';
 
+import { expect } from 'utils/assert';
 import Notes from './Notes';
 import PubBottomSection, { SectionBullets } from './PubBottomSection';
 
@@ -30,7 +31,7 @@ const SearchableNoteSection = (props: Props) => {
 		>
 			{({ searchTerm }) => (
 				<Notes
-					accentColor={communityData.accentColorDark}
+					accentColor={expect(communityData.accentColorDark)}
 					notes={notes.filter(checkContains(searchTerm))}
 				/>
 			)}

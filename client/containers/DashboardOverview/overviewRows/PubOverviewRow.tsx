@@ -11,14 +11,14 @@ import { usePageContext } from 'utils/hooks';
 import OverviewRowSkeleton from './OverviewRowSkeleton';
 import { IconLabelPair, renderLabelPairs, getTypicalPubLabels } from './labels';
 
-type Pub = DefinitelyHas<BasePub, 'attributions'>;
+type PubWithAttributions = DefinitelyHas<BasePub, 'attributions'>;
 
 type Props = {
 	leftIconElement?: React.ReactNode;
 	rightElement?: React.ReactNode;
 	labels?: IconLabelPair[];
 	className?: string;
-	pub: Pub;
+	pub: PubWithAttributions;
 	inCollection?: Collection;
 };
 

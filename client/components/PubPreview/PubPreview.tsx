@@ -10,6 +10,7 @@ import { communityUrl, bestPubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
 import { Icon, PreviewImage, PubTitle } from 'components';
 
+import { expect } from 'utils/assert';
 import ExpandButton from './ExpandButton';
 import ManyAuthorsByline from './ManyAuthorsByline';
 import PubPreviewEdges from './PubPreviewEdges';
@@ -177,13 +178,13 @@ const PubPreview = (props: Props) => {
 					{!hideEdges && (
 						<PubPreviewEdges
 							pubData={pubData}
-							accentColor={localCommunityData.accentColorDark}
+							accentColor={expect(localCommunityData.accentColorDark)}
 						/>
 					)}
 				</div>
 				{showExpandButton && (
 					<ExpandButton
-						accentColor={localCommunityData.accentColorDark}
+						accentColor={expect(localCommunityData.accentColorDark)}
 						isExpanded={isExpanded}
 						onClick={() => setIsExpanded(!isExpanded)}
 					/>

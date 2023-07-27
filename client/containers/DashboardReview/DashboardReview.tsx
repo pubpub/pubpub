@@ -43,7 +43,7 @@ const DashboardReview = (props: Props) => {
 			...result.updatedValues,
 			thread: {
 				...localReviewData.thread,
-				events: [...localReviewData.thread.events, ...result.newReviewEvents],
+				events: [...(localReviewData.thread?.events ?? []), ...result.newReviewEvents],
 			},
 		});
 	};
@@ -63,7 +63,7 @@ const DashboardReview = (props: Props) => {
 			status: 'completed',
 			thread: {
 				...localReviewData.thread,
-				events: [...localReviewData.thread.events, ...result.reviewEvents],
+				events: [...(localReviewData.thread?.events ?? []), ...result.reviewEvents],
 			},
 		});
 		setIsReleasing(false);

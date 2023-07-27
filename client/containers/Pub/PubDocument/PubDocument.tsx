@@ -9,6 +9,7 @@ import {
 } from 'components/PubEdgeListing';
 import { useFacetsQuery } from 'client/utils/useFacets';
 
+import { expect } from 'utils/assert';
 import { usePubContext } from '../pubHooks';
 import { usePermalinkOnMount } from '../usePermalinkOnMount';
 import { usePubHrefs } from '../usePubHrefs';
@@ -69,7 +70,7 @@ const PubDocument = () => {
 						className="top-pub-edges"
 						pubData={pubData}
 						pubEdgeDescriptionIsVisible={pubEdgeDisplay.descriptionIsVisible}
-						accentColor={communityData.accentColorDark}
+						accentColor={expect(communityData.accentColorDark)}
 						initialFilters={[PubEdgeFilter.Parent]}
 						isolated
 					/>
@@ -88,7 +89,7 @@ const PubDocument = () => {
 						className="bottom-pub-edges"
 						pubData={pubData}
 						pubEdgeDescriptionIsVisible={pubEdgeDisplay.descriptionIsVisible}
-						accentColor={communityData.accentColorDark}
+						accentColor={expect(communityData.accentColorDark)}
 						initialFilters={[PubEdgeFilter.Child, PubEdgeFilter.Sibling]}
 						initialMode={
 							pubEdgeDisplay.defaultsToCarousel

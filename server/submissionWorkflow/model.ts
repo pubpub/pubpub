@@ -41,9 +41,10 @@ export class SubmissionWorkflow extends Model<
 	@Column(DataType.BOOLEAN)
 	enabled!: boolean;
 
+	// TODO: Add validation for this
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	instructionsText!: object;
+	instructionsText!: DocJson;
 
 	// TODO: Add validation for this
 	@AllowNull(false)

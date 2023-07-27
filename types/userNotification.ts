@@ -10,11 +10,16 @@ import { UserSubscription } from './userSubscription';
 export type UserNotification = RecursiveAttributes<UserNotificationModel>;
 
 export type UserNotificationWithActivityItemModel = UserNotificationModel & {
-	activityItem: ActivityItemOfKind<'pub-discussion-comment-added' | 'pub-review-comment-added'>;
+	activityItem:
+		| ActivityItemOfKind<'pub-discussion-comment-added'>
+		| ActivityItemOfKind<'pub-review-comment-added'>;
 };
 
-export type UserNotificationWithActivityItem =
-	RecursiveAttributes<UserNotificationWithActivityItemModel>;
+export type UserNotificationWithActivityItem = Omit<UserNotification, 'activityItem'> & {
+	activityItem:
+		| ActivityItemOfKind<'pub-discussion-comment-added'>
+		| ActivityItemOfKind<'pub-review-comment-added'>;
+};
 
 export type UserNotificationMarkReadTrigger = 'seen' | 'clicked-through' | 'manual';
 

@@ -3,6 +3,7 @@ import React from 'react';
 import { InputField, SettingsSection, ImageUpload, ColorInput } from 'components';
 import { Callback, Community } from 'types';
 import { slugifyString } from 'utils/strings';
+import { expect } from 'utils/assert';
 
 import SettingsRow from '../SettingsRow';
 import LabelWithInfo from '../LabelWithInfo';
@@ -90,7 +91,7 @@ const BasicSettings = (props: Props) => {
 			<SettingsRow>
 				<InputField label="Dark Accent Color">
 					<ColorInput
-						value={accentColorDark}
+						value={expect(accentColorDark)}
 						onChange={(val) => {
 							updateCommunityData({ accentColorDark: val.hex });
 						}}
@@ -98,7 +99,7 @@ const BasicSettings = (props: Props) => {
 				</InputField>
 				<InputField label="Light Accent Color">
 					<ColorInput
-						value={accentColorLight}
+						value={expect(accentColorLight)}
 						onChange={(val) => {
 							updateCommunityData({ accentColorLight: val.hex });
 						}}
