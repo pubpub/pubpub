@@ -51,8 +51,8 @@ export const createCollection = async (
 		kind: types.CollectionKind;
 		pageId?: string | null;
 		doi?: string | null;
-		isPublic?: boolean;
-		isRestricted?: boolean;
+		isPublic?: boolean | null;
+		isRestricted?: boolean | null;
 		id?: string | null;
 		slug?: string | null;
 	},
