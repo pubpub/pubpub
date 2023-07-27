@@ -104,6 +104,7 @@ const Breadcrumbs = (props: Props) => {
 				<Avatar
 					avatar={avatar}
 					initials={title[0]}
+					// @ts-expect-error FIXME: CommunityData does not exist on Avatar?
 					communityData={communityData}
 					width={40}
 					isBlock={true}

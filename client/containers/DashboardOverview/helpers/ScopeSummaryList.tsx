@@ -5,11 +5,12 @@ import { Icon, IconName } from 'components';
 import { Community, Collection, DefinitelyHas } from 'types';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { enIndefiniteArticle, capitalize } from 'utils/strings';
+import { MinimalScopeSummary } from 'utils/scopeSummaries';
 
 require('./scopeSummaryList.scss');
 
 type Props = {
-	scope: DefinitelyHas<Community | Collection, 'scopeSummary'>;
+	scope: Omit<Community | Collection, 'scopeSummary'> & { scopeSummary: MinimalScopeSummary };
 	scopeKind: 'collection' | 'community';
 };
 

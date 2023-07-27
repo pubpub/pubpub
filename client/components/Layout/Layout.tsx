@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { Collection, Pub } from 'types';
+import { Collection, DefinitelyHas, Pub } from 'types';
 import {
 	LayoutBlock,
 	LayoutOptions,
@@ -67,7 +67,9 @@ const Layout = (props: Props) => {
 					<LayoutPagesCollections
 						content={block.content}
 						pages={communityData.pages}
-						collections={communityData.collections}
+						collections={
+							communityData.collections as DefinitelyHas<Collection, 'title'>[]
+						}
 					/>
 				</div>
 			);

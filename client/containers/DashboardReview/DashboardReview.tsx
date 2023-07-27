@@ -62,6 +62,7 @@ const DashboardReview = (props: Props) => {
 		setLocalReviewData({
 			...localReviewData,
 			status: 'completed',
+			// @ts-expect-error FIXME: Somehow createdAt is set to string | undefined somewhere, don't know where
 			thread: {
 				...localReviewData.thread,
 				events: [...(localReviewData.thread?.events ?? []), ...result.reviewEvents],

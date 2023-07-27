@@ -187,7 +187,9 @@ const LayoutEditor = React.memo((props: Props) => {
 							layoutIndex={index}
 							content={block.content}
 							pages={communityData.pages}
-							collections={communityData.collections}
+							collections={
+								communityData.collections as DefinitelyHas<Collection, 'title'>[]
+							}
 						/>
 					)}
 					{!!collection && block.type === 'collection-header' && (
