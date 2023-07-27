@@ -35,6 +35,7 @@ export const updateThreadEvent = async (
 	// Filter to only allow certain fields to be updated
 	const filteredValues = {};
 	Object.keys(inputValues).forEach((key) => {
+		// @ts-expect-error FIXME: updatePermissions can only be `false`, this shouldn't be here
 		if (updatePermissions && updatePermissions?.includes(key)) {
 			filteredValues[key] = inputValues[key];
 		}

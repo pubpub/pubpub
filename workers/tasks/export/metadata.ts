@@ -102,7 +102,9 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		),
 		accentColor: expect(pubData.community.accentColorDark),
 		attributions,
+		// @ts-expect-error: FIXME: Citationstyle is not in the model, its in the facets
 		citationStyle: pubData.citationStyle,
+		// @ts-expect-error: FIXME: CitationInlineStyle is not in the model, its in the facets
 		citationInlineStyle: pubData.citationInlineStyle,
 		nodeLabels: facets.NodeLabels.value,
 		publisher: pubData.community.publishAs,

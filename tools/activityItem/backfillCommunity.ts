@@ -123,6 +123,7 @@ const backfillDiscussion = async (discussion: types.Discussion) => {
 const backfillPub = async (ctx: Context, pub: types.Pub) => {
 	const [releases, reviews, discussions, pubEdges] = await Promise.all(
 		[Release, ReviewNew, Discussion, PubEdge, PubAttribution].map((Model) =>
+			// @ts-expect-error FIXME: `this` error, if you have a union of models type inferece doesn't work properly. Nbd
 			Model.findAll({ where: { pubId: pub.id } }),
 		),
 	);
