@@ -95,7 +95,13 @@ export const fetchUserNotifications = async (
 		...readNotifications,
 	] as types.UserNotificationWithActivityItemModel[];
 
-	const allPubIds = allNotifications.map((n) => n.activityItem.pubId);
+	const allPubIds = allNotifications
+		.map((n) => n.activityItem.pubId)
+		.filter((n): n is string => !!n);
+
+	const notificationActivityItems = allNotifications.map(
+		(notification) => notification.activityItem,
+	);
 
 	const [subscriptions, associations, facets] = await Promise.all([
 		UserSubscription.findAll({
@@ -104,14 +110,14 @@ export const fetchUserNotifications = async (
 				id: { [Op.in]: [...new Set(allNotifications.map((n) => n.userSubscriptionId))] },
 			},
 		}),
-		fetchAssociationsForActivityItems(
-			allNotifications.map((notification) => notification.activityItem),
-		),
+		fetchAssociationsForActivityItems(notificationActivityItems as types.ActivityItem[]),
 		fetchFacetsForScopeIds({ pub: allPubIds }, ['PubHeaderTheme']),
 	]);
 
 	return {
-		notifications: allNotifications.map((n) => n.toJSON()),
+		notifications: allNotifications.map((n) =>
+			n.toJSON(),
+		) as types.UserNotificationWithActivityItem[],
 		associations,
 		subscriptions,
 		facets,
