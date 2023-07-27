@@ -8,6 +8,7 @@ import { timeAgoBaseProps } from 'utils/dates';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Review } from 'types';
 import { getEmptyDoc } from 'client/components/Editor';
+import { expect } from 'utils/assert';
 
 require('./dashboardReview.scss');
 
@@ -129,7 +130,7 @@ const DashboardReview = (props: Props) => {
 			<Thread threadData={thread} />
 			<ThreadInput
 				parentId={localReviewData.id}
-				pubId={localReviewData.pubId}
+				pubId={expect(localReviewData.pubId)}
 				threadData={thread}
 				// @ts-expect-error ts-migrate(2322) FIXME: Type '(newThread: any) => void' is not assignable ... Remove this comment to see the full error message
 				onThreadUpdate={onThreadUpdate}
@@ -140,8 +141,8 @@ const DashboardReview = (props: Props) => {
 					icon="document-share"
 					title="Publication Requested"
 				>
-					{author.fullName} has requested that a Release be published from the Draft. If
-					this review is satisfactory, you can create the Release here directly.{' '}
+					{expect(author).fullName} has requested that a Release be published from the
+					Draft. If this review is satisfactory, you can create the Release here directly.{' '}
 					<div style={{ marginTop: '1em' }}>
 						<Button
 							text="Create Release from Draft"
