@@ -12,10 +12,6 @@ import type { InferAttributes, InferCreationAttributes, CreationOptional } from 
 import { InsertableActivityItem, RecursiveAttributes } from 'types';
 
 @Table
-// export class ActivityItem<Kind extends ActivityItemKind = ActivityItemKind> extends Model<
-// 	InferAttributes<ActivityItem<Kind>>,
-// 	InferCreationAttributes<ActivityItem<Kind>>
-// > {
 export class ActivityItem<T extends InsertableActivityItem = InsertableActivityItem> extends Model<
 	InferAttributes<ActivityItem<T>, { omit: Extract<keyof ActivityItem<T>, keyof T> }> & T,
 	InferCreationAttributes<ActivityItem<T>, { omit: Extract<keyof ActivityItem<T>, keyof T> }> & T
