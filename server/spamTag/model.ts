@@ -13,10 +13,6 @@ import { SpamStatus } from 'types';
 
 @Table
 export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttributes<SpamTag>> {
-	// this overrides the default Date type to be compatible with existing code
-	declare createdAt: CreationOptional<string>;
-	declare updatedAt: CreationOptional<string>;
-
 	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)
@@ -31,7 +27,7 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 	status!: CreationOptional<SpamStatus>;
 
 	@Column(DataType.DATE)
-	statusUpdatedAt!: string | null;
+	statusUpdatedAt!: Date | null;
 
 	/**
 	 * TODO: add validation and better type for fields
@@ -66,7 +62,7 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 
 	@AllowNull(false)
 	@Column(DataType.DATE)
-	spamScoreComputedAt!: string;
+	spamScoreComputedAt!: Date;
 
 	@Default(1)
 	@Column(DataType.INTEGER)

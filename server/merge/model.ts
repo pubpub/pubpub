@@ -14,10 +14,6 @@ import { User } from '../models';
 
 @Table
 export class Merge extends Model<InferAttributes<Merge>, InferCreationAttributes<Merge>> {
-	// this overrides the default Date type to be compatible with existing code
-	declare createdAt: CreationOptional<string>;
-	declare updatedAt: CreationOptional<string>;
-
 	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)

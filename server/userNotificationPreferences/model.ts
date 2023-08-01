@@ -17,10 +17,6 @@ export class UserNotificationPreferences extends Model<
 	InferAttributes<UserNotificationPreferences>,
 	InferCreationAttributes<UserNotificationPreferences>
 > {
-	// this overrides the default Date type to be compatible with existing code
-	declare createdAt: CreationOptional<string>;
-	declare updatedAt: CreationOptional<string>;
-
 	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)
@@ -44,7 +40,7 @@ export class UserNotificationPreferences extends Model<
 	receiveDiscussionThreadEmails!: CreationOptional<boolean>;
 
 	@Column(DataType.DATE)
-	lastReceivedNotificationsAt!: string | null;
+	lastReceivedNotificationsAt!: Date | null;
 
 	@AllowNull(false)
 	@Default(true)

@@ -5,10 +5,6 @@ import { ThreadComment, ThreadEvent } from '../models';
 
 @Table
 export class Thread extends Model<InferAttributes<Thread>, InferCreationAttributes<Thread>> {
-	// this overrides the default Date type to be compatible with existing code
-	declare createdAt: CreationOptional<string>;
-	declare updatedAt: CreationOptional<string>;
-
 	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)

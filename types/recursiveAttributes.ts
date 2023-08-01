@@ -16,6 +16,10 @@ export type RecursiveAttributes<
 		? S[P] extends Array<infer M extends Model> | undefined
 			? RecursiveAttributes<M, C>[] | undefined
 			: RecursiveAttributes<NonNullable<S[P]>, C> | undefined
+		: S[P] extends Date | null
+		? S[P] extends Date
+			? string
+			: string | null
 		: S[P];
 }>;
 

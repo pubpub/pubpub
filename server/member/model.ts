@@ -15,10 +15,6 @@ import { User, Community, Pub, Collection } from '../models';
 
 @Table
 export class Member extends Model<InferAttributes<Member>, InferCreationAttributes<Member>> {
-	// this overrides the default Date type to be compatible with existing code
-	declare createdAt: CreationOptional<string>;
-	declare updatedAt: CreationOptional<string>;
-
 	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)

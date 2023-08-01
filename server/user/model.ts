@@ -113,10 +113,6 @@ class ModelWithPassport<T extends {} = any, C extends {} = T> extends Model<T, C
 
 @Table
 export class User extends ModelWithPassport<InferAttributes<User>, InferCreationAttributes<User>> {
-	// this overrides the default Date type to be compatible with existing code
-	declare createdAt: CreationOptional<string>;
-	declare updatedAt: CreationOptional<string>;
-
 	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)
@@ -194,7 +190,7 @@ export class User extends ModelWithPassport<InferAttributes<User>, InferCreation
 	googleScholar!: string | null;
 
 	@Column(DataType.DATE)
-	resetHashExpiration!: number | null;
+	resetHashExpiration!: Date | null;
 
 	@Column(DataType.TEXT)
 	resetHash!: string | null;

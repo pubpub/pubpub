@@ -36,10 +36,6 @@ import {
 
 @Table
 export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
-	// this overrides the default Date type to be compatible with existing code
-	declare createdAt: CreationOptional<string>;
-	declare updatedAt: CreationOptional<string>;
-
 	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)
@@ -74,7 +70,7 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 	avatar!: string | null;
 
 	@Column(DataType.DATE)
-	customPublishedAt!: string | null;
+	customPublishedAt!: Date | null;
 
 	@Column(DataType.TEXT)
 	doi!: string | null;

@@ -17,10 +17,6 @@ export class Submission extends Model<
 	InferAttributes<Submission>,
 	InferCreationAttributes<Submission>
 > {
-	// this overrides the default Date type to be compatible with existing code
-	declare createdAt: CreationOptional<string>;
-	declare updatedAt: CreationOptional<string>;
-
 	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
 
 	@Default(DataType.UUIDV4)
@@ -34,7 +30,7 @@ export class Submission extends Model<
 	status!: SubmissionStatus;
 
 	@Column(DataType.DATE)
-	submittedAt!: string | null;
+	submittedAt!: Date | null;
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
