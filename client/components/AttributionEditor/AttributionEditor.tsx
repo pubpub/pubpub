@@ -6,7 +6,6 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { AttributionWithUser } from 'types';
 import { UserAutocomplete } from 'components';
 
-import { expect } from 'utils/assert';
 import AttributionRow from './AttributionRow';
 import DragDropListing from '../DragDropListing/DragDropListing';
 
@@ -59,9 +58,7 @@ class AttributionEditor extends Component<Props> {
 
 	handleAttributionAdd(user) {
 		const { attributions, onUpdateAttributions, onPersistStateChange } = this.props;
-		const maxOrder = attributions.length
-			? Math.max(...attributions.map((a) => expect(a.order)))
-			: 0;
+		const maxOrder = attributions.length ? Math.max(...attributions.map((a) => a.order)) : 0;
 		const newOrder = 0.5 + maxOrder / 2;
 		onPersistStateChange(1);
 		this.persistAttribution(
@@ -115,19 +112,19 @@ class AttributionEditor extends Component<Props> {
 		const sourceIndex = result.source.index;
 		const sourceId = attributions[sourceIndex].id;
 		const destIndex = result.destination.index;
-		const destinationOrder = expect(attributions[destIndex].order);
+		const destinationOrder = attributions[destIndex].order;
 		const direction = sourceIndex > destIndex ? -1 : 1;
 		let newOrder = 0.5;
 
 		if (sourceIndex === destIndex) {
-			newOrder = expect(attributions[sourceIndex].order);
+			newOrder = attributions[sourceIndex].order;
 		} else if (destIndex === 0) {
 			newOrder = destinationOrder / 2;
 		} else if (destIndex === attributions.length - 1) {
 			newOrder = (1 + destinationOrder) / 2;
 		} else {
 			const destinationNeighborOrder = attributions[destIndex + direction].order;
-			newOrder = (destinationOrder + expect(destinationNeighborOrder)) / 2;
+			newOrder = (destinationOrder + destinationNeighborOrder) / 2;
 		}
 		this.handleAttributionUpdate({
 			...identifyingProps,
@@ -145,16 +142,14 @@ class AttributionEditor extends Component<Props> {
 					order: newOrder,
 				};
 			})
-			.sort((a, b) => expect(a.order) - expect(b.order));
+			.sort((a, b) => a.order - b.order);
 
 		onUpdateAttributions(newAttributions);
 	}
 
 	render() {
 		const { attributions, canEdit, listOnBylineText, hasEmptyState } = this.props;
-		const sortedAttributions = attributions
-			.concat()
-			.sort((a, b) => expect(a.order) - expect(b.order));
+		const sortedAttributions = attributions.concat().sort((a, b) => a.order - b.order);
 		return (
 			<div className="attribution-editor-component">
 				{canEdit && (

@@ -37,8 +37,9 @@ export class PubAttribution extends Model<
 	@Column(DataType.TEXT)
 	title!: string | null;
 
+	// TODO: Add AllowNull(false) for this. Made non-null as that is how its used, but technically still nullable in the db
 	@Column(DataType.DOUBLE)
-	order!: number | null;
+	order!: number;
 
 	@Column(DataType.BOOLEAN)
 	isAuthor!: boolean | null;

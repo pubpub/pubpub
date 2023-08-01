@@ -30,9 +30,6 @@ type MetaProps = {
 
 const contributorRoles = ['Writing – Review & Editing', 'Editor', 'Series Editor'];
 const sortAttributions = (foo: Attribution, bar: Attribution) => {
-	if (!foo.order || !bar.order) {
-		return 0;
-	}
 	if (foo.order < bar.order) {
 		return -1;
 	}

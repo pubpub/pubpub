@@ -54,7 +54,7 @@ export async function transformCollectionToResource(
 	const license = licenseDetailsByKind[facets.License.value.kind];
 	const contributions: ResourceContribution[] =
 		collection.attributions
-			?.sort((a, b) => expect(a.order) - expect(b.order))
+			?.sort((a, b) => a.order - b.order)
 			.map((attribution) =>
 				transformCollectionAttributionToResourceContribution(
 					attribution,
