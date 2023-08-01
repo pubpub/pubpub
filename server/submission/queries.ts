@@ -55,7 +55,7 @@ export const createSubmission = async ({ userId, submissionWorkflowId }: CreateO
 	) as types.DefinitelyHas<SubmissionWorkflow, 'collection'>;
 	const pub = await createPub(
 		{
-			communityId: expect(collection.communityId),
+			communityId: collection.communityId,
 			collectionIds: [collection.id],
 			titleKind: 'New Submission',
 		},

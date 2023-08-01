@@ -50,7 +50,7 @@ const resolvePartialMemberItem = async (member: types.Member) => {
 		return {
 			tag: 'collection',
 			value: {
-				communityId: expect(collection.communityId),
+				communityId: collection.communityId,
 				collectionId: collection.id,
 				payload: {
 					collection: {
@@ -222,7 +222,7 @@ export const createCollectionActivityItem = async (
 		kind,
 		collectionId,
 		actorId,
-		communityId: expect(collection.communityId),
+		communityId: collection.communityId,
 		payload: {
 			collection: {
 				title: expect(title),
@@ -249,7 +249,7 @@ export const createCollectionUpdatedActivityItem = async (
 		kind: 'collection-updated' as const,
 		collectionId,
 		actorId,
-		communityId: expect(collection.communityId),
+		communityId: collection.communityId,
 		payload: {
 			collection: {
 				title: expect(title),
@@ -428,7 +428,7 @@ export const createCollectionPubActivityItem = async (
 		pubId: collectionPub.pubId,
 		collectionId: collectionPub.collectionId,
 		actorId,
-		communityId: expect(collectionPub.collection.communityId),
+		communityId: collectionPub.collection.communityId,
 		payload: {
 			collectionPubId,
 			pub: {

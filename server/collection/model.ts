@@ -100,8 +100,10 @@ export class Collection extends Model<
 	@Column(DataType.UUID)
 	pageId!: string | null;
 
+	// TODO: Make this `AllowNull(false)`. Never is a collection without a communityId, but
+	// technically this is nullable in the database.
 	@Column(DataType.UUID)
-	communityId!: string | null;
+	communityId!: string;
 
 	@Column(DataType.UUID)
 	scopeSummaryId!: string | null;

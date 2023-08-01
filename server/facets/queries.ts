@@ -27,7 +27,7 @@ export const getScopeIdForFacetBinding = async (facetBinding: FacetBinding): Pro
 			}),
 		);
 		return {
-			communityId: expect(collection.communityId),
+			communityId: collection.communityId,
 			collectionId: collection.id,
 		};
 	}

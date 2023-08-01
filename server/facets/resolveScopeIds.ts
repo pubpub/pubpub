@@ -117,12 +117,8 @@ export const resolveScopeIds = async (
 		}),
 	]);
 	const pubs = pubSequelizeModels.map((pub) => pub.toJSON());
-	const collections = collectionSequelizeModels
-		.map((collection) => collection.toJSON())
-		.filter(
-			(collection): collection is types.DefinitelyHas<types.Collection, 'communityId'> =>
-				!!collection.communityId,
-		);
+	const collections = collectionSequelizeModels.map((collection) => collection.toJSON());
+
 	const allCommunityIds = [
 		...new Set([
 			...communityIds,
