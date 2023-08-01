@@ -100,7 +100,7 @@ const ScopeDropdown = (props: Props) => {
 		scopes.push({
 			type: 'Collection',
 			icon: pubPubIcons.collection,
-			title: expect(activeCollection.title),
+			title: activeCollection.title,
 			avatar: activeCollection.avatar,
 			slugs: { collectionSlug },
 			href: getDashUrl({

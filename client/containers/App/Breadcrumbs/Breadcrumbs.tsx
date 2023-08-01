@@ -6,7 +6,6 @@ import { Avatar, Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
 import { apiFetch } from 'client/utils/apiFetch';
-import { expect } from 'utils/assert';
 
 import CreateCollectionDialog from './CreateCollectionDialog';
 
@@ -35,7 +34,7 @@ const Breadcrumbs = (props: Props) => {
 	let avatar = communityData.avatar;
 	let showLockIcon = false;
 	if (activeCollection) {
-		title = expect(activeCollection.title);
+		title = activeCollection.title;
 		avatar = activeCollection.avatar;
 		showLockIcon = !activeCollection.isPublic;
 	}

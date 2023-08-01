@@ -15,7 +15,6 @@ import {
 	validate,
 } from 'utils/validate';
 
-import { expect } from 'utils/assert';
 import WorkflowTextEditor from './WorkflowTextEditor';
 import EmailPreview from './EmailPreview';
 import SubmissionWorkflowStepPicker from './SubmissionWorkflowStepPicker';
@@ -193,7 +192,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				<EmailPreview
 					{...sharedEmailPreviewProps}
 					kind="received"
-					collectionTitle={expect(collection.title)}
+					collectionTitle={collection.title}
 					body={
 						<WorkflowTextEditor
 							placeholder="Custom email text"
@@ -210,7 +209,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				<EmailPreview
 					{...sharedEmailPreviewProps}
 					kind="accepted"
-					collectionTitle={expect(collection.title)}
+					collectionTitle={collection.title}
 					body={
 						<WorkflowTextEditor
 							placeholder="Custom email text"
@@ -227,7 +226,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				<EmailPreview
 					{...sharedEmailPreviewProps}
 					kind="declined"
-					collectionTitle={expect(collection.title)}
+					collectionTitle={collection.title}
 					body={
 						<WorkflowTextEditor
 							placeholder="Custom email text"

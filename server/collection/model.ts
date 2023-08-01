@@ -44,8 +44,10 @@ export class Collection extends Model<
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
+	// TODO: Make this `AllowNull(false)`. Never is a collection without a title, but
+	// technically this is nullable in the database.
 	@Column(DataType.TEXT)
-	title!: string | null;
+	title!: string;
 
 	@AllowNull(false)
 	@IsLowercase

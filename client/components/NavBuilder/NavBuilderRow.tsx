@@ -6,8 +6,6 @@ import { Icon, IconName } from 'components';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { CommunityNavigationEntry, isCommunityNavigationMenu } from 'client/utils/navigation';
 
-import * as types from 'types';
-import { expect } from 'utils/assert';
 import PageCollectionAutocomplete from './PageCollectionAutocomplete';
 import { NavBuilderContext } from './navBuilderContext';
 
@@ -53,7 +51,7 @@ const NavBuilderRow = (props: Props) => {
 				if (collection) {
 					const schema = getSchemaForKind(collection.kind);
 					return renderForPageOrCollection(
-						expect(collection.title),
+						collection.title,
 						schema && schema.bpDisplayIcon,
 					);
 				}
@@ -102,14 +100,10 @@ const NavBuilderRow = (props: Props) => {
 						}}
 					/>
 					<PageCollectionAutocomplete
-						items={collections as types.DefinitelyHas<types.Collection, 'title'>[]}
+						items={collections}
 						placeholder="Add Collection"
-						usedItems={collections.filter(
-							(
-								collection,
-							): collection is types.DefinitelyHas<types.Collection, 'title'> =>
-								item.children.some((current) => current.id === collection.id) &&
-								!!collection.title,
+						usedItems={collections.filter((collection) =>
+							item.children.some((current) => current.id === collection.id),
 						)}
 						onSelect={(collection) => {
 							const newItem = { type: 'collection' as const, id: collection.id };

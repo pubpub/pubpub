@@ -63,7 +63,7 @@ export async function transformCollectionToResource(
 			) ?? [];
 	const collectionResource: Resource = {
 		kind: getResourceKindForCollection(collection),
-		title: expect(collection.title),
+		title: collection.title,
 		identifiers: [
 			{
 				identifierKind: 'URL',

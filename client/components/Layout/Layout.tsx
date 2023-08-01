@@ -67,9 +67,7 @@ const Layout = (props: Props) => {
 					<LayoutPagesCollections
 						content={block.content}
 						pages={communityData.pages}
-						collections={
-							communityData.collections as DefinitelyHas<Collection, 'title'>[]
-						}
+						collections={communityData.collections}
 					/>
 				</div>
 			);
