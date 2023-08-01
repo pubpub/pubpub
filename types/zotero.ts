@@ -1,5 +1,5 @@
 import { ZoteroIntegration as ZoteroIntegrationModel } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 export type ZoteroIntegration = SerializedModel<ZoteroIntegrationModel>;
 

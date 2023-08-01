@@ -2,7 +2,7 @@ import {
 	ScopeSummary as ScopeSummaryModel,
 	UserScopeVisit as UserScopeVisitModel,
 } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 export type ScopeId = { communityId: string } & ({ pubId: string } | { collectionId: string } | {});
 

@@ -6,7 +6,7 @@ import {
 	PubVersion as PubVersionModel,
 	CrossrefDepositRecord,
 } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 import { PubAttribution } from './attribution';
 import { Collection, CollectionPub } from './collection';
 import { Discussion } from './discussion';

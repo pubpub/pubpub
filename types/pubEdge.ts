@@ -2,7 +2,7 @@ import {
 	ExternalPublication as ExternalPublicationModel,
 	PubEdge as PubEdgeModel,
 } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 export type ExternalPublication = SerializedModel<ExternalPublicationModel>;
 

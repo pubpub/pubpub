@@ -2,7 +2,7 @@ import {
 	PubAttribution as PubAttributionModel,
 	CollectionAttribution as CollectionAttributionModel,
 } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 import { DefinitelyHas } from './util';
 

@@ -1,5 +1,5 @@
 import { User as UserModel } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 type UserType = SerializedModel<UserModel>;
 

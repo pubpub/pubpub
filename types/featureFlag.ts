@@ -3,7 +3,7 @@ import {
 	FeatureFlagCommunity as FeatureFlagCommunityModel,
 	FeatureFlagUser as FeatureFlagUserModel,
 } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 export type FeatureFlagOverrideState = 'inert' | 'off' | 'on';
 

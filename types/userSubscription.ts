@@ -1,5 +1,5 @@
 import { UserSubscription as UserSubscriptionModel } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 export type UserSubscriptionTarget = { pubId: string } | { threadId: string };
 

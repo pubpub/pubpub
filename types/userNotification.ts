@@ -4,7 +4,7 @@ import {
 	UserNotification as UserNotificationModel,
 	UserNotificationPreferences as UserNotificationPreferencesModel,
 } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 import {
 	ActivityAssociations,
 	ActivityItemOfKind,

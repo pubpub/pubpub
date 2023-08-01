@@ -10,7 +10,7 @@ import { PubActivityItem } from './pub';
 import { MemberActivityItem } from './member';
 import { ActivityAssociations } from './associations';
 import { SubmissionActivityItem } from './submission';
-import { SerializedModel } from '../recursiveAttributes';
+import { SerializedModel } from '../serializedModel';
 
 export * from './community';
 export * from './collection';

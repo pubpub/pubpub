@@ -1,6 +1,6 @@
 import { LandingPageFeature as LandingPageFeatureModel } from 'server/models';
 import { DefinitelyHas, DocJson } from 'types';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 export type LandingPageFeature = SerializedModel<LandingPageFeatureModel>;
 

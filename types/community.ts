@@ -1,5 +1,5 @@
 import { Community as CommunityModel } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 export type CommunityHeroButton = {
 	title: string;

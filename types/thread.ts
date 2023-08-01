@@ -3,7 +3,7 @@ import {
 	ThreadComment as ThreadCommentModel,
 	Thread as ThreadModel,
 } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 import { Discussion } from './discussion';
 import { Review } from './review';
 

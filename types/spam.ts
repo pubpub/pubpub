@@ -1,5 +1,5 @@
 import { SpamTag as SpamTagModel } from 'server/models';
-import { SerializedModel } from './recursiveAttributes';
+import { SerializedModel } from './serializedModel';
 
 export type SpamStatus = 'unreviewed' | 'confirmed-spam' | 'confirmed-not-spam';
 
