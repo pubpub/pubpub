@@ -75,11 +75,13 @@ export class Community extends Model<
 	@Column(DataType.TEXT)
 	favicon!: string | null;
 
+	// TODO: Make this `AllowNull(false)`. Communities always have a color.
 	@Column(DataType.STRING)
-	accentColorLight!: string | null;
+	accentColorLight!: string;
 
+	// TODO: Make this `AllowNull(false)`. Communities always have a color.
 	@Column(DataType.STRING)
-	accentColorDark!: string | null;
+	accentColorDark!: string;
 
 	@Column(DataType.BOOLEAN)
 	hideCreatePubButton!: boolean | null;

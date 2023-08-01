@@ -70,7 +70,7 @@ const PubDocument = () => {
 						className="top-pub-edges"
 						pubData={pubData}
 						pubEdgeDescriptionIsVisible={pubEdgeDisplay.descriptionIsVisible}
-						accentColor={expect(communityData.accentColorDark)}
+						accentColor={communityData.accentColorDark}
 						initialFilters={[PubEdgeFilter.Parent]}
 						isolated
 					/>
@@ -89,7 +89,7 @@ const PubDocument = () => {
 						className="bottom-pub-edges"
 						pubData={pubData}
 						pubEdgeDescriptionIsVisible={pubEdgeDisplay.descriptionIsVisible}
-						accentColor={expect(communityData.accentColorDark)}
+						accentColor={communityData.accentColorDark}
 						initialFilters={[PubEdgeFilter.Child, PubEdgeFilter.Sibling]}
 						initialMode={
 							pubEdgeDisplay.defaultsToCarousel

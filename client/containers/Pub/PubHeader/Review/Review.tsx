@@ -23,14 +23,14 @@ const Review = (props: Props) => {
 	const [hover, setHover] = useState(false);
 
 	const lighterAccentColor = useMemo(
-		() => Color(communityData.accentColorDark ?? undefined).alpha(0.4),
+		() => Color(communityData.accentColorDark).alpha(0.4),
 		[communityData.accentColorDark],
 	);
 	const bgColor = isEmptyDoc(review as DocJson)
 		? 'lightgray'
 		: !hover
 		? lighterAccentColor?.toString()
-		: communityData.accentColorDark ?? undefined;
+		: communityData.accentColorDark;
 
 	return (
 		<div className="review-component">

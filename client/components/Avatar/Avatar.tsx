@@ -39,7 +39,7 @@ const Avatar = (props: Props) => {
 		borderColor,
 		borderWidth: borderColor ? borderWidth || Math.floor(width / 50) + 1 : 0,
 		fontSize: isBlock ? Math.floor(width / 1.5) : Math.floor(width / 2.5),
-		backgroundColor: communityData.accentColorDark ?? undefined,
+		backgroundColor: communityData.accentColorDark,
 		zIndex: typeof instanceNumber === 'number' ? -1 * instanceNumber : 'initial',
 		borderRadius: isBlock ? '2px' : '50%',
 	};

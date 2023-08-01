@@ -130,7 +130,7 @@ const FormattingBar = (props: Props) => {
 				<FormattingBarControlsContainer
 					controlsConfiguration={resolvedControlsConfiguration}
 					editorChangeObject={editorChangeObject}
-					accentColor={expect(communityData.accentColorDark)}
+					accentColor={communityData.accentColorDark}
 					onClose={() => setOpenedButton(null)}
 				>
 					<ControlsComponent

@@ -10,7 +10,7 @@ type Props = {
 	children?: React.ReactNode;
 	className?: string;
 	communityData: {
-		accentColorDark?: string | null;
+		accentColorDark?: string;
 	};
 	blur?: boolean;
 	style?: any;

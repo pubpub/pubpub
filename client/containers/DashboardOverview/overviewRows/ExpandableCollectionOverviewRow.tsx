@@ -30,10 +30,7 @@ const ExpandableCollectionOverviewRow = (props: Props) => {
 	const headerRef = useRef<null | HTMLElement>();
 
 	const backgroundColor = useMemo(
-		() =>
-			Color(communityData.accentColorDark ?? undefined)
-				.alpha(0.05)
-				.toString(),
+		() => Color(communityData.accentColorDark).alpha(0.05).toString(),
 		[communityData.accentColorDark],
 	);
 

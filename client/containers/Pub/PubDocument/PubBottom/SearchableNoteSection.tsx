@@ -31,7 +31,7 @@ const SearchableNoteSection = (props: Props) => {
 		>
 			{({ searchTerm }) => (
 				<Notes
-					accentColor={expect(communityData.accentColorDark)}
+					accentColor={communityData.accentColorDark}
 					notes={notes.filter(checkContains(searchTerm))}
 				/>
 			)}

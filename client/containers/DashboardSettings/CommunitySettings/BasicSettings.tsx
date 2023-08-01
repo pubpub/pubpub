@@ -91,7 +91,7 @@ const BasicSettings = (props: Props) => {
 			<SettingsRow>
 				<InputField label="Dark Accent Color">
 					<ColorInput
-						value={expect(accentColorDark)}
+						value={accentColorDark}
 						onChange={(val) => {
 							updateCommunityData({ accentColorDark: val.hex });
 						}}
@@ -99,7 +99,7 @@ const BasicSettings = (props: Props) => {
 				</InputField>
 				<InputField label="Light Accent Color">
 					<ColorInput
-						value={expect(accentColorLight)}
+						value={accentColorLight}
 						onChange={(val) => {
 							updateCommunityData({ accentColorLight: val.hex });
 						}}

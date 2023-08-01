@@ -149,9 +149,7 @@ const HomepageBannerSettings = (props: Props) => {
 						<SettingsRow gap={30}>
 							<InputField label="Banner Background Color">
 								<ColorInput
-									value={
-										heroBackgroundColor || expect(communityData.accentColorDark)
-									}
+									value={heroBackgroundColor || communityData.accentColorDark}
 									onChange={(val) => {
 										updateCommunityData({ heroBackgroundColor: val.hex });
 									}}
