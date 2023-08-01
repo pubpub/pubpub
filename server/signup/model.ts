@@ -11,11 +11,11 @@ import {
 	Unique,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
+import type { SerializedModel } from 'types';
 
 @Table
 export class Signup extends Model<InferAttributes<Signup>, InferCreationAttributes<Signup>> {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

@@ -9,7 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes, DocJson, SubmissionStatus } from 'types';
+import type { SerializedModel, DocJson, SubmissionStatus } from 'types';
 import { Pub, SubmissionWorkflow } from '../models';
 
 @Table
@@ -17,7 +17,7 @@ export class Submission extends Model<
 	InferAttributes<Submission>,
 	InferCreationAttributes<Submission>
 > {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

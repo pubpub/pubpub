@@ -9,12 +9,12 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
+import type { SerializedModel } from 'types';
 import { WorkerTask } from '../models';
 
 @Table
 export class Export extends Model<InferAttributes<Export>, InferCreationAttributes<Export>> {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

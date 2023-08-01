@@ -14,7 +14,7 @@ import {
 	HasMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
+import type { SerializedModel } from 'types';
 import { CommunityHeaderLink, CommunityHeroButton } from 'types';
 import { CommunityNavigationEntry } from 'client/utils/navigation';
 import {
@@ -32,7 +32,7 @@ export class Community extends Model<
 	InferAttributes<Community>,
 	InferCreationAttributes<Community>
 > {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

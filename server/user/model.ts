@@ -14,7 +14,7 @@ import {
 	HasMany,
 	HasOne,
 } from 'sequelize-typescript';
-import { RecursiveAttributes } from 'types';
+import { SerializedModel } from 'types';
 import type {
 	InferAttributes,
 	InferCreationAttributes,
@@ -113,7 +113,7 @@ class ModelWithPassport<T extends {} = any, C extends {} = T> extends Model<T, C
 
 @Table
 export class User extends ModelWithPassport<InferAttributes<User>, InferCreationAttributes<User>> {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

@@ -16,7 +16,7 @@ import {
 	HasOne,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
+import type { SerializedModel } from 'types';
 import {
 	PubAttribution,
 	CollectionPub,
@@ -36,7 +36,7 @@ import {
 
 @Table
 export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

@@ -14,7 +14,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
+import type { SerializedModel } from 'types';
 import { CollectionKind, ReadNextPreviewSize } from 'types';
 import { CollectionLayout } from 'utils/layout';
 import {
@@ -33,7 +33,7 @@ export class Collection extends Model<
 	InferAttributes<Collection>,
 	InferCreationAttributes<Collection>
 > {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

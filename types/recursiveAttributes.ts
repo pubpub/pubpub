@@ -5,7 +5,7 @@ type Prettify<T> = {
 	[P in keyof T]: T[P];
 } & {};
 
-export type RecursiveAttributes<
+export type SerializedModel<
 	T extends Model,
 	C extends boolean = false,
 	S extends C extends false ? Attributes<T> : CreationAttributes<T> = C extends false
@@ -14,8 +14,8 @@ export type RecursiveAttributes<
 > = Prettify<{
 	[P in keyof S]: S[P] extends Model | Model[] | undefined
 		? S[P] extends Array<infer M extends Model> | undefined
-			? RecursiveAttributes<M, C>[] | undefined
-			: RecursiveAttributes<NonNullable<S[P]>, C> | undefined
+			? SerializedModel<M, C>[] | undefined
+			: SerializedModel<NonNullable<S[P]>, C> | undefined
 		: S[P] extends Date | null
 		? S[P] extends Date
 			? string
@@ -23,4 +23,4 @@ export type RecursiveAttributes<
 		: S[P];
 }>;
 
-export type RecursiveCreationAttributes<T extends Model> = RecursiveAttributes<T, true>;
+export type RecursiveCreationAttributes<T extends Model> = SerializedModel<T, true>;

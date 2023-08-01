@@ -2,7 +2,7 @@ import {
 	Discussion as DiscussionModel,
 	DiscussionAnchor as DiscussionAnchorModel,
 } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
-export type DiscussionAnchor = RecursiveAttributes<DiscussionAnchorModel>;
-export type Discussion = RecursiveAttributes<DiscussionModel>;
+export type DiscussionAnchor = SerializedModel<DiscussionAnchorModel>;
+export type Discussion = SerializedModel<DiscussionModel>;

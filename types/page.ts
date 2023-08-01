@@ -1,4 +1,4 @@
 import { Page as PageModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
-export type Page = RecursiveAttributes<PageModel>;
+export type Page = SerializedModel<PageModel>;

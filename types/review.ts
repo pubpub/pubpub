@@ -1,6 +1,6 @@
 import { ReviewNew as ReviewNewModel, Reviewer as ReviewerModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
-export type Review = RecursiveAttributes<ReviewNewModel>;
+export type Review = SerializedModel<ReviewNewModel>;
 
-export type Reviewer = RecursiveAttributes<ReviewerModel>;
+export type Reviewer = SerializedModel<ReviewerModel>;

@@ -1,8 +1,8 @@
 import { SubmissionWorkflow as SubmissionWorkflowModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 // import { Collection, DocJson } from 'types';
 
-export type SubmissionWorkflow = RecursiveAttributes<SubmissionWorkflowModel>;
+export type SubmissionWorkflow = SerializedModel<SubmissionWorkflowModel>;
 // {
 // 	id: string;
 // 	createdAt: string;

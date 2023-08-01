@@ -6,7 +6,7 @@ import {
 	PubVersion as PubVersionModel,
 	CrossrefDepositRecord,
 } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 import { PubAttribution } from './attribution';
 import { Collection, CollectionPub } from './collection';
 import { Discussion } from './discussion';
@@ -17,9 +17,9 @@ import { ThreadComment, Thread } from './thread';
 import { DefinitelyHas, Maybe } from './util';
 import { UserSubscription } from './userSubscription';
 
-export type Draft = RecursiveAttributes<DraftModel>;
-export type Doc = RecursiveAttributes<DocModel>;
-export type Release = RecursiveAttributes<ReleaseModel>;
+export type Draft = SerializedModel<DraftModel>;
+export type Doc = SerializedModel<DocModel>;
+export type Release = SerializedModel<ReleaseModel>;
 
 export type Export = {
 	id: string;
@@ -29,9 +29,9 @@ export type Export = {
 	workerTaskId?: string;
 };
 
-export type PubVersion = RecursiveAttributes<PubVersionModel>;
-export type DepositRecord = RecursiveAttributes<CrossrefDepositRecord>;
-export type Pub = RecursiveAttributes<PubModel>;
+export type PubVersion = SerializedModel<PubVersionModel>;
+export type DepositRecord = SerializedModel<CrossrefDepositRecord>;
+export type Pub = SerializedModel<PubModel>;
 
 export type PubWithConnections = DefinitelyHas<Pub, 'inboundEdges' | 'outboundEdges'>;
 

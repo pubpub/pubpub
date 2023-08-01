@@ -2,13 +2,13 @@ import {
 	PubAttribution as PubAttributionModel,
 	CollectionAttribution as CollectionAttributionModel,
 } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
 import { DefinitelyHas } from './util';
 
-export type PubAttribution = RecursiveAttributes<PubAttributionModel>;
+export type PubAttribution = SerializedModel<PubAttributionModel>;
 
-export type CollectionAttribution = RecursiveAttributes<CollectionAttributionModel>;
+export type CollectionAttribution = SerializedModel<CollectionAttributionModel>;
 
 export type Attribution = CollectionAttribution | PubAttribution;
 export type AttributionWithUser = DefinitelyHas<Attribution, 'user'>;

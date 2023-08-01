@@ -10,7 +10,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { InsertableActivityItem, RecursiveAttributes } from 'types';
+import type { InsertableActivityItem, SerializedModel } from 'types';
 import { ActivityItem, UserSubscription, User } from '../models';
 
 @Table
@@ -18,7 +18,7 @@ export class UserNotification extends Model<
 	InferAttributes<UserNotification>,
 	InferCreationAttributes<UserNotification>
 > {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

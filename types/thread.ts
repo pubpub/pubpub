@@ -3,7 +3,7 @@ import {
 	ThreadComment as ThreadCommentModel,
 	Thread as ThreadModel,
 } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 import { Discussion } from './discussion';
 import { Review } from './review';
 
@@ -12,11 +12,11 @@ export type Commenter = {
 	name: string;
 };
 
-export type ThreadEvent = RecursiveAttributes<ThreadEventModel>;
+export type ThreadEvent = SerializedModel<ThreadEventModel>;
 
-export type ThreadComment = RecursiveAttributes<ThreadCommentModel>;
+export type ThreadComment = SerializedModel<ThreadCommentModel>;
 
-export type Thread = RecursiveAttributes<ThreadModel>;
+export type Thread = SerializedModel<ThreadModel>;
 
 export type TaggedThreadParent<T = {}> =
 	| { type: 'discussion'; value: T & Discussion }

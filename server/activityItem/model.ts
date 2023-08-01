@@ -9,14 +9,14 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { InsertableActivityItem, RecursiveAttributes } from 'types';
+import { InsertableActivityItem, SerializedModel } from 'types';
 
 @Table
 export class ActivityItem<T extends InsertableActivityItem = InsertableActivityItem> extends Model<
 	InferAttributes<ActivityItem<T>, { omit: Extract<keyof ActivityItem<T>, keyof T> }> & T,
 	InferCreationAttributes<ActivityItem<T>, { omit: Extract<keyof ActivityItem<T>, keyof T> }> & T
 > {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

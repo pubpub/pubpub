@@ -3,12 +3,12 @@ import {
 	FeatureFlagCommunity as FeatureFlagCommunityModel,
 	FeatureFlagUser as FeatureFlagUserModel,
 } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
 export type FeatureFlagOverrideState = 'inert' | 'off' | 'on';
 
-export type FeatureFlagUser = RecursiveAttributes<FeatureFlagUserModel>;
+export type FeatureFlagUser = SerializedModel<FeatureFlagUserModel>;
 
-export type FeatureFlagCommunity = RecursiveAttributes<FeatureFlagCommunityModel>;
+export type FeatureFlagCommunity = SerializedModel<FeatureFlagCommunityModel>;
 
-export type FeatureFlag = RecursiveAttributes<FeatureFlagModel>;
+export type FeatureFlag = SerializedModel<FeatureFlagModel>;

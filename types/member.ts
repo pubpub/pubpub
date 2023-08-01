@@ -1,6 +1,6 @@
 import { Member as MemberModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
 export type MemberPermission = 'view' | 'edit' | 'manage' | 'admin';
 
-export type Member = RecursiveAttributes<MemberModel>;
+export type Member = SerializedModel<MemberModel>;

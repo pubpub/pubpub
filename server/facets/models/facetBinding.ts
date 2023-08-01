@@ -9,7 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { RecursiveAttributes } from 'types';
+import { SerializedModel } from 'types';
 import { Community, Collection, Pub } from '../../models';
 
 @Table
@@ -17,7 +17,7 @@ export class FacetBinding extends Model<
 	InferAttributes<FacetBinding>,
 	InferCreationAttributes<FacetBinding>
 > {
-	declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

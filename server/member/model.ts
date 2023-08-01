@@ -9,13 +9,13 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
+import type { SerializedModel } from 'types';
 import { MemberPermission } from 'types';
 import { User, Community, Pub, Collection } from '../models';
 
 @Table
 export class Member extends Model<InferAttributes<Member>, InferCreationAttributes<Member>> {
-	public declare toJSON: <M extends Model>(this: M) => RecursiveAttributes<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

@@ -4,7 +4,7 @@ import {
 	UserNotification as UserNotificationModel,
 	UserNotificationPreferences as UserNotificationPreferencesModel,
 } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 import {
 	ActivityAssociations,
 	ActivityItemOfKind,
@@ -13,7 +13,7 @@ import {
 } from './activity';
 import { UserSubscription } from './userSubscription';
 
-export type UserNotification = RecursiveAttributes<UserNotificationModel>;
+export type UserNotification = SerializedModel<UserNotificationModel>;
 
 export type UserNotificationWithActivityItemModel = UserNotificationModel & {
 	activityItem:
@@ -29,7 +29,7 @@ export type UserNotificationWithActivityItem = Omit<UserNotification, 'activityI
 
 export type UserNotificationMarkReadTrigger = 'seen' | 'clicked-through' | 'manual';
 
-export type UserNotificationPreferences = RecursiveAttributes<UserNotificationPreferencesModel>;
+export type UserNotificationPreferences = SerializedModel<UserNotificationPreferencesModel>;
 
 export type UserNotificationsFetchResult = {
 	notifications: UserNotificationWithActivityItem[];

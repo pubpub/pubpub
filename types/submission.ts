@@ -1,5 +1,5 @@
 import { Submission as SubmissionModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
 export const managerStatuses = ['received', 'accepted', 'declined'] as const;
 export const submitterStatuses = ['received'] as const;
@@ -11,5 +11,5 @@ export const submissionStatuses = [
 
 export type SubmissionStatus = (typeof submissionStatuses)[number];
 
-export type Submission = RecursiveAttributes<SubmissionModel>;
+export type Submission = SerializedModel<SubmissionModel>;
 export type SubmissionEmailKind = 'received' | 'accepted' | 'declined';

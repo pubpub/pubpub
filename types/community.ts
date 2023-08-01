@@ -1,5 +1,5 @@
 import { Community as CommunityModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
 export type CommunityHeroButton = {
 	title: string;
@@ -8,4 +8,4 @@ export type CommunityHeroButton = {
 
 export type CommunityHeaderLink = { title: string; url: string; external?: boolean };
 
-export type Community = RecursiveAttributes<CommunityModel>;
+export type Community = SerializedModel<CommunityModel>;

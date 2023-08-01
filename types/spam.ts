@@ -1,9 +1,9 @@
 import { SpamTag as SpamTagModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
 export type SpamStatus = 'unreviewed' | 'confirmed-spam' | 'confirmed-not-spam';
 
-export type SpamTag = RecursiveAttributes<SpamTagModel>;
+export type SpamTag = SerializedModel<SpamTagModel>;
 
 export type SpamVerdict = Pick<
 	SpamTag,

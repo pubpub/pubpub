@@ -1,4 +1,4 @@
 import { IntegrationDataOAuth1 as IntegrationDataOAuth1Model } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
-export type IntegrationDataOAuth1 = RecursiveAttributes<IntegrationDataOAuth1Model>;
+export type IntegrationDataOAuth1 = SerializedModel<IntegrationDataOAuth1Model>;

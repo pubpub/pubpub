@@ -10,7 +10,7 @@ import { PubActivityItem } from './pub';
 import { MemberActivityItem } from './member';
 import { ActivityAssociations } from './associations';
 import { SubmissionActivityItem } from './submission';
-import { RecursiveAttributes } from '../recursiveAttributes';
+import { SerializedModel } from '../recursiveAttributes';
 
 export * from './community';
 export * from './collection';
@@ -33,7 +33,7 @@ export type ActivityItemKind = InsertableActivityItem['kind'];
 export type ActivityItemPayload = InsertableActivityItem['payload'];
 
 export type ActivityItem<T extends InsertableActivityItem = InsertableActivityItem> =
-	RecursiveAttributes<ActivityItemModel<T>>;
+	SerializedModel<ActivityItemModel<T>>;
 
 export type ActivityItemOfKind<Kind extends ActivityItemKind> = ActivityItem<
 	InsertableActivityItem & { kind: Kind }

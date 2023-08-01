@@ -1,4 +1,4 @@
 import { DepositTarget as DepositTargetModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
-export type DepositTarget = RecursiveAttributes<DepositTargetModel>;
+export type DepositTarget = SerializedModel<DepositTargetModel>;

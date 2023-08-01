@@ -1,5 +1,5 @@
 import { UserSubscription as UserSubscriptionModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
 export type UserSubscriptionTarget = { pubId: string } | { threadId: string };
 
@@ -14,7 +14,7 @@ export type UserSubscriptionStatus =
 	// Active: this subscription will actively generate notifications for this item
 	| 'active';
 
-export type UserSubscription = RecursiveAttributes<UserSubscriptionModel>;
+export type UserSubscription = SerializedModel<UserSubscriptionModel>;
 
 export type UniqueUserSubscriptionQuery =
 	| Pick<UserSubscription, 'id'>

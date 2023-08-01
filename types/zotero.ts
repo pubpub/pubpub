@@ -1,7 +1,7 @@
 import { ZoteroIntegration as ZoteroIntegrationModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
-export type ZoteroIntegration = RecursiveAttributes<ZoteroIntegrationModel>;
+export type ZoteroIntegration = SerializedModel<ZoteroIntegrationModel>;
 
 export type ZoteroCSLJSON = {
 	meta: {

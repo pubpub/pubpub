@@ -1,7 +1,7 @@
 import { User as UserModel } from 'server/models';
-import { RecursiveAttributes } from './recursiveAttributes';
+import { SerializedModel } from './recursiveAttributes';
 
-type UserType = RecursiveAttributes<UserModel>;
+type UserType = SerializedModel<UserModel>;
 
 export type MinimalUser = Pick<
 	UserType,
