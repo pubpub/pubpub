@@ -3,12 +3,12 @@ import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { joinOxford } from 'utils/strings';
 import { unique } from 'utils/arrays';
 import { getPrimaryCollection } from 'utils/collections/primary';
+import assert from 'assert';
 
 const orderedContributors = (maybeContributors: Attribution[] | undefined | null) =>
 	(maybeContributors || []).concat().sort((a, b) => {
-		if (!a.order || !b.order) {
-			return 0;
-		}
+		assert(!!a.order && !!b.order, 'Attributions must have an order');
+
 		if (a.order !== b.order) {
 			return a.order - b.order;
 		}

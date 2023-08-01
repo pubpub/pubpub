@@ -190,7 +190,7 @@ export async function transformPubToResource(
 		),
 	]);
 	const contributions: ResourceContribution[] = (pub.attributions ?? [])
-		.sort((a, b) => (!a.order || !b.order ? 0 : a.order - b.order))
+		.sort((a, b) => expect(a.order) - expect(b.order))
 		.map((attribution) =>
 			transformPubAttributionToResourceContribution(
 				attribution,

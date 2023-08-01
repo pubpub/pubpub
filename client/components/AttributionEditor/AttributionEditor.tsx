@@ -60,7 +60,7 @@ class AttributionEditor extends Component<Props> {
 	handleAttributionAdd(user) {
 		const { attributions, onUpdateAttributions, onPersistStateChange } = this.props;
 		const maxOrder = attributions.length
-			? Math.max(...attributions.map((a) => a.order ?? 0))
+			? Math.max(...attributions.map((a) => expect(a.order)))
 			: 0;
 		const newOrder = 0.5 + maxOrder / 2;
 		onPersistStateChange(1);
@@ -145,7 +145,7 @@ class AttributionEditor extends Component<Props> {
 					order: newOrder,
 				};
 			})
-			.sort((a, b) => (a.order && b.order ? a.order - b.order : 0));
+			.sort((a, b) => expect(a.order) - expect(b.order));
 
 		onUpdateAttributions(newAttributions);
 	}
@@ -154,7 +154,7 @@ class AttributionEditor extends Component<Props> {
 		const { attributions, canEdit, listOnBylineText, hasEmptyState } = this.props;
 		const sortedAttributions = attributions
 			.concat()
-			.sort((a, b) => (a.order && b.order ? a.order - b.order : 0));
+			.sort((a, b) => expect(a.order) - expect(b.order));
 		return (
 			<div className="attribution-editor-component">
 				{canEdit && (
