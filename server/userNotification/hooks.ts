@@ -35,10 +35,10 @@ const template = async (activityItem: types.ActivityItemOfKind<'pub-discussion-c
 		},
 		associations: {
 			pub: {
-				[pub.id]: pub,
+				[pub.id]: pub as types.Pub,
 			},
 			community: {
-				[community.id]: community,
+				[community.id]: community as types.Community,
 			},
 		},
 		userId: activityItem.actorId,
