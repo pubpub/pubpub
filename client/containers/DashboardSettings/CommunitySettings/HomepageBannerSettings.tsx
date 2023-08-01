@@ -4,7 +4,6 @@ import { ButtonGroup, Button, Switch, Checkbox } from '@blueprintjs/core';
 import { ColorInput, Header, ImageUpload, InputField, SettingsSection } from 'components';
 import { Callback, Community, PageContext } from 'types';
 
-import { expect } from 'utils/assert';
 import LabelWithInfo from '../LabelWithInfo';
 import SettingsRow from '../SettingsRow';
 

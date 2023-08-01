@@ -3,7 +3,6 @@ import React from 'react';
 import { InputField, SettingsSection, ImageUpload, ColorInput } from 'components';
 import { Callback, Community } from 'types';
 import { slugifyString } from 'utils/strings';
-import { expect } from 'utils/assert';
 
 import SettingsRow from '../SettingsRow';
 import LabelWithInfo from '../LabelWithInfo';

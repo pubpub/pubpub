@@ -3,7 +3,6 @@ import React from 'react';
 import { usePageContext } from 'utils/hooks';
 import { RenderedNote } from 'utils/notes';
 
-import { expect } from 'utils/assert';
 import Notes from './Notes';
 import PubBottomSection, { SectionBullets } from './PubBottomSection';
 

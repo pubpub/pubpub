@@ -1,9 +1,7 @@
 import { ThreadComment, includeUserModel, Commenter } from 'server/models';
 import * as types from 'types';
 import { expect } from 'utils/assert';
-import { Attributes } from 'sequelize';
 import { createCommenter } from '../commenter/queries';
-import { Permissions } from './permissions';
 
 const findThreadCommentWithUser = async (id: string) => {
 	const threadComment = expect(

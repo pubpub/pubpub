@@ -9,7 +9,6 @@ import {
 } from 'components/PubEdgeListing';
 import { useFacetsQuery } from 'client/utils/useFacets';
 
-import { expect } from 'utils/assert';
 import { usePubContext } from '../pubHooks';
 import { usePermalinkOnMount } from '../usePermalinkOnMount';
 import { usePubHrefs } from '../usePubHrefs';

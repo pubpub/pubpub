@@ -9,8 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { RecursiveAttributes } from 'types';
-import type { DocJson, SubmissionStatus } from 'types';
+import type { RecursiveAttributes, DocJson, SubmissionStatus } from 'types';
 import { Pub, SubmissionWorkflow } from '../models';
 
 @Table
