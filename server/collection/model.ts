@@ -14,6 +14,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import { CollectionKind, ReadNextPreviewSize } from 'types';
 import { CollectionLayout } from 'utils/layout';
 import {
@@ -32,13 +33,17 @@ export class Collection extends Model<
 	InferAttributes<Collection>,
 	InferCreationAttributes<Collection>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
 	id!: CreationOptional<string>;
 
+	// TODO: Make this `AllowNull(false)`. Never is a collection without a title, but
+	// technically this is nullable in the database.
 	@Column(DataType.TEXT)
-	title!: string | null;
+	title!: string;
 
 	@AllowNull(false)
 	@IsLowercase
@@ -75,7 +80,7 @@ export class Collection extends Model<
 
 	@Default('choose-best')
 	@Column(DataType.ENUM('none', 'minimal', 'medium', 'choose-best'))
-	readNextPreviewSize!: CreationOptional<ReadNextPreviewSize | null>;
+	readNextPreviewSize!: CreationOptional<ReadNextPreviewSize>;
 
 	// TODO: Add validation for this field
 	@AllowNull(false)
@@ -91,8 +96,10 @@ export class Collection extends Model<
 	@Column(DataType.UUID)
 	pageId!: string | null;
 
+	// TODO: Make this `AllowNull(false)`. Never is a collection without a communityId, but
+	// technically this is nullable in the database.
 	@Column(DataType.UUID)
-	communityId!: string | null;
+	communityId!: string;
 
 	@Column(DataType.UUID)
 	scopeSummaryId!: string | null;

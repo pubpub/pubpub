@@ -7,6 +7,9 @@ import {
 	TruncateOptions,
 	Paranoid,
 	Hookable,
+	SaveOptions,
+	SetOptions,
+	Filterable,
 } from 'sequelize';
 
 declare module 'sequelize' {
@@ -32,6 +35,16 @@ declare module 'sequelize' {
 			Transactionable,
 			Paranoid,
 			Hookable {
+		actorId?: string | null;
+	}
+
+	/**
+	 * Options used for Instance.update method
+	 */
+	export interface InstanceUpdateOptions<TAttributes = any>
+		extends SaveOptions<TAttributes>,
+			SetOptions,
+			Filterable<TAttributes> {
 		actorId?: string | null;
 	}
 }

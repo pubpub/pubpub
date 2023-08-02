@@ -553,7 +553,10 @@
   avatar<del style="background:red">?:</del><ins style="background:green">:</ins> string<ins style="background:green"> | null</ins>
   customPublishedAt<del style="background:red">?:</del><ins style="background:green">:</ins> <del style="background:red">string</del><ins style="background:green">Date | null</ins>
   doi: string | null
-  labels<del style="background:red">?:</del><ins style="background:green">:</ins> string[]<ins style="background:green"> | null</ins>
+  labels<del style="background:red">?:</del><ins style="background:green">:</ins> <ins style="background:green">{ id: </ins>string<del style="background:red">[]</del>
+  <ins style="background:green">color: string</ins>
+  title: string
+  <ins style="background:green">publicApply: boolean</ins>
   downloads<del style="background:red">?:</del><ins style="background:green">:</ins> any[]<ins style="background:green"> | null</ins>
   metadata<del style="background:red">?:</del><ins style="background:green">:</ins> <del style="background:red">{}</del><ins style="background:green">object | null</ins>
   viewHash<del style="background:red">?:</del><ins style="background:green">:</ins> string<ins style="background:green"> | null</ins>
@@ -884,13 +887,13 @@
   salt: string
   <ins style="background:green">gdprConsent: CreationOptional<boolean></ins>
   isSuperAdmin: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
-  isShadowUser?: boolean
-  feedback?: string
-  sha3hashedPassword: string
   <ins style="background:green">attributions?: PubAttribution[]</ins>
   <ins style="background:green">discussions?: Discussion[]</ins>
   <ins style="background:green">userNotificationPreferences?: UserNotificationPreferences</ins>
   <ins style="background:green">zoteroIntegration?: ZoteroIntegration</ins>
+  isShadowUser?: boolean
+  feedback?: string
+  sha3hashedPassword: string
   <ins style="background:green">createdAt?: any</ins>
   <ins style="background:green">updatedAt?: any</ins>
   <ins style="background:green">deletedAt?: any</ins>
@@ -911,7 +914,7 @@
   activityItemId: string
   isRead: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
   manuallySetIsRead: <ins style="background:green">CreationOptional<</ins>boolean<ins style="background:green">></ins>
-  activityItem?: ActivityItem
+  activityItem?: ActivityItem<ins style="background:green"><ActivityItemKind></ins>
   userSubscription?: UserSubscription
   user?: User
   createdAt<del style="background:red">:</del><ins style="background:green">?:</ins> <del style="background:red">string</del><ins style="background:green">any</ins>

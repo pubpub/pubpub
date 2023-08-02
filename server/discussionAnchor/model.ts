@@ -9,12 +9,15 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 
 @Table
 export class DiscussionAnchor extends Model<
 	InferAttributes<DiscussionAnchor>,
 	InferCreationAttributes<DiscussionAnchor>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

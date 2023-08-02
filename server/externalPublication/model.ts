@@ -8,12 +8,15 @@ import {
 	AllowNull,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 
 @Table
 export class ExternalPublication extends Model<
 	InferAttributes<ExternalPublication>,
 	InferCreationAttributes<ExternalPublication>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -41,5 +44,5 @@ export class ExternalPublication extends Model<
 	avatar!: string | null;
 
 	@Column(DataType.DATE)
-	publicationDate!: Date | null;
+	publicationDate!: string | null;
 }

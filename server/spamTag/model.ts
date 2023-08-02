@@ -8,10 +8,13 @@ import {
 	AllowNull,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import { SpamStatus } from 'types';
 
 @Table
 export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttributes<SpamTag>> {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -51,7 +54,7 @@ export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttrib
 	 */
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	fields!: Record<string, any>;
+	fields!: Record<string, string[]>;
 
 	@AllowNull(false)
 	@Column(DataType.DOUBLE)

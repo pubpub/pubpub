@@ -14,6 +14,7 @@ import {
 	HasMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import { CommunityHeaderLink, CommunityHeroButton } from 'types';
 import { CommunityNavigationEntry } from 'client/utils/navigation';
 import {
@@ -31,6 +32,8 @@ export class Community extends Model<
 	InferAttributes<Community>,
 	InferCreationAttributes<Community>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -68,11 +71,13 @@ export class Community extends Model<
 	@Column(DataType.TEXT)
 	favicon!: string | null;
 
+	// TODO: Make this `AllowNull(false)`. Communities always have a color.
 	@Column(DataType.STRING)
-	accentColorLight!: string | null;
+	accentColorLight!: string;
 
+	// TODO: Make this `AllowNull(false)`. Communities always have a color.
 	@Column(DataType.STRING)
-	accentColorDark!: string | null;
+	accentColorDark!: string;
 
 	@Column(DataType.BOOLEAN)
 	hideCreatePubButton!: boolean | null;

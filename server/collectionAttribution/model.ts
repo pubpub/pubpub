@@ -9,6 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import { MinimalUser } from 'types';
 import { User, Collection } from '../models';
 
@@ -17,6 +18,8 @@ export class CollectionAttribution extends Model<
 	InferAttributes<CollectionAttribution>,
 	InferCreationAttributes<CollectionAttribution>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -31,8 +34,9 @@ export class CollectionAttribution extends Model<
 	@Column(DataType.TEXT)
 	title!: string | null;
 
+	// TODO: Add AllowNull(false) for this. Made non-null as that is how its used, but technically still nullable in the db
 	@Column(DataType.DOUBLE)
-	order!: number | null;
+	order!: number;
 
 	@Column(DataType.BOOLEAN)
 	isAuthor!: boolean | null;

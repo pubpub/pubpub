@@ -9,6 +9,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { SerializedModel } from 'types';
 import { Community, Collection, Pub } from '../../models';
 
 @Table
@@ -16,6 +17,8 @@ export class FacetBinding extends Model<
 	InferAttributes<FacetBinding>,
 	InferCreationAttributes<FacetBinding>
 > {
+	declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

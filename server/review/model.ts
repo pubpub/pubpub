@@ -11,6 +11,8 @@ import {
 	HasMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
+import { DocJson } from 'types';
 import { Thread, Visibility, User, Pub, Reviewer } from '../models';
 
 @Table
@@ -18,6 +20,8 @@ export class ReviewNew extends Model<
 	InferAttributes<ReviewNew>,
 	InferCreationAttributes<ReviewNew>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -32,7 +36,7 @@ export class ReviewNew extends Model<
 
 	@Default('open')
 	@Column(DataType.ENUM('open', 'closed', 'completed'))
-	status!: CreationOptional<'open' | 'closed' | 'completed' | null>;
+	status!: CreationOptional<'open' | 'closed' | 'completed'>;
 
 	@Column(DataType.BOOLEAN)
 	releaseRequested!: boolean | null;
@@ -56,8 +60,9 @@ export class ReviewNew extends Model<
 	@Column(DataType.UUID)
 	pubId!: string | null;
 
+	// TODO: Add validation
 	@Column(DataType.JSONB)
-	reviewContent!: object | null;
+	reviewContent!: DocJson | null;
 
 	@BelongsTo(() => Thread, { onDelete: 'CASCADE', as: 'thread', foreignKey: 'threadId' })
 	thread?: Thread;

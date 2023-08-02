@@ -14,11 +14,13 @@ import {
 	HasMany,
 	HasOne,
 } from 'sequelize-typescript';
+import { SerializedModel } from 'types';
 import type {
 	InferAttributes,
 	InferCreationAttributes,
 	CreationOptional,
 	CreationAttributes,
+	ModelStatic,
 } from 'sequelize';
 import type { Strategy } from 'passport';
 import {
@@ -31,69 +33,73 @@ import {
 /**
  * Basically typings for passport-local-sequelize
  */
-declare abstract class ModelWithPassport<
-	T extends {} = any,
-	C extends {} = T,
-	User = any,
-> extends Model<T, C> {
-	declare setPassword: (password: string, cb: (err: any, user?: User) => void) => void;
-
-	declare setActivationKey: (cb: (err: any, user?: User) => void) => void;
-
-	declare authenticate: (
+class ModelWithPassport<T extends {} = any, C extends {} = T> extends Model<T, C> {
+	declare setPassword: <M extends Model>(
+		this: M,
 		password: string,
-		cb: ((err: any, user?: boolean, info?: any) => void) &
-			((err: any, user?: User, info?: any) => void),
+		cb: (err: any, user?: M) => void,
 	) => void;
 
-	declare static authenticate: () => (
+	declare setActivationKey: <M extends Model>(this: M, cb: (err: any, user?: M) => void) => void;
+
+	declare authenticate: <M extends Model>(
+		this: M,
+		password: string,
+		cb: ((err: any, user?: boolean, info?: any) => void) &
+			((err: any, user?: M, info?: any) => void),
+	) => void;
+
+	declare static authenticate: <M extends Model>(
+		this: ModelStatic<M>,
+	) => (
 		username: string,
 		password: string,
 		cb: ((err: any, user?: boolean, info?: any) => void) &
-			((err: any, user?: InstanceType<typeof ModelWithPassport>, info?: any) => void),
+			((err: any, user?: M, info?: any) => void),
 	) => void;
 
-	declare static serializeUser: () => (
-		user: InstanceType<typeof ModelWithPassport>,
-		cb: (err: any, id?: string) => void,
-	) => void;
+	declare static serializeUser: <M extends Model>(
+		this: ModelStatic<M>,
+	) => (user: M, cb: (err: any, id?: string) => void) => void;
 
-	declare static deserializeUser: () => (
-		username: string,
-		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
-	) => void;
+	declare static deserializeUser: <M extends Model>(
+		this: ModelStatic<M>,
+	) => (username: string, cb: (err: any, user?: M) => void) => void;
 
-	declare static register: (
-		user:
-			| InstanceType<typeof ModelWithPassport>
-			| string
-			| CreationAttributes<ModelWithPassport>,
+	declare static register: <M extends Model>(
+		this: ModelStatic<M>,
+		user: M | string | CreationAttributes<ModelWithPassport>,
 		password: string,
-		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+		cb: (err: any, user?: M) => void,
 	) => void;
 
-	declare static activate: (
+	declare static activate: <M extends Model>(
+		this: ModelStatic<M>,
 		username: string,
 		password: string,
 		activationKey: string,
-		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+		cb: (err: any, user?: M) => void,
 	) => void;
 
-	declare static findByUsername: (
+	declare static findByUsername: <M extends Model>(
+		this: ModelStatic<M>,
+
 		username: string,
-		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+		cb: (err: any, user?: M) => void,
 	) => void;
 
-	declare static setResetPasswordKey: (
+	declare static setResetPasswordKey: <M extends Model>(
+		this: ModelStatic<M>,
 		username: string,
-		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+		cb: (err: any, user?: M) => void,
 	) => void;
 
-	declare static resetPassword: (
+	declare static resetPassword: <M extends Model>(
+		this: ModelStatic<M>,
 		username: string,
 		password: string,
 		resetPasswordKey: string,
-		cb: (err: any, user?: InstanceType<typeof ModelWithPassport>) => void,
+		cb: (err: any, user?: M) => void,
 	) => void;
 
 	declare static createStrategy: () => Strategy;
@@ -106,11 +112,9 @@ declare abstract class ModelWithPassport<
 }
 
 @Table
-export class User extends ModelWithPassport<
-	InferAttributes<User>,
-	InferCreationAttributes<User>,
-	User
-> {
+export class User extends ModelWithPassport<InferAttributes<User>, InferCreationAttributes<User>> {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

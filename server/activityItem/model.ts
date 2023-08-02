@@ -9,13 +9,15 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { ActivityItemKind, ActivityItemPayload } from 'types';
+import { InsertableActivityItem, SerializedModel } from 'types';
 
 @Table
-export class ActivityItem extends Model<
-	InferAttributes<ActivityItem>,
-	InferCreationAttributes<ActivityItem>
+export class ActivityItem<T extends InsertableActivityItem = InsertableActivityItem> extends Model<
+	InferAttributes<ActivityItem<T>, { omit: Extract<keyof ActivityItem<T>, keyof T> }> & T,
+	InferCreationAttributes<ActivityItem<T>, { omit: Extract<keyof ActivityItem<T>, keyof T> }> & T
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -23,7 +25,7 @@ export class ActivityItem extends Model<
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)
-	kind!: ActivityItemKind;
+	kind!: T['kind'];
 
 	@Index({ using: 'BTREE' })
 	@Column(DataType.UUID)
@@ -31,12 +33,12 @@ export class ActivityItem extends Model<
 
 	// TODO: Add validation for payload
 	@Column(DataType.JSONB)
-	payload!: ActivityItemPayload | null;
+	payload!: T['payload'];
 
 	@AllowNull(false)
 	@Default(DataType.NOW)
 	@Column(DataType.DATE)
-	timestamp!: CreationOptional<Date>;
+	timestamp!: CreationOptional<string>;
 
 	@Index({ using: 'BTREE' })
 	@AllowNull(false)

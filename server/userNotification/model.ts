@@ -10,6 +10,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { InsertableActivityItem, SerializedModel } from 'types';
 import { ActivityItem, UserSubscription, User } from '../models';
 
 @Table
@@ -17,6 +18,8 @@ export class UserNotification extends Model<
 	InferAttributes<UserNotification>,
 	InferCreationAttributes<UserNotification>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -45,7 +48,7 @@ export class UserNotification extends Model<
 	@Column(DataType.BOOLEAN)
 	manuallySetIsRead!: CreationOptional<boolean>;
 
-	@BelongsTo(() => ActivityItem, {
+	@BelongsTo(() => ActivityItem<InsertableActivityItem>, {
 		onDelete: 'CASCADE',
 		as: 'activityItem',
 		foreignKey: 'activityItemId',

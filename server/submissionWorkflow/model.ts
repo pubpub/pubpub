@@ -10,6 +10,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import { DocJson } from 'types';
 import { Submission, Collection } from '../models';
 
@@ -18,6 +19,8 @@ export class SubmissionWorkflow extends Model<
 	InferAttributes<SubmissionWorkflow>,
 	InferCreationAttributes<SubmissionWorkflow>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -34,9 +37,10 @@ export class SubmissionWorkflow extends Model<
 	@Column(DataType.BOOLEAN)
 	enabled!: boolean;
 
+	// TODO: Add validation for this
 	@AllowNull(false)
 	@Column(DataType.JSONB)
-	instructionsText!: object;
+	instructionsText!: DocJson;
 
 	// TODO: Add validation for this
 	@AllowNull(false)

@@ -11,6 +11,7 @@ import {
 	HasMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import { Thread, Visibility, User, Commenter, Pub, DiscussionAnchor } from '../models';
 
 @Table
@@ -18,6 +19,8 @@ export class Discussion extends Model<
 	InferAttributes<Discussion>,
 	InferCreationAttributes<Discussion>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

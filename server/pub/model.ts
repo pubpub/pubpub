@@ -16,6 +16,7 @@ import {
 	HasOne,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import {
 	PubAttribution,
 	CollectionPub,
@@ -35,6 +36,8 @@ import {
 
 @Table
 export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub>> {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -74,7 +77,14 @@ export class Pub extends Model<InferAttributes<Pub>, InferCreationAttributes<Pub
 
 	// TODO: add validation for labels
 	@Column(DataType.JSONB)
-	labels!: string[] | null;
+	labels!:
+		| {
+				id: string;
+				color: string;
+				title: string;
+				publicApply: boolean;
+		  }[]
+		| null;
 
 	/**  TODO: add validation for downloads
 	// Should be something like

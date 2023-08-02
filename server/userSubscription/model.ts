@@ -10,6 +10,7 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import { UserSubscriptionStatus } from 'types';
 import { Pub, Thread, User } from '../models';
 
@@ -18,6 +19,8 @@ export class UserSubscription extends Model<
 	InferAttributes<UserSubscription>,
 	InferCreationAttributes<UserSubscription>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)

@@ -51,7 +51,7 @@ export const createActivityHooks = <InstanceProperties extends MinimalInstancePr
 	if (onModelCreated) {
 		Model.afterCreate((model, { actorId }) =>
 			defer(async () => {
-				onModelCreated(actorId || null, model.id);
+				await onModelCreated(actorId || null, model.id);
 			}),
 		);
 	}

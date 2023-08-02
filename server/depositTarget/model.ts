@@ -1,11 +1,14 @@
 import { Model, Table, Column, DataType, PrimaryKey, Default } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 
 @Table
 export class DepositTarget extends Model<
 	InferAttributes<DepositTarget>,
 	InferCreationAttributes<DepositTarget>
 > {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -29,4 +32,6 @@ export class DepositTarget extends Model<
 
 	@Column(DataType.TEXT)
 	passwordInitVec!: string | null;
+
+	declare isPubPubManaged?: boolean;
 }

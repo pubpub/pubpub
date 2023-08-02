@@ -9,11 +9,14 @@ import {
 	BelongsTo,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import type { SerializedModel } from 'types';
 import { MemberPermission } from 'types';
 import { User, Community, Pub, Collection } from '../models';
 
 @Table
 export class Member extends Model<InferAttributes<Member>, InferCreationAttributes<Member>> {
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+
 	@Default(DataType.UUIDV4)
 	@PrimaryKey
 	@Column(DataType.UUID)
@@ -21,7 +24,7 @@ export class Member extends Model<InferAttributes<Member>, InferCreationAttribut
 
 	@Default('view')
 	@Column(DataType.ENUM('view', 'edit', 'manage', 'admin'))
-	permissions!: CreationOptional<MemberPermission | null>;
+	permissions!: CreationOptional<MemberPermission>;
 
 	@Column(DataType.BOOLEAN)
 	isOwner!: boolean | null;
