@@ -1,13 +1,17 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
-import { PubGetOptions, PubsQuery } from 'types';
+import { Pub, PubGetOptions, PubsQuery } from 'types';
 import { indexByProperty } from 'utils/arrays';
 import { transformPubToResource } from 'deposit/transform/pub';
 import { generateDoi } from 'server/doi/queries';
 import { assert, expect } from 'utils/assert';
 import { prepareResource, submitResource } from 'deposit/datacite/deposit';
 import { assertValidResource } from 'deposit/validate';
+import * as types from 'types';
+
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { validate } from 'typia';
 
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
@@ -89,26 +93,66 @@ const getRequestIds = (req) => {
 	};
 };
 
+type PubPost = Pick<types.DefinitelyHas<types.Pub, 'communityId'>, 'communityId'>;
+
+const validatePostMiddleware: RequestHandler = (req, res, next) => {
+	const body = req.body;
+	const validatedBody = validate<PubPost>(body);
+
+	console.log(validatedBody);
+	if (validatedBody.success) {
+		console.log(`✅ Successfully validated body`);
+		next();
+		return;
+	}
+
+	throw new Error(validatedBody.errors?.join('\n'));
+};
+
 app.post(
 	'/api/pubs',
+	validatePostMiddleware,
 	wrap(async (req, res) => {
-		const { userId, collectionId, communityId, createPubToken } = getRequestIds(req);
-		const { create, collectionIds } = await canCreatePub({
-			userId,
-			collectionId,
-			communityId,
-			createPubToken,
-		});
-		if (create) {
-			const newPub = await createPub({ communityId, collectionIds }, userId);
-			return res.status(201).json(newPub);
+		try {
+			const { userId, collectionId, communityId, createPubToken } = getRequestIds(req);
+			const { create, collectionIds } = await canCreatePub({
+				userId,
+				collectionId,
+				communityId,
+				createPubToken,
+			});
+			if (create) {
+				const newPub = await createPub({ communityId, collectionIds }, userId);
+				return res.status(201).json(newPub);
+			}
+			throw new ForbiddenError();
+		} catch (e) {
+			console.log(e);
+			throw new Error(e as any);
 		}
-		throw new ForbiddenError();
 	}),
 );
 
+function validateMiddleware<T extends Record<string, any>>(validator: typeof validate<T>) {
+	return (req: Request, res: Response<T>, next: NextFunction) => {
+		const body = req.body;
+		const validatedBody = validator(body);
+
+		console.log(validatedBody);
+		if (validatedBody.success) {
+			console.log(`✅ Successfully validated body`);
+			next();
+			return;
+		}
+
+		console.error(`❌ Youve been a naughty boy`);
+		throw new Error(validatedBody.errors?.join('\n'));
+	};
+}
+
 app.put(
 	'/api/pubs',
+	validateMiddleware(validate<types.DefinitelyHas<Partial<types.Pub>, 'id'>>),
 	wrap(async (req, res) => {
 		const { userId, pubId } = getRequestIds(req);
 		const updatableFields = await getUpdatablePubFields({
