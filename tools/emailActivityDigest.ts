@@ -46,7 +46,7 @@ async function main() {
 						console.log(`user ${user.id} ${email}`);
 						// Create an activity digest email
 						const scope = { communityId: community.id };
-						const digest = await renderDigestEmail(community, { scope, user });
+						const digest = await renderDigestEmail(community.toJSON(), { scope, user });
 						if (digest === null) return;
 						await mg.messages.create('mg.pubpub.org', {
 							from: 'PubPub Team <hello@mg.pubpub.org>',

@@ -303,12 +303,13 @@ const getScopeMemberData = async (scopeInputs, scopeElements) => {
 		return [];
 	}
 	const orQuery = buildOrQuery(scopeElements);
-	return Member.findAll({
+	const members = await Member.findAll({
 		where: {
 			userId: loginId,
 			[Op.or]: orQuery,
 		},
 	});
+	return members.map((member) => member.toJSON());
 };
 
 const getActivePermissions = async (

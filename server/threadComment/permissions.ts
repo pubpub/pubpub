@@ -77,5 +77,5 @@ export const getPermissions = async ({
 
 export type Permissions = {
 	create?: boolean;
-	update?: false | (typeof userEditableFields)[number][];
+	update?: false | typeof userEditableFields;
 };

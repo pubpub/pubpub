@@ -72,7 +72,7 @@ const createSearchDataForPub = async (pub: SearchPub): Promise<AlgoliaPubEntry[]
 		avatar: pub.avatar!,
 		description: pub.description!,
 		byline: authorByline ? `by ${authorByline}` : '',
-		customPublishedAt: pub.customPublishedAt!,
+		customPublishedAt: pub.customPublishedAt!.toISOString(),
 		communityId: community.id,
 		communityDomain: community.domain || `${community.subdomain}.pubpub.org`,
 		communityTitle: community.title,

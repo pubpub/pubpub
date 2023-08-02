@@ -14,7 +14,7 @@ export type Attribution = CollectionAttribution | PubAttribution;
 export type AttributionWithUser = DefinitelyHas<Attribution, 'user'>;
 
 export const isAttributionWithUser = (
-	attribution: Attribution,
+	attribution: Attribution | PubAttributionModel | CollectionAttributionModel,
 ): attribution is AttributionWithUser => 'user' in attribution && !!attribution.user;
 
 export const isCollectionAttribution = (

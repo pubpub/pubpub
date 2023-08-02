@@ -23,7 +23,7 @@ import { fetchFacetsForScope } from 'server/facets';
 import { expect } from 'utils/assert';
 import { PubMetadata } from './types';
 
-const getPrimaryCollectionMetadata = (collectionPubs: types.CollectionPub[]) => {
+const getPrimaryCollectionMetadata = (collectionPubs: types.CollectionPub[] | CollectionPub[]) => {
 	const primaryCollection = getPrimaryCollection(collectionPubs);
 	if (primaryCollection) {
 		const { metadata, title, kind } = primaryCollection;

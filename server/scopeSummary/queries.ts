@@ -126,7 +126,7 @@ export const summarizePub = async (pubId: string, summarizeParentScopes = true) 
 		collections: 0,
 	});
 	if (summarizeParentScopes) {
-		const collectionPubs: types.CollectionPub[] = await CollectionPub.findAll({
+		const collectionPubs = await CollectionPub.findAll({
 			where: { pubId },
 		});
 		await asyncMap(

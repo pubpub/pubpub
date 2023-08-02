@@ -8,6 +8,7 @@ import {
 	UserNotificationWithActivityItem,
 } from 'types';
 import { bucketBy, flattenOnce, splitArrayOn } from 'utils/arrays';
+import { UserSubscription, UserNotificationPreferences } from 'server/models';
 
 import {
 	NotificationsState,
@@ -129,7 +130,9 @@ const createInitialThreadState = (
 	pub: Pub,
 ): ThreadNotificationsState => {
 	const { subscriptions } = initializer;
-	const subscription = subscriptions.find((s) => s.threadId === thread.id) ?? null;
+	const subscription =
+		(subscriptions as (typeof subscriptions)[number][]).find((s) => s.threadId === thread.id) ??
+		null;
 	const sortedNotifications = sortNotifications(notifications);
 	const activityItems = renderActivityItems(
 		sortedNotifications.map((n) => n.activityItem),
@@ -138,7 +141,8 @@ const createInitialThreadState = (
 	);
 	return {
 		thread,
-		subscription,
+		subscription:
+			subscription instanceof UserSubscription ? subscription.toJSON() : subscription,
 		activityItems,
 		initiallyUnread: notifications.some((n) => !n.isRead),
 		latestUnreadTimestamp: sortedNotifications[0].activityItem.timestamp,
@@ -155,7 +159,8 @@ const createInitialPubState = (
 	const { associations, subscriptions, facets } = initializer;
 	const location = { pubId: pub.id };
 	const notificationsByThread = bucketBy(notifications, (n) => n.activityItem.payload.threadId);
-	const subscription = subscriptions.find((s) => s.pubId === pub.id) ?? null;
+	const subscription =
+		(subscriptions as (typeof subscriptions)[number][]).find((s) => s.pubId === pub.id) ?? null;
 	const community = associations.community[pub.communityId];
 	const threadStates = Object.entries(notificationsByThread).map(
 		([threadId, threadNotifications]) =>
@@ -172,7 +177,8 @@ const createInitialPubState = (
 		location,
 		pub,
 		community,
-		subscription,
+		subscription:
+			subscription instanceof UserSubscription ? subscription.toJSON() : subscription,
 		threadStates: sortedThreadStates,
 		initiallyUnread: threadStates.some((state) => state.initiallyUnread),
 		latestUnreadTimestamp: sortedThreadStates[0].latestUnreadTimestamp,
@@ -189,6 +195,9 @@ export const createInitialState = (context: NotificationsInitializer): Notificat
 	return {
 		pubStates: sortPubStates(pubStates),
 		hasNotifications: pubStates.length > 0,
-		notificationPreferences,
+		notificationPreferences:
+			notificationPreferences instanceof UserNotificationPreferences
+				? notificationPreferences.toJSON()
+				: notificationPreferences,
 	};
 };

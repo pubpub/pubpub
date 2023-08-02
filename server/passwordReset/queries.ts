@@ -32,7 +32,7 @@ export const createPasswordReset = (
 
 			const updateData = {
 				resetHash: generateHash(),
-				resetHashExpiration: Date.now() + 1000 * 60 * 60 * 24, // Expires in 24 hours.
+				resetHashExpiration: new Date(Date.now() + 1000 * 60 * 60 * 24), // Expires in 24 hours.
 			};
 			return User.update(updateData, {
 				where: { id: userData.id },
@@ -70,7 +70,7 @@ export const updatePasswordReset = (
 				!user.id &&
 				resetHash &&
 				userData.resetHashExpiration &&
-				userData.resetHashExpiration < currentTime
+				Number(userData.resetHashExpiration) < currentTime
 			) {
 				throw new Error('Hash is expired');
 			}
@@ -84,7 +84,7 @@ export const updatePasswordReset = (
 				hash: passwordResetData?.dataValues.hash,
 				salt: passwordResetData?.dataValues.salt,
 				resetHash: '',
-				resetHashExpiration: currentTime,
+				resetHashExpiration: new Date(currentTime),
 				passwordDigest: 'sha512',
 			};
 			return User.update(updateData, {

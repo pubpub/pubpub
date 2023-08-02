@@ -19,6 +19,6 @@ export const getPermissions = async ({
 		loginId: userId,
 		accessHash,
 	});
-	const isReleaseKey = activePub.releases.some((release) => release.historyKey === historyKey);
+	const isReleaseKey = activePub?.releases?.some((release) => release.historyKey === historyKey);
 	return { canCreateExport: isReleaseKey || canView || canViewDraft, canRestoreHistory: canEdit };
 };

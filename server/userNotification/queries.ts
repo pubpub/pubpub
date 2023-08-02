@@ -1,7 +1,12 @@
 import { Op } from 'sequelize';
 
 import * as types from 'types';
-import { ActivityItem, UserNotification, UserSubscription } from 'server/models';
+import {
+	ActivityItem,
+	UserNotification,
+	UserNotificationPreferences,
+	UserSubscription,
+} from 'server/models';
 import { fetchAssociationsForActivityItems } from 'server/activityItem/fetch';
 import {
 	getOrCreateUserNotificationPreferences,
@@ -34,7 +39,7 @@ type DeleteOptions = {
 };
 
 const getLatestNotificationDateToShow = async (
-	preferences: types.UserNotificationPreferences,
+	preferences: types.UserNotificationPreferences | UserNotificationPreferences,
 	now: Date,
 ) => {
 	const { userId, notificationCadence, lastReceivedNotificationsAt } = preferences;
@@ -42,7 +47,7 @@ const getLatestNotificationDateToShow = async (
 	const updateLastReceived = async () => {
 		await updateUserNotificationPreferences({
 			userId,
-			preferences: { lastReceivedNotificationsAt: now.toISOString() },
+			preferences: { lastReceivedNotificationsAt: now },
 		});
 	};
 

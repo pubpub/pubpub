@@ -26,7 +26,7 @@ const collectionIncludes = [
 	},
 ];
 
-const findPrimaryCollectionPubForPub = async (pubId) => {
+const findPrimaryCollectionPubForPub = async (pubId: string) => {
 	const collectionPubs = await CollectionPub.findAll({
 		where: { pubId },
 		include: [

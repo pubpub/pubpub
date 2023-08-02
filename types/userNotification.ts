@@ -3,6 +3,7 @@ import {
 	ActivityItem,
 	UserNotification as UserNotificationModel,
 	UserNotificationPreferences as UserNotificationPreferencesModel,
+	UserSubscription as UserSubscriptionModel,
 } from 'server/models';
 import { SerializedModel } from './serializedModel';
 import {
@@ -34,7 +35,7 @@ export type UserNotificationPreferences = SerializedModel<UserNotificationPrefer
 export type UserNotificationsFetchResult = {
 	notifications: UserNotificationWithActivityItem[];
 	associations: ActivityAssociations;
-	subscriptions: UserSubscription[];
+	subscriptions: UserSubscription[] | UserSubscriptionModel[];
 	facets: CascadedFacetsForScopes<'PubHeaderTheme'>;
-	notificationPreferences: UserNotificationPreferences;
+	notificationPreferences: UserNotificationPreferences | UserNotificationPreferencesModel;
 };

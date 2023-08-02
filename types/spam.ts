@@ -5,8 +5,8 @@ export type SpamStatus = 'unreviewed' | 'confirmed-spam' | 'confirmed-not-spam';
 
 export type SpamTag = SerializedModel<SpamTagModel>;
 
-export type SpamVerdict = Pick<
-	SpamTag,
+export type SpamVerdict<T extends SpamTag | SpamTagModel = SpamTag> = Pick<
+	T,
 	'spamScore' | 'spamScoreVersion' | 'spamScoreComputedAt' | 'fields'
 >;
 

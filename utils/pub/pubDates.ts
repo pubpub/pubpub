@@ -1,8 +1,9 @@
 import { formatDate, getLocalDateMatchingUtcCalendarDate } from 'utils/dates';
 
-import { Maybe, Pub } from 'types';
+import * as types from 'types';
+import { Pub } from 'server/models';
 
-export const getPubLatestReleasedDate = (pub: Pub) => {
+export const getPubLatestReleasedDate = (pub: types.Pub | Pub) => {
 	if (!pub.releases || pub.releases?.length === 0) {
 		return null;
 	}
@@ -13,11 +14,11 @@ export const getPubLatestReleasedDate = (pub: Pub) => {
 		});
 };
 
-export const getPubCreatedDate = (pub: Pub) => {
+export const getPubCreatedDate = (pub: types.Pub | Pub) => {
 	return pub.createdAt;
 };
 
-export const getPubPublishedDate = (pub: Pub, includeCustomPublishedAt = true) => {
+export const getPubPublishedDate = (pub: types.Pub | Pub, includeCustomPublishedAt = true) => {
 	if (pub.customPublishedAt && includeCustomPublishedAt) {
 		return getLocalDateMatchingUtcCalendarDate(pub.customPublishedAt);
 	}
@@ -29,7 +30,7 @@ export const getPubPublishedDate = (pub: Pub, includeCustomPublishedAt = true) =
 	return null;
 };
 
-export const getPubPublishedDateString = (pub: Pub): string | null => {
+export const getPubPublishedDateString = (pub: types.Pub): string | null => {
 	const publishedDate = getPubPublishedDate(pub, true);
 	let publishedDateString = '';
 	if (publishedDate) publishedDateString = formatDate(publishedDate);
@@ -37,7 +38,7 @@ export const getPubPublishedDateString = (pub: Pub): string | null => {
 	return publishedDateString || null;
 };
 
-export const getPubLatestReleaseDate = (pub: Pub, { excludeFirstRelease = false } = {}) => {
+export const getPubLatestReleaseDate = (pub: types.Pub, { excludeFirstRelease = false } = {}) => {
 	const { releases } = pub;
 	if (!releases) {
 		return null;
@@ -56,8 +57,8 @@ export const getPubUpdatedDate = ({
 	pub,
 	historyData = null,
 }: {
-	pub: Pub;
-	historyData?: Maybe<{ timestamps?: number[]; latestKey?: number }>;
+	pub: types.Pub | Pub;
+	historyData?: types.Maybe<{ timestamps?: number[]; latestKey?: number }>;
 }) => {
 	if (historyData) {
 		const { timestamps, latestKey } = historyData;

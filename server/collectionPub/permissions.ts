@@ -14,7 +14,7 @@ const canManagePub = async ({
 	const scopeData = await getScope({ loginId: userId, communityId, pubId });
 	return (
 		scopeData.activePermissions.canManage &&
-		scopeData.elements.activePub.communityId === communityId
+		scopeData.elements.activePub?.communityId === communityId
 	);
 };
 
@@ -63,7 +63,7 @@ export const getUpdatableFieldsForCollectionPub = async ({
 	}
 	const canUpdatePubRank = await canManagePub({
 		userId,
-		communityId: activeCollection.communityId,
+		communityId: expect(activeCollection?.communityId),
 		pubId,
 	});
 	if (canUpdatePubRank) {

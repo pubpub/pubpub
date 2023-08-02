@@ -82,7 +82,7 @@ export const updateSubmission = async (options: UpdateOptions, actorId: string) 
 		{
 			status,
 			abstract,
-			...(isBeingSubmitted && { submittedAt: new Date().toISOString() }),
+			...(isBeingSubmitted && { submittedAt: new Date() }),
 		},
 		{
 			where: { id: options.id },

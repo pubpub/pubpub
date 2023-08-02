@@ -1,8 +1,9 @@
+import * as types from 'types';
 import { fetchFacetsForScope } from 'server/facets';
-import { Collection, CollectionAttribution, Community } from 'types';
 import { collectionUrl } from 'utils/canonicalUrls';
 import { licenseDetailsByKind } from 'utils/licenses';
 import { expect } from 'utils/assert';
+import { Collection, Community } from 'server/models';
 import { ResourceKind, ResourceContribution, ResourceContributorRole, Resource } from '../resource';
 
 const attributionRoleToResourceContributorRole: Record<string, ResourceContributorRole> = {
@@ -17,7 +18,7 @@ function transformAttributionRoleToResourceContributorRole(role: string): Resour
 	return attributionRoleToResourceContributorRole[role] ?? 'Other';
 }
 
-function getResourceKindForCollection(collection: Collection): ResourceKind {
+function getResourceKindForCollection(collection: types.Collection | Collection): ResourceKind {
 	switch (collection.kind) {
 		case 'tag':
 		case 'issue':
@@ -32,7 +33,7 @@ function getResourceKindForCollection(collection: Collection): ResourceKind {
 }
 
 function transformCollectionAttributionToResourceContribution(
-	attribution: CollectionAttribution,
+	attribution: types.CollectionAttribution,
 	role: string,
 ): ResourceContribution {
 	return {
@@ -47,8 +48,8 @@ function transformCollectionAttributionToResourceContribution(
 }
 
 export async function transformCollectionToResource(
-	collection: Collection,
-	community: Community,
+	collection: types.Collection | Collection,
+	community: types.Community | Community,
 ): Promise<Resource> {
 	const facets = await fetchFacetsForScope({ collectionId: collection.id }, ['License']);
 	const license = licenseDetailsByKind[facets.License.value.kind];

@@ -47,7 +47,7 @@ const getSubmittersInfo = async (members: types.Member[]) => {
 
 const deriveEmailCustomText = (
 	emailKind: types.SubmissionEmailKind,
-	submissionWorkflow: types.SubmissionWorkflow,
+	submissionWorkflow: types.SubmissionWorkflow | SubmissionWorkflow,
 	customText: types.Maybe<types.DocJson>,
 ) => {
 	if (customText) {

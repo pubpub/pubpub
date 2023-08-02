@@ -23,7 +23,7 @@ import { getScopeIdForFacetBinding } from 'server/facets';
 import { expect } from 'utils/assert';
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
 
-const resolvePartialMemberItem = async (member: types.Member) => {
+const resolvePartialMemberItem = async (member: Member) => {
 	if (member.pubId) {
 		const pub = expect(await Pub.findOne({ where: { id: member.pubId } }));
 		return {
