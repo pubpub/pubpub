@@ -25,7 +25,7 @@ type AlgoliaPubEntry = {
 	avatar: string;
 	description: string;
 	byline: string;
-	customPublishedAt: string;
+	customPublishedAt: string | null;
 	communityId: string;
 	communityDomain: string;
 	communityTitle: string;
@@ -72,7 +72,7 @@ const createSearchDataForPub = async (pub: SearchPub): Promise<AlgoliaPubEntry[]
 		avatar: pub.avatar!,
 		description: pub.description!,
 		byline: authorByline ? `by ${authorByline}` : '',
-		customPublishedAt: pub.customPublishedAt!.toISOString(),
+		customPublishedAt: pub.customPublishedAt ? pub.customPublishedAt.toISOString() : null,
 		communityId: community.id,
 		communityDomain: community.domain || `${community.subdomain}.pubpub.org`,
 		communityTitle: community.title,
@@ -82,7 +82,7 @@ const createSearchDataForPub = async (pub: SearchPub): Promise<AlgoliaPubEntry[]
 		communityHeaderColorType: community.headerColorType!,
 		communityUseHeaderTextAccent: community.useHeaderTextAccent!,
 		userIdsWithAccess,
-	};
+	} satisfies Omit<AlgoliaPubEntry, 'isPublic' | 'content'>;
 	if (release) {
 		const releaseContentChunks = docJsonToTextChunks(release.doc.content);
 		releaseContentChunks.forEach((chunk) =>
