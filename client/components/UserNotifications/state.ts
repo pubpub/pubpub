@@ -8,7 +8,6 @@ import {
 	UserNotificationWithActivityItem,
 } from 'types';
 import { bucketBy, flattenOnce, splitArrayOn } from 'utils/arrays';
-import { UserSubscription, UserNotificationPreferences } from 'server/models';
 
 import {
 	NotificationsState,
@@ -142,7 +141,7 @@ const createInitialThreadState = (
 	return {
 		thread,
 		subscription:
-			subscription instanceof UserSubscription ? subscription.toJSON() : subscription,
+			subscription && 'toJSON' in subscription ? subscription.toJSON() : subscription,
 		activityItems,
 		initiallyUnread: notifications.some((n) => !n.isRead),
 		latestUnreadTimestamp: sortedNotifications[0].activityItem.timestamp,
@@ -178,7 +177,7 @@ const createInitialPubState = (
 		pub,
 		community,
 		subscription:
-			subscription instanceof UserSubscription ? subscription.toJSON() : subscription,
+			subscription && 'toJSON' in subscription ? subscription.toJSON() : subscription,
 		threadStates: sortedThreadStates,
 		initiallyUnread: threadStates.some((state) => state.initiallyUnread),
 		latestUnreadTimestamp: sortedThreadStates[0].latestUnreadTimestamp,
@@ -196,7 +195,7 @@ export const createInitialState = (context: NotificationsInitializer): Notificat
 		pubStates: sortPubStates(pubStates),
 		hasNotifications: pubStates.length > 0,
 		notificationPreferences:
-			notificationPreferences instanceof UserNotificationPreferences
+			'toJSON' in notificationPreferences
 				? notificationPreferences.toJSON()
 				: notificationPreferences,
 	};

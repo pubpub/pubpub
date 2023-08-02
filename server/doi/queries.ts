@@ -89,15 +89,9 @@ export const persistCrossrefDepositRecord = async (ids, depositJson) => {
 	const crossrefDepositRecord = await createCrossrefDepositRecord({ depositJson });
 
 	// this is just to make typescript happy, update cannot be called on the union
-	if (targetModel instanceof Pub) {
-		await targetModel.update({
-			crossrefDepositRecordId: crossrefDepositRecord.id,
-		});
-	} else {
-		await targetModel.update({
-			crossrefDepositRecordId: crossrefDepositRecord.id,
-		});
-	}
+	await (targetModel as Pub).update({
+		crossrefDepositRecordId: crossrefDepositRecord.id,
+	});
 
 	return targetModel;
 };

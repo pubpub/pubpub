@@ -1,4 +1,4 @@
-import {
+import type {
 	Pub as PubModel,
 	Draft as DraftModel,
 	Doc as DocModel,
