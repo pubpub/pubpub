@@ -11,7 +11,7 @@ import { assertValidResource } from 'deposit/validate';
 import * as types from 'types';
 
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { validate } from 'typia';
+import { IValidation, validate } from 'typia';
 
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
@@ -133,7 +133,7 @@ app.post(
 	}),
 );
 
-function validateMiddleware<T extends Record<string, any>>(validator: typeof validate<T>) {
+function validateMiddleware<T>(validator: (body: Record<string, any>) => IValidation<T>) {
 	return (req: Request, res: Response<T>, next: NextFunction) => {
 		const body = req.body;
 		const validatedBody = validator(body);
@@ -152,7 +152,23 @@ function validateMiddleware<T extends Record<string, any>>(validator: typeof val
 
 app.put(
 	'/api/pubs',
-	validateMiddleware(validate<types.DefinitelyHas<Partial<types.Pub>, 'id'>>),
+	validateMiddleware((body) =>
+		validate<
+			Partial<
+				Pick<
+					types.Pub,
+					| 'avatar'
+					| 'doi'
+					| 'description'
+					| 'htmlDescription'
+					| 'title'
+					| 'htmlTitle'
+					| 'downloads'
+					| 'slug'
+				>
+			> & { pubId: string }
+		>(body),
+	),
 	wrap(async (req, res) => {
 		const { userId, pubId } = getRequestIds(req);
 		const updatableFields = await getUpdatablePubFields({
