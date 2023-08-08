@@ -5,7 +5,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import enforce from 'express-sslify';
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import noSlash from 'no-slash';
 import passport from 'passport';
 import path from 'path';
@@ -27,9 +27,18 @@ import { sequelize } from './sequelize';
 import { zoteroAuthStrategy } from './zoteroIntegration/utils/auth';
 import './hooks';
 
+type Wrap = <
+	P = any,
+	ResBody = any,
+	ReqBody = any,
+	ReqQuery = any,
+	Locals extends Record<string, any> = Record<string, any>,
+>(
+	handler: RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals>,
+) => RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals>;
 // Wrapper for app.METHOD() handlers. Though we need this to properly catch errors in handlers that
 // return a promise, i.e. those that use async/await, we should use it everywhere to be consistent.
-export const wrap =
+export const wrap: Wrap =
 	(routeHandlerFn) =>
 	(...args) => {
 		const [req, res, next] = args;

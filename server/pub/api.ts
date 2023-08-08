@@ -10,12 +10,12 @@ import { prepareResource, submitResource } from 'deposit/datacite/deposit';
 import { assertValidResource } from 'deposit/validate';
 import * as types from 'types';
 
-import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { IValidation, validate } from 'typia';
-
-import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
-import { createPub, destroyPub, findPub, updatePub } from './queries';
+import { z } from 'zod';
+import { validate } from 'utils/api';
+import { Resource, resourceKinds } from 'deposit/resource';
 import { getPubsById, queryPubIds } from './queryMany';
+import { createPub, destroyPub, findPub, updatePub } from './queries';
+import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 
 type ManyRequestParams = {
 	query: Omit<PubsQuery, 'communityId'>;
@@ -95,23 +95,8 @@ const getRequestIds = (req) => {
 
 type PubPost = Pick<types.DefinitelyHas<types.Pub, 'communityId'>, 'communityId'>;
 
-const validatePostMiddleware: RequestHandler = (req, res, next) => {
-	const body = req.body;
-	const validatedBody = validate<PubPost>(body);
-
-	console.log(validatedBody);
-	if (validatedBody.success) {
-		console.log(`✅ Successfully validated body`);
-		next();
-		return;
-	}
-
-	throw new Error(validatedBody.errors?.join('\n'));
-};
-
 app.post(
 	'/api/pubs',
-	validatePostMiddleware,
 	wrap(async (req, res) => {
 		try {
 			const { userId, collectionId, communityId, createPubToken } = getRequestIds(req);
@@ -133,42 +118,22 @@ app.post(
 	}),
 );
 
-function validateMiddleware<T>(validator: (body: Record<string, any>) => IValidation<T>) {
-	return (req: Request, res: Response<T>, next: NextFunction) => {
-		const body = req.body;
-		const validatedBody = validator(body);
-
-		console.log(validatedBody);
-		if (validatedBody.success) {
-			console.log(`✅ Successfully validated body`);
-			next();
-			return;
-		}
-
-		console.error(`❌ Youve been a naughty boy`);
-		throw new Error(validatedBody.errors?.join('\n'));
-	};
-}
+type PubPut = Partial<
+	Pick<
+		types.Pub,
+		| 'avatar'
+		| 'doi'
+		| 'description'
+		| 'htmlDescription'
+		| 'title'
+		| 'htmlTitle'
+		| 'downloads'
+		| 'slug'
+	>
+> & { pubId: string };
 
 app.put(
 	'/api/pubs',
-	validateMiddleware((body) =>
-		validate<
-			Partial<
-				Pick<
-					types.Pub,
-					| 'avatar'
-					| 'doi'
-					| 'description'
-					| 'htmlDescription'
-					| 'title'
-					| 'htmlTitle'
-					| 'downloads'
-					| 'slug'
-				>
-			> & { pubId: string }
-		>(body),
-	),
 	wrap(async (req, res) => {
 		const { userId, pubId } = getRequestIds(req);
 		const updatableFields = await getUpdatablePubFields({
@@ -185,6 +150,20 @@ app.put(
 
 app.delete(
 	'/api/pubs',
+	validate({
+		description: 'Delete a Pub',
+		summary: 'Delete a Pub fr fr',
+		tags: ['pub'],
+		body: z.object({
+			pubId: z.string(),
+		}),
+		response: {},
+		statusCodes: {
+			403: {
+				error: z.literal('ForbiddenError'),
+			},
+		},
+	}),
 	wrap(async (req, res) => {
 		const { userId, pubId } = getRequestIds(req);
 		const canDestroy = await canDestroyPub({ userId, pubId });
@@ -192,12 +171,29 @@ app.delete(
 			await destroyPub(pubId, userId);
 			return res.status(200).json({});
 		}
-		throw new ForbiddenError();
 	}),
 );
 
 app.get(
 	'/api/pub/:pubId/resource',
+	validate<undefined, z.ZodType<Resource>>({
+		description: 'Get a Pub Resource',
+		query: {
+			pubId: z.string(),
+		},
+		response: z.object({
+			title: z.string(),
+			kind: z.enum(resourceKinds),
+			identifiers: z.array(
+				z.object({
+					identifierKind: z.enum(['URL', 'DOI', 'ISSN', 'EISSN', 'ISBN']),
+					identifierValue: z.string(),
+				}),
+			),
+			timestamp: z.string(),
+		}), // satisfies z.ZodType<Resource>,
+	}),
+
 	wrap(async (req, res) => {
 		const { pubId } = req.params;
 		const pub = await findPub(pubId);

@@ -7,16 +7,19 @@ export type ResourceLicense = {
 	spdxIdentifier: string;
 };
 
-export type ResourceKind =
-	| 'Book'
-	| 'BookChapter'
-	| 'Journal'
-	| 'JournalIssue'
-	| 'JournalArticle'
-	| 'Conference'
-	| 'ConferenceProceeding'
-	| 'ConferencePaper'
-	| 'Other';
+export const resourceKinds = [
+	'Book',
+	'BookChapter',
+	'Journal',
+	'JournalIssue',
+	'JournalArticle',
+	'Conference',
+	'ConferenceProceeding',
+	'ConferencePaper',
+	'Other',
+] as const;
+
+export type ResourceKind = (typeof resourceKinds)[number];
 
 export const resourceKindToProperNoun: Record<ResourceKind, string> = {
 	Book: 'Book',
