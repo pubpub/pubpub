@@ -23,7 +23,6 @@ const poolOptions = process.env.WORKER
 	? {
 			max: 2,
 			min: 0,
-			idle: 0,
 			acquire: 10000,
 	  }
 	: {
