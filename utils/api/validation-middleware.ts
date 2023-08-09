@@ -1,11 +1,14 @@
 import type { RequestHandler, Request, Response, NextFunction } from 'express';
+import { SecurityRequirementObject } from 'openapi3-ts/oas31';
 import { z, ZodArray, ZodError, ZodObject, ZodRawShape, ZodString, ZodType } from 'zod';
+import { fromZodError } from 'zod-validation-error';
 
 type ValidationMiddlewareProperties = {
 	isValidationMiddleware: boolean;
 	summary?: string;
 	description?: string;
 	tags?: string[];
+	security?: SecurityRequirementObject[];
 	zodSchemas: {
 		body?: ZodObject<any>;
 		query?: ZodObject<any>;
@@ -14,7 +17,12 @@ type ValidationMiddlewareProperties = {
 	};
 };
 
-type ZodRawShapeOrObjOrArray = ZodRawShape | ZodObject<any> | ZodArray<any>;
+type ZodRawShapeOrObjOrArray =
+	| ZodRawShape
+	| ZodObject<any>
+	| ZodArray<any>
+	| ZodType<Record<string, any>>
+	| ZodType<any[]>;
 
 type ZodifyRawShapeOrZodType<T extends ZodType | ZodRawShape> = T extends ZodType
 	? T
@@ -27,7 +35,7 @@ type InferZodRawShapeOrZodType<T extends ZodType | ZodRawShape> = T extends ZodT
 
 type ZodStringRecordShape = { [k: string]: ZodString | ZodType<string | undefined> };
 
-type StatusCodes = Record<string, ZodRawShapeOrObjOrArray>;
+type StatusCodes = Record<string, ZodRawShapeOrObjOrArray | ZodType<string>>;
 
 type ZodifiedStatusCodes<Type extends StatusCodes> = {
 	[Property in keyof Type]: ZodifyRawShapeOrZodType<Type[Property]>;
@@ -51,12 +59,22 @@ type Options<
 	statusCodes?: ResStatusCodes | undefined;
 	errorHandler?: (err: ZodError, req: Request, res: Response, next: NextFunction) => void;
 	// TODO: rename to parseQuery
+	/**
+	 * @default true
+	 */
 	queryThrowsError?: boolean;
 	// TODO: rename to parseBody
+	/**
+	 * @default true
+	 */
 	bodyThrowsError?: boolean;
 	summary?: string;
 	description?: string;
 	tags?: string[];
+	/**
+	 * @default false
+	 */
+	security?: boolean;
 };
 
 type ValidationMiddleware = <
@@ -80,16 +98,18 @@ type ValidationMiddleware = <
 	ValidationMiddlewareProperties;
 
 export const defaultErrorHandler: Options<any, any, any, any>['errorHandler'] = (err, req, res) => {
-	res.status(400).json(err);
+	res.status(400).json(fromZodError(err).message);
 };
 
 function isZodObject(
-	zodRawShapeOrZodType: ZodRawShapeOrObjOrArray,
+	zodRawShapeOrZodType: ZodRawShapeOrObjOrArray | ZodType<string>,
 ): zodRawShapeOrZodType is ZodObject<any> {
 	return zodRawShapeOrZodType instanceof ZodType;
 }
 
-function turnToZodObject(zodRawShapeOrZodType: ZodRawShapeOrObjOrArray): ZodObject<any> {
+function turnToZodObject(
+	zodRawShapeOrZodType: ZodRawShapeOrObjOrArray | ZodType<string>,
+): ZodObject<any> {
 	if (isZodObject(zodRawShapeOrZodType)) {
 		return zodRawShapeOrZodType;
 	}
@@ -102,6 +122,7 @@ export const validate: ValidationMiddleware = (options) => {
 		errorHandler: defaultErrorHandler,
 		queryThrowsError: true,
 		bodyThrowsError: true,
+		security: false,
 		...options,
 	};
 
@@ -168,6 +189,13 @@ export const validate: ValidationMiddleware = (options) => {
 	handler.description = optionsWithDefaults.description;
 	handler.summary = optionsWithDefaults.summary;
 	handler.tags = optionsWithDefaults.tags;
+	handler.security = optionsWithDefaults.security
+		? [
+				{
+					cookieAuth: [],
+				},
+		  ]
+		: [];
 	handler.zodSchemas = {
 		body: zodBodySchema,
 		query: zodQuerySchema,

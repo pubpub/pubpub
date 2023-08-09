@@ -14,11 +14,30 @@ const managerUpdatableFields = [
 	'slug',
 	'title',
 	'htmlTitle',
-];
+] as const;
 
-const adminUpdatableFields = ['doi'];
+const adminUpdatableFields = ['doi'] as const;
 
-export const canCreatePub = async ({ userId, communityId, collectionId, createPubToken }) => {
+export type CanCreatePub = {
+	userId?: string | null;
+	communityId: string;
+} & (
+	| {
+			collectionId?: string | null;
+			createPubToken?: undefined;
+	  }
+	| {
+			createPubToken?: string | null;
+			collectionId?: undefined;
+	  }
+);
+
+export const canCreatePub = async ({
+	userId,
+	communityId,
+	collectionId,
+	createPubToken,
+}: CanCreatePub) => {
 	if (userId) {
 		if (createPubToken) {
 			const collectionIds = getValidCollectionIdsFromCreatePubToken(createPubToken, {
@@ -49,7 +68,13 @@ export const canCreatePub = async ({ userId, communityId, collectionId, createPu
 	return { create: false };
 };
 
-export const getUpdatablePubFields = async ({ userId, pubId }) => {
+export const getUpdatablePubFields = async ({
+	userId,
+	pubId,
+}: {
+	userId?: string | null;
+	pubId: string;
+}) => {
 	const {
 		activePermissions: { canManage, canAdmin },
 	} = await getScope({ pubId, loginId: userId });
@@ -64,14 +89,22 @@ export const getUpdatablePubFields = async ({ userId, pubId }) => {
 	return null;
 };
 
-export const canDestroyPub = async ({ userId, pubId }) => {
+export type PubUpdateableFields = Awaited<ReturnType<typeof getUpdatablePubFields>>;
+
+export const canDestroyPub = async ({
+	userId,
+	pubId,
+}: {
+	userId?: string | null;
+	pubId: string;
+}) => {
 	const {
 		activePermissions: { canManage },
 	} = await getScope({ pubId, loginId: userId });
 	return canManage;
 };
 
-export const canDepositPub = async ({ userId, pubId }) => {
+export const canDepositPub = async ({ userId, pubId }: { userId: string; pubId: string }) => {
 	const {
 		activePermissions: { canManage },
 	} = await getScope({ pubId, loginId: userId });

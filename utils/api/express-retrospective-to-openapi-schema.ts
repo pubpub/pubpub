@@ -1,21 +1,21 @@
-import type { OpenAPIV3 } from 'openapi-types';
 import type { Application } from 'express';
-import zodToJsonSchema from 'zod-to-json-schema';
 import { z, ZodString } from 'zod';
+import { generateSchema } from '@anatine/zod-openapi';
+import { OpenApiBuilder, InfoObject, OperationObject, PathItemObject } from 'openapi3-ts/oas31';
 import { expressRetroSpective } from './express-retrospective';
 import { validate } from './validation-middleware';
 
 export interface OpenApiConfig {
-	info: OpenAPIV3.Document['info'];
+	info: InfoObject;
 }
 
 function isValidationMiddleware(handler: Function): handler is ReturnType<typeof validate> {
 	return (handler as any).isValidationMiddleware;
 }
 
-export function expressAppToApiSchema(config: OpenApiConfig, app: Application): OpenAPIV3.Document {
+export function expressAppToApiSchema(config: OpenApiConfig, app: Application) {
 	const expressRetroSpectiveResult = expressRetroSpective(app);
-	return {
+	const openApiSchema = new OpenApiBuilder({
 		openapi: '3.0.0',
 		info: config.info,
 		servers: [
@@ -23,101 +23,108 @@ export function expressAppToApiSchema(config: OpenApiConfig, app: Application): 
 				url: '/',
 			},
 		],
-		paths: Object.fromEntries(
-			expressRetroSpectiveResult
-				.filter(({ handlers }) => handlers.some(isValidationMiddleware))
-				.map(({ path, handlers, method, params }) => {
-					const validationMiddleware = handlers.find(
-						isValidationMiddleware,
-					) as ReturnType<typeof validate>;
-					const operationObject: OpenAPIV3.OperationObject = {
-						description: validationMiddleware.description,
-						summary: validationMiddleware.summary,
-						tags: validationMiddleware.tags,
-						parameters: [
-							...params.map(({ name, optional }) => ({
-								name,
-								in: 'path',
-								required: !optional,
-								schema: zodToJsonSchema(z.string(), {
-									target: 'openApi3',
-								}),
-							})),
-							...(validationMiddleware.zodSchemas.query
-								? Object.entries<ZodString>(
-										validationMiddleware.zodSchemas.query.shape,
-								  ).map(([paramName, paramZodShape]) => ({
-										name: paramName,
-										in: 'query',
-										description: paramZodShape.description,
-										required: !paramZodShape.isOptional(),
-										schema: zodToJsonSchema(paramZodShape, {
-											target: 'openApi3',
-										}),
-								  }))
-								: []),
-						],
-						...(validationMiddleware.zodSchemas.body
+		components: {
+			securitySchemes: {
+				cookieAuth: {
+					type: 'apiKey',
+					in: 'cookie',
+					name: 'connect.sid',
+				},
+			},
+		},
+		paths: expressRetroSpectiveResult
+			.filter(({ handlers }) => handlers.some(isValidationMiddleware))
+			.map(({ path, handlers, method, params }) => {
+				const validationMiddleware = handlers.find(isValidationMiddleware) as ReturnType<
+					typeof validate
+				>;
+				const operationObject: OperationObject = {
+					security: validationMiddleware.security,
+					description: validationMiddleware.description,
+					summary: validationMiddleware.summary,
+					tags: validationMiddleware.tags,
+					parameters: [
+						...params.map(({ name, optional }) => ({
+							name,
+							in: 'path' as const,
+							required: !optional,
+							schema: generateSchema(z.string()),
+						})),
+						...(validationMiddleware.zodSchemas.query
+							? Object.entries<ZodString>(
+									validationMiddleware.zodSchemas.query.shape,
+							  ).map(([paramName, paramZodShape]) => ({
+									name: paramName,
+									in: 'query' as const,
+									description: paramZodShape.description,
+									required: !paramZodShape.isOptional(),
+									schema: generateSchema(paramZodShape),
+							  }))
+							: []),
+					],
+					...(validationMiddleware.zodSchemas.body
+						? {
+								requestBody: {
+									required: true,
+									content: {
+										'application/json': {
+											schema: generateSchema(
+												validationMiddleware.zodSchemas.body,
+											),
+										},
+									},
+								},
+						  }
+						: {}),
+					responses: {
+						...(validationMiddleware.zodSchemas.response
 							? {
-									requestBody: {
-										required: true,
+									'200': {
+										description: '',
 										content: {
 											'application/json': {
-												schema: zodToJsonSchema(
-													validationMiddleware.zodSchemas.body,
-													{
-														target: 'openApi3',
-													},
+												schema: generateSchema(
+													validationMiddleware.zodSchemas.response,
 												),
+												// {
+												// 	target: 'openApi3',
+												// },
+												// ),
 											},
 										},
 									},
 							  }
 							: {}),
-						responses: {
-							...(validationMiddleware.zodSchemas.response
-								? {
-										'200': {
-											description: '',
-											content: {
-												'application/json': {
-													schema: zodToJsonSchema(
-														validationMiddleware.zodSchemas.response,
-														{
-															target: 'openApi3',
-														},
-													),
-												},
+						...Object.fromEntries(
+							Object.entries(validationMiddleware.zodSchemas.statusCodes).map(
+								([statusCode, zodObject]) => [
+									statusCode,
+									{
+										description: '',
+										content: {
+											'application/json': {
+												schema: generateSchema(zodObject),
 											},
 										},
-								  }
-								: {}),
-							...Object.fromEntries(
-								Object.entries(validationMiddleware.zodSchemas.statusCodes).map(
-									([statusCode, zodObject]) => [
-										statusCode,
-										{
-											description: '',
-											content: {
-												'application/json': {
-													schema: zodToJsonSchema(zodObject, {
-														target: 'openApi3',
-													}),
-												},
-											},
-										},
-									],
-								),
+									},
+								],
 							),
-						},
-					};
-					return [
-						path,
-						{
-							[method]: operationObject,
-						},
-					];
-				}),
-		),
-	};
+						),
+					},
+				};
+				return [
+					path,
+					{
+						[method]: operationObject,
+					},
+				] as const;
+			})
+			.reduce((acc, [path, methodObject]) => {
+				acc[path] = { ...(acc[path] || {}), ...methodObject };
+
+				return acc;
+			}, {} as Record<string, PathItemObject>),
+	});
+
+	return openApiSchema.rootDoc;
 }
