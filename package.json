@@ -276,7 +276,6 @@
 		"@types/sanitize-html": "^2.9.0",
 		"@types/sinon": "^7.5.2",
 		"@types/supertest": "^2.0.12",
-		"@types/swagger-ui-express": "^4.1.3",
 		"@types/unidecode": "^0.1.1",
 		"@types/uuid": "^3.4.10",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
