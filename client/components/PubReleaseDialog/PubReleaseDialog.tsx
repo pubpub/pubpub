@@ -24,7 +24,7 @@ import {
 	acceptSuggestions,
 	rejectSuggestions,
 } from 'components/Editor/plugins/suggestedEdits/resolve';
-import { hasSuggestions } from 'client/utils/suggestedEdits';
+import { hasSuggestions } from 'components/Editor/plugins/suggestedEdits/operations';
 
 require('./pubReleaseDialog.scss');
 
@@ -59,7 +59,8 @@ const PubReleaseDialog = (props: Props) => {
 	const { releases } = pub;
 	const releaseCount = releases ? releases.length : 0;
 	const latestRelease = releases?.[releaseCount - 1]!;
-	const { editorChangeObject } = collabData;
+	const view = collabData.editorChangeObject?.view;
+	const editorState = view?.state;
 
 	const handleCreateRelease = async () => {
 		setIsCreatingRelease(true);
@@ -187,23 +188,27 @@ const PubReleaseDialog = (props: Props) => {
 		return null;
 	};
 
-	const suggestedEditsAction = (action: {
+	const resolveSuggestedEdits = (action: {
 		(state: EditorState, from: number, to: number): Transaction;
 	}) => {
-		if (!hasSuggestions(editorChangeObject)) return;
-		if (!editorChangeObject) return;
-		const editorState = editorChangeObject.view.state;
-		const size = editorChangeObject.view.state.doc.nodeSize;
+		if (!editorState) {
+			return;
+		}
+
+		if (!hasSuggestions(editorState)) {
+			return;
+		}
+		const size = editorState.doc.nodeSize;
 		const tr = action(editorState, 0, size - 2);
-		editorChangeObject.view.dispatch(tr);
+		view.dispatch(tr);
 	};
 
 	const handleSuggestedEditsAccept = () => {
-		suggestedEditsAction(acceptSuggestions);
+		resolveSuggestedEdits(acceptSuggestions);
 	};
 
 	const handleSuggestedEditsReject = () => {
-		suggestedEditsAction(rejectSuggestions);
+		resolveSuggestedEdits(rejectSuggestions);
 	};
 
 	const renderSuggestedEditsActionButtons = () => {
@@ -291,7 +296,7 @@ const PubReleaseDialog = (props: Props) => {
 				{renderReleaseResult()}
 			</div>
 			<div className={Classes.DIALOG_FOOTER}>
-				{hasSuggestions(editorChangeObject) && featureFlags.suggestedEdits ? (
+				{featureFlags.suggestedEdits && editorState && hasSuggestions(editorState) ? (
 					<div>{renderSuggestedEditsActionButtons()}</div>
 				) : (
 					<div className={Classes.DIALOG_FOOTER_ACTIONS}>

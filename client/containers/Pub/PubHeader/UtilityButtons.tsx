@@ -9,7 +9,7 @@ import CitationsPreview from './CitationsPreview';
 import PubToc from './PubToc';
 import SmallHeaderButton from './SmallHeaderButton';
 import Social from './Social';
-import DowloadButton from './DownloadButton';
+import DownloadButton from './DownloadButton';
 
 type Props = {
 	onShowHeaderDetails: Callback;
@@ -81,7 +81,7 @@ const UtilityButtons = (props: Props) => {
 					<SmallHeaderButton label="Social" labelPosition="left" icon="share2" />
 				</Social>
 			)}
-			<DowloadButton pubData={pubData} />
+			<DownloadButton pubData={pubData} />
 			<PubToc>
 				<SmallHeaderButton label="Contents" labelPosition="left" icon="toc" />
 			</PubToc>

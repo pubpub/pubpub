@@ -3,7 +3,7 @@ import { Button, Callout, Classes } from '@blueprintjs/core';
 import { EditorState, Transaction } from 'prosemirror-state';
 
 import { PopoverButton } from 'components';
-import { hasSuggestions } from 'client/utils/suggestedEdits';
+import { hasSuggestions } from 'components/Editor/plugins/suggestedEdits/operations';
 import { usePageContext } from 'utils/hooks';
 import {
 	acceptSuggestions,
@@ -21,29 +21,34 @@ type Props = {
 const ConditionalWrapper = ({ condition, wrapper, children }) =>
 	condition ? wrapper(children) : children;
 
-const DowloadButton = (props: Props) => {
+const DownloadButton = (props: Props) => {
 	const { pubData } = props;
 	const { featureFlags } = usePageContext();
 	const { collabData } = usePubContext();
-	const { editorChangeObject } = collabData;
+	const view = collabData.editorChangeObject?.view;
+	const editorState = view?.state;
 
-	const suggestedEditsAction = (action: {
+	const resolveSuggestedEdits = (action: {
 		(state: EditorState, from: number, to: number): Transaction;
 	}) => {
-		if (!hasSuggestions(editorChangeObject)) return;
-		if (!editorChangeObject) return;
-		const editorState = editorChangeObject.view.state;
-		const size = editorChangeObject.view.state.doc.nodeSize;
+		if (!editorState) {
+			return;
+		}
+
+		if (!hasSuggestions(editorState)) {
+			return;
+		}
+		const size = editorState.doc.nodeSize;
 		const tr = action(editorState, 0, size - 2);
-		editorChangeObject.view.dispatch(tr);
+		view.dispatch(tr);
 	};
 
 	const handleSuggestedEditsAccept = () => {
-		suggestedEditsAction(acceptSuggestions);
+		resolveSuggestedEdits(acceptSuggestions);
 	};
 
 	const handleSuggestedEditsReject = () => {
-		suggestedEditsAction(rejectSuggestions);
+		resolveSuggestedEdits(rejectSuggestions);
 	};
 
 	const PopoverContent = () => {
@@ -73,7 +78,7 @@ const DowloadButton = (props: Props) => {
 
 	return (
 		<ConditionalWrapper
-			condition={hasSuggestions(editorChangeObject) && featureFlags.suggestedEdits}
+			condition={featureFlags.suggestedEdits && editorState && hasSuggestions(editorState)}
 			wrapper={(children) => (
 				<PopoverButton
 					component={() => <PopoverContent />}
@@ -84,7 +89,7 @@ const DowloadButton = (props: Props) => {
 				</PopoverButton>
 			)}
 		>
-			{hasSuggestions(editorChangeObject) && featureFlags.suggestedEdits ? (
+			{featureFlags.suggestedEdits && editorState && hasSuggestions(editorState) ? (
 				<SmallHeaderButton label="Download" labelPosition="left" icon="download2" />
 			) : (
 				<Download pubData={pubData}>
@@ -95,4 +100,4 @@ const DowloadButton = (props: Props) => {
 	);
 };
 
-export default DowloadButton;
+export default DownloadButton;
