@@ -52,13 +52,16 @@ export const createPage = async (
 		where: { id: inputValues.communityId },
 		attributes: ['id', 'navigation'],
 	});
+
 	const [newPage_1, communityData] = await Promise.all([newPage, findCommunity]);
+	console.log('communityData', communityData);
 	const oldNavigation = expect(communityData?.toJSON().navigation);
 	const newNavigationOutput: CommunityNavigationEntry[] = [
 		oldNavigation[0],
 		{ type: 'page' as const, id: newPage_1.id },
 		...oldNavigation.slice(1, oldNavigation.length),
 	].filter((x) => x);
+
 	const updateCommunity = Community.update(
 		{ navigation: newNavigationOutput },
 		{

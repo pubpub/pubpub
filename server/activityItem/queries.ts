@@ -265,6 +265,7 @@ export const createPageActivityItem = async (
 	actorId: null | string,
 	pageId: string,
 ) => {
+	console.log(pageId);
 	const page = expect(await Page.findOne({ where: { id: pageId } }));
 	return createActivityItem({
 		kind,
