@@ -45,7 +45,8 @@ $removal-light: #ffd7d7;
 		opacity: 0;
 	}
 	&:hover::before,
-	.selected::before {
+	.selected::before,
+	.selected ::before {
 		opacity: 1;
 	}
 }
@@ -58,7 +59,7 @@ $removal-light: #ffd7d7;
 	-webkit-text-decoration-line: line-through;
 }
 
-$iconSize: 0.75em;
+$iconSize: 0.75rem;
 
 @mixin highlight-range($color) {
 	background-color: rgba($color, 0.2);
@@ -76,6 +77,7 @@ $iconSize: 0.75em;
 		height: 1.1 * $iconSize;
 		border-radius: 50%;
 		font-size: $iconSize;
+		font-weight: initial;
 		line-height: 0.9 * $iconSize;
 		text-align: center;
 		left: -0.9 * $iconSize;
@@ -84,7 +86,8 @@ $iconSize: 0.75em;
 		opacity: 0;
 	}
 	&:hover::before,
-	.selected::before {
+	.selected::before,
+	.selected ::before {
 		opacity: 1;
 	}
 }
@@ -122,45 +125,47 @@ li[data-suggestion-kind='removal']::before {
 > *[data-suggestion-kind='addition'] {
 	@include block-border('addition', rgba($addition, 0.5));
 	@include corner-icon('+', $addition, $addition-light);
-	&::before {
-		opacity: 1;
-		left: 0;
-	}
+	// &::before {
+	// 	opacity: 1;
+	// 	left: 0;
+	// }
 }
 
 > *[data-suggestion-kind='removal'] {
 	@include block-border('removal', rgba($removal, 0.5));
 	@include corner-icon('–', $removal, $removal-light);
-	&::before {
-		opacity: 1;
-		left: 0;
-	}
+	// &::before {
+	// 	opacity: 1;
+	// 	left: 0;
+	// }
 }
 
 > *[data-suggestion-kind='modification'] {
 	@include block-border('modification', rgba($modification, 0.5));
 	@include corner-triangle(10px, $modification);
-	&::before {
-		opacity: 1;
-		left: 0;
-	}
+	// &::before {
+	// 	opacity: 1;
+	// 	left: 0;
+	// }
 }
 
 ol,
 ul {
 	&[data-suggestion-kind='addition'] {
 		@include corner-icon('+', $addition, $addition-light);
-		&::before {
-			opacity: 1;
-			left: 0;
-		}
+		@include block-border('addition', rgba($addition, 0.5));
+		// &::before {
+		// 	opacity: 1;
+		// 	left: 0;
+		// }
 	}
 	&[data-suggestion-kind='removal'] {
 		@include corner-icon('–', $removal, $removal-light);
-		&::before {
-			opacity: 1;
-			left: 0;
-		}
+		@include block-border('removal', rgba($removal, 0.5));
+		// &::before {
+		// 	opacity: 1;
+		// 	left: 0;
+		// }
 	}
 }
 
@@ -188,16 +193,17 @@ p > *[data-suggestion-kind='modification'] {
 .tableWrapper:not([data-suggestion-kind='addition']) {
 	tr > *[data-suggestion-kind='addition'] {
 		@include corner-icon('+', $addition, $addition-light);
+		border-left: 2px solid rgba($addition, 0.5);
 		&::before {
-			opacity: 1;
 			left: 0;
 		}
+
 	}
 
 	tr > *[data-suggestion-kind='removal'] {
 		@include corner-icon('–', $removal, $removal-light);
+		border-left: 2px solid rgba($removal, 0.5);
 		&::before {
-			opacity: 1;
 			left: 0;
 		}
 	}
