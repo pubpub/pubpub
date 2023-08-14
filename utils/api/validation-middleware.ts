@@ -1,6 +1,6 @@
 import type { RequestHandler, Request, Response, NextFunction } from 'express';
 import { SecurityRequirementObject } from 'openapi3-ts/oas31';
-import { z, ZodArray, ZodError, ZodObject, ZodRawShape, ZodString, ZodType } from 'zod';
+import { z, ZodArray, ZodError, ZodLiteral, ZodObject, ZodRawShape, ZodString, ZodType } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 
 type ValidationMiddlewareProperties = {
@@ -22,7 +22,9 @@ type ZodRawShapeOrObjOrArray =
 	| ZodObject<any>
 	| ZodArray<any>
 	| ZodType<Record<string, any>>
-	| ZodType<any[]>;
+	| ZodType<any[]>
+	| ZodString
+	| ZodLiteral<string>;
 
 type ZodifyRawShapeOrZodType<T extends ZodType | ZodRawShape> = T extends ZodType
 	? T
@@ -35,7 +37,7 @@ type InferZodRawShapeOrZodType<T extends ZodType | ZodRawShape> = T extends ZodT
 
 type ZodStringRecordShape = { [k: string]: ZodString | ZodType<string | undefined> };
 
-type StatusCodes = Record<string, ZodRawShapeOrObjOrArray | ZodType<string>>;
+type StatusCodes = Record<string, ZodRawShapeOrObjOrArray>;
 
 type ZodifiedStatusCodes<Type extends StatusCodes> = {
 	[Property in keyof Type]: ZodifyRawShapeOrZodType<Type[Property]>;
@@ -102,14 +104,12 @@ export const defaultErrorHandler: Options<any, any, any, any>['errorHandler'] = 
 };
 
 function isZodObject(
-	zodRawShapeOrZodType: ZodRawShapeOrObjOrArray | ZodType<string>,
+	zodRawShapeOrZodType: ZodRawShapeOrObjOrArray,
 ): zodRawShapeOrZodType is ZodObject<any> {
 	return zodRawShapeOrZodType instanceof ZodType;
 }
 
-function turnToZodObject(
-	zodRawShapeOrZodType: ZodRawShapeOrObjOrArray | ZodType<string>,
-): ZodObject<any> {
+function turnToZodObject(zodRawShapeOrZodType: ZodRawShapeOrObjOrArray): ZodObject<any> {
 	if (isZodObject(zodRawShapeOrZodType)) {
 		return zodRawShapeOrZodType;
 	}

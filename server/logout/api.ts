@@ -13,11 +13,9 @@ app.get(
 		description: 'Logout',
 		summary: 'Logout and clear authentication cookie',
 		tags: ['Login'],
-		statusCodes: {
-			200: z.literal('success').openapi({
-				description: `Successfully logged out.\n The sesion ID is cleared from the cookie named \`connect.sid\`, and future requests will not be authenticated.`,
-			}),
-		},
+		response: z.literal('success').openapi({
+			description: `Successfully logged out.\n The sesion ID is cleared from the cookie named \`connect.sid\`, and future requests will not be authenticated.`,
+		}),
 	}),
 	(req, res) => {
 		res.cookie('gdpr-consent-survives-login', 'no');

@@ -1,21 +1,39 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
+import { createGetRequestIds } from 'utils/getRequestIds';
+import { validate } from 'utils/api';
+import { z } from 'zod';
+import { memberPermissions } from 'types';
 import { getPermissions } from './permissions';
 import { createMember, updateMember, destroyMember } from './queries';
 
-const getRequestIds = (req) => {
-	const user = req.user || {};
-	const { pubId, collectionId, communityId } = req.body;
-	return {
-		pubId,
-		collectionId,
-		communityId,
-		actorId: user.id,
-	};
-};
+const getRequestIds = createGetRequestIds<{
+	communityId?: string;
+	pubId?: string;
+	collectionId?: string;
+}>();
 
-const chooseTargetFromRequestIds = ({ pubId, collectionId, communityId }) => {
+// const getRequestIds = (req) => {
+// 	const user = req.user || {};
+// 	const { pubId, collectionId, communityId } = req.body;
+// 	return {
+// 		pubId,
+// 		collectionId,
+// 		communityId,
+// 		actorId: user.id,
+// 	};
+// };
+
+const chooseTargetFromRequestIds = ({
+	pubId,
+	collectionId,
+	communityId,
+}: {
+	pubId?: string;
+	collectionId?: string;
+	communityId?: string;
+}) => {
 	if (pubId) {
 		return { pubId };
 	}
@@ -28,12 +46,39 @@ const chooseTargetFromRequestIds = ({ pubId, collectionId, communityId }) => {
 	return {};
 };
 
+const idUnionSchema = z.union([
+	z.object({
+		pubId: z.string(),
+		communityId: z.undefined(),
+		collectionId: z.undefined(),
+	}),
+	z.object({
+		pubId: z.undefined(),
+		communityId: z.string(),
+		collectionId: z.undefined(),
+	}),
+	z.object({
+		pubId: z.undefined(),
+		communityId: z.undefined(),
+		collectionId: z.string(),
+	}),
+]);
+
 app.post(
 	'/api/members',
+	validate({
+		description: 'Create a member',
+		security: true,
+		body: z
+			.object({
+				value: z.object({ permissions: z.enum(memberPermissions) }),
+				targetUserId: z.string(),
+			})
+			.and(idUnionSchema),
+	}),
 	wrap(async (req, res) => {
-		const { pubId, collectionId, communityId, actorId } = getRequestIds(req);
+		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(req);
 		const { targetUserId, value } = req.body;
-		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ actorId: any; pubId: any; comm... Remove this comment to see the full error message
 		const permissions = await getPermissions({
 			actorId,
 			pubId,
@@ -62,8 +107,26 @@ app.post(
 
 app.put(
 	'/api/members',
+	validate({
+		description: 'Update a member',
+		body: z
+			.object({
+				id: z.string(),
+				value: z.object({
+					permissions: z.enum(memberPermissions).optional(),
+					subscribedToActivityDigest: z.boolean().optional(),
+				}),
+			})
+			.and(idUnionSchema),
+		response: {
+			id: z.string(),
+			permissions: z.enum(memberPermissions),
+			isOwner: z.boolean().nullable(),
+			subscribedToActivityDigest: z.boolean(),
+		},
+	}),
 	wrap(async (req, res) => {
-		const { pubId, collectionId, communityId, actorId } = getRequestIds(req);
+		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(req);
 		const { value, id: memberId } = req.body;
 		const permissions = await getPermissions({
 			actorId,
@@ -87,8 +150,20 @@ app.put(
 
 app.delete(
 	'/api/members',
+	validate({
+		description: 'Delete a member',
+		body: z
+			.object({
+				id: z.string(),
+				value: z.object({
+					permissions: z.enum(memberPermissions),
+				}),
+			})
+			.and(idUnionSchema),
+		response: z.string({ description: 'The ID of the deleted member' }),
+	}),
 	wrap(async (req, res) => {
-		const { pubId, collectionId, communityId, actorId } = getRequestIds(req);
+		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(req);
 		const { value, id } = req.body;
 		const permissions = await getPermissions({
 			actorId,

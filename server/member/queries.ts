@@ -12,7 +12,7 @@ const assertExactlyOneScopeInTarget = ({ pubId, communityId, collectionId }: any
 	}
 };
 
-type CreateMemberOptions = {
+export type CreateMemberOptions = {
 	target: {
 		userId: string;
 		communityId?: string;
@@ -46,11 +46,11 @@ export const createMember = async ({
 	return getMemberDataById(memberId);
 };
 
-type UpdateMemberOptions = {
+export type UpdateMemberOptions = {
 	memberId: string;
 	actorId: string | null;
 	value: Partial<{
-		permissions: ['view', 'edit', 'manage', 'admin'][number];
+		permissions: MemberPermission;
 		subscribedToActivityDigest: boolean;
 	}>;
 };
