@@ -16,6 +16,7 @@ import { Resource, resourceSchema } from 'deposit/resource';
 import { Pub } from 'server/models';
 import { Request } from 'express';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { createGetRequestIds } from 'utils/getRequestIds';
 import { getPubsById, queryPubIds } from './queryMany';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
 import { CanCreatePub, canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
@@ -145,7 +146,6 @@ app.post(
 	'/api/pubs/many',
 	validate({
 		description: 'Get many pubs',
-
 		tags: ['pub'],
 		body: getManyQuerySchema,
 		response: z.object({
@@ -174,31 +174,12 @@ app.post(
 	}),
 );
 
-const getRequestIds = <
-	ResB extends {
-		communityId?: string;
-		collectionId?: string;
-		pubId?: string;
-		createPubToken?: string;
-	},
-	A = any,
-	B = any,
-	C = any,
-	D extends Record<string, any> = Record<string, any>,
-	R extends Request<A, B, ResB, C, D> = Request<A, B, ResB, C, D>,
->(
-	req: R,
-) => {
-	const user = req.user || {};
-	const { communityId, collectionId, pubId, createPubToken } = req.body;
-	return {
-		userId: user.id,
-		communityId,
-		collectionId,
-		createPubToken,
-		pubId,
-	} as R['body'] & { userId?: string };
-};
+const getRequestIds = createGetRequestIds<{
+	communityId?: string;
+	collectionId?: string;
+	pubId?: string;
+	createPubToken?: string;
+}>();
 
 export const pubSchema = z.object({
 	id: z.string(),

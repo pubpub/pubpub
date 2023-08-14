@@ -17,9 +17,9 @@ export const getPermissions = async ({
 	communityId,
 	pageId,
 }: {
-	userId: string | null;
+	userId?: string | null;
 	communityId: string;
-	pageId: string;
+	pageId?: string;
 }) => {
 	if (!userId) {
 		return {};

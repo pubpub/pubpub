@@ -6,18 +6,15 @@ import { z } from 'zod';
 import * as types from 'types';
 import { layoutBlockSchema } from 'utils/layout/validators';
 import { Page } from 'server/models';
+import { createGetRequestIds } from 'utils/getRequestIds';
 import { createPage, updatePage, destroyPage } from './queries';
 import { getPermissions } from './permissions';
 
-const getRequestIds = (req) => {
-	const user = req.user || {};
-	return {
-		userId: user.id,
-		communityId: req.body.communityId,
-		pubId: req.body.pubId,
-		pageId: req.body.pageId || null,
-	};
-};
+const getRequestIds = createGetRequestIds<{
+	communityId?: string;
+	pubId?: string;
+	pageId?: string;
+}>();
 
 app.post(
 	'/api/pages',
@@ -33,8 +30,12 @@ app.post(
 		}),
 	}),
 	wrap(async (req, res) => {
-		const requestIds = getRequestIds(req);
-		const permissions = await getPermissions(requestIds);
+		const { userId, communityId, pageId } = getRequestIds(req);
+		const permissions = await getPermissions({
+			userId,
+			communityId,
+			pageId,
+		});
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
