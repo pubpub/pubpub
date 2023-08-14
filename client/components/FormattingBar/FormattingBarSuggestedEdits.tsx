@@ -1,6 +1,5 @@
 import React from 'react';
-import { Tooltip } from '@blueprintjs/core';
-import { Button } from 'reakit';
+import { Tooltip, Button } from '@blueprintjs/core';
 import { Icon } from 'components';
 
 import { SuggestedEditsUser } from 'types';
