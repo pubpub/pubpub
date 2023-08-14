@@ -1,8 +1,13 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
-import { getPermissions } from './permissions';
+import { validate } from 'utils/api';
+import { z } from 'zod';
+import * as types from 'types';
+import { layoutBlockSchema } from 'utils/layout/validators';
+import { Page } from 'server/models';
 import { createPage, updatePage, destroyPage } from './queries';
+import { getPermissions } from './permissions';
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
@@ -16,6 +21,17 @@ const getRequestIds = (req) => {
 
 app.post(
 	'/api/pages',
+	validate({
+		description: 'Create a page',
+		security: true,
+		body: z.object({
+			communityId: z.string(),
+			title: z.string(),
+			slug: z.string(),
+			description: z.string().nullish(),
+			avatar: z.string().nullish(),
+		}),
+	}),
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 		const permissions = await getPermissions(requestIds);
@@ -29,6 +45,22 @@ app.post(
 
 app.put(
 	'/api/pages',
+	validate({
+		description: 'Update a page',
+		security: true,
+		body: z.object({
+			title: z.string().optional(),
+			slug: z.string().optional(),
+			description: z.string().nullish(),
+			avatar: z.string().nullish(),
+			isPublic: z.boolean().nullish(),
+			isNarrowWidth: z.boolean().nullish(),
+			layoutAllowDuplicatePubs: z.boolean().nullish(),
+			layout: z.array(layoutBlockSchema).optional(),
+			communityId: z.string(),
+			pageId: z.string(),
+		}) satisfies types.UpdateParams<Page>,
+	}),
 	wrap(async (req, res) => {
 		const ids = getRequestIds(req);
 		const permissions = await getPermissions(ids);
@@ -42,6 +74,17 @@ app.put(
 
 app.delete(
 	'/api/pages',
+	validate({
+		description: 'Delete a page',
+		security: true,
+		body: z.object({
+			communityId: z.string(),
+			pageId: z.string(),
+		}),
+		statusCodes: {
+			201: z.string(),
+		},
+	}),
 	wrap(async (req, res) => {
 		const ids = getRequestIds(req);
 		const permissions = await getPermissions(ids);

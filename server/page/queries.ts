@@ -8,6 +8,7 @@ import { generateDefaultPageLayout } from 'utils/pages';
 
 import { expect } from 'utils/assert';
 import { CommunityNavigationEntry } from 'client/utils/navigation';
+import { LayoutBlock } from 'utils/layout';
 import { sanitizePageHtml } from './sanitizePageHtml';
 import { PagePermissions } from './permissions';
 
@@ -16,8 +17,8 @@ export const createPage = async (
 		communityId: string;
 		title: string;
 		slug: string;
-		description?: string;
-		avatar?: string;
+		description?: string | null;
+		avatar?: string | null;
 	},
 	actorId: string | null = null,
 ) => {
@@ -74,9 +75,9 @@ export const updatePage = async (
 		pageId: string;
 		title?: string;
 		slug?: string;
-		description?: string;
-		avatar?: string;
-		layout?: any;
+		description?: string | null;
+		avatar?: string | null;
+		layout?: LayoutBlock[];
 	},
 	updatePermissions: PagePermissions['update'],
 	actorId: string | null = null,
@@ -110,7 +111,9 @@ export const updatePage = async (
 				return block;
 			}
 			const cleanedBlock = { ...block };
-			cleanedBlock.content.html = sanitizePageHtml(block.content.html);
+			cleanedBlock.content.html = block.content.html
+				? sanitizePageHtml(block.content.html)
+				: block.content.html;
 			return cleanedBlock;
 		});
 	}
@@ -128,7 +131,13 @@ export const updatePage = async (
 		});
 };
 
-export const destroyPage = async (inputValues, actorId = null) => {
+export const destroyPage = async (
+	inputValues: {
+		communityId: string;
+		pageId: string;
+	},
+	actorId: string | null = null,
+) => {
 	await Page.destroy({
 		where: {
 			id: inputValues.pageId,
