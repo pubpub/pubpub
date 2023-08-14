@@ -237,12 +237,20 @@ app.post(
 				communityId: z.string(),
 			})
 			.and(
-				z.object({ collectionId: z.string().optional(), createPubToken: z.undefined() }).or(
+				z.union([
+					z.object({
+						collectionId: z.string().optional(),
+						createPubToken: z.undefined(),
+					}),
 					z.object({
 						createPubToken: z.string().optional(),
 						collectionId: z.undefined(),
 					}),
-				),
+					z.object({
+						createPubToken: z.undefined(),
+						collectionId: z.undefined(),
+					}),
+				]),
 			) satisfies z.ZodType<CanCreatePub>,
 		statusCodes: {
 			// @ts-expect-error FIXME: REALLY FIX THIS THOMAS
@@ -251,24 +259,25 @@ app.post(
 	}),
 
 	wrap(async (req, res) => {
-		try {
-			const { userId, collectionId, communityId, createPubToken } = getRequestIds(req);
-			// @ts-expect-error FIXME: REALLY FIX THIS THOMAS
-			const { create, collectionIds } = await canCreatePub({
-				userId,
-				collectionId,
-				communityId,
-				createPubToken,
-			});
-			if (create) {
-				const newPub = await createPub({ communityId, collectionIds }, userId);
-				const jsonedPub = newPub.toJSON();
-				return res.status(201).json(jsonedPub);
-			}
-			throw new ForbiddenError();
-		} catch (e) {
-			throw new Error(e as any);
+		//		try {
+		const { userId, collectionId, communityId, createPubToken } = getRequestIds(req);
+		// @ts-expect-error FIXME: REALLY FIX THIS THOMAS
+		const { create, collectionIds } = await canCreatePub({
+			userId,
+			collectionId,
+			communityId,
+			createPubToken,
+		});
+		if (create) {
+			const newPub = await createPub({ communityId, collectionIds }, userId);
+			const jsonedPub = newPub.toJSON();
+			return res.status(201).json(jsonedPub);
 		}
+		throw new ForbiddenError();
+		// } catch (e) {
+		// 	console.error(e);
+		// 	throw new Error(e as any);
+		// }
 	}),
 );
 
@@ -330,16 +339,19 @@ app.put(
 		}),
 	}),
 	wrap(async (req, res) => {
+		console.log('req.body', req.body);
 		const { userId, pubId } = getRequestIds(req);
 		const updatableFields = await getUpdatablePubFields({
 			userId,
 			pubId,
 		});
-		if (updatableFields) {
-			const updateResult = await updatePub(req.body, updatableFields, userId);
-			return res.status(200).json(updateResult);
+		console.log(updatableFields);
+		if (!updatableFields) {
+			throw new ForbiddenError();
 		}
-		throw new ForbiddenError();
+
+		const updateResult = await updatePub(req.body, updatableFields, userId);
+		return res.status(200).json(updateResult);
 	}),
 );
 
@@ -358,10 +370,12 @@ app.delete(
 	wrap(async (req, res) => {
 		const { userId, pubId } = getRequestIds(req);
 		const canDestroy = await canDestroyPub({ userId, pubId });
-		if (canDestroy) {
-			await destroyPub(pubId, userId);
-			return res.status(200).json({});
+		if (!canDestroy) {
+			throw new ForbiddenError();
 		}
+
+		await destroyPub(pubId, userId);
+		return res.status(200).json({});
 	}),
 );
 

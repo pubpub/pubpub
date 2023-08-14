@@ -81,7 +81,10 @@ export const getUpdatablePubFields = async ({
 
 	if (canManage) {
 		if (canAdmin) {
-			return [...managerUpdatableFields, ...adminUpdatableFields];
+			return [...managerUpdatableFields, ...adminUpdatableFields] as [
+				...typeof managerUpdatableFields,
+				...typeof adminUpdatableFields,
+			];
 		}
 		return managerUpdatableFields;
 	}

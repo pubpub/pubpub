@@ -46,23 +46,11 @@ const chooseTargetFromRequestIds = ({
 	return {};
 };
 
-const idUnionSchema = z.union([
-	z.object({
-		pubId: z.string(),
-		communityId: z.undefined(),
-		collectionId: z.undefined(),
-	}),
-	z.object({
-		pubId: z.undefined(),
-		communityId: z.string(),
-		collectionId: z.undefined(),
-	}),
-	z.object({
-		pubId: z.undefined(),
-		communityId: z.undefined(),
-		collectionId: z.string(),
-	}),
-]);
+const idUnionSchema = z.object({
+	communityId: z.string(),
+	collectionId: z.string().optional(),
+	pubId: z.string().optional(),
+});
 
 app.post(
 	'/api/members',
@@ -71,7 +59,9 @@ app.post(
 		security: true,
 		body: z
 			.object({
-				value: z.object({ permissions: z.enum(memberPermissions) }),
+				value: z.object({
+					permissions: z.enum(memberPermissions).optional().default('view'),
+				}),
 				targetUserId: z.string(),
 			})
 			.and(idUnionSchema),
@@ -156,7 +146,7 @@ app.delete(
 			.object({
 				id: z.string(),
 				value: z.object({
-					permissions: z.enum(memberPermissions),
+					permissions: z.enum(memberPermissions).optional(),
 				}),
 			})
 			.and(idUnionSchema),

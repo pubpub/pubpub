@@ -100,6 +100,7 @@ type ValidationMiddleware = <
 	ValidationMiddlewareProperties;
 
 export const defaultErrorHandler: Options<any, any, any, any>['errorHandler'] = (err, req, res) => {
+	console.error(err);
 	res.status(400).json(fromZodError(err).message);
 };
 

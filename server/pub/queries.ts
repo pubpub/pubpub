@@ -113,6 +113,8 @@ export const updatePub = async (
 			return acc;
 		}
 
+		acc[key] = value;
+
 		if (key === 'slug' && value) {
 			acc.slug = slugifyString(value);
 		}
@@ -139,6 +141,7 @@ export const updatePub = async (
 
 		return acc;
 	}, {} as Attributes<Pub>);
+	console.log({ actualFilteredValues: actualFilteredValues });
 
 	await Pub.update(actualFilteredValues, {
 		where: { id: inputValues.pubId },
