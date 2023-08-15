@@ -24,7 +24,7 @@ const excludedMeta = [
 const nodeIsMath = (node: Node) => ['math_inline', 'math_display'].includes(node.type.name);
 
 const isMathTransaction = (tr: Transaction) => {
-	// `any` is used here because the Step type doesn't include `from` or `pos` types, but all step
+	// `any` is used here because the Step type doesn't include `from` or `pos` properties, but all step
 	// types include at least one of those
 	return tr.steps.some((step: any) => {
 		const pos = step.from ?? step.pos;
