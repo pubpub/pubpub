@@ -61,14 +61,14 @@ const DownloadButton = (props: Props) => {
 					</p>
 					<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 						<Button
-							text="Reject All"
-							intent="danger"
-							onClick={handleSuggestedEditsReject}
-						/>
-						<Button
 							text="Accept All"
 							intent="success"
 							onClick={handleSuggestedEditsAccept}
+						/>
+						<Button
+							text="Reject All"
+							intent="danger"
+							onClick={handleSuggestedEditsReject}
 						/>
 					</div>
 				</Callout>

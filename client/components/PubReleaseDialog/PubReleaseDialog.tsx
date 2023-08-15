@@ -215,23 +215,21 @@ const PubReleaseDialog = (props: Props) => {
 		return (
 			<React.Fragment>
 				<Callout className="text-info" intent="warning">
-					You still have pending edits. Would you like to accept the suggested changes or
-					reject them (
-					<strong>this will remove any suggested changes from your doc</strong>)?
+					You still have pending edits. Resolve your edits before publishing this Pub.
 				</Callout>
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 					<Button disabled={isCreatingRelease} onClick={onClose}>
 						Return to draft
 					</Button>
 					<Button
-						text="Reject All"
-						intent="danger"
-						onClick={handleSuggestedEditsReject}
-					/>
-					<Button
 						text="Accept All"
 						intent="success"
 						onClick={handleSuggestedEditsAccept}
+					/>
+					<Button
+						text="Reject All"
+						intent="danger"
+						onClick={handleSuggestedEditsReject}
 					/>
 				</div>
 			</React.Fragment>
