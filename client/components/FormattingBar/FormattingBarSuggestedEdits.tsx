@@ -33,17 +33,15 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 		commandState?.run();
 		view.focus();
 	};
-
+	const rejectButtonContent = suggestionAuthor
+		? `Reject suggestion made by ${suggestionAuthor.fullName}`
+		: suggestedEditsReject.title;
+	const acceptButtonContent = suggestionAuthor
+		? `Accept suggestion made by ${suggestionAuthor.fullName}`
+		: suggestedEditsAccept.title;
 	return (
 		<div>
-			<Tooltip
-				content={
-					suggestionAuthor
-						? `Reject suggestion made by ${suggestionAuthor.fullName}`
-						: suggestedEditsReject.title
-				}
-				usePortal={true}
-			>
+			<Tooltip content={rejectButtonContent} usePortal={true}>
 				<Button
 					ref={buttonElementRefs.getRef(suggestedEditsReject.key)}
 					aria-label={suggestedEditsReject.title}
@@ -54,14 +52,7 @@ const FormattingBarSuggestedEdits = (props: Props) => {
 					<Icon icon={suggestedEditsReject.icon} iconSize={16} />
 				</Button>
 			</Tooltip>
-			<Tooltip
-				content={
-					suggestionAuthor
-						? `Accept suggestion made by ${suggestionAuthor.fullName}`
-						: suggestedEditsReject.title
-				}
-				usePortal={true}
-			>
+			<Tooltip content={acceptButtonContent} usePortal={true}>
 				<Button
 					ref={buttonElementRefs.getRef(suggestedEditsAccept.key)}
 					aria-label={suggestedEditsAccept.title}
