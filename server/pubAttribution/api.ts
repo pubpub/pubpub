@@ -30,9 +30,9 @@ const getRequestIds = createGetRequestIds<{
 // 		pubAttributionId: req.body.id,
 // 	};
 // };
-const attributionSchema = z
+export const attributionSchema = z
 	.object({
-		order: z.number().default(0.5),
+		order: z.number().max(1).min(0).default(0.5),
 		roles: z.array(z.string()).default([]).openapi({ example: DEFAULT_ROLES }),
 		affiliation: z.string().optional(),
 		isAuthor: z.boolean().optional(),
@@ -74,6 +74,8 @@ app.post(
 	'/api/pubAttributions/batch',
 	validate({
 		description: 'Batch create pub attributions',
+		tags: ['PubAttributions'],
+		security: true,
 		body: z.object({
 			attributions: z.array(attributionSchema),
 			communityId: z.string(),
@@ -121,6 +123,8 @@ app.post(
 	'/api/pubAttributions',
 	validate({
 		description: 'Create a pub attribution',
+		security: true,
+		tags: ['PubAttributions'],
 		body: z
 			.object({
 				communityId: z.string(),
@@ -152,17 +156,19 @@ app.put(
 	'/api/pubAttributions',
 	validate({
 		description: 'Update a pub attribution',
+		security: true,
+		tags: ['PubAttributions'],
 		body: z.object({
-			id: z.string(),
+			id: z.string().openapi({ description: 'The id of the pub attribution to update' }),
 			communityId: z.string(),
 			pubId: z.string(),
 			order: z.number().optional(),
 			roles: z.array(z.string()).openapi({ example: DEFAULT_ROLES }),
-			affiliation: z.string().optional(),
+			affiliation: z.string().nullish(),
 			isAuthor: z.boolean().optional(),
-			name: z.string(),
-			userId: z.string(),
-			orcid: z.string(),
+			name: z.string().nullish(),
+			userId: z.string().nullish(),
+			orcid: z.string().nullish(),
 		}) satisfies z.ZodType<UpdateParams<PubAttribution>>,
 	}),
 	(req, res) => {
@@ -194,6 +200,8 @@ app.delete(
 	'/api/pubAttributions',
 	validate({
 		description: 'Delete a pub attribution',
+		security: true,
+		tags: ['PubAttributions'],
 		body: z.object({
 			id: z.string().openapi({ description: 'The attribution id' }),
 			communityId: z.string(),

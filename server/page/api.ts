@@ -20,6 +20,7 @@ app.post(
 	'/api/pages',
 	validate({
 		description: 'Create a page',
+		tags: ['Pages'],
 		security: true,
 		body: z.object({
 			communityId: z.string(),
@@ -48,6 +49,7 @@ app.put(
 	'/api/pages',
 	validate({
 		description: 'Update a page',
+		tags: ['Pages'],
 		security: true,
 		body: z.object({
 			title: z.string().optional(),
@@ -77,6 +79,7 @@ app.delete(
 	'/api/pages',
 	validate({
 		description: 'Delete a page',
+		tags: ['Pages'],
 		security: true,
 		body: z.object({
 			communityId: z.string(),

@@ -145,8 +145,10 @@ export const getManyQuerySchema = z.object({
 app.post(
 	'/api/pubs/many',
 	validate({
+		summary: 'Search for Pubs',
 		description: 'Get many pubs',
-		tags: ['pub'],
+		tags: ['Pub'],
+		security: false,
 		body: getManyQuerySchema,
 		response: z.object({
 			pubIds: z.array(z.string()),
@@ -332,20 +334,19 @@ export const pubPutSchema = z.object({
 app.put(
 	'/api/pubs',
 	validate({
-		summary: 'Update a Pub',
+		tags: ['Pub'],
+		description: 'Update a Pub',
 		body: pubPutSchema,
 		response: pubPutSchema.omit({
 			pubId: true,
 		}),
 	}),
 	wrap(async (req, res) => {
-		console.log('req.body', req.body);
 		const { userId, pubId } = getRequestIds(req);
 		const updatableFields = await getUpdatablePubFields({
 			userId,
 			pubId,
 		});
-		console.log(updatableFields);
 		if (!updatableFields) {
 			throw new ForbiddenError();
 		}
@@ -360,7 +361,7 @@ app.delete(
 	validate({
 		description: 'Delete a Pub',
 		summary: 'Delete a Pub fr fr',
-		tags: ['pub'],
+		tags: ['Pub'],
 		body: z.object({
 			pubId: z.string(),
 		}),
@@ -383,6 +384,7 @@ app.get(
 	'/api/pub/:pubId/resource',
 	validate({
 		description: 'Get a Pub Resource',
+		tags: ['Pub'],
 		query: {
 			pubId: z.string(),
 		},
@@ -412,7 +414,7 @@ type ResourceAST = Awaited<ReturnType<typeof submitResource>>['resourceAst'];
 app.post(
 	'/api/pub/:pubId/doi',
 	validate({
-		tags: ['pub'],
+		tags: ['Pub'],
 		description: 'Create a DOI for a Pub',
 		response: resourceASTSchema satisfies z.ZodType<ResourceAST>,
 		statusCodes: {
@@ -462,7 +464,7 @@ app.post(
 app.post(
 	'/api/pub/:pubId/doi/preview',
 	validate({
-		tags: ['pub'],
+		tags: ['Pub'],
 		description: 'Preview a pubs DOI deposit',
 		response: resourceASTSchema satisfies z.ZodType<ResourceAST>,
 		statusCodes: {

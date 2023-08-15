@@ -74,7 +74,9 @@ type Options<
 	description?: string;
 	tags?: string[];
 	/**
-	 * @default false
+	 * Whether this route needs cookie authentication
+	 *
+	 * @default true
 	 */
 	security?: boolean;
 };
@@ -123,7 +125,7 @@ export const validate: ValidationMiddleware = (options) => {
 		errorHandler: defaultErrorHandler,
 		queryThrowsError: true,
 		bodyThrowsError: true,
-		security: false,
+		security: true,
 		...options,
 	};
 

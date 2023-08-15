@@ -55,6 +55,7 @@ const idUnionSchema = z.object({
 app.post(
 	'/api/members',
 	validate({
+		tags: ['Members'],
 		description: 'Create a member',
 		security: true,
 		body: z
@@ -98,6 +99,7 @@ app.post(
 app.put(
 	'/api/members',
 	validate({
+		tags: ['Members'],
 		description: 'Update a member',
 		body: z
 			.object({
@@ -141,6 +143,7 @@ app.put(
 app.delete(
 	'/api/members',
 	validate({
+		tags: ['Members'],
 		description: 'Delete a member',
 		body: z
 			.object({
