@@ -54,7 +54,6 @@ export const createPage = async (
 	});
 
 	const [newPage_1, communityData] = await Promise.all([newPage, findCommunity]);
-	console.log('communityData', communityData);
 	const oldNavigation = expect(communityData?.toJSON().navigation);
 	const newNavigationOutput: CommunityNavigationEntry[] = [
 		oldNavigation[0],
