@@ -158,7 +158,7 @@ export const destroyPage = async (
 	const oldNavigation = expect(communityData.toJSON().navigation);
 	const newNavigationOutput = oldNavigation
 		.filter((item) => {
-			return item !== inputValues.pageId;
+			return item.id !== inputValues.pageId;
 		})
 		.map((item_1) => {
 			if (!('children' in item_1)) {
@@ -167,7 +167,7 @@ export const destroyPage = async (
 			return {
 				...item_1,
 				children: item_1.children.filter((subitem) => {
-					return subitem !== inputValues.pageId;
+					return subitem.id !== inputValues.pageId;
 				}),
 			};
 		});

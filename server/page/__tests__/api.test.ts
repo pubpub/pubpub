@@ -1,6 +1,6 @@
 import { Page } from 'server/models';
 import { expectCreatedActivityItem, login, modelize, setup, teardown } from 'stubstub';
-import { LayoutBlock, layoutBlockSchema } from 'utils/layout';
+import { layoutBlockSchema } from 'utils/layout';
 import { z } from 'zod';
 
 const models = modelize`
