@@ -45,8 +45,7 @@ $removal-light: #ffd7d7;
 		opacity: 0;
 	}
 	&:hover::before,
-	.selected::before,
-	.selected ::before {
+	.selected::before {
 		opacity: 1;
 	}
 }
@@ -82,12 +81,11 @@ $iconSize: 0.75rem;
 		text-align: center;
 		left: -0.9 * $iconSize;
 		top: -0.5 * $iconSize;
-		box-shadow: 0 0 0 0.5px $color;
+		box-shadow: 0 0 0 1px $color;
 		opacity: 0;
 	}
 	&:hover::before,
-	.selected::before,
-	.selected ::before {
+	.selected::before {
 		opacity: 1;
 	}
 }
