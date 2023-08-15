@@ -23,3 +23,28 @@ export const isCollectionAttribution = (
 
 export const isPubAttribution = (attribution: Attribution): attribution is PubAttribution =>
 	'pubId' in attribution;
+
+export const DEFAULT_ROLES = [
+	'Conceptualization',
+	'Methodology',
+	'Software',
+	'Validation',
+	'Formal Analysis',
+	'Investigation',
+	'Resources',
+	'Data Curation',
+	'Writing – Original Draft Preparation',
+	'Writing – Review & Editing',
+	'Visualization',
+	'Supervision',
+	'Project Administration',
+	'Peer Review',
+	'Funding Acquisition',
+	'Illustrator',
+	'Editor',
+	'Series Editor',
+	'Translator',
+	'Chair',
+] as const;
+
+export type AttributionRole = (typeof DEFAULT_ROLES)[number];
