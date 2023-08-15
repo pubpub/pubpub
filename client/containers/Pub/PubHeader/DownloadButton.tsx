@@ -53,26 +53,21 @@ const DownloadButton = (props: Props) => {
 
 	const PopoverContent = () => {
 		return (
-			<React.Fragment>
-				<Callout className="text-info" intent="warning">
-					<p>
-						You still have pending edits. Resolve your edits before downloading this
-						Pub.
-					</p>
-					<div className={Classes.DIALOG_FOOTER_ACTIONS}>
-						<Button
-							text="Accept All"
-							intent="success"
-							onClick={handleSuggestedEditsAccept}
-						/>
-						<Button
-							text="Reject All"
-							intent="danger"
-							onClick={handleSuggestedEditsReject}
-						/>
-					</div>
-				</Callout>
-			</React.Fragment>
+			<Callout className="text-info" intent="warning">
+				<p>You still have pending edits. Resolve your edits before downloading this Pub.</p>
+				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+					<Button
+						text="Accept All"
+						intent="success"
+						onClick={handleSuggestedEditsAccept}
+					/>
+					<Button
+						text="Reject All"
+						intent="danger"
+						onClick={handleSuggestedEditsReject}
+					/>
+				</div>
+			</Callout>
 		);
 	};
 
