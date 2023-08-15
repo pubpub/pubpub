@@ -9,8 +9,6 @@ import { FormattingBarButtonData } from './types';
 import { suggestedEditsReject, suggestedEditsAccept } from './buttons';
 import { useCommandStates } from './hooks/useCommandStates';
 
-require('./formattingBarSuggestedEdits.scss');
-
 type Props = {
 	suggestionAuthor?: SuggestedEditsUser;
 	buttons: FormattingBarButtonData[][];
