@@ -40,7 +40,7 @@ const getRequestIds = createGetRequestIds<{
 app.post(
 	'/api/collectionAttributions',
 	validate({
-		tags: ['CollectionAttribution'],
+		tags: ['CollectionAttributions'],
 		description: 'Create a collection attribution',
 		body: z
 			.object({
@@ -65,7 +65,7 @@ app.post(
 app.put(
 	'/api/collectionAttributions',
 	validate({
-		tags: ['CollectionAttribution'],
+		tags: ['CollectionAttributions'],
 		description: 'Update a collection attribution',
 		body: updateAttributionSchema.merge(
 			z.object({ collectionId: z.string() }),
