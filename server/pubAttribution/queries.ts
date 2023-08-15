@@ -2,7 +2,7 @@ import assert from 'assert';
 import { PubAttribution, includeUserModel } from 'server/models';
 import { expect } from 'utils/assert';
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
-import { UpdateParams } from 'types';
+import { UpdateParams, PubAttributionCreationParams } from 'types';
 import { Permissions } from './permissions';
 
 export const getPubAttributions = (pubId) => PubAttribution.findAll({ where: { id: pubId } });
@@ -16,24 +16,7 @@ export const createPubAttribution = async ({
 	orcid,
 	roles,
 	affiliation,
-}: {
-	pubId: string;
-	order: number;
-	roles?: string[];
-	affiliation?: string;
-	isAuthor?: boolean;
-} & (
-	| {
-			userId: string;
-			name?: undefined | null;
-			orcid?: undefined;
-	  }
-	| {
-			name: string;
-			userId?: undefined;
-			orcid?: string;
-	  }
-)) => {
+}: PubAttributionCreationParams) => {
 	const newAttribution = await PubAttribution.create({
 		userId,
 		pubId,

@@ -5,7 +5,8 @@ import { expect } from 'utils/assert';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { validate } from 'utils/api';
 import { z } from 'zod';
-import { DEFAULT_ROLES, UpdateParams } from 'types';
+import { DEFAULT_ROLES, PubAttributionCreationParams, UpdateParams } from 'types';
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { getPermissions } from './permissions';
 import {
 	createPubAttribution,
@@ -20,6 +21,8 @@ const getRequestIds = createGetRequestIds<{
 	pubId?: string;
 	id?: string;
 }>();
+
+extendZodWithOpenApi(z);
 
 // const getRequestIds = (req) => {
 // 	const user = req.user || {};
@@ -51,23 +54,7 @@ export const attributionSchema = z
 			}),
 		]),
 	) satisfies z.ZodType<
-	{
-		order?: number;
-		roles?: string[];
-		affiliation?: string;
-		isAuthor?: boolean;
-	} & (
-		| {
-				userId: string;
-				name?: undefined;
-				orcid?: undefined;
-		  }
-		| {
-				name: string;
-				userId?: undefined;
-				orcid?: string;
-		  }
-	)
+	Omit<PubAttributionCreationParams, 'order' | 'pubId'> & { order?: number }
 >;
 
 app.post(
@@ -152,24 +139,27 @@ app.post(
 	},
 );
 
+export const updateAttributionSchema = z.object({
+	id: z.string().openapi({ description: 'The id of the attribution to update' }),
+	communityId: z.string(),
+	order: z.number().optional(),
+	roles: z.array(z.string()).optional().openapi({ example: DEFAULT_ROLES }),
+	affiliation: z.string().nullish(),
+	isAuthor: z.boolean().optional(),
+	name: z.string().nullish(),
+	userId: z.string().nullish(),
+	orcid: z.string().nullish(),
+}) satisfies Omit<z.ZodType<UpdateParams<PubAttribution>>, 'pubId'>;
+
 app.put(
 	'/api/pubAttributions',
 	validate({
 		description: 'Update a pub attribution',
 		security: true,
 		tags: ['PubAttributions'],
-		body: z.object({
-			id: z.string().openapi({ description: 'The id of the pub attribution to update' }),
-			communityId: z.string(),
-			pubId: z.string(),
-			order: z.number().optional(),
-			roles: z.array(z.string()).openapi({ example: DEFAULT_ROLES }),
-			affiliation: z.string().nullish(),
-			isAuthor: z.boolean().optional(),
-			name: z.string().nullish(),
-			userId: z.string().nullish(),
-			orcid: z.string().nullish(),
-		}) satisfies z.ZodType<UpdateParams<PubAttribution>>,
+		body: updateAttributionSchema.merge(z.object({ pubId: z.string() })) satisfies z.ZodType<
+			UpdateParams<PubAttribution>
+		>,
 	}),
 	(req, res) => {
 		const requestIds = getRequestIds(req);

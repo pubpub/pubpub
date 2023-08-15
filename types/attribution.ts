@@ -48,3 +48,26 @@ export const DEFAULT_ROLES = [
 ] as const;
 
 export type AttributionRole = (typeof DEFAULT_ROLES)[number];
+
+export type PubAttributionCreationParams = {
+	pubId: string;
+	order: number;
+	roles?: string[];
+	affiliation?: string;
+	isAuthor?: boolean;
+} & (
+	| {
+			userId: string;
+			name?: undefined | null;
+			orcid?: undefined;
+	  }
+	| {
+			name: string;
+			userId?: undefined;
+			orcid?: string;
+	  }
+);
+
+export type CollectionAttributionCreationParams = Omit<PubAttributionCreationParams, 'pubId'> & {
+	collectionId: string;
+};

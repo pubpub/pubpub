@@ -1,14 +1,11 @@
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { CollectionAttribution, includeUserModel } from 'server/models';
 import { expect } from 'utils/assert';
+import { CollectionAttributionCreationParams, UpdateParams } from 'types';
 
-export const createCollectionAttribution = async (inputValues: {
-	userId?: string | null;
-	collectionId: string;
-	name: string;
-	order: number;
-	communityId?: string | null;
-}) => {
+export const createCollectionAttribution = async (
+	inputValues: CollectionAttributionCreationParams,
+) => {
 	const newAttribution = await CollectionAttribution.create({
 		userId: inputValues.userId,
 		collectionId: inputValues.collectionId,
@@ -31,7 +28,10 @@ export const createCollectionAttribution = async (inputValues: {
 	return ensureUserForAttribution(populatedCollectionAttributionJson);
 };
 
-export const updateCollectionAttribution = (inputValues, updatePermissions) => {
+export const updateCollectionAttribution = (
+	inputValues: UpdateParams<CollectionAttribution> & { collectionAttributionId: string },
+	updatePermissions,
+) => {
 	// Filter to only allow certain fields to be updated
 	const filteredValues = {};
 	Object.keys(inputValues).forEach((key) => {
@@ -47,7 +47,7 @@ export const updateCollectionAttribution = (inputValues, updatePermissions) => {
 	});
 };
 
-export const destroyCollectionAttribution = (inputValues) => {
+export const destroyCollectionAttribution = (inputValues: { collectionAttributionId: string }) => {
 	return CollectionAttribution.destroy({
 		where: { id: inputValues.collectionAttributionId },
 	});
