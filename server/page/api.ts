@@ -83,7 +83,9 @@ app.delete(
 			pageId: z.string(),
 		}),
 		statusCodes: {
-			201: z.string(),
+			201: z.string().openapi({
+				description: 'The ID of the deleted page',
+			}),
 		},
 	}),
 	wrap(async (req, res) => {
