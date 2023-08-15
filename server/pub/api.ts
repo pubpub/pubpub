@@ -226,14 +226,39 @@ export const pubSchema = z.object({
 		)
 		.nullable(),
 	customPublishedAt: z.string().datetime().nullable(),
-}); // satisfies z.ZodType<types.Pub>;
+	labels: z
+		.array(
+			z.object({
+				id: z.string(),
+				color: z.string(),
+				title: z.string(),
+				publicApply: z.boolean(),
+			}),
+		)
+		.nullable(),
+	viewHash: z.string().nullable(),
+	reviewHash: z.string().nullable(),
+	editHash: z.string().nullable(),
+	commentHash: z.string().nullable(),
+	communityId: z.string(),
+	metadata: z
+		.object({
+			mtg_id: z.string().openapi({ example: 'aas241' }),
+			bibcode: z.string().openapi({ example: '2023AAS…24130111A' }),
+			mtg_presentation_id: z.string().openapi({ example: '301.11' }),
+		})
+		.nullable(),
+	draftId: z.string(),
+	scopeSummaryId: z.string().nullable(),
+	crossrefDepositRecordId: z.string().nullable(),
+}) satisfies z.ZodType<types.Pub>;
 
 app.post(
 	'/api/pubs',
 	validate({
 		description: 'Create a Pub',
 		security: true,
-		tags: ['pub'],
+		tags: ['Pub'],
 		body: z
 			.object({
 				communityId: z.string(),
@@ -255,8 +280,7 @@ app.post(
 				]),
 			) satisfies z.ZodType<CanCreatePub>,
 		statusCodes: {
-			// @ts-expect-error FIXME: REALLY FIX THIS THOMAS
-			201: z.object({}) as z.ZodType<types.Pub>,
+			201: pubSchema,
 		},
 	}),
 
@@ -285,51 +309,65 @@ app.post(
 
 export type PubPut = types.UpdateParams<Pub> & { pubId: string };
 
-export const pubPutSchema = z.object({
-	pubId: z.string(),
-	slug: z
-		.string({
-			description: 'Slug',
-		})
-		.regex(/^[a-zA-Z0-9-]+$/)
-		.min(1)
-		.max(280)
-		.optional()
-		.openapi({
-			uniqueItems: true,
-			example: 'some-slug',
+// export const pubPutSchema = z.object({
+// 	pubId: z.string(),
+// 	slug: z
+// 		.string({
+// 			description: 'Slug',
+// 		})
+// 		.regex(/^[a-zA-Z0-9-]+$/)
+// 		.min(1)
+// 		.max(280)
+// 		.optional()
+// 		.openapi({
+// 			uniqueItems: true,
+// 			example: 'some-slug',
+// 		}),
+// 	title: z.string().optional().openapi({
+// 		example: 'A beautiful title',
+// 	}),
+// 	htmlTitle: z.string().nullish().openapi({
+// 		example: 'A <strong>beautiful</strong> <em>title</em>',
+// 		description:
+// 			'HTML version of the title, allows for things like <strong>bold</strong> and <em>italics</em>',
+// 	}),
+// 	description: z.string().max(280).min(0).nullish(),
+// 	htmlDescription: z.string().max(280).min(0).nullish(),
+// 	avatar: z.string({}).nullish().openapi({
+// 		description: 'The preview image of a Pub',
+// 	}),
+// 	doi: z.string().nullish().openapi({
+// 		example: '10.1101/2020.05.01.072975',
+// 		description: 'The DOI of the pub',
+// 	}),
+// 	downloads: z
+// 		.array(
+// 			z.object({
+// 				url: z.string().url(),
+// 				type: z.literal('formatted').default('formatted'),
+// 				createdAt: z
+// 					.string()
+// 					.datetime()
+// 					.default(() => new Date().toISOString()),
+// 			}),
+// 		)
+// 		.nullish(),
+// 	customPublishedAt: z.string().datetime().nullish(),
+// }) satisfies z.ZodType<PubPut>;
+
+export const pubPutSchema = pubSchema
+	.partial()
+	.omit({
+		communityId: true,
+		draftId: true,
+		scopeSummaryId: true,
+		crossrefDepositRecordId: true,
+	})
+	.merge(
+		z.object({
+			pubId: z.string(),
 		}),
-	title: z.string().optional().openapi({
-		example: 'A beautiful title',
-	}),
-	htmlTitle: z.string().nullish().openapi({
-		example: 'A <strong>beautiful</strong> <em>title</em>',
-		description:
-			'HTML version of the title, allows for things like <strong>bold</strong> and <em>italics</em>',
-	}),
-	description: z.string().max(280).min(0).nullish(),
-	htmlDescription: z.string().max(280).min(0).nullish(),
-	avatar: z.string({}).nullish().openapi({
-		description: 'The preview image of a Pub',
-	}),
-	doi: z.string().nullish().openapi({
-		example: '10.1101/2020.05.01.072975',
-		description: 'The DOI of the pub',
-	}),
-	downloads: z
-		.array(
-			z.object({
-				url: z.string().url(),
-				type: z.literal('formatted'),
-				createdAt: z
-					.string()
-					.datetime()
-					.default(() => new Date().toISOString()),
-			}),
-		)
-		.nullish(),
-	customPublishedAt: z.string().datetime().nullish(),
-}) satisfies z.ZodType<PubPut>;
+	) satisfies z.ZodType<PubPut>;
 
 app.put(
 	'/api/pubs',
@@ -385,9 +423,7 @@ app.get(
 	validate({
 		description: 'Get a Pub Resource',
 		tags: ['Pub'],
-		query: {
-			pubId: z.string(),
-		},
+
 		response: resourceSchema satisfies z.ZodType<Resource>,
 	}),
 
