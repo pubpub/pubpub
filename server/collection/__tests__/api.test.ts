@@ -146,6 +146,7 @@ it('updates only expected values on an existing collection', async () => {
 		kind: 'issue',
 		title: 'The Book of Tests',
 	});
+	console.log(collection);
 	const agent = await login(admin);
 	const { body: updatedCollection } = await expectCreatedActivityItem(
 		agent

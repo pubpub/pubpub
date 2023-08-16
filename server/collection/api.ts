@@ -9,20 +9,27 @@ import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { transformCollectionToResource } from 'deposit/transform/collection';
-import { LayoutBlock, layoutBlockSchema } from 'utils/layout';
+import { layoutBlockSchema } from 'utils/layout';
+import { validate } from 'utils/api';
+import { createGetRequestIds } from 'utils/getRequestIds';
 import { getPermissions } from './permissions';
 import { createCollection, destroyCollection, findCollection, updateCollection } from './queries';
 
 extendZodWithOpenApi(z);
 
-const getRequestIds = (req) => {
-	const user = req.user || {};
-	return {
-		userId: user.id,
-		communityId: req.body.communityId,
-		collectionId: req.body.id || null,
-	};
-};
+const getRequestIds = createGetRequestIds<{
+	userId?: string;
+	id?: string;
+	communityId?: string;
+}>();
+// const getRequestIds = (req) => {
+// 	const user = req.user || {};
+// 	return {
+// 		userId: user.id,
+// 		communityId: req.body.communityId,
+// 		collectionId: req.body.id || null,
+// 	};
+// };
 
 const collectionLayoutSchema = z.object({
 	isNarrow: z.boolean().optional(),
@@ -37,7 +44,7 @@ export const collectionSchema = z.object({
 		.regex(/^[a-zA-Z0-9-]+$/)
 		.min(1)
 		.max(280),
-	avatar: z.string().nullable(),
+	avatar: z.string().url().nullable(),
 	isRestricted: z.boolean().nullable(),
 	isPublic: z.boolean().nullable(),
 	viewHash: z.string().nullable(),
@@ -54,10 +61,34 @@ export const collectionSchema = z.object({
 	crossrefDepositRecordId: z.string().uuid().nullable(),
 }) satisfies z.ZodType<types.Collection, any, any>;
 
+const collectionCreationSchema = collectionSchema
+	.pick({
+		communityId: true,
+		title: true,
+	})
+	.merge(
+		collectionSchema
+			.pick({
+				pageId: true,
+				doi: true,
+				isPublic: true,
+				isRestricted: true,
+				id: true,
+				slug: true,
+			})
+			.partial(),
+	)
+	.merge(z.object({ kind: collectionSchema.shape.kind.unwrap() }));
+
 app.post(
 	'/api/collections',
+	validate({
+		description: 'Create a collection',
+		body: collectionCreationSchema,
+	}),
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
+		console.log(requestIds);
 		const permissions = await getPermissions(requestIds);
 		if (!permissions.create) {
 			throw new ForbiddenError();
