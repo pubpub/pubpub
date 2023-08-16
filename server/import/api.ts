@@ -44,6 +44,7 @@ export const importerFlagsSchema = z.object({
 app.post(
 	'/api/import',
 	validate({
+		tags: ['Import'],
 		body: z.object({
 			sourceFiles: z.array(sourceFileSchema),
 			importerFlags: importerFlagsSchema.default({}),

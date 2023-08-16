@@ -7,6 +7,7 @@ import { getWorkerTask } from './queries';
 app.get(
 	'/api/workerTasks',
 	validate({
+		tags: ['Worker Tasks'],
 		description:
 			'Get the status of a worker task. This is used to poll for the status of a worker task, such as an import or export.',
 		query: {
