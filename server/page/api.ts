@@ -97,7 +97,12 @@ app.delete(
 		if (!permissions.update) {
 			throw new ForbiddenError();
 		}
-		await destroyPage(req.body, req.user.id);
-		return res.status(201).json(req.body.pageId);
+		try {
+			await destroyPage(req.body, req.user.id);
+			return res.status(201).json(req.body.pageId);
+		} catch (e) {
+			console.error(e);
+			throw new Error(e as string);
+		}
 	}),
 );
