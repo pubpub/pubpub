@@ -14,7 +14,7 @@ import { expect } from 'utils/assert';
 
 export const getPubsInCollection = async ({ communityId, collectionId, userId }) => {
 	const collectionPubsQuery = CollectionPub.findAll({
-		where: { collectionId },
+		where: { collectionId: collectionId ?? null },
 		order: [['rank', 'ASC']],
 		include: [
 			{
