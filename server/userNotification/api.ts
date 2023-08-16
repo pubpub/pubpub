@@ -36,7 +36,7 @@ app.get(
 	wrap(async (req, res) => {
 		const { userId, offset, limit } = unwrapGetRequest(req);
 		if (!userId) {
-			return res.status(404).json({ error: 'User not found' });
+			throw new NotFoundError();
 		}
 		const result = await fetchUserNotifications({ userId, offset, limit });
 		return res.status(200).json(result);
