@@ -52,19 +52,19 @@ export type AttributionRole = (typeof DEFAULT_ROLES)[number];
 export type PubAttributionCreationParams = {
 	pubId: string;
 	order: number;
-	roles?: string[];
-	affiliation?: string;
-	isAuthor?: boolean;
+	roles?: string[] | null;
+	affiliation?: string | null;
+	isAuthor?: boolean | null;
 } & (
 	| {
 			userId: string;
 			name?: undefined | null;
-			orcid?: undefined;
+			orcid?: undefined | null;
 	  }
 	| {
 			name: string;
-			userId?: undefined;
-			orcid?: string;
+			userId?: undefined | null;
+			orcid?: string | null;
 	  }
 );
 

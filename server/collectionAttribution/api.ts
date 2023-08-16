@@ -4,7 +4,11 @@ import { ForbiddenError } from 'server/utils/errors';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { validate } from 'utils/api';
 import { z } from 'zod';
-import { attributionSchema, updateAttributionSchema } from 'server/pubAttribution/api';
+import {
+	attributionCreationSchema,
+	attributionSchema,
+	updateAttributionSchema,
+} from 'server/pubAttribution/api';
 import { UpdateParams } from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { CollectionAttribution } from './model';
@@ -23,15 +27,11 @@ const getRequestIds = createGetRequestIds<{
 	id?: string;
 }>();
 
-// const getRequestIds = (req) => {
-// 	const user = req.user || {};
-// 	return {
-// 		userId: user.id,
-// 		communityId: req.body.communityId,
-// 		collectionId: req.body.collectionId,
-// 		collectionAttributionId: req.body.id,
-// 	};
-// };
+const collectionAttributionSchema = attributionSchema.merge(
+	z.object({
+		collectionId: z.string().uuid(),
+	}),
+);
 
 /* Note: we typically use values like collectionAttributionId on API requests */
 /* here, id is sent up, so there is a little bit of kludge to make */
@@ -44,10 +44,13 @@ app.post(
 		description: 'Create a collection attribution',
 		body: z
 			.object({
-				communityId: z.string(),
-				collectionId: z.string(),
+				communityId: z.string().uuid(),
+				collectionId: z.string().uuid(),
 			})
-			.and(attributionSchema),
+			.and(attributionCreationSchema),
+		statusCodes: {
+			201: collectionAttributionSchema,
+		},
 	}),
 	wrap(async (req, res) => {
 		const permissions = await getPermissions(getRequestIds(req));
@@ -68,8 +71,9 @@ app.put(
 		tags: ['CollectionAttributions'],
 		description: 'Update a collection attribution',
 		body: updateAttributionSchema.merge(
-			z.object({ collectionId: z.string() }),
+			z.object({ collectionId: z.string().uuid(), communityId: z.string().uuid() }),
 		) satisfies z.ZodType<UpdateParams<CollectionAttribution>>,
+		response: updateAttributionSchema.partial().omit({ id: true }),
 	}),
 	wrap(async (req, res) => {
 		const permissions = await getPermissions(getRequestIds(req));

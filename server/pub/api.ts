@@ -20,6 +20,7 @@ import { createGetRequestIds } from 'utils/getRequestIds';
 import { getPubsById, queryPubIds } from './queryMany';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
 import { CanCreatePub, canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+import { attributionCreationSchema, pubAttributionSchema } from 'server/pubAttribution/api';
 
 extendZodWithOpenApi(z);
 
@@ -94,95 +95,6 @@ export type GetManyQuery = {
 	| { pubIds?: undefined; collectionIds?: undefined }
 );
 
-export const getManyQuerySchema = z.object({
-	query: z
-		.object({
-			excludeCollectionIds: z.array(z.string()).optional(),
-			ordering: z.object({
-				field: z.enum(['updatedDate', 'creationDate', 'collectionRank', 'title']),
-				direction: z.enum(['ASC', 'DESC']),
-			}),
-			limit: z.number().optional().default(50),
-			offset: z.number().optional().default(0),
-		})
-		.and(
-			z.union([
-				z.object({
-					collectionIds: z.array(z.string()),
-					pubIds: z.undefined().optional(),
-				}),
-				z.object({ pubIds: z.array(z.string()), collectionIds: z.undefined().optional() }),
-				z.object({
-					pubIds: z.undefined().optional(),
-					collectionIds: z.undefined().optional(),
-				}),
-			]),
-		) satisfies z.ZodType<GetManyQuery>,
-	alreadyFetchedPubIds: z.array(z.string()),
-	pubOptions: z.object({
-		isAuth: z.boolean().optional(),
-		isPreview: z.boolean().optional(),
-		getCollections: z.boolean().optional(),
-		getMembers: z.boolean().optional(),
-		getCommunity: z.boolean().optional(),
-		getExports: z.boolean().optional(),
-		getEdges: z.enum(['all', 'approved-only']).optional(),
-		getDraft: z.boolean().optional(),
-		getDiscussions: z.boolean().optional(),
-		getReviews: z.boolean().optional(),
-		getEdgesOptions: z
-			.object({
-				includeCommunityForPubs: z.boolean().optional(),
-				includeTargetPub: z.boolean().optional(),
-				includePub: z.boolean().optional(),
-			})
-			.optional(),
-		getSubmissions: z.boolean().optional(),
-		getFacets: z.boolean().optional(),
-	}) satisfies z.ZodType<PubGetOptions>,
-}) satisfies z.ZodType<ManyRequestParams>;
-
-app.post(
-	'/api/pubs/many',
-	validate({
-		summary: 'Search for Pubs',
-		description: 'Get many pubs',
-		tags: ['Pub'],
-		security: false,
-		body: getManyQuerySchema,
-		response: z.object({
-			pubIds: z.array(z.string()),
-			pubsById: z.record(z.any()) as z.ZodType<Record<string, types.SanitizedPubData>>,
-			loadedAllPubs: z.boolean().or(z.number()).optional().nullable(),
-		}),
-	}),
-	wrap(async (req, res) => {
-		const initialData = await getInitialData(req);
-		const { query: queryPartial, alreadyFetchedPubIds, pubOptions } = getManyQueryParams(req);
-		const { limit } = queryPartial;
-		const pubIds = await queryPubIds({
-			...queryPartial,
-			communityId: initialData.communityData.id,
-		});
-		const loadedAllPubs = limit && limit > pubIds.length;
-		const idsToFetch = pubIds.filter((id) => !alreadyFetchedPubIds.includes(id));
-		const pubs = await getPubsById(idsToFetch, pubOptions).sanitize(initialData);
-		const pubsById = indexByProperty(pubs, 'id');
-		return res.status(200).json({
-			pubIds: pubIds.filter((id) => !!pubsById[id] || alreadyFetchedPubIds.includes(id)),
-			pubsById,
-			loadedAllPubs,
-		});
-	}),
-);
-
-const getRequestIds = createGetRequestIds<{
-	communityId?: string;
-	collectionId?: string;
-	pubId?: string;
-	createPubToken?: string;
-}>();
-
 export const pubSchema = z.object({
 	id: z.string(),
 	slug: z
@@ -253,6 +165,101 @@ export const pubSchema = z.object({
 	crossrefDepositRecordId: z.string().nullable(),
 }) satisfies z.ZodType<types.Pub>;
 
+export const getManyQuerySchema = z.object({
+	query: z
+		.object({
+			excludeCollectionIds: z.array(z.string()).optional(),
+			ordering: z.object({
+				field: z.enum(['updatedDate', 'creationDate', 'collectionRank', 'title']),
+				direction: z.enum(['ASC', 'DESC']),
+			}),
+			limit: z.number().optional().default(50),
+			offset: z.number().optional().default(0),
+		})
+		.and(
+			z.union([
+				z.object({
+					collectionIds: z.array(z.string()),
+					pubIds: z.undefined().optional(),
+				}),
+				z.object({ pubIds: z.array(z.string()), collectionIds: z.undefined().optional() }),
+				z.object({
+					pubIds: z.undefined().optional(),
+					collectionIds: z.undefined().optional(),
+				}),
+			]),
+		) satisfies z.ZodType<GetManyQuery>,
+	alreadyFetchedPubIds: z.array(z.string()),
+	pubOptions: z.object({
+		isAuth: z.boolean().optional(),
+		isPreview: z.boolean().optional(),
+		getCollections: z.boolean().optional(),
+		getMembers: z.boolean().optional(),
+		getCommunity: z.boolean().optional(),
+		getExports: z.boolean().optional(),
+		getEdges: z.enum(['all', 'approved-only']).optional(),
+		getDraft: z.boolean().optional(),
+		getDiscussions: z.boolean().optional(),
+		getReviews: z.boolean().optional(),
+		getEdgesOptions: z
+			.object({
+				includeCommunityForPubs: z.boolean().optional(),
+				includeTargetPub: z.boolean().optional(),
+				includePub: z.boolean().optional(),
+			})
+			.optional(),
+		getSubmissions: z.boolean().optional(),
+		getFacets: z.boolean().optional(),
+	}) satisfies z.ZodType<PubGetOptions>,
+}) satisfies z.ZodType<ManyRequestParams>;
+
+const sanitizedPubSchema = pubSchema.merge(
+	z.object({
+		attributions: pubAttributionSchema.array(),
+	}),
+); // satisfies z.ZodType<types.SanitizedPubData>;
+
+app.post(
+	'/api/pubs/many',
+	validate({
+		summary: 'Search for Pubs',
+		description: 'Get many pubs',
+		tags: ['Pub'],
+		security: false,
+		body: getManyQuerySchema,
+		response: z.object({
+			pubIds: z.array(z.string()),
+			pubsById: z.record(sanitizedPubSchema), // as z.ZodType<Record<string, types.SanitizedPubData>>,
+			loadedAllPubs: z.boolean().or(z.number()).optional().nullable(),
+		}),
+	}),
+	wrap(async (req, res) => {
+		const initialData = await getInitialData(req);
+		const { query: queryPartial, alreadyFetchedPubIds, pubOptions } = getManyQueryParams(req);
+		const { limit } = queryPartial;
+		const pubIds = await queryPubIds({
+			...queryPartial,
+			communityId: initialData.communityData.id,
+		});
+		const loadedAllPubs = limit && limit > pubIds.length;
+		const idsToFetch = pubIds.filter((id) => !alreadyFetchedPubIds.includes(id));
+		const pubs = await getPubsById(idsToFetch, pubOptions).sanitize(initialData);
+		const pubsById = indexByProperty(pubs, 'id');
+		return res.status(200).json({
+			pubIds: pubIds.filter((id) => !!pubsById[id] || alreadyFetchedPubIds.includes(id)),
+			pubsById,
+			loadedAllPubs,
+		});
+	}),
+);
+
+const getRequestIds = createGetRequestIds<{
+	communityId?: string;
+	collectionId?: string;
+	pubId?: string;
+	createPubToken?: string;
+}>();
+
 app.post(
 	'/api/pubs',
 	validate({
@@ -308,52 +315,6 @@ app.post(
 );
 
 export type PubPut = types.UpdateParams<Pub> & { pubId: string };
-
-// export const pubPutSchema = z.object({
-// 	pubId: z.string(),
-// 	slug: z
-// 		.string({
-// 			description: 'Slug',
-// 		})
-// 		.regex(/^[a-zA-Z0-9-]+$/)
-// 		.min(1)
-// 		.max(280)
-// 		.optional()
-// 		.openapi({
-// 			uniqueItems: true,
-// 			example: 'some-slug',
-// 		}),
-// 	title: z.string().optional().openapi({
-// 		example: 'A beautiful title',
-// 	}),
-// 	htmlTitle: z.string().nullish().openapi({
-// 		example: 'A <strong>beautiful</strong> <em>title</em>',
-// 		description:
-// 			'HTML version of the title, allows for things like <strong>bold</strong> and <em>italics</em>',
-// 	}),
-// 	description: z.string().max(280).min(0).nullish(),
-// 	htmlDescription: z.string().max(280).min(0).nullish(),
-// 	avatar: z.string({}).nullish().openapi({
-// 		description: 'The preview image of a Pub',
-// 	}),
-// 	doi: z.string().nullish().openapi({
-// 		example: '10.1101/2020.05.01.072975',
-// 		description: 'The DOI of the pub',
-// 	}),
-// 	downloads: z
-// 		.array(
-// 			z.object({
-// 				url: z.string().url(),
-// 				type: z.literal('formatted').default('formatted'),
-// 				createdAt: z
-// 					.string()
-// 					.datetime()
-// 					.default(() => new Date().toISOString()),
-// 			}),
-// 		)
-// 		.nullish(),
-// 	customPublishedAt: z.string().datetime().nullish(),
-// }) satisfies z.ZodType<PubPut>;
 
 export const pubPutSchema = pubSchema
 	.partial()

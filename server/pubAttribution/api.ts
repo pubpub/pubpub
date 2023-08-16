@@ -5,7 +5,7 @@ import { expect } from 'utils/assert';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { validate } from 'utils/api';
 import { z } from 'zod';
-import { DEFAULT_ROLES, PubAttributionCreationParams, UpdateParams } from 'types';
+import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { getPermissions } from './permissions';
 import {
@@ -24,37 +24,54 @@ const getRequestIds = createGetRequestIds<{
 
 extendZodWithOpenApi(z);
 
-// const getRequestIds = (req) => {
-// 	const user = req.user || {};
-// 	return {
-// 		userId: user.id,
-// 		communityId: req.body.communityId,
-// 		pubId: req.body.pubId,
-// 		pubAttributionId: req.body.id,
-// 	};
-// };
-export const attributionSchema = z
-	.object({
-		order: z.number().max(1).min(0).default(0.5),
-		roles: z.array(z.string()).default([]).openapi({ example: DEFAULT_ROLES }),
-		affiliation: z.string().optional(),
-		isAuthor: z.boolean().optional(),
-	})
+export const attributionSchema = z.object({
+	id: z.string().uuid(),
+	order: z.number().max(1).min(0),
+	roles: z.array(z.string()).openapi({ example: types.DEFAULT_ROLES }).nullable(),
+	affiliation: z.string().nullable(),
+	isAuthor: z.boolean().nullable(),
+	userId: z.string().uuid().nullable(),
+	name: z.string().nullable(),
+	orcid: z.string().nullable(),
+	avatar: z.string().url().nullable(),
+	title: z.string().nullable().openapi({
+		deprecated: true,
+		description: 'Legacy field, do not use.',
+	}),
+}) satisfies z.ZodType<Omit<types.PubAttribution, 'pubId'>>;
+
+export const pubAttributionSchema = attributionSchema.merge(
+	z.object({
+		pubId: z.string().uuid(),
+	}),
+);
+
+export const attributionCreationSchema = attributionSchema
+	.omit({ id: true, pubId: true, userId: true, name: true, orcid: true })
+	.partial()
+	.merge(
+		z.object({
+			order: attributionSchema.shape.order.default(0.5),
+			roles: attributionSchema.shape.roles.default([]),
+			affiliation: attributionSchema.shape.affiliation.optional(),
+			isAuthor: attributionSchema.shape.isAuthor.optional(),
+		}),
+	)
 	.and(
 		z.union([
 			z.object({
-				userId: z.string(),
+				userId: attributionSchema.shape.userId.unwrap(),
 				name: z.undefined().optional(),
 				orcid: z.undefined().optional(),
 			}),
 			z.object({
 				userId: z.undefined().optional(),
-				name: z.string(),
-				orcid: z.string().optional(),
+				name: attributionSchema.shape.name.unwrap(),
+				orcid: attributionSchema.shape.orcid.unwrap().optional(),
 			}),
 		]),
 	) satisfies z.ZodType<
-	Omit<PubAttributionCreationParams, 'order' | 'pubId'> & { order?: number }
+	Omit<types.PubAttributionCreationParams, 'order' | 'pubId'> & { order?: number }
 >;
 
 app.post(
@@ -64,10 +81,13 @@ app.post(
 		tags: ['PubAttributions'],
 		security: true,
 		body: z.object({
-			attributions: z.array(attributionSchema),
+			attributions: z.array(attributionCreationSchema),
 			communityId: z.string(),
 			pubId: z.string(),
 		}),
+		statusCodes: {
+			201: z.array(pubAttributionSchema),
+		},
 	}),
 	wrap(async (req, res) => {
 		const { attributions } = req.body;
@@ -117,7 +137,7 @@ app.post(
 				communityId: z.string(),
 				pubId: z.string(),
 			})
-			.and(attributionSchema),
+			.and(attributionCreationSchema),
 	}),
 	(req, res) => {
 		getPermissions(getRequestIds(req))
@@ -139,17 +159,13 @@ app.post(
 	},
 );
 
-export const updateAttributionSchema = z.object({
-	id: z.string().openapi({ description: 'The id of the attribution to update' }),
-	communityId: z.string(),
-	order: z.number().optional(),
-	roles: z.array(z.string()).optional().openapi({ example: DEFAULT_ROLES }),
-	affiliation: z.string().nullish(),
-	isAuthor: z.boolean().optional(),
-	name: z.string().nullish(),
-	userId: z.string().nullish(),
-	orcid: z.string().nullish(),
-}) satisfies Omit<z.ZodType<UpdateParams<PubAttribution>>, 'pubId'>;
+export const updateAttributionSchema = attributionSchema
+	.omit({ id: true })
+	.partial()
+	.merge(attributionSchema.pick({ id: true })) satisfies Omit<
+	z.ZodType<types.UpdateParams<PubAttribution>>,
+	'pubId'
+>;
 
 app.put(
 	'/api/pubAttributions',
@@ -157,9 +173,12 @@ app.put(
 		description: 'Update a pub attribution',
 		security: true,
 		tags: ['PubAttributions'],
-		body: updateAttributionSchema.merge(z.object({ pubId: z.string() })) satisfies z.ZodType<
-			UpdateParams<PubAttribution>
-		>,
+		body: updateAttributionSchema.merge(
+			z.object({ pubId: z.string(), communityId: z.string() }),
+		) satisfies z.ZodType<types.UpdateParams<PubAttribution>>,
+		statusCodes: {
+			201: updateAttributionSchema.partial().omit({ id: true }),
+		},
 	}),
 	(req, res) => {
 		const requestIds = getRequestIds(req);
