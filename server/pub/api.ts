@@ -17,10 +17,15 @@ import { Pub } from 'server/models';
 import { Request } from 'express';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { createGetRequestIds } from 'utils/getRequestIds';
+import { pubAttributionSchema } from 'server/pubAttribution/api';
+import { discussionSchema } from 'server/discussion/api';
+import { releaseSchema } from 'server/release/api';
+import { collectionPubSchema } from 'server/collectionPub/api';
+import { collectionSchema } from 'server/collection/api';
+import { collectionAttributionSchema } from 'server/collectionAttribution/api';
 import { getPubsById, queryPubIds } from './queryMany';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
 import { CanCreatePub, canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
-import { attributionCreationSchema, pubAttributionSchema } from 'server/pubAttribution/api';
 
 extendZodWithOpenApi(z);
 
@@ -96,7 +101,7 @@ export type GetManyQuery = {
 );
 
 export const pubSchema = z.object({
-	id: z.string(),
+	id: z.string().uuid(),
 	slug: z
 		.string({
 			description: 'Slug',
@@ -141,7 +146,7 @@ export const pubSchema = z.object({
 	labels: z
 		.array(
 			z.object({
-				id: z.string(),
+				id: z.string().uuid(),
 				color: z.string(),
 				title: z.string(),
 				publicApply: z.boolean(),
@@ -152,7 +157,7 @@ export const pubSchema = z.object({
 	reviewHash: z.string().nullable(),
 	editHash: z.string().nullable(),
 	commentHash: z.string().nullable(),
-	communityId: z.string(),
+	communityId: z.string().uuid(),
 	metadata: z
 		.object({
 			mtg_id: z.string().openapi({ example: 'aas241' }),
@@ -160,15 +165,15 @@ export const pubSchema = z.object({
 			mtg_presentation_id: z.string().openapi({ example: '301.11' }),
 		})
 		.nullable(),
-	draftId: z.string(),
-	scopeSummaryId: z.string().nullable(),
-	crossrefDepositRecordId: z.string().nullable(),
+	draftId: z.string().uuid(),
+	scopeSummaryId: z.string().uuid().nullable(),
+	crossrefDepositRecordId: z.string().uuid().nullable(),
 }) satisfies z.ZodType<types.Pub>;
 
 export const getManyQuerySchema = z.object({
 	query: z
 		.object({
-			excludeCollectionIds: z.array(z.string()).optional(),
+			excludeCollectionIds: z.array(z.string().uuid()).optional(),
 			ordering: z.object({
 				field: z.enum(['updatedDate', 'creationDate', 'collectionRank', 'title']),
 				direction: z.enum(['ASC', 'DESC']),
@@ -179,10 +184,13 @@ export const getManyQuerySchema = z.object({
 		.and(
 			z.union([
 				z.object({
-					collectionIds: z.array(z.string()),
+					collectionIds: z.array(z.string().uuid()),
 					pubIds: z.undefined().optional(),
 				}),
-				z.object({ pubIds: z.array(z.string()), collectionIds: z.undefined().optional() }),
+				z.object({
+					pubIds: z.array(z.string().uuid()),
+					collectionIds: z.undefined().optional(),
+				}),
 				z.object({
 					pubIds: z.undefined().optional(),
 					collectionIds: z.undefined().optional(),
@@ -216,8 +224,23 @@ export const getManyQuerySchema = z.object({
 const sanitizedPubSchema = pubSchema.merge(
 	z.object({
 		attributions: pubAttributionSchema.array(),
+		discussions: z.array(discussionSchema),
+		collectionPubs: z.array(
+			collectionPubSchema.merge(
+				z.object({
+					collection: collectionSchema.merge(
+						z.object({
+							attributions: z.array(collectionAttributionSchema),
+						}),
+					),
+				}),
+			),
+		),
+		isRelease: z.boolean(),
+		releases: z.array(releaseSchema),
+		releaseNumber: z.number().nullable(),
 	}),
-); // satisfies z.ZodType<types.SanitizedPubData>;
+) satisfies z.ZodType<types.SanitizedPubData, any, any>;
 
 app.post(
 	'/api/pubs/many',
@@ -293,16 +316,13 @@ app.post(
 
 	wrap(async (req, res) => {
 		//		try {
-		const { userId, collectionId, communityId, createPubToken } = getRequestIds(req);
-		// @ts-expect-error FIXME: REALLY FIX THIS THOMAS
-		const { create, collectionIds } = await canCreatePub({
-			userId,
-			collectionId,
-			communityId,
-			createPubToken,
-		});
+		const ids = getRequestIds(req);
+		const { create, collectionIds } = await canCreatePub(ids);
 		if (create) {
-			const newPub = await createPub({ communityId, collectionIds }, userId);
+			const newPub = await createPub(
+				{ communityId: ids.communityId, collectionIds },
+				ids.userId,
+			);
 			const jsonedPub = newPub.toJSON();
 			return res.status(201).json(jsonedPub);
 		}

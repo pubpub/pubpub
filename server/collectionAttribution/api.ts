@@ -27,7 +27,7 @@ const getRequestIds = createGetRequestIds<{
 	id?: string;
 }>();
 
-const collectionAttributionSchema = attributionSchema.merge(
+export const collectionAttributionSchema = attributionSchema.merge(
 	z.object({
 		collectionId: z.string().uuid(),
 	}),

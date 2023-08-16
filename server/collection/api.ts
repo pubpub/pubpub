@@ -4,9 +4,16 @@ import app, { wrap } from 'server/server';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { expect } from 'utils/assert';
 
+import * as types from 'types';
+import { z } from 'zod';
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+
 import { transformCollectionToResource } from 'deposit/transform/collection';
+import { LayoutBlock, layoutBlockSchema } from 'utils/layout';
 import { getPermissions } from './permissions';
 import { createCollection, destroyCollection, findCollection, updateCollection } from './queries';
+
+extendZodWithOpenApi(z);
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
@@ -16,6 +23,36 @@ const getRequestIds = (req) => {
 		collectionId: req.body.id || null,
 	};
 };
+
+const collectionLayoutSchema = z.object({
+	isNarrow: z.boolean().optional(),
+	blocks: z.array(layoutBlockSchema),
+});
+
+export const collectionSchema = z.object({
+	id: z.string().uuid(),
+	title: z.string(),
+	slug: z
+		.string()
+		.regex(/^[a-zA-Z0-9-]+$/)
+		.min(1)
+		.max(280),
+	avatar: z.string().nullable(),
+	isRestricted: z.boolean().nullable(),
+	isPublic: z.boolean().nullable(),
+	viewHash: z.string().nullable(),
+	editHash: z.string().nullable(),
+	metadata: z.record(z.any()).nullable(),
+	kind: z.enum(types.collectionKinds).nullable(),
+	doi: z.string().nullable(),
+	readNextPreviewSize: z.enum(types.readNextPreviewSizes).default('choose-best'),
+	layout: collectionLayoutSchema,
+	layoutAllowsDuplicatePubs: z.boolean().default(false),
+	pageId: z.string().uuid().nullable(),
+	communityId: z.string().uuid(),
+	scopeSummaryId: z.string().uuid().nullable(),
+	crossrefDepositRecordId: z.string().uuid().nullable(),
+}) satisfies z.ZodType<types.Collection, any, any>;
 
 app.post(
 	'/api/collections',

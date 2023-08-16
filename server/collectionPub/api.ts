@@ -1,6 +1,10 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
+import * as types from 'types';
+import { z } from 'zod';
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+
 import {
 	canCreateCollectionPub,
 	canDestroyCollectionPub,
@@ -12,6 +16,8 @@ import {
 	destroyCollectionPub,
 	getPubsInCollection,
 } from './queries';
+
+extendZodWithOpenApi(z);
 
 const getRequestIds = (req, argsFrom = req.body) => {
 	const user = req.user || {};
@@ -25,6 +31,15 @@ const getRequestIds = (req, argsFrom = req.body) => {
 };
 
 // TODO: Add validation to not allow empty collectionId query param
+export const collectionPubSchema = z.object({
+	id: z.string().uuid(),
+	pubId: z.string().uuid(),
+	collectionId: z.string().uuid(),
+	contextHint: z.string().nullable(),
+	rank: z.string(),
+	pubRank: z.string(),
+}) satisfies z.ZodType<types.CollectionPub>;
+
 app.get(
 	'/api/collectionPubs',
 	wrap(async (req, res) => {
