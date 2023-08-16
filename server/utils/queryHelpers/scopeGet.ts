@@ -235,6 +235,9 @@ const getScopeElements = async (
 			collectionId,
 			communityId: activeCommunity?.id,
 		});
+		if (!activeCollection) {
+			throw new Error('Pub Not Found');
+		}
 		activeTarget = activeCollection;
 	}
 
