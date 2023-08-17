@@ -51,12 +51,14 @@ const createDiscussionAnchorsForRelease = async (
 		const discussions = await Discussion.findAll({
 			where: { pubId },
 			attributes: ['id'],
+			transaction: sequelizeTransaction,
 		});
 		const existingAnchors = await DiscussionAnchor.findAll({
 			where: {
 				discussionId: { [Op.in]: discussions.map((d) => d.id) },
 				historyKey: previousRelease.historyKey,
 			},
+			transaction: sequelizeTransaction,
 		});
 		await Promise.all(
 			existingAnchors.map((anchor) =>
