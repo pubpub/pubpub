@@ -44,7 +44,7 @@ const createDiscussionAnchorsForRelease = async (
 	currentHistoryKey: number,
 	sequelizeTransaction: any,
 ) => {
-	const draftRef = await getPubDraftRef(pubId);
+	const draftRef = await getPubDraftRef(pubId, sequelizeTransaction);
 	if (previousRelease) {
 		const steps = await getStepsSinceLastRelease(draftRef, previousRelease, currentHistoryKey);
 		const flatSteps = steps.reduce((a, b) => [...a, ...b], []);
