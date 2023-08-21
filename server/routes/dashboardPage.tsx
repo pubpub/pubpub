@@ -15,7 +15,10 @@ app.get(['/dash/pages/:subMode'], async (req, res, next) => {
 		}
 		const initialData = await getInitialData(req, { isDashboard: true });
 
-		if (!initialData.scopeData.activePermissions.canView) {
+		if (
+			!initialData.scopeData.activePermissions.canView ||
+			!initialData.scopeData.elements.activeTarget
+		) {
 			throw new ForbiddenError();
 		}
 
