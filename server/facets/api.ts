@@ -50,7 +50,10 @@ const facetSchemas = Object.entries(ALL_FACET_DEFINITIONS).reduce((acc, [njame, 
 app.post(
 	'/api/facets',
 	validate({
-		description: 'Update facets for a scope',
+		summary: 'Update facets for a scope',
+		description:
+			'Facets are properties that cascade down from a community, collection, or publication to all of its children, like the style of citation used or the license for content.\n\nYou cannot "unset" facets, so passing an empty object will just be treated as no change.',
+		tags: ['Facets'],
 		body: {
 			facets: z.object(facetSchemas).partial() satisfies z.ZodType<UpdateFacetsQuery>,
 			scope: z.object({
