@@ -131,8 +131,38 @@ app.post(
 	}),
 );
 
+const pubEdgeUpdateSchema = pubEdgeSchema
+	.omit({ id: true, externalPublicationId: true, targetPubId: true })
+	.partial({
+		rank: true,
+		approvedByTarget: true,
+		pubIsParent: true,
+		relationType: true,
+	})
+	.extend({
+		pubEdgeId: pubEdgeSchema.shape.id,
+	})
+	.and(
+		z.union([
+			z.object({
+				targetPubId: z.string().uuid(),
+				externalPublication: z.undefined().optional(),
+			}),
+			z.object({
+				targetPubId: z.undefined().optional(),
+				externalPublication: externalPublicationCreationSchema.partial(),
+			}),
+		]),
+	);
+
 app.put(
 	'/api/pubEdges',
+	validate({
+		tags: ['PubEdges'],
+		description: 'Update a pubEdge',
+		body: pubEdgeUpdateSchema,
+		response: pubEdgeSchema,
+	}),
 	wrap(async (req, res) => {
 		const {
 			pubEdgeId,
@@ -184,6 +214,14 @@ app.put(
 
 app.delete(
 	'/api/pubEdges',
+	validate({
+		tags: ['PubEdges'],
+		description: 'Remove a connection for a pub',
+		body: z.object({
+			pubEdgeId: z.string().uuid(),
+		}),
+		response: {},
+	}),
 	wrap(async (req, res) => {
 		const { pubEdgeId } = req.body;
 		const userId = req.user.id;
