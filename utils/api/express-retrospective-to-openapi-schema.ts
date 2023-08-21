@@ -48,7 +48,9 @@ export function expressAppToApiSchema(config: OpenApiConfig, app: Application) {
 							name,
 							in: 'path' as const,
 							required: !optional,
-							schema: generateSchema(z.string()),
+							schema: generateSchema(
+								validationMiddleware.zodSchemas.params?.shape[name] ?? z.string(),
+							),
 						})),
 						...(validationMiddleware.zodSchemas.query
 							? Object.entries<ZodString>(

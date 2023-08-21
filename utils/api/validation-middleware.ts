@@ -12,6 +12,7 @@ type ValidationMiddlewareProperties = {
 	zodSchemas: {
 		body?: ZodObject<any>;
 		query?: ZodObject<any>;
+		params?: ZodObject<any>;
 		response?: ZodObject<any>;
 		statusCodes: Record<string, ZodObject<any>>;
 	};
@@ -54,10 +55,12 @@ type Options<
 	ResBody extends ZodRawShapeOrObjOrArray | undefined,
 	ReqQuery extends ZodStringRecordShape | undefined,
 	ResStatusCodes extends StatusCodes | undefined,
+	ReqParams extends ZodStringRecordShape | undefined = undefined,
 > = {
 	body?: ReqBody;
 	response?: ResBody;
 	query?: ReqQuery;
+	params?: ReqParams;
 	statusCodes?: ResStatusCodes | undefined;
 	errorHandler?: (err: ZodError, req: Request, res: Response, next: NextFunction) => void;
 	// TODO: rename to parseQuery
@@ -70,6 +73,11 @@ type Options<
 	 * @default true
 	 */
 	bodyThrowsError?: boolean;
+	// TODO: rename to parseParams
+	/**
+	 * @default true
+	 */
+	paramsThrowsError?: boolean;
 	summary?: string;
 	description?: string;
 	tags?: string[];
@@ -86,10 +94,11 @@ type ValidationMiddleware = <
 	ResBody extends ZodRawShapeOrObjOrArray | undefined = undefined,
 	ReqQuery extends ZodStringRecordShape | undefined = undefined,
 	ResStatusCodes extends StatusCodes | undefined = undefined,
+	ReqParams extends ZodStringRecordShape | undefined = undefined,
 >(
-	options: Options<ReqBody, ResBody, ReqQuery, ResStatusCodes>,
+	options: Options<ReqBody, ResBody, ReqQuery, ResStatusCodes, ReqParams>,
 ) => RequestHandler<
-	Request['params'],
+	undefined extends ReqParams ? Request['params'] : InferShapeOrZodTypeIfNotUndefined<ReqParams>,
 	| InferStatusCodes<ResStatusCodes>
 	| (ResStatusCodes extends StatusCodes
 			? ResBody extends ZodRawShapeOrObjOrArray
@@ -125,10 +134,15 @@ export const validate: ValidationMiddleware = (options) => {
 		errorHandler: defaultErrorHandler,
 		queryThrowsError: true,
 		bodyThrowsError: true,
+		paramsThrowsError: true,
 		security: true,
 		...options,
 	};
 
+	const zodParamsSchema: ZodObject<any> | undefined =
+		optionsWithDefaults.params && optionsWithDefaults.paramsThrowsError
+			? z.object(optionsWithDefaults.params)
+			: undefined;
 	const zodBodySchema: ZodObject<any> | undefined =
 		optionsWithDefaults.body && optionsWithDefaults.bodyThrowsError
 			? turnToZodObject(optionsWithDefaults.body)
@@ -152,6 +166,11 @@ export const validate: ValidationMiddleware = (options) => {
 					query: zodQuerySchema,
 			  }
 			: {}),
+		...(optionsWithDefaults.params && optionsWithDefaults.paramsThrowsError
+			? {
+					params: zodParamsSchema,
+			  }
+			: {}),
 	});
 
 	const handler: RequestHandler<any, any, any, any> & ValidationMiddlewareProperties = (
@@ -162,7 +181,8 @@ export const validate: ValidationMiddleware = (options) => {
 		const { query, body } = req;
 		const shouldParseSchema =
 			(optionsWithDefaults.body && optionsWithDefaults.bodyThrowsError) ||
-			(optionsWithDefaults.query && optionsWithDefaults.queryThrowsError);
+			(optionsWithDefaults.query && optionsWithDefaults.queryThrowsError) ||
+			(optionsWithDefaults.params && optionsWithDefaults.paramsThrowsError);
 		if (shouldParseSchema) {
 			const parseResult = zodSchema.safeParse({
 				...(optionsWithDefaults.body && optionsWithDefaults.bodyThrowsError
@@ -175,6 +195,11 @@ export const validate: ValidationMiddleware = (options) => {
 							query,
 					  }
 					: {}),
+				...(optionsWithDefaults.params && optionsWithDefaults.paramsThrowsError
+					? {
+							params: req.params,
+					  }
+					: {}),
 			});
 			if (!parseResult.success) {
 				optionsWithDefaults.errorHandler!(parseResult.error, req, res, next);
@@ -183,6 +208,7 @@ export const validate: ValidationMiddleware = (options) => {
 
 			req.body = parseResult.data.body || req.body;
 			req.query = parseResult.data.query || req.query;
+			req.params = parseResult.data.params || req.params;
 		}
 
 		next();
@@ -202,6 +228,7 @@ export const validate: ValidationMiddleware = (options) => {
 	handler.zodSchemas = {
 		body: zodBodySchema,
 		query: zodQuerySchema,
+		params: zodParamsSchema,
 		response: zodResponseSchema,
 		statusCodes: Object.fromEntries(
 			Object.entries(optionsWithDefaults.statusCodes!).map(([statusCode, zodRawShape]) => [
