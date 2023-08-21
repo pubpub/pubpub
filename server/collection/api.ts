@@ -62,33 +62,56 @@ export const collectionSchema = z.object({
 }) satisfies z.ZodType<types.Collection, any, any>;
 
 const collectionCreationSchema = collectionSchema
+	.omit({ id: true })
 	.pick({
 		communityId: true,
 		title: true,
+		pageId: true,
+		doi: true,
+		isPublic: true,
+		isRestricted: true,
+		slug: true,
 	})
-	.merge(
-		collectionSchema
-			.pick({
-				pageId: true,
-				doi: true,
-				isPublic: true,
-				isRestricted: true,
-				id: true,
-				slug: true,
-			})
-			.partial(),
-	)
-	.merge(z.object({ kind: collectionSchema.shape.kind.unwrap() }));
+	.required({
+		communityId: true,
+		title: true,
+	})
+	.partial({
+		pageId: true,
+		doi: true,
+		isPublic: true,
+		isRestricted: true,
+		slug: true,
+	})
+
+	// .merge(
+	// 	collectionSchema
+	// 		.pick({
+	// 			pageId: true,
+	// 			doi: true,
+	// 			isPublic: true,
+	// 			isRestricted: true,
+	// 			id: true,
+	// 			slug: true,
+	// 		})
+	// 		.partial(),
+	// )
+	// .merge(z.object(
+	.extend({ kind: collectionSchema.shape.kind.unwrap() });
 
 app.post(
 	'/api/collections',
 	validate({
+		tags: ['Collections'],
 		description: 'Create a collection',
 		body: collectionCreationSchema,
+		statusCodes: {
+			201: collectionSchema,
+		},
 	}),
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
-		const permissions = await getPermissions({ ...requestIds, collectionId: req.body.id });
+		const permissions = await getPermissions({ ...requestIds });
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
@@ -99,6 +122,31 @@ app.post(
 
 app.put(
 	'/api/collections',
+	validate({
+		tags: ['Collections'],
+		description: 'Create a collection',
+		body: collectionSchema
+			.pick({
+				title: true,
+				slug: true,
+				isRestricted: true,
+				isPublic: true,
+				pageId: true,
+				metadata: true,
+				readNextPreviewSize: true,
+				layout: true,
+				layoutAllowsDuplicatePubs: true,
+				avatar: true,
+			})
+			.partial()
+			.extend({
+				id: collectionSchema.shape.id,
+				communityId: collectionSchema.shape.communityId,
+			}),
+		statusCodes: {
+			200: collectionCreationSchema.partial(),
+		},
+	}),
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 		const permissions = await getPermissions({ ...requestIds, collectionId: req.body.id });
@@ -119,6 +167,15 @@ app.put(
 
 app.delete(
 	'/api/collections',
+	validate({
+		tags: ['Collections'],
+		description: 'Delete a collection',
+		body: z.object({
+			id: collectionSchema.shape.id,
+			communityId: collectionSchema.shape.communityId,
+		}),
+		response: collectionSchema.shape.id,
+	}),
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 		const permissions = await getPermissions({ ...requestIds, collectionId: req.body.id });

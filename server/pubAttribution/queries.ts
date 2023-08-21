@@ -50,7 +50,10 @@ export const updatePubAttribution = async (
 	updatePermissions: Permissions['update'],
 ) => {
 	// Filter to only allow certain fields to be updated
-	const filteredValues = {} as Pick<typeof inputValues, keyof typeof updatePermissions>;
+	const filteredValues = {} as Pick<
+		typeof inputValues,
+		Exclude<typeof updatePermissions, false | undefined>[number]
+	>;
 	Object.keys(inputValues).forEach((key) => {
 		if (updatePermissions && updatePermissions.some((update) => update === key)) {
 			filteredValues[key] = inputValues[key];

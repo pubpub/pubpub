@@ -126,7 +126,7 @@ it('does not allow normal users to create or update a collection', async () => {
 		.expect(403);
 
 	await agent
-		.post('/api/collections')
+		.put('/api/collections')
 		.send({
 			communityId: community.id,
 			id: slugCollection.id,

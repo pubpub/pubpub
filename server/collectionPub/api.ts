@@ -43,6 +43,7 @@ const getRequestIds = createGetRequestIds<{
 app.get(
 	'/api/collectionPubs',
 	validate({
+		tags: ['CollectionPubs'],
 		description: 'Get the pubs associated with a collection',
 		security: false,
 		query: {
@@ -84,6 +85,7 @@ export const createCollectionPubSchema = collectionPubSchema
 app.post(
 	'/api/collectionPubs',
 	validate({
+		tags: ['CollectionPubs'],
 		description: 'Add a pub to a collection',
 		body: createCollectionPubSchema,
 		statusCodes: {
@@ -121,6 +123,7 @@ const updateCollectionPubSchema = collectionPubSchema
 app.put(
 	'/api/collectionPubs',
 	validate({
+		tags: ['CollectionPubs'],
 		description: 'Change the pubs that are associated with a collection',
 		body: updateCollectionPubSchema.merge(
 			z.object({
@@ -147,6 +150,7 @@ app.put(
 app.delete(
 	'/api/collectionPubs',
 	validate({
+		tags: ['CollectionPubs'],
 		description: 'Remove a pub from a collection',
 		body: z.object({
 			id: z.string().uuid(),

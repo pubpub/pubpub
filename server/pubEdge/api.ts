@@ -50,6 +50,7 @@ const externalPublicationCreationSchema = externalPublicationSchema.omit({ id: t
 app.get(
 	'/api/pubEdges/:id',
 	validate({
+		tags: ['PubEdges'],
 		description: 'Get a pubEdge by id',
 		security: false,
 		params: {
@@ -91,6 +92,7 @@ const pubEdgeCreationSchema = pubEdgeSchema
 app.post(
 	'/api/pubEdges',
 	validate({
+		tags: ['PubEdges'],
 		description: 'Create a connection from one pub to another, or to an external publication',
 		body: pubEdgeCreationSchema,
 		statusCodes: {
