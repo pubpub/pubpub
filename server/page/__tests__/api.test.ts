@@ -84,17 +84,6 @@ describe('/api/pages', () => {
 			.expect(201);
 	});
 
-	it('allows a Community manager to delete a page', async () => {
-		const { community, communityManager, page } = models;
-
-		const agent = await login(communityManager);
-
-		await agent
-			.delete(`/api/pages`)
-			.send({ pageId: page.id, communityId: community.id })
-			.expect(201);
-	});
-
 	it('does not allow allow a Community member to delete, create, or update a page', async () => {
 		const { community, communityMember, page } = models;
 
@@ -149,6 +138,17 @@ describe('/api/pages', () => {
 		await agent
 			.put(`/api/pages`)
 			.send({ pageId: page.id, layout, communityId: community.id })
+			.expect(201);
+	});
+
+	it('allows a Community manager to delete a page', async () => {
+		const { community, communityManager, page } = models;
+
+		const agent = await login(communityManager);
+
+		await agent
+			.delete(`/api/pages`)
+			.send({ pageId: page.id, communityId: community.id })
 			.expect(201);
 	});
 });
