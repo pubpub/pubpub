@@ -157,9 +157,12 @@ const resolveDirectiveValues = async (directive, sourceFiles, rawMetadata, doc):
 			if (key === 'downloads') {
 				resolvedDirective[key] = [{ url: resolvedValue, type: 'formatted' }];
 			} else if (key === 'inlineFile') {
+				const { $sourceFile } = value as any;
+				const resolvedFileName =
+					$sourceFile || resolvedValue.split('/')[resolvedValue.split('/').length - 1];
 				resolvedDirective[key] = {
 					url: resolvedValue,
-					fileName: resolvedValue.split('/')[resolvedValue.split('/').length - 1],
+					fileName: resolvedFileName,
 					fileSize: '',
 				};
 			} else {
