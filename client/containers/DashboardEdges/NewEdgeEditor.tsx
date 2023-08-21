@@ -10,6 +10,7 @@ import { PubEdgeEditor, PubEdgeListingCard } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
 
 import NewEdgeInput from './NewEdgeInput';
+import { RelationTypeName } from 'utils/pubEdge/relations';
 
 require('./newEdgeEditor.scss');
 
@@ -76,7 +77,7 @@ const NewEdgeEditor = (props: Props) => {
 		});
 	};
 
-	const handleEdgeRelationTypeChange = (relationType: string) => {
+	const handleEdgeRelationTypeChange = (relationType: RelationTypeName) => {
 		assert(pubEdge !== null);
 		onChange({
 			...pubEdge,
@@ -111,7 +112,11 @@ const NewEdgeEditor = (props: Props) => {
 								return (
 									<MenuItem
 										text={name}
-										onClick={() => handleEdgeRelationTypeChange(relationType)}
+										onClick={() =>
+											handleEdgeRelationTypeChange(
+												relationType as RelationTypeName,
+											)
+										}
 										key={relationType}
 										icon={selected ? 'tick' : 'blank'}
 									/>

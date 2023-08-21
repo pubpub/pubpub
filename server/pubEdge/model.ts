@@ -11,6 +11,7 @@ import {
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import type { SerializedModel } from 'types';
 import { Pub, ExternalPublication } from '../models';
+import { RelationTypeName } from 'utils/pubEdge/relations';
 
 @Table
 export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttributes<PubEdge>> {
@@ -33,7 +34,7 @@ export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttrib
 
 	@AllowNull(false)
 	@Column(DataType.STRING)
-	relationType!: string;
+	relationType!: RelationTypeName;
 
 	@AllowNull(false)
 	@Column(DataType.TEXT)

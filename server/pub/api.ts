@@ -221,7 +221,7 @@ export const getManyQuerySchema = z.object({
 	}) satisfies z.ZodType<PubGetOptions>,
 }) satisfies z.ZodType<ManyRequestParams>;
 
-const sanitizedPubSchema = pubSchema.merge(
+export const sanitizedPubSchema = pubSchema.merge(
 	z.object({
 		attributions: pubAttributionSchema.array(),
 		discussions: z.array(discussionSchema),
