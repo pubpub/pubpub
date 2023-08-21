@@ -154,7 +154,8 @@ const resolveDirectiveValues = async (directive, sourceFiles, rawMetadata, doc):
 	await Promise.all(
 		Object.entries(directive).map(async ([key, value]) => {
 			const resolvedValue = await resolveDirectiveValue(value, context);
-			resolvedDirective[key] = resolvedValue;
+			const resolvedDownloadsValue = [{ url: resolvedValue, type: 'formatted' }];
+			resolvedDirective[key] = key === 'downloads' ? resolvedDownloadsValue : resolvedValue;
 		}),
 	);
 	return resolvedDirective;
