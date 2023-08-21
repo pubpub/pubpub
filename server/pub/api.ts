@@ -20,7 +20,7 @@ import { createGetRequestIds } from 'utils/getRequestIds';
 import { pubAttributionSchema } from 'server/pubAttribution/api';
 import { discussionSchema } from 'server/discussion/api';
 import { releaseSchema } from 'server/release/api';
-import { collectionPubSchema } from 'server/collectionPub/api';
+import { collectionPubSchema } from 'server/collectionPub/schemas';
 import { collectionSchema } from 'server/collection/api';
 import { collectionAttributionSchema } from 'server/collectionAttribution/api';
 import { getPubsById, queryPubIds } from './queryMany';

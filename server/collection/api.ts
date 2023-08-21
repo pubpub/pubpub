@@ -88,7 +88,6 @@ app.post(
 	}),
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
-		console.log(requestIds);
 		const permissions = await getPermissions({ ...requestIds, collectionId: req.body.id });
 		if (!permissions.create) {
 			throw new ForbiddenError();
