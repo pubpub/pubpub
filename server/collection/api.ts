@@ -19,8 +19,8 @@ extendZodWithOpenApi(z);
 
 const getRequestIds = createGetRequestIds<{
 	userId?: string;
-	id?: string;
 	communityId?: string;
+	id?: string;
 }>();
 // const getRequestIds = (req) => {
 // 	const user = req.user || {};
@@ -89,7 +89,7 @@ app.post(
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 		console.log(requestIds);
-		const permissions = await getPermissions(requestIds);
+		const permissions = await getPermissions({ ...requestIds, collectionId: req.body.id });
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
@@ -101,7 +101,8 @@ app.post(
 app.put(
 	'/api/collections',
 	wrap(async (req, res) => {
-		const permissions = await getPermissions(getRequestIds(req));
+		const requestIds = getRequestIds(req);
+		const permissions = await getPermissions({ ...requestIds, collectionId: req.body.id });
 		if (!permissions.update) {
 			throw new ForbiddenError();
 		}
@@ -120,7 +121,8 @@ app.put(
 app.delete(
 	'/api/collections',
 	wrap(async (req, res) => {
-		const permissions = await getPermissions(getRequestIds(req));
+		const requestIds = getRequestIds(req);
+		const permissions = await getPermissions({ ...requestIds, collectionId: req.body.id });
 		if (!permissions.update) {
 			throw new ForbiddenError();
 		}
