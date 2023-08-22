@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 import { usePageContext } from 'utils/hooks';
-import { apiFetch } from 'client/utils/apiFetch';
+// import { apiFetch } from 'client/utils/apiFetch';
 
-import GlobalControlsButton from './GlobalControlsButton';
 import { client } from 'utils/api/router';
+import GlobalControlsButton from './GlobalControlsButton';
 
 const CreatePubButton = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +15,6 @@ const CreatePubButton = () => {
 		return client
 			.post('/api/pubs', { body: { communityId: communityData.id } })
 			.then((newPub) => {
-				console.log('using new thing');
 				window.location.href = `/pub/${newPub.slug}`;
 			})
 			.catch((err) => {

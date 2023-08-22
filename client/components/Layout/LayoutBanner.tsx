@@ -4,7 +4,6 @@ import { AnchorButton, Classes, Tooltip } from '@blueprintjs/core';
 
 import { getResizedUrl } from 'utils/images';
 import { apiFetch } from 'client/utils/apiFetch';
-import { client } from 'utils/api/router';
 
 require('./layoutBanner.scss');
 
@@ -46,16 +45,15 @@ class LayoutBanner extends Component<Props, State> {
 	createPub() {
 		const { communityData, content } = this.props;
 		this.setState({ isLoading: true, buttonError: null });
-		return client
+		return apiFetch
 			.post('/api/pubs', {
-				// method: 'POST',
+				method: 'POST',
 				body: {
 					communityId: communityData.id,
 					createPubToken: content.createPubToken,
 				},
 			})
 			.then((newPub) => {
-				console.log('using new thing');
 				window.location.href = `/pub/${newPub.slug}`;
 				this.setState({ isLoading: false });
 			})

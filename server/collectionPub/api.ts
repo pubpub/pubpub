@@ -6,6 +6,7 @@ import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { validate } from 'utils/api';
+import { pubSchema } from 'types/schemas/pub';
 import {
 	canCreateCollectionPub,
 	canDestroyCollectionPub,
@@ -18,7 +19,6 @@ import {
 	getPubsInCollection,
 } from './queries';
 import { collectionPubSchema } from './schemas';
-import { pubSchema } from 'types/schemas/pub';
 
 extendZodWithOpenApi(z);
 

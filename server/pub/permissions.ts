@@ -2,8 +2,8 @@ import { Community } from 'server/models';
 import { getScope } from 'server/utils/queryHelpers';
 
 import { expect } from 'utils/assert';
-import { getValidCollectionIdsFromCreatePubToken } from './tokens';
 import { CanCreatePub } from 'types';
+import { getValidCollectionIdsFromCreatePubToken } from './tokens';
 
 const managerUpdatableFields = [
 	'avatar',

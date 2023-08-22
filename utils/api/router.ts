@@ -2,6 +2,8 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { Prettify, UnionToIntersection } from 'utils/types';
+import { pubSchema } from 'types/schemas/pub';
+import { CanCreatePub } from 'types';
 import {
 	InferShapeOrZodTypeIfNotUndefined,
 	InferShapeOrZodTypeIfNotUndefinedStrict,
@@ -10,8 +12,6 @@ import {
 	ZodRawShapeOrObjOrArray,
 	validate,
 } from './validation-middleware';
-import { pubSchema } from 'types/schemas/pub';
-import { CanCreatePub } from 'types';
 
 extendZodWithOpenApi(z);
 
@@ -152,6 +152,7 @@ const createSubFetch = <Method extends AllowedMethods>(method: Method) => {
 		ResStatusCodes extends IndexOrUndefined<Contract[Route][Method], 'statusCodes'>,
 	>(
 		route: Route,
+		// eslint-disable-next-line no-undef
 		fetchConfig: Omit<RequestInit, 'body' | 'method' | 'type' | 'credentials'> &
 			MakeOptionalKeys<{
 				body: InferShapeOrZodTypeIfNotUndefinedStrict<ReqBody>;
@@ -159,6 +160,7 @@ const createSubFetch = <Method extends AllowedMethods>(method: Method) => {
 			}>,
 	) => {
 		const { ...rest } = fetchConfig;
+		// eslint-disable-next-line no-undef
 		const request: RequestInit = {
 			...rest,
 			method,
