@@ -1,6 +1,7 @@
 import { RequestHandler, Request as ExpressRequest } from 'express';
 import app, { wrap } from 'server/server';
-import { Contract, IndexOrUndefined, router } from './router';
+import { contract } from './contract';
+import { Contract, IndexOrUndefined } from './client';
 import {
 	InferShapeOrZodTypeIfNotUndefined,
 	InferStatusCodes,
@@ -44,7 +45,7 @@ export const createRoute = <
 ) => {
 	return app[method.toLowerCase()](
 		route,
-		validate(router[route][method]!),
+		validate(contract[route][method]!),
 		options.wrap ? wrap(handler) : handler,
 	);
 };

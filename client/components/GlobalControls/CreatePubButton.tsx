@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { usePageContext } from 'utils/hooks';
 // import { apiFetch } from 'client/utils/apiFetch';
 
-import { client } from 'utils/api/router';
+import { client } from 'utils/api/client';
 import GlobalControlsButton from './GlobalControlsButton';
 
 const CreatePubButton = () => {
