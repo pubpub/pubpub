@@ -25,7 +25,9 @@ import { collectionSchema } from 'server/collection/api';
 import { collectionAttributionSchema } from 'server/collectionAttribution/api';
 import { getPubsById, queryPubIds } from './queryMany';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
-import { CanCreatePub, canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+import { createRoute } from 'utils/api/createRoute';
+import { pubSchema } from 'types/schemas/pub';
 
 extendZodWithOpenApi(z);
 
@@ -99,76 +101,6 @@ export type GetManyQuery = {
 	| { pubIds: string[]; collectionIds?: undefined }
 	| { pubIds?: undefined; collectionIds?: undefined }
 );
-
-export const pubSchema = z.object({
-	id: z.string().uuid(),
-	slug: z
-		.string({
-			description: 'Slug',
-		})
-		.regex(/^[a-zA-Z0-9-]+$/)
-		.min(1)
-		.max(280)
-		.openapi({
-			uniqueItems: true,
-			example: 'some-slug',
-		}),
-	title: z.string().openapi({
-		example: 'A beautiful title',
-	}),
-	htmlTitle: z.string().nullable().openapi({
-		example: 'A <strong>beautiful</strong> <em>title</em>',
-		description:
-			'HTML version of the title, allows for things like <strong>bold</strong> and <em>italics</em>',
-	}),
-	description: z.string().max(280).min(0).nullable(),
-	htmlDescription: z.string().max(280).min(0).nullable(),
-	avatar: z.string({}).nullable().openapi({
-		description: 'The preview image of a Pub',
-	}),
-	doi: z.string().nullable().openapi({
-		example: '10.1101/2020.05.01.072975',
-		description: 'The DOI of the pub',
-	}),
-	downloads: z
-		.array(
-			z.object({
-				url: z.string().url(),
-				type: z.literal('formatted'),
-				createdAt: z
-					.string()
-					.datetime()
-					.default(() => new Date().toISOString()),
-			}),
-		)
-		.nullable(),
-	customPublishedAt: z.string().datetime().nullable(),
-	labels: z
-		.array(
-			z.object({
-				id: z.string().uuid(),
-				color: z.string(),
-				title: z.string(),
-				publicApply: z.boolean(),
-			}),
-		)
-		.nullable(),
-	viewHash: z.string().nullable(),
-	reviewHash: z.string().nullable(),
-	editHash: z.string().nullable(),
-	commentHash: z.string().nullable(),
-	communityId: z.string().uuid(),
-	metadata: z
-		.object({
-			mtg_id: z.string().openapi({ example: 'aas241' }),
-			bibcode: z.string().openapi({ example: '2023AAS…24130111A' }),
-			mtg_presentation_id: z.string().openapi({ example: '301.11' }),
-		})
-		.nullable(),
-	draftId: z.string().uuid(),
-	scopeSummaryId: z.string().uuid().nullable(),
-	crossrefDepositRecordId: z.string().uuid().nullable(),
-}) satisfies z.ZodType<types.Pub>;
 
 export const getManyQuerySchema = z.object({
 	query: z
@@ -283,51 +215,62 @@ const getRequestIds = createGetRequestIds<{
 	createPubToken?: string;
 }>();
 
-app.post(
-	'/api/pubs',
-	validate({
-		description: 'Create a Pub',
-		security: true,
-		tags: ['Pub'],
-		body: z
-			.object({
-				communityId: z.string(),
-			})
-			.and(
-				z.union([
-					z.object({
-						collectionId: z.string().optional(),
-						createPubToken: z.undefined(),
-					}),
-					z.object({
-						createPubToken: z.string().optional(),
-						collectionId: z.undefined(),
-					}),
-					z.object({
-						createPubToken: z.undefined(),
-						collectionId: z.undefined(),
-					}),
-				]),
-			) satisfies z.ZodType<CanCreatePub>,
-		statusCodes: {
-			201: pubSchema,
-		},
-	}),
+// app.post(
+// 	'/api/pubs',
+// 	validate({
+// 		description: 'Create a Pub',
+// 		security: true,
+// 		tags: ['Pub'],
+// 		body: z
+// 			.object({
+// 				communityId: z.string(),
+// 			})
+// 			.and(
+// 				z.union([
+// 					z.object({
+// 						collectionId: z.string().optional(),
+// 						createPubToken: z.undefined(),
+// 					}),
+// 					z.object({
+// 						createPubToken: z.string().optional(),
+// 						collectionId: z.undefined(),
+// 					}),
+// 					z.object({
+// 						createPubToken: z.undefined(),
+// 						collectionId: z.undefined(),
+// 					}),
+// 				]),
+// 			) satisfies z.ZodType<CanCreatePub>,
+// 		statusCodes: {
+// 			201: pubSchema,
+// 		},
+// 	}),
 
-	wrap(async (req, res) => {
-		const ids = getRequestIds(req);
-		const { create, collectionIds } = await canCreatePub(ids);
-		if (create) {
-			const newPub = await createPub(
-				{ communityId: ids.communityId, collectionIds },
-				ids.userId,
-			);
-			const jsonedPub = newPub.toJSON();
-			return res.status(201).json(jsonedPub);
-		}
-		throw new ForbiddenError();
-	}),
-);
+// 	wrap(async (req, res) => {
+// 		const ids = getRequestIds(req);
+// 		const { create, collectionIds } = await canCreatePub(ids);
+// 		if (create) {
+// 			const newPub = await createPub(
+// 				{ communityId: ids.communityId, collectionIds },
+// 				ids.userId,
+// 			);
+// 			const jsonedPub = newPub.toJSON();
+// 			return res.status(201).json(jsonedPub);
+// 		}
+// 		throw new ForbiddenError();
+// 	}),
+// );
+
+createRoute('/api/pubs', 'POST', async (req, res) => {
+	const ids = getRequestIds(req);
+	const { create, collectionIds } = await canCreatePub(ids);
+	if (create) {
+		const newPub = await createPub({ communityId: ids.communityId, collectionIds }, ids.userId);
+		const jsonedPub = newPub.toJSON();
+		return res.status(201).json(jsonedPub);
+	}
+	throw new ForbiddenError();
+});
 
 export type PubPut = types.UpdateParams<Pub> & { pubId: string };
 

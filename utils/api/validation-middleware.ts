@@ -1,9 +1,19 @@
 import type { RequestHandler, Request, Response, NextFunction } from 'express';
 import { SecurityRequirementObject } from 'openapi3-ts/oas31';
-import { z, ZodArray, ZodError, ZodLiteral, ZodObject, ZodRawShape, ZodString, ZodType } from 'zod';
+import {
+	z,
+	ZodArray,
+	ZodError,
+	ZodLiteral,
+	ZodObject,
+	ZodOptional,
+	ZodRawShape,
+	ZodString,
+	ZodType,
+} from 'zod';
 import { fromZodError } from 'zod-validation-error';
 
-type ValidationMiddlewareProperties = {
+export type ValidationMiddlewareProperties = {
 	isValidationMiddleware: boolean;
 	summary?: string;
 	description?: string;
@@ -18,14 +28,15 @@ type ValidationMiddlewareProperties = {
 	};
 };
 
-type ZodRawShapeOrObjOrArray =
+export type ZodRawShapeOrObjOrArray =
 	| ZodRawShape
 	| ZodObject<any>
 	| ZodArray<any>
 	| ZodType<Record<string, any>>
 	| ZodType<any[]>
 	| ZodString
-	| ZodLiteral<string>;
+	| ZodLiteral<string>
+	| ZodOptional<any>;
 
 type ZodifyRawShapeOrZodType<T extends ZodType | ZodRawShape> = T extends ZodType
 	? T
@@ -36,21 +47,30 @@ type InferZodRawShapeOrZodType<T extends ZodType | ZodRawShape> = T extends ZodT
 	? z.infer<ZodifyRawShapeOrZodType<T>>
 	: never;
 
-type ZodStringRecordShape = { [k: string]: ZodString | ZodType<string | undefined> };
+export type ZodStringRecordShape =
+	| { [k: string]: ZodString | ZodType<string | undefined> }
+	| ZodObject<any>
+	| ZodOptional<ZodObject<any>>;
 
-type StatusCodes = Record<string, ZodRawShapeOrObjOrArray>;
+export type StatusCodes = Record<string, ZodRawShapeOrObjOrArray>;
 
 type ZodifiedStatusCodes<Type extends StatusCodes> = {
 	[Property in keyof Type]: ZodifyRawShapeOrZodType<Type[Property]>;
 };
 
-type InferShapeOrZodTypeIfNotUndefined<T> = T extends ZodRawShapeOrObjOrArray
+export type InferShapeOrZodTypeIfNotUndefined<T> = T extends ZodRawShapeOrObjOrArray
 	? InferZodRawShapeOrZodType<T>
 	: unknown;
 
-type InferStatusCodes<T> = T extends StatusCodes ? z.infer<ZodifiedStatusCodes<T>[keyof T]> : never;
+export type InferShapeOrZodTypeIfNotUndefinedStrict<T> = T extends ZodRawShapeOrObjOrArray
+	? InferZodRawShapeOrZodType<T>
+	: never;
 
-type Options<
+export type InferStatusCodes<T> = T extends StatusCodes
+	? z.infer<ZodifiedStatusCodes<T>[keyof T]>
+	: never;
+
+export type Options<
 	ReqBody extends ZodRawShapeOrObjOrArray | undefined,
 	ResBody extends ZodRawShapeOrObjOrArray | undefined,
 	ReqQuery extends ZodStringRecordShape | undefined,
@@ -141,7 +161,7 @@ export const validate: ValidationMiddleware = (options) => {
 
 	const zodParamsSchema: ZodObject<any> | undefined =
 		optionsWithDefaults.params && optionsWithDefaults.paramsThrowsError
-			? z.object(optionsWithDefaults.params)
+			? turnToZodObject(optionsWithDefaults.params)
 			: undefined;
 	const zodBodySchema: ZodObject<any> | undefined =
 		optionsWithDefaults.body && optionsWithDefaults.bodyThrowsError
@@ -149,7 +169,7 @@ export const validate: ValidationMiddleware = (options) => {
 			: undefined;
 	const zodQuerySchema: ZodObject<any> | undefined =
 		optionsWithDefaults.query && optionsWithDefaults.queryThrowsError
-			? z.object(optionsWithDefaults.query)
+			? turnToZodObject(optionsWithDefaults.query)
 			: undefined;
 	const zodResponseSchema: ZodObject<any> | undefined = optionsWithDefaults.response
 		? turnToZodObject(optionsWithDefaults.response)

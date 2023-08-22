@@ -3,6 +3,7 @@ import { getScope } from 'server/utils/queryHelpers';
 
 import { expect } from 'utils/assert';
 import { getValidCollectionIdsFromCreatePubToken } from './tokens';
+import { CanCreatePub } from 'types';
 
 const managerUpdatableFields = [
 	'avatar',
@@ -17,20 +18,6 @@ const managerUpdatableFields = [
 ] as const;
 
 const adminUpdatableFields = ['doi'] as const;
-
-export type CanCreatePub = {
-	userId?: string | null;
-	communityId: string;
-} & (
-	| {
-			collectionId?: string | null;
-			createPubToken?: undefined;
-	  }
-	| {
-			createPubToken?: string | null;
-			collectionId?: undefined;
-	  }
-);
 
 export const canCreatePub = async ({
 	userId,

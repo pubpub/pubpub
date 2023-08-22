@@ -115,3 +115,17 @@ export type SanitizedPubData = Pub & {
 export type PubWithCollections = Pub & {
 	collectionPubs: DefinitelyHas<CollectionPub, 'collection'>[];
 };
+
+export type CanCreatePub = {
+	userId?: string | null;
+	communityId: string;
+} & (
+	| {
+			collectionId?: string | null;
+			createPubToken?: undefined;
+	  }
+	| {
+			createPubToken?: string | null;
+			collectionId?: undefined;
+	  }
+);
