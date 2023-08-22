@@ -16,19 +16,49 @@ const getRequestIds = createGetRequestIds<{
 	pageId?: string;
 }>();
 
+const pageSchema = z.object({
+	id: z.string().uuid(),
+	title: z.string().nonempty(),
+	slug: z.string().nonempty().openapi({
+		description: 'The URL slug for the page',
+	}),
+	description: z.string().nullable(),
+	avatar: z.string().url().nullable().openapi({
+		description: 'URL of the preview image',
+	}),
+	isPublic: z.boolean().default(false),
+	isNarrowWidth: z.boolean().nullable(),
+	viewHash: z.string().nullable(),
+	layout: z.array(layoutBlockSchema).openapi({
+		description: 'The layout of the page, as an array of blocks.',
+	}),
+	layoutAllowsDuplicatePubs: z.boolean().default(false).openapi({
+		description: 'Whether the page allows pubs to reappear in subsequent pub blocks.',
+	}),
+	communityId: z.string().uuid(),
+}) satisfies z.ZodType<types.Page, any, any>;
+
 app.post(
 	'/api/pages',
 	validate({
 		description: 'Create a page',
 		tags: ['Pages'],
 		security: true,
-		body: z.object({
-			communityId: z.string(),
-			title: z.string(),
-			slug: z.string(),
-			description: z.string().nullish(),
-			avatar: z.string().nullish(),
-		}),
+		body: pageSchema
+			.pick({
+				communityId: true,
+				title: true,
+				slug: true,
+				description: true,
+				avatar: true,
+			})
+			.partial({
+				description: true,
+				avatar: true,
+			}),
+		statusCodes: {
+			201: pageSchema,
+		},
 	}),
 	wrap(async (req, res) => {
 		const { userId, communityId, pageId } = getRequestIds(req);
@@ -51,18 +81,15 @@ app.put(
 		description: 'Update a page',
 		tags: ['Pages'],
 		security: true,
-		body: z.object({
-			title: z.string().optional(),
-			slug: z.string().optional(),
-			description: z.string().nullish(),
-			avatar: z.string().nullish(),
-			isPublic: z.boolean().nullish(),
-			isNarrowWidth: z.boolean().nullish(),
-			layoutAllowDuplicatePubs: z.boolean().nullish(),
-			layout: z.array(layoutBlockSchema).optional(),
-			communityId: z.string(),
-			pageId: z.string(),
-		}) satisfies types.UpdateParams<Page>,
+		body: pageSchema
+			.omit({ id: true })
+			.partial()
+			.required({
+				communityId: true,
+			})
+			.extend({
+				pageId: pageSchema.shape.id,
+			}) satisfies types.UpdateParams<Page>,
 	}),
 	wrap(async (req, res) => {
 		const ids = getRequestIds(req);
@@ -82,11 +109,11 @@ app.delete(
 		tags: ['Pages'],
 		security: true,
 		body: z.object({
-			communityId: z.string(),
-			pageId: z.string(),
+			communityId: z.string().uuid(),
+			pageId: z.string().uuid(),
 		}),
 		statusCodes: {
-			201: z.string().openapi({
+			201: z.string().uuid().openapi({
 				description: 'The ID of the deleted page',
 			}),
 		},

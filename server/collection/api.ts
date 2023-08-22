@@ -22,14 +22,6 @@ const getRequestIds = createGetRequestIds<{
 	communityId?: string;
 	id?: string;
 }>();
-// const getRequestIds = (req) => {
-// 	const user = req.user || {};
-// 	return {
-// 		userId: user.id,
-// 		communityId: req.body.communityId,
-// 		collectionId: req.body.id || null,
-// 	};
-// };
 
 const collectionLayoutSchema = z.object({
 	isNarrow: z.boolean().optional(),
@@ -83,20 +75,6 @@ const collectionCreationSchema = collectionSchema
 		isRestricted: true,
 		slug: true,
 	})
-
-	// .merge(
-	// 	collectionSchema
-	// 		.pick({
-	// 			pageId: true,
-	// 			doi: true,
-	// 			isPublic: true,
-	// 			isRestricted: true,
-	// 			id: true,
-	// 			slug: true,
-	// 		})
-	// 		.partial(),
-	// )
-	// .merge(z.object(
 	.extend({ kind: collectionSchema.shape.kind.unwrap() });
 
 app.post(
