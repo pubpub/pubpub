@@ -3,6 +3,7 @@ import { Button, Callout } from '@blueprintjs/core';
 import classNames from 'classnames';
 
 import { relationTypeDefinitions, createCandidateEdge, stripMarkupFromString } from 'utils/pubEdge';
+import { RelationTypeName } from 'utils/pubEdge/relations';
 import { assert } from 'utils/assert';
 
 import { PubEdge } from 'types';
@@ -10,7 +11,6 @@ import { PubEdgeEditor, PubEdgeListingCard } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
 
 import NewEdgeInput from './NewEdgeInput';
-import { RelationTypeName } from 'utils/pubEdge/relations';
 
 require('./newEdgeEditor.scss');
 

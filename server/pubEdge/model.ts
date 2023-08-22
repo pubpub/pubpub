@@ -10,8 +10,8 @@ import {
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import type { SerializedModel } from 'types';
-import { Pub, ExternalPublication } from '../models';
 import { RelationTypeName } from 'utils/pubEdge/relations';
+import { Pub, ExternalPublication } from '../models';
 
 @Table
 export class PubEdge extends Model<InferAttributes<PubEdge>, InferCreationAttributes<PubEdge>> {

@@ -5,6 +5,8 @@ import { validate } from 'utils/api';
 import { z } from 'zod';
 import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { sanitizedPubSchema } from 'server/pub/api';
+import { relationTypes } from 'utils/pubEdge';
 import { createPubEdge, updatePubEdge, destroyPubEdge, getPubEdgeById } from './queries';
 import {
 	canCreatePubEdge,
@@ -12,8 +14,6 @@ import {
 	canApprovePubEdge,
 	canApprovePubEdgeWithTargetPubId,
 } from './permissions';
-import { relationTypes } from 'utils/pubEdge';
-import { pubSchema, sanitizedPubSchema } from 'server/pub/api';
 
 extendZodWithOpenApi(z);
 
@@ -134,6 +134,7 @@ app.post(
 const pubEdgeUpdateSchema = pubEdgeSchema
 	.omit({ id: true, externalPublicationId: true, targetPubId: true })
 	.partial({
+		pubId: true,
 		rank: true,
 		approvedByTarget: true,
 		pubIsParent: true,
@@ -151,6 +152,10 @@ const pubEdgeUpdateSchema = pubEdgeSchema
 			z.object({
 				targetPubId: z.undefined().optional(),
 				externalPublication: externalPublicationCreationSchema.partial(),
+			}),
+			z.object({
+				targetPubId: z.undefined().optional(),
+				externalPublication: z.undefined().optional(),
 			}),
 		]),
 	);
