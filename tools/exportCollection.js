@@ -25,11 +25,6 @@ const getPubExports = async (pubId, dest) => {
 	const finalDest = `${dest}/${pubData.slug}`;
 
 	if (!pdfUrl || !jatsUrl) {
-		/* Note: for some very old pubs, this will fail for JATS becauseo of some historykey
-		mismatch issues. The workaround is to, for those pubs, go into the db and match the
-		historykey of the generated export to the one expected by the getPublicExport URL
-		function.
-		*/
 		console.log('Missing:', pubData.slug);
 		await createPubExportsForLatestRelease(pubId);
 		await getPubExports(pubId, dest);
