@@ -315,7 +315,6 @@ app.post(
 	}),
 
 	wrap(async (req, res) => {
-		//		try {
 		const ids = getRequestIds(req);
 		const { create, collectionIds } = await canCreatePub(ids);
 		if (create) {
@@ -327,10 +326,6 @@ app.post(
 			return res.status(201).json(jsonedPub);
 		}
 		throw new ForbiddenError();
-		// } catch (e) {
-		// 	console.error(e);
-		// 	throw new Error(e as any);
-		// }
 	}),
 );
 

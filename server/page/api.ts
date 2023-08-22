@@ -75,21 +75,26 @@ app.post(
 	}),
 );
 
+const pubUdateSchema = pageSchema
+	.omit({ id: true })
+	.partial()
+	.required({
+		communityId: true,
+	})
+	.extend({
+		pageId: pageSchema.shape.id,
+	}) satisfies types.UpdateParams<Page>;
+
 app.put(
 	'/api/pages',
 	validate({
 		description: 'Update a page',
 		tags: ['Pages'],
 		security: true,
-		body: pageSchema
-			.omit({ id: true })
-			.partial()
-			.required({
-				communityId: true,
-			})
-			.extend({
-				pageId: pageSchema.shape.id,
-			}) satisfies types.UpdateParams<Page>,
+		body: pubUdateSchema,
+		statusCodes: {
+			201: pubUdateSchema.omit({ pageId: true, communityId: true }).partial(),
+		},
 	}),
 	wrap(async (req, res) => {
 		const ids = getRequestIds(req);

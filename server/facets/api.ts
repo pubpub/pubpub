@@ -47,6 +47,14 @@ const facetSchemas = Object.entries(ALL_FACET_DEFINITIONS).reduce((acc, [njame, 
 	return acc;
 }, {} as FacetSchema);
 
+const facetSchema = z.object({
+	facets: z.object(facetSchemas).partial() satisfies z.ZodType<UpdateFacetsQuery>,
+	scope: z.object({
+		kind: z.enum(['community', 'collection', 'pub']),
+		id: z.string().uuid(),
+	}) satisfies z.ZodType<FacetSourceScope>,
+});
+
 app.post(
 	'/api/facets',
 	validate({
@@ -54,13 +62,7 @@ app.post(
 		description:
 			'Facets are properties that cascade down from a community, collection, or publication to all of its children, like the style of citation used or the license for content.\n\nYou cannot "unset" facets, so passing an empty object will just be treated as no change.',
 		tags: ['Facets'],
-		body: {
-			facets: z.object(facetSchemas).partial() satisfies z.ZodType<UpdateFacetsQuery>,
-			scope: z.object({
-				kind: z.enum(['community', 'collection', 'pub']),
-				id: z.string().uuid(),
-			}) satisfies z.ZodType<FacetSourceScope>,
-		},
+		body: facetSchema,
 		response: {},
 	}),
 	wrap(async (req, res) => {
