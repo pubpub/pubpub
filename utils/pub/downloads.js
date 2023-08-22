@@ -23,7 +23,7 @@ export const getPublicExportUrl = (pubData, format) => {
 		const latestHistoryKey = releases.map((r) => r.historyKey).reduce((a, b) => Math.max(a, b));
 		if (typeof latestHistoryKey === 'number') {
 			const validExport = exports.find(
-				(exp) => exp.historyKey === latestHistoryKey && exp.format === format,
+				(exp) => exp.historyKey >= latestHistoryKey && exp.format === format,
 			);
 			if (validExport) {
 				return validExport.url;
