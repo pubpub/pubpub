@@ -51,6 +51,7 @@ export const openApiMiddleware = (options: OpenApiMiddlewareOptions) => {
     <elements-api
       apiDescriptionUrl="${path}${openApiJsonPath}"
       router="hash"
+	  tryItCredentialsPolicy="same-origin"
     />
 
   </body>

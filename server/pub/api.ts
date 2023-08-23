@@ -251,7 +251,7 @@ app.post(
 		security: false,
 		body: getManyQuerySchema,
 		response: z.object({
-			pubIds: z.array(z.string()),
+			pubIds: z.array(z.string().uuid()),
 			pubsById: z.record(sanitizedPubSchema), // as z.ZodType<Record<string, types.SanitizedPubData>>,
 			loadedAllPubs: z.boolean().or(z.number()).optional().nullable(),
 		}),
@@ -291,12 +291,12 @@ app.post(
 		tags: ['Pub'],
 		body: z
 			.object({
-				communityId: z.string(),
+				communityId: z.string().uuid(),
 			})
 			.and(
 				z.union([
 					z.object({
-						collectionId: z.string().optional(),
+						collectionId: z.string().uuid().optional(),
 						createPubToken: z.undefined(),
 					}),
 					z.object({
@@ -377,7 +377,7 @@ app.delete(
 		summary: 'Delete a Pub fr fr',
 		tags: ['Pub'],
 		body: z.object({
-			pubId: z.string(),
+			pubId: z.string().uuid(),
 		}),
 		response: {},
 	}),
