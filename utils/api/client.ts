@@ -9,11 +9,21 @@ import {
 } from './validation-middleware';
 import { contract } from './contract';
 
-export type IndexOrUndefined<T, K extends string> = K extends keyof T ? T[K] : undefined;
+export type IndexOrUndefined<
+	T,
+	K extends string,
+	KK extends string | undefined = undefined,
+> = K extends keyof T
+	? KK extends undefined
+		? T[K]
+		: KK extends keyof T[K]
+		? T[K][KK]
+		: undefined
+	: undefined;
 
 export type Contract = typeof contract;
 
-type Routes = keyof Contract; // Extract<keyof Contract, `/api/${string}`>;
+type Routes = keyof Contract;
 
 type ContractRoutes = Contract[Routes];
 type AllowedMethods = keyof UnionToIntersection<ContractRoutes>;
@@ -37,15 +47,10 @@ type MakeOptionalKeys<T> = Prettify<
 const createSubFetch = <Method extends AllowedMethods>(method: Method) => {
 	return async <
 		Route extends AllRoutesWithMethod<Method>,
-		ReqBody extends Method extends keyof Contract[Route]
-			? IndexOrUndefined<Contract[Route][Method], 'body'>
-			: never,
-		// @ts-expect-error This is fine, should be fixed
-		ResBody extends IndexOrUndefined<Contract[Route][Method], 'response'>,
-		// @ts-expect-error
-		ReqQuery extends IndexOrUndefined<Contract[Route][Method], 'query'>,
-		// @ts-expect-error
-		ResStatusCodes extends IndexOrUndefined<Contract[Route][Method], 'statusCodes'>,
+		ReqBody extends IndexOrUndefined<Contract[Route], Method, 'body'>,
+		ResBody extends IndexOrUndefined<Contract[Route], Method, 'response'>,
+		ReqQuery extends IndexOrUndefined<Contract[Route], Method, 'query'>,
+		ResStatusCodes extends IndexOrUndefined<Contract[Route], Method, 'statusCodes'>,
 	>(
 		route: Route,
 		// eslint-disable-next-line no-undef

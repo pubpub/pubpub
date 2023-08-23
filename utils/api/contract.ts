@@ -7,7 +7,7 @@ import { validate } from './validation-middleware';
 extendZodWithOpenApi(z);
 
 type ValidationInput = Parameters<typeof validate>[0];
-export type CustomRouter = {
+export type ValidatedContract = {
 	[key in `/api/${string}`]: {
 		GET?: ValidationInput;
 		POST?: ValidationInput;
@@ -60,4 +60,4 @@ export const contract = {
 			response: z.array(pubSchema),
 		},
 	},
-} satisfies CustomRouter;
+} satisfies ValidatedContract;

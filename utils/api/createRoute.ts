@@ -11,9 +11,8 @@ import {
 } from './validation-middleware';
 
 export const createRoute = <
-	//	Contract extends CustomRouter,
 	Route extends Extract<keyof Contract, `/api/${string}`>,
-	Method extends Extract<keyof Contract[Route], 'POST' | 'GET' | 'PUT' | 'DELETE'>, // Extract<keyof Router[Route], 'POST' | 'GET' | 'PUT' | 'DELETE'>,
+	Method extends Extract<keyof Contract[Route], 'POST' | 'GET' | 'PUT' | 'DELETE'>,
 	Options extends NonNullable<Contract[Route][Method]>,
 	ReqBody extends IndexOrUndefined<Options, 'body'> = IndexOrUndefined<Options, 'body'>,
 	ResBody extends IndexOrUndefined<Options, 'response'> = IndexOrUndefined<Options, 'response'>,
@@ -24,10 +23,8 @@ export const createRoute = <
 	>,
 	ReqParams extends IndexOrUndefined<Options, 'params'> = IndexOrUndefined<Options, 'params'>,
 >(
-	//	contract: Contract,
 	route: Route,
 	method: Method,
-	// handler: ValidationOutput<Options>,
 	handler: RequestHandler<
 		undefined extends ReqParams
 			? ExpressRequest['params']
