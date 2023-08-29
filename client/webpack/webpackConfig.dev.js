@@ -1,4 +1,5 @@
 const { resolve } = require('path');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const autoprefixer = require('autoprefixer');
@@ -102,6 +103,8 @@ module.exports = {
 		new ManifestPlugin({
 			publicPath: '/dist/',
 		}),
+		// Allow shared utils to import the sentry/node package by replacing it in the webpack build
+		new webpack.NormalModuleReplacementPlugin(/@sentry\/node/, '@sentry/react'),
 	],
 	optimization: {
 		splitChunks: {
