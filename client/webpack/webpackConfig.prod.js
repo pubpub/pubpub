@@ -30,7 +30,7 @@ module.exports = {
 			'prosemirror-state': require.resolve('prosemirror-state'),
 		},
 	},
-	devtool: '#source-map',
+	devtool: 'source-map',
 	output: {
 		filename: '[name].[chunkhash].js',
 		path: resolve(__dirname, '../../dist/client'),

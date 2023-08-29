@@ -233,6 +233,7 @@
 		"@blueprintjs/eslint-plugin": "^2.5.2",
 		"@jest/test-sequencer": "^29.5.0",
 		"@jest/types": "^29.5.0",
+		"@sentry/cli": "^2.20.5",
 		"@sentry/webpack-plugin": "^2.7.0",
 		"@side/jest-runtime": "^1.1.0",
 		"@storybook/addon-knobs": "^6.4.0",
