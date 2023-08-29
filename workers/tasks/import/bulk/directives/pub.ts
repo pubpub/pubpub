@@ -158,14 +158,13 @@ const resolveDirectiveValues = async (directive, sourceFiles, rawMetadata, doc):
 				resolvedDirective[key] = [{ url: resolvedValue, type: 'formatted' }];
 			} else if (key === 'inlineFile') {
 				const { $sourceFile } = value as any;
+				const resolvedFileNameIndex = resolvedValue.split('/').length - 1;
 				const resolvedFileName =
 					`${rawMetadata.title}${resolvedValue
 						.split('/')
-						[resolvedValue.split('/').length - 1].substring(
-							resolvedValue.indexOf('.'),
-						)}` ||
+						[resolvedFileNameIndex].substring(resolvedValue.indexOf('.'))}` ||
 					$sourceFile ||
-					resolvedValue.split('/')[resolvedValue.split('/').length - 1];
+					resolvedValue.split('/')[resolvedFileNameIndex];
 				resolvedDirective[key] = {
 					url: resolvedValue,
 					fileName: resolvedFileName,
