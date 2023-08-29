@@ -48,7 +48,7 @@ export const collectionPubContract = c.router({
 			200: updateCollectionPubSchema.omit({ id: true }),
 		},
 	},
-	delete: {
+	remove: {
 		path: '/api/collectionPubs',
 		method: 'DELETE',
 		description: 'Remove a pub from a collection',

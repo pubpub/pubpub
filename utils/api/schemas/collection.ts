@@ -34,3 +34,51 @@ export const collectionSchema = z.object({
 	scopeSummaryId: z.string().uuid().nullable(),
 	crossrefDepositRecordId: z.string().uuid().nullable(),
 }) satisfies z.ZodType<types.Collection, any, any>;
+
+export const collectionCreationSchema = collectionSchema
+	.omit({ id: true })
+	.pick({
+		communityId: true,
+		title: true,
+		pageId: true,
+		doi: true,
+		isPublic: true,
+		isRestricted: true,
+		slug: true,
+	})
+	.required({
+		communityId: true,
+		title: true,
+	})
+	.partial({
+		pageId: true,
+		doi: true,
+		isPublic: true,
+		isRestricted: true,
+		slug: true,
+	})
+	.extend({ kind: collectionSchema.shape.kind.unwrap() });
+
+export const collectionUpdateSchema = collectionSchema
+	.pick({
+		title: true,
+		slug: true,
+		isRestricted: true,
+		isPublic: true,
+		pageId: true,
+		metadata: true,
+		readNextPreviewSize: true,
+		layout: true,
+		layoutAllowsDuplicatePubs: true,
+		avatar: true,
+	})
+	.partial()
+	.extend({
+		id: collectionSchema.shape.id,
+		communityId: collectionSchema.shape.communityId,
+	});
+
+export const collectionRemoveSchema = z.object({
+	id: collectionSchema.shape.id,
+	communityId: collectionSchema.shape.communityId,
+});

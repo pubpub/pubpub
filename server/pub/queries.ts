@@ -21,7 +21,7 @@ import { buildPubOptions } from 'server/utils/queryHelpers';
 import { expect } from 'utils/assert';
 import * as types from 'types';
 import { Attributes } from 'sequelize';
-import { PubPut } from 'utils/api/contracts/pub';
+import { PubPut } from 'utils/api/schemas/pub';
 import { PubUpdateableFields } from './permissions';
 
 export const createPub = async (

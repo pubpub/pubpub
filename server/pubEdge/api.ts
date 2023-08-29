@@ -5,8 +5,8 @@ import { validate } from 'utils/api';
 import { z } from 'zod';
 import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { sanitizedPubSchema } from 'utils/api/contracts/pub';
 import { relationTypes } from 'utils/pubEdge';
+import { sanitizedPubSchema } from 'utils/api/schemas/pub';
 import { createPubEdge, updatePubEdge, destroyPubEdge, getPubEdgeById } from './queries';
 import {
 	canCreatePubEdge,

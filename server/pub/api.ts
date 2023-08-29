@@ -489,7 +489,7 @@ export const pubServer = s.router(pubContract, {
 			body: updateResult,
 		};
 	},
-	delete: async ({ body, req }) => {
+	remove: async ({ body, req }) => {
 		const { userId, pubId } = getRequestIds(body, req.user);
 		const canDestroy = await canDestroyPub({ userId, pubId });
 		if (!canDestroy) {

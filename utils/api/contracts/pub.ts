@@ -35,7 +35,7 @@ export const pubContract = c.router({
 			}),
 		},
 	},
-	delete: {
+	remove: {
 		path: '/api/pubs',
 		method: 'DELETE',
 		description: 'Delete a Pub',

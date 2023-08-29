@@ -223,7 +223,7 @@ export const collectionPubServer = s.router(collectionPubContract, {
 			body: updated,
 		};
 	},
-	delete: async ({ req, body }) => {
+	remove: async ({ req, body }) => {
 		const { id: collectionPubId, communityId, userId } = getRequestIds(body, req.user);
 		const canDestroy = await canDestroyCollectionPub({
 			communityId,
