@@ -1,14 +1,14 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
-import { createGetRequestIds } from 'utils/getRequestIds';
+import { oldCreateGetRequestIds } from 'utils/getRequestIds';
 import { validate } from 'utils/api';
 import { z } from 'zod';
 import { memberPermissions } from 'types';
 import { getPermissions } from './permissions';
 import { createMember, updateMember, destroyMember } from './queries';
 
-const getRequestIds = createGetRequestIds<{
+const getRequestIds = oldCreateGetRequestIds<{
 	communityId?: string;
 	pubId?: string;
 	collectionId?: string;

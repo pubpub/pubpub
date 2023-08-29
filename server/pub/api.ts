@@ -16,16 +16,18 @@ import { Resource, resourceSchema } from 'deposit/resource';
 import { Pub } from 'server/models';
 import { Request } from 'express';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { createGetRequestIds } from 'utils/getRequestIds';
+import { createGetRequestIds, oldCreateGetRequestIds } from 'utils/getRequestIds';
 import { pubAttributionSchema } from 'server/pubAttribution/api';
 import { discussionSchema } from 'server/discussion/api';
 import { releaseSchema } from 'server/release/api';
 import { collectionPubSchema } from 'server/collectionPub/schemas';
 import { collectionSchema } from 'server/collection/api';
 import { collectionAttributionSchema } from 'server/collectionAttribution/api';
+import { pubContract, pubSchema } from 'utils/api/contracts/pub';
 import { getPubsById, queryPubIds } from './queryMany';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
 import { CanCreatePub, canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+import { initServer } from '@ts-rest/express';
 
 extendZodWithOpenApi(z);
 
@@ -99,76 +101,6 @@ export type GetManyQuery = {
 	| { pubIds: string[]; collectionIds?: undefined }
 	| { pubIds?: undefined; collectionIds?: undefined }
 );
-
-export const pubSchema = z.object({
-	id: z.string().uuid(),
-	slug: z
-		.string({
-			description: 'Slug',
-		})
-		.regex(/^[a-zA-Z0-9-]+$/)
-		.min(1)
-		.max(280)
-		.openapi({
-			uniqueItems: true,
-			example: 'some-slug',
-		}),
-	title: z.string().openapi({
-		example: 'A beautiful title',
-	}),
-	htmlTitle: z.string().nullable().openapi({
-		example: 'A <strong>beautiful</strong> <em>title</em>',
-		description:
-			'HTML version of the title, allows for things like <strong>bold</strong> and <em>italics</em>',
-	}),
-	description: z.string().max(280).min(0).nullable(),
-	htmlDescription: z.string().max(280).min(0).nullable(),
-	avatar: z.string({}).nullable().openapi({
-		description: 'The preview image of a Pub',
-	}),
-	doi: z.string().nullable().openapi({
-		example: '10.1101/2020.05.01.072975',
-		description: 'The DOI of the pub',
-	}),
-	downloads: z
-		.array(
-			z.object({
-				url: z.string().url(),
-				type: z.literal('formatted'),
-				createdAt: z
-					.string()
-					.datetime()
-					.default(() => new Date().toISOString()),
-			}),
-		)
-		.nullable(),
-	customPublishedAt: z.string().datetime().nullable(),
-	labels: z
-		.array(
-			z.object({
-				id: z.string().uuid(),
-				color: z.string(),
-				title: z.string(),
-				publicApply: z.boolean(),
-			}),
-		)
-		.nullable(),
-	viewHash: z.string().nullable(),
-	reviewHash: z.string().nullable(),
-	editHash: z.string().nullable(),
-	commentHash: z.string().nullable(),
-	communityId: z.string().uuid(),
-	metadata: z
-		.object({
-			mtg_id: z.string().openapi({ example: 'aas241' }),
-			bibcode: z.string().openapi({ example: '2023AAS…24130111A' }),
-			mtg_presentation_id: z.string().openapi({ example: '301.11' }),
-		})
-		.nullable(),
-	draftId: z.string().uuid(),
-	scopeSummaryId: z.string().uuid().nullable(),
-	crossrefDepositRecordId: z.string().uuid().nullable(),
-}) satisfies z.ZodType<types.Pub>;
 
 export const getManyQuerySchema = z.object({
 	query: z
@@ -276,6 +208,13 @@ app.post(
 	}),
 );
 
+const oldGetRequestIds = oldCreateGetRequestIds<{
+	communityId?: string;
+	collectionId?: string;
+	pubId?: string;
+	createPubToken?: string;
+}>();
+
 const getRequestIds = createGetRequestIds<{
 	communityId?: string;
 	collectionId?: string;
@@ -315,7 +254,7 @@ app.post(
 	}),
 
 	wrap(async (req, res) => {
-		const ids = getRequestIds(req);
+		const ids = oldGetRequestIds(req);
 		const { create, collectionIds } = await canCreatePub(ids);
 		if (create) {
 			const newPub = await createPub(
@@ -356,7 +295,7 @@ app.put(
 		}),
 	}),
 	wrap(async (req, res) => {
-		const { userId, pubId } = getRequestIds(req);
+		const { userId, pubId } = oldGetRequestIds(req);
 		const updatableFields = await getUpdatablePubFields({
 			userId,
 			pubId,
@@ -383,7 +322,7 @@ app.delete(
 	}),
 	// eslint-disable-next-line consistent-return
 	wrap(async (req, res) => {
-		const { userId, pubId } = getRequestIds(req);
+		const { userId, pubId } = oldGetRequestIds(req);
 		const canDestroy = await canDestroyPub({ userId, pubId });
 		if (!canDestroy) {
 			throw new ForbiddenError();
@@ -393,6 +332,67 @@ app.delete(
 		return res.status(200).json({});
 	}),
 );
+
+const s = initServer();
+
+export const pubServer = s.router(pubContract, {
+	create: async ({ body, req, res }) => {
+		const ids = getRequestIds(body, req.user);
+		const { create, collectionIds } = await canCreatePub(ids);
+		if (create) {
+			const newPub = await createPub(
+				{ communityId: ids.communityId, collectionIds },
+				ids.userId,
+			);
+			const jsonedPub = newPub.toJSON();
+			// return {
+
+			// }
+			return res.status(201).json(jsonedPub);
+			// return {
+			// 	status: 201,
+			// 	body: jsonedPub,
+			// };
+		}
+		throw new ForbiddenError();
+	},
+	update: async ({ body, req, res }) => {
+		// req;
+		// const { userId, pubId } = getRequestIds(body, req.user);
+		const { userId, pubId } = oldGetRequestIds(req);
+		const updatableFields = await getUpdatablePubFields({
+			userId,
+			pubId,
+		});
+		if (!updatableFields) {
+			throw new ForbiddenError();
+		}
+
+		const updateResult = await updatePub(req.body, updatableFields, userId);
+		return res.status(100);
+		// return {
+		// 	status: 200,
+		// 	body: {
+		// 		gay: 'slug',
+		// 	}, //updateResult,
+		// };
+		// return res.status(200).json({});
+	},
+	delete: async ({ body, req }) => {
+		const { userId, pubId } = getRequestIds(body, req.user);
+		const canDestroy = await canDestroyPub({ userId, pubId });
+		if (!canDestroy) {
+			throw new ForbiddenError();
+		}
+
+		await destroyPub(pubId, userId);
+		return {
+			status: 200,
+			body: {},
+		};
+	},
+	getMany: async ({ body, req }) => {},
+});
 
 app.get(
 	'/api/pub/:pubId/resource',

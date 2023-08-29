@@ -6,11 +6,11 @@ import { z } from 'zod';
 import * as types from 'types';
 import { layoutBlockSchema } from 'utils/layout/validators';
 import { Page } from 'server/models';
-import { createGetRequestIds } from 'utils/getRequestIds';
+import { oldCreateGetRequestIds } from 'utils/getRequestIds';
 import { createPage, updatePage, destroyPage } from './queries';
 import { getPermissions } from './permissions';
 
-const getRequestIds = createGetRequestIds<{
+const getRequestIds = oldCreateGetRequestIds<{
 	communityId?: string;
 	pubId?: string;
 	pageId?: string;

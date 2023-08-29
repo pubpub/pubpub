@@ -11,13 +11,13 @@ import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { transformCollectionToResource } from 'deposit/transform/collection';
 import { layoutBlockSchema } from 'utils/layout';
 import { validate } from 'utils/api';
-import { createGetRequestIds } from 'utils/getRequestIds';
+import { oldCreateGetRequestIds } from 'utils/getRequestIds';
 import { getPermissions } from './permissions';
 import { createCollection, destroyCollection, findCollection, updateCollection } from './queries';
 
 extendZodWithOpenApi(z);
 
-const getRequestIds = createGetRequestIds<{
+const getRequestIds = oldCreateGetRequestIds<{
 	userId?: string;
 	communityId?: string;
 	id?: string;

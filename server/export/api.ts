@@ -1,7 +1,7 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
-import { createGetRequestIds } from 'utils/getRequestIds';
+import { oldCreateGetRequestIds } from 'utils/getRequestIds';
 import { validate } from 'utils/api';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
@@ -11,7 +11,7 @@ import { getOrStartExportTask } from './queries';
 
 extendZodWithOpenApi(z);
 
-const getRequestData = createGetRequestIds<{
+const getRequestData = oldCreateGetRequestIds<{
 	accessHash?: string | null;
 	format?: string;
 	historyKey?: number;

@@ -1,7 +1,7 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
-import { createGetRequestIds } from 'utils/getRequestIds';
+import { oldCreateGetRequestIds } from 'utils/getRequestIds';
 import { validate } from 'utils/api';
 import { z } from 'zod';
 import {
@@ -21,7 +21,7 @@ import { getPermissions } from './permissions';
 
 extendZodWithOpenApi(z);
 
-const getRequestIds = createGetRequestIds<{
+const getRequestIds = oldCreateGetRequestIds<{
 	communityId?: string;
 	collectionId?: string;
 	id?: string;

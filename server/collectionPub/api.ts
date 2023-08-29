@@ -4,9 +4,9 @@ import { ForbiddenError } from 'server/utils/errors';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
-import { createGetRequestIds } from 'utils/getRequestIds';
-import { validate } from 'utils/api';
-import { pubSchema } from '../pub/api';
+import { createGetRequestIds, oldCreateGetRequestIds } from 'utils/getRequestIds';
+// import { validate } from 'utils/api';
+// import { pubSchema } from '../pub/api';
 import {
 	canCreateCollectionPub,
 	canDestroyCollectionPub,
@@ -18,7 +18,8 @@ import {
 	destroyCollectionPub,
 	getPubsInCollection,
 } from './queries';
-import { collectionPubSchema } from './schemas';
+import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { collectionPubContract } from 'utils/api/contracts/collectionPub';
 
 extendZodWithOpenApi(z);
 
@@ -40,61 +41,152 @@ const getRequestIds = createGetRequestIds<{
 // 	};
 // };
 
-app.get(
-	'/api/collectionPubs',
-	validate({
-		tags: ['CollectionPubs'],
-		description: 'Get the pubs associated with a collection',
-		security: false,
-		query: {
-			pubId: z.string().uuid().optional(),
-			collectionId: z.string().uuid(),
-			communityId: z.string().uuid(),
-		},
-		response: z.array(pubSchema),
-	}),
-	wrap(async (req, res) => {
-		req.body = req.query;
-		const reqq = req as typeof req & { body: typeof req.query };
+// app.get(
+// 	'/api/collectionPubs',
+// 	validate({
+// 		tags: ['CollectionPubs'],
+// 		description: 'Get the pubs associated with a collection',
+// 		security: false,
+// 		query: {
+// 			pubId: z.string().uuid().optional(),
+// 			collectionId: z.string().uuid(),
+// 			communityId: z.string().uuid(),
+// 		},
+// 		response: z.array(pubSchema),
+// 	}),
+// 	wrap(async (req, res) => {
+// 		req.body = req.query;
+// 		const reqq = req as typeof req & { body: typeof req.query };
 
-		const pubsInCollection = await getPubsInCollection(getRequestIds(reqq));
-		return res.status(200).json(pubsInCollection);
-	}),
-);
+// 		const pubsInCollection = await getPubsInCollection(getRequestIds(reqq));
+// 		return res.status(200).json(pubsInCollection);
+// 	}),
+// );
 
-export const createCollectionPubSchema = collectionPubSchema
-	.pick({
-		pubId: true,
-		collectionId: true,
-	})
-	.merge(
-		collectionPubSchema
-			.pick({
-				rank: true,
-				moveToTop: true,
-			})
-			.partial(),
-	)
-	.merge(
-		z.object({
-			communityId: z.string().uuid(),
-			moveToTop: z.boolean().optional(),
-		}),
-	);
+// export const createCollectionPubSchema = collectionPubSchema
+// 	.pick({
+// 		pubId: true,
+// 		collectionId: true,
+// 	})
+// 	.merge(
+// 		collectionPubSchema
+// 			.pick({
+// 				rank: true,
+// 				moveToTop: true,
+// 			})
+// 			.partial(),
+// 	)
+// 	.merge(
+// 		z.object({
+// 			communityId: z.string().uuid(),
+// 			moveToTop: z.boolean().optional(),
+// 		}),
+// 	);
 
-app.post(
-	'/api/collectionPubs',
-	validate({
-		tags: ['CollectionPubs'],
-		description: 'Add a pub to a collection',
-		body: createCollectionPubSchema,
-		statusCodes: {
-			201: collectionPubSchema,
-		},
-	}),
-	wrap(async (req, res) => {
-		const { collectionId, pubId, userId, communityId } = getRequestIds(req);
-		const { rank, moveToTop } = req.body;
+// app.post(
+// 	'/api/collectionPubs',
+// 	validate({
+// 		tags: ['CollectionPubs'],
+// 		description: 'Add a pub to a collection',
+// 		body: createCollectionPubSchema,
+// 		statusCodes: {
+// 			201: collectionPubSchema,
+// 		},
+// 	}),
+// 	wrap(async (req, res) => {
+// 		const { collectionId, pubId, userId, communityId } = getRequestIds(req);
+// 		const { rank, moveToTop } = req.body;
+// 		const canCreate = await canCreateCollectionPub({
+// 			userId,
+// 			communityId,
+// 			collectionId,
+// 			pubId,
+// 		});
+// 		if (!canCreate) {
+// 			throw new ForbiddenError();
+// 		}
+// 		const collectionPub = await createCollectionPub({
+// 			collectionId,
+// 			pubId,
+// 			rank,
+// 			moveToTop,
+// 			actorId: userId,
+// 		});
+// 		return res.status(201).json(collectionPub);
+// 	}),
+// );
+
+// const updateCollectionPubSchema = collectionPubSchema
+// 	.omit({ id: true })
+// 	.partial()
+// 	.merge(collectionPubSchema.pick({ id: true }));
+
+// app.put(
+// 	'/api/collectionPubs',
+// 	validate({
+// 		tags: ['CollectionPubs'],
+// 		description: 'Change the pubs that are associated with a collection',
+// 		body: updateCollectionPubSchema.merge(
+// 			z.object({
+// 				communityId: z.string().uuid(),
+// 			}),
+// 		),
+// 		response: updateCollectionPubSchema.omit({ id: true }),
+// 	}),
+// 	wrap(async (req, res) => {
+// 		const { id: collectionPubId, communityId, userId } = getRequestIds(req);
+// 		const updatableFields = await getUpdatableFieldsForCollectionPub({
+// 			communityId,
+// 			collectionPubId,
+// 			userId,
+// 		});
+// 		if (!updatableFields) {
+// 			throw new ForbiddenError();
+// 		}
+// 		const updated = await updateCollectionPub(collectionPubId, req.body, updatableFields);
+// 		return res.status(200).json(updated);
+// 	}),
+// );
+
+// app.delete(
+// 	'/api/collectionPubs',
+// 	validate({
+// 		tags: ['CollectionPubs'],
+// 		description: 'Remove a pub from a collection',
+// 		body: z.object({
+// 			id: z.string().uuid(),
+// 			communityId: z.string().uuid(),
+// 		}),
+// 		response: z.string().uuid(),
+// 	}),
+// 	wrap(async (req, res) => {
+// 		const { id: collectionPubId, communityId, userId } = getRequestIds(req);
+// 		const canDestroy = await canDestroyCollectionPub({
+// 			communityId,
+// 			collectionPubId,
+// 			userId,
+// 		});
+// 		if (!canDestroy) {
+// 			throw new ForbiddenError();
+// 		}
+// 		await destroyCollectionPub(collectionPubId, userId);
+// 		return res.status(200).json(req.body.id);
+// 	}),
+// );
+
+const s = initServer();
+
+export const collectionPubServer = s.router(collectionPubContract, {
+	get: async ({ req, query }) => {
+		const pubsInCollection = await getPubsInCollection(getRequestIds(query, req.user));
+		return {
+			status: 200,
+			body: pubsInCollection,
+		};
+	},
+	create: async ({ body, req }) => {
+		const { collectionId, pubId, userId, communityId } = getRequestIds(body, req.user);
+		const { rank, moveToTop } = body;
 		const canCreate = await canCreateCollectionPub({
 			userId,
 			communityId,
@@ -111,29 +203,14 @@ app.post(
 			moveToTop,
 			actorId: userId,
 		});
-		return res.status(201).json(collectionPub);
-	}),
-);
-
-const updateCollectionPubSchema = collectionPubSchema
-	.omit({ id: true })
-	.partial()
-	.merge(collectionPubSchema.pick({ id: true }));
-
-app.put(
-	'/api/collectionPubs',
-	validate({
-		tags: ['CollectionPubs'],
-		description: 'Change the pubs that are associated with a collection',
-		body: updateCollectionPubSchema.merge(
-			z.object({
-				communityId: z.string().uuid(),
-			}),
-		),
-		response: updateCollectionPubSchema.omit({ id: true }),
-	}),
-	wrap(async (req, res) => {
-		const { id: collectionPubId, communityId, userId } = getRequestIds(req);
+		return {
+			status: 201,
+			body: collectionPub,
+		};
+		// return res.status(201).json(collectionPub);
+	},
+	update: async ({ req, body }) => {
+		const { id: collectionPubId, communityId, userId } = getRequestIds(body, req.user);
 		const updatableFields = await getUpdatableFieldsForCollectionPub({
 			communityId,
 			collectionPubId,
@@ -142,24 +219,14 @@ app.put(
 		if (!updatableFields) {
 			throw new ForbiddenError();
 		}
-		const updated = await updateCollectionPub(collectionPubId, req.body, updatableFields);
-		return res.status(200).json(updated);
-	}),
-);
-
-app.delete(
-	'/api/collectionPubs',
-	validate({
-		tags: ['CollectionPubs'],
-		description: 'Remove a pub from a collection',
-		body: z.object({
-			id: z.string().uuid(),
-			communityId: z.string().uuid(),
-		}),
-		response: z.string().uuid(),
-	}),
-	wrap(async (req, res) => {
-		const { id: collectionPubId, communityId, userId } = getRequestIds(req);
+		const updated = await updateCollectionPub(collectionPubId, body, updatableFields);
+		return {
+			status: 200,
+			body: updated,
+		};
+	},
+	delete: async ({ req, body }) => {
+		const { id: collectionPubId, communityId, userId } = getRequestIds(body, req.user);
 		const canDestroy = await canDestroyCollectionPub({
 			communityId,
 			collectionPubId,
@@ -169,6 +236,13 @@ app.delete(
 			throw new ForbiddenError();
 		}
 		await destroyCollectionPub(collectionPubId, userId);
-		return res.status(200).json(req.body.id);
-	}),
-);
+		return {
+			status: 200,
+			body: body.id,
+		};
+	},
+});
+
+createExpressEndpoints(collectionPubContract, collectionPubServer, app, {
+	globalMiddleware: [wrap],
+});

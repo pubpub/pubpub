@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { User } from 'server/models';
 
 // type PickOrUndefined<T, K extends keyof T> = {
 // 	[P in K]: unknown extends T[P] ? undefined : T[P];
@@ -29,7 +30,7 @@ type Helper<
 // 	[EK in keyof ExpectedBody]: ReqBody[EK];
 // };
 
-export function createGetRequestIds<ExpectedBody extends Record<string, any>>() {
+export function oldCreateGetRequestIds<ExpectedBody extends Record<string, any>>() {
 	return function <ReqBody extends ExpectedBody, A, B, C, D extends Record<string, any>>(
 		req: Request<A, B, ReqBody, C, D>, // : WithUserId<Pick<ReqBody, DefinedKeys<ReqBody>>>
 	) {
@@ -40,5 +41,19 @@ export function createGetRequestIds<ExpectedBody extends Record<string, any>>() 
 			...picked,
 			userId: user.id,
 		} as unknown as WithUserId<Helper<ExpectedBody, ReqBody>>;
+	};
+}
+
+export function createGetRequestIds<ExpectedBody extends Record<string, any>>() {
+	return function <PassedBody extends ExpectedBody>(
+		body: PassedBody, // : WithUserId<Pick<ReqBody, DefinedKeys<ReqBody>>>
+		user?: User,
+	) {
+		const picked: Partial<ExpectedBody> = { ...body };
+
+		return {
+			...picked,
+			userId: user?.id,
+		} as unknown as WithUserId<Helper<ExpectedBody, PassedBody>>;
 	};
 }
