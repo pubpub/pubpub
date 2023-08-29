@@ -27,7 +27,7 @@ module.exports = {
 			'prosemirror-state': require.resolve('prosemirror-state'),
 		},
 	},
-	devtool: '#eval',
+	devtool: 'eval',
 	output: {
 		filename: '[name].js',
 		path: resolve(__dirname, '../../dist/client'),
