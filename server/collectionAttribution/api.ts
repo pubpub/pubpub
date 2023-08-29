@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { attributionSchema } from 'server/pubAttribution/api';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
-import { collectionAttributionContract } from 'utils/api/contracts/collectionAttribution';
+import { contract } from 'utils/api/contract';
 import {
 	createCollectionAttribution,
 	updateCollectionAttribution,
@@ -35,7 +35,7 @@ export const collectionAttributionSchema = attributionSchema.merge(
 
 const s = initServer();
 
-export const collectionAttributionServer = s.router(collectionAttributionContract, {
+export const collectionAttributionServer = s.router(contract.collectionAttribution, {
 	create: async ({ req, body }) => {
 		const permissions = await getPermissions(getRequestIds(body, req.user));
 		if (!permissions.create) {
@@ -76,4 +76,4 @@ export const collectionAttributionServer = s.router(collectionAttributionContrac
 	},
 });
 
-createExpressEndpoints(collectionAttributionContract, collectionAttributionServer, app);
+createExpressEndpoints(contract.collectionAttribution, collectionAttributionServer, app);

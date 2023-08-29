@@ -8,8 +8,8 @@ import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { transformCollectionToResource } from 'deposit/transform/collection';
+import { contract } from 'utils/api/contract';
 import { createGetRequestIds } from 'utils/getRequestIds';
-import { collectionContract } from 'utils/api/contracts/collection';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { getPermissions } from './permissions';
 import { createCollection, destroyCollection, findCollection, updateCollection } from './queries';
@@ -104,7 +104,7 @@ app.post(
 
 const s = initServer();
 
-export const collectionServer = s.router(collectionContract, {
+export const collectionServer = s.router(contract.collection, {
 	create: async ({ req, body }) => {
 		const requestIds = getRequestIds(body, req.user);
 		const permissions = await getPermissions({ ...requestIds });
@@ -165,4 +165,4 @@ app.get(
 	}),
 );
 
-createExpressEndpoints(collectionContract, collectionServer, app);
+createExpressEndpoints(contract.collection, collectionServer, app);

@@ -6,7 +6,7 @@ import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
-import { collectionPubContract } from 'utils/api/contracts/collectionPub';
+import { contract } from 'utils/api/contract';
 import {
 	canCreateCollectionPub,
 	canDestroyCollectionPub,
@@ -174,7 +174,7 @@ const getRequestIds = createGetRequestIds<{
 
 const s = initServer();
 
-export const collectionPubServer = s.router(collectionPubContract, {
+export const collectionPubServer = s.router(contract.collectionPub, {
 	get: async ({ req, query }) => {
 		const pubsInCollection = await getPubsInCollection(getRequestIds(query, req.user));
 		return {
@@ -241,4 +241,4 @@ export const collectionPubServer = s.router(collectionPubContract, {
 	},
 });
 
-createExpressEndpoints(collectionPubContract, collectionPubServer, app);
+createExpressEndpoints(contract.collectionPub, collectionPubServer, app);

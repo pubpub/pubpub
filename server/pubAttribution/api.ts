@@ -6,7 +6,7 @@ import { createGetRequestIds } from 'utils/getRequestIds';
 import { z } from 'zod';
 import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { pubAttributionContract } from 'utils/api/contracts/pubAttribution';
+import { contract } from 'utils/api/contract';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { getPermissions } from './permissions';
 import {
@@ -76,7 +76,7 @@ export const attributionCreationSchema = attributionSchema
 
 const s = initServer();
 
-export const pubAttributionServer = s.router(pubAttributionContract, {
+export const pubAttributionServer = s.router(contract.pubAttribution, {
 	batchCreate: async ({ req, body }) => {
 		const { attributions } = body;
 		const requestIds = getRequestIds(body, req.user);
@@ -171,4 +171,4 @@ export const pubAttributionServer = s.router(pubAttributionContract, {
 	},
 });
 
-createExpressEndpoints(pubAttributionContract, pubAttributionServer, app);
+createExpressEndpoints(contract.pubAttribution, pubAttributionServer, app);

@@ -8,22 +8,13 @@ import { generateDoi } from 'server/doi/queries';
 import { assert, expect } from 'utils/assert';
 import { prepareResource, submitResource } from 'deposit/datacite/deposit';
 import { assertValidResource } from 'deposit/validate';
-// import * as types from 'types';
 
 import { z } from 'zod';
 import { validate } from 'utils/api';
-// import { Resource, resourceSchema } from 'deposit/resource';
-// import { Pub } from 'server/models';
 import { Request } from 'express';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { createGetRequestIds } from 'utils/getRequestIds';
-// import { pubAttributionSchema } from 'server/pubAttribution/api';
-// import { discussionSchema } from 'server/discussion/api';
-// import { releaseSchema } from 'server/release/api';
-// import { collectionPubSchema } from 'server/collectionPub/schemas';
-// import { collectionSchema } from 'server/collection/api';
-// import { collectionAttributionSchema } from 'server/collectionAttribution/api';
-import { pubContract } from 'utils/api/contracts/pub';
+import { contract } from 'utils/api/contract';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { getPubsById, queryPubIds } from './queryMany';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
@@ -459,7 +450,7 @@ app.post(
 
 const s = initServer();
 
-export const pubServer = s.router(pubContract, {
+export const pubServer = s.router(contract.pub, {
 	create: async ({ body, req }) => {
 		const ids = getRequestIds(body, req.user);
 		const { create, collectionIds } = await canCreatePub(ids);
@@ -525,4 +516,4 @@ export const pubServer = s.router(pubContract, {
 	},
 });
 
-createExpressEndpoints(pubContract, pubServer, app);
+createExpressEndpoints(contract.pub, pubServer, app);
