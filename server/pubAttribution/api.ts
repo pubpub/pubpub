@@ -1,12 +1,13 @@
-import app, { wrap } from 'server/server';
+import app from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
 import { expect } from 'utils/assert';
-import { oldCreateGetRequestIds } from 'utils/getRequestIds';
-import { validate } from 'utils/api';
+import { createGetRequestIds } from 'utils/getRequestIds';
 import { z } from 'zod';
 import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { pubAttributionContract } from 'utils/api/contracts/pubAttribution';
+import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { getPermissions } from './permissions';
 import {
 	createPubAttribution,
@@ -14,9 +15,8 @@ import {
 	destroyPubAttribution,
 	getPubAttributions,
 } from './queries';
-import { PubAttribution } from './model';
 
-const getRequestIds = oldCreateGetRequestIds<{
+const getRequestIds = createGetRequestIds<{
 	communityId?: string;
 	pubId?: string;
 	id?: string;
@@ -74,24 +74,12 @@ export const attributionCreationSchema = attributionSchema
 	Omit<types.PubAttributionCreationParams, 'order' | 'pubId'> & { order?: number }
 >;
 
-app.post(
-	'/api/pubAttributions/batch',
-	validate({
-		description: 'Batch create pub attributions',
-		tags: ['PubAttributions'],
-		security: true,
-		body: z.object({
-			attributions: z.array(attributionCreationSchema),
-			communityId: z.string(),
-			pubId: z.string(),
-		}),
-		statusCodes: {
-			201: z.array(pubAttributionSchema),
-		},
-	}),
-	wrap(async (req, res) => {
-		const { attributions } = req.body;
-		const requestIds = getRequestIds(req);
+const s = initServer();
+
+export const pubAttributionServer = s.router(pubAttributionContract, {
+	batchCreate: async ({ req, body }) => {
+		const { attributions } = body;
+		const requestIds = getRequestIds(body, req.user);
 		const permissions = await getPermissions(requestIds);
 
 		if (!permissions.create) {
@@ -120,123 +108,67 @@ app.post(
 				),
 		);
 
-		return res
-			.status(201)
-			.json([...existingAttributions, ...newAttributions].sort((a, b) => a.order - b.order));
-	}),
-);
-
-app.post(
-	'/api/pubAttributions',
-	validate({
-		description: 'Create a pub attribution',
-		security: true,
-		tags: ['PubAttributions'],
-		body: z
-			.object({
-				communityId: z.string(),
-				pubId: z.string(),
-			})
-			.and(attributionCreationSchema),
-	}),
-	(req, res) => {
-		getPermissions(getRequestIds(req))
-			.then((permissions) => {
-				if (!permissions.create) {
-					throw new Error('Not Authorized');
-				}
-				return createPubAttribution({
-					...req.body,
-				});
-			})
-			.then((newPubAttribution) => {
-				return res.status(201).json(newPubAttribution);
-			})
-			.catch((err) => {
-				console.error('Error in postPubAttribution: ', err);
-				return res.status(500).json(err.message);
-			});
+		return {
+			status: 201,
+			body: [...existingAttributions, ...newAttributions].sort((a, b) => a.order - b.order),
+		};
 	},
-);
 
-export const updateAttributionSchema = attributionSchema
-	.omit({ id: true })
-	.partial()
-	.merge(attributionSchema.pick({ id: true })) satisfies Omit<
-	z.ZodType<types.UpdateParams<PubAttribution>>,
-	'pubId'
->;
-
-app.put(
-	'/api/pubAttributions',
-	validate({
-		description: 'Update a pub attribution',
-		security: true,
-		tags: ['PubAttributions'],
-		body: updateAttributionSchema.merge(
-			z.object({ pubId: z.string(), communityId: z.string() }),
-		) satisfies z.ZodType<types.UpdateParams<PubAttribution>>,
-		statusCodes: {
-			201: updateAttributionSchema.partial().omit({ id: true }),
-		},
-	}),
-	(req, res) => {
-		const requestIds = getRequestIds(req);
-		getPermissions(requestIds)
-			.then((permissions) => {
-				if (!permissions.update) {
-					throw new Error('Not Authorized');
-				}
-				return updatePubAttribution(
-					{
-						...req.body,
-						pubAttributionId: req.body.id,
-					},
-					permissions.update,
-				);
-			})
-			.then((updatedValues) => {
-				return res.status(201).json(updatedValues);
-			})
-			.catch((err) => {
-				console.error('Error in putPubAttribution: ', err);
-				return res.status(500).json(err.message);
+	create: async ({ req, body }) => {
+		try {
+			const requestIds = getRequestIds(body, req.user);
+			const permissions = await getPermissions(requestIds);
+			if (!permissions.create) {
+				throw new Error('Not Authorized');
+			}
+			const newPubAttribution = await createPubAttribution({
+				...body,
 			});
+			return { status: 201, body: newPubAttribution };
+		} catch (err: any) {
+			console.error('Error in postPubAttribution: ', err);
+			return { status: 500, body: err.message };
+		}
 	},
-);
 
-app.delete(
-	'/api/pubAttributions',
-	validate({
-		description: 'Delete a pub attribution',
-		security: true,
-		tags: ['PubAttributions'],
-		body: z.object({
-			id: z.string().openapi({ description: 'The attribution id' }),
-			communityId: z.string(),
-			pubId: z.string(),
-		}),
-		statusCodes: {
-			201: z.string().openapi({ description: 'The id of the deleted attribution' }),
-		},
-	}),
-	(req, res) => {
-		getPermissions(getRequestIds(req))
-			.then((permissions) => {
-				if (!permissions.destroy) {
-					throw new Error('Not Authorized');
-				}
-				return destroyPubAttribution({
-					...req.body,
-					pubAttributionId: req.body.id,
-				});
-			})
-			.then(() => {
-				return res.status(201).json(req.body.id);
-			})
-			.catch((err) => {
-				console.error('Error in deletePubAttribution: ', err);
-				return res.status(500).json(err.message);
-			});
+	update: async ({ req, body }) => {
+		try {
+			const requestIds = getRequestIds(body, req.user);
+			const permissions = await getPermissions(requestIds);
+			if (!permissions.update) {
+				throw new Error('Not Authorized');
+			}
+
+			const updatedValues = await updatePubAttribution(
+				{
+					...body,
+					pubAttributionId: body.id,
+				},
+				permissions.update,
+			);
+			return { status: 201, body: updatedValues };
+		} catch (err: any) {
+			console.error('Error in putPubAttribution: ', err);
+			return { status: 500, body: err.message };
+		}
 	},
-);
+	remove: async ({ req, body }) => {
+		try {
+			const requestIds = getRequestIds(body, req.user);
+			const permissions = await getPermissions(requestIds);
+			if (!permissions.destroy) {
+				throw new Error('Not Authorized');
+			}
+			await destroyPubAttribution({
+				...body,
+				pubAttributionId: body.id,
+			});
+			return { status: 201, body: body.id };
+		} catch (err: any) {
+			console.error('Error in deletePubAttribution: ', err);
+			return { status: 500, body: err.message };
+		}
+	},
+});
+
+createExpressEndpoints(pubAttributionContract, pubAttributionServer, app);
