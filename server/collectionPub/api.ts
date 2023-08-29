@@ -1,12 +1,12 @@
-import app, { wrap } from 'server/server';
+import app from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
-import { createGetRequestIds, oldCreateGetRequestIds } from 'utils/getRequestIds';
-// import { validate } from 'utils/api';
-// import { pubSchema } from '../pub/api';
+import { createGetRequestIds } from 'utils/getRequestIds';
+import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { collectionPubContract } from 'utils/api/contracts/collectionPub';
 import {
 	canCreateCollectionPub,
 	canDestroyCollectionPub,
@@ -18,8 +18,6 @@ import {
 	destroyCollectionPub,
 	getPubsInCollection,
 } from './queries';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
-import { collectionPubContract } from 'utils/api/contracts/collectionPub';
 
 extendZodWithOpenApi(z);
 
@@ -243,6 +241,4 @@ export const collectionPubServer = s.router(collectionPubContract, {
 	},
 });
 
-createExpressEndpoints(collectionPubContract, collectionPubServer, app, {
-	globalMiddleware: [wrap],
-});
+createExpressEndpoints(collectionPubContract, collectionPubServer, app);

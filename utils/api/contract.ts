@@ -13,6 +13,6 @@ export const contract = c.router(
 		getCollectionPub: collectionPubContract,
 	},
 	{
-		strictStatusCodes: true,
+		strictStatusCodes: false,
 	},
 );

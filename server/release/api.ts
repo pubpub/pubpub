@@ -1,14 +1,8 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
-import * as types from 'types';
-import { z } from 'zod';
-import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-
 import { getPermissions } from './permissions';
 import { createRelease, ReleaseQueryError } from './queries';
-
-extendZodWithOpenApi(z);
 
 const getRequestValues = (req) => {
 	const user = req.user || {};
@@ -22,17 +16,6 @@ const getRequestValues = (req) => {
 		userId: user.id,
 	};
 };
-
-export const releaseSchema = z.object({
-	id: z.string().uuid(),
-	noteContent: z.record(z.any()).nullable(),
-	noteText: z.string().nullable(),
-	pubId: z.string().uuid(),
-	userId: z.string().uuid(),
-	docId: z.string().uuid(),
-	historyKey: z.number(),
-	historyKeyMissing: z.boolean(),
-}) satisfies z.ZodType<types.Release>;
 
 app.post(
 	'/api/releases',

@@ -8,26 +8,26 @@ import { generateDoi } from 'server/doi/queries';
 import { assert, expect } from 'utils/assert';
 import { prepareResource, submitResource } from 'deposit/datacite/deposit';
 import { assertValidResource } from 'deposit/validate';
-import * as types from 'types';
+// import * as types from 'types';
 
 import { z } from 'zod';
 import { validate } from 'utils/api';
-import { Resource, resourceSchema } from 'deposit/resource';
-import { Pub } from 'server/models';
+// import { Resource, resourceSchema } from 'deposit/resource';
+// import { Pub } from 'server/models';
 import { Request } from 'express';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { createGetRequestIds, oldCreateGetRequestIds } from 'utils/getRequestIds';
-import { pubAttributionSchema } from 'server/pubAttribution/api';
-import { discussionSchema } from 'server/discussion/api';
-import { releaseSchema } from 'server/release/api';
-import { collectionPubSchema } from 'server/collectionPub/schemas';
-import { collectionSchema } from 'server/collection/api';
-import { collectionAttributionSchema } from 'server/collectionAttribution/api';
-import { pubContract, pubSchema } from 'utils/api/contracts/pub';
+import { createGetRequestIds } from 'utils/getRequestIds';
+// import { pubAttributionSchema } from 'server/pubAttribution/api';
+// import { discussionSchema } from 'server/discussion/api';
+// import { releaseSchema } from 'server/release/api';
+// import { collectionPubSchema } from 'server/collectionPub/schemas';
+// import { collectionSchema } from 'server/collection/api';
+// import { collectionAttributionSchema } from 'server/collectionAttribution/api';
+import { pubContract } from 'utils/api/contracts/pub';
+import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { getPubsById, queryPubIds } from './queryMany';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
-import { CanCreatePub, canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
-import { initServer } from '@ts-rest/express';
+import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 
 extendZodWithOpenApi(z);
 
@@ -82,138 +82,138 @@ const getManyQueryParams = <
 	};
 };
 
-export type GetManyQuery = {
-	excludeCollectionIds?: string[];
-	ordering?: {
-		field: 'updatedDate' | 'creationDate' | 'collectionRank' | 'title';
-		direction: 'ASC' | 'DESC';
-	};
-	limit?: number;
-	offset?: number;
-	isReleased?: boolean;
-	scopedCollectionId?: string;
-	withinPubIds?: string[];
-	term?: string;
-	submissionStatuses?: types.SubmissionStatus[];
-	relatedUserIds?: string[];
-} & (
-	| { collectionIds: string[]; pubIds?: undefined }
-	| { pubIds: string[]; collectionIds?: undefined }
-	| { pubIds?: undefined; collectionIds?: undefined }
-);
+// export type GetManyQuery = {
+// 	excludeCollectionIds?: string[];
+// 	ordering?: {
+// 		field: 'updatedDate' | 'creationDate' | 'collectionRank' | 'title';
+// 		direction: 'ASC' | 'DESC';
+// 	};
+// 	limit?: number;
+// 	offset?: number;
+// 	isReleased?: boolean;
+// 	scopedCollectionId?: string;
+// 	withinPubIds?: string[];
+// 	term?: string;
+// 	submissionStatuses?: types.SubmissionStatus[];
+// 	relatedUserIds?: string[];
+// } & (
+// 	| { collectionIds: string[]; pubIds?: undefined }
+// 	| { pubIds: string[]; collectionIds?: undefined }
+// 	| { pubIds?: undefined; collectionIds?: undefined }
+// );
 
-export const getManyQuerySchema = z.object({
-	query: z
-		.object({
-			excludeCollectionIds: z.array(z.string().uuid()).optional(),
-			ordering: z.object({
-				field: z.enum(['updatedDate', 'creationDate', 'collectionRank', 'title']),
-				direction: z.enum(['ASC', 'DESC']),
-			}),
-			limit: z.number().optional().default(50),
-			offset: z.number().optional().default(0),
-		})
-		.and(
-			z.union([
-				z.object({
-					collectionIds: z.array(z.string().uuid()),
-					pubIds: z.undefined().optional(),
-				}),
-				z.object({
-					pubIds: z.array(z.string().uuid()),
-					collectionIds: z.undefined().optional(),
-				}),
-				z.object({
-					pubIds: z.undefined().optional(),
-					collectionIds: z.undefined().optional(),
-				}),
-			]),
-		) satisfies z.ZodType<GetManyQuery>,
-	alreadyFetchedPubIds: z.array(z.string()),
-	pubOptions: z.object({
-		isAuth: z.boolean().optional(),
-		isPreview: z.boolean().optional(),
-		getCollections: z.boolean().optional(),
-		getMembers: z.boolean().optional(),
-		getCommunity: z.boolean().optional(),
-		getExports: z.boolean().optional(),
-		getEdges: z.enum(['all', 'approved-only']).optional(),
-		getDraft: z.boolean().optional(),
-		getDiscussions: z.boolean().optional(),
-		getReviews: z.boolean().optional(),
-		getEdgesOptions: z
-			.object({
-				includeCommunityForPubs: z.boolean().optional(),
-				includeTargetPub: z.boolean().optional(),
-				includePub: z.boolean().optional(),
-			})
-			.optional(),
-		getSubmissions: z.boolean().optional(),
-		getFacets: z.boolean().optional(),
-	}) satisfies z.ZodType<PubGetOptions>,
-}) satisfies z.ZodType<ManyRequestParams>;
+// export const getManyQuerySchema = z.object({
+// 	query: z
+// 		.object({
+// 			excludeCollectionIds: z.array(z.string().uuid()).optional(),
+// 			ordering: z.object({
+// 				field: z.enum(['updatedDate', 'creationDate', 'collectionRank', 'title']),
+// 				direction: z.enum(['ASC', 'DESC']),
+// 			}),
+// 			limit: z.number().optional().default(50),
+// 			offset: z.number().optional().default(0),
+// 		})
+// 		.and(
+// 			z.union([
+// 				z.object({
+// 					collectionIds: z.array(z.string().uuid()),
+// 					pubIds: z.undefined().optional(),
+// 				}),
+// 				z.object({
+// 					pubIds: z.array(z.string().uuid()),
+// 					collectionIds: z.undefined().optional(),
+// 				}),
+// 				z.object({
+// 					pubIds: z.undefined().optional(),
+// 					collectionIds: z.undefined().optional(),
+// 				}),
+// 			]),
+// 		) satisfies z.ZodType<GetManyQuery>,
+// 	alreadyFetchedPubIds: z.array(z.string()),
+// 	pubOptions: z.object({
+// 		isAuth: z.boolean().optional(),
+// 		isPreview: z.boolean().optional(),
+// 		getCollections: z.boolean().optional(),
+// 		getMembers: z.boolean().optional(),
+// 		getCommunity: z.boolean().optional(),
+// 		getExports: z.boolean().optional(),
+// 		getEdges: z.enum(['all', 'approved-only']).optional(),
+// 		getDraft: z.boolean().optional(),
+// 		getDiscussions: z.boolean().optional(),
+// 		getReviews: z.boolean().optional(),
+// 		getEdgesOptions: z
+// 			.object({
+// 				includeCommunityForPubs: z.boolean().optional(),
+// 				includeTargetPub: z.boolean().optional(),
+// 				includePub: z.boolean().optional(),
+// 			})
+// 			.optional(),
+// 		getSubmissions: z.boolean().optional(),
+// 		getFacets: z.boolean().optional(),
+// 	}) satisfies z.ZodType<PubGetOptions>,
+// }) satisfies z.ZodType<ManyRequestParams>;
 
-export const sanitizedPubSchema = pubSchema.merge(
-	z.object({
-		attributions: pubAttributionSchema.array(),
-		discussions: z.array(discussionSchema),
-		collectionPubs: z.array(
-			collectionPubSchema.merge(
-				z.object({
-					collection: collectionSchema.merge(
-						z.object({
-							attributions: z.array(collectionAttributionSchema),
-						}),
-					),
-				}),
-			),
-		),
-		isRelease: z.boolean(),
-		releases: z.array(releaseSchema),
-		releaseNumber: z.number().nullable(),
-	}),
-) satisfies z.ZodType<types.SanitizedPubData, any, any>;
+// export const sanitizedPubSchema = pubSchema.merge(
+// 	z.object({
+// 		attributions: pubAttributionSchema.array(),
+// 		discussions: z.array(discussionSchema),
+// 		collectionPubs: z.array(
+// 			collectionPubSchema.merge(
+// 				z.object({
+// 					collection: collectionSchema.merge(
+// 						z.object({
+// 							attributions: z.array(collectionAttributionSchema),
+// 						}),
+// 					),
+// 				}),
+// 			),
+// 		),
+// 		isRelease: z.boolean(),
+// 		releases: z.array(releaseSchema),
+// 		releaseNumber: z.number().nullable(),
+// 	}),
+// ) satisfies z.ZodType<types.SanitizedPubData, any, any>;
 
-app.post(
-	'/api/pubs/many',
-	validate({
-		summary: 'Search for Pubs',
-		description: 'Get many pubs',
-		tags: ['Pub'],
-		security: false,
-		body: getManyQuerySchema,
-		response: z.object({
-			pubIds: z.array(z.string().uuid()),
-			pubsById: z.record(sanitizedPubSchema), // as z.ZodType<Record<string, types.SanitizedPubData>>,
-			loadedAllPubs: z.boolean().or(z.number()).optional().nullable(),
-		}),
-	}),
-	wrap(async (req, res) => {
-		const initialData = await getInitialData(req);
-		const { query: queryPartial, alreadyFetchedPubIds, pubOptions } = getManyQueryParams(req);
-		const { limit } = queryPartial;
-		const pubIds = await queryPubIds({
-			...queryPartial,
-			communityId: initialData.communityData.id,
-		});
-		const loadedAllPubs = limit && limit > pubIds.length;
-		const idsToFetch = pubIds.filter((id) => !alreadyFetchedPubIds.includes(id));
-		const pubs = await getPubsById(idsToFetch, pubOptions).sanitize(initialData);
-		const pubsById = indexByProperty(pubs, 'id');
-		return res.status(200).json({
-			pubIds: pubIds.filter((id) => !!pubsById[id] || alreadyFetchedPubIds.includes(id)),
-			pubsById,
-			loadedAllPubs,
-		});
-	}),
-);
+// app.post(
+// 	'/api/pubs/many',
+// 	validate({
+// 		summary: 'Search for Pubs',
+// 		description: 'Get many pubs',
+// 		tags: ['Pub'],
+// 		security: false,
+// 		body: getManyQuerySchema,
+// 		response: z.object({
+// 			pubIds: z.array(z.string().uuid()),
+// 			pubsById: z.record(sanitizedPubSchema), // as z.ZodType<Record<string, types.SanitizedPubData>>,
+// 			loadedAllPubs: z.boolean().or(z.number()).optional().nullable(),
+// 		}),
+// 	}),
+// 	wrap(async (req, res) => {
+// 		const initialData = await getInitialData(req);
+// 		const { query: queryPartial, alreadyFetchedPubIds, pubOptions } = getManyQueryParams(req);
+// 		const { limit } = queryPartial;
+// 		const pubIds = await queryPubIds({
+// 			...queryPartial,
+// 			communityId: initialData.communityData.id,
+// 		});
+// 		const loadedAllPubs = limit && limit > pubIds.length;
+// 		const idsToFetch = pubIds.filter((id) => !alreadyFetchedPubIds.includes(id));
+// 		const pubs = await getPubsById(idsToFetch, pubOptions).sanitize(initialData);
+// 		const pubsById = indexByProperty(pubs, 'id');
+// 		return res.status(200).json({
+// 			pubIds: pubIds.filter((id) => !!pubsById[id] || alreadyFetchedPubIds.includes(id)),
+// 			pubsById,
+// 			loadedAllPubs,
+// 		});
+// 	}),
+// );
 
-const oldGetRequestIds = oldCreateGetRequestIds<{
-	communityId?: string;
-	collectionId?: string;
-	pubId?: string;
-	createPubToken?: string;
-}>();
+// const oldGetRequestIds = oldCreateGetRequestIds<{
+// 	communityId?: string;
+// 	collectionId?: string;
+// 	pubId?: string;
+// 	createPubToken?: string;
+// }>();
 
 const getRequestIds = createGetRequestIds<{
 	communityId?: string;
@@ -222,198 +222,137 @@ const getRequestIds = createGetRequestIds<{
 	createPubToken?: string;
 }>();
 
-app.post(
-	'/api/pubs',
-	validate({
-		description: 'Create a Pub',
-		security: true,
-		tags: ['Pub'],
-		body: z
-			.object({
-				communityId: z.string().uuid(),
-			})
-			.and(
-				z.union([
-					z.object({
-						collectionId: z.string().uuid().optional(),
-						createPubToken: z.undefined(),
-					}),
-					z.object({
-						createPubToken: z.string().optional(),
-						collectionId: z.undefined(),
-					}),
-					z.object({
-						createPubToken: z.undefined(),
-						collectionId: z.undefined(),
-					}),
-				]),
-			) satisfies z.ZodType<CanCreatePub>,
-		statusCodes: {
-			201: pubSchema,
-		},
-	}),
+// app.post(
+// 	'/api/pubs',
+// 	validate({
+// 		description: 'Create a Pub',
+// 		security: true,
+// 		tags: ['Pub'],
+// 		body: z
+// 			.object({
+// 				communityId: z.string().uuid(),
+// 			})
+// 			.and(
+// 				z.union([
+// 					z.object({
+// 						collectionId: z.string().uuid().optional(),
+// 						createPubToken: z.undefined(),
+// 					}),
+// 					z.object({
+// 						createPubToken: z.string().optional(),
+// 						collectionId: z.undefined(),
+// 					}),
+// 					z.object({
+// 						createPubToken: z.undefined(),
+// 						collectionId: z.undefined(),
+// 					}),
+// 				]),
+// 			) satisfies z.ZodType<CanCreatePub>,
+// 		statusCodes: {
+// 			201: pubSchema,
+// 		},
+// 	}),
 
-	wrap(async (req, res) => {
-		const ids = oldGetRequestIds(req);
-		const { create, collectionIds } = await canCreatePub(ids);
-		if (create) {
-			const newPub = await createPub(
-				{ communityId: ids.communityId, collectionIds },
-				ids.userId,
-			);
-			const jsonedPub = newPub.toJSON();
-			return res.status(201).json(jsonedPub);
-		}
-		throw new ForbiddenError();
-	}),
-);
+// 	wrap(async (req, res) => {
+// 		const ids = oldGetRequestIds(req);
+// 		const { create, collectionIds } = await canCreatePub(ids);
+// 		if (create) {
+// 			const newPub = await createPub(
+// 				{ communityId: ids.communityId, collectionIds },
+// 				ids.userId,
+// 			);
+// 			const jsonedPub = newPub.toJSON();
+// 			return res.status(201).json(jsonedPub);
+// 		}
+// 		throw new ForbiddenError();
+// 	}),
+// );
 
-export type PubPut = types.UpdateParams<Pub> & { pubId: string };
+// export type PubPut = types.UpdateParams<Pub> & { pubId: string };
 
-export const pubPutSchema = pubSchema
-	.partial()
-	.omit({
-		communityId: true,
-		draftId: true,
-		scopeSummaryId: true,
-		crossrefDepositRecordId: true,
-	})
-	.merge(
-		z.object({
-			pubId: z.string(),
-		}),
-	) satisfies z.ZodType<PubPut>;
+// export const pubPutSchema = pubSchema
+// 	.partial()
+// 	.omit({
+// 		communityId: true,
+// 		draftId: true,
+// 		scopeSummaryId: true,
+// 		crossrefDepositRecordId: true,
+// 	})
+// 	.merge(
+// 		z.object({
+// 			pubId: z.string(),
+// 		}),
+// 	) satisfies z.ZodType<PubPut>;
 
-app.put(
-	'/api/pubs',
-	validate({
-		tags: ['Pub'],
-		description: 'Update a Pub',
-		body: pubPutSchema,
-		response: pubPutSchema.omit({
-			pubId: true,
-		}),
-	}),
-	wrap(async (req, res) => {
-		const { userId, pubId } = oldGetRequestIds(req);
-		const updatableFields = await getUpdatablePubFields({
-			userId,
-			pubId,
-		});
-		if (!updatableFields) {
-			throw new ForbiddenError();
-		}
+// app.put(
+// 	'/api/pubs',
+// 	validate({
+// 		tags: ['Pub'],
+// 		description: 'Update a Pub',
+// 		body: pubPutSchema,
+// 		response: pubPutSchema.omit({
+// 			pubId: true,
+// 		}),
+// 	}),
+// 	wrap(async (req, res) => {
+// 		const { userId, pubId } = oldGetRequestIds(req);
+// 		const updatableFields = await getUpdatablePubFields({
+// 			userId,
+// 			pubId,
+// 		});
+// 		if (!updatableFields) {
+// 			throw new ForbiddenError();
+// 		}
 
-		const updateResult = await updatePub(req.body, updatableFields, userId);
-		return res.status(200).json(updateResult);
-	}),
-);
+// 		const updateResult = await updatePub(req.body, updatableFields, userId);
+// 		return res.status(200).json(updateResult);
+// 	}),
+// );
 
-app.delete(
-	'/api/pubs',
-	validate({
-		description: 'Delete a Pub',
-		summary: 'Delete a Pub fr fr',
-		tags: ['Pub'],
-		body: z.object({
-			pubId: z.string().uuid(),
-		}),
-		response: {},
-	}),
-	// eslint-disable-next-line consistent-return
-	wrap(async (req, res) => {
-		const { userId, pubId } = oldGetRequestIds(req);
-		const canDestroy = await canDestroyPub({ userId, pubId });
-		if (!canDestroy) {
-			throw new ForbiddenError();
-		}
+// app.delete(
+// 	'/api/pubs',
+// 	validate({
+// 		description: 'Delete a Pub',
+// 		summary: 'Delete a Pub fr fr',
+// 		tags: ['Pub'],
+// 		body: z.object({
+// 			pubId: z.string().uuid(),
+// 		}),
+// 		response: {},
+// 	}),
+// 	// eslint-disable-next-line consistent-return
+// 	wrap(async (req, res) => {
+// 		const { userId, pubId } = oldGetRequestIds(req);
+// 		const canDestroy = await canDestroyPub({ userId, pubId });
+// 		if (!canDestroy) {
+// 			throw new ForbiddenError();
+// 		}
 
-		await destroyPub(pubId, userId);
-		return res.status(200).json({});
-	}),
-);
+// 		await destroyPub(pubId, userId);
+// 		return res.status(200).json({});
+// 	}),
+// );
 
-const s = initServer();
+// app.get(
+// 	'/api/pub/:pubId/resource',
+// 	validate({
+// 		description: 'Get a Pub Resource',
+// 		tags: ['Pub'],
 
-export const pubServer = s.router(pubContract, {
-	create: async ({ body, req, res }) => {
-		const ids = getRequestIds(body, req.user);
-		const { create, collectionIds } = await canCreatePub(ids);
-		if (create) {
-			const newPub = await createPub(
-				{ communityId: ids.communityId, collectionIds },
-				ids.userId,
-			);
-			const jsonedPub = newPub.toJSON();
-			// return {
+// 		response: resourceSchema satisfies z.ZodType<Resource>,
+// 	}),
 
-			// }
-			return res.status(201).json(jsonedPub);
-			// return {
-			// 	status: 201,
-			// 	body: jsonedPub,
-			// };
-		}
-		throw new ForbiddenError();
-	},
-	update: async ({ body, req, res }) => {
-		// req;
-		// const { userId, pubId } = getRequestIds(body, req.user);
-		const { userId, pubId } = oldGetRequestIds(req);
-		const updatableFields = await getUpdatablePubFields({
-			userId,
-			pubId,
-		});
-		if (!updatableFields) {
-			throw new ForbiddenError();
-		}
-
-		const updateResult = await updatePub(req.body, updatableFields, userId);
-		return res.status(100);
-		// return {
-		// 	status: 200,
-		// 	body: {
-		// 		gay: 'slug',
-		// 	}, //updateResult,
-		// };
-		// return res.status(200).json({});
-	},
-	delete: async ({ body, req }) => {
-		const { userId, pubId } = getRequestIds(body, req.user);
-		const canDestroy = await canDestroyPub({ userId, pubId });
-		if (!canDestroy) {
-			throw new ForbiddenError();
-		}
-
-		await destroyPub(pubId, userId);
-		return {
-			status: 200,
-			body: {},
-		};
-	},
-	getMany: async ({ body, req }) => {},
-});
-
-app.get(
-	'/api/pub/:pubId/resource',
-	validate({
-		description: 'Get a Pub Resource',
-		tags: ['Pub'],
-
-		response: resourceSchema satisfies z.ZodType<Resource>,
-	}),
-
-	wrap(async (req, res) => {
-		const { pubId } = req.params;
-		const pub = await findPub(pubId);
-		if (!pub) {
-			throw new NotFoundError();
-		}
-		const jsonedPub = pub.toJSON();
-		const resource = await transformPubToResource(jsonedPub, expect(jsonedPub.community));
-		return res.status(200).json(resource);
-	}),
-);
+// 	wrap(async (req, res) => {
+// 		const { pubId } = req.params;
+// 		const pub = await findPub(pubId);
+// 		if (!pub) {
+// 			throw new NotFoundError();
+// 		}
+// 		const jsonedPub = pub.toJSON();
+// 		const resource = await transformPubToResource(jsonedPub, expect(jsonedPub.community));
+// 		return res.status(200).json(resource);
+// 	}),
+// );
 
 const resourceASTSchema = z.object({
 	type: z.literal('element'),
@@ -517,3 +456,73 @@ app.post(
 		}
 	}),
 );
+
+const s = initServer();
+
+export const pubServer = s.router(pubContract, {
+	create: async ({ body, req }) => {
+		const ids = getRequestIds(body, req.user);
+		const { create, collectionIds } = await canCreatePub(ids);
+		if (!create) {
+			throw new ForbiddenError();
+		}
+		const newPub = await createPub({ communityId: ids.communityId, collectionIds }, ids.userId);
+		const jsonedPub = newPub.toJSON();
+		return {
+			status: 201,
+			body: jsonedPub,
+		};
+	},
+	update: async ({ body, req }) => {
+		const { userId, pubId } = getRequestIds(body, req.user);
+		const updatableFields = await getUpdatablePubFields({
+			userId,
+			pubId,
+		});
+		if (!updatableFields) {
+			throw new ForbiddenError();
+		}
+
+		const updateResult = await updatePub(req.body, updatableFields, userId);
+		return {
+			status: 200,
+			body: updateResult,
+		};
+	},
+	delete: async ({ body, req }) => {
+		const { userId, pubId } = getRequestIds(body, req.user);
+		const canDestroy = await canDestroyPub({ userId, pubId });
+		if (!canDestroy) {
+			throw new ForbiddenError();
+		}
+
+		await destroyPub(pubId, userId);
+		return {
+			status: 200,
+			body: {},
+		};
+	},
+	getMany: async ({ body, req }) => {
+		const initialData = await getInitialData(body, req.user);
+		const { query: queryPartial, alreadyFetchedPubIds, pubOptions } = getManyQueryParams(req);
+		const { limit } = queryPartial;
+		const pubIds = await queryPubIds({
+			...queryPartial,
+			communityId: initialData.communityData.id,
+		});
+		const loadedAllPubs = limit && limit > pubIds.length;
+		const idsToFetch = pubIds.filter((id) => !alreadyFetchedPubIds.includes(id));
+		const pubs = await getPubsById(idsToFetch, pubOptions).sanitize(initialData);
+		const pubsById = indexByProperty(pubs, 'id');
+		return {
+			status: 200,
+			body: {
+				pubIds: pubIds.filter((id) => !!pubsById[id] || alreadyFetchedPubIds.includes(id)),
+				pubsById,
+				loadedAllPubs,
+			},
+		};
+	},
+});
+
+createExpressEndpoints(pubContract, pubServer, app);

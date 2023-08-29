@@ -3,14 +3,13 @@ import * as types from 'types';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
-import { CanCreatePub } from 'server/pub/permissions';
 import { Pub } from 'server/models';
-import { collectionSchema } from 'server/collection/api';
-import { collectionAttributionSchema } from 'server/collectionAttribution/api';
-import { collectionPubSchema } from 'server/collectionPub/schemas';
-import { discussionSchema } from 'server/discussion/api';
-import { pubAttributionSchema } from 'server/pubAttribution/api';
-import { releaseSchema } from 'server/release/api';
+import { pubAttributionSchema } from '../schemas/pubAttribution';
+import { discussionSchema } from '../schemas/discussion';
+import { collectionPubSchema } from './collectionPub';
+import { collectionSchema } from '../schemas/collection';
+import { collectionAttributionSchema } from '../schemas/collectionAttribution';
+import { releaseSchema } from '../schemas/release';
 
 extendZodWithOpenApi(z);
 
@@ -202,36 +201,34 @@ export const sanitizedPubSchema = pubSchema.merge(
 
 export const pubContract = c.router({
 	create: {
-		path: '/api/posts',
+		path: '/api/pubs',
 		method: 'POST',
 		description: 'Create a Pub',
-		body: z
-			.object({
-				communityId: z.string(),
-			})
-			.and(
-				z.union([
-					z.object({
-						collectionId: z.string().optional(),
-						createPubToken: z.undefined(),
-					}),
-					z.object({
-						createPubToken: z.string().optional(),
-						collectionId: z.undefined(),
-					}),
-					z.object({
-						createPubToken: z.undefined(),
-						collectionId: z.undefined(),
-					}),
-				]),
-			) satisfies z.ZodType<CanCreatePub>,
+		body: z.object({
+			communityId: z.string(),
+		}),
+		// .and(
+		// 	z.union([
+		// 		z.object({
+		// 			collectionId: z.string().optional(),
+		// 			createPubToken: z.undefined(),
+		// 		}),
+		// 		z.object({
+		// 			createPubToken: z.string().optional(),
+		// 			collectionId: z.undefined(),
+		// 		}),
+		// 		z.object({
+		// 			createPubToken: z.undefined(),
+		// 			collectionId: z.undefined(),
+		// 		}),
+		// 	]),
+		// ) satisfies z.ZodType<types.CanCreatePub>,
 		responses: {
 			201: pubSchema,
 		},
-		strictStatusCodes: true,
 	},
 	update: {
-		path: '/api/posts',
+		path: '/api/pubs',
 		method: 'PUT',
 		description: 'Update a Pub',
 		body: pubPutSchema,
@@ -254,7 +251,7 @@ export const pubContract = c.router({
 		},
 	},
 	getMany: {
-		path: '/api/posts/many',
+		path: '/api/pubs/many',
 		method: 'POST',
 		summary: 'Search for Pubs',
 		description: 'Get many pubs',
@@ -262,7 +259,7 @@ export const pubContract = c.router({
 		responses: {
 			200: z.object({
 				pubIds: z.array(z.string().uuid()),
-				pubsById: z.record(sanitizedPubSchema), // as z.ZodType<Record<string, types.SanitizedPubData>>,
+				pubsById: z.record(sanitizedPubSchema),
 				loadedAllPubs: z.boolean().or(z.number()).optional().nullable(),
 			}),
 		},
