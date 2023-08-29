@@ -27,4 +27,4 @@ export const facetsServer = s.router(contract.facets, {
 	},
 });
 
-createExpressEndpoints(contract.facets, facetsServer, app);
+// createExpressEndpoints(contract.facets, facetsServer, app);

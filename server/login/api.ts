@@ -6,10 +6,10 @@ import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { assert } from 'utils/assert';
 import * as types from 'types';
-import app from 'server/server';
 import { User } from 'server/models';
 import { isDuqDuq, isProd } from 'utils/environment';
-import { validate } from 'utils/api';
+import { contract } from 'utils/api/contract';
+import { AppRouteImplementation } from '@ts-rest/express';
 
 type SetPasswordData = { hash: string; salt: string };
 type Step1Result = [types.UserWithPrivateFields, null] | [null, types.UserWithPrivateFields];
@@ -18,146 +18,147 @@ type Step3Result = [types.UserWithPrivateFields, null] | [null, types.UserWithPr
 
 extendZodWithOpenApi(z);
 
-app.post(
-	'/api/login',
-	validate({
-		description: 'Login',
-		summary: 'Login and returns authentication cookie',
-		tags: ['Login'],
-		body: z
-			.object({
-				email: z.string().email(),
-				password: z.string().openapi({
-					description: 'The SHA3 hash of the user’s password',
-				}),
-			})
-			.openapi({
-				description: 'A JSON object containing the user’s email and hashed password',
-			}),
-		statusCodes: {
-			201: z.literal('success').openapi({
-				description: `Successfully authenticated.\n The sesion ID is returned in a cookie named \`connect.sid\` and should be included in all subsequent requests.`,
-			}),
-			401: z.literal('Login attempt failed').openapi({}),
-			500: z.string().openapi({}),
-		},
-	}),
-	(req, res, next) => {
-		const authenticate = new Promise<types.UserWithPrivateFields | null>((resolve, reject) => {
-			passport.authenticate('local', (authErr: Error, user: types.UserWithPrivateFields) => {
-				if (authErr) {
-					return reject(authErr);
-				}
-				return resolve(user);
-			})(req, res, next);
-		});
-		return authenticate
-			.then((user) => {
-				/* If authentication succeeded, we have a user */
-				if (user) {
-					return [user, null] as Step1Result;
-				}
+// app.post(
+// 	'/api/login',
+// 	validate({
+// 		description: 'Login',
+// 		summary: 'Login and returns authentication cookie',
+// 		tags: ['Login'],
+// 		body: z
+// 			.object({
+// 				email: z.string().email(),
+// 				password: z.string().openapi({
+// 					description: 'The SHA3 hash of the user’s password',
+// 				}),
+// 			})
+// 			.openapi({
+// 				description: 'A JSON object containing the user’s email and hashed password',
+// 			}),
+// 		statusCodes: {
+// 			201: z.literal('success').openapi({
+// 				description: `Successfully authenticated.\n The sesion ID is returned in a cookie named \`connect.sid\` and should be included in all subsequent requests.`,
+// 			}),
+// 			401: z.literal('Login attempt failed').openapi({}),
+// 			500: z.string().openapi({}),
+// 		},
+// 	}),
+// 	(req, res, next) => {
 
-				/* If authentication did not succeed, we need to check if a legacy hash is valid */
-				const findUser = User.findOne({
-					where: { email: req.body.email },
-				});
+export const login: AppRouteImplementation<typeof contract.login> = async ({ req, res }) => {
+	const authenticate = new Promise<types.UserWithPrivateFields | null>((resolve, reject) => {
+		passport.authenticate('local', (authErr: Error, user: types.UserWithPrivateFields) => {
+			if (authErr) {
+				return reject(authErr);
+			}
+			return resolve(user);
+		})(req, res);
+	});
+	return authenticate
+		.then((user) => {
+			/* If authentication succeeded, we have a user */
+			if (user) {
+				return [user, null] as Step1Result;
+			}
 
-				return Promise.all([null, findUser]) as Promise<Step1Result>;
-			})
-			.then(([user, userData]) => {
-				if (user) {
-					return [user, null] as Step2Result;
-				}
-
-				/* If the login failed, and there is no
-			userData, then the email doesn't exist */
-				if (!userData) {
-					throw new Error('Invalid email');
-				}
-				/* If the login failed, but the email exists, and the
-			digest is already sha512, it's simply a wrong password */
-				if (userData.passwordDigest === 'sha512') {
-					throw new Error('Invalid password');
-				}
-
-				/* If the login failed, but the email exists, and the digest
-			is not sha512, we need to check for valid legacy hashes */
-				const pubpubSha1HashRaw = crypto.pbkdf2Sync(
-					req.body.password,
-					userData.salt,
-					25000,
-					512,
-					'sha1',
-				);
-				// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
-				const pubpubSha1Hash = Buffer.from(pubpubSha1HashRaw, 'binary').toString('hex');
-				const isPubPubSha1Valid = pubpubSha1Hash === userData.hash;
-
-				const frankenbookHashRaw = crypto.pbkdf2Sync(
-					req.body.password,
-					userData.salt,
-					12000,
-					512,
-					'sha1',
-				);
-				// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
-				const frankenbookHash = Buffer.from(frankenbookHashRaw, 'binary').toString('hex');
-				const isfrankenbookValid = frankenbookHash === userData.hash;
-
-				const isLegacyValid = isPubPubSha1Valid || isfrankenbookValid;
-				if (!isLegacyValid) {
-					throw new Error('Invalid password');
-				}
-
-				/* If isLegacyValid, we need to update user to sha512 */
-				const setPassword = promisify((userData as any).setPassword.bind(userData));
-				return Promise.all([null, setPassword(req.body.password)]) as Promise<Step2Result>;
-			})
-			.then(([user, setPasswordData]) => {
-				if (user) {
-					return [user, null] as Step3Result;
-				}
-				assert(setPasswordData !== null);
-				const userUpdateData = {
-					passwordDigest: 'sha512',
-					hash: setPasswordData.hash,
-					salt: setPasswordData.salt,
-				};
-				const updateUser = User.update(userUpdateData, {
-					where: { email: req.body.email },
-					returning: true,
-				});
-				return Promise.all([null, updateUser]) as Promise<Step3Result>;
-			})
-			.then(([user, updatedUserData]) => {
-				if (user) {
-					return user;
-				}
-				assert(updatedUserData !== null);
-				return updatedUserData[1][0];
-			})
-			.then((user) => {
-				req.logIn(user, (err: string) => {
-					if (err) {
-						throw new Error(err);
-					}
-					res.cookie('pp-cache', 'pp-no-cache', {
-						...(isProd() &&
-							req.hostname.indexOf('pubpub.org') > -1 && { domain: '.pubpub.org' }),
-						...(isDuqDuq() &&
-							req.hostname.indexOf('pubpub.org') > -1 && { domain: '.duqduq.org' }),
-						maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days to match login cookies
-					});
-					return res.status(201).json('success');
-				});
-			})
-			.catch((err) => {
-				const unaunthenticatedValues = ['Invalid password', 'Invalid email'];
-				if (unaunthenticatedValues.includes(err.message)) {
-					return res.status(401).json('Login attempt failed');
-				}
-				return res.status(500).json(err.message);
+			/* If authentication did not succeed, we need to check if a legacy hash is valid */
+			const findUser = User.findOne({
+				where: { email: req.body.email },
 			});
-	},
-);
+
+			return Promise.all([null, findUser]) as Promise<Step1Result>;
+		})
+		.then(([user, userData]) => {
+			if (user) {
+				return [user, null] as Step2Result;
+			}
+
+			/* If the login failed, and there is no
+			userData, then the email doesn't exist */
+			if (!userData) {
+				throw new Error('Invalid email');
+			}
+			/* If the login failed, but the email exists, and the
+			digest is already sha512, it's simply a wrong password */
+			if (userData.passwordDigest === 'sha512') {
+				throw new Error('Invalid password');
+			}
+
+			/* If the login failed, but the email exists, and the digest
+			is not sha512, we need to check for valid legacy hashes */
+			const pubpubSha1HashRaw = crypto.pbkdf2Sync(
+				req.body.password,
+				userData.salt,
+				25000,
+				512,
+				'sha1',
+			);
+			// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
+			const pubpubSha1Hash = Buffer.from(pubpubSha1HashRaw, 'binary').toString('hex');
+			const isPubPubSha1Valid = pubpubSha1Hash === userData.hash;
+
+			const frankenbookHashRaw = crypto.pbkdf2Sync(
+				req.body.password,
+				userData.salt,
+				12000,
+				512,
+				'sha1',
+			);
+			// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
+			const frankenbookHash = Buffer.from(frankenbookHashRaw, 'binary').toString('hex');
+			const isfrankenbookValid = frankenbookHash === userData.hash;
+
+			const isLegacyValid = isPubPubSha1Valid || isfrankenbookValid;
+			if (!isLegacyValid) {
+				throw new Error('Invalid password');
+			}
+
+			/* If isLegacyValid, we need to update user to sha512 */
+			const setPassword = promisify((userData as any).setPassword.bind(userData));
+			return Promise.all([null, setPassword(req.body.password)]) as Promise<Step2Result>;
+		})
+		.then(([user, setPasswordData]) => {
+			if (user) {
+				return [user, null] as Step3Result;
+			}
+			assert(setPasswordData !== null);
+			const userUpdateData = {
+				passwordDigest: 'sha512',
+				hash: setPasswordData.hash,
+				salt: setPasswordData.salt,
+			};
+			const updateUser = User.update(userUpdateData, {
+				where: { email: req.body.email },
+				returning: true,
+			});
+			return Promise.all([null, updateUser]) as Promise<Step3Result>;
+		})
+		.then(([user, updatedUserData]) => {
+			if (user) {
+				return user;
+			}
+			assert(updatedUserData !== null);
+			return updatedUserData[1][0];
+		})
+		.then(async (user) => {
+			const logIn = promisify(req.logIn.bind(req));
+			await logIn(user);
+			res.cookie('pp-cache', 'pp-no-cache', {
+				...(isProd() &&
+					req.hostname.indexOf('pubpub.org') > -1 && { domain: '.pubpub.org' }),
+				...(isDuqDuq() &&
+					req.hostname.indexOf('pubpub.org') > -1 && { domain: '.duqduq.org' }),
+				maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days to match login cookies
+			});
+			return {
+				status: 201,
+				body: 'success',
+			} as const;
+		})
+		.catch((err) => {
+			const unaunthenticatedValues = ['Invalid password', 'Invalid email'];
+			if (unaunthenticatedValues.includes(err.message)) {
+				return { status: 401, body: 'Login attempt failed' } as const;
+			}
+			return { status: 500, body: err.message } as const;
+		});
+};

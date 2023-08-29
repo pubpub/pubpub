@@ -58,6 +58,7 @@ export const wrap: Wrap =
 	};
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+	console.log('Error handler', err);
 	if (err.message.indexOf('UseCustomDomain:') === 0) {
 		const customDomain = err.message.split(':')[1];
 		return res.redirect(`https://${customDomain}${req.originalUrl}`);
@@ -75,9 +76,12 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 /* Initialize express app */
 /* ---------------------- */
 const app = express();
-app.use(errorHandler);
 
 export default app;
+
+import { createExpressEndpoints } from '@ts-rest/express';
+import { contract } from 'utils/api/contract';
+import { server } from 'utils/api/server';
 
 if (process.env.NODE_ENV === 'production') {
 	// The Sentry request handler must be the first middleware on the app
@@ -181,6 +185,11 @@ app.use((req, res, next) => {
 	}
 	next();
 });
+
+/* ------------------------- */
+/* Create ts-rest api routes */
+/* ------------------------- */
+createExpressEndpoints(contract, server, app);
 
 /* ------------- */
 /* Import Routes */

@@ -516,4 +516,4 @@ export const pubServer = s.router(contract.pub, {
 	},
 });
 
-createExpressEndpoints(contract.pub, pubServer, app);
+// createExpressEndpoints(contract.pub, pubServer, app);

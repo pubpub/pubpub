@@ -76,4 +76,4 @@ export const collectionAttributionServer = s.router(contract.collectionAttributi
 	},
 });
 
-createExpressEndpoints(contract.collectionAttribution, collectionAttributionServer, app);
+// createExpressEndpoints(contract.collectionAttribution, collectionAttributionServer, app);

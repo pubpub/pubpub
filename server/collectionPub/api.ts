@@ -241,4 +241,4 @@ export const collectionPubServer = s.router(contract.collectionPub, {
 	},
 });
 
-createExpressEndpoints(contract.collectionPub, collectionPubServer, app);
+// createExpressEndpoints(contract.collectionPub, collectionPubServer, app);

@@ -171,4 +171,4 @@ export const pubAttributionServer = s.router(contract.pubAttribution, {
 	},
 });
 
-createExpressEndpoints(contract.pubAttribution, pubAttributionServer, app);
+// createExpressEndpoints(contract.pubAttribution, pubAttributionServer, app);

@@ -165,4 +165,4 @@ app.get(
 	}),
 );
 
-createExpressEndpoints(contract.collection, collectionServer, app);
+// createExpressEndpoints(contract.collection, collectionServer, app);
