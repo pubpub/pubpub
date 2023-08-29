@@ -35,6 +35,6 @@ export const contract = c.router(
 		workerTask: workerTaskContract,
 	},
 	{
-		strictStatusCodes: false,
+		strictStatusCodes: true,
 	},
 );
