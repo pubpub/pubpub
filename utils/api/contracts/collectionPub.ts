@@ -1,45 +1,14 @@
-import * as types from 'types';
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-
-import { pubSchema } from './pub';
+import {
+	createCollectionPubSchema,
+	collectionPubSchema,
+	updateCollectionPubSchema,
+} from '../schemas/collectionPub';
+import { pubSchema } from '../schemas/pub';
 
 extendZodWithOpenApi(z);
-
-export const collectionPubSchema = z.object({
-	id: z.string().uuid(),
-	pubId: z.string().uuid(),
-	collectionId: z.string().uuid(),
-	contextHint: z.string().nullable(),
-	rank: z.string(),
-	pubRank: z.string(),
-}) satisfies z.ZodType<types.CollectionPub>;
-
-const updateCollectionPubSchema = collectionPubSchema
-	.omit({ id: true })
-	.partial()
-	.merge(collectionPubSchema.pick({ id: true }));
-
-export const createCollectionPubSchema = collectionPubSchema
-	.pick({
-		pubId: true,
-		collectionId: true,
-	})
-	.merge(
-		collectionPubSchema
-			.pick({
-				rank: true,
-				moveToTop: true,
-			})
-			.partial(),
-	)
-	.merge(
-		z.object({
-			communityId: z.string().uuid(),
-			moveToTop: z.boolean().optional(),
-		}),
-	);
 
 const c = initContract();
 
