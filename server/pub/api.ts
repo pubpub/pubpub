@@ -122,8 +122,8 @@ export const pubServer = s.router(contract.pub, {
 			body: {},
 		};
 	},
-	getMany: async ({ body, req }) => {
-		const initialData = await getInitialData(body, req.user);
+	getMany: async ({ req }) => {
+		const initialData = await getInitialData(req, req.user);
 		const { query: queryPartial, alreadyFetchedPubIds, pubOptions } = getManyQueryParams(req);
 		const { limit } = queryPartial;
 		const pubIds = await queryPubIds({
