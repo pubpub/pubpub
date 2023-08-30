@@ -15,6 +15,7 @@ import { pubAttributionContract } from './contracts/pubAttribution';
 import { pubEdgeContract } from './contracts/pubEdge';
 import { workerTaskContract } from './contracts/workerTask';
 import { importRoute } from './contracts/import';
+import { releaseContract } from './contracts/release';
 
 extendZodWithOpenApi(z);
 
@@ -33,6 +34,7 @@ export const contract = c.router(
 		pub: pubContract,
 		pubAttribution: pubAttributionContract,
 		pubEdge: pubEdgeContract,
+		release: releaseContract,
 		workerTask: workerTaskContract,
 		login: loginRoute,
 		logout: logoutRoute,

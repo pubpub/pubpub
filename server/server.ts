@@ -79,7 +79,7 @@ const app = express();
 
 export default app;
 
-import { createExpressEndpoints } from '@ts-rest/express';
+import { RequestValidationError, createExpressEndpoints } from '@ts-rest/express';
 import { contract } from 'utils/api/contract';
 import { server } from 'utils/api/server';
 
@@ -191,6 +191,27 @@ app.use((req, res, next) => {
 /* ------------------------- */
 createExpressEndpoints(contract, server, app, {
 	logInitialization: false,
+	// eslint-disable-next-line consistent-return
+	requestValidationErrorHandler: (err, req, res, next) => {
+		if (err instanceof RequestValidationError) {
+			if (process.env.NODE_ENV !== 'production') {
+				console.error(err);
+			}
+			if (err.pathParams) {
+				return res.status(400).json(err.pathParams);
+			}
+			if (err.headers) {
+				return res.status(400).json(err.headers);
+			}
+			if (err.query) {
+				return res.status(400).json(err.query);
+			}
+			if (err.body) {
+				return res.status(400).json(err.body);
+			}
+		}
+		next(err);
+	},
 });
 
 /* ------------- */

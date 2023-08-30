@@ -10,7 +10,7 @@ import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { transformCollectionToResource } from 'deposit/transform/collection';
 import { contract } from 'utils/api/contract';
 import { createGetRequestIds } from 'utils/getRequestIds';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { initServer } from '@ts-rest/express';
 import { getPermissions } from './permissions';
 import { createCollection, destroyCollection, findCollection, updateCollection } from './queries';
 
@@ -164,5 +164,3 @@ app.get(
 		return res.status(200).json(resource);
 	}),
 );
-
-// createExpressEndpoints(contract.collection, collectionServer, app);

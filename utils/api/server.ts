@@ -13,6 +13,7 @@ import { pageServer } from 'server/page/api';
 import { memberServer } from 'server/member/api';
 import { pubEdgeServer } from 'server/pubEdge/api';
 import { workerTaskServer } from 'server/workerTask/api';
+import { releaseServer } from 'server/release/api';
 import { contract } from './contract';
 
 const s = initServer();
@@ -29,6 +30,7 @@ export const server = s.router(contract, {
 	pub: pubServer,
 	pubAttribution: pubAttributionServer,
 	pubEdge: pubEdgeServer,
+	release: releaseServer,
 	workerTask: workerTaskServer,
 	logout: logoutRouteImplementation,
 	login: loginRouteImplementation,
