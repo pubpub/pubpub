@@ -17,6 +17,7 @@ export const memberContract = c.router({
 	create: {
 		path: '/api/members',
 		method: 'POST',
+		summary: 'Create a member',
 		description: 'Create a member',
 		body: memberCreateSchema,
 		responses: {
@@ -26,6 +27,7 @@ export const memberContract = c.router({
 	update: {
 		path: '/api/members',
 		method: 'PUT',
+		summary: 'Update a member',
 		description: 'Update a member',
 		body: memberUpdateSchema,
 		responses: {
@@ -40,10 +42,11 @@ export const memberContract = c.router({
 	remove: {
 		path: '/api/members',
 		method: 'DELETE',
-		description: 'Delete a member',
+		summary: 'Remove a member',
+		description: 'Remove a member',
 		body: memberRemoveSchema,
 		responses: {
-			200: z.string({ description: 'The ID of the deleted member' }).uuid(),
+			200: z.string({ description: 'The ID of the removed member' }).uuid(),
 		},
 	},
 });

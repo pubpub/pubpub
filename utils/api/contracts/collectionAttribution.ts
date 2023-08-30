@@ -18,6 +18,7 @@ export const collectionAttributionContract = c.router(
 		create: {
 			path: '/api/collectionAttributions',
 			method: 'POST',
+			summary: 'Create a collection attribution',
 			description: 'Create a collection attribution',
 			body: collectionAttributionCreationSchema,
 			responses: {
@@ -27,6 +28,7 @@ export const collectionAttributionContract = c.router(
 		update: {
 			path: '/api/collectionAttributions',
 			method: 'PUT',
+			summary: 'Update a collection attribution',
 			description: 'Update a collection attribution',
 			body: collectionAttributionUpdateSchema,
 			responses: {
@@ -36,7 +38,8 @@ export const collectionAttributionContract = c.router(
 		remove: {
 			path: '/api/collectionAttributions',
 			method: 'DELETE',
-			description: 'Delete a collection attribution',
+			summary: 'Remove a collection attribution',
+			description: 'Remove a collection attribution',
 			body: collectionAttributionRemoveSchema,
 			responses: {
 				200: z.string().openapi({ description: 'The id of the deleted attribution' }),

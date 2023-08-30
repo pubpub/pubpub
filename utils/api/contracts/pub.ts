@@ -19,6 +19,7 @@ export const pubContract = c.router(
 		create: {
 			path: '/api/pubs',
 			method: 'POST',
+			summary: 'Create a Pub',
 			description: 'Create a Pub',
 			body: pubPostSchema,
 			responses: {
@@ -28,6 +29,7 @@ export const pubContract = c.router(
 		update: {
 			path: '/api/pubs',
 			method: 'PUT',
+			summary: 'Update a Pub',
 			description: 'Update a Pub',
 			body: pubPutSchema,
 			responses: {
@@ -39,8 +41,8 @@ export const pubContract = c.router(
 		remove: {
 			path: '/api/pubs',
 			method: 'DELETE',
-			description: 'Delete a Pub',
-			summary: 'Delete a Pub fr fr',
+			summary: 'Remove a Pub',
+			description: 'Remove a Pub',
 			body: z.object({
 				pubId: z.string().uuid(),
 			}),

@@ -8,6 +8,8 @@ extendZodWithOpenApi(z);
 export const importRoute = {
 	path: '/api/import',
 	method: 'POST',
+	summary: 'Import a file to a pub',
+	description: 'Import a file to a pub',
 	body: z.object({
 		sourceFiles: z.array(sourceFileSchema),
 		importerFlags: importerFlagsSchema.default({}),

@@ -11,6 +11,7 @@ export const pageContract = c.router({
 	create: {
 		path: '/api/pages',
 		method: 'POST',
+		summary: 'Create a page',
 		description: 'Create a page',
 		body: pageCreateSchema,
 		responses: {
@@ -20,6 +21,7 @@ export const pageContract = c.router({
 	update: {
 		path: '/api/pages',
 		method: 'PUT',
+		summary: 'Update a page',
 		description: 'Update a page',
 		body: pageUpdateSchema,
 		responses: {
@@ -29,11 +31,12 @@ export const pageContract = c.router({
 	remove: {
 		path: '/api/pages',
 		method: 'DELETE',
-		description: 'Delete a page',
+		summary: 'Remove a page',
+		description: 'Remove a page',
 		body: pageRemoveSchema,
 		responses: {
 			201: z.string().uuid().openapi({
-				description: 'The ID of the deleted page',
+				description: 'The ID of the removed page',
 			}),
 		},
 	},

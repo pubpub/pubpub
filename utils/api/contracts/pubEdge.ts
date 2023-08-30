@@ -12,6 +12,7 @@ export const pubEdgeContract = c.router({
 	get: {
 		path: '/api/pubEdges/:id',
 		method: 'GET',
+		summary: 'Get a pubEdge',
 		description: 'Get a pubEdge by id',
 		pathParams: z.object({
 			id: z.string().uuid(),
@@ -23,6 +24,7 @@ export const pubEdgeContract = c.router({
 	create: {
 		path: '/api/pubEdges',
 		method: 'POST',
+		summary: 'Create a pub edge',
 		description: 'Create a connection from one pub to another, or to an external publication',
 		body: pubEdgeCreateSchema,
 		responses: {
@@ -38,6 +40,7 @@ export const pubEdgeContract = c.router({
 	update: {
 		path: '/api/pubEdges',
 		method: 'PUT',
+		summary: 'Update a pubEdge',
 		description: 'Update a pubEdge',
 		body: pubEdgeUpdateSchema,
 		responses: { 200: pubEdgeSchema },
@@ -45,6 +48,7 @@ export const pubEdgeContract = c.router({
 	updateApprovedByTarget: {
 		path: '/api/pubEdges/approvedByTarget',
 		method: 'PUT',
+		summary: 'Update approvedByTarget for pubEdge',
 		description: 'Update the approvedByTarget field of a pubEdge',
 		body: z.object({
 			pubEdgeId: z.string().uuid(),
@@ -57,6 +61,7 @@ export const pubEdgeContract = c.router({
 	remove: {
 		path: '/api/pubEdges',
 		method: 'DELETE',
+		summary: 'Remove a pubEdge',
 		description: 'Remove a connection for a pub',
 		body: z.object({
 			pubEdgeId: z.string().uuid(),

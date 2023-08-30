@@ -16,6 +16,7 @@ export const collectionPubContract = c.router({
 	get: {
 		path: '/api/collectionPubs',
 		method: 'GET',
+		summary: 'Get the pubs associated with a collection',
 		description: 'Get the pubs associated with a collection',
 		query: z.object({
 			pubId: z.string().uuid().optional(),
@@ -29,6 +30,7 @@ export const collectionPubContract = c.router({
 	create: {
 		path: '/api/collectionPubs',
 		method: 'POST',
+		summary: 'Add a pub to a collection',
 		description: 'Add a pub to a collection',
 		body: createCollectionPubSchema,
 		responses: {
@@ -38,6 +40,7 @@ export const collectionPubContract = c.router({
 	update: {
 		path: '/api/collectionPubs',
 		method: 'PUT',
+		summary: 'Update pubs for collection',
 		description: 'Change the pubs that are associated with a collection',
 		body: updateCollectionPubSchema.merge(
 			z.object({
@@ -51,6 +54,7 @@ export const collectionPubContract = c.router({
 	remove: {
 		path: '/api/collectionPubs',
 		method: 'DELETE',
+		summary: 'Remove a pub from a collection',
 		description: 'Remove a pub from a collection',
 		body: z.object({
 			id: z.string().uuid(),

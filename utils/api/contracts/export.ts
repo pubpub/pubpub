@@ -8,6 +8,7 @@ extendZodWithOpenApi(z);
 export const exportRoute = {
 	path: '/api/export',
 	method: 'POST',
+	summary: 'Export a pub',
 	description:
 		"Export a pub to a file. Returns the export task's status. \n\nRequires authentication for unreleased pubs.",
 	body: z.object({

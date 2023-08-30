@@ -10,6 +10,7 @@ export const workerTaskContract = c.router({
 	get: {
 		path: '/api/workerTasks',
 		method: 'GET',
+		summary: 'Get a worker task',
 		description:
 			'Get the status of a worker task. This is used to poll for the status of a worker task, such as an import or export.',
 		query: z.object({
