@@ -6,17 +6,26 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import enforce from 'express-sslify';
 import express from 'express';
+import fs from 'fs';
 import noSlash from 'no-slash';
 import passport from 'passport';
 import path from 'path';
 import CreateSequelizeStore from 'connect-session-sequelize';
 
-import { setEnvironment, setAppCommit, isProd, getAppCommit } from 'utils/environment';
+import { setEnvironment, setAppCommit, isProd, getAppCommit, isQubQub } from 'utils/environment';
 
 // ACHTUNG: These calls must appear before we import any more of our own code to ensure that
 // the environment, and in particular the choice of dev vs. prod, is configured correctly!
 setEnvironment(process.env.PUBPUB_PRODUCTION, process.env.IS_DUQDUQ, process.env.IS_QUBQUB);
-setAppCommit(process.env.HEROKU_SLUG_COMMIT);
+if (isQubQub() && !process.env.HEROKU_SLUG_COMMIT) {
+	try {
+		setAppCommit(fs.readFileSync('.app-commit').toString());
+	} catch (err) {
+		console.error('Unable to read app commit from .app-commit file: ', err);
+	}
+} else {
+	setAppCommit(process.env.HEROKU_SLUG_COMMIT);
+}
 
 import 'server/utils/serverModuleOverwrite';
 import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
