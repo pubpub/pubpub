@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import app from 'server/server';
 import { BadRequestError, ForbiddenError } from 'server/utils/errors';
 import { getScopeId } from 'facets';
 
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { initServer } from '@ts-rest/express';
 import { contract } from 'utils/api/contract';
 import { canUserUpdateFacetsForScope } from './permissions';
 import { updateFacetsForScope } from './update';
@@ -26,5 +25,3 @@ export const facetsServer = s.router(contract.facets, {
 		return { status: 200, body: {} };
 	},
 });
-
-// createExpressEndpoints(contract.facets, facetsServer, app);

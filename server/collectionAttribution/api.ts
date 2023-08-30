@@ -1,11 +1,10 @@
-import app from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { z } from 'zod';
 import { attributionSchema } from 'server/pubAttribution/api';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { initServer } from '@ts-rest/express';
 import { contract } from 'utils/api/contract';
 import {
 	createCollectionAttribution,
@@ -75,5 +74,3 @@ export const collectionAttributionServer = s.router(contract.collectionAttributi
 		return { status: 200, body: body.id };
 	},
 });
-
-// createExpressEndpoints(contract.collectionAttribution, collectionAttributionServer, app);

@@ -1,6 +1,5 @@
 import { prepareResource, submitResource } from 'deposit/datacite/deposit';
 import { generateDoi } from 'server/doi/queries';
-import app, { wrap } from 'server/server';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { expect } from 'utils/assert';
 
@@ -21,86 +20,6 @@ const getRequestIds = createGetRequestIds<{
 	communityId?: string;
 	id?: string;
 }>();
-
-app.post(
-	'/api/collection/:collectionId/doi',
-	wrap(async (req, res) => {
-		const { collectionId } = req.params;
-		const collection = await findCollection(collectionId);
-		if (!collection) {
-			return new NotFoundError();
-		}
-		const permissions = await getPermissions({
-			userId: req.user.id,
-			collectionId,
-			communityId: collection.communityId,
-		});
-		if (!permissions.update) {
-			throw new ForbiddenError();
-		}
-		const collectionDoi =
-			collection.doi ??
-			(
-				await generateDoi(
-					{ communityId: collection.communityId, collectionId, pubId: undefined },
-					'collection',
-				)
-			).collection;
-		const resource = await transformCollectionToResource(
-			collection.toJSON(),
-			collection.community,
-		);
-		try {
-			const { resourceAst } = await submitResource(
-				collection,
-				resource,
-				expect(collectionDoi),
-				{ collectionId },
-			);
-			return res.status(200).json(resourceAst);
-		} catch (error) {
-			return res.status(400).json({ error: (error as Error).message });
-		}
-	}),
-);
-
-app.post(
-	'/api/collection/:collectionId/doi/preview',
-	wrap(async (req, res) => {
-		const { collectionId } = req.params;
-		const collection = await findCollection(collectionId);
-		const permissions = await getPermissions({
-			userId: req.user.id,
-			collectionId,
-			communityId: collection.communityId,
-		});
-		if (!permissions.update) {
-			throw new ForbiddenError();
-		}
-		const collectionDoi =
-			collection.doi ??
-			(
-				await generateDoi(
-					{ communityId: collection.communityId, collectionId, pubId: undefined },
-					'collection',
-				)
-			).collection;
-		const resource = await transformCollectionToResource(
-			collection.toJSON(),
-			collection.community,
-		);
-		try {
-			const { resourceAst } = await prepareResource(
-				collection,
-				resource,
-				expect(collectionDoi),
-			);
-			return res.status(200).json(resourceAst);
-		} catch (error) {
-			return res.status(400).json({ error: (error as Error).message });
-		}
-	}),
-);
 
 const s = initServer();
 
@@ -147,20 +66,90 @@ export const collectionServer = s.router(contract.collection, {
 		);
 		return { status: 200, body: body.id };
 	},
-});
-
-app.get(
-	'/api/collection/:collectionId/resource',
-	wrap(async (req, res) => {
-		const { collectionId } = req.params;
+	doi: {
+		deposit: async ({ req, params }) => {
+			const { collectionId } = params;
+			const collection = await findCollection(collectionId);
+			if (!collection) {
+				throw new NotFoundError();
+			}
+			const permissions = await getPermissions({
+				userId: req.user.id,
+				collectionId,
+				communityId: collection.communityId,
+			});
+			if (!permissions.update) {
+				throw new ForbiddenError();
+			}
+			const collectionDoi =
+				collection.doi ??
+				(
+					await generateDoi(
+						{ communityId: collection.communityId, collectionId, pubId: undefined },
+						'collection',
+					)
+				).collection;
+			const resource = await transformCollectionToResource(
+				collection.toJSON(),
+				collection.community,
+			);
+			try {
+				const { resourceAst } = await submitResource(
+					collection,
+					resource,
+					expect(collectionDoi),
+					{ collectionId },
+				);
+				return { status: 200, body: resourceAst };
+			} catch (error) {
+				return { status: 400, body: { error: (error as Error).message } };
+			}
+		},
+		preview: async ({ req, params }) => {
+			const { collectionId } = params;
+			const collection = await findCollection(collectionId);
+			const permissions = await getPermissions({
+				userId: req.user.id,
+				collectionId,
+				communityId: collection.communityId,
+			});
+			if (!permissions.update) {
+				throw new ForbiddenError();
+			}
+			const collectionDoi =
+				collection.doi ??
+				(
+					await generateDoi(
+						{ communityId: collection.communityId, collectionId, pubId: undefined },
+						'collection',
+					)
+				).collection;
+			const resource = await transformCollectionToResource(
+				collection.toJSON(),
+				collection.community,
+			);
+			try {
+				const { resourceAst } = await prepareResource(
+					collection,
+					resource,
+					expect(collectionDoi),
+				);
+				return { status: 200, body: resourceAst };
+			} catch (error) {
+				return { status: 400, body: { error: (error as Error).message } };
+			}
+		},
+	},
+	getResource: async ({ params }) => {
+		const { collectionId } = params;
 		const collection = await findCollection(collectionId);
 		if (!collection) {
-			return new NotFoundError();
+			throw new NotFoundError();
 		}
 		const resource = await transformCollectionToResource(
 			collection.toJSON(),
 			collection.community,
 		);
-		return res.status(200).json(resource);
-	}),
-);
+		return { status: 200, body: resource };
+	},
+});

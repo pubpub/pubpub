@@ -1,4 +1,3 @@
-import app from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
 import { expect } from 'utils/assert';
@@ -7,7 +6,7 @@ import { z } from 'zod';
 import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { contract } from 'utils/api/contract';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { initServer } from '@ts-rest/express';
 import { getPermissions } from './permissions';
 import {
 	createPubAttribution,
@@ -170,5 +169,3 @@ export const pubAttributionServer = s.router(contract.pubAttribution, {
 		}
 	},
 });
-
-// createExpressEndpoints(contract.pubAttribution, pubAttributionServer, app);

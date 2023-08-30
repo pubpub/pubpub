@@ -179,8 +179,12 @@ export const getIdentifierValue = (resource: AnyResource, identifierKind: Resour
 		?.identifierValue;
 
 export const partialResourceSchema = z.object({
-	title: z.string(),
-	kind: z.enum(resourceKinds),
+	title: z.string().openapi({
+		description: 'The title of the resource',
+	}),
+	kind: z.enum(resourceKinds).openapi({
+		description: 'The type of resource',
+	}),
 	identifiers: z.array(
 		z.object({
 			identifierKind: z.enum(['URL', 'DOI', 'ISSN', 'EISSN', 'ISBN']),
@@ -190,13 +194,19 @@ export const partialResourceSchema = z.object({
 });
 
 export const resourceSchema: z.ZodType<Resource> = partialResourceSchema.extend({
-	timestamp: z.string(),
+	timestamp: z.string().datetime().openapi({
+		description: 'The version of the resource expressed as a UTC datetime string',
+		example: '2021-01-01T00:00:00.000Z',
+	}),
 	description: z.string(),
 
 	descriptions: z.array(
 		z.object({
 			kind: z.enum(resourceDescriptors),
-			lang: z.string(),
+			lang: z.string().openapi({
+				description: 'ISO 639-2 language code',
+				example: 'eng',
+			}),
 			text: z.string(),
 		}),
 	),
@@ -204,7 +214,10 @@ export const resourceSchema: z.ZodType<Resource> = partialResourceSchema.extend(
 	summaries: z.array(
 		z.object({
 			kind: z.enum(resourceSummaryKinds),
-			lang: z.string(),
+			lang: z.string().openapi({
+				description: 'ISO 639-2 language code',
+				example: 'eng',
+			}),
 			value: z.string(),
 		}),
 	),
@@ -221,13 +234,17 @@ export const resourceSchema: z.ZodType<Resource> = partialResourceSchema.extend(
 	/**
 	 * Homogeneous list of inter- and intra-work relationships.
 	 */
-	relationships: z.array(
-		z.object({
-			isParent: z.boolean(),
-			relation: z.enum(resourceRelations),
-			resource: z.lazy(() => resourceSchema),
+	relationships: z
+		.array(
+			z.object({
+				isParent: z.boolean(),
+				relation: z.enum(resourceRelations),
+				resource: z.lazy(() => resourceSchema),
+			}),
+		)
+		.openapi({
+			description: 'Homogeneous list of inter- and intra-work relationships',
 		}),
-	),
 
 	license: z.object({
 		uri: z.string(),
@@ -235,7 +252,10 @@ export const resourceSchema: z.ZodType<Resource> = partialResourceSchema.extend(
 		 * SPDX license identifier.
 		 * @see {@link https://spdx.org/licenses}
 		 */
-		spdxIdentifier: z.string(),
+		spdxIdentifier: z.string().openapi({
+			description: 'SPDX license identifier',
+			example: 'CC-BY-4.0',
+		}),
 	}),
 
 	meta: z.record(z.string()),

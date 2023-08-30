@@ -3,6 +3,7 @@ import { Pub } from 'server/models';
 import * as types from 'types';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { submitResource } from 'deposit/datacite/deposit';
 import { pubAttributionSchema } from './pubAttribution';
 import { discussionSchema } from './discussion';
 import { collectionPubSchema } from './collectionPub';
@@ -190,3 +191,10 @@ export const pubPutSchema = pubSchema
 			pubId: z.string(),
 		}),
 	) satisfies z.ZodType<PubPut>;
+
+export const resourceASTSchema = z.object({
+	type: z.literal('element'),
+	name: z.string(),
+	attributes: z.record(z.string()).optional(),
+	children: z.array(z.any()).optional(),
+}) satisfies Awaited<ReturnType<typeof submitResource>>['resourceAst'];
