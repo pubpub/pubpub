@@ -111,6 +111,9 @@ module.exports = {
 						org: 'kfg',
 						project: 'pubpub-frontend',
 						authToken: process.env.SENTRY_AUTH_TOKEN,
+						errorHandler: (err) => {
+							console.warn(err);
+						},
 					}),
 			  ]),
 	],
