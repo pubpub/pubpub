@@ -9,6 +9,7 @@ import { logoutRouteImplementation } from 'server/logout/api';
 import { loginRouteImplementation } from 'server/login/api';
 import { exportRouteImplementation } from 'server/export/api';
 import { importRouteImplementation } from 'server/import/api';
+import { pageServer } from 'server/page/api';
 import { contract } from './contract';
 
 const s = initServer();
@@ -22,7 +23,7 @@ export const server = s.router(contract, {
 	import: importRouteImplementation,
 	member: {},
 	//	memberServer,
-	page: {},
+	page: pageServer,
 	//	pageServer,
 	pub: pubServer,
 	pubAttribution: pubAttributionServer,
