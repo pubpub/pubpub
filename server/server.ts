@@ -41,24 +41,24 @@ type Wrap = <
 export const wrap: Wrap =
 	(routeHandlerFn) =>
 	(...args) => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const [req, res, next] = args;
 		Promise.resolve(routeHandlerFn(...args)).catch((err) => {
-			if (err.message.indexOf('UseCustomDomain:') === 0) {
-				const customDomain = err.message.split(':')[1];
-				return res.redirect(`https://${customDomain}${req.originalUrl}`);
-			}
-			// Log the error if we're testing. Normally this is handled in the error middleware, but
-			// that isn't active while handling individual requests in a test environment.
-			if (process.env.NODE_ENV === 'test' && !(err instanceof HTTPStatusError)) {
-				// eslint-disable-next-line no-console
-				console.log('Got an error in an API route while testing:', err);
-			}
+			// if (err.message.indexOf('UseCustomDomain:') === 0) {
+			// 	const customDomain = err.message.split(':')[1];
+			// 	return res.redirect(`https://${customDomain}${req.originalUrl}`);
+			// }
+			// // Log the error if we're testing. Normally this is handled in the error middleware, but
+			// // that isn't active while handling individual requests in a test environment.
+			// if (process.env.NODE_ENV === 'test' && !(err instanceof HTTPStatusError)) {
+			// 	// eslint-disable-next-line no-console
+			// 	console.log('Got an error in an API route while testing:', err);
+			// }
 			return next(err);
 		});
 	};
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-	console.log('Error handler', err);
 	if (err.message.indexOf('UseCustomDomain:') === 0) {
 		const customDomain = err.message.split(':')[1];
 		return res.redirect(`https://${customDomain}${req.originalUrl}`);
@@ -189,7 +189,9 @@ app.use((req, res, next) => {
 /* ------------------------- */
 /* Create ts-rest api routes */
 /* ------------------------- */
-createExpressEndpoints(contract, server, app);
+createExpressEndpoints(contract, server, app, {
+	logInitialization: false,
+});
 
 /* ------------- */
 /* Import Routes */
@@ -204,6 +206,7 @@ if (process.env.NODE_ENV === 'production') {
 	// The Sentry error handler must be before any other error middleware
 	app.use(Sentry.Handlers.errorHandler());
 }
+app.use(errorHandler);
 app.use(errorMiddleware);
 
 /* ------------ */
