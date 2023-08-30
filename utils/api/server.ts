@@ -11,6 +11,7 @@ import { exportRouteImplementation } from 'server/export/api';
 import { importRouteImplementation } from 'server/import/api';
 import { pageServer } from 'server/page/api';
 import { memberServer } from 'server/member/api';
+import { pubEdgeServer } from 'server/pubEdge/api';
 import { contract } from './contract';
 
 const s = initServer();
@@ -26,8 +27,7 @@ export const server = s.router(contract, {
 	page: pageServer,
 	pub: pubServer,
 	pubAttribution: pubAttributionServer,
-	pubEdge: {},
-	//	pubEdgeServer,
+	pubEdge: pubEdgeServer,
 	workerTask: {},
 	logout: logoutRouteImplementation,
 	login: loginRouteImplementation,
