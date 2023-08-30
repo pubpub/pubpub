@@ -12,7 +12,9 @@ const collectionLayoutSchema = z.object({
 
 export const collectionSchema = z.object({
 	id: z.string().uuid(),
-	title: z.string(),
+	title: z
+		.string()
+		.openapi({ description: 'The title of the collection', example: 'A wonderful title' }),
 	slug: z
 		.string()
 		.regex(/^[a-zA-Z0-9-]+$/)
