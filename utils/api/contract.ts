@@ -16,6 +16,7 @@ import { pubEdgeContract } from './contracts/pubEdge';
 import { workerTaskContract } from './contracts/workerTask';
 import { importRoute } from './contracts/import';
 import { releaseContract } from './contracts/release';
+import { uploadPolicyRoute } from './contracts/uploadPolicy';
 
 extendZodWithOpenApi(z);
 
@@ -38,6 +39,7 @@ export const contract = c.router(
 		workerTask: workerTaskContract,
 		login: loginRoute,
 		logout: logoutRoute,
+		uploadPolicy: uploadPolicyRoute,
 	},
 	{
 		strictStatusCodes: true,
