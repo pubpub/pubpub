@@ -7,6 +7,7 @@ import { collectionServer } from 'server/collection/api';
 import { facetsServer } from 'server/facets/api';
 import { logout } from 'server/logout/api';
 import { login } from 'server/login/api';
+import { exportServer } from 'server/export/api';
 import { contract } from './contract';
 
 const s = initServer();
@@ -15,8 +16,7 @@ export const server = s.router(contract, {
 	collection: collectionServer,
 	collectionAttribution: collectionAttributionServer,
 	collectionPub: collectionPubServer,
-	export: {},
-	//	exportServer,
+	export: exportServer,
 	facets: facetsServer,
 	member: {},
 	//	memberServer,
