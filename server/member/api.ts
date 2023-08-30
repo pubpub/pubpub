@@ -1,29 +1,16 @@
-import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
-import { oldCreateGetRequestIds } from 'utils/getRequestIds';
-import { validate } from 'utils/api';
-import { z } from 'zod';
-import { memberPermissions } from 'types';
+import { createGetRequestIds } from 'utils/getRequestIds';
+import { contract } from 'utils/api/contract';
+import { initServer } from '@ts-rest/express';
 import { getPermissions } from './permissions';
 import { createMember, updateMember, destroyMember } from './queries';
 
-const getRequestIds = oldCreateGetRequestIds<{
+const getRequestIds = createGetRequestIds<{
 	communityId?: string;
 	pubId?: string;
 	collectionId?: string;
 }>();
-
-// const getRequestIds = (req) => {
-// 	const user = req.user || {};
-// 	const { pubId, collectionId, communityId } = req.body;
-// 	return {
-// 		pubId,
-// 		collectionId,
-// 		communityId,
-// 		actorId: user.id,
-// 	};
-// };
 
 const chooseTargetFromRequestIds = ({
 	pubId,
@@ -46,30 +33,12 @@ const chooseTargetFromRequestIds = ({
 	return {};
 };
 
-const idUnionSchema = z.object({
-	communityId: z.string(),
-	collectionId: z.string().optional(),
-	pubId: z.string().optional(),
-});
+const s = initServer();
 
-app.post(
-	'/api/members',
-	validate({
-		tags: ['Members'],
-		description: 'Create a member',
-		security: true,
-		body: z
-			.object({
-				value: z.object({
-					permissions: z.enum(memberPermissions).optional().default('view'),
-				}),
-				targetUserId: z.string(),
-			})
-			.and(idUnionSchema),
-	}),
-	wrap(async (req, res) => {
-		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(req);
-		const { targetUserId, value } = req.body;
+export const memberServer = s.router(contract.member, {
+	create: async ({ req, body }) => {
+		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(body, req.user);
+		const { targetUserId, value } = body;
 		const permissions = await getPermissions({
 			actorId,
 			pubId,
@@ -92,34 +61,12 @@ app.post(
 				}),
 			},
 		});
-		return res.status(201).json(member);
-	}),
-);
+		return { status: 201, body: member };
+	},
 
-app.put(
-	'/api/members',
-	validate({
-		tags: ['Members'],
-		description: 'Update a member',
-		body: z
-			.object({
-				id: z.string(),
-				value: z.object({
-					permissions: z.enum(memberPermissions).optional(),
-					subscribedToActivityDigest: z.boolean().optional(),
-				}),
-			})
-			.and(idUnionSchema),
-		response: {
-			id: z.string(),
-			permissions: z.enum(memberPermissions),
-			isOwner: z.boolean().nullable(),
-			subscribedToActivityDigest: z.boolean(),
-		},
-	}),
-	wrap(async (req, res) => {
-		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(req);
-		const { value, id: memberId } = req.body;
+	update: async ({ req, body }) => {
+		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(body, req.user);
+		const { value, id: memberId } = body;
 		const permissions = await getPermissions({
 			actorId,
 			pubId,
@@ -136,28 +83,12 @@ app.put(
 			memberId,
 			actorId: req.user.id,
 		});
-		return res.status(200).json(member);
-	}),
-);
+		return { status: 200, body: member };
+	},
 
-app.delete(
-	'/api/members',
-	validate({
-		tags: ['Members'],
-		description: 'Delete a member',
-		body: z
-			.object({
-				id: z.string(),
-				value: z.object({
-					permissions: z.enum(memberPermissions).optional(),
-				}),
-			})
-			.and(idUnionSchema),
-		response: z.string({ description: 'The ID of the deleted member' }),
-	}),
-	wrap(async (req, res) => {
-		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(req);
-		const { value, id } = req.body;
+	remove: async ({ req, body }) => {
+		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(body, req.user);
+		const { value, id } = body;
 		const permissions = await getPermissions({
 			actorId,
 			pubId,
@@ -170,6 +101,6 @@ app.delete(
 			throw new ForbiddenError();
 		}
 		await destroyMember({ memberId: id, actorId: req.user.id });
-		return res.status(200).json(id);
-	}),
-);
+		return { status: 200, body: id };
+	},
+});

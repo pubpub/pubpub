@@ -43,7 +43,7 @@ export const createMember = async ({
 		},
 		{ returning: ['id'], actorId },
 	);
-	return getMemberDataById(memberId);
+	return expect(await getMemberDataById(memberId));
 };
 
 export type UpdateMemberOptions = {
