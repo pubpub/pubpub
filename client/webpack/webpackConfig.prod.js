@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const crypto = require('crypto');
 
@@ -102,6 +103,11 @@ module.exports = {
 		}),
 		// Allow shared utils to import the sentry/node package by replacing it in the webpack build
 		new webpack.NormalModuleReplacementPlugin(/@sentry\/node/, '@sentry/react'),
+		sentryWebpackPlugin({
+			org: 'kfg',
+			project: 'pubpub-frontend',
+			authToken: process.env.SENTRY_AUTH_TOKEN,
+		}),
 	],
 	optimization: {
 		minimizer: [
