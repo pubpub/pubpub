@@ -1,8 +1,6 @@
 import passport from 'passport';
 import crypto from 'crypto';
 import { promisify } from 'util';
-import { z } from 'zod';
-import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { assert } from 'utils/assert';
 import * as types from 'types';
@@ -16,35 +14,10 @@ type Step1Result = [types.UserWithPrivateFields, null] | [null, types.UserWithPr
 type Step2Result = [types.UserWithPrivateFields, null] | [null, SetPasswordData];
 type Step3Result = [types.UserWithPrivateFields, null] | [null, types.UserWithPrivateFields[][]];
 
-extendZodWithOpenApi(z);
-
-// app.post(
-// 	'/api/login',
-// 	validate({
-// 		description: 'Login',
-// 		summary: 'Login and returns authentication cookie',
-// 		tags: ['Login'],
-// 		body: z
-// 			.object({
-// 				email: z.string().email(),
-// 				password: z.string().openapi({
-// 					description: 'The SHA3 hash of the user’s password',
-// 				}),
-// 			})
-// 			.openapi({
-// 				description: 'A JSON object containing the user’s email and hashed password',
-// 			}),
-// 		statusCodes: {
-// 			201: z.literal('success').openapi({
-// 				description: `Successfully authenticated.\n The sesion ID is returned in a cookie named \`connect.sid\` and should be included in all subsequent requests.`,
-// 			}),
-// 			401: z.literal('Login attempt failed').openapi({}),
-// 			500: z.string().openapi({}),
-// 		},
-// 	}),
-// 	(req, res, next) => {
-
-export const login: AppRouteImplementation<typeof contract.login> = async ({ req, res }) => {
+export const loginRouteImplementation: AppRouteImplementation<typeof contract.login> = async ({
+	req,
+	res,
+}) => {
 	const authenticate = new Promise<types.UserWithPrivateFields | null>((resolve, reject) => {
 		passport.authenticate('local', (authErr: Error, user: types.UserWithPrivateFields) => {
 			if (authErr) {

@@ -5,7 +5,7 @@ import { pubContract } from './contracts/pub';
 import { collectionPubContract } from './contracts/collectionPub';
 import { collectionContract } from './contracts/collection';
 import { collectionAttributionContract } from './contracts/collectionAttribution';
-import { exportContract } from './contracts/export';
+import { exportRoute } from './contracts/export';
 import { facetsContract } from './contracts/facets';
 import { loginRoute } from './contracts/login';
 import { logoutRoute } from './contracts/logout';
@@ -14,6 +14,7 @@ import { pageContract } from './contracts/page';
 import { pubAttributionContract } from './contracts/pubAttribution';
 import { pubEdgeContract } from './contracts/pubEdge';
 import { workerTaskContract } from './contracts/workerTask';
+import { importRoute } from './contracts/import';
 
 extendZodWithOpenApi(z);
 
@@ -24,8 +25,9 @@ export const contract = c.router(
 		collection: collectionContract,
 		collectionAttribution: collectionAttributionContract,
 		collectionPub: collectionPubContract,
-		export: exportContract,
+		export: exportRoute,
 		facets: facetsContract,
+		import: importRoute,
 		member: memberContract,
 		page: pageContract,
 		pub: pubContract,

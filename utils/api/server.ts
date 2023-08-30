@@ -5,9 +5,10 @@ import { pubAttributionServer } from 'server/pubAttribution/api';
 import { collectionAttributionServer } from 'server/collectionAttribution/api';
 import { collectionServer } from 'server/collection/api';
 import { facetsServer } from 'server/facets/api';
-import { logout } from 'server/logout/api';
-import { login } from 'server/login/api';
-import { exportServer } from 'server/export/api';
+import { logoutRouteImplementation } from 'server/logout/api';
+import { loginRouteImplementation } from 'server/login/api';
+import { exportRouteImplementation } from 'server/export/api';
+import { importRouteImplementation } from 'server/import/api';
 import { contract } from './contract';
 
 const s = initServer();
@@ -16,8 +17,9 @@ export const server = s.router(contract, {
 	collection: collectionServer,
 	collectionAttribution: collectionAttributionServer,
 	collectionPub: collectionPubServer,
-	export: exportServer,
+	export: exportRouteImplementation,
 	facets: facetsServer,
+	import: importRouteImplementation,
 	member: {},
 	//	memberServer,
 	page: {},
@@ -27,6 +29,6 @@ export const server = s.router(contract, {
 	pubEdge: {},
 	//	pubEdgeServer,
 	workerTask: {},
-	logout,
-	login,
+	logout: logoutRouteImplementation,
+	login: loginRouteImplementation,
 });
