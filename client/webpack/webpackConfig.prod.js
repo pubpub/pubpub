@@ -103,11 +103,16 @@ module.exports = {
 		}),
 		// Allow shared utils to import the sentry/node package by replacing it in the webpack build
 		new webpack.NormalModuleReplacementPlugin(/@sentry\/node/, '@sentry/react'),
-		sentryWebpackPlugin({
-			org: 'kfg',
-			project: 'pubpub-frontend',
-			authToken: process.env.SENTRY_AUTH_TOKEN,
-		}),
+		// Upload sourcemaps to sentry only when we're not in CI
+		...(process.env.CI === 'true'
+			? []
+			: [
+					sentryWebpackPlugin({
+						org: 'kfg',
+						project: 'pubpub-frontend',
+						authToken: process.env.SENTRY_AUTH_TOKEN,
+					}),
+			  ]),
 	],
 	optimization: {
 		minimizer: [
