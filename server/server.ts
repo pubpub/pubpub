@@ -40,9 +40,14 @@ import './hooks';
 // return a promise, i.e. those that use async/await, we should use it everywhere to be consistent.
 export const wrap =
 	(routeHandlerFn) =>
-	(...args) => {
+	async (...args) => {
 		const [req, res, next] = args;
-		Promise.resolve(routeHandlerFn(...args)).catch((err) => {
+		try {
+			return await routeHandlerFn(...args);
+		} catch (err) {
+			if (!(err instanceof Error)) {
+				return next(err);
+			}
 			if (err.message.indexOf('UseCustomDomain:') === 0) {
 				const customDomain = err.message.split(':')[1];
 				return res.redirect(`https://${customDomain}${req.originalUrl}`);
@@ -54,7 +59,7 @@ export const wrap =
 				console.log('Got an error in an API route while testing:', err);
 			}
 			return next(err);
-		});
+		}
 	};
 
 /* ---------------------- */
