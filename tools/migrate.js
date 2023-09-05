@@ -11,9 +11,9 @@ import * as models from 'server/models';
 
 import { promptOkay } from './utils/prompt';
 
-const { argv } = require('yargs');
-
-const { name, down, fn } = argv;
+const {
+	argv: { name, down, fn },
+} = require('yargs');
 
 const fnName = fn ?? (down ? 'down' : 'up');
 

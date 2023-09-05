@@ -89,7 +89,6 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"pretty": true,
-		"incremental": true,
-		"strictNullChecks": true
+		"incremental": true
 	}
 }
