@@ -8,6 +8,5 @@ app.use(
 			title: 'PubPub API',
 			version: '6.0.0',
 		},
-		redoc: true,
 	}),
 );
