@@ -90,11 +90,11 @@ export const pubPostSchema = z
 	.and(
 		z.union([
 			z.object({
-				collectionId: z.string().optional(),
+				collectionId: z.string().nullish(),
 				createPubToken: z.undefined(),
 			}),
 			z.object({
-				createPubToken: z.string().optional(),
+				createPubToken: z.string().nullish(),
 				collectionId: z.undefined(),
 			}),
 			z.object({

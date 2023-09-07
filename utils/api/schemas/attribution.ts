@@ -40,9 +40,9 @@ export const attributionCreationSchema = attributionSchema
 				orcid: z.undefined().optional(),
 			}),
 			z.object({
-				userId: z.undefined().optional(),
+				userId: z.undefined().nullish(),
 				name: attributionSchema.shape.name.unwrap(),
-				orcid: attributionSchema.shape.orcid.unwrap().optional(),
+				orcid: attributionSchema.shape.orcid.optional(),
 			}),
 		]),
 	) satisfies z.ZodType<

@@ -31,7 +31,7 @@ export const createPub = async (
 		slug,
 		titleKind = 'Untitled Pub',
 		...restArgs
-	}: { communityId: string; collectionIds?: string[]; slug?: string; [key: string]: any },
+	}: { communityId: string; collectionIds?: string[] | null; slug?: string; [key: string]: any },
 	actorId?: string,
 ) => {
 	const newPubSlug = slug ? slug.toLowerCase().trim() : generateHash(8);

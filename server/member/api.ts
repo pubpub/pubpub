@@ -8,8 +8,8 @@ import { createMember, updateMember, destroyMember } from './queries';
 
 const getRequestIds = createGetRequestIds<{
 	communityId?: string;
-	pubId?: string;
-	collectionId?: string;
+	pubId?: string | null;
+	collectionId?: string | null;
 }>();
 
 const chooseTargetFromRequestIds = ({
@@ -17,8 +17,8 @@ const chooseTargetFromRequestIds = ({
 	collectionId,
 	communityId,
 }: {
-	pubId?: string;
-	collectionId?: string;
+	pubId?: string | null;
+	collectionId?: string | null;
 	communityId?: string;
 }) => {
 	if (pubId) {
@@ -88,14 +88,13 @@ export const memberServer = s.router(contract.member, {
 
 	remove: async ({ req, body }) => {
 		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(body, req.user);
-		const { value, id } = body;
+		const { id } = body;
 		const permissions = await getPermissions({
 			actorId,
 			pubId,
 			communityId,
 			collectionId,
 			memberId: id,
-			value,
 		});
 		if (!permissions.destroy) {
 			throw new ForbiddenError();

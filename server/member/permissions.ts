@@ -30,9 +30,9 @@ export const getPermissions = async ({
 	value: { permissions } = { permissions: undefined },
 }: {
 	actorId?: string | null;
-	pubId?: string;
+	pubId?: string | null;
 	communityId?: string;
-	collectionId?: string;
+	collectionId?: string | null;
 	memberId?: string;
 	value?: {
 		permissions?: MemberPermission;

@@ -47,10 +47,10 @@ export const pubEdgeCreateSchema = pubEdgeSchema
 		z.union([
 			z.object({
 				targetPubId: z.string().uuid(),
-				externalPublication: z.undefined().optional(),
+				externalPublication: z.undefined().nullish(),
 			}),
 			z.object({
-				targetPubId: z.undefined().optional(),
+				targetPubId: z.undefined().nullish(),
 				externalPublication: externalPublicationCreateSchema,
 			}),
 		]),

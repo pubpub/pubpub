@@ -72,9 +72,9 @@ const getManyQueryParams = <
 };
 const getRequestIds = createGetRequestIds<{
 	communityId?: string;
-	collectionId?: string;
+	collectionId?: string | null;
 	pubId?: string;
-	createPubToken?: string;
+	createPubToken?: string | null;
 }>();
 
 const s = initServer();

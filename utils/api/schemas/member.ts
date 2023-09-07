@@ -18,8 +18,8 @@ export const memberSchema = z.object({
 
 export const idUnionSchema = z.object({
 	communityId: memberSchema.shape.communityId.unwrap(),
-	collectionId: memberSchema.shape.collectionId.unwrap().optional(),
-	pubId: memberSchema.shape.pubId.unwrap().optional(),
+	collectionId: memberSchema.shape.collectionId.optional(),
+	pubId: memberSchema.shape.pubId.optional(),
 });
 
 export const memberCreateSchema = z
@@ -44,8 +44,5 @@ export const memberUpdateSchema = z
 export const memberRemoveSchema = z
 	.object({
 		id: memberSchema.shape.id,
-		value: z.object({
-			permissions: z.enum(types.memberPermissions).optional(),
-		}),
 	})
 	.and(idUnionSchema);
