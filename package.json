@@ -4,6 +4,7 @@
 	"description": "Collaborative Community Publishing",
 	"author": "PubPub Team <hello@pubpub.org>",
 	"license": "GPL-2.0+",
+	"type": "commonjs",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/pubpub/pubpub.git"
@@ -78,7 +79,7 @@
 		"@lezer/python": "^1.1.1",
 		"@lezer/rust": "^1.0.0",
 		"@lezer/xml": "^1.0.0",
-		"@monaco-editor/react": "^4.1.1",
+		"@monaco-editor/react": "4.1.1",
 		"@popperjs/core": "^2.11.5",
 		"@pubpub/deposit-utils": "^0.1.10",
 		"@pubpub/prosemirror-pandoc": "^1.1.5",
