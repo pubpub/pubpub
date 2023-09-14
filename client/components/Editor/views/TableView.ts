@@ -1,4 +1,4 @@
-import { TableView as BaseTableView,  } from 'prosemirror-tables';
+import { TableView as BaseTableView } from 'prosemirror-tables';
 import type { Node } from 'prosemirror-model';
 
 import { buildLabel } from '../utils';
