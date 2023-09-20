@@ -1,8 +1,8 @@
 import * as types from 'types';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { layoutBlockSchema } from './layout';
 import { collectionKinds, readNextPreviewSizes } from 'types/collection';
+import { layoutBlockSchema } from './layout';
 
 extendZodWithOpenApi(z);
 
