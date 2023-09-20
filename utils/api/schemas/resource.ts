@@ -1,67 +1,12 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-// import {
-// 	resourceKinds,
-// 	resourceDescriptors,
-// 	resourceSummaryKinds,
-// 	resourceContributorRoles,
-// 	resourceRelations,
-// 	Resource,
-// } from 'deposit/resource';
-
-export const resourceKinds = [
-	'Book',
-	'BookChapter',
-	'Journal',
-	'JournalIssue',
-	'JournalArticle',
-	'Conference',
-	'ConferenceProceeding',
-	'ConferencePaper',
-	'Other',
-] as const;
-
-export const resourceKindToProperNoun = {
-	Book: 'Book',
-	BookChapter: 'Book Chapter',
-	Journal: 'Journal',
-	JournalIssue: 'Journal Issue',
-	JournalArticle: 'Journal Article',
-	Conference: 'Conference',
-	ConferenceProceeding: 'Conference Proceeding',
-	ConferencePaper: 'Conference Paper',
-	Other: 'Other',
-};
-
-export const interWorkResourceRelations = [
-	'Comment',
-	'Preprint',
-	'Reply',
-	'Review',
-	'Supplement',
-	'Translation',
-	'Version',
-] as const;
-
-export const intraWorkResourceRelations = ['Part', 'Publication'] as const;
-
-export const resourceRelations = [
-	...interWorkResourceRelations,
-	...intraWorkResourceRelations,
-] as const;
-export const resourceContributorKinds = ['Person', 'Organization'] as const;
-export const resourceContributorRoles = ['Creator', 'Editor', 'Translator', 'Other'] as const;
-export const resourceDescriptors = [
-	'Explanation',
-	'Mechanism',
-	'Process',
-	'Definition',
-	'Other',
-] as const;
-
-export const resourceSummaryKinds = ['Synopsis', 'WordCount', 'Other'] as const;
-
-export const resourceIdentifierKinds = ['URL', 'DOI', 'ISSN', 'EISSN', 'ISBN'] as const;
+import {
+	resourceKinds,
+	resourceDescriptors,
+	resourceSummaryKinds,
+	resourceContributorRoles,
+	resourceRelations,
+} from 'deposit/resource';
 
 extendZodWithOpenApi(z);
 

@@ -2,6 +2,7 @@ import * as types from 'types';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { layoutBlockSchema } from './layout';
+import { collectionKinds, readNextPreviewSizes } from 'types/collection';
 
 extendZodWithOpenApi(z);
 
@@ -9,9 +10,6 @@ const collectionLayoutSchema = z.object({
 	isNarrow: z.boolean().optional(),
 	blocks: z.array(layoutBlockSchema),
 });
-
-export const collectionKinds = ['tag', 'issue', 'book', 'conference'] as const;
-export const readNextPreviewSizes = ['none', 'minimal', 'medium', 'choose-best'] as const;
 
 export const collectionSchema = z.object({
 	id: z.string().uuid(),
@@ -76,6 +74,7 @@ export const collectionUpdateSchema = collectionSchema
 		layout: true,
 		layoutAllowsDuplicatePubs: true,
 		avatar: true,
+		doi: true,
 	})
 	.partial()
 	.extend({

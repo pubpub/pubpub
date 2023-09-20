@@ -1,32 +1,8 @@
-// import * as types from 'types';
-
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { PubAttribution } from 'server/models';
 import * as types from 'types';
-
-export const DEFAULT_ROLES = [
-	'Conceptualization',
-	'Methodology',
-	'Software',
-	'Validation',
-	'Formal Analysis',
-	'Investigation',
-	'Resources',
-	'Data Curation',
-	'Writing – Original Draft Preparation',
-	'Writing – Review & Editing',
-	'Visualization',
-	'Supervision',
-	'Project Administration',
-	'Peer Review',
-	'Funding Acquisition',
-	'Illustrator',
-	'Editor',
-	'Series Editor',
-	'Translator',
-	'Chair',
-] as const;
+import { DEFAULT_ROLES } from 'types/attribution';
 
 extendZodWithOpenApi(z);
 

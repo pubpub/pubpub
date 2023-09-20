@@ -1,7 +1,7 @@
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-// import { memberPermissions } from 'types';
+import { memberPermissions } from 'types/member';
 import {
 	memberCreateSchema,
 	memberRemoveSchema,
@@ -9,7 +9,6 @@ import {
 	memberUpdateSchema,
 } from '../schemas/member';
 
-export const memberPermissions = ['view', 'edit', 'manage', 'admin'] as const;
 extendZodWithOpenApi(z);
 
 const c = initContract();

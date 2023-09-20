@@ -1,21 +1,7 @@
 import { z } from 'zod';
 import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-// import { relationTypes } from 'utils/pubEdge';
-
-// import { layoutBlockSchema } from 'utils/layout';
-
-export const relationTypes = [
-	'comment',
-	'commentary',
-	'preprint',
-	'rejoinder',
-	'reply',
-	'review',
-	'supplement',
-	'translation',
-	'version',
-] as const;
+import { relationTypes } from 'utils/pubEdge';
 
 extendZodWithOpenApi(z);
 

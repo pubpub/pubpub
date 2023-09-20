@@ -8,7 +8,7 @@ export const docJsonSchema = z.object({
 	type: z.literal('doc'),
 	attrs: z.record(z.any()),
 	content: z.array(z.any()),
-}); // as z.ZodType<DocJson>;
+});
 
 export const releaseSchema = z.object({
 	id: z.string().uuid(),

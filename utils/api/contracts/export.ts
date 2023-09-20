@@ -1,20 +1,7 @@
 import { AppRoute } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-// import { exportFormatsArray } from 'utils/export/formats';
-
-export const exportFormatsArray = [
-	'html',
-	'pdf',
-	'docx',
-	'epub',
-	'markdown',
-	'odt',
-	'plain',
-	'jats',
-	'tex',
-	'json',
-] as const;
+import { exportFormatsArray } from 'utils/export/formats';
 
 extendZodWithOpenApi(z);
 

@@ -12,13 +12,13 @@ import { ActivityAssociations } from './associations';
 import { SubmissionActivityItem } from './submission';
 import { SerializedModel } from '../serializedModel';
 
-export * from './community';
-export * from './collection';
-export * from './facets';
-export * from './page';
-export * from './pub';
-export * from './member';
-export * from './submission';
+export type * from './community';
+export type * from './collection';
+export type * from './facets';
+export type * from './page';
+export type * from './pub';
+export type * from './member';
+export type * from './submission';
 
 export type InsertableActivityItem =
 	| CommunityActivityItem
@@ -57,4 +57,4 @@ export type ActivityItemsRenderContext = ActivityItemsFetchResult & {
 	scope: ScopeId;
 };
 
-export { ActivityFilter } from './filters';
+export { type ActivityFilter } from './filters';

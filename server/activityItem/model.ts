@@ -9,7 +9,8 @@ import {
 	Index,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import { InsertableActivityItem, SerializedModel } from 'types';
+import type { SerializedModel } from 'types';
+import { type InsertableActivityItem } from 'types/activity';
 
 @Table
 export class ActivityItem<T extends InsertableActivityItem = InsertableActivityItem> extends Model<
