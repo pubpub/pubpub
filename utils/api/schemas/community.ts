@@ -92,6 +92,11 @@ export const communitySchema = z.object({
 	accentTextColor: z.string(),
 }) satisfies z.ZodType<types.Community, any, any>;
 
-export const communityUpdateSchema = communitySchema.partial().required({
-	id: true,
-});
+export const communityUpdateSchema = communitySchema
+	.partial()
+	.omit({
+		id: true,
+	})
+	.extend({
+		communityId: communitySchema.shape.id,
+	});

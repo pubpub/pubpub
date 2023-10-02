@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 
-import { ScopeId, MemberPermission, ScopeData } from 'types';
+import * as types from 'types';
+
 import {
 	Collection,
 	CollectionPub,
@@ -21,20 +22,15 @@ import { expect } from 'utils/assert';
 import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
 import { getCollection } from './collectionGet';
 
-// let getScopeElements;
-// let getPublicPermissionsData;
-// let getScopeMemberData;
-// let getActivePermissions;
-
 const getScopeIdsObject = ({
 	pubId,
 	collectionId,
 	communityId,
 }: {
-	pubId?: string;
-	collectionId?: string;
+	pubId: string | null;
+	collectionId: string | null;
 	communityId: string;
-}): ScopeId => {
+}): types.ScopeId => {
 	if (pubId) {
 		return { pubId, communityId };
 	}
@@ -115,7 +111,7 @@ const getActiveCounts = async (isDashboard: boolean, scopeElements) => {
 	return { reviews: 0, submissions: 0 };
 };
 
-const getFacets = async (includeFacets: boolean, scopeElements: ScopeData['elements']) => {
+const getFacets = async (includeFacets: boolean, scopeElements: types.ScopeData['elements']) => {
 	if (includeFacets && scopeElements.activeTarget) {
 		const { activeTarget, activeTargetType } = scopeElements;
 		if (activeTargetType === 'organization') {
@@ -134,37 +130,29 @@ const getActiveIds = ({
 }: {
 	activePub: Pub | null;
 	activeCollection: Collection | null;
-	activeCommunity?: Community | null;
+	activeCommunity: Community;
 }) => {
 	return {
 		pubId: activePub && activePub.id,
 		collectionId: activeCollection && activeCollection.id,
-		communityId: activeCommunity?.id,
+		communityId: activeCommunity.id,
 	};
 };
 
-const getScopeElements = async (
-	scopeInputs: {
-		communityId?: string | null;
-		collectionId?: string | null;
-		collectionSlug?: string | null;
-		pubId?: string | null;
-		pubSlug?: string | null;
-	} = {
-		communityId: null,
-		collectionId: null,
-		collectionSlug: null,
-		pubId: null,
-		pubSlug: null,
-	},
-) => {
+const getScopeElements = async (scopeInputs: {
+	communityId?: string | null;
+	collectionId?: string | null;
+	collectionSlug?: string | null;
+	pubId?: string | null;
+	pubSlug?: string | null;
+}) => {
 	const { communityId, collectionId, collectionSlug, pubId, pubSlug } = scopeInputs;
 	let activeTarget: Pub | Collection | Community | null = null;
 	let activePub: Pub | null = null;
 	let activeCollection: Collection | null = null;
 	let inactiveCollections: Collection[] = [];
 	let activeCommunity: Community | null = null;
-	let activeTargetType: 'community' | 'pub' | 'collection' = 'community';
+	let activeTargetType: 'community' | 'pub' | 'collection' | 'organization' = 'community';
 	if (pubSlug || pubId) {
 		activeTargetType = 'pub';
 	} else if (collectionSlug || collectionId) {
@@ -235,9 +223,7 @@ const getScopeElements = async (
 			collectionId,
 			communityId: activeCommunity?.id,
 		});
-		// if (!activeCollection) {
-		// 	throw new Error('Pub Not Found');
-		// }
+
 		activeTarget = activeCollection;
 	}
 
@@ -254,16 +240,16 @@ const getScopeElements = async (
 	return ensureSerialized({
 		activeTargetType,
 		activeTargetName: activeTargetType.charAt(0).toUpperCase() + activeTargetType.slice(1),
-		activeTarget: activeTarget as Community | Collection | Pub,
+		activeTarget: expect(activeTarget),
 		activePub,
 		activeCollection,
 		activeIds: getActiveIds({
 			activePub,
 			activeCollection,
-			activeCommunity,
+			activeCommunity: expect(activeCommunity),
 		}),
 		inactiveCollections,
-		activeCommunity,
+		activeCommunity: expect(activeCommunity),
 	});
 };
 
@@ -316,17 +302,17 @@ const getScopeMemberData = async (scopeInputs, scopeElements) => {
 };
 
 const getActivePermissions = async (
-	scopeInputs,
-	scopeElements,
-	publicPermissionsData,
-	scopeMemberData,
+	scopeInputs: ScopeInputs,
+	scopeElements: types.ScopeData['elements'],
+	publicPermissionsData: PublicPermissions[],
+	scopeMemberData: types.Member[],
 ) => {
 	const { activePub, activeCollection, activeCommunity, inactiveCollections } = scopeElements;
 	const isSuperAdmin = await isUserSuperAdmin({ userId: scopeInputs.loginId });
-	const permissionLevels: MemberPermission[] = ['view', 'edit', 'manage', 'admin'];
+	const permissionLevels: types.MemberPermission[] = ['view', 'edit', 'manage', 'admin'];
 	let defaultPermissionIndex = -1;
 	[activePub, activeCollection, activeCommunity, ...inactiveCollections]
-		.filter((elem) => !!elem)
+		.filter((elem): elem is NonNullable<typeof elem> => !!elem)
 		.forEach((elem) => {
 			if (elem.viewHash && elem.viewHash === scopeInputs.accessHash) {
 				defaultPermissionIndex = 0;
@@ -334,10 +320,18 @@ const getActivePermissions = async (
 			if (elem.editHash && elem.editHash === scopeInputs.accessHash) {
 				defaultPermissionIndex = 1;
 			}
-			if (elem.reviewHash && elem.reviewHash === scopeInputs.accessHash) {
+			if (
+				'reviewHash' in elem &&
+				elem.reviewHash &&
+				elem.reviewHash === scopeInputs.accessHash
+			) {
 				defaultPermissionIndex = 0;
 			}
-			if (elem.commentHash && elem.commentHash === scopeInputs.accessHash) {
+			if (
+				'commentHash' in elem &&
+				elem.commentHash &&
+				elem.commentHash === scopeInputs.accessHash
+			) {
 				defaultPermissionIndex = 0;
 			}
 		});
@@ -351,7 +345,7 @@ const getActivePermissions = async (
 		return currLevelIndex > prev ? currLevelIndex : prev;
 	}, defaultPermissionIndex);
 
-	const memberHasCommunityPermissions = (permissionLevel: MemberPermission) => {
+	const memberHasCommunityPermissions = (permissionLevel: types.MemberPermission) => {
 		return (
 			permissionLevels.includes(permissionLevel) &&
 			scopeMemberData.find(
@@ -365,7 +359,7 @@ const getActivePermissions = async (
 	const canEditCommunity = canManageCommunity || memberHasCommunityPermissions('edit');
 	const canViewCommunity = canEditCommunity || memberHasCommunityPermissions('view');
 
-	const booleanOr = (precedent, value) => {
+	const booleanOr = <P extends unknown, V extends unknown>(precedent: P, value: V) => {
 		/* Don't inherit value from null */
 		return typeof value === 'boolean' ? value : precedent;
 	};
@@ -402,7 +396,7 @@ const getActivePermissions = async (
 				next[key] = booleanOr(prev[key], curr[key]);
 			});
 			return next;
-		}, initialOptions);
+		}, initialOptions as types.Prettify<Omit<typeof initialOptions, keyof types.PublicPermissions> & types.PublicPermissions>);
 
 	/* If canEditDraft is true, canViewDraft must also be true */
 	activePublicPermissions.canViewDraft =
@@ -426,12 +420,7 @@ const getActivePermissions = async (
 	};
 };
 
-/* getScopeData can be called from either a route (e.g. to authenticate */
-/* whether a user has access to /pub/example), or it can be called from */
-/* an API route to verify a user's permissions. When called from a route */
-/* it is likely that collectionSlug and pubSlug will be used. */
-/* When called from an API endpoint, it is likely that collectionId and pubId will be used. */
-export default async (scopeInputs: {
+type ScopeInputs = {
 	communityId?: string | null;
 	pubId?: string | null;
 	pubSlug?: string | null;
@@ -441,17 +430,13 @@ export default async (scopeInputs: {
 	loginId?: string | null;
 	isDashboard?: boolean | null;
 	includeFacets?: boolean | null;
-}) => {
-	/* scopeInputs = 
-		{
-			collectionId, collectionSlug,
-			pubId, pubSlug,
-			accessHash,
-			loginId,
-			isDashboard,
-		}
-	*/
-
+};
+/* getScopeData can be called from either a route (e.g. to authenticate */
+/* whether a user has access to /pub/example), or it can be called from */
+/* an API route to verify a user's permissions. When called from a route */
+/* it is likely that collectionSlug and pubSlug will be used. */
+/* When called from an API endpoint, it is likely that collectionId and pubId will be used. */
+const scopeGet = async (scopeInputs: ScopeInputs) => {
 	const scopeElements = await getScopeElements(scopeInputs);
 	const facets = await getFacets(!!scopeInputs.includeFacets, scopeElements);
 
@@ -472,3 +457,5 @@ export default async (scopeInputs: {
 		...facets,
 	};
 };
+
+export default scopeGet;

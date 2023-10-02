@@ -1,3 +1,4 @@
+import { Model } from 'sequelize-typescript';
 import {
 	Thread,
 	ThreadComment,
@@ -6,20 +7,49 @@ import {
 	includeUserModel,
 	Commenter,
 } from 'server/models';
+import { Prettify, SerializedModel } from 'types';
 
 export const stripFalsyIdsFromQuery = (whereQueryObject) => {
 	return Object.fromEntries(Object.entries(whereQueryObject).filter((entry) => entry[1]));
 };
 
-export const ensureSerialized = (item) => {
+type PossiblyNestedModels =
+	| Model
+	| {
+			[K: string]:
+				| PossiblyNestedModels[]
+				| PossiblyNestedModels
+				| Model
+				| Record<string, any>
+				| string
+				| boolean
+				| number
+				| undefined
+				| null;
+	  };
+
+type SerializedModels<S extends PossiblyNestedModels> = {
+	[P in keyof S]: S[P] extends (infer M extends Model)[]
+		? SerializedModel<M>[]
+		: S[P] extends infer M extends Model
+		? Prettify<SerializedModel<S[P]>>
+		: S[P] extends Model | null
+		? Prettify<SerializedModel<NonNullable<S[P]>>> | null
+		: S[P];
+};
+
+export const ensureSerialized = <T extends PossiblyNestedModels>(
+	item: T,
+): Prettify<SerializedModels<T>> => {
 	if (Array.isArray(item)) {
 		return item.map(ensureSerialized);
 	}
 	if (item && typeof item === 'object') {
-		if (typeof item.toJSON === 'function') {
+		if ('toJSON' in item && typeof item.toJSON === 'function') {
 			return item.toJSON();
 		}
 		const res = {};
+
 		Object.keys(item).forEach((key) => {
 			res[key] = ensureSerialized(item[key]);
 		});

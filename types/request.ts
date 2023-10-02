@@ -60,16 +60,16 @@ export type ScopeData = {
 	elements: {
 		activeIds: {
 			communityId: string;
-			collectionId?: string;
-			pubId?: string;
+			collectionId: string | null;
+			pubId: string | null;
 		};
 		activeTarget: Community | Collection | Pub;
 		activeTargetType: 'organization' | 'community' | 'collection' | 'pub';
 		activeTargetName: string;
 		activeCommunity: Community;
-		activeCollection?: Collection;
-		activePub?: Pub;
-		inactiveCollections?: Collection[];
+		activeCollection: Collection | null;
+		activePub: Pub | null;
+		inactiveCollections: Collection[];
 	};
 	activeCounts: {
 		reviews: number;
