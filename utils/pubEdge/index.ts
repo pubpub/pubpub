@@ -1,2 +1,2 @@
-export { relationTypes, relationTypeDefinitions, type RelationType } from './relations';
+export { relationTypes, relationTypeDefinitions, RelationType } from './relations';
 export * from './helpers';
