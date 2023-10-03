@@ -358,11 +358,11 @@ const getActivePermissions = async (
 	}, defaultPermissionIndex);
 
 	const memberHasCommunityPermissions = (permissionLevel: types.MemberPermission) => {
-		return (
+		return Boolean(
 			permissionLevels.includes(permissionLevel) &&
-			scopeMemberData.find(
-				(member) => member.communityId && member.permissions === permissionLevel,
-			)
+				scopeMemberData.find(
+					(member) => member.communityId && member.permissions === permissionLevel,
+				),
 		);
 	};
 
@@ -378,11 +378,26 @@ const getActivePermissions = async (
 
 	const initialOptions = {
 		isSuperAdmin,
-		canCreateReviews: null,
+		canCreateReviews: false,
 		canCreateDiscussions: true,
-		canViewDraft: null,
-		canEditDraft: null,
+		canViewDraft: false,
+		canEditDraft: false,
 	};
+
+	type ActivePublicPermissions = types.PickByValueExact<
+		types.PublicPermissions,
+		boolean | null
+	> & {
+		isSuperAdmin: boolean;
+	} extends infer T
+		? {
+				[P in keyof T]: P extends keyof typeof initialOptions
+					? (typeof initialOptions)[P] extends boolean
+						? (typeof initialOptions)[P]
+						: T[P]
+					: T[P];
+		  }
+		: never;
 
 	const activePublicPermissions = publicPermissionsData
 		.sort((foo, bar) => {
@@ -407,15 +422,17 @@ const getActivePermissions = async (
 			Object.keys(prev).forEach((key) => {
 				next[key] = booleanOr(prev[key], curr[key]);
 			});
+
 			return next;
-		}, initialOptions as types.Prettify<Omit<typeof initialOptions, keyof types.PublicPermissions> & types.PublicPermissions>);
+		}, initialOptions as ActivePublicPermissions);
 
 	/* If canEditDraft is true, canViewDraft must also be true */
-	activePublicPermissions.canViewDraft =
-		activePublicPermissions.canViewDraft || activePublicPermissions.canEditDraft;
+	activePublicPermissions.canViewDraft = Boolean(
+		activePublicPermissions.canViewDraft || activePublicPermissions.canEditDraft,
+	);
 
 	const canEdit = permissionLevelIndex > 0;
-	const canCreateReviews = canEdit || activePublicPermissions.canCreateReviews;
+	const canCreateReviews = Boolean(canEdit || activePublicPermissions.canCreateReviews);
 
 	return {
 		activePermission: permissionLevelIndex > -1 ? permissionLevels[permissionLevelIndex] : null,
@@ -448,7 +465,7 @@ type ScopeInputs = {
 /* an API route to verify a user's permissions. When called from a route */
 /* it is likely that collectionSlug and pubSlug will be used. */
 /* When called from an API endpoint, it is likely that collectionId and pubId will be used. */
-const scopeGet = async (scopeInputs: ScopeInputs) => {
+const scopeGet = async (scopeInputs: ScopeInputs): Promise<types.ScopeData> => {
 	const scopeElements = await getScopeElements(scopeInputs);
 	const facets = await getFacets(!!scopeInputs.includeFacets, scopeElements);
 
@@ -461,7 +478,6 @@ const scopeGet = async (scopeInputs: ScopeInputs) => {
 
 	return {
 		elements: scopeElements,
-		optionsData: publicPermissionsData,
 		memberData: scopeMemberData,
 		activePermissions,
 		activeCounts,

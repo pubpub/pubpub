@@ -1,4 +1,3 @@
-import { Model } from 'sequelize-typescript';
 import {
 	Thread,
 	ThreadComment,
@@ -7,42 +6,12 @@ import {
 	includeUserModel,
 	Commenter,
 } from 'server/models';
-import { Prettify, SerializedModel } from 'types';
 
 export const stripFalsyIdsFromQuery = (whereQueryObject) => {
 	return Object.fromEntries(Object.entries(whereQueryObject).filter((entry) => entry[1]));
 };
 
-type PossiblyNestedModels =
-	| Model
-	| {
-			[K: string]:
-				| PossiblyNestedModels[]
-				| PossiblyNestedModels
-				| Model
-				| Record<string, any>
-				| string
-				| boolean
-				| number
-				| undefined
-				| null;
-	  };
-
-type SerializedModels<S extends PossiblyNestedModels> = {
-	[P in keyof S]: S[P] extends (infer M extends Model)[]
-		? SerializedModel<M>[]
-		: S[P] extends Model | null
-		? S[P] extends infer M extends Model
-			? M extends M
-				? SerializedModel<M>
-				: never
-			: SerializedModel<NonNullable<S[P]>> | null
-		: S[P];
-};
-
-export const ensureSerialized = <T extends PossiblyNestedModels>(
-	item: T,
-): Prettify<SerializedModels<T>> => {
+export const ensureSerialized = (item: any) => {
 	if (Array.isArray(item)) {
 		return item.map(ensureSerialized) as any;
 	}
