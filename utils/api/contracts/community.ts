@@ -1,7 +1,11 @@
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { communitySchema, communityUpdateSchema } from '../schemas/community';
+import {
+	communityCreateSchema,
+	communitySchema,
+	communityUpdateSchema,
+} from '../schemas/community';
 
 extendZodWithOpenApi(z);
 
@@ -9,7 +13,7 @@ const c = initContract();
 
 export const communityContract = c.router({
 	get: {
-		path: '/api/community/:id',
+		path: '/api/communities/:id',
 		method: 'GET',
 		summary: "Get a community by it's id",
 		description: 'Get a community',
@@ -18,6 +22,16 @@ export const communityContract = c.router({
 		}),
 		responses: {
 			200: communitySchema,
+		},
+	},
+	create: {
+		path: '/api/communities',
+		method: 'POST',
+		summary: 'Create a community',
+		description: 'Create a community',
+		body: communityCreateSchema,
+		responses: {
+			201: z.string().url(),
 		},
 	},
 	update: {

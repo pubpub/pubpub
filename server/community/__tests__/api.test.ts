@@ -33,6 +33,27 @@ setup(beforeAll, async () => {
 });
 
 describe('/api/communities', () => {
+	it('gets a community by id', async () => {
+		const { existingCommunity, admin } = models;
+		const agent = await login(admin);
+		const { body: community } = await agent
+			.get(`/api/communities/${existingCommunity.id}`)
+			.expect(200);
+		expect(community.id).toEqual(existingCommunity.id);
+	});
+
+	it('does not get a community by id if you are not logged in', async () => {
+		const { existingCommunity } = models;
+		await (await login()).get(`/api/communities/${existingCommunity.id}`).expect(403);
+	});
+
+	it('does not get a community by id if you are not the admin of that community', async () => {
+		const { existingCommunity, someOtherAdmin } = models;
+		await (await login(someOtherAdmin))
+			.get(`/api/communities/${existingCommunity.id}`)
+			.expect(403);
+	});
+
 	it('creates a community', async () => {
 		const { willCreateCommunity } = models;
 		const agent = await login(willCreateCommunity);

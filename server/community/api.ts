@@ -2,40 +2,34 @@ import { initServer } from '@ts-rest/express';
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
+import { createGetRequestIds } from 'utils/getRequestIds';
+import { expect } from 'utils/assert';
+import { contract } from 'utils/api';
 import { getPermissions } from './permissions';
 import { createCommunity, getCommunity, updateCommunity } from './queries';
-import { createGetRequestIds } from 'utils/getRequestIds';
-import { communityContract } from 'utils/api/contracts/community';
-import { expect } from 'utils/assert';
-
-// const getRequestIds = (req) => {
-// 	const user = req.user || {};
-// 	return {
-// 		userId: user.id,
-// 		communityId: req.body.communityId || null,
-// 	};
-// };
 
 const getRequestIds = createGetRequestIds<{
-	communityId: string | null;
+	communityId?: string | null;
 }>();
 
 const s = initServer();
 
-app.post(
-	'/api/communities',
-	wrap(async (req, res) => {
-		const requestIds = getRequestIds(req.body);
-		const permissions = await getPermissions(requestIds);
-		if (!permissions.create) {
-			throw new ForbiddenError();
-		}
-		const newCommunity = await createCommunity(req.body, req.user);
-		return res.status(201).json(`https://${newCommunity.subdomain}.pubpub.org`);
-	}),
-);
+// app.post(
+// 	'/api/communities',
+// 	wrap(async (req, res) => {
+// 		const requestIds = getRequestIds(req.body, req.user);
+// 		console.log({ requestIds });
+// 		const permissions = await getPermissions(requestIds);
+// 		console.log(permissions);
+// 		if (!permissions.create) {
+// 			throw new ForbiddenError();
+// 		}
+// 		const newCommunity = await createCommunity(req.body, req.user);
+// 		return res.status(201).json(`https://${newCommunity.subdomain}.pubpub.org`);
+// 	}),
+// );
 
-export const communityServer = s.router(communityContract, {
+export const communityServer = s.router(contract.community, {
 	get: async ({ params, req }) => {
 		const permissions = await getPermissions({
 			communityId: params.id,
@@ -47,7 +41,21 @@ export const communityServer = s.router(communityContract, {
 		}
 
 		const community = expect(await getCommunity(params.id));
-		return community;
+		return {
+			body: community,
+			status: 200,
+		};
+	},
+	create: async ({ req }) => {
+		const permissions = await getPermissions({ userId: req.user?.id || null });
+		if (!permissions.create) {
+			throw new ForbiddenError();
+		}
+		const newCommunity = await createCommunity(req.body, req.user);
+		return {
+			body: `https://${newCommunity.subdomain}.pubpub.org`,
+			status: 201,
+		};
 	},
 	update: async ({ body, req }) => {
 		const requestIds = getRequestIds(body, req.user);

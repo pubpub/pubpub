@@ -92,6 +92,26 @@ export const communitySchema = z.object({
 	accentTextColor: z.string(),
 }) satisfies z.ZodType<types.Community, any, any>;
 
+export const communityCreateSchema = communitySchema
+	.pick({
+		subdomain: true,
+		title: true,
+		description: true,
+		headerLogo: true,
+		heroLogo: true,
+		heroTitle: true,
+		accentColorLight: true,
+		accentColorDark: true,
+	})
+	.partial({
+		headerLogo: true,
+		heroLogo: true,
+		heroTitle: true,
+		description: true,
+		accentColorLight: true,
+		accentColorDark: true,
+	});
+
 export const communityUpdateSchema = communitySchema
 	.partial()
 	.omit({
