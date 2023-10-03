@@ -1,12 +1,17 @@
 import { initServer } from '@ts-rest/express';
-import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { expect } from 'utils/assert';
 import { contract } from 'utils/api';
 import { getPermissions } from './permissions';
-import { createCommunity, getCommunity, updateCommunity } from './queries';
+import {
+	createCommunity,
+	findCommunityByHostname,
+	getCommunity,
+	isCommunityAdmin,
+	updateCommunity,
+} from './queries';
 
 const getRequestIds = createGetRequestIds<{
 	communityId?: string | null;
@@ -14,22 +19,26 @@ const getRequestIds = createGetRequestIds<{
 
 const s = initServer();
 
-// app.post(
-// 	'/api/communities',
-// 	wrap(async (req, res) => {
-// 		const requestIds = getRequestIds(req.body, req.user);
-// 		console.log({ requestIds });
-// 		const permissions = await getPermissions(requestIds);
-// 		console.log(permissions);
-// 		if (!permissions.create) {
-// 			throw new ForbiddenError();
-// 		}
-// 		const newCommunity = await createCommunity(req.body, req.user);
-// 		return res.status(201).json(`https://${newCommunity.subdomain}.pubpub.org`);
-// 	}),
-// );
-
 export const communityServer = s.router(contract.community, {
+	getId: async ({ req }) => {
+		const community = await findCommunityByHostname(req.hostname);
+
+		return {
+			body: expect(community).id,
+			status: 200,
+		};
+	},
+	getSelf: async ({ req }) => {
+		const [canAdmin, community] = await isCommunityAdmin(req);
+		if (!canAdmin) {
+			throw new ForbiddenError();
+		}
+
+		return {
+			body: community,
+			status: 200,
+		};
+	},
 	get: async ({ params, req }) => {
 		const permissions = await getPermissions({
 			communityId: params.id,

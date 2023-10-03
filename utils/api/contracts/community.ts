@@ -12,6 +12,24 @@ extendZodWithOpenApi(z);
 const c = initContract();
 
 export const communityContract = c.router({
+	getId: {
+		path: '/api/communities/id',
+		method: 'GET',
+		summary: 'Get the current community id',
+		description: 'Get the current community id. Accessible by anyone',
+		responses: {
+			200: z.string().uuid(),
+		},
+	},
+	getSelf: {
+		path: '/api/communities',
+		method: 'GET',
+		summary: 'Get the current community',
+		description: 'Get the current community. Only works if you are the admin of this community',
+		responses: {
+			200: communitySchema,
+		},
+	},
 	get: {
 		path: '/api/communities/:id',
 		method: 'GET',

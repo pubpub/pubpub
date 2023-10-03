@@ -66,5 +66,6 @@ export const getPermissions = async ({
 	return {
 		create: true,
 		update: canUpdate ? editProps : false,
+		admin: scopeData.activePermissions.canAdminCommunity,
 	};
 };
