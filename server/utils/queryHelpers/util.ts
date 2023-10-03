@@ -31,10 +31,12 @@ type PossiblyNestedModels =
 type SerializedModels<S extends PossiblyNestedModels> = {
 	[P in keyof S]: S[P] extends (infer M extends Model)[]
 		? SerializedModel<M>[]
-		: S[P] extends infer M extends Model
-		? Prettify<SerializedModel<S[P]>>
 		: S[P] extends Model | null
-		? Prettify<SerializedModel<NonNullable<S[P]>>> | null
+		? S[P] extends infer M extends Model
+			? M extends M
+				? SerializedModel<M>
+				: never
+			: SerializedModel<NonNullable<S[P]>> | null
 		: S[P];
 };
 
@@ -42,7 +44,7 @@ export const ensureSerialized = <T extends PossiblyNestedModels>(
 	item: T,
 ): Prettify<SerializedModels<T>> => {
 	if (Array.isArray(item)) {
-		return item.map(ensureSerialized);
+		return item.map(ensureSerialized) as any;
 	}
 	if (item && typeof item === 'object') {
 		if ('toJSON' in item && typeof item.toJSON === 'function') {
@@ -53,7 +55,7 @@ export const ensureSerialized = <T extends PossiblyNestedModels>(
 		Object.keys(item).forEach((key) => {
 			res[key] = ensureSerialized(item[key]);
 		});
-		return res;
+		return res as any;
 	}
 	return item;
 };

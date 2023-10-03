@@ -40,7 +40,11 @@ const getScopeIdsObject = ({
 	return { communityId };
 };
 
-const getActiveSubmissionsCount = ({ activeCollection }: { activeCollection: Collection }) => {
+const getActiveSubmissionsCount = ({
+	activeCollection,
+}: {
+	activeCollection: types.Collection | null;
+}) => {
 	if (activeCollection) {
 		return Submission.count({
 			where: {
@@ -64,9 +68,9 @@ const getActiveReviewsCount = ({
 	activeCollection,
 	activePub,
 }: {
-	activeCommunity: Community;
-	activeCollection?: Collection;
-	activePub?: Pub;
+	activeCommunity: types.Community;
+	activeCollection: types.Collection | null;
+	activePub: types.Pub | null;
 }) => {
 	if (activePub) {
 		return ReviewNew.count({ where: { status: 'open', pubId: activePub.id } });
@@ -100,7 +104,10 @@ const getActiveReviewsCount = ({
 	});
 };
 
-const getActiveCounts = async (isDashboard: boolean, scopeElements) => {
+const getActiveCounts = async (
+	isDashboard: boolean,
+	scopeElements: types.ScopeData['elements'],
+) => {
 	if (isDashboard) {
 		const [reviews, submissions] = await Promise.all([
 			getActiveReviewsCount(scopeElements),
@@ -145,7 +152,7 @@ const getScopeElements = async (scopeInputs: {
 	collectionSlug?: string | null;
 	pubId?: string | null;
 	pubSlug?: string | null;
-}) => {
+}): Promise<types.ScopeData['elements']> => {
 	const { communityId, collectionId, collectionSlug, pubId, pubSlug } = scopeInputs;
 	let activeTarget: Pub | Collection | Community | null = null;
 	let activePub: Pub | null = null;
@@ -237,7 +244,7 @@ const getScopeElements = async (scopeInputs: {
 		activeTarget = activeCommunity;
 	}
 
-	return ensureSerialized({
+	const res = ensureSerialized({
 		activeTargetType,
 		activeTargetName: activeTargetType.charAt(0).toUpperCase() + activeTargetType.slice(1),
 		activeTarget: expect(activeTarget),
@@ -251,9 +258,11 @@ const getScopeElements = async (scopeInputs: {
 		inactiveCollections,
 		activeCommunity: expect(activeCommunity),
 	});
+
+	return res;
 };
 
-export const buildOrQuery = (scopeElements) => {
+export const buildOrQuery = (scopeElements: types.ScopeData['elements']) => {
 	const { activePub, activeCollection, inactiveCollections, activeCommunity } = scopeElements;
 	const orQuery = [];
 	// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
@@ -277,7 +286,7 @@ export const buildOrQuery = (scopeElements) => {
 	return orQuery;
 };
 
-const getPublicPermissionsData = async (scopeElements) => {
+const getPublicPermissionsData = async (scopeElements: types.ScopeData['elements']) => {
 	const orQuery = buildOrQuery(scopeElements);
 	return PublicPermissions.findAll({
 		where: {
@@ -286,7 +295,10 @@ const getPublicPermissionsData = async (scopeElements) => {
 	});
 };
 
-const getScopeMemberData = async (scopeInputs, scopeElements) => {
+const getScopeMemberData = async (
+	scopeInputs: ScopeInputs,
+	scopeElements: types.ScopeData['elements'],
+) => {
 	const { loginId } = scopeInputs;
 	if (!loginId) {
 		return [];
