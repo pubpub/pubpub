@@ -121,6 +121,7 @@ const getActiveCounts = async (
 const getFacets = async (includeFacets: boolean, scopeElements: types.ScopeData['elements']) => {
 	if (includeFacets && scopeElements.activeTarget) {
 		const { activeTarget, activeTargetType } = scopeElements;
+		// @ts-expect-error I think this is an old type that was not used
 		if (activeTargetType === 'organization') {
 			throw new FacetsError('No such thing as an organization');
 		}

@@ -42,7 +42,7 @@ export type LocationData = {
 
 export type ScopeData = {
 	activePermissions: {
-		activePermission: MemberPermission;
+		activePermission: MemberPermission | null;
 		canAdmin: boolean;
 		canAdminCommunity: boolean;
 		canCreateDiscussions: boolean;
@@ -64,7 +64,7 @@ export type ScopeData = {
 			pubId: string | null;
 		};
 		activeTarget: Community | Collection | Pub;
-		activeTargetType: 'organization' | 'community' | 'collection' | 'pub';
+		activeTargetType: 'community' | 'collection' | 'pub';
 		activeTargetName: string;
 		activeCommunity: Community;
 		activeCollection: Collection | null;
