@@ -215,6 +215,7 @@ createExpressEndpoints(contract, server, app, {
 		}
 		next(err);
 	},
+	jsonQuery: true,
 });
 
 /* ------------- */

@@ -70,3 +70,14 @@ export type PickByValueExact<T, ValueType> = Pick<
 			: never;
 	}[keyof T]
 >;
+
+export type OptionalKeys<T> = {
+	[K in keyof T]-?: {} extends Pick<T, K> ? K : never;
+}[keyof T];
+
+/**
+ * Pretty print an object type, unwraps it so to say
+ */
+export type Prettify<T> = {
+	[P in keyof T]: T[P];
+} & {};

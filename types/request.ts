@@ -63,7 +63,7 @@ export type ScopeData = {
 			collectionId: string | null;
 			pubId: string | null;
 		};
-		activeTarget: Community | Collection | Pub;
+		activeTarget: Community | Collection | Pub | null;
 		activeTargetType: 'community' | 'collection' | 'pub';
 		activeTargetName: string;
 		activeCommunity: Community;

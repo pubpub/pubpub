@@ -248,7 +248,7 @@ const getScopeElements = async (scopeInputs: {
 	const res = ensureSerialized({
 		activeTargetType,
 		activeTargetName: activeTargetType.charAt(0).toUpperCase() + activeTargetType.slice(1),
-		activeTarget: expect(activeTarget),
+		activeTarget,
 		activePub,
 		activeCollection,
 		activeIds: getActiveIds({
