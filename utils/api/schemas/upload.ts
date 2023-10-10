@@ -1,20 +1,29 @@
 import { z } from 'zod';
-import { extensionToPandocFormat, bibliographyFormats } from 'utils/import/formats';
 
+/**
+ * Non-exhaustive list of mime-types that we allow to be uploaded to PubPub,
+ * minus image types, which are handled separately.
+ */
 export const allowedMimeTypes = [
-	'application/pdf',
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 	'application/json',
-	'image/png',
-	'image/jpeg',
-	'image/gif',
-	'text/tex-x',
+	'text/yaml',
+	'application/xml',
+	'application/mods+xml',
+	'application/x-research-info-systems',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'application/epub+zip',
 	'text/html',
+	'text/markdown',
+	'application/vnd.oasis.opendocument.text',
 	'text/plain',
+	'application/x-tex',
+	'application/pdf',
+	'text/tex-x',
 ] as const;
 
 const fileSchema = z.union([z.string(), z.instanceof(Blob), z.instanceof(Buffer)]);
-const mimeTypeSchema = z.enum(allowedMimeTypes);
+
+const mimeTypeSchema = z.union([z.enum(allowedMimeTypes), z.string().regex(/image\/.*/)]);
 
 export const uploadSchema = z.object({
 	file: fileSchema,
