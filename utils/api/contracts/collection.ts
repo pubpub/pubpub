@@ -44,7 +44,7 @@ export const collectionContract = c.router({
 		query: createGetManyQueryOptions(collectionWithRelationsSchema, {
 			omitFromFilter: { layout: true },
 			sort: {
-				options: ['title'],
+				options: ['title', 'kind', 'slug'],
 			},
 			include: {
 				options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],

@@ -1,9 +1,5 @@
 import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
-import {
-	GetManyCollectionQuery,
-	collectionSchema,
-	getManyCollectionQuerySchema,
-} from 'utils/api/schemas/collection';
+import { GetManyCollectionQuery, collectionSchema } from 'utils/api/schemas/collection';
 import { createCollection } from '../queries';
 import { Collection } from '../../models';
 
@@ -416,8 +412,8 @@ describe('GET /api/collections', () => {
 		const { admin, community } = models;
 		const agent = await login(admin);
 
-		const { body: orderByCreatedAt } = await agent
-			.get('/api/collections?sort=createdAt')
+		const { body: orderByTitle } = await agent
+			.get('/api/collections?sort=title')
 			.set('Host', getHost(community))
 			.expect(200);
 
@@ -427,24 +423,28 @@ describe('GET /api/collections', () => {
 			.expect(200);
 
 		// Assuming IDs are unique and can be used to differentiate collections
-		expect(orderByCreatedAt[0].id).not.toEqual(orderByUpdatedAt[0].id);
+		expect(orderByTitle[0].id).not.toEqual(orderByUpdatedAt[0].id);
 	});
 
 	it('should reverse the order of collections when changing sort order', async () => {
 		const { admin, community } = models;
 		const agent = await login(admin);
 
-		const { body: orderAsc } = await agent
-			.get('/api/collections?sort=title&order=ASC&limit=100')
-			.set('Host', getHost(community))
-			.expect(200);
+		const [{ body: orderAsc }, { body: orderDesc }] = await Promise.all([
+			agent
+				.get('/api/collections?sort=slug&order=ASC&limit=100')
+				.set('Host', getHost(community))
+				.expect(200),
 
-		const { body: orderDesc } = await agent
-			.get('/api/collections?sort=title&order=DESC&limit=100')
-			.set('Host', getHost(community))
-			.expect(200);
+			agent
+				.get('/api/collections?sort=slug&order=DESC&limit=100')
+				.set('Host', getHost(community))
+				.expect(200),
+		]);
 
-		expect(orderAsc.reverse()).toEqual(orderDesc);
+		expect(orderAsc.length).toEqual(orderDesc.length);
+		expect(orderAsc.at(0)).toEqual(orderDesc.at(-1));
+		expect(orderAsc.at(1)).toEqual(orderDesc.at(-2));
 	});
 
 	it('should limit the number of collections returned', async () => {

@@ -28,39 +28,7 @@ const s = initServer();
 
 export const collectionServer = s.router(contract.collection, {
 	get: queryOne(Collection),
-	// get: async ({ params, req }) => {
-	// 	const [canAdmin] = await isCommunityAdmin(req);
-	// 	if (!canAdmin) {
-	// 		throw new ForbiddenError();
-	// 	}
-
-	// 	const collection = await findCollection(params.id);
-
-	// 	if (!collection) {
-	// 		throw new NotFoundError();
-	// 	}
-
-	// 	return {
-	// 		body: collection,
-	// 		status: 200,
-	// 	};
-	// },
-
 	getMany: queryMany(Collection),
-	// getMany: async ({ req, query }) => {
-	// 	const [canAdmin] = await isCommunityAdmin(req);
-
-	// 	if (!canAdmin) {
-	// 		throw new ForbiddenError();
-	// 	}
-
-	// 	const collections = await findManyCollections(query);
-
-	// 	return {
-	// 		body: collections,
-	// 		status: 200,
-	// 	};
-	// },
 
 	create: async ({ req, body }) => {
 		const requestIds = getRequestIds(body, req.user);
