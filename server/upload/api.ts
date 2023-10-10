@@ -20,7 +20,7 @@ export const createAWSFormData = (body: (typeof contract.upload.body)['_output']
 	const { mimeType, file, fileName } = body;
 
 	const res =
-		file instanceof Buffer || typeof file === 'string'
+		typeof file === 'string'
 			? new Blob([file], {
 					type: mimeType,
 			  })
@@ -52,6 +52,7 @@ export const createAWSFormData = (body: (typeof contract.upload.body)['_output']
 export const uploadRouteImplementation: AppRouteImplementation<typeof contract.upload> = async ({
 	req,
 	body,
+	file,
 }) => {
 	const [isAdmin] = await isCommunityAdmin(req);
 

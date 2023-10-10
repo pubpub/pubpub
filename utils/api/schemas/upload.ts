@@ -21,7 +21,7 @@ export const allowedMimeTypes = [
 	'text/tex-x',
 ] as const;
 
-const fileSchema = z.union([z.string(), z.instanceof(Blob), z.instanceof(Buffer)]);
+const fileSchema = z.union([z.string(), z.instanceof(Blob)]);
 
 const mimeTypeSchema = z.union([z.enum(allowedMimeTypes), z.string().regex(/image\/.*/)]);
 
