@@ -1,12 +1,12 @@
 import type { TsRestRequest } from '@ts-rest/express';
-import { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
-import { ModelCtor } from 'sequelize-typescript';
+import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
+import type { ModelCtor } from 'sequelize-typescript';
 import { isCommunityAdmin } from 'server/community/queries';
 import { ForbiddenError } from 'server/utils/errors';
-import { Express, Response } from 'express-serve-static-core';
+import type { Express, Response } from 'express-serve-static-core';
 import { buildWhereClause } from './filter';
 import { createIncludes } from './include';
-import { GetManyQueryAny } from './createGetManyQuery';
+import type { GetManyQueryAny } from './createGetManyQuery';
 
 export const queryMany =
 	<M extends ModelCtor>(model: M) =>
@@ -26,9 +26,6 @@ export const queryMany =
 
 		const { limit, offset, attributes, order, sort, filter, include } =
 			(query as GetManyQueryAny) ?? {};
-		console.log(query);
-
-		console.log(createIncludes(model, include));
 
 		const result = (await model.findAll({
 			...(filter && { where: buildWhereClause(filter) }),

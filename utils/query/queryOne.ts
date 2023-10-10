@@ -1,9 +1,9 @@
 import type { TsRestRequest } from '@ts-rest/express';
-import { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
-import { ModelCtor } from 'sequelize-typescript';
+import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
+import type { ModelCtor } from 'sequelize-typescript';
 import { isCommunityAdmin } from 'server/community/queries';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
-import { Express, Response } from 'express-serve-static-core';
+import type { Express, Response } from 'express-serve-static-core';
 import { createIncludes } from './include';
 
 export const queryOne =
