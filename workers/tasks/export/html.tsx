@@ -94,7 +94,7 @@ const addAttrsToNodes = (newAttrs, matchNodeTypes, nodes) =>
 const getCitationLinkage = (unstructuredValue, structuredValue, nodeId = null) => {
 	const digest = digestCitation(unstructuredValue, structuredValue);
 	return {
-		inlineElementId: `citation-${digest}${nodeId && '-' + nodeId}-inline`,
+		inlineElementId: `citation-${digest}${nodeId ? '-' + nodeId : ''}-inline`,
 		bottomElementId: `citation-${digest}-bottom`,
 	};
 };
