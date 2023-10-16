@@ -50,8 +50,6 @@ require('./zoteroIntegration/api');
 
 require('./apiDocs/api');
 
-require('./upload/smapi');
-
 if (!isProd()) {
 	// eslint-disable-next-line global-require
 	require('./dev/api');

@@ -9,6 +9,7 @@ import busboyC from 'busboy';
 import mime from 'mime-types';
 import { BadRequestError, ForbiddenError } from 'server/utils/errors';
 import { isCommunityAdmin } from 'server/community/queries';
+import { mimeTypeSchema } from 'utils/api/schemas/upload';
 
 export const generateFileNameForUpload = (file: string) => {
 	const folderName = generateHash(8);
@@ -18,9 +19,15 @@ export const generateFileNameForUpload = (file: string) => {
 	return `${folderName}/${random}${now}.${extension}`;
 };
 
-type UploadBody = (typeof contract.upload.body)['_output'];
-
-if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+/**
+ * This is here because the default test enviroment does not have the AWS keys set.
+ * Only runs if you are integration testing
+ */
+if (
+	process.env.NODE_ENV === 'test' &&
+	(!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY)
+) {
+	// eslint-disable global-require
 	require('../../config');
 }
 
@@ -41,68 +48,84 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 
 		const busboy = busboyC({ headers: req.headers });
 
-		const result = new Promise((resolve) => {
-			let name: string | undefined;
+		const result: Promise<{ url: string; key: string; size: number }> = new Promise(
+			(resolve, reject) => {
+				let name: string | undefined;
 
-			busboy.on('field', (fieldname, value, info) => {
-				if (fieldname !== 'name') {
-					throw new BadRequestError(
-						new Error(
-							`Unknown field '${fieldname}': '${value}' found. Do not include other data with the form.`,
-						),
-					);
-				}
+				busboy.on('field', (fieldname, value) => {
+					if (fieldname !== 'name') {
+						reject(
+							new Error(
+								`Unknown field '${fieldname}': '${value}' found. Do not include other data with the form.`,
+							),
+						);
+					}
 
-				name = value;
-			});
-
-			busboy.on('file', async (fieldname, file, { filename, mimeType }) => {
-				filename = name ?? filename;
-
-				const isDefaultMimeType = mimeType === 'application/octet-stream' || !mimeType;
-
-				const isDefaultFileName = filename === 'blob' || !filename;
-
-				if (!filename && !name) {
-					throw new BadRequestError(
-						new Error(
-							'Could not find filename! Check to see whether you included it before the file in the formdata, fields included after the file field are ignored.',
-						),
-					);
-				}
-
-				// if no filenname is given, e.g. when you send up the result of fs.readFileSync, we need to try to guess the file extension
-				// this does not really affect the upload, but otherwise we get a default '.png' extension, which is not great
-				if (isDefaultMimeType && isDefaultFileName) {
-					const inferredMime = mime.contentType(filename);
-					mimeType = inferredMime || 'application/octet-stream';
-				}
-
-				if (!isDefaultMimeType && isDefaultFileName) {
-					filename = `${uuid()}.${mime.extension(mimeType)}`;
-				}
-
-				const key = generateFileNameForUpload(filename);
-
-				let size = 0;
-				await s3Client.uploadFileSplit(key, file, {
-					contentType: mimeType === 'application/octet-stream' ? undefined : mimeType,
-					progressCallback: (progress) => {
-						size = progress.loaded ?? 0;
-					},
+					name = value;
 				});
 
-				resolve({ url: `https://assets.pubpub.org/${key}`, size, key });
-			});
-		});
+				busboy.on('file', async (fieldname, file, { filename, mimeType }) => {
+					filename = name ?? filename;
+
+					const isDefaultMimeType = mimeType === 'application/octet-stream' || !mimeType;
+
+					const isDefaultFileName = filename === 'blob' || !filename;
+
+					if (!filename && !name) {
+						reject(
+							new Error(
+								'Could not find filename! Check to see whether you included it before the file in the formdata, fields included after the file field are ignored.',
+							),
+						);
+					}
+
+					// if no filenname is given, e.g. when you send up the result of fs.readFileSync, we need to try to guess the file extension
+					// this does not really affect the upload, but otherwise we get a default '.png' extension, which is not great
+					if (isDefaultMimeType && isDefaultFileName) {
+						const inferredMime = mime.contentType(filename);
+						mimeType = inferredMime || 'application/octet-stream';
+					}
+
+					if (!isDefaultMimeType && isDefaultFileName) {
+						filename = `${uuid()}.${mime.extension(mimeType)}`;
+					}
+
+					/**
+					 * Do manual mimetype parsing, since ts-rest middelware cannot catch it
+					 */
+					if (!isDefaultMimeType) {
+						try {
+							mimeTypeSchema.parse(mimeType);
+						} catch (err: any) {
+							reject(err);
+						}
+					}
+
+					const key = generateFileNameForUpload(filename);
+
+					let size = 0;
+					await s3Client.uploadFileSplit(key, file, {
+						contentType: mimeType === 'application/octet-stream' ? undefined : mimeType,
+						progressCallback: (progress) => {
+							size = progress.loaded ?? 0;
+						},
+					});
+
+					resolve({ url: `https://assets.pubpub.org/${key}`, size, key });
+				});
+			},
+		);
 
 		req.pipe(busboy);
+		try {
+			const bod = await result;
 
-		const bod = await result;
-
-		return {
-			status: 201,
-			body: bod,
-		};
+			return {
+				status: 201,
+				body: bod,
+			};
+		} catch (err: any) {
+			throw new BadRequestError(err);
+		}
 	},
 };

@@ -24,14 +24,22 @@ export const allowedMimeTypes = [
 	'application/pdf',
 ] as const;
 
-const fileSchema = z.union([z.string(), z.custom<Express.Multer.File>()]);
+const fileSchema = z.union([z.string(), z.custom<File | Blob>()]);
 
-const mimeTypeSchema = z.union([z.enum(allowedMimeTypes), z.string().regex(/image\/.*/)]);
+export const mimeTypeSchema = z.union([z.enum(allowedMimeTypes), z.string().regex(/image\/.*/)], {
+	invalid_type_error: `Invalid mime type. Allowed types are: ${allowedMimeTypes.join(
+		', ',
+	)} or image/*`,
+});
 
 export const uploadSchema = z.object({
 	name: z.string().optional().openapi({
 		description:
-			'Name of the file being uploaded. Only strictly necessary if you upload files without proper file information (e.g. from a buffer). \nMake sure you include the file name before the file in the formdata, fields included after the file field are ignored.',
+			'Name of the file being uploaded. Include the extension here! Only strictly necessary if you upload files without proper file information (e.g. from a buffer). \nMake sure you include the file name before the file in the formdata, fields included after the file field are ignored.',
+	}),
+	mimeType: mimeTypeSchema.optional().openapi({
+		description:
+			'Mime type of the file being uploaded. Only strictly necessary if you upload files without proper file information (e.g. from a buffer). \nMake sure you include the mime-type before the file in the formdata, fields included after the file field are ignored.\nMime-type gets inferred from the file extension if not provided, so only strictly necessary if you upload extensionless files.',
 	}),
 	file: z.custom<Blob | File>(),
 });
