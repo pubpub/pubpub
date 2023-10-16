@@ -28,17 +28,13 @@ const fileSchema = z.union([z.string(), z.custom<Express.Multer.File>()]);
 
 const mimeTypeSchema = z.union([z.enum(allowedMimeTypes), z.string().regex(/image\/.*/)]);
 
-export const uploadSchema = z.union([
-	z.object({
-		name: z.string().optional(),
-		file: z.custom<Blob>(),
+export const uploadSchema = z.object({
+	name: z.string().optional().openapi({
+		description:
+			'Name of the file being uploaded. Only strictly necessary if you upload files without proper file information (e.g. from a buffer). \nMake sure you include the file name before the file in the formdata, fields included after the file field are ignored.',
 	}),
-	z.object({
-		file: z.string(),
-		fileName: z.string(),
-		// mimeType: z.enum(textMimeTypes),
-	}),
-]);
+	file: z.custom<Blob | File>(),
+});
 
 export const awsFormdataSchema = z.object({
 	key: z.string(),

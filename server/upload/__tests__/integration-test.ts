@@ -35,88 +35,80 @@ describe('POST /api/upload', () => {
 		adminAgent.set('Host', getHost(models.community));
 	});
 
-	// it('should not be able to upload if not logged in', async () => {
-	// 	const agent = await login();
-	// 	await agent
-	// 		.post('/api/upload')
-	// 		.send({
-	// 			file: 'test file',
-	// 			fileName: 'test file name.html',
-	// 			mimeType: 'text/html',
-	// 		})
-	// 		.expect(403);
-	// });
+	it('should not be able to upload if not logged in', async () => {
+		const agent = await login();
+		await agent
+			.post('/api/upload')
+			.send({
+				file: 'test file',
+				fileName: 'test file name.html',
+				mimeType: 'text/html',
+			})
+			.expect(403);
+	});
 
 	it('should be able to upload a text html file', async () => {
 		const testContent = 'test file';
 		const result = await adminAgent
 			.post('/api/upload')
+			.field('name', 'test file name.html')
 			.attach('file', Buffer.from(testContent), {
 				filename: 'test file name.html',
 			})
-			.field('name', 'test file name.html')
 			.expect(201);
+
+		const res = await fetch(result.body.url);
+
+		expect(res.status).toEqual(200);
+
+		const body = await res.text();
+
+		expect(body).toEqual('test file');
 	});
 
-	// 	const res = await fetch(result.body.url);
+	it('should be able to upload a text html buffer with properly set filename and content type using formdata', async () => {
+		const testContent = 'test file';
 
-	// 	expect(res.status).toEqual(200);
+		const result = await adminAgent
+			.post('/api/smupload')
+			.attach('file', Buffer.from(testContent), {
+				filename: 'test file name.html',
+				contentType: 'text/html',
+			})
+			.expect(201);
 
-	// 	const body = await res.text();
+		const res = await fetch(result.body.url);
 
-	// 	expect(body).toEqual('test file');
-	// });
+		expect(res.status).toEqual(200);
 
-	// it('should be able to upload a text html buffer with properly set filename and content type using formdata', async () => {
-	// 	const testContent = 'test file';
+		const body = await res.text();
 
-	// 	const result = await adminAgent
-	// 		.post('/api/smupload')
-	// 		.attach('file', Buffer.from(testContent), {
-	// 			filename: 'test file name.html',
-	// 			contentType: 'text/html',
-	// 		})
-	// 		.expect(201);
+		expect(body).toEqual('test file');
+	});
 
-	// 	const res = await fetch(result.body.url);
+	it('should be able to upload a BIG PDF file read from disk', async () => {
+		const pdfFile = path.join(__dirname, 'test.pdf');
+		const pdfFileContent = await fs.readFile(pdfFile);
 
-	// 	expect(res.status).toEqual(200);
+		const formdata = new FormData();
+		// @ts-expect-error app does exist here, typing is wrong
+		const port = adminAgent.app.address().port;
+		formdata.append('name', 'test.pdf');
+		formdata.append('file', new Blob([pdfFileContent]));
 
-	// 	const body = await res.text();
+		const result = await fetch(`http://localhost:${port}/api/upload`, {
+			method: 'POST',
+			body: formdata,
+		});
 
-	// 	expect(body).toEqual('test file');
-	// });
+		expect(result.status).toEqual(201);
 
-	// it('should be able to upload a BIG PDF file read from disk', async () => {
-	// 	const pdfFile = path.join(__dirname, 'test.pdf');
-	// 	const pdfFileContent = await fs.readFile(pdfFile);
+		const body = await result.json();
 
-	// 	console.log(pdfFileContent.byteLength);
-	// 	const formdata = new FormData();
-	// 	const port = adminAgent.app.address().port;
-	// 	formdata.append('name', 'test.pdf');
-	// 	formdata.append('file', new Blob([pdfFileContent]));
+		console.log(body);
+		expect(body.size).toBeGreaterThan(20_000_000);
+		const res = await fetch(body.url, { method: 'HEAD' });
 
-	// 	const result = await fetch(`http://localhost:${port}/api/upload`, {
-	// 		method: 'POST',
-	// 		body: formdata,
-	// 	});
-
-	// 	expect(result.status).toEqual(201);
-
-	// 	// const result = await adminAgent
-	// 	// 	.post('/api/upload')
-	// 	// 	.attach('file', pdfFileContent, {
-	// 	// 		filename: 'test file name.pdf',
-	// 	// 		contentType: 'application/pdf',
-	// 	// 	})
-	// 	// 	.expect(201);
-	// 	const body = await result.json();
-
-	// 	console.log(body);
-	// 	expect(body.size).toBeGreaterThan(20_000_000);
-	// 	const res = await fetch(body.url, { method: 'HEAD' });
-
-	// 	expect(res.status).toEqual(200);
-	// }, 60000);
+		expect(res.status).toEqual(200);
+	}, 60000);
 });
