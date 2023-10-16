@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { initServer } from '@ts-rest/express';
 
-import { ForbiddenError, NotFoundError } from 'server/utils/errors';
+import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { PubGetOptions, PubsQuery } from 'types';
 import { indexByProperty } from 'utils/arrays';
@@ -92,12 +92,23 @@ export const pubServer = s.router(contract.pub, {
 		if (!create) {
 			throw new ForbiddenError();
 		}
-		const newPub = await createPub({ communityId: ids.communityId, collectionIds }, ids.userId);
-		const jsonedPub = newPub.toJSON();
-		return {
-			status: 201,
-			body: jsonedPub,
-		};
+		const { communityId, collectionId, createPubToken, ...rest } = body;
+		try {
+			const newPub = await createPub(
+				{ communityId: ids.communityId, collectionIds, ...rest },
+				ids.userId,
+			);
+			const jsonedPub = newPub.toJSON();
+			return {
+				status: 201,
+				body: jsonedPub,
+			};
+		} catch (e: any) {
+			if (e.message === 'Slug is already in use') {
+				throw new BadRequestError(e);
+			}
+			throw new Error(e);
+		}
 	},
 	update: async ({ body, req }) => {
 		const { userId, pubId } = getRequestIds(body, req.user);
