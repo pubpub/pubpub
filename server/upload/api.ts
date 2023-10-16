@@ -51,30 +51,38 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 		const result: Promise<{ url: string; key: string; size: number }> = new Promise(
 			(resolve, reject) => {
 				let name: string | undefined;
+				let mimeType: string | undefined;
 
 				busboy.on('field', (fieldname, value) => {
-					if (fieldname !== 'name') {
-						reject(
-							new Error(
-								`Unknown field '${fieldname}': '${value}' found. Do not include other data with the form.`,
-							),
-						);
+					switch (fieldname) {
+						case 'name':
+							name = value;
+							break;
+						case 'mimeType':
+							mimeType = value;
+							break;
+						default:
+							reject(
+								new Error(
+									`Unknown field '${fieldname}': '${value}' found. Do not include other data with the form.`,
+								),
+							);
 					}
-
-					name = value;
 				});
 
-				busboy.on('file', async (fieldname, file, { filename, mimeType }) => {
+				busboy.on('file', async (fieldname, file, { filename, mimeType: fileMimeType }) => {
 					filename = name ?? filename;
+					fileMimeType = mimeType ?? fileMimeType;
 
-					const isDefaultMimeType = mimeType === 'application/octet-stream' || !mimeType;
+					const isDefaultMimeType =
+						fileMimeType === 'application/octet-stream' || !fileMimeType;
 
 					const isDefaultFileName = filename === 'blob' || !filename;
 
 					if (!filename && !name) {
 						reject(
 							new Error(
-								'Could not find filename! Check to see whether you included it before the file in the formdata, fields included after the file field are ignored.',
+								'Could not find filename! Check to see whether you included it before the file in the formdata _before_ the file, fields included after the file field are ignored.',
 							),
 						);
 					}
@@ -83,11 +91,11 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 					// this does not really affect the upload, but otherwise we get a default '.png' extension, which is not great
 					if (isDefaultMimeType && isDefaultFileName) {
 						const inferredMime = mime.contentType(filename);
-						mimeType = inferredMime || 'application/octet-stream';
+						fileMimeType = inferredMime || 'application/octet-stream';
 					}
 
 					if (!isDefaultMimeType && isDefaultFileName) {
-						filename = `${uuid()}.${mime.extension(mimeType)}`;
+						filename = `${uuid()}.${mime.extension(fileMimeType)}`;
 					}
 
 					/**
@@ -95,7 +103,7 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 					 */
 					if (!isDefaultMimeType) {
 						try {
-							mimeTypeSchema.parse(mimeType);
+							mimeTypeSchema.parse(fileMimeType);
 						} catch (err: any) {
 							reject(err);
 						}
@@ -105,7 +113,8 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 
 					let size = 0;
 					await s3Client.uploadFileSplit(key, file, {
-						contentType: mimeType === 'application/octet-stream' ? undefined : mimeType,
+						contentType:
+							fileMimeType === 'application/octet-stream' ? undefined : fileMimeType,
 						progressCallback: (progress) => {
 							size = progress.loaded ?? 0;
 						},
