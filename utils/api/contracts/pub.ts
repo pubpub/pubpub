@@ -7,6 +7,7 @@ import { createGetManyQueryOptions, createGetQueryOptions } from 'utils/query';
 import { resourceSchema } from '../schemas/resource';
 import {
 	getManyQuerySchema,
+	optionalPubCreateParamSchema,
 	pubCreateSchema,
 	pubPutSchema,
 	pubSchema,
@@ -210,7 +211,7 @@ export const pubContract = c.router({
 		summary: 'Create a pub and import files to it',
 		description: 'Create a pub and upload a file and import it to a pub.',
 		body: z.object({
-			pub: pubPostSchema,
+			pub: optionalPubCreateParamSchema.extend({ collectionId: z.string().uuid().optional() }),
 			sourceFiles: z.array(sourceFileSchema),
 		}),
 		responses: {

@@ -251,13 +251,13 @@ export const pubServer = s.router(contract.pub, {
 	import: async ({ req, body }) => {
 		const community = await ensureUserIsCommunityAdmin(req);
 
-		const {collectionId, createPubToken, ...createPubArgs} = body
+		const {collectionId,  ...createPubArgs} = body.pub
 
 		const baseUrl = `${req.protocol}://${req.get(isProd() ? 'host' : 'localhost')}`;
 
 		const { id: pubId } = await createPub({
 			communityId: community.id,
-			collectionIds: [collectionId],
+			collectionIds: collectionId ? [collectionId] : undefined,
 			...createPubArgs,
 		});
 
