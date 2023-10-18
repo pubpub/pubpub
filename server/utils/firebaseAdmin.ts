@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import firebaseAdmin from 'firebase-admin';
-import { Schema } from 'prosemirror-model';
-import { Step, Transform } from 'prosemirror-transform';
+import { Schema, Node, Slice, Fragment } from 'prosemirror-model';
+import { Step, Transform, ReplaceStep } from 'prosemirror-transform';
 
 import {
 	editorSchema,
@@ -86,6 +86,7 @@ export const getPubDraftDoc = async (
 
 	return {
 		doc: doc.toJSON() as DocJson,
+		size: doc.content.size,
 		mostRecentRemoteKey: currentKey,
 		firstTimestamp,
 		latestTimestamp,

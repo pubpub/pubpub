@@ -36,3 +36,10 @@ export const importerFlagsSchema = z.object({
 	keepStraightQuotes: z.boolean().optional(),
 	skipJatsBibExtraction: z.boolean().optional(),
 });
+
+export const createImportTaskSchema = z.object({
+	sourceFiles: z.array(sourceFileSchema),
+	importerFlags: importerFlagsSchema.default({}),
+});
+
+export type ImportBody = (typeof createImportTaskSchema)['_input'];

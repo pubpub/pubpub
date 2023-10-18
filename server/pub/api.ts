@@ -17,9 +17,12 @@ import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
 
 import { getPubsById, queryPubIds } from './queryMany';
-import { createPub, destroyPub, findPub, updatePub } from './queries';
+import { createPub, destroyPub, findPub, importToPub, updatePub } from './queries';
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 import { Pub } from './model';
+import { editFirebaseDraftByRef, getPubDraftDoc, getPubDraftRef } from 'server/utils/firebaseAdmin';
+import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
+import { isProd } from 'utils/environment';
 
 extendZodWithOpenApi(z);
 
@@ -233,5 +236,45 @@ export const pubServer = s.router(contract.pub, {
 		const jsonedPub = pub.toJSON();
 		const resource = await transformPubToResource(jsonedPub, expect(jsonedPub.community));
 		return { status: 200, body: resource };
+	},
+	getText: async ({ params }) => {
+		const doc = await getPubDraftDoc(params.pubId);
+
+		return { status: 200, body: doc.doc };
+	},
+	replaceText: async ({ params, body }) => {
+		await writeDocumentToPubDraft(params.pubId, body.doc);
+
+		return { status: 200, body: { doc: body.doc } };
+	},
+
+	import: async ({ req, body }) => {
+		const baseUrl = `${req.protocol}://${req.get(isProd() ? 'host' : 'localhost')}`;
+
+		const { id: pubId } = await createPub();
+
+		const task = await importToPub({
+			pubId,
+			baseUrl,
+			importBody: {
+				sourceFiles: body.sourceFiles,
+			},
+		});
+
+		return { status: 201, body: task.doc };
+	},
+	importToPub: async ({ req, body, params }) => {
+		const baseUrl = `${req.protocol}://${req.get(isProd() ? 'host' : 'localhost')}`;
+
+		const { pubId } = params;
+		const { sourceFiles } = body;
+
+		const task = await importToPub({
+			pubId,
+			baseUrl,
+			importBody: {
+				sourceFiles,
+			},
+		});
 	},
 });

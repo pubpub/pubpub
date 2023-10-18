@@ -23,6 +23,12 @@ import * as types from 'types';
 import { Attributes } from 'sequelize';
 import { PubPut } from 'utils/api/schemas/pub';
 import { PubUpdateableFields } from './permissions';
+import { pingTask } from 'client/utils/pingTask';
+import { async } from 'hasbin';
+import { createImport } from 'server/import/queries';
+import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
+import { string } from 'yargs';
+import { ImportBody } from 'utils/api/schemas/import';
 
 export const createPub = async (
 	{
@@ -205,3 +211,25 @@ export const findPub = (pubId: string) =>
 		Pub,
 		'community'
 	> | null>;
+
+export const importToPub = async ({
+	pubId,
+	baseUrl,
+	importBody,
+}: {
+	pubId: string;
+	baseUrl: string;
+	importBody: ImportBody;
+}) => {
+	const taskData = await createImport(importBody);
+
+	const task = (await pingTask(taskData.id, 1000, 1000, baseUrl)) as {
+		doc: any;
+		// warnings: ResourceWarning[];
+		// proposedMetadata: ProposedMetadata;
+		pandocErrorOutput: string;
+	};
+
+	await writeDocumentToPubDraft(pubId, task.doc, { overwrite: false });
+	return task;
+};

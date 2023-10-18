@@ -14,6 +14,8 @@ import {
 	resourceASTSchema,
 	sanitizedPubSchema,
 } from '../schemas/pub';
+import { docJsonSchema } from '../schemas/release';
+import { sourceFileSchema } from '../schemas/import';
 
 extendZodWithOpenApi(z);
 
@@ -167,6 +169,65 @@ export const pubContract = c.router({
 		}),
 		responses: {
 			200: resourceSchema,
+		},
+	},
+	getText: {
+		path: '/api/pubs/:pubId/text',
+		method: 'GET',
+		summary: 'Get the text of a Pub',
+		description: 'Get the text of a Pub as a ProseMirror document',
+		pathParams: z.object({
+			pubId: z.string().uuid(),
+		}),
+		responses: {
+			200: docJsonSchema,
+		},
+	},
+	replaceText: {
+		path: '/api/pubs/:pubId/text',
+		method: 'PUT',
+		summary: 'Replace the text of a pub',
+		description: 'Replace the text of a pub with a different ProseMirror document',
+		pathParams: z.object({
+			pubId: z.string().uuid(),
+		}),
+		body: z.object({
+			doc: docJsonSchema,
+			clientID: z.string().default('api'),
+			publishRelease: z.boolean().default(false),
+		}),
+		responses: {
+			200: z.object({
+				doc: docJsonSchema,
+				url: z.string().url().optional(),
+			}),
+			400: z.object({ error: z.string() }),
+		},
+	},
+	import: {
+		path: '/api/pubs/import',
+		method: 'POST',
+		summary: 'Create a pub and import files to it',
+		description: 'Create a pub and upload a file and import it to a pub.',
+		body: z.object({
+			pubId: z.string().uuid(),
+			sourceFiles: z.array(sourceFileSchema),
+		}),
+		responses: {
+			201: docJsonSchema,
+		},
+	},
+	importToPub: {
+		path: '/api/pubs/:pubId/import',
+		method: 'POST',
+		summary: 'Import a file to a pub',
+		description: 'Upload a file and import it to a pub.',
+		body: z.object({
+			pub: pubPostSchema,
+			sourceFiles: z.array(sourceFileSchema),
+		}),
+		responses: {
+			201: docJsonSchema,
 		},
 	},
 });
