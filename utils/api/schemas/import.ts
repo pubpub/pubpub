@@ -9,10 +9,10 @@ export const documentLabels = [
 	'bibliography',
 	'supplement',
 	'metadata',
+	'none',
 ] as const;
 
-export const sourceFileSchema = z.object({
-	id: z.number().int().nonnegative(),
+export const baseSourceFileSchema = z.object({
 	state: z.string().default('complete'),
 	clientPath: z.string(),
 	loaded: z.number(),
@@ -20,6 +20,9 @@ export const sourceFileSchema = z.object({
 	label: z.enum(documentLabels).optional().openapi({
 		description: 'What kind of document this is',
 	}),
+});
+export const sourceFileSchema = baseSourceFileSchema.extend({
+	id: z.number().int().nonnegative(),
 	assetKey: z.string().openapi({
 		description: 'The key of the asset in AWS',
 	}),
@@ -43,3 +46,7 @@ export const createImportTaskSchema = z.object({
 });
 
 export type ImportBody = (typeof createImportTaskSchema)['_input'];
+
+export type SourceFile = z.infer<typeof sourceFileSchema>;
+
+export type BaseSourceFile = z.infer<typeof baseSourceFileSchema>;

@@ -29,6 +29,8 @@ import { createImport } from 'server/import/queries';
 import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
 import { string } from 'yargs';
 import { ImportBody } from 'utils/api/schemas/import';
+import { getTmpDirectoryPath } from 'workers/tasks/import/tmpDirectory';
+import { downloadAndConvertFiles } from 'workers/tasks/import/download';
 
 export const createPub = async (
 	{
@@ -216,10 +218,12 @@ export const importToPub = async ({
 	pubId,
 	baseUrl,
 	importBody,
+	method,
 }: {
 	pubId: string;
 	baseUrl: string;
 	importBody: ImportBody;
+	method?: 'replace' | 'overwrite' | 'append' | 'prepend';
 }) => {
 	const taskData = await createImport(importBody);
 
@@ -230,6 +234,6 @@ export const importToPub = async ({
 		pandocErrorOutput: string;
 	};
 
-	await writeDocumentToPubDraft(pubId, task.doc, { overwrite: false });
+	await writeDocumentToPubDraft(pubId, task.doc, { method });
 	return task;
 };

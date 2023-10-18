@@ -17,9 +17,9 @@ const makeReplaceStepFromTo = (from: number, to: number, slice: Slice, client = 
 export const writeDocumentToPubDraft = async (
 	pubId: string,
 	document: DocJson,
-	options?: { overwrite?: boolean },
+	options?: { method?: 'replace' | 'overwrite' | 'append' | 'prepend' },
 ) => {
-	const { overwrite } = options || {};
+	const { method = 'replace' } = options || {};
 	const draftRef = await getPubDraftRef(pubId);
 
 	const { size } = await getPubDraftDoc(draftRef);
@@ -29,13 +29,35 @@ export const writeDocumentToPubDraft = async (
 	const documentFragment = Fragment.from(hydratedDocument.content);
 	const documentSlice = new Slice(documentFragment, 0, 0);
 
-	if (overwrite) {
+	let from = 0;
+	let to = size;
+
+	switch (method) {
+		case 'append':
+			from = size;
+			to = size;
+			break;
+		case 'prepend':
+			from = 0;
+			to = 0;
+			break;
+		case 'replace':
+			from = 0;
+			to = size;
+			break;
+		case 'overwrite':
+			from = 0;
+			to = 0;
+			break;
+	}
+
+	if (method === 'overwrite') {
 		const change = makeReplaceStepFromTo(0, 0, documentSlice, 'api');
 		await draftRef.child('changes').set({ 0: change });
 		return;
 	}
 
-	const change = makeReplaceStepFromTo(0, size, documentSlice, 'api');
+	const change = makeReplaceStepFromTo(from, to, documentSlice, 'api');
 	const latest = (await draftRef.child('changes').limitToLast(1).once('value')).val();
 
 	const latestKey = latest ? Object.keys(latest)[0] : null;

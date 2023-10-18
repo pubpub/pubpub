@@ -227,10 +227,26 @@ export const pubContract = c.router({
 		summary: 'Import a file to a pub',
 		description: 'Upload a file and import it to a pub.',
 		body: z.object({
+			method: z.enum(['replace', 'append', 'prepend', 'overwrite']).optional(),
 			sourceFiles: z.array(sourceFileSchema),
 		}),
 		responses: {
 			201: docJsonSchema,
+		},
+	},
+	importLocal: {
+		path: '/api/pubs/importLocal',
+		method: 'POST',
+		contentType: 'multipart/form-data',
+		body: optionalPubCreateParamSchema
+			.extend({ collectionId: z.string().uuid().optional() })
+			.partial()
+			.extend({
+				filenames: z.array(z.string()),
+				files: z.custom<Blob[]>(),
+			}),
+		responses: {
+			200: z.any(),
 		},
 	},
 });

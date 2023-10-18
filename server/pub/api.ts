@@ -24,6 +24,13 @@ import { editFirebaseDraftByRef, getPubDraftDoc, getPubDraftRef } from 'server/u
 import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
 import { isDuqDuq, isProd } from 'utils/environment';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
+import multer from 'multer';
+import { getTmpDirectoryPath } from 'workers/tasks/import/tmpDirectory';
+import fs from 'fs/promises';
+import mime from 'mime-types';
+import { importFiles } from 'workers/tasks/import/import';
+import { BaseSourceFile } from 'utils/api/schemas/import';
+import { labelFiles } from 'client/containers/Pub/PubDocument/PubFileImport/formats';
 
 extendZodWithOpenApi(z);
 
@@ -83,6 +90,37 @@ const getRequestIds = createGetRequestIds<{
 	pubId?: string;
 	createPubToken?: string | null;
 }>();
+
+const createUpload = async () => {
+	const tmpDirPath = await getTmpDirectoryPath();
+
+	const storage = multer.diskStorage({
+		destination: (req, file, cb) => {
+			// @ts-expect-error we are mutating baby
+			req.tmpDir = tmpDirPath;
+			cb(null, tmpDirPath);
+		},
+		filename: (req, file, cb) => {
+			// Instead of using file.originalname, pull from req.body
+			// This assumes that filenames are provided in pairs with files
+
+			const f = req.body.filenames;
+			const suppliedFilename = Array.isArray(f) ? f.at(-1) : f;
+
+			if (file.mimetype === 'application/octet-stream') {
+				const mimeType = mime.contentType(suppliedFilename);
+				if (mimeType) {
+					file.mimetype = mimeType;
+				}
+			}
+
+			cb(null, suppliedFilename || file.originalname);
+		},
+	});
+
+	const upload = multer({ storage: storage }).array('files');
+	return upload;
+};
 
 const s = initServer();
 
@@ -273,11 +311,50 @@ export const pubServer = s.router(contract.pub, {
 
 		return { status: 201, body: { doc: task.doc, pub: pub.toJSON() } };
 	},
+	importLocal: {
+		middleware: [
+			async (req, res, next) => {
+				return (await createUpload())(req, res, next);
+			},
+		],
+		handler: async ({ req, body, files }) => {
+			const community = await ensureUserIsCommunityAdmin(req);
+
+			const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
+				(file): BaseSourceFile & { tmpPath: string } => ({
+					clientPath: file.filename ?? file.originalname,
+					tmpPath: file.path,
+					state: 'complete',
+					loaded: file.size,
+					total: file.size,
+				}),
+			);
+
+			const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
+
+			const res = await importFiles({
+				sourceFiles: labeledFiles,
+				importerFlags: {},
+				// @ts-expect-error shh
+				tmpDirPath: req.tmpDir,
+			});
+			const { filenames, files: smiles, ...rest } = body;
+
+			const pub = await createPub({
+				communityId: community.id,
+				...rest,
+			});
+
+			await writeDocumentToPubDraft(pub.id, res.doc);
+
+			return { status: 200, body: { doc: res.doc, pub: pub.toJSON() } };
+		},
+	},
 	importToPub: async ({ req, body, params }) => {
 		const baseUrl = `${req.protocol}://${req.get(isProd() ? 'host' : 'localhost')}`;
 
 		const { pubId } = params;
-		const { sourceFiles } = body;
+		const { sourceFiles, method } = body;
 
 		const task = await importToPub({
 			pubId,
@@ -285,6 +362,7 @@ export const pubServer = s.router(contract.pub, {
 			importBody: {
 				sourceFiles,
 			},
+			method,
 		});
 
 		return { status: 201, body: task.doc };

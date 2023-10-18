@@ -31,7 +31,6 @@ export const findCommunityByDomain = async (domain: string) => {
  */
 export const findCommunityByHostname = async (hostname: string) => {
 	const domainOrSubmdomain = hostname.replace(/\.pubpub\.org$|\.duqduq\.org$/, '');
-	console.log({ domainOrSubmdomain });
 	const community = await findCommunityByDomain(domainOrSubmdomain);
 	return community;
 };
