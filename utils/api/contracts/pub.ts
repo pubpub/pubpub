@@ -211,11 +211,14 @@ export const pubContract = c.router({
 		summary: 'Create a pub and import files to it',
 		description: 'Create a pub and upload a file and import it to a pub.',
 		body: z.object({
-			pub: optionalPubCreateParamSchema.extend({ collectionId: z.string().uuid().optional() }),
+			pub: optionalPubCreateParamSchema
+				.extend({ collectionId: z.string().uuid().optional() })
+				.partial()
+				.optional(),
 			sourceFiles: z.array(sourceFileSchema),
 		}),
 		responses: {
-			201: docJsonSchema,
+			201: z.object({ doc: docJsonSchema, pub: pubSchema }),
 		},
 	},
 	importToPub: {

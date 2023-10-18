@@ -8,7 +8,7 @@ import { facetsServer } from 'server/facets/api';
 import { logoutRouteImplementation } from 'server/logout/api';
 import { loginRouteImplementation } from 'server/login/api';
 import { exportRouteImplementation } from 'server/export/api';
-import { importServer } from 'server/import/api';
+import { importRouteImplementation } from 'server/import/api';
 import { pageServer } from 'server/page/api';
 import { memberServer } from 'server/member/api';
 import { pubEdgeServer } from 'server/pubEdge/api';
@@ -31,7 +31,7 @@ export const server = s.router(contractWithScriptsAndCommunity, {
 	community: communityServer,
 	export: exportRouteImplementation,
 	facets: facetsServer,
-	import: importServer,
+	import: importRouteImplementation,
 	member: memberServer,
 	page: pageServer,
 	pub: pubServer,

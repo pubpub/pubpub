@@ -22,7 +22,7 @@ import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permission
 import { Pub } from './model';
 import { editFirebaseDraftByRef, getPubDraftDoc, getPubDraftRef } from 'server/utils/firebaseAdmin';
 import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
-import { isProd } from 'utils/environment';
+import { isDuqDuq, isProd } from 'utils/environment';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 
 extendZodWithOpenApi(z);
@@ -251,25 +251,27 @@ export const pubServer = s.router(contract.pub, {
 	import: async ({ req, body }) => {
 		const community = await ensureUserIsCommunityAdmin(req);
 
-		const {collectionId,  ...createPubArgs} = body.pub
+		const { collectionId, ...createPubArgs } = body.pub ?? {};
 
-		const baseUrl = `${req.protocol}://${req.get(isProd() ? 'host' : 'localhost')}`;
+		const baseUrl = `${req.protocol}://${req.get(
+			isProd() || isDuqDuq() ? 'host' : 'localhost',
+		)}`;
 
-		const { id: pubId } = await createPub({
+		const pub = await createPub({
 			communityId: community.id,
 			collectionIds: collectionId ? [collectionId] : undefined,
 			...createPubArgs,
 		});
 
 		const task = await importToPub({
-			pubId,
+			pubId: pub.id,
 			baseUrl,
 			importBody: {
 				sourceFiles: body.sourceFiles,
 			},
 		});
 
-		return { status: 201, body: task.doc };
+		return { status: 201, body: { doc: task.doc, pub: pub.toJSON() } };
 	},
 	importToPub: async ({ req, body, params }) => {
 		const baseUrl = `${req.protocol}://${req.get(isProd() ? 'host' : 'localhost')}`;

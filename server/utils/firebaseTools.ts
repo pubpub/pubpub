@@ -38,7 +38,7 @@ export const writeDocumentToPubDraft = async (
 	const change = makeReplaceStepFromTo(0, size, documentSlice, 'api');
 	const latest = (await draftRef.child('changes').limitToLast(1).once('value')).val();
 
-	const latestKey = Object.keys(latest)[0];
+	const latestKey = latest ? Object.keys(latest)[0] : null;
 	const key = latestKey ? Number(latestKey) + 1 : 0;
 
 	await draftRef.child('changes').child(key.toString()).set(change);

@@ -22,7 +22,11 @@ const models = modelize`
         }
 		Member {
 			permissions: "admin"
+<<<<<<< HEAD
 			User admin {}
+=======
+			User communityAdmin {}
+>>>>>>> 445a9faa0 (chore: finish initial bad import api)
 		}
 		Collection collection {
             Member {
@@ -548,5 +552,34 @@ describe('GET /api/pubs', () => {
 		body.forEach((pub) => {
 			expect(pub.title).not.toBe('Ew, another pub');
 		});
+	});
+});
+
+describe('import', () => {
+	const testImportPayload = {
+		pubId: '2a213f49-5f4b-4b3f-a2cb-68654612d40d',
+		sourceFiles: [
+			{
+				id: 0,
+				state: 'complete',
+				clientPath: 'Fiddly DOCX.docx',
+				loaded: 385756,
+				total: 385756,
+				label: 'document',
+				assetKey: '_testing/Fiddly DOCX-41697539601783.docx',
+			},
+		],
+	};
+	it('is able to import', async () => {
+		const { community, communityAdmin } = models;
+
+		const agent = await login(communityAdmin);
+
+		const result = await agent
+			.post('/api/pubs/import')
+			.set('Host', getHost(community))
+			.send({ ...testImportPayload });
+
+		expect(result.status).toBe(201);
 	});
 });
