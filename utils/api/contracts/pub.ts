@@ -210,7 +210,7 @@ export const pubContract = c.router({
 		summary: 'Create a pub and import files to it',
 		description: 'Create a pub and upload a file and import it to a pub.',
 		body: z.object({
-			pubId: z.string().uuid(),
+			pub: pubPostSchema,
 			sourceFiles: z.array(sourceFileSchema),
 		}),
 		responses: {
@@ -223,7 +223,6 @@ export const pubContract = c.router({
 		summary: 'Import a file to a pub',
 		description: 'Upload a file and import it to a pub.',
 		body: z.object({
-			pub: pubPostSchema,
 			sourceFiles: z.array(sourceFileSchema),
 		}),
 		responses: {

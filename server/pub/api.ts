@@ -23,6 +23,7 @@ import { Pub } from './model';
 import { editFirebaseDraftByRef, getPubDraftDoc, getPubDraftRef } from 'server/utils/firebaseAdmin';
 import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
 import { isProd } from 'utils/environment';
+import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 
 extendZodWithOpenApi(z);
 
@@ -247,11 +248,18 @@ export const pubServer = s.router(contract.pub, {
 
 		return { status: 200, body: { doc: body.doc } };
 	},
-
 	import: async ({ req, body }) => {
+		const community = await ensureUserIsCommunityAdmin(req);
+
+		const {collectionId, createPubToken, ...createPubArgs} = body
+
 		const baseUrl = `${req.protocol}://${req.get(isProd() ? 'host' : 'localhost')}`;
 
-		const { id: pubId } = await createPub();
+		const { id: pubId } = await createPub({
+			communityId: community.id,
+			collectionIds: [collectionId],
+			...createPubArgs,
+		});
 
 		const task = await importToPub({
 			pubId,
@@ -276,5 +284,7 @@ export const pubServer = s.router(contract.pub, {
 				sourceFiles,
 			},
 		});
+
+		return { status: 201, body: task.doc };
 	},
 });
