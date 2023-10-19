@@ -135,13 +135,36 @@ const createUploadMiddleware = async () => {
 	return upload;
 };
 
-type ToPubImportInput = {
+type ConvertInput = {
 	tmpDir: string;
 	files: Express.Multer.File[];
+};
+
+const convertFiles = async ({ files, tmpDir }: ConvertInput) => {
+	const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
+		(file): BaseSourceFile & { tmpPath: string } => ({
+			clientPath: file.filename ?? file.originalname,
+			tmpPath: file.path,
+			state: 'complete',
+			loaded: file.size,
+			total: file.size,
+		}),
+	);
+
+	const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
+
+	return importFiles({
+		sourceFiles: labeledFiles,
+		importerFlags: {},
+		tmpDirPath: tmpDir,
+	});
+};
+
+type ToPubImportInput = ConvertInput & {
 	pubId: string;
 	method?: ImportMethod;
 };
-type CreatePubImportInput = {
+type CreatePubImportInput = ConvertInput & {
 	tmpDir: string;
 	files: Express.Multer.File[];
 	communityId: string;
@@ -160,23 +183,7 @@ function handleImport(
 async function handleImport(options: ToPubImportInput | CreatePubImportInput) {
 	const { files, tmpDir } = options;
 
-	const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
-		(file): BaseSourceFile & { tmpPath: string } => ({
-			clientPath: file.filename ?? file.originalname,
-			tmpPath: file.path,
-			state: 'complete',
-			loaded: file.size,
-			total: file.size,
-		}),
-	);
-
-	const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
-
-	const res = await importFiles({
-		sourceFiles: labeledFiles,
-		importerFlags: {},
-		tmpDirPath: tmpDir,
-	});
+	const res = await convertFiles({ files, tmpDir });
 
 	if ('pubId' in options) {
 		const { pubId, method } = options;
@@ -476,6 +483,25 @@ export const pubServer = s.router(contract.pub, {
 				// await writeDocumentToPubDraft(pubId, res.doc, { method: body.method });
 
 				// return { status: 200, body: { doc: res.doc } };
+			},
+		},
+		convert: {
+			middleware: [
+				async (req, res, next) => {
+					return (await createUploadMiddleware())(req, res, next);
+				},
+			],
+			handler: async ({ req, files }) => {
+				const result = await convertFiles({
+					// @ts-expect-error shh
+					tmpDir: req.tmpDir,
+					files: files as Express.Multer.File[],
+				});
+
+				return {
+					status: 200,
+					body: result,
+				};
 			},
 		},
 	},

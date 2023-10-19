@@ -8,10 +8,10 @@ export const extensionFor = (fileName: string) => {
 	return pieces[pieces.length - 1];
 };
 
-const fileIsValidDocument = (file: BaseSourceFile) =>
+const fileIsValidDocument = <T extends BaseSourceFile>(file: T) =>
 	Object.keys(extensionToPandocFormat).includes(extensionFor(file.clientPath));
 
-export const getPotentialLabelsForFile = (file: BaseSourceFile) => {
+export const getPotentialLabelsForFile = <T extends BaseSourceFile>(file: T) => {
 	const isDoc = fileIsValidDocument(file);
 	return [
 		isDoc && 'document',
@@ -22,7 +22,7 @@ export const getPotentialLabelsForFile = (file: BaseSourceFile) => {
 	].filter((x): x is string => !!x);
 };
 
-export const labelFiles = (files: BaseSourceFile[]) => {
+export const labelFiles = <T extends BaseSourceFile>(files: T[]) => {
 	const bibliography =
 		files.find((file) => file.label === 'bibliography') ||
 		files.find((file) => extensionFor(file.clientPath) === 'bib' && !file.label);

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { createGetManyQueryOptions, createGetQueryOptions } from 'utils/query';
+import { ResourceWarning } from 'workers/tasks/import/resources';
 
 import { resourceSchema } from '../schemas/resource';
 import {
@@ -45,6 +46,26 @@ const baseWithImport = base.extend(importCreateParams.shape).extend({ pubId: z.u
 
 const fullOutput = z.object({ doc: z.any(), pub: z.any() });
 const toPubOutput = z.object({ doc: z.any() });
+
+const pandocOutputSchema = z.object({
+	rawMetadata: z.record(z.any()).optional(),
+	doc: docJsonSchema,
+	warnings: z.array(z.any()),
+	pandocErrorOutput: z.string(),
+	proposedMetadata: z.record(z.any()),
+}) satisfies z.ZodType<{
+	rawMetadata?:
+		| {
+				[k: string]: any;
+		  }
+		| undefined;
+	doc: any;
+	warnings: ResourceWarning[];
+	pandocErrorOutput: string;
+	proposedMetadata: {
+		[k: string]: unknown;
+	};
+}>;
 
 export const pubContract = c.router({
 	get: {
@@ -266,6 +287,18 @@ export const pubContract = c.router({
 			body: baseWithPubId,
 			responses: {
 				200: toPubOutput,
+			},
+		},
+		convert: {
+			path: '/api/pubs/text/convert',
+			method: 'POST',
+			summary: 'Convert files to a ProseMirror document',
+			description:
+				'Convert files to a ProseMirror document.\n\n Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.',
+			contentType: 'multipart/form-data',
+			body: base,
+			responses: {
+				200: pandocOutputSchema,
 			},
 		},
 	},
