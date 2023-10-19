@@ -6,7 +6,14 @@ import mime from 'mime-types';
 import multer from 'multer';
 
 import * as types from 'types';
+import {
+	type ImportCreatePubParams,
+	type ImportMethod,
+	type MetadataOptions,
+	type ProposedMetadata,
+} from 'utils/api/schemas/pub';
 
+import { createPubAttribution } from 'server/pubAttribution/queries';
 import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { indexByProperty } from 'utils/arrays';
@@ -19,15 +26,8 @@ import { queryMany, queryOne } from 'utils/query';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
 
-import { getPubsById, queryPubIds } from './queryMany';
-import { createPub, destroyPub, findPub, importToPub, updatePub } from './queries';
-import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
-import { Pub } from './model';
-import { editFirebaseDraftByRef, getPubDraftDoc, getPubDraftRef } from 'server/utils/firebaseAdmin';
-
-import { createGetRequestIds } from 'utils/getRequestIds';
-import { contract } from 'utils/api/contract';
 import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
+
 import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
 import { isDuqDuq, isProd } from 'utils/environment';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
@@ -36,9 +36,14 @@ import { importFiles } from 'workers/tasks/import/import';
 import { BaseSourceFile } from 'utils/api/schemas/import';
 import { labelFiles } from 'client/containers/Pub/PubDocument/PubFileImport/formats';
 import { omitKeys } from 'utils/objects';
-import type { ImportCreatePubParams, ImportMethod } from 'utils/api/contracts/pub';
-
-import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+import { uploadAndConvertImages } from 'utils/import/uploadAndConvertImages';
+import { Pub } from './model';
+import {
+	canCreatePub,
+	canDestroyPub,
+	getUpdatablePubFields,
+	managerUpdatableFields,
+} from './permissions';
 import { createPub, destroyPub, findPub, importToPub, updatePub } from './queries';
 import { getPubsById, queryPubIds } from './queryMany';
 
@@ -118,10 +123,22 @@ const createUploadMiddleware = async () => {
 			// This assumes that filenames are provided in pairs with files
 
 			const f = req.body.filenames;
-			const suppliedFilename = Array.isArray(f) ? f.at(-1) : f;
+
+			// if only one filename is provided, req.body.filenames will be a string
+			const suppliedFilename = Array.isArray(f) ? f.shift() : f;
+
+			const filename = suppliedFilename ?? file.originalname;
+
+			if (!filename) {
+				throw new BadRequestError(
+					new Error(
+						'No filename provided, either in the body or as the original filename.\n Check the order of your files and filenames, filenames should come before the files they refer to.',
+					),
+				);
+			}
 
 			if (file.mimetype === 'application/octet-stream') {
-				const mimeType = mime.contentType(suppliedFilename);
+				const mimeType = mime.contentType(filename);
 				if (mimeType) {
 					file.mimetype = mimeType;
 				}
@@ -135,11 +152,6 @@ const createUploadMiddleware = async () => {
 	return upload;
 };
 
-type ConvertInput = {
-	tmpDir: string;
-	files: Express.Multer.File[];
-};
-
 const convertFiles = async ({ files, tmpDir }: ConvertInput) => {
 	const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
 		(file): BaseSourceFile & { tmpPath: string } => ({
@@ -151,7 +163,11 @@ const convertFiles = async ({ files, tmpDir }: ConvertInput) => {
 		}),
 	);
 
-	const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
+	const uploadedAndConvertedFiles = await uploadAndConvertImages(
+		sourceFilesFromNormalFiles,
+		tmpDir,
+	);
+	const labeledFiles = labelFiles(uploadedAndConvertedFiles);
 
 	return importFiles({
 		sourceFiles: labeledFiles,
@@ -160,8 +176,111 @@ const convertFiles = async ({ files, tmpDir }: ConvertInput) => {
 	});
 };
 
+function addAttributionsToPub({
+	pubId,
+	attributions,
+	existingAttributions = [],
+	shouldMatchUsers = true,
+}: {
+	pubId: string;
+	attributions: { name: string; mostLikelyUserId?: string }[];
+	existingAttributions?: types.PubAttribution[];
+	shouldMatchUsers?: boolean;
+}) {
+	return Promise.all(
+		attributions
+			.filter(
+				(attr) =>
+					!existingAttributions.some(
+						(existingAttr) =>
+							shouldMatchUsers && existingAttr.userId === attr.mostLikelyUserId,
+					),
+			)
+			.map(async (attribution, idx) => {
+				const { name, mostLikelyUserId } = attribution;
+				const pubAttribution = await createPubAttribution({
+					pubId,
+					order: 1 / 2 ** idx,
+					...(shouldMatchUsers && mostLikelyUserId
+						? { userId: mostLikelyUserId }
+						: {
+								name,
+						  }),
+				});
+
+				return pubAttribution as types.PubAttribution;
+			}),
+	);
+}
+
+const getDetectedParamsToUpdate = ({
+	proposedMetadata,
+	pubCreateParams,
+	overrides,
+	overrideAll,
+}: {
+	proposedMetadata: ProposedMetadata;
+	pubCreateParams?: ImportCreatePubParams;
+	overrides?: MetadataOptions['overrides'];
+	overrideAll?: MetadataOptions['overrideAll'];
+}) => {
+	const detectedMetadata = omitKeys(proposedMetadata, ['attributions', 'metadata']);
+
+	const fieldToOverrideWithDetected = Array.isArray(overrides) ? overrides : [overrides];
+
+	const newParams = Object.entries(detectedMetadata).reduce((acc, [key, val]) => {
+		// if we're creating a pub we always want to use the proposed metadata
+		// if the user hasn't specified a value for this field
+		if (pubCreateParams && !(key in acc)) {
+			acc[key] = val;
+			return acc;
+		}
+
+		// this value has been specified by the user, and we do want to override it with the detected value
+		if (overrideAll || fieldToOverrideWithDetected?.some((field) => field === key)) {
+			acc[key] = val;
+		}
+
+		return acc;
+	}, pubCreateParams ?? {});
+
+	return newParams;
+};
+
+const maybeAddAttributionsToPub = async ({
+	pubId,
+	proposedAttributions,
+	attributions,
+}: {
+	pubId: string;
+	proposedAttributions?: ProposedMetadata['attributions'];
+	attributions?: boolean | 'match';
+}) => {
+	if (attributions === false || !proposedAttributions?.length) {
+		return [];
+	}
+
+	const addedAttributions = addAttributionsToPub({
+		pubId,
+		attributions: proposedAttributions.map(({ name, users }) => ({
+			name,
+			mostLikelyUserId: users?.[0]?.id,
+		})),
+		shouldMatchUsers: attributions === 'match',
+	});
+
+	return addedAttributions;
+};
+
+type ConvertInput = {
+	userId?: string;
+	tmpDir: string;
+	files: Express.Multer.File[];
+};
+
 type ToPubImportInput = ConvertInput & {
 	pubId: string;
+	metadataOptions?: MetadataOptions;
 	method?: ImportMethod;
 };
 type CreatePubImportInput = ConvertInput & {
@@ -169,38 +288,94 @@ type CreatePubImportInput = ConvertInput & {
 	files: Express.Multer.File[];
 	communityId: string;
 	pubCreateParams: ImportCreatePubParams;
+	metadataOptions?: MetadataOptions;
 };
 
 function handleImport(options: ToPubImportInput): Promise<{
 	status: 200;
 	body: {
 		doc: types.DocJson;
+		pub: types.DefinitelyHas<types.Pub, 'attributions'>;
 	};
 }>;
-function handleImport(
-	options: CreatePubImportInput,
-): Promise<{ status: 201; body: { doc: types.DocJson; pub: types.Pub } }>;
+function handleImport(options: CreatePubImportInput): Promise<{
+	status: 201;
+	body: { doc: types.DocJson; pub: types.DefinitelyHas<types.Pub, 'attributions'> };
+}>;
 async function handleImport(options: ToPubImportInput | CreatePubImportInput) {
-	const { files, tmpDir } = options;
-
-	const res = await convertFiles({ files, tmpDir });
+	const { files, tmpDir, metadataOptions, userId } = options;
 
 	if ('pubId' in options) {
 		const { pubId, method } = options;
-		await writeDocumentToPubDraft(pubId, res.doc, { method });
 
-		return { status: 200, body: { doc: res.doc } };
+		const pub = await Pub.findOne({
+			where: { id: pubId },
+		});
+
+		if (!pub) {
+			throw new NotFoundError();
+		}
+
+		const { proposedMetadata, doc } = await convertFiles({ files, tmpDir });
+
+		const newParams = getDetectedParamsToUpdate({
+			proposedMetadata,
+			overrides: metadataOptions?.overrides,
+			overrideAll: metadataOptions?.overrideAll,
+		});
+
+		const modifiedText = await writeDocumentToPubDraft(pub.id, doc, { method });
+
+		const updatedAttributes = await updatePub(
+			{ ...newParams, pubId },
+			managerUpdatableFields,
+			userId,
+		);
+		const updatedAttributions = await maybeAddAttributionsToPub({
+			pubId,
+			proposedAttributions: proposedMetadata.attributions,
+			attributions: metadataOptions?.attributions,
+		});
+
+		const outputPub = Object.assign(pub.toJSON(), updatedAttributes, {
+			attributions: updatedAttributions ?? [],
+		}) as types.DefinitelyHas<types.Pub, 'attributions'>;
+
+		return { status: 200, body: { doc: modifiedText, pub: outputPub } };
 	}
 
-	const { communityId, pubCreateParams } = options;
-	const pub = await createPub({
-		communityId,
-		...pubCreateParams,
+	const { communityId } = options;
+
+	const { proposedMetadata, doc } = await convertFiles({ files, tmpDir });
+
+	const newParams = getDetectedParamsToUpdate({
+		proposedMetadata,
+		pubCreateParams: options.pubCreateParams,
+		overrides: metadataOptions?.overrides,
+		overrideAll: metadataOptions?.overrideAll,
 	});
 
-	await writeDocumentToPubDraft(pub.id, res.doc);
+	const pub = await createPub(
+		{
+			communityId,
+			...newParams,
+		},
+		userId,
+	);
 
-	return { status: 201, body: { doc: res.doc, pub: pub.toJSON() } };
+	await writeDocumentToPubDraft(pub.id, doc);
+
+	const addedAttributions = await maybeAddAttributionsToPub({
+		pubId: pub.id,
+		proposedAttributions: proposedMetadata.attributions,
+		attributions: metadataOptions?.attributions,
+	});
+
+	const outputPub = Object.assign(pub.toJSON(), {
+		attributions: addedAttributions ?? [],
+	}) as types.DefinitelyHas<types.Pub, 'attributions'>;
+
+	return { status: 201, body: { doc, pub: outputPub } };
 }
 
 const s = initServer();
@@ -324,6 +499,7 @@ export const pubServer = s.router(contract.pub, {
 				throw new ForbiddenError();
 			}
 			const pub = expect(await findPub(pubId));
+
 			const pubDoi =
 				pub.doi ??
 				(
@@ -332,6 +508,7 @@ export const pubServer = s.router(contract.pub, {
 						'pub',
 					)
 				).pub;
+
 			const jsonedPub = pub.toJSON();
 			const resource = await transformPubToResource(jsonedPub, expect(jsonedPub.community));
 			try {
@@ -368,7 +545,9 @@ export const pubServer = s.router(contract.pub, {
 
 			await writeDocumentToPubDraft(params.pubId, body.doc, { method: body.method });
 
-			return { status: 200, body: { doc: body.doc } };
+			const { doc } = await getPubDraftDoc(params.pubId);
+
+			return { status: 200, body: { doc } };
 		},
 		importOld: async ({ req, body }) => {
 			const community = await ensureUserIsCommunityAdmin(req);
@@ -404,42 +583,24 @@ export const pubServer = s.router(contract.pub, {
 			handler: async ({ req, body, files }) => {
 				const community = await ensureUserIsCommunityAdmin(req);
 
-				const pubCreateParams = omitKeys(body, ['filenames', 'files']);
+				const pubCreateParams = omitKeys(body, [
+					'filenames',
+					'files',
+					'overrides',
+					'attributions',
+				]);
 				return handleImport({
 					// @ts-expect-error shh
 					tmpDir: req.tmpDir,
 					files: files as Express.Multer.File[],
 					communityId: community.id,
 					pubCreateParams,
+					metadataOptions: {
+						attributions: body.attributions,
+						overrides: body.overrides,
+					},
+					userId: req.user.id,
 				});
-				// const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
-				// 	(file): BaseSourceFile & { tmpPath: string } => ({
-				// 		clientPath: file.filename ?? file.originalname,
-				// 		tmpPath: file.path,
-				// 		state: 'complete',
-				// 		loaded: file.size,
-				// 		total: file.size,
-				// 	}),
-				// );
-
-				// const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
-
-				// const res = await importFiles({
-				// 	sourceFiles: labeledFiles,
-				// 	importerFlags: {},
-				// 	// @ts-expect-error shh
-				// 	tmpDirPath: req.tmpDir,
-				// });
-				// const createParams = omitKeys(body, ['filenames', 'files']);
-
-				// const pub = await createPub({
-				// 	communityId: community.id,
-				// 	...createParams,
-				// });
-
-				// await writeDocumentToPubDraft(pub.id, res.doc);
-
-				// return { status: 201, body: { doc: res.doc, pub: pub.toJSON() } };
 			},
 		},
 		importToPub: {
@@ -457,32 +618,12 @@ export const pubServer = s.router(contract.pub, {
 					files: files as Express.Multer.File[],
 					pubId: params.pubId,
 					method: body.method,
+					metadataOptions: {
+						attributions: body.attributions,
+						overrides: body.overrides,
+					},
+					userId: req.user.id,
 				});
-				// //
-				// const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
-				// 	(file): BaseSourceFile & { tmpPath: string } => ({
-				// 		clientPath: file.filename ?? file.originalname,
-				// 		tmpPath: file.path,
-				// 		state: 'complete',
-				// 		loaded: file.size,
-				// 		total: file.size,
-				// 	}),
-				// );
-
-				// const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
-
-				// const res = await importFiles({
-				// 	sourceFiles: labeledFiles,
-				// 	importerFlags: {},
-				// 	// @ts-expect-error shh
-				// 	tmpDirPath: req.tmpDir,
-				// });
-
-				// const { pubId } = params;
-
-				// await writeDocumentToPubDraft(pubId, res.doc, { method: body.method });
-
-				// return { status: 200, body: { doc: res.doc } };
 			},
 		},
 		convert: {

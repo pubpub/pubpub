@@ -2,8 +2,13 @@
 import uuid from 'uuid/v4';
 
 import { pubSchema } from 'utils/api/schemas/pub';
+import supertest from 'supertest';
+
 import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
 import { CollectionPub, Pub, Draft } from 'server/models';
+import { fullImportOutput } from 'utils/api/schemas/pub';
+import { stubModule } from 'stubstub/stub';
+
 import { issueCreatePubToken } from '../tokens';
 
 const defaultCollectionId = uuid();
@@ -23,10 +28,16 @@ const models = modelize`
 		Member {
 			permissions: "admin"
 <<<<<<< HEAD
+<<<<<<< HEAD
 			User admin {}
 =======
 			User communityAdmin {}
 >>>>>>> 445a9faa0 (chore: finish initial bad import api)
+=======
+			User communityAdmin {
+				name: "Testy McTestface"
+			}
+>>>>>>> f6d76ce41 (feat: further improve import routes)
 		}
 		Collection collection {
             Member {
@@ -581,5 +592,259 @@ describe('import', () => {
 			.send({ ...testImportPayload });
 
 		expect(result.status).toBe(201);
+=======
+const getCommunityHost = (community) => `${community.subdomain}.pubpub.org`;
+
+let adminAgent!: supertest.SuperAgentTest;
+
+describe('/api/pubs/text', () => {
+	let restore = () => {};
+	const isAWSAccessKeySet = !!process.env.AWS_ACCESS_KEY_ID;
+
+	beforeEach(() => {
+		if (!isAWSAccessKeySet) {
+			// eslint-disable-next-line global-require
+			const stubbed = stubModule(require('utils/import/uploadAndConvertImages'), {
+				uploadAndConvertImages: (files) => files,
+			});
+			restore = stubbed.restore;
+		}
+	});
+
+	beforeAll(async () => {
+		const { community, communityAdmin } = models;
+
+		adminAgent = (await login(communityAdmin)).set(
+			'Host',
+			getCommunityHost(community),
+		) as unknown as supertest.SuperAgentTest;
+	});
+
+	let importedPubId!: string;
+	it('should be able to create a pub by importing very simple files', async () => {
+		const textFile = 'wow, some text';
+
+		const { body } = await adminAgent
+			.post('/api/pubs/text/import')
+			.field('filenames', 'text.txt')
+			.attach('files', Buffer.from(textFile), 'text.txt')
+			.expect(201);
+
+		const output = fullImportOutput.parse(body);
+
+		importedPubId = output.pub.id;
+	}, 50000);
+
+	it('should be able to retrieve the text via GET /api/pubs/:pubId/text', async () => {
+		const { body } = await adminAgent.get(`/api/pubs/${importedPubId}/text`).expect(200);
+
+		expect(body).toMatchObject({
+			type: 'doc',
+			content: [{ type: 'paragraph', content: [{ type: 'text', text: 'wow, some text' }] }],
+		});
+	});
+
+	it('should be able to replace the text via POST /api/pubs/:pubId/text/import', async () => {
+		const textFile = 'wow, some different text';
+
+		const { body } = await adminAgent
+			.post(`/api/pubs/${importedPubId}/text/import`)
+			.field('filenames', 'text.txt')
+			.attach('files', Buffer.from(textFile), 'text.txt')
+			.expect(200);
+
+		expect(body).toMatchObject({
+			doc: {
+				type: 'doc',
+				content: [
+					{
+						type: 'paragraph',
+						content: [{ type: 'text', text: 'wow, some different text' }],
+					},
+				],
+			},
+		});
+	});
+
+	it('should be able to prepend and append text via POST /api/pubs/:pubId/text/import', async () => {
+		const textFile = 'wow, some prepended text';
+
+		const { body } = await adminAgent
+			.post(`/api/pubs/${importedPubId}/text/import`)
+			.field('method', 'prepend')
+			.field('filenames', 'text.txt')
+			.attach('files', Buffer.from(textFile), 'text.txt')
+			.expect(200);
+
+		expect(body).toMatchObject({
+			doc: {
+				type: 'doc',
+				content: [
+					{
+						type: 'paragraph',
+						content: [{ type: 'text', text: 'wow, some prepended text' }],
+					},
+					{
+						type: 'paragraph',
+						content: [{ type: 'text', text: 'wow, some different text' }],
+					},
+				],
+			},
+		});
+
+		const textFile2 = 'wow, some appended text';
+		const { body: body2 } = await adminAgent
+			.post(`/api/pubs/${importedPubId}/text/import`)
+			.field('method', 'append')
+			.field('filenames', 'text.txt')
+			.attach('files', Buffer.from(textFile2), 'text.txt')
+			.expect(200);
+
+		expect(body2).toMatchObject({
+			doc: {
+				type: 'doc',
+				content: [
+					{
+						type: 'paragraph',
+						content: [{ type: 'text', text: 'wow, some prepended text' }],
+					},
+					{
+						type: 'paragraph',
+						content: [{ type: 'text', text: 'wow, some different text' }],
+					},
+					{
+						type: 'paragraph',
+						content: [{ type: 'text', text: 'wow, some appended text' }],
+					},
+				],
+			},
+		});
+	});
+
+	it('PUT /api/pubs/:pubId/text should work as expected', async () => {
+		const newText = 'it was I, new text!';
+
+		const { body } = await adminAgent
+			.put(`/api/pubs/${importedPubId}/text`)
+			.send({
+				doc: {
+					type: 'doc',
+					content: [{ type: 'paragraph', content: [{ type: 'text', text: newText }] }],
+				},
+			})
+			.expect(200);
+
+		expect(body).toMatchObject({
+			doc: {
+				type: 'doc',
+				content: [{ type: 'paragraph', content: [{ type: 'text', text: newText }] }],
+			},
+		});
+	});
+
+	it('should be able to just convert files to a doc via POST /api/pubs/text/convert', async () => {
+		const textFile = 'wow, some text';
+
+		const { body } = await adminAgent
+			.post('/api/pubs/text/convert')
+			.field('filenames', 'text.txt')
+			.attach('files', Buffer.from(textFile), 'text.txt')
+			.expect(200);
+
+		expect(body).toMatchObject({
+			doc: {
+				type: 'doc',
+				content: [
+					{ type: 'paragraph', content: [{ type: 'text', text: 'wow, some text' }] },
+				],
+			},
+		});
+	});
+
+	let complicatedPubId!: string;
+	it('should convert a latex file with a bib and a figure to one document', async () => {
+		const paths = ['test.tex', 'test.bib', 'image1.png'];
+		const fixturePaths = paths.map((path) => `${__dirname}/fixtures/latex/${path}`);
+
+		const {
+			body: { doc, pub },
+		} = await adminAgent
+			.post('/api/pubs/text/import')
+			.field('attributions', 'match')
+			.field('filenames', paths[0])
+			.field('filenames', paths[1])
+			.field('filenames', paths[2])
+			.attach('files', fixturePaths[0])
+			.attach('files', fixturePaths[1])
+			.attach('files', fixturePaths[2])
+			.expect(201);
+
+		complicatedPubId = pub.id;
+
+		const image = doc.content.at(-1);
+
+		expect(image.type).toEqual('image');
+
+		const { url } = image.attrs;
+
+		expect(url).toMatch(/\.png$/);
+
+		console.dir(pub, { depth: 19 });
+		/**
+		 * this tests the metadata inf
+		 */
+		expect(pub.title).toEqual('On Testing');
+		expect(pub.attributions?.[0]?.name).toEqual('Testy McTestface');
+		expect(pub.customPublishedAt).toMatch(/^1337-01-01/);
+
+		if (isAWSAccessKeySet) {
+			const response = await fetch(url, { method: 'HEAD' });
+
+			expect(response.ok).toEqual(true);
+		}
+	});
+
+	it('should only override metadata if explicitly allowed to', async () => {
+		const html = String.raw;
+
+		const text = html`
+			<!DOCTYPE html>
+			<html>
+				<head>
+					<title>A new title that might be inferred</title>
+				</head>
+				<body>
+					hihi haha
+				</body>
+			</html>
+		`;
+
+		const {
+			body: { pub },
+		} = await adminAgent
+			.post(`/api/pubs/${complicatedPubId}/text/import`)
+			.field('filenames', 'test.html')
+			.attach('files', Buffer.from(text), 'test.html')
+			.expect(200);
+
+		expect(pub.title).toEqual('On Testing');
+
+		const {
+			body: { pub: pub2 },
+		} = await adminAgent
+			.post(`/api/pubs/${complicatedPubId}/text/import`)
+			.field('overrides', 'title')
+			.field('filenames', 'test.html')
+			.attach('files', Buffer.from(text), 'test.html')
+			.expect(200);
+
+		expect(pub2.title).toEqual('A new title that might be inferred');
+	});
+
+	afterEach(() => {
+		if (!isAWSAccessKeySet) {
+			restore();
+		}
+>>>>>>> f6d76ce41 (feat: further improve import routes)
 	});
 });

@@ -3,18 +3,24 @@ import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { createGetManyQueryOptions, createGetQueryOptions } from 'utils/query';
-import { ResourceWarning } from 'workers/tasks/import/resources';
 
 import { resourceSchema } from '../schemas/resource';
 import {
+	base,
+	baseWithImport,
+	baseWithPubId,
+	fullImportOutput,
 	getManyQuerySchema,
+	importMethodSchema,
 	optionalPubCreateParamSchema,
+	pandocOutputSchema,
 	pubCreateSchema,
 	pubPutSchema,
 	pubSchema,
 	pubWithRelationsSchema,
 	resourceASTSchema,
 	sanitizedPubSchema,
+	toPubImportOutput,
 } from '../schemas/pub';
 import { docJsonSchema } from '../schemas/release';
 import { sourceFileSchema } from '../schemas/import';
@@ -22,50 +28,6 @@ import { sourceFileSchema } from '../schemas/import';
 extendZodWithOpenApi(z);
 
 const c = initContract();
-
-const importCreateParams = optionalPubCreateParamSchema
-	.extend({ collectionId: z.string().uuid().optional() })
-	.partial();
-
-export type ImportCreatePubParams = (typeof importCreateParams)['_input'];
-
-const base = z.object({
-	filenames: z.array(z.string()),
-	files: z.custom<Blob[]>(),
-});
-
-const importMethodSchema = z.enum(['replace', 'append', 'prepend', 'overwrite']).default('replace');
-export type ImportMethod = (typeof importMethodSchema)['_input'];
-
-const baseWithPubId = base.extend({
-	pubId: z.string().uuid(),
-	method: importMethodSchema,
-});
-
-const baseWithImport = base.extend(importCreateParams.shape).extend({ pubId: z.undefined() });
-
-const fullOutput = z.object({ doc: z.any(), pub: z.any() });
-const toPubOutput = z.object({ doc: z.any() });
-
-const pandocOutputSchema = z.object({
-	rawMetadata: z.record(z.any()).optional(),
-	doc: docJsonSchema,
-	warnings: z.array(z.any()),
-	pandocErrorOutput: z.string(),
-	proposedMetadata: z.record(z.any()),
-}) satisfies z.ZodType<{
-	rawMetadata?:
-		| {
-				[k: string]: any;
-		  }
-		| undefined;
-	doc: any;
-	warnings: ResourceWarning[];
-	pandocErrorOutput: string;
-	proposedMetadata: {
-		[k: string]: unknown;
-	};
-}>;
 
 export const pubContract = c.router({
 	get: {
@@ -276,7 +238,7 @@ export const pubContract = c.router({
 			contentType: 'multipart/form-data',
 			body: baseWithImport,
 			responses: {
-				201: fullOutput,
+				201: fullImportOutput,
 			},
 		},
 		importToPub: {
@@ -284,9 +246,12 @@ export const pubContract = c.router({
 			method: 'POST',
 			summary: 'Import a file to a pub',
 			description: 'Upload files and import it to a pub.',
+			pathParams: z.object({
+				pubId: z.string().uuid(),
+			}),
 			body: baseWithPubId,
 			responses: {
-				200: toPubOutput,
+				200: toPubImportOutput,
 			},
 		},
 		convert: {

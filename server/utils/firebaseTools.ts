@@ -5,12 +5,46 @@ import { Node, Fragment, Slice } from 'prosemirror-model';
 import { ReplaceStep } from 'prosemirror-transform';
 import { getPubDraftDoc, getPubDraftRef } from './firebaseAdmin';
 
+type Reference = Awaited<ReturnType<typeof getPubDraftRef>>;
+
 const documentSchema = buildSchema();
 
-const makeReplaceStepFromTo = (from: number, to: number, slice: Slice, client = 'api') => {
+const makeReplaceStepFromTo = ({
+	from,
+	to,
+	slice,
+	client = 'api',
+}: {
+	from: number;
+	to: number;
+	slice: Slice;
+	client?: string;
+}) => {
 	const replaceStep = new ReplaceStep(from, to, slice);
 	const change = createFirebaseChange([replaceStep], client);
 	return change;
+};
+
+const appendNewChange = async ({
+	draftRef,
+	from,
+	to,
+	slice,
+	client = 'api',
+}: {
+	draftRef: Reference;
+	from: number;
+	to: number;
+	slice: Slice;
+	client?: string;
+}) => {
+	const latestChange = (await draftRef.child('changes').limitToLast(1).once('value')).val();
+
+	const latestKey = latestChange ? Object.keys(latestChange)[0] : null;
+	const key = latestKey ? Number(latestKey) + 1 : 0;
+
+	const change = makeReplaceStepFromTo({ from, to, slice, client });
+	await draftRef.child('changes').child(key.toString()).set(change);
 };
 
 export const writeDocumentToPubDraft = async (
@@ -21,46 +55,39 @@ export const writeDocumentToPubDraft = async (
 	const { method = 'replace' } = options || {};
 	const draftRef = await getPubDraftRef(pubId);
 
-	const { size } = await getPubDraftDoc(draftRef);
-
 	const hydratedDocument = Node.fromJSON(documentSchema, document);
 
 	const documentFragment = Fragment.from(hydratedDocument.content);
-	const documentSlice = new Slice(documentFragment, 0, 0);
+	const slice = new Slice(documentFragment, 0, 0);
 
-	let from = 0;
-	let to = size;
+	const doc = hydratedDocument.toJSON() as DocJson;
 
+	const { size, doc: originalDoc } = await getPubDraftDoc(draftRef);
 	switch (method) {
-		case 'append':
-			from = size;
-			to = size;
-			break;
-		case 'prepend':
-			from = 0;
-			to = 0;
-			break;
-		case 'overwrite':
-			from = 0;
-			to = 0;
-			break;
-		default:
-			from = 0;
-			to = size;
-			break;
+		case 'overwrite': {
+			const change = makeReplaceStepFromTo({ from: 0, to: 0, slice });
+			// this removes the old data
+			await draftRef.child('changes').set({ 0: change });
+			return doc;
+		}
+		case 'prepend': {
+			appendNewChange({ from: 0, to: 0, slice, draftRef });
+			return {
+				...originalDoc,
+				content: [...doc.content, ...originalDoc.content],
+			} as DocJson;
+		}
+		case 'replace': {
+			appendNewChange({ from: 0, to: size, slice, draftRef });
+			return doc;
+		}
+
+		default: {
+			appendNewChange({ from: size, to: size, slice, draftRef });
+			return {
+				...originalDoc,
+				content: [...originalDoc.content, ...doc.content],
+			} as DocJson;
+		}
 	}
-
-	if (method === 'overwrite') {
-		const change = makeReplaceStepFromTo(0, 0, documentSlice, 'api');
-		await draftRef.child('changes').set({ 0: change });
-		return;
-	}
-
-	const change = makeReplaceStepFromTo(from, to, documentSlice, 'api');
-	const latest = (await draftRef.child('changes').limitToLast(1).once('value')).val();
-
-	const latestKey = latest ? Object.keys(latest)[0] : null;
-	const key = latestKey ? Number(latestKey) + 1 : 0;
-
-	await draftRef.child('changes').child(key.toString()).set(change);
 };
