@@ -91,7 +91,10 @@ const getRequestIds = createGetRequestIds<{
 	createPubToken?: string | null;
 }>();
 
-const createUpload = async () => {
+/**
+ * We need to dynamically create the middleware in order to set a different temporary directory for each request, otherwise there's a chance that two requests will try to write to the same file.
+ */
+const createUploadMiddleware = async () => {
 	const tmpDirPath = await getTmpDirectoryPath();
 
 	const storage = multer.diskStorage({
@@ -118,7 +121,7 @@ const createUpload = async () => {
 		},
 	});
 
-	const upload = multer({ storage: storage }).array('files');
+	const upload = multer({ storage }).array('files');
 	return upload;
 };
 
@@ -276,95 +279,117 @@ export const pubServer = s.router(contract.pub, {
 		const resource = await transformPubToResource(jsonedPub, expect(jsonedPub.community));
 		return { status: 200, body: resource };
 	},
-	getText: async ({ params }) => {
-		const doc = await getPubDraftDoc(params.pubId);
+	text: {
+		get: async ({ params }) => {
+			const doc = await getPubDraftDoc(params.pubId);
 
-		return { status: 200, body: doc.doc };
-	},
-	replaceText: async ({ params, body }) => {
-		await writeDocumentToPubDraft(params.pubId, body.doc);
-
-		return { status: 200, body: { doc: body.doc } };
-	},
-	import: async ({ req, body }) => {
-		const community = await ensureUserIsCommunityAdmin(req);
-
-		const { collectionId, ...createPubArgs } = body.pub ?? {};
-
-		const baseUrl = `${req.protocol}://${req.get(
-			isProd() || isDuqDuq() ? 'host' : 'localhost',
-		)}`;
-
-		const pub = await createPub({
-			communityId: community.id,
-			collectionIds: collectionId ? [collectionId] : undefined,
-			...createPubArgs,
-		});
-
-		const task = await importToPub({
-			pubId: pub.id,
-			baseUrl,
-			importBody: {
-				sourceFiles: body.sourceFiles,
-			},
-		});
-
-		return { status: 201, body: { doc: task.doc, pub: pub.toJSON() } };
-	},
-	importLocal: {
-		middleware: [
-			async (req, res, next) => {
-				return (await createUpload())(req, res, next);
-			},
-		],
-		handler: async ({ req, body, files }) => {
+			return { status: 200, body: doc.doc };
+		},
+		update: async ({ req, params, body }) => {
 			const community = await ensureUserIsCommunityAdmin(req);
 
-			const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
-				(file): BaseSourceFile & { tmpPath: string } => ({
-					clientPath: file.filename ?? file.originalname,
-					tmpPath: file.path,
-					state: 'complete',
-					loaded: file.size,
-					total: file.size,
-				}),
-			);
+			await writeDocumentToPubDraft(params.pubId, body.doc, { method: body.method });
 
-			const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
+			return { status: 200, body: { doc: body.doc } };
+		},
+		importOld: async ({ req, body }) => {
+			const community = await ensureUserIsCommunityAdmin(req);
 
-			const res = await importFiles({
-				sourceFiles: labeledFiles,
-				importerFlags: {},
-				// @ts-expect-error shh
-				tmpDirPath: req.tmpDir,
-			});
-			const { filenames, files: smiles, ...rest } = body;
+			const { collectionId, ...createPubArgs } = body.pub ?? {};
+
+			const baseUrl = `${req.protocol}://${req.get(
+				isProd() || isDuqDuq() ? 'host' : 'localhost',
+			)}`;
 
 			const pub = await createPub({
 				communityId: community.id,
-				...rest,
+				collectionIds: collectionId ? [collectionId] : undefined,
+				...createPubArgs,
 			});
 
-			await writeDocumentToPubDraft(pub.id, res.doc);
+			const task = await importToPub({
+				pubId: pub.id,
+				baseUrl,
+				importBody: {
+					sourceFiles: body.sourceFiles,
+				},
+			});
 
-			return { status: 200, body: { doc: res.doc, pub: pub.toJSON() } };
+			return { status: 201, body: { doc: task.doc, pub: pub.toJSON() } };
 		},
-	},
-	importToPub: async ({ req, body, params }) => {
-		const baseUrl = `${req.protocol}://${req.get(isProd() ? 'host' : 'localhost')}`;
+		import: {
+			middleware: [
+				async (req, res, next) => {
+					return (await createUploadMiddleware())(req, res, next);
+				},
+			],
+			handler: async ({ req, body, files }) => {
+				const community = await ensureUserIsCommunityAdmin(req);
 
-		const { pubId } = params;
-		const { sourceFiles, method } = body;
+				const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
+					(file): BaseSourceFile & { tmpPath: string } => ({
+						clientPath: file.filename ?? file.originalname,
+						tmpPath: file.path,
+						state: 'complete',
+						loaded: file.size,
+						total: file.size,
+					}),
+				);
 
-		const task = await importToPub({
-			pubId,
-			baseUrl,
-			importBody: {
-				sourceFiles,
+				const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
+
+				const res = await importFiles({
+					sourceFiles: labeledFiles,
+					importerFlags: {},
+					// @ts-expect-error shh
+					tmpDirPath: req.tmpDir,
+				});
+				const { filenames, files: smiles, ...rest } = body;
+
+				const pub = await createPub({
+					communityId: community.id,
+					...rest,
+				});
+
+				await writeDocumentToPubDraft(pub.id, res.doc);
+
+				return { status: 201, body: { doc: res.doc, pub: pub.toJSON() } };
 			},
-			method,
-		});
+		},
+		importToPub: {
+			middleware: [
+				async (req, res, next) => {
+					return (await createUploadMiddleware())(req, res, next);
+				},
+			],
+			handler: async ({ req, body, files, params }) => {
+				await ensureUserIsCommunityAdmin(req);
 
-		return { status: 201, body: task.doc };
+				const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
+					(file): BaseSourceFile & { tmpPath: string } => ({
+						clientPath: file.filename ?? file.originalname,
+						tmpPath: file.path,
+						state: 'complete',
+						loaded: file.size,
+						total: file.size,
+					}),
+				);
+
+				const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
+
+				const res = await importFiles({
+					sourceFiles: labeledFiles,
+					importerFlags: {},
+					// @ts-expect-error shh
+					tmpDirPath: req.tmpDir,
+				});
+
+				const { pubId } = params;
+
+				await writeDocumentToPubDraft(pubId, res.doc, { method: body.method });
+
+				return { status: 200, body: { doc: res.doc } };
+			},
+		},
 	},
 });

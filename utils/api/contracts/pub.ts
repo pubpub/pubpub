@@ -22,6 +22,25 @@ extendZodWithOpenApi(z);
 
 const c = initContract();
 
+const creationThings = optionalPubCreateParamSchema
+	.extend({ collectionId: z.string().uuid().optional() })
+	.partial();
+
+const base = z.object({
+	filenames: z.array(z.string()),
+	files: z.custom<Blob[]>(),
+});
+
+const baseWithPubId = base.extend({
+	pubId: z.string().uuid(),
+	method: z.enum(['replace', 'append', 'prepend', 'overwrite']).default('replace'),
+});
+
+const baseWithImport = base.extend(creationThings.shape).extend({ pubId: z.undefined() });
+
+const fullOutput = z.object({ doc: z.any(), pub: z.any() });
+const toPubOutput = z.object({ doc: z.any() });
+
 export const pubContract = c.router({
 	get: {
 		path: '/api/pubs/:id',
@@ -172,81 +191,77 @@ export const pubContract = c.router({
 			200: resourceSchema,
 		},
 	},
-	getText: {
-		path: '/api/pubs/:pubId/text',
-		method: 'GET',
-		summary: 'Get the text of a Pub',
-		description: 'Get the text of a Pub as a ProseMirror document',
-		pathParams: z.object({
-			pubId: z.string().uuid(),
-		}),
-		responses: {
-			200: docJsonSchema,
+	text: {
+		get: {
+			path: '/api/pubs/:pubId/text',
+			method: 'GET',
+			summary: 'Get the text of a Pub',
+			description: 'Get the text of a Pub as a ProseMirror document',
+			pathParams: z.object({
+				pubId: z.string().uuid(),
+			}),
+			responses: {
+				200: docJsonSchema,
+			},
 		},
-	},
-	replaceText: {
-		path: '/api/pubs/:pubId/text',
-		method: 'PUT',
-		summary: 'Replace the text of a pub',
-		description: 'Replace the text of a pub with a different ProseMirror document',
-		pathParams: z.object({
-			pubId: z.string().uuid(),
-		}),
-		body: z.object({
-			doc: docJsonSchema,
-			clientID: z.string().default('api'),
-			publishRelease: z.boolean().default(false),
-		}),
-		responses: {
-			200: z.object({
+		update: {
+			path: '/api/pubs/:pubId/text',
+			method: 'PUT',
+			summary: 'Replace the text of a pub',
+			description: 'Replace the text of a pub with a different ProseMirror document',
+			pathParams: z.object({
+				pubId: z.string().uuid(),
+			}),
+			body: z.object({
 				doc: docJsonSchema,
-				url: z.string().url().optional(),
+				clientID: z.string().default('api'),
+				publishRelease: z.boolean().default(false),
+				method: z.enum(['replace', 'append', 'prepend', 'overwrite']).default('replace'),
 			}),
-			400: z.object({ error: z.string() }),
+			responses: {
+				200: z.object({
+					doc: docJsonSchema,
+					url: z.string().url().optional(),
+				}),
+				400: z.object({ error: z.string() }),
+			},
 		},
-	},
-	import: {
-		path: '/api/pubs/import',
-		method: 'POST',
-		summary: 'Create a pub and import files to it',
-		description: 'Create a pub and upload a file and import it to a pub.',
-		body: z.object({
-			pub: optionalPubCreateParamSchema
-				.extend({ collectionId: z.string().uuid().optional() })
-				.partial()
-				.optional(),
-			sourceFiles: z.array(sourceFileSchema),
-		}),
-		responses: {
-			201: z.object({ doc: docJsonSchema, pub: pubSchema }),
-		},
-	},
-	importToPub: {
-		path: '/api/pubs/:pubId/import',
-		method: 'POST',
-		summary: 'Import a file to a pub',
-		description: 'Upload a file and import it to a pub.',
-		body: z.object({
-			method: z.enum(['replace', 'append', 'prepend', 'overwrite']).optional(),
-			sourceFiles: z.array(sourceFileSchema),
-		}),
-		responses: {
-			201: docJsonSchema,
-		},
-	},
-	importLocal: {
-		path: '/api/pubs/importLocal',
-		method: 'POST',
-		contentType: 'multipart/form-data',
-		body: optionalPubCreateParamSchema
-			.extend({ collectionId: z.string().uuid().optional() })
-			.partial()
-			.extend({
-				filenames: z.array(z.string()),
-				files: z.custom<Blob[]>(),
+		importOld: {
+			path: '/api/pubs/text/importOld',
+			method: 'POST',
+			summary: 'Create a pub and import files to it',
+			description: 'Create a pub and upload a file and import it to a pub.',
+			body: z.object({
+				pub: optionalPubCreateParamSchema
+					.extend({ collectionId: z.string().uuid().optional() })
+					.partial()
+					.optional(),
+				sourceFiles: z.array(sourceFileSchema),
 			}),
-		responses: {
-			200: z.any(),
+			responses: {
+				201: z.object({ doc: docJsonSchema, pub: pubSchema }),
+			},
+		},
+		import: {
+			path: '/api/pubs/text/import',
+			method: 'POST',
+			summary: 'Create a pub and import files to it',
+			description: 'Create a pub and upload a file and import it to a pub.',
+			contentType: 'multipart/form-data',
+			body: baseWithImport,
+			responses: {
+				201: fullOutput,
+			},
+		},
+		importToPub: {
+			path: '/api/pubs/:pubId/text/import',
+			method: 'POST',
+			summary: 'Import a file to a pub',
+			description: 'Upload files and import it to a pub.',
+			body: baseWithPubId,
+			responses: {
+				200: toPubOutput,
+			},
 		},
 	},
 });
