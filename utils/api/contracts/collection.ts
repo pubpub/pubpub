@@ -87,7 +87,7 @@ export const collectionContract = c.router({
 	},
 	doi: {
 		deposit: {
-			path: '/api/collection/:collectionId/doi',
+			path: '/api/collections/:collectionId/doi',
 			method: 'POST',
 			summary: 'Create a DOI',
 			description: 'Deposit metadata to create a DOI',
@@ -101,7 +101,7 @@ export const collectionContract = c.router({
 			},
 		},
 		preview: {
-			path: '/api/collection/:collectionId/doi/preview',
+			path: '/api/collections/:collectionId/doi/preview',
 			method: 'POST',
 			summary: 'Preview a DOI deposit',
 			description: 'Preview a DOI deposit',
@@ -116,7 +116,7 @@ export const collectionContract = c.router({
 		},
 	},
 	getResource: {
-		path: '/api/collection/:collectionId/resource',
+		path: '/api/collections/:collectionId/resource',
 		method: 'GET',
 		summary: 'Get collection as a resource',
 		description: 'Get collection as a resource',

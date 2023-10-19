@@ -156,7 +156,7 @@ export const pubContract = c.router({
 	},
 	doi: {
 		deposit: {
-			path: '/api/pub/:pubId/doi',
+			path: '/api/pubs/:pubId/doi',
 			method: 'POST',
 			summary: 'Create a DOI',
 			description: 'Deposit metadata to create a DOI',
@@ -170,7 +170,7 @@ export const pubContract = c.router({
 			},
 		},
 		preview: {
-			path: '/api/pub/:pubId/doi/preview',
+			path: '/api/pubs/:pubId/doi/preview',
 			method: 'POST',
 			summary: 'Preview a DOI deposit',
 			description: 'Preview a DOI deposit',
@@ -185,7 +185,7 @@ export const pubContract = c.router({
 		},
 	},
 	getResource: {
-		path: '/api/pub/:pubId/resource',
+		path: '/api/pubs/:pubId/resource',
 		method: 'GET',
 		summary: 'Get pub as a resource',
 		description: 'Get pub as a resource',
