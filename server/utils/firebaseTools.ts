@@ -1,10 +1,9 @@
-import { createFirebaseChange } from 'client/components/Editor';
+import { DocJson } from 'types';
+
+import { createFirebaseChange, buildSchema } from 'client/components/Editor';
 import { Node, Fragment, Slice } from 'prosemirror-model';
 import { ReplaceStep } from 'prosemirror-transform';
 import { getPubDraftDoc, getPubDraftRef } from './firebaseAdmin';
-
-import { buildSchema } from 'client/components/Editor';
-import { DocJson } from 'types';
 
 const documentSchema = buildSchema();
 
@@ -41,13 +40,13 @@ export const writeDocumentToPubDraft = async (
 			from = 0;
 			to = 0;
 			break;
-		case 'replace':
-			from = 0;
-			to = size;
-			break;
 		case 'overwrite':
 			from = 0;
 			to = 0;
+			break;
+		default:
+			from = 0;
+			to = size;
 			break;
 	}
 

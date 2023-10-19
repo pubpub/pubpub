@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import firebaseAdmin from 'firebase-admin';
-import { Schema, Node, Slice, Fragment } from 'prosemirror-model';
-import { Step, Transform, ReplaceStep } from 'prosemirror-transform';
+import { Schema } from 'prosemirror-model';
+import { Step, Transform } from 'prosemirror-transform';
 
 import {
 	editorSchema,

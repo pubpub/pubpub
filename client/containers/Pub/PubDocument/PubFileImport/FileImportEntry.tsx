@@ -10,8 +10,9 @@ import {
 	Classes,
 } from '@blueprintjs/core';
 
+import type { BaseSourceFile } from 'utils/api/schemas/import';
+
 import { getPotentialLabelsForFile } from './formats';
-import { BaseSourceFile } from 'utils/api/schemas/import';
 
 type Props = {
 	// file: {

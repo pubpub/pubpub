@@ -1,7 +1,9 @@
 import { z } from 'zod';
-import { Request } from 'express';
+import { Request, Express } from 'express';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { initServer } from '@ts-rest/express';
+import mime from 'mime-types';
+import multer from 'multer';
 
 import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
@@ -21,16 +23,22 @@ import { createPub, destroyPub, findPub, importToPub, updatePub } from './querie
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 import { Pub } from './model';
 import { editFirebaseDraftByRef, getPubDraftDoc, getPubDraftRef } from 'server/utils/firebaseAdmin';
+
+import { createGetRequestIds } from 'utils/getRequestIds';
+import { contract } from 'utils/api/contract';
+import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
 import { isDuqDuq, isProd } from 'utils/environment';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
-import multer from 'multer';
 import { getTmpDirectoryPath } from 'workers/tasks/import/tmpDirectory';
-import fs from 'fs/promises';
-import mime from 'mime-types';
 import { importFiles } from 'workers/tasks/import/import';
 import { BaseSourceFile } from 'utils/api/schemas/import';
 import { labelFiles } from 'client/containers/Pub/PubDocument/PubFileImport/formats';
+import { omitKeys } from 'utils/objects';
+
+import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+import { createPub, destroyPub, findPub, importToPub, updatePub } from './queries';
+import { getPubsById, queryPubIds } from './queryMany';
 
 extendZodWithOpenApi(z);
 
@@ -137,10 +145,10 @@ export const pubServer = s.router(contract.pub, {
 		if (!create) {
 			throw new ForbiddenError();
 		}
-		const { communityId, collectionId, createPubToken, ...rest } = body;
+		const createParams = omitKeys(body, ['communityId', 'collectionId', 'createPubToken']);
 		try {
 			const newPub = await createPub(
-				{ communityId: ids.communityId, collectionIds, ...rest },
+				{ communityId: ids.communityId, collectionIds, ...createParams },
 				ids.userId,
 			);
 			const jsonedPub = newPub.toJSON();
@@ -286,7 +294,7 @@ export const pubServer = s.router(contract.pub, {
 			return { status: 200, body: doc.doc };
 		},
 		update: async ({ req, params, body }) => {
-			const community = await ensureUserIsCommunityAdmin(req);
+			await ensureUserIsCommunityAdmin(req);
 
 			await writeDocumentToPubDraft(params.pubId, body.doc, { method: body.method });
 
@@ -344,11 +352,11 @@ export const pubServer = s.router(contract.pub, {
 					// @ts-expect-error shh
 					tmpDirPath: req.tmpDir,
 				});
-				const { filenames, files: smiles, ...rest } = body;
+				const createParams = omitKeys(body, ['filenames', 'files']);
 
 				const pub = await createPub({
 					communityId: community.id,
-					...rest,
+					...createParams,
 				});
 
 				await writeDocumentToPubDraft(pub.id, res.doc);

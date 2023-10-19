@@ -1,6 +1,8 @@
 import striptags from 'striptags';
 import unescape from 'lodash.unescape';
+import type { Attributes } from 'sequelize';
 
+import * as types from 'types';
 import {
 	Collection,
 	Community,
@@ -13,24 +15,21 @@ import {
 import { setPubSearchData, deletePubSearchData } from 'server/utils/search';
 import { createCollectionPub } from 'server/collectionPub/queries';
 import { createDraft } from 'server/draft/queries';
+import { createImport } from 'server/import/queries';
+import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
+
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { getReadableDateInYear } from 'utils/dates';
 import { asyncForEach } from 'utils/async';
 import { buildPubOptions } from 'server/utils/queryHelpers';
 import { expect } from 'utils/assert';
-import * as types from 'types';
-import { Attributes } from 'sequelize';
-import { PubPut } from 'utils/api/schemas/pub';
-import { PubUpdateableFields } from './permissions';
+import type { PubPut } from 'utils/api/schemas/pub';
+
 import { pingTask } from 'client/utils/pingTask';
-import { async } from 'hasbin';
-import { createImport } from 'server/import/queries';
-import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
-import { string } from 'yargs';
-import { ImportBody } from 'utils/api/schemas/import';
-import { getTmpDirectoryPath } from 'workers/tasks/import/tmpDirectory';
-import { downloadAndConvertFiles } from 'workers/tasks/import/download';
+import type { ImportBody } from 'utils/api/schemas/import';
+
+import type { PubUpdateableFields } from './permissions';
 
 export const createPub = async (
 	{
@@ -229,8 +228,6 @@ export const importToPub = async ({
 
 	const task = (await pingTask(taskData.id, 1000, 1000, baseUrl)) as {
 		doc: any;
-		// warnings: ResourceWarning[];
-		// proposedMetadata: ProposedMetadata;
 		pandocErrorOutput: string;
 	};
 

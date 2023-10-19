@@ -32,7 +32,8 @@
 					["utils", "./utils"],
 					["types", "./types"],
 					["facets", "./facets"],
-					["deposit", "./deposit"]
+					["deposit", "./deposit"],
+					["workers", "./workers"]
 				],
 				"extensions": [".js", ".ts", ".tsx"]
 			}
