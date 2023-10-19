@@ -22,21 +22,26 @@ extendZodWithOpenApi(z);
 
 const c = initContract();
 
-const creationThings = optionalPubCreateParamSchema
+const importCreateParams = optionalPubCreateParamSchema
 	.extend({ collectionId: z.string().uuid().optional() })
 	.partial();
+
+export type ImportCreatePubParams = (typeof importCreateParams)['_input'];
 
 const base = z.object({
 	filenames: z.array(z.string()),
 	files: z.custom<Blob[]>(),
 });
 
+const importMethodSchema = z.enum(['replace', 'append', 'prepend', 'overwrite']).default('replace');
+export type ImportMethod = (typeof importMethodSchema)['_input'];
+
 const baseWithPubId = base.extend({
 	pubId: z.string().uuid(),
-	method: z.enum(['replace', 'append', 'prepend', 'overwrite']).default('replace'),
+	method: importMethodSchema,
 });
 
-const baseWithImport = base.extend(creationThings.shape).extend({ pubId: z.undefined() });
+const baseWithImport = base.extend(importCreateParams.shape).extend({ pubId: z.undefined() });
 
 const fullOutput = z.object({ doc: z.any(), pub: z.any() });
 const toPubOutput = z.object({ doc: z.any() });
@@ -216,7 +221,7 @@ export const pubContract = c.router({
 				doc: docJsonSchema,
 				clientID: z.string().default('api'),
 				publishRelease: z.boolean().default(false),
-				method: z.enum(['replace', 'append', 'prepend', 'overwrite']).default('replace'),
+				method: importMethodSchema,
 			}),
 			responses: {
 				200: z.object({

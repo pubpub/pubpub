@@ -5,9 +5,10 @@ import { initServer } from '@ts-rest/express';
 import mime from 'mime-types';
 import multer from 'multer';
 
+import * as types from 'types';
+
 import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
-import { PubGetOptions, PubsQuery } from 'types';
 import { indexByProperty } from 'utils/arrays';
 import { transformPubToResource } from 'deposit/transform/pub';
 import { generateDoi } from 'server/doi/queries';
@@ -35,6 +36,7 @@ import { importFiles } from 'workers/tasks/import/import';
 import { BaseSourceFile } from 'utils/api/schemas/import';
 import { labelFiles } from 'client/containers/Pub/PubDocument/PubFileImport/formats';
 import { omitKeys } from 'utils/objects';
+import type { ImportCreatePubParams, ImportMethod } from 'utils/api/contracts/pub';
 
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
 import { createPub, destroyPub, findPub, importToPub, updatePub } from './queries';
@@ -43,9 +45,9 @@ import { getPubsById, queryPubIds } from './queryMany';
 extendZodWithOpenApi(z);
 
 type ManyRequestParams = {
-	query: Omit<PubsQuery, 'communityId'>;
+	query: Omit<types.PubsQuery, 'communityId'>;
 	alreadyFetchedPubIds: string[];
-	pubOptions: PubGetOptions;
+	pubOptions: types.PubGetOptions;
 };
 
 const getManyQueryParams = <
@@ -132,6 +134,67 @@ const createUploadMiddleware = async () => {
 	const upload = multer({ storage }).array('files');
 	return upload;
 };
+
+type ToPubImportInput = {
+	tmpDir: string;
+	files: Express.Multer.File[];
+	pubId: string;
+	method?: ImportMethod;
+};
+type CreatePubImportInput = {
+	tmpDir: string;
+	files: Express.Multer.File[];
+	communityId: string;
+	pubCreateParams: ImportCreatePubParams;
+};
+
+function handleImport(options: ToPubImportInput): Promise<{
+	status: 200;
+	body: {
+		doc: types.DocJson;
+	};
+}>;
+function handleImport(
+	options: CreatePubImportInput,
+): Promise<{ status: 201; body: { doc: types.DocJson; pub: types.Pub } }>;
+async function handleImport(options: ToPubImportInput | CreatePubImportInput) {
+	const { files, tmpDir } = options;
+
+	const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
+		(file): BaseSourceFile & { tmpPath: string } => ({
+			clientPath: file.filename ?? file.originalname,
+			tmpPath: file.path,
+			state: 'complete',
+			loaded: file.size,
+			total: file.size,
+		}),
+	);
+
+	const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
+
+	const res = await importFiles({
+		sourceFiles: labeledFiles,
+		importerFlags: {},
+		tmpDirPath: tmpDir,
+	});
+
+	if ('pubId' in options) {
+		const { pubId, method } = options;
+		await writeDocumentToPubDraft(pubId, res.doc, { method });
+
+		return { status: 200, body: { doc: res.doc } };
+	}
+
+	const { communityId, pubCreateParams } = options;
+	const pub = await createPub({
+		communityId,
+		...pubCreateParams,
+	});
+
+	await writeDocumentToPubDraft(pub.id, res.doc);
+
+	return { status: 201, body: { doc: res.doc, pub: pub.toJSON() } };
+}
 
 const s = initServer();
 
@@ -334,34 +397,42 @@ export const pubServer = s.router(contract.pub, {
 			handler: async ({ req, body, files }) => {
 				const community = await ensureUserIsCommunityAdmin(req);
 
-				const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
-					(file): BaseSourceFile & { tmpPath: string } => ({
-						clientPath: file.filename ?? file.originalname,
-						tmpPath: file.path,
-						state: 'complete',
-						loaded: file.size,
-						total: file.size,
-					}),
-				);
-
-				const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
-
-				const res = await importFiles({
-					sourceFiles: labeledFiles,
-					importerFlags: {},
+				const pubCreateParams = omitKeys(body, ['filenames', 'files']);
+				return handleImport({
 					// @ts-expect-error shh
-					tmpDirPath: req.tmpDir,
-				});
-				const createParams = omitKeys(body, ['filenames', 'files']);
-
-				const pub = await createPub({
+					tmpDir: req.tmpDir,
+					files: files as Express.Multer.File[],
 					communityId: community.id,
-					...createParams,
+					pubCreateParams,
 				});
+				// const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
+				// 	(file): BaseSourceFile & { tmpPath: string } => ({
+				// 		clientPath: file.filename ?? file.originalname,
+				// 		tmpPath: file.path,
+				// 		state: 'complete',
+				// 		loaded: file.size,
+				// 		total: file.size,
+				// 	}),
+				// );
 
-				await writeDocumentToPubDraft(pub.id, res.doc);
+				// const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
 
-				return { status: 201, body: { doc: res.doc, pub: pub.toJSON() } };
+				// const res = await importFiles({
+				// 	sourceFiles: labeledFiles,
+				// 	importerFlags: {},
+				// 	// @ts-expect-error shh
+				// 	tmpDirPath: req.tmpDir,
+				// });
+				// const createParams = omitKeys(body, ['filenames', 'files']);
+
+				// const pub = await createPub({
+				// 	communityId: community.id,
+				// 	...createParams,
+				// });
+
+				// await writeDocumentToPubDraft(pub.id, res.doc);
+
+				// return { status: 201, body: { doc: res.doc, pub: pub.toJSON() } };
 			},
 		},
 		importToPub: {
@@ -373,30 +444,38 @@ export const pubServer = s.router(contract.pub, {
 			handler: async ({ req, body, files, params }) => {
 				await ensureUserIsCommunityAdmin(req);
 
-				const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
-					(file): BaseSourceFile & { tmpPath: string } => ({
-						clientPath: file.filename ?? file.originalname,
-						tmpPath: file.path,
-						state: 'complete',
-						loaded: file.size,
-						total: file.size,
-					}),
-				);
-
-				const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
-
-				const res = await importFiles({
-					sourceFiles: labeledFiles,
-					importerFlags: {},
+				return handleImport({
 					// @ts-expect-error shh
-					tmpDirPath: req.tmpDir,
+					tmpDir: req.tmpDir,
+					files: files as Express.Multer.File[],
+					pubId: params.pubId,
+					method: body.method,
 				});
+				// //
+				// const sourceFilesFromNormalFiles = (files as Express.Multer.File[]).map(
+				// 	(file): BaseSourceFile & { tmpPath: string } => ({
+				// 		clientPath: file.filename ?? file.originalname,
+				// 		tmpPath: file.path,
+				// 		state: 'complete',
+				// 		loaded: file.size,
+				// 		total: file.size,
+				// 	}),
+				// );
 
-				const { pubId } = params;
+				// const labeledFiles = labelFiles(sourceFilesFromNormalFiles);
 
-				await writeDocumentToPubDraft(pubId, res.doc, { method: body.method });
+				// const res = await importFiles({
+				// 	sourceFiles: labeledFiles,
+				// 	importerFlags: {},
+				// 	// @ts-expect-error shh
+				// 	tmpDirPath: req.tmpDir,
+				// });
 
-				return { status: 200, body: { doc: res.doc } };
+				// const { pubId } = params;
+
+				// await writeDocumentToPubDraft(pubId, res.doc, { method: body.method });
+
+				// return { status: 200, body: { doc: res.doc } };
 			},
 		},
 	},
