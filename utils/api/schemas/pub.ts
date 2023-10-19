@@ -298,6 +298,7 @@ export const baseWithImport = base
 const pubWithAttributionsSchema = pubSchema.extend({
 	attributions: pubAttributionSchema.array(),
 });
+
 export const fullImportOutput = z.object({ doc: docJsonSchema, pub: pubWithAttributionsSchema });
 export const toPubImportOutput = z.object({ doc: docJsonSchema, pub: pubWithAttributionsSchema });
 
@@ -307,5 +308,5 @@ export const pandocOutputSchema = z.object({
 	doc: docJsonSchema,
 	warnings: z.array(z.any()),
 	pandocErrorOutput: z.string(),
-	proposedMetadata: z.record(z.any()) satisfies z.ZodType<ProposedMetadata>,
+	proposedMetadata: z.record(z.any()), // satisfies z.ZodType<ProposedMetadata>,
 });

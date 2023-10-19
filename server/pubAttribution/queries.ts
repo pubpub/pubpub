@@ -39,7 +39,6 @@ export const createPubAttribution = async ({
 			include: [includeUserModel({ as: 'user', required: false })],
 		}),
 	);
-	console.log({ populatedPubAttribution, newAttribution });
 
 	const populatedPubAttributionJson = populatedPubAttribution.toJSON();
 

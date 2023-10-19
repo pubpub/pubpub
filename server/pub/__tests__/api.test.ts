@@ -789,7 +789,6 @@ describe('/api/pubs/text', () => {
 
 		expect(url).toMatch(/\.png$/);
 
-		console.dir(pub, { depth: 19 });
 		/**
 		 * this tests the metadata inf
 		 */

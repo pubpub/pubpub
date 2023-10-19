@@ -41,6 +41,7 @@ export const createPub = async (
 		...restArgs
 	}: { communityId: string; collectionIds?: string[] | null; slug?: string; [key: string]: any },
 	actorId?: string,
+	including?: ('draft' | 'members' | 'attributions')[],
 ) => {
 	const newPubSlug = slug ? slug.toLowerCase().trim() : generateHash(8);
 	const dateString = getReadableDateInYear(new Date());
@@ -115,9 +116,34 @@ export const createPub = async (
 		},
 	);
 
-	await Promise.all([createPubAttribution, createCollectionPubs, createMember].filter((x) => x));
+	const [attribution, _, member] = await Promise.all([
+		createPubAttribution,
+		createCollectionPubs,
+		createMember,
+	]);
 
 	setPubSearchData(newPub.id);
+
+	switch (true) {
+		case including?.includes('draft'):
+			newPub.draft = draft;
+			break;
+
+		case including?.includes('members'):
+			if (member) {
+				newPub.members = [member];
+			}
+			break;
+
+		case including?.includes('attributions'):
+			if (attribution) {
+				newPub.attributions = [attribution];
+			}
+			break;
+		default:
+			break;
+	}
+
 	return newPub;
 };
 
