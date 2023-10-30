@@ -9,7 +9,7 @@ const c = initContract();
 
 export const communityContract = c.router({
 	update: {
-		path: '/api/community',
+		path: '/api/communities',
 		method: 'PUT',
 		summary: 'Update a community',
 		description: 'Update a community',
