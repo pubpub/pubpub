@@ -19,8 +19,6 @@ import { postToSlackAboutNewCommunity } from 'server/utils/slack';
 import { updateCommunityData } from 'server/utils/search';
 import { defer } from 'server/utils/deferred';
 import { getSpamTagForCommunity } from 'server/spamTag/queries';
-import { Op } from 'sequelize';
-import { getPermissions } from './permissions';
 
 export const getCommunity = (communityId: string) => {
 	return Community.findOne({
@@ -236,61 +234,4 @@ export const iterAllCommunities = async function* (limit = 10): AsyncGenerator<C
 		if (communities.length < limit) break;
 		offset += limit;
 	}
-};
-
-/**
- * Finds a community by its domain or subdomain.
- * @param domain - The domain or subdomain of the community to find.
- * @returns A Promise that resolves to the community object if found, or null if not found.
- */
-export const findCommunityByDomain = async (domain: string) => {
-	const community = await Community.findOne({
-		where: {
-			[Op.or]: [
-				{
-					domain,
-				},
-				{
-					subdomain: domain,
-				},
-			],
-		},
-	});
-	return community;
-};
-
-/**
- * Finds a community by its hostname.
- * @param {string} hostname - The hostname of the community to find.
- * @returns {Promise<Community | null>} - A promise that resolves to the community object, or null if not found.
- */
-export const findCommunityByHostname = async (hostname: string) => {
-	const domainOrSubmdomain = hostname.replace(/\.pubpub\.org$|\.duqduq\.org$/, '');
-	const community = await findCommunityByDomain(domainOrSubmdomain);
-	return community;
-};
-
-/**
- * Checks if the user is an admin of the community associated with the given hostname.
- * @param req - An object containing at least the hostname and user information. Usually an Express request object.
- * @param req.hostname - The hostname of the community to check.
- * @param req.user - An optional object containing the user ID.
- * @param req.user.id - The ID of the user to check.
- * @returns A tuple containing a boolean indicating if the user is an admin and the community object.
- */
-export const isCommunityAdmin = async (req: {
-	hostname: string;
-	user?: {
-		id: string;
-	};
-}) => {
-	const community = await findCommunityByHostname(req.hostname);
-	if (!community) {
-		return [false, null] as const;
-	}
-
-	return [
-		(await getPermissions({ userId: req.user?.id, communityId: community?.id })).admin,
-		community,
-	] as const;
 };

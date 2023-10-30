@@ -4,14 +4,13 @@ import { ForbiddenError } from 'server/utils/errors';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { expect } from 'utils/assert';
 import { contract } from 'utils/api';
-import { getPermissions } from './permissions';
 import {
-	createCommunity,
+	ensureUserIsCommunityAdmin,
 	findCommunityByHostname,
-	getCommunity,
-	isCommunityAdmin,
-	updateCommunity,
-} from './queries';
+} from 'utils/ensureUserIsCommunityAdmin';
+
+import { getPermissions } from './permissions';
+import { createCommunity, getCommunity, updateCommunity } from './queries';
 
 const getRequestIds = createGetRequestIds<{
 	communityId?: string | null;
@@ -29,10 +28,7 @@ export const communityServer = s.router(contract.community, {
 		};
 	},
 	getSelf: async ({ req }) => {
-		const [canAdmin, community] = await isCommunityAdmin(req);
-		if (!canAdmin) {
-			throw new ForbiddenError();
-		}
+		const community = await ensureUserIsCommunityAdmin(req);
 
 		return {
 			body: community,
