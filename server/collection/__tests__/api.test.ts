@@ -88,10 +88,15 @@ const models = modelize`
 			}
 		}
 	}
-	Community {
+	Community anotherCommunity {
 		Member {
 			permissions: "admin"
 			User anotherAdmin {}
+		}
+		Collection {
+			title: "AAAAA"
+			kind: "issue"
+			slug: "aaaaa"
 		}
 	}
 	User guest {}
@@ -321,6 +326,19 @@ describe('GET /api/collections', () => {
 		const agent = await login(nonAdmin);
 
 		await agent.get('/api/collections').expect(403); // Forbidden
+	});
+
+	it('should not return collections from other communities', async () => {
+		const { anotherAdmin, anotherCommunity } = models;
+		const agent = await login(anotherAdmin);
+
+		const { body } = await agent
+			.get('/api/collections')
+			.set('Host', getHost(anotherCommunity))
+			.expect(200);
+
+		expect(body).toBeInstanceOf(Array);
+		expect(body.length).toEqual(1);
 	});
 
 	it('should return collections with default query parameters', async () => {

@@ -2,11 +2,11 @@ import { z, ZodRawShape, ZodTypeAny } from 'zod';
 
 import { Op, WhereOptions } from 'sequelize';
 
-const plainAndArrayFilter = <Z extends ZodTypeAny>(schema: Z) =>
-	z.union([schema, z.array(schema)]).optional();
+const plainAndBooleanAndArrayFilter = <Z extends ZodTypeAny>(schema: Z) =>
+	z.union([schema, z.boolean(), z.array(schema)]).optional();
 
 const dateNumberFilter = <Z extends ZodTypeAny>(fieldSchema: Z) =>
-	plainAndArrayFilter(
+	plainAndBooleanAndArrayFilter(
 		z.union([
 			fieldSchema,
 			z.object({
@@ -23,7 +23,7 @@ const dateNumberFilter = <Z extends ZodTypeAny>(fieldSchema: Z) =>
 const booleanFilter = z.boolean();
 
 const stringFilter = <Z extends z.ZodString>(schema: Z) =>
-	plainAndArrayFilter(
+	plainAndBooleanAndArrayFilter(
 		z.union([
 			schema,
 			z.union([
@@ -46,7 +46,7 @@ const stringFilter = <Z extends z.ZodString>(schema: Z) =>
 		]),
 	).optional();
 
-const enumFilter = <Z extends z.ZodEnum<any>>(schema: Z) => plainAndArrayFilter(schema);
+const enumFilter = <Z extends z.ZodEnum<any>>(schema: Z) => plainAndBooleanAndArrayFilter(schema);
 
 export const generateFilterSchema = <Z extends z.ZodType<any>>(baseSchema: Z) => {
 	/**
@@ -131,17 +131,9 @@ type ObjectFilter<T extends Record<string, any>> = {
 	[K in keyof T]?: FilterType<z.ZodType<T[K], any, any>>;
 };
 
-/**
- * AAAAA
- */
 type FilterT<T> = z.ZodType<FilterType<T>>;
-/**
- * test
- */
+
 export const generateFilterForModelSchema = <Z extends z.ZodObject<any>>(modelSchema: Z) => {
-	/**
-	 * test
-	 */
 	const result = generateFilterSchema(
 		modelSchema.extend({
 			createdAt: z.date(),
@@ -162,6 +154,14 @@ type ZodTypes =
 const buildFieldWhereClause = <T extends ZodTypes>(filterField: FilterType<T>) => {
 	if (Array.isArray(filterField)) {
 		return { [Op.or]: filterField.map(buildFieldWhereClause) };
+	}
+
+	if (typeof filterField === 'boolean') {
+		if (filterField) {
+			return { [Op.not]: null };
+		}
+
+		return { [Op.is]: null };
 	}
 
 	if (typeof filterField === 'object') {
