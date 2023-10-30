@@ -322,10 +322,10 @@ describe('GET /api/collections', () => {
 	it('should get a collection by id', async () => {});
 
 	it('should throw a ForbiddenError for non-admin users', async () => {
-		const { nonAdmin } = models;
+		const { nonAdmin, community } = models;
 		const agent = await login(nonAdmin);
 
-		await agent.get('/api/collections').expect(403); // Forbidden
+		await agent.get('/api/collections').set('Host', getHost(community)).expect(403); // Forbidden
 	});
 
 	it('should not return collections from other communities', async () => {
