@@ -99,6 +99,7 @@ if (process.env.NODE_ENV === 'production') {
 		integrations: [
 			new Sentry.Integrations.Http({ tracing: true }),
 			new Sentry.Integrations.Postgres(),
+			new Sentry.Integrations.Express({ app }),
 		],
 	});
 	app.use(Sentry.Handlers.requestHandler({ user: ['id', 'slug'] }));
