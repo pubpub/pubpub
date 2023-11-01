@@ -1,13 +1,10 @@
 import { initServer } from '@ts-rest/express';
-import { ForbiddenError } from 'server/utils/errors';
+import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { expect } from 'utils/assert';
 import { contract } from 'utils/api';
-import {
-	ensureUserIsCommunityAdmin,
-	findCommunityByHostname,
-} from 'utils/ensureUserIsCommunityAdmin';
+import { findCommunityByHostname } from 'utils/ensureUserIsCommunityAdmin';
 
 import { getPermissions } from './permissions';
 import { createCommunity, getCommunity, updateCommunity } from './queries';
@@ -19,33 +16,21 @@ const getRequestIds = createGetRequestIds<{
 const s = initServer();
 
 export const communityServer = s.router(contract.community, {
-	getId: async ({ req }) => {
-		const community = await findCommunityByHostname(req.hostname);
+	getCommunities: async ({ req }) => {
+		const community = expect(await findCommunityByHostname(req.hostname));
 
 		return {
-			body: expect(community).id,
+			body: [community],
 			status: 200,
 		};
 	},
-	getSelf: async ({ req }) => {
-		const community = await ensureUserIsCommunityAdmin(req);
+	get: async ({ params }) => {
+		const community = await getCommunity(params.id);
 
-		return {
-			body: community,
-			status: 200,
-		};
-	},
-	get: async ({ params, req }) => {
-		const permissions = await getPermissions({
-			communityId: params.id,
-			userId: req.user?.id || null,
-		});
-
-		if (!permissions.update) {
-			throw new ForbiddenError();
+		if (!community) {
+			throw new NotFoundError();
 		}
 
-		const community = expect(await getCommunity(params.id));
 		return {
 			body: community,
 			status: 200,
