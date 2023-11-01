@@ -38,6 +38,74 @@ const s3Client = createPubPubS3Client({
 	ACL: 'public-read',
 });
 
+const isDefaultMimeType = (mimeType: string | undefined): boolean =>
+	mimeType === 'application/octet-stream' || !mimeType;
+
+const defaultFilenames = ['blob', 'file'] as const;
+
+const isDefaultFileName = (name: string | undefined): boolean =>
+	defaultFilenames.some((defaultName) => name === defaultName) || !name;
+
+const inferMimeTypeFromFileName = (filename: string | undefined): string => {
+	if (!filename) {
+		return 'application/octet-stream';
+	}
+	const inferredMime = mime.lookup(filename);
+	return inferredMime || 'application/octet-stream';
+};
+
+const generateFileNameFromMimeType = (mimeType: string): string =>
+	`${uuid()}.${mime.extension(mimeType)}`;
+
+const validateMimeType = (mimeType: string): void => {
+	try {
+		mimeTypeSchema.parse(mimeType);
+	} catch (err: any) {
+		console.log(err);
+		throw new BadRequestError(new Error(`Invalid mime type: ${mimeType}`));
+	}
+};
+
+const validateFileNameAndMimeType = ({
+	filename,
+	mimeType,
+}: {
+	filename?: string;
+	mimeType?: string;
+}): { filename: string; mimeType: string } => {
+	switch (true) {
+		/**
+		 * no filename or mimetype provided, exit
+		 */
+		case isDefaultMimeType(mimeType) && isDefaultFileName(filename): {
+			throw new BadRequestError(new Error('No filename or mimetype provided'));
+		}
+		/**
+		 * no mimetype provided, infer from filename
+		 */
+		case isDefaultMimeType(mimeType) && !isDefaultFileName(filename): {
+			mimeType = inferMimeTypeFromFileName(filename);
+			break;
+		}
+		/**
+		 * mimetype provided, no filename provided, generate filename from mimetype
+		 */
+		case !isDefaultMimeType(mimeType) && isDefaultFileName(filename): {
+			filename = generateFileNameFromMimeType(mimeType as string);
+			break;
+		}
+		/**
+		 * both mimetype and filename provided, do nothing
+		 */
+		default:
+			break;
+	}
+
+	validateMimeType(mimeType as string);
+
+	return { filename: filename as string, mimeType: mimeType as string };
+};
+
 export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> = {
 	handler: async ({ req }) => {
 		await ensureUserIsCommunityAdmin(req);
@@ -46,16 +114,16 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 
 		const result: Promise<{ url: string; key: string; size: number }> = new Promise(
 			(resolve, reject) => {
-				let name: string | undefined;
-				let mimeType: string | undefined;
+				let explicitlyPassedFilename: string | undefined;
+				let explicitlyPassedMimeType: string | undefined;
 
 				busboy.on('field', (fieldname, value) => {
 					switch (fieldname) {
 						case 'name':
-							name = value;
+							explicitlyPassedFilename = value;
 							break;
 						case 'mimeType':
-							mimeType = value;
+							explicitlyPassedMimeType = value;
 							break;
 						default:
 							reject(
@@ -66,58 +134,36 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 					}
 				});
 
-				busboy.on('file', async (fieldname, file, { filename, mimeType: fileMimeType }) => {
-					filename = name ?? filename;
-					fileMimeType = mimeType ?? fileMimeType;
-
-					const isDefaultMimeType =
-						fileMimeType === 'application/octet-stream' || !fileMimeType;
-
-					const isDefaultFileName = filename === 'blob' || !filename;
-
-					if (!filename && !name) {
-						reject(
-							new Error(
-								'Could not find filename! Check to see whether you included it before the file in the formdata _before_ the file, fields included after the file field are ignored.',
-							),
-						);
-					}
-
-					// if no filenname is given, e.g. when you send up the result of fs.readFileSync, we need to try to guess the file extension
-					// this does not really affect the upload, but otherwise we get a default '.png' extension, which is not great
-					if (isDefaultMimeType && isDefaultFileName) {
-						const inferredMime = mime.contentType(filename);
-						fileMimeType = inferredMime || 'application/octet-stream';
-					}
-
-					if (!isDefaultMimeType && isDefaultFileName) {
-						filename = `${uuid()}.${mime.extension(fileMimeType)}`;
-					}
-
-					/**
-					 * Do manual mimetype parsing, since ts-rest middelware cannot catch it
-					 */
-					if (!isDefaultMimeType) {
+				busboy.on(
+					'file',
+					async (
+						fieldname,
+						file,
+						{ filename: filenameFromFile, mimeType: mimeTypeFromFile },
+					) => {
 						try {
-							mimeTypeSchema.parse(fileMimeType);
+							const { filename, mimeType } = validateFileNameAndMimeType({
+								filename: explicitlyPassedFilename ?? filenameFromFile,
+								mimeType: explicitlyPassedMimeType ?? mimeTypeFromFile,
+							});
+
+							const key = generateFileNameForUpload(filename);
+
+							let size = 0;
+							await s3Client.uploadFileSplit(key, file, {
+								contentType:
+									mimeType === 'application/octet-stream' ? undefined : mimeType,
+								progressCallback: (progress) => {
+									size = progress.loaded ?? 0;
+								},
+							});
+
+							resolve({ url: `https://assets.pubpub.org/${key}`, size, key });
 						} catch (err: any) {
 							reject(err);
 						}
-					}
-
-					const key = generateFileNameForUpload(filename);
-
-					let size = 0;
-					await s3Client.uploadFileSplit(key, file, {
-						contentType:
-							fileMimeType === 'application/octet-stream' ? undefined : fileMimeType,
-						progressCallback: (progress) => {
-							size = progress.loaded ?? 0;
-						},
-					});
-
-					resolve({ url: `https://assets.pubpub.org/${key}`, size, key });
-				});
+					},
+				);
 			},
 		);
 

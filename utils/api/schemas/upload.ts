@@ -27,9 +27,9 @@ export const allowedMimeTypes = [
 const fileSchema = z.union([z.string(), z.custom<File | Blob>()]);
 
 export const mimeTypeSchema = z.union([z.enum(allowedMimeTypes), z.string().regex(/image\/.*/)], {
-	invalid_type_error: `Invalid mime type. Allowed types are: ${allowedMimeTypes.join(
-		', ',
-	)} or image/*`,
+	// invalid_type_error: `Invalid mime type. Allowed types are: ${allowedMimeTypes.join(
+	// 	', ',
+	// )} or image/*`,
 });
 
 export const uploadSchema = z.object({
