@@ -5,7 +5,7 @@ import { generateHash } from 'utils/hashes';
 import uuid from 'uuid';
 
 import { createPubPubS3Client } from 'server/utils/s3';
-import busboyC from 'busboy';
+import bb from 'busboy';
 import mime from 'mime-types';
 import { BadRequestError } from 'server/utils/errors';
 import { mimeTypeSchema } from 'utils/api/schemas/upload';
@@ -61,8 +61,7 @@ const validateMimeType = (mimeType: string): void => {
 	try {
 		mimeTypeSchema.parse(mimeType);
 	} catch (err: any) {
-		console.log(err);
-		throw new BadRequestError(new Error(`Invalid mime type: ${mimeType}`));
+		throw new Error(`Invalid mime type: ${mimeType}`);
 	}
 };
 
@@ -78,7 +77,7 @@ const validateFileNameAndMimeType = ({
 		 * no filename or mimetype provided, exit
 		 */
 		case isDefaultMimeType(mimeType) && isDefaultFileName(filename): {
-			throw new BadRequestError(new Error('No filename or mimetype provided'));
+			throw new Error('No filename or mimetype provided');
 		}
 		/**
 		 * no mimetype provided, infer from filename
@@ -110,7 +109,7 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 	handler: async ({ req }) => {
 		await ensureUserIsCommunityAdmin(req);
 
-		const busboy = busboyC({ headers: req.headers });
+		const busboy = bb({ headers: req.headers });
 
 		const result: Promise<{ url: string; key: string; size: number }> = new Promise(
 			(resolve, reject) => {
