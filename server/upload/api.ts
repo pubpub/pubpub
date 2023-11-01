@@ -7,9 +7,9 @@ import uuid from 'uuid';
 import { createPubPubS3Client } from 'server/utils/s3';
 import busboyC from 'busboy';
 import mime from 'mime-types';
-import { BadRequestError, ForbiddenError } from 'server/utils/errors';
-import { isCommunityAdmin } from 'server/community/queries';
+import { BadRequestError } from 'server/utils/errors';
 import { mimeTypeSchema } from 'utils/api/schemas/upload';
+import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 
 export const generateFileNameForUpload = (file: string) => {
 	const folderName = generateHash(8);
@@ -27,7 +27,7 @@ if (
 	process.env.NODE_ENV === 'test' &&
 	(!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY)
 ) {
-	// eslint-disable global-require
+	// eslint-disable-next-line global-require
 	require('../../config');
 }
 
@@ -40,11 +40,7 @@ const s3Client = createPubPubS3Client({
 
 export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> = {
 	handler: async ({ req }) => {
-		const [isAdmin] = await isCommunityAdmin(req);
-
-		if (!isAdmin) {
-			throw new ForbiddenError();
-		}
+		await ensureUserIsCommunityAdmin(req);
 
 		const busboy = busboyC({ headers: req.headers });
 

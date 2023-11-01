@@ -70,7 +70,7 @@ describe('POST /api/upload', () => {
 		const testContent = 'test file';
 
 		const result = await adminAgent
-			.post('/api/smupload')
+			.post('/api/upload')
 			.attach('file', Buffer.from(testContent), {
 				filename: 'test file name.html',
 				contentType: 'text/html',
@@ -90,22 +90,17 @@ describe('POST /api/upload', () => {
 		const pdfFile = path.join(__dirname, 'test.pdf');
 		const pdfFileContent = await fs.readFile(pdfFile);
 
-		const formdata = new FormData();
-		// @ts-expect-error app does exist here, typing is wrong
-		const port = adminAgent.app.address().port;
-		formdata.append('name', 'test.pdf');
-		formdata.append('file', new Blob([pdfFileContent]));
-
-		const result = await fetch(`http://localhost:${port}/api/upload`, {
-			method: 'POST',
-			body: formdata,
-		});
+		const result = await adminAgent
+			.post('/api/upload')
+			.attach('file', pdfFileContent, {
+				filename: 'test.pdf',
+				contentType: 'application/pdf',
+			})
+			.expect(201);
 
 		expect(result.status).toEqual(201);
 
-		const body = await result.json();
-
-		console.log(body);
+		const body = result.body;
 		expect(body.size).toBeGreaterThan(20_000_000);
 		const res = await fetch(body.url, { method: 'HEAD' });
 
