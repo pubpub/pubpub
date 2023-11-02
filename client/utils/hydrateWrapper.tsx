@@ -45,8 +45,6 @@ export const hydrateWrapper = (Component) => {
 				dsn: 'https://28b2ae6e574a49dfbc894d8793b36f0d@o31718.ingest.sentry.io/4504532925349888',
 				environment: isProd ? 'prod' : 'dev',
 				release: appCommit,
-				tracesSampleRate: 1.0,
-				integrations: [new Sentry.BrowserTracing()],
 			});
 			Sentry.setUser({
 				id: initialData.loginData.id,
