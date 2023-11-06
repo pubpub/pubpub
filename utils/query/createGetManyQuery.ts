@@ -2,7 +2,7 @@ import { z } from 'zod';
 import * as types from 'types';
 import { generateFilterForModelSchema } from './filter';
 
-function nonRelationFields(schema: z.ZodObject<any>) {
+export function nonRelationFields(schema: z.ZodObject<any>) {
 	return Object.entries(schema.shape)
 		.map(([key, value]) => {
 			if (value instanceof z.ZodOptional) {
@@ -37,9 +37,6 @@ export function createGetManyQueryOptions<
 	] = [],
 	OmitOptions extends { [K in keyof Schema['_output'] & string]?: true } = {},
 	SortDefault extends SortOptions[number] | 'createdAt' | 'updatedAt' = 'createdAt',
-	OmittedSchema extends z.ZodObject<Omit<Schema['shape'], keyof OmitOptions>> = z.ZodObject<
-		Omit<Schema['shape'], keyof OmitOptions>
-	>,
 	NonRelationFields extends [
 		Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>,
 		...Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>[],
@@ -47,6 +44,9 @@ export function createGetManyQueryOptions<
 		Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>,
 		...Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>[],
 	],
+	OmittedSchema extends z.ZodObject<
+		Omit<Pick<Schema['shape'], NonRelationFields[number]>, keyof OmitOptions>
+	> = z.ZodObject<Omit<Pick<Schema['shape'], NonRelationFields[number]>, keyof OmitOptions>>,
 >(
 	schema: Schema,
 	options: {
@@ -100,6 +100,20 @@ export function createGetManyQueryOptions<
 
 	const omit = options.omitFromFilter ?? {};
 	const includeOptions = options?.include?.options;
+
+	const nonAssocFields = nonRelationFields(schema).reduce(
+		(acc, curr) => ({ ...acc, [curr]: true }),
+		{} as { [K in NonRelationFields[number]]: true },
+	);
+
+	const filterOptions = generateFilterForModelSchema(
+		/**
+		 * This is done to make sure that the omitted fields are not included in the filter
+		 * Just doing `.omit` will not provide proper type inference
+		 */
+		schema.omit({ ...omit }).pick(nonAssocFields) as unknown as OmittedSchema,
+	);
+
 	return z
 		.object({
 			/**
@@ -134,13 +148,7 @@ export function createGetManyQueryOptions<
 			 * String fields can take the following types as options
 			 * - `string` - a string that must match exactly
 			 */
-			filter: generateFilterForModelSchema(
-				/**
-				 * This is done to make sure that the omitted fields are not included in the filter
-				 * Just doing `.omit` will not provide proper type inference
-				 */
-				schema.omit(omit) as unknown as OmittedSchema,
-			).optional(),
+			filter: filterOptions.optional(),
 			/**
 			 * Include certain relations
 			 */
@@ -158,5 +166,6 @@ export function createGetManyQueryOptions<
 			 */
 			attributes: z.array(z.enum(nonRelationFields(schema) as NonRelationFields)).optional(),
 		})
+		.and(filterOptions)
 		.optional();
 }

@@ -337,4 +337,14 @@ describe('GET /api/pages', () => {
 
 		expect(body[0]?.slug).toEqual('ew');
 	});
+
+	it('should be able to filter without the filter query parameter', async () => {
+		const [{ body: slugBod }, { body: titleBod }] = await Promise.all([
+			adminAgent.get(`/api/pages?slug=ew`).expect(200),
+			adminAgent.get(`/api/pages?title=Page`).expect(200),
+		]);
+
+		expect(slugBod[0]?.slug).toEqual('ew');
+		expect(titleBod[0]?.title).toEqual('Page');
+	});
 });

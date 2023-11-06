@@ -20,12 +20,25 @@ export const queryMany =
 
 		const community = await ensureUserIsCommunityAdmin(req);
 
-		const { limit, offset, attributes, order, sort, filter, include } =
+		const { limit, offset, attributes, order, sort, filter, include, ...rest } =
 			(query as GetManyQueryAny) ?? {};
 
-		const modelHasCommunityId = 'communityId' in model.getAttributes();
+		console.log(query);
+		const modelAttributes = model.getAttributes();
 
-		const whereClause = filter && buildWhereClause(filter);
+		const modelHasCommunityId = 'communityId' in modelAttributes;
+
+		// users can supply things like ?slug=foo instead of ?filter={slug: 'foo'}, we filter those out here
+		const restQueryFilterParams = rest
+			? Object.fromEntries(Object.entries(rest).filter(([k]) => k in modelAttributes))
+			: {};
+
+		const whereClause =
+			(filter || restQueryFilterParams) &&
+			buildWhereClause({
+				...restQueryFilterParams,
+				...filter,
+			});
 		const result = (await model.findAll({
 			where: {
 				// @ts-expect-error FIXME: The 'filter' type does not work well generically
