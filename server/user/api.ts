@@ -45,14 +45,14 @@ app.post('/api/users', (req, res) => {
 });
 
 app.get(
-	'/api/users',
+	'/api/users/:id',
 	wrap(async (req, res) => {
-		const { suggestionUserId } = req.query;
-		if (!suggestionUserId) {
+		const { id } = req.params;
+		if (!id) {
 			throw new NotFoundError();
 		}
 
-		const userInfo = await getSuggestedEditsUserInfo(suggestionUserId);
+		const userInfo = await getSuggestedEditsUserInfo(id);
 		if (!userInfo) {
 			throw new NotFoundError();
 		}
