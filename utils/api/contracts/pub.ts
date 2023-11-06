@@ -2,12 +2,15 @@ import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
+import { createGetManyQueryOptions, createGetQueryOptions } from 'utils/query';
+
 import { resourceSchema } from '../schemas/resource';
 import {
 	getManyQuerySchema,
 	pubPostSchema,
 	pubPutSchema,
 	pubSchema,
+	pubWithRelationsSchema,
 	resourceASTSchema,
 	sanitizedPubSchema,
 } from '../schemas/pub';
@@ -17,6 +20,64 @@ extendZodWithOpenApi(z);
 const c = initContract();
 
 export const pubContract = c.router({
+	get: {
+		path: '/api/pubs/:id',
+		method: 'GET',
+		summary: "Get a pub by it's id",
+		description: 'Get a pub',
+		pathParams: z.object({
+			id: z.string().uuid(),
+		}),
+		query: createGetQueryOptions(pubWithRelationsSchema, {
+			include: {
+				options: [
+					'attributions',
+					'collectionPubs',
+					'community',
+					'draft',
+					'members',
+					'releases',
+					'reviews',
+					'submission',
+					'inboundEdges',
+					'outboundEdges',
+				],
+				defaults: ['attributions', 'draft'],
+			},
+		}),
+		responses: {
+			200: pubWithRelationsSchema,
+		},
+	},
+	getMany: {
+		path: '/api/pubs',
+		method: 'GET',
+		summary: 'Get many pubs',
+		description: 'Get many pubs',
+		query: createGetManyQueryOptions(pubWithRelationsSchema, {
+			sort: {
+				options: ['title', 'slug'],
+			},
+			include: {
+				options: [
+					'attributions',
+					'collectionPubs',
+					'community',
+					'draft',
+					'members',
+					'releases',
+					'reviews',
+					'submission',
+					'inboundEdges',
+					'outboundEdges',
+				],
+				defaults: ['attributions', 'draft'],
+			},
+		}),
+		responses: {
+			200: z.array(pubWithRelationsSchema),
+		},
+	},
 	create: {
 		path: '/api/pubs',
 		method: 'POST',
@@ -51,11 +112,12 @@ export const pubContract = c.router({
 			200: z.object({}),
 		},
 	},
-	getMany: {
+	queryMany: {
 		path: '/api/pubs/many',
 		method: 'POST',
 		summary: 'Search for Pubs',
-		description: 'Get many pubs',
+		description:
+			'Search for many pubs. This is an older alternative to the more standardised `GET /api/pubs`, offering different options.',
 		body: getManyQuerySchema,
 		responses: {
 			200: z.object({

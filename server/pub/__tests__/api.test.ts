@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
 import uuid from 'uuid/v4';
 
+import { pubSchema } from 'utils/api/schemas/pub';
 import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
 import { CollectionPub, Pub, Draft } from 'server/models';
 import { issueCreatePubToken } from '../tokens';
@@ -19,6 +20,10 @@ const models = modelize`
             permissions: "edit"
             User communityMember {}
         }
+		Member {
+			permissions: "admin"
+			User admin {}
+		}
 		Collection collection {
             Member {
                 permissions: "manage"
@@ -38,6 +43,17 @@ const models = modelize`
                 }
             }
         }
+		Pub wowPub {
+			title: "Wow, a pub"
+			doi: "10.21428/wow"
+		}
+		Pub ewPub {
+			title: "Ew, another pub"
+			doi: "10.21428/ew"
+			PubAttribution {
+				name: "John Schmoe"
+			}
+		}
         Collection defaultCollection {
             id: ${defaultCollectionId}
 		}
@@ -61,6 +77,10 @@ const models = modelize`
                 permissions: "manage"
                 User nefariousUser {}
             }
+		}
+		Member {
+			permissions: "admin"
+			User nefariousAdmin {}
 		}
 	}
 	Community permissiveCommunity {}
@@ -270,5 +290,231 @@ describe('/api/pubs', () => {
 		const { alsoDestroyThisPub, communityManager } = models;
 		const agent = await login(communityManager);
 		await agent.delete('/api/pubs').send({ pubId: alsoDestroyThisPub.id }).expect(200);
+	});
+});
+
+const getHost = (community: any) => `${community.subdomain}.pubpub.org`;
+
+let adminAgent: Awaited<ReturnType<typeof login>>;
+
+describe('GET /api/pubs', () => {
+	beforeEach(async () => {
+		adminAgent = await login(models.admin);
+		adminAgent.set('Host', getHost(models.community));
+	});
+
+	it('should get a pub by id', async () => {
+		const { wowPub } = models;
+
+		const { body } = await adminAgent.get(`/api/pubs/${wowPub.id}`).expect(200);
+
+		expect(body.title).toEqual(wowPub.title);
+	});
+
+	it('should be able to include the community in the get response, but not do so by default', async () => {
+		const { wowPub, community } = models;
+
+		const { body } = await adminAgent.get(`/api/pubs/${wowPub.id}`).expect(200);
+
+		expect(body.community).toBeUndefined();
+
+		const { body: bodyWithCommunity } = await adminAgent
+			.get(`/api/pubs/${wowPub.id}?include=${JSON.stringify(['community'])}`)
+			.expect(200);
+
+		expect(bodyWithCommunity.community).toBeDefined();
+		expect(bodyWithCommunity.community.id).toEqual(community.id);
+	});
+
+	it('should throw a ForbiddenError for non-admin users', async () => {
+		const { communityMember } = models;
+		const agent = await login(communityMember);
+
+		await agent.get('/api/pubs').set('Host', getHost(models.community)).expect(403); // Forbidden
+	});
+
+	it('should only return pubs from your community', async () => {
+		const { nefariousAdmin, nefariousCommunity } = models;
+		const agent = await login(nefariousAdmin);
+
+		const { body } = await agent
+			.get('/api/pubs')
+			.set('Host', getHost(nefariousCommunity))
+			.expect(200);
+
+		expect(body).toBeInstanceOf(Array);
+		expect(body.length).toEqual(0);
+	});
+
+	it('should return pubs with default query parameters', async () => {
+		const { admin, community } = models;
+		const agent = await login(admin);
+
+		const { body } = await agent.get('/api/pubs').set('Host', getHost(community)).expect(200);
+
+		expect(body).toBeInstanceOf(Array);
+		expect(body.length).toBeLessThanOrEqual(10); // default limit
+		expect(body.length).toBeGreaterThanOrEqual(1);
+		// Additional assertions based on default sort, order, etc.
+	});
+
+	it('should return pubs with custom query parameters', async () => {
+		const { admin, community } = models;
+		const agent = await login(admin);
+
+		const { body } = await agent
+			.get('/api/pubs?limit=5&offset=5&sort=updatedAt&order=ASC')
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(body).toBeInstanceOf(Array);
+		expect(body.length).toBeLessThanOrEqual(5);
+		// Additional assertions based on custom sort, order, etc.
+	});
+
+	it('should return pubs with a specific title', async () => {
+		const { admin, community } = models;
+		const agent = await login(admin);
+
+		const { body } = await agent
+			.get(
+				`/api/pubs?filter=${encodeURIComponent(
+					JSON.stringify({ title: { contains: 'Wow' } }),
+				)}`,
+			)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(body).toBeInstanceOf(Array);
+		expect(body.length).toBeGreaterThanOrEqual(1);
+		body.forEach((pub) => {
+			expect(pub.title).toBe('Wow, a pub');
+		});
+	});
+	it('should return pubs with specified includes', async () => {
+		const { admin, community } = models;
+		const agent = await login(admin);
+
+		const { body } = await agent
+			.get('/api/pubs?include[]=attributions&include[]=members')
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(body).toBeInstanceOf(Array);
+		expect(body.length).toBeGreaterThanOrEqual(1);
+		body.forEach((pub) => {
+			expect(pub).toHaveProperty('attributions');
+			expect(pub).toHaveProperty('members');
+			expect(pub).not.toHaveProperty('pubs');
+			expect(pub).not.toHaveProperty('page');
+		});
+
+		const ew = body.find((pub) => pub.title === 'Ew, another pub');
+
+		expect(ew).toHaveProperty('attributions');
+		expect(ew.attributions[0].name).toBe('John Schmoe');
+	});
+	it('should return pubs that match the expected schema', async () => {
+		const { body } = await adminAgent.get('/api/pubs').expect(200);
+
+		body.forEach((pub) => {
+			expect(() => pubSchema.parse(pub)).not.toThrow();
+		});
+	});
+
+	it('should order pubs differently for different sort parameters', async () => {
+		const { admin, community } = models;
+		const agent = await login(admin);
+
+		const { body: orderByTitle } = await agent
+			.get('/api/pubs?sort=title')
+			.set('Host', getHost(community))
+			.expect(200);
+
+		const { body: orderByUpdatedAt } = await agent
+			.get('/api/pubs?sort=updatedAt')
+			.set('Host', getHost(community))
+			.expect(200);
+
+		// Assuming IDs are unique and can be used to differentiate pubs
+		expect(orderByTitle[0].id).not.toEqual(orderByUpdatedAt[0].id);
+	});
+
+	it('should reverse the order of pubs when changing sort order', async () => {
+		const { admin, community } = models;
+		const agent = await login(admin);
+
+		const [{ body: orderAsc }, { body: orderDesc }] = await Promise.all([
+			agent
+				.get('/api/pubs?sort=slug&order=ASC&limit=100')
+				.set('Host', getHost(community))
+				.expect(200),
+
+			agent
+				.get('/api/pubs?sort=slug&order=DESC&limit=100')
+				.set('Host', getHost(community))
+				.expect(200),
+		]);
+
+		expect(orderAsc.length).toEqual(orderDesc.length);
+		expect(orderAsc.at(0)).toEqual(orderDesc.at(-1));
+		expect(orderAsc.at(1)).toEqual(orderDesc.at(-2));
+	});
+
+	it('should limit the number of pubs returned', async () => {
+		const { admin, community } = models;
+		const agent = await login(admin);
+
+		const limit = 5;
+
+		const { body } = await agent
+			.get(`/api/pubs?limit=${limit}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(body.length).toEqual(limit);
+	});
+
+	it('should return correct pubs with offset and limit', async () => {
+		const { admin, community } = models;
+		const agent = await login(admin);
+
+		const limit = 5;
+		const offset = 5;
+
+		const { body: firstPage } = await agent
+			.get(`/api/pubs?limit=${limit}&offset=${offset}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		const { body: secondPage } = await agent
+			.get(`/api/pubs?limit=${limit}&offset=${offset + limit}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		// Ensure no overlap in pubs between pages
+		const firstPageIds = firstPage.map((c) => c.id);
+		const secondPageIds = secondPage.map((c) => c.id);
+		const intersection = firstPageIds.filter((id) => secondPageIds.includes(id));
+
+		expect(intersection.length).toEqual(0);
+	});
+
+	it('should do some sophisticated filtering', async () => {
+		const { admin, community } = models;
+
+		const agent = await login(admin);
+
+		const filter = {
+			title: [{ contains: 'pub' }],
+			doi: [{ contains: '10.21428' }],
+		};
+
+		const { body } = await agent
+			.get(`/api/pubs?filter=${encodeURIComponent(JSON.stringify(filter))}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(body[0]?.doi).toMatch(/10.21428\/ew.*/);
 	});
 });

@@ -9,6 +9,12 @@ import { collectionPubSchema } from './collectionPub';
 import { collectionSchema } from './collection';
 import { collectionAttributionSchema } from './collectionAttribution';
 import { releaseSchema } from './release';
+import { communitySchema } from './community';
+import { draftSchema } from './draft';
+import { reviewNewSchema } from './review';
+import { memberSchema } from './member';
+import { pubEdgeSchema } from './pubEdge';
+import { submissionSchema } from './submission';
 
 extendZodWithOpenApi(z);
 
@@ -204,4 +210,18 @@ export const resourceASTSchema = z.object({
 	name: z.string(),
 	attributes: z.record(z.string()).optional(),
 	children: z.array(z.any()).optional(),
+});
+
+export const pubWithRelationsSchema = pubSchema.extend({
+	attributions: pubAttributionSchema.array().optional(),
+	collectionPubs: collectionPubSchema.array().optional(),
+	community: communitySchema.optional(),
+	draft: draftSchema.optional(),
+	discussions: discussionSchema.array().optional(),
+	members: memberSchema.array().optional(),
+	releases: releaseSchema.array().optional(),
+	inboundEdges: pubEdgeSchema.array().optional(),
+	outboundEdges: pubEdgeSchema.array().optional(),
+	reviews: reviewNewSchema.array().optional(),
+	submission: submissionSchema.optional(),
 });

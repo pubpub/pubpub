@@ -3,6 +3,7 @@ import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
 import type { ModelCtor } from 'sequelize-typescript';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import type { Express, Response } from 'express-serve-static-core';
+import { SerializedModel } from 'types/serializedModel';
 import { buildWhereClause } from './filter';
 import { createIncludes } from './include';
 import type { GetManyQueryAny } from './createGetManyQuery';
@@ -35,7 +36,9 @@ export const queryMany =
 			limit: limit ?? 10,
 			offset: offset ?? 0,
 			...(include && { include: createIncludes(model, include) }),
-		})) as InstanceType<M>[];
+			// the 'SerializedModel' type is kind of cheating since this isn't actually a serialized model,
+			// but since this is only used to be returned immediately to the client, which forces it to be serialized, it's fine
+		})) as SerializedModel<InstanceType<M>>[];
 
 		return {
 			body: result,

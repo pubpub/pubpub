@@ -319,7 +319,39 @@ it('does not allow normal users to delete a collection', async () => {
 });
 
 describe('GET /api/collections', () => {
-	it('should get a collection by id', async () => {});
+	it('should get a collection by id', async () => {
+		const { confCyberSec, admin, community } = models;
+
+		const agent = await login(admin);
+
+		const { body } = await agent
+			.get(`/api/collections/${confCyberSec.id}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(body.title).toEqual(confCyberSec.title);
+	});
+
+	it('should be able to include the community in the get response, but not do so by default', async () => {
+		const { confCyberSec, admin, community } = models;
+
+		const agent = await login(admin);
+
+		const { body } = await agent
+			.get(`/api/collections/${confCyberSec.id}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(body.community).toBeUndefined();
+
+		const { body: bodyWithCommunity } = await agent
+			.get(`/api/collections/${confCyberSec.id}?include=${JSON.stringify(['community'])}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(bodyWithCommunity.community).toBeDefined();
+		expect(bodyWithCommunity.community.id).toEqual(community.id);
+	});
 
 	it('should throw a ForbiddenError for non-admin users', async () => {
 		const { nonAdmin, community } = models;

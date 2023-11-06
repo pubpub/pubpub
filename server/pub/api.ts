@@ -1,3 +1,8 @@
+import { z } from 'zod';
+import { Request } from 'express';
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { initServer } from '@ts-rest/express';
+
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { PubGetOptions, PubsQuery } from 'types';
@@ -7,16 +12,14 @@ import { generateDoi } from 'server/doi/queries';
 import { assert, expect } from 'utils/assert';
 import { prepareResource } from 'deposit/datacite/deposit';
 import { assertValidResource } from 'deposit/validate';
-
-import { z } from 'zod';
-import { Request } from 'express';
-import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { queryMany, queryOne } from 'utils/query';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
-import { initServer } from '@ts-rest/express';
+
 import { getPubsById, queryPubIds } from './queryMany';
 import { createPub, destroyPub, findPub, updatePub } from './queries';
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+import { Pub } from './model';
 
 extendZodWithOpenApi(z);
 
@@ -80,6 +83,9 @@ const getRequestIds = createGetRequestIds<{
 const s = initServer();
 
 export const pubServer = s.router(contract.pub, {
+	get: queryOne(Pub),
+	getMany: queryMany(Pub),
+
 	create: async ({ body, req }) => {
 		const ids = getRequestIds(body, req.user);
 		const { create, collectionIds } = await canCreatePub(ids);
@@ -122,7 +128,7 @@ export const pubServer = s.router(contract.pub, {
 			body: {},
 		};
 	},
-	getMany: async ({ req }) => {
+	queryMany: async ({ req }) => {
 		const initialData = await getInitialData(req, req.user);
 		const { query: queryPartial, alreadyFetchedPubIds, pubOptions } = getManyQueryParams(req);
 		const { limit } = queryPartial;
