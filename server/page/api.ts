@@ -1,9 +1,12 @@
+import { initServer } from '@ts-rest/express';
+
 import { ForbiddenError } from 'server/utils/errors';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
-import { initServer } from '@ts-rest/express';
+import { queryOne, queryMany } from 'utils/query';
 import { createPage, updatePage, destroyPage } from './queries';
 import { getPermissions } from './permissions';
+import { Page } from './model';
 
 const getRequestIds = createGetRequestIds<{
 	communityId?: string;
@@ -14,6 +17,8 @@ const getRequestIds = createGetRequestIds<{
 const s = initServer();
 
 export const pageServer = s.router(contract.page, {
+	get: queryOne(Page),
+	getMany: queryMany(Page),
 	create: async ({ req, body }) => {
 		const { userId, communityId, pageId } = getRequestIds(body, req.user);
 		const permissions = await getPermissions({

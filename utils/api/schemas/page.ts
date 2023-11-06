@@ -3,6 +3,7 @@ import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { Page } from 'server/models';
 import { layoutBlockSchema } from './layout';
+import { communitySchema } from './community';
 
 extendZodWithOpenApi(z);
 
@@ -54,4 +55,8 @@ export const pageUpdateSchema = pageSchema
 export const pageRemoveSchema = z.object({
 	communityId: z.string().uuid(),
 	pageId: z.string().uuid(),
+});
+
+export const pageWithRelationsSchema = pageSchema.extend({
+	community: communitySchema.optional(),
 });

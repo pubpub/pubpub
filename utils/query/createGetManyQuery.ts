@@ -145,11 +145,11 @@ export function createGetManyQueryOptions<
 			 * Include certain relations
 			 */
 			include:
-				includeOptions && (includeOptions?.length ?? 0) > 1
+				includeOptions && (includeOptions?.length ?? 0) > 0
 					? z
 							.array(z.enum(includeOptions as Exclude<IncludeOptions, []>))
 							.default(options?.include?.defaults ?? [])
-					: z.never(),
+					: z.undefined(),
 
 			/**
 			 * Which non-relation fields to include in the response

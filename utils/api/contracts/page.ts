@@ -1,13 +1,57 @@
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { pageCreateSchema, pageRemoveSchema, pageSchema, pageUpdateSchema } from '../schemas/page';
+import { createGetManyQueryOptions, createGetQueryOptions } from 'utils/query';
+import {
+	pageCreateSchema,
+	pageRemoveSchema,
+	pageSchema,
+	pageUpdateSchema,
+	pageWithRelationsSchema,
+} from '../schemas/page';
 
 extendZodWithOpenApi(z);
 
 const c = initContract();
 
 export const pageContract = c.router({
+	get: {
+		path: '/api/pages/:id',
+		method: 'GET',
+		summary: "Get a page by it's id",
+		description: 'Get a page',
+		pathParams: z.object({
+			id: z.string().uuid(),
+		}),
+		query: createGetQueryOptions(pageWithRelationsSchema, {
+			include: {
+				options: ['community'],
+				defaults: [],
+			},
+		}),
+		responses: {
+			200: pageSchema,
+		},
+	},
+	getMany: {
+		path: '/api/pages',
+		method: 'GET',
+		summary: 'Get many pages',
+		description: 'Get many pages',
+		query: createGetManyQueryOptions(pageWithRelationsSchema, {
+			omitFromFilter: { layout: true },
+			sort: {
+				options: ['title', 'slug'],
+			},
+			include: {
+				options: ['community'],
+				defaults: [],
+			},
+		}),
+		responses: {
+			200: z.array(pageSchema),
+		},
+	},
 	create: {
 		path: '/api/pages',
 		method: 'POST',

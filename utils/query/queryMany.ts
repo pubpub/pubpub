@@ -25,10 +25,11 @@ export const queryMany =
 
 		const modelHasCommunityId = 'communityId' in model.getAttributes();
 
+		const whereClause = filter && buildWhereClause(filter);
 		const result = (await model.findAll({
 			where: {
 				// @ts-expect-error FIXME: The 'filter' type does not work well generically
-				...(filter && buildWhereClause(filter)),
+				...whereClause,
 				...(modelHasCommunityId && { communityId: community.id }),
 			},
 			order: [[sort ?? 'createdAt', order ?? 'DESC']],
