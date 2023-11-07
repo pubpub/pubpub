@@ -23,7 +23,6 @@ export const queryMany =
 		const { limit, offset, attributes, order, sort, filter, include, ...rest } =
 			(query as GetManyQueryAny) ?? {};
 
-		console.log(query);
 		const modelAttributes = model.getAttributes();
 
 		const modelHasCommunityId = 'communityId' in modelAttributes;

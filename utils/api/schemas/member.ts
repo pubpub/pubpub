@@ -1,11 +1,6 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
-import { userSchema } from './user';
-import { communitySchema } from './community';
-import { pubSchema } from './pub';
-import { collectionSchema } from './collection';
-
 extendZodWithOpenApi(z);
 
 export const memberPermissions = ['view', 'edit', 'manage', 'admin'] as const;

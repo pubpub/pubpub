@@ -22,29 +22,31 @@ const dateNumberFilter = <Z extends ZodTypeAny>(fieldSchema: Z) =>
 
 const booleanFilter = z.boolean();
 
-const stringFilter = <Z extends z.ZodString>(schema: Z) =>
-	plainAndBooleanAndArrayFilter(
-		z.union([
-			schema,
-			z.union([
-				z.object({
-					exact: schema.optional(),
-					contains: z.undefined(),
-					invert: z.undefined(),
-				}),
-				z.object({
-					exact: z.undefined(),
-					contains: z.string().optional(),
-					invert: z.boolean().optional(),
-				}),
-				z.object({
-					exact: z.undefined(),
-					contains: z.undefined(),
-					invert: z.undefined(),
-				}),
-			]),
-		]),
-	).optional();
+const stringFilter = <Z extends z.ZodString>(schema: Z, strict?: boolean) =>
+	strict
+		? schema
+		: plainAndBooleanAndArrayFilter(
+				z.union([
+					schema,
+					z.union([
+						z.object({
+							exact: schema.optional(),
+							contains: z.undefined(),
+							invert: z.undefined(),
+						}),
+						z.object({
+							exact: z.undefined(),
+							contains: z.string().optional(),
+							invert: z.boolean().optional(),
+						}),
+						z.object({
+							exact: z.undefined(),
+							contains: z.undefined(),
+							invert: z.undefined(),
+						}),
+					]),
+				]),
+		  ).optional();
 
 const enumFilter = <Z extends z.ZodEnum<any>>(schema: Z) => plainAndBooleanAndArrayFilter(schema);
 
@@ -88,7 +90,7 @@ export const generateFilterSchema = <Z extends z.ZodType<any>>(baseSchema: Z) =>
 		return enumFilter(baseSchema);
 	}
 	if (baseSchema instanceof z.ZodString) {
-		return stringFilter(baseSchema);
+		return stringFilter(baseSchema, baseSchema.isUUID);
 	}
 	if (baseSchema instanceof z.ZodNumber || baseSchema instanceof z.ZodDate) {
 		return dateNumberFilter(baseSchema);
@@ -100,14 +102,15 @@ export const generateFilterSchema = <Z extends z.ZodType<any>>(baseSchema: Z) =>
 	return z.any();
 };
 
-export type FilterType<T> = T extends z.ZodType<infer U, any, any>
+export type FilterType<T, isUUID extends boolean = false> = T extends z.ZodType<infer U, any, any>
 	? U extends Array<infer X>
 		? Array<FilterType<z.ZodType<X, any, any>>>
 		: U extends string
 		? string extends U
-			? // @ts-expect-error FIXME: Typescript doesn't understand that if
-			  // `U extends string` then `T extends z.ZodType<string>`
-			  StringFilter<T>
+			? isUUID extends false
+				? // @ts-expect-error FIXME: Typescript doesn't understand that if
+				  StringFilter<T>
+				: string
 			: EnumFilter<T>
 		: U extends number | Date
 		? // @ts-expect-error FIXME: Typescript doesn't understand that if
@@ -128,7 +131,9 @@ type NumberDateFilter<T extends z.ZodType<number> | z.ZodType<Date>> = z.infer<
 	ReturnType<typeof dateNumberFilter<T>>
 >;
 type ObjectFilter<T extends Record<string, any>> = {
-	[K in keyof T]?: FilterType<z.ZodType<T[K], any, any>>;
+	[K in keyof T]?: K extends 'id' | `${string}Id`
+		? FilterType<z.ZodType<T[K], any, any>, true>
+		: FilterType<z.ZodType<T[K], any, any>>;
 };
 
 type FilterT<T> = z.ZodType<FilterType<T>>;
