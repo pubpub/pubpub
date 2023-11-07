@@ -57,11 +57,6 @@ export const memberContract = c.router({
 				options: ['user', 'community', 'pub', 'collection'],
 				defaults: ['user'],
 			},
-			omitFromFilter: {
-				communityId: true,
-				pubId: true,
-				collectionId: true,
-			},
 		}),
 		responses: {
 			200: z.array(memberWithRelationsSchema),

@@ -517,4 +517,31 @@ describe('GET /api/pubs', () => {
 
 		expect(body[0]?.doi).toMatch(/10.21428\/ew.*/);
 	});
+
+	it('should be able to combine inverted and normal filters seamlessly', async () => {
+		const { admin, community } = models;
+
+		const agent = await login(admin);
+
+		const filter = {
+			title: [
+				[
+					{ contains: 'pub' },
+					{
+						contains: 'ew',
+						not: true,
+					},
+				],
+			],
+		};
+
+		const { body } = await agent
+			.get(`/api/pubs?filter=${encodeURIComponent(JSON.stringify(filter))}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		body.forEach((pub) => {
+			expect(pub.title).not.toBe('Ew, another pub');
+		});
+	});
 });

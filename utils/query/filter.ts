@@ -2,8 +2,11 @@ import { z, ZodRawShape, ZodTypeAny } from 'zod';
 
 import { Op, WhereOptions } from 'sequelize';
 
-const plainAndBooleanAndArrayFilter = <Z extends ZodTypeAny>(schema: Z) =>
-	z.union([schema, z.boolean(), z.array(schema)]).optional();
+const plainAndBooleanAndArrayFilter = <Z extends ZodTypeAny>(schema: Z) => {
+	const plainOrBooleanOrArray = z.union([schema, z.boolean(), z.array(schema)]);
+
+	return z.union([plainOrBooleanOrArray, z.array(plainOrBooleanOrArray)]);
+};
 
 const dateNumberFilter = <Z extends ZodTypeAny>(fieldSchema: Z) =>
 	plainAndBooleanAndArrayFilter(
@@ -15,7 +18,7 @@ const dateNumberFilter = <Z extends ZodTypeAny>(fieldSchema: Z) =>
 				gte: fieldSchema.optional(),
 				lt: fieldSchema.optional(),
 				lte: fieldSchema.optional(),
-				invert: z.boolean().optional(),
+				ne: fieldSchema.optional(),
 			}),
 		]),
 	);
@@ -24,7 +27,7 @@ const booleanFilter = z.boolean();
 
 const stringFilter = <Z extends z.ZodString>(schema: Z, strict?: boolean) =>
 	strict
-		? schema
+		? z.union([schema, schema.array()])
 		: plainAndBooleanAndArrayFilter(
 				z.union([
 					schema,
@@ -32,17 +35,17 @@ const stringFilter = <Z extends z.ZodString>(schema: Z, strict?: boolean) =>
 						z.object({
 							exact: schema.optional(),
 							contains: z.undefined(),
-							invert: z.undefined(),
+							not: z.undefined(),
 						}),
 						z.object({
 							exact: z.undefined(),
 							contains: z.string().optional(),
-							invert: z.boolean().optional(),
+							not: z.boolean().optional(),
 						}),
 						z.object({
 							exact: z.undefined(),
 							contains: z.undefined(),
-							invert: z.undefined(),
+							not: z.undefined(),
 						}),
 					]),
 				]),
@@ -110,7 +113,7 @@ export type FilterType<T, isUUID extends boolean = false> = T extends z.ZodType<
 			? isUUID extends false
 				? // @ts-expect-error FIXME: Typescript doesn't understand that if
 				  StringFilter<T>
-				: string
+				: string | string[]
 			: EnumFilter<T>
 		: U extends number | Date
 		? // @ts-expect-error FIXME: Typescript doesn't understand that if
@@ -149,16 +152,23 @@ export const generateFilterForModelSchema = <Z extends z.ZodObject<any>>(modelSc
 };
 
 type ZodTypes =
-	| z.ZodNumber
-	| z.ZodString
-	| z.ZodDate
-	| z.ZodBoolean
-	| z.ZodEnum<any>
-	| z.ZodObject<any>;
+	| z.ZodType<number>
+	| z.ZodType<string>
+	| z.ZodType<Date>
+	| z.ZodType<Boolean>
+	| z.ZodEnum<[string, ...string[]]>
+	| z.ZodType<Record<string, any>>;
 
-const buildFieldWhereClause = <T extends ZodTypes>(filterField: FilterType<T>) => {
+type FilterTypess<T> = T extends T ? FilterType<T> : never;
+type FilterTypes = FilterTypess<ZodTypes>;
+
+const buildFieldWhereClause = <T extends FilterTypes>(filterField: T, arrayDepth = 0) => {
 	if (Array.isArray(filterField)) {
-		return { [Op.or]: filterField.map(buildFieldWhereClause) };
+		return {
+			[arrayDepth > 0 ? Op.and : Op.or]: filterField.map((filter) =>
+				buildFieldWhereClause(filter, arrayDepth + 1),
+			),
+		};
 	}
 
 	if (typeof filterField === 'boolean') {
@@ -175,14 +185,12 @@ const buildFieldWhereClause = <T extends ZodTypes>(filterField: FilterType<T>) =
 				acc[Op.eq] = value;
 			}
 			if (key === 'contains') {
-				acc[Op.iLike] = `%${value}%`;
+				acc[
+					'not' in filterField && filterField.not ? Op.notILike : Op.iLike
+				] = `%${value}%`;
 			}
 
-			if (key === 'invert') {
-				acc[Op.not] = value;
-			}
-
-			if (['gt', 'lt', 'gte', 'lte', 'eq'].includes(key)) {
+			if (['gt', 'lt', 'gte', 'lte', 'eq', 'ne'].includes(key)) {
 				acc[Op[key]] = value;
 			}
 

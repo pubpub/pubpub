@@ -41,7 +41,9 @@ const s = initServer();
 
 export const memberServer = s.router(contract.member, {
 	get: queryOne(Member),
-	getMany: queryMany(Member),
+	getMany: queryMany(Member, {
+		checkOtherFieldsForAdminAccess: true,
+	}),
 	create: async ({ req, body }) => {
 		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(body, req.user);
 		const { targetUserId, value } = body;

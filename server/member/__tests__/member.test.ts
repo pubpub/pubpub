@@ -20,6 +20,10 @@ const models = modelize`
 		}
 	}
     Community community {
+		Member {
+			permissions: "admin"
+			User admin {}
+		}
         Member communityManagerMember {
             permissions: "manage"
             User communityManager {}
@@ -77,6 +81,16 @@ const models = modelize`
                 permissions: "admin"
                 User iCannotCreateMemberInOtherScope {}
             }
+			CollectionPub {
+				rank: "0"
+				Pub someOtherPub {
+					createPubCreator: false
+					Member someOtherPubMember {
+						permissions: "view"
+						User {}
+					}
+				}
+			}
         }
 		Collection yetAnotherCollection {
 			Member memberFromAnotherCollection {
@@ -94,6 +108,18 @@ const models = modelize`
             permissions: "admin"
             User otherCommunityAdmin {}
         }
+		Collection otherCommunityCollection {
+			Member {
+				permissions: "admin"
+				User otherCommunityCollectionAdmin {}
+			}
+		}
+		Collection anotherCommunityCollection {
+			Member anotherCommunityCollectionAdminMember {
+				permissions: "admin"
+				User anotherCommunityCollectionAdmin {}
+			}
+		}
     }
 `;
 
@@ -586,5 +612,92 @@ describe('/api/members', () => {
 			where: { id: disillusionedCommunityAdminMember.id },
 		});
 		expect(memberNow).toBeNull();
+	});
+});
+
+const getHost = (community: any) => `${community.subdomain}.pubpub.org`;
+
+let adminAgent: Awaited<ReturnType<typeof login>>;
+
+describe('GET /api/members', () => {
+	beforeEach(async () => {
+		adminAgent = await login(models.admin);
+		adminAgent.set('Host', getHost(models.community));
+	});
+
+	it('should allow you to query members of your own community', async () => {
+		const { body: members } = await adminAgent.get('/api/members').expect(200);
+
+		expect(members.length).toEqual(4);
+	});
+
+	it('should allow you to query members of a collection in your community', async () => {
+		const { collection } = models;
+		const { body: members } = await adminAgent
+			.get(`/api/members?collectionId=${collection.id}`)
+			.expect(200);
+
+		expect(members.length).toEqual(5);
+	});
+
+	it('should not allow you to query members of a collection in another community', async () => {
+		const { otherCommunityCollection, anotherCommunityCollection } = models;
+		const { body: members } = await adminAgent
+			.get(`/api/members?collectionId=${otherCommunityCollection.id}`)
+			.expect(403);
+
+		expect(members).toEqual({});
+
+		const { body: twoCollectionMembers } = await adminAgent
+			.get(
+				`/api/members?collectionId=${encodeURIComponent(
+					JSON.stringify([otherCommunityCollection.id, anotherCommunityCollection.id]),
+				)}`,
+			)
+			.expect(403);
+
+		expect(twoCollectionMembers).toEqual({});
+	});
+
+	it('should allow you to query members of multiple pubs and collections', async () => {
+		const { collection, someOtherCollection, yetAnotherCollection, pub, someOtherPub } = models;
+
+		const { body: members } = await adminAgent
+			.get(
+				`/api/members?collectionId=${encodeURIComponent(
+					JSON.stringify([
+						collection.id,
+						someOtherCollection.id,
+						yetAnotherCollection.id,
+					]),
+				)}&limit=100`,
+			)
+			.expect(200);
+
+		expect(members.length).toEqual(7);
+
+		const { body: pubMembers } = await adminAgent
+			.get(`/api/members?pubId[]=${pub.id}&pubId[]=${someOtherPub.id}`)
+			.expect(200);
+
+		expect(pubMembers.length).toEqual(4);
+	});
+
+	it('should allow you to query members from other communities if you know their id', async () => {
+		const { anotherCommunityCollectionAdminMember } = models;
+
+		const { body: members } = await adminAgent
+			.get(`/api/members/${anotherCommunityCollectionAdminMember.id}`)
+			.expect(200);
+
+		expect(members?.id).toEqual(anotherCommunityCollectionAdminMember.id);
+	});
+
+	it('should allow you to get all members which are admins, by default only scoped to your community', async () => {
+		const { body: members } = await adminAgent
+			.get('/api/members?permissions=admin')
+			.expect(200);
+
+		expect(members.length).toEqual(1);
 	});
 });
