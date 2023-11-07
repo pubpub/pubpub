@@ -1,6 +1,10 @@
 import { z } from 'zod';
-// import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+
+import { userSchema } from './user';
+import { communitySchema } from './community';
+import { pubSchema } from './pub';
+import { collectionSchema } from './collection';
 
 extendZodWithOpenApi(z);
 

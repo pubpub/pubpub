@@ -1,10 +1,14 @@
+import { initServer } from '@ts-rest/express';
+
 import { ForbiddenError } from 'server/utils/errors';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
-import { initServer } from '@ts-rest/express';
+import { queryOne, queryMany } from 'utils/query';
+
 import { getPermissions } from './permissions';
 import { createMember, updateMember, destroyMember } from './queries';
+import { Member } from './model';
 
 const getRequestIds = createGetRequestIds<{
 	communityId?: string;
@@ -36,6 +40,8 @@ const chooseTargetFromRequestIds = ({
 const s = initServer();
 
 export const memberServer = s.router(contract.member, {
+	get: queryOne(Member),
+	getMany: queryMany(Member),
 	create: async ({ req, body }) => {
 		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(body, req.user);
 		const { targetUserId, value } = body;
