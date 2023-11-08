@@ -20,7 +20,7 @@ const models = modelize`
 		}
 	}
     Community community {
-		Member {
+		Member communityAdminMember {
 			permissions: "admin"
 			User admin {}
 		}
@@ -133,16 +133,19 @@ describe('getMembersForScope', () => {
 	it('finds the correct Members for a Community', async () => {
 		const {
 			community,
+			communityAdminMember,
 			communityManagerMember,
 			disillusionedCommunityAdminMember,
 			communityViewerMember,
 		} = models;
 		const communityMembers = [
+			communityAdminMember,
 			communityManagerMember,
 			disillusionedCommunityAdminMember,
 			communityViewerMember,
 		];
 		const members = await getMembersForScope({ communityId: community.id });
+
 		expect(new Set(members.map((m) => m.id))).toEqual(
 			new Set(communityMembers.map((m) => m.id)),
 		);
@@ -152,6 +155,7 @@ describe('getMembersForScope', () => {
 		const {
 			community,
 			collection,
+			communityAdminMember,
 			communityManagerMember,
 			disillusionedCommunityAdminMember,
 			communityViewerMember,
@@ -162,6 +166,7 @@ describe('getMembersForScope', () => {
 			yetAnotherMember,
 		} = models;
 		const collectionMembers = [
+			communityAdminMember,
 			communityManagerMember,
 			disillusionedCommunityAdminMember,
 			communityViewerMember,
@@ -184,6 +189,7 @@ describe('getMembersForScope', () => {
 		const {
 			community,
 			pub,
+			communityAdminMember,
 			communityManagerMember,
 			disillusionedCommunityAdminMember,
 			communityViewerMember,
@@ -198,6 +204,7 @@ describe('getMembersForScope', () => {
 			iWillBeDeleted,
 		} = models;
 		const pubMembers = [
+			communityAdminMember,
 			communityManagerMember,
 			disillusionedCommunityAdminMember,
 			communityViewerMember,
@@ -384,6 +391,7 @@ describe('/api/members', () => {
 			.expect(403);
 	});
 
+	let toBeDeletedId: string;
 	it('allows a Community manager to create a member in a Collection scope', async () => {
 		const { communityManager, willBeCollectionManager, collection } = models;
 		const agent = await login(communityManager);
@@ -398,6 +406,24 @@ describe('/api/members', () => {
 			)
 			.expect(201);
 		expect(member.userId).toEqual(willBeCollectionManager.id);
+		toBeDeletedId = member.id;
+	});
+
+	it('allows a community manager to remove a member from a collection', async () => {
+		expect(toBeDeletedId).toBeTruthy();
+		const { communityManager, collection, community } = models;
+		const agent = await login(communityManager);
+		await agent
+			.delete('/api/members')
+			.send({
+				communityId: community.id,
+				collectionId: collection.id,
+				id: toBeDeletedId,
+			})
+			.expect(200);
+
+		const memberNow = await Member.findOne({ where: { id: toBeDeletedId } });
+		expect(memberNow).toBeNull();
 	});
 
 	it('allows a Collection manager to create a member in a Pub scope', async () => {
@@ -682,13 +708,13 @@ describe('GET /api/members', () => {
 			.get(`/api/members?pubId[]=${pub.id}&pubId[]=${someOtherPub.id}`)
 			.expect(200);
 
-		expect(pubMembers.length).toEqual(4);
+		expect(pubMembers.length).toEqual(5);
 	});
 
 	it('should not allow you to query members from other communities if you know their id', async () => {
 		const { anotherCommunityCollectionAdminMember } = models;
 
-		const { body: members } = await adminAgent
+		await adminAgent
 			.get(`/api/members/${anotherCommunityCollectionAdminMember.id}`)
 			.expect(404);
 	});

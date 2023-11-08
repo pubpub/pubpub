@@ -44,13 +44,15 @@ const models = modelize`
             }
         }
 		Pub wowPub {
+			slug: "wow"
 			title: "Wow, a pub"
 			doi: "10.21428/wow"
 		}
 		Pub ewPub {
+			slug: "xxx"
 			title: "Ew, another pub"
 			doi: "10.21428/ew"
-			PubAttribution {
+			PubAttribution schmoeAttribution {
 				name: "John Schmoe"
 			}
 		}
@@ -412,7 +414,9 @@ describe('GET /api/pubs', () => {
 		const ew = body.find((pub) => pub.title === 'Ew, another pub');
 
 		expect(ew).toHaveProperty('attributions');
-		expect(ew.attributions[0].name).toBe('John Schmoe');
+
+		const schmoe = ew?.attributions.find((attribution) => attribution.name === 'John Schmoe');
+		expect(schmoe.name).toBe('John Schmoe');
 	});
 	it('should return pubs that match the expected schema', async () => {
 		const { body } = await adminAgent.get('/api/pubs').expect(200);
@@ -427,17 +431,17 @@ describe('GET /api/pubs', () => {
 		const agent = await login(admin);
 
 		const { body: orderByTitle } = await agent
+			.get('/api/pubs?sort=slug')
+			.set('Host', getHost(community))
+			.expect(200);
+
+		const { body: orderBySlug } = await agent
 			.get('/api/pubs?sort=title')
 			.set('Host', getHost(community))
 			.expect(200);
 
-		const { body: orderByUpdatedAt } = await agent
-			.get('/api/pubs?sort=updatedAt')
-			.set('Host', getHost(community))
-			.expect(200);
-
 		// Assuming IDs are unique and can be used to differentiate pubs
-		expect(orderByTitle[0].id).not.toEqual(orderByUpdatedAt[0].id);
+		expect(orderByTitle[0].id).not.toEqual(orderBySlug[0].id);
 	});
 
 	it('should reverse the order of pubs when changing sort order', async () => {
@@ -506,7 +510,7 @@ describe('GET /api/pubs', () => {
 		const agent = await login(admin);
 
 		const filter = {
-			title: [{ contains: 'pub' }],
+			title: [[{ contains: 'pub' }, { contains: 'Wow', not: true }]],
 			doi: [{ contains: '10.21428' }],
 		};
 
@@ -515,6 +519,7 @@ describe('GET /api/pubs', () => {
 			.set('Host', getHost(community))
 			.expect(200);
 
+		expect(body.length).toEqual(1);
 		expect(body[0]?.doi).toMatch(/10.21428\/ew.*/);
 	});
 

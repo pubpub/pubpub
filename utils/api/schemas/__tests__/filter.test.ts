@@ -12,9 +12,6 @@ describe('generateFilterSchema', () => {
 		expect(schema).toBeDefined();
 
 		const parsed = schema.parse({
-			id: {
-				contains: '4',
-			},
 			title: 'string',
 			kind: 'tag',
 			smoo: { gt: 2 },
