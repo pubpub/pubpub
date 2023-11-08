@@ -5,9 +5,15 @@ import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { NotFoundError } from 'server/utils/errors';
 import type { Express, Response } from 'express-serve-static-core';
 import { createIncludes } from './include';
+import { CustomScopeInput, createCustomWhereClause } from './queryMany';
 
 export const queryOne =
-	<M extends ModelCtor>(model: M) =>
+	<M extends ModelCtor>(
+		model: M,
+		options?: {
+			customScope?: CustomScopeInput[];
+		},
+	) =>
 	async <T extends AppRouteQuery>(
 		input: ServerInferRequest<T, Express['request']['headers']> & {
 			req: TsRestRequest<T>;
@@ -16,15 +22,37 @@ export const queryOne =
 	) => {
 		const { req, query, params } = input;
 
-		await ensureUserIsCommunityAdmin(req);
+		const community = await ensureUserIsCommunityAdmin(req);
+
+		const modelAttributes = model.getAttributes();
+		const modelHasCommunityId = 'communityId' in modelAttributes;
 
 		const { id } = params;
-		const { attributes, include } = query;
+		const { attributes, include = [] } = query;
+
+		const { where, includes } = createCustomWhereClause(
+			options?.customScope ?? [],
+			community.id,
+		);
+
+		const filteredInclude = attributes
+			? include.filter(
+					(includeItem) =>
+						(attributes as string[]).includes(includeItem) &&
+						!includes.some((customIncludeItem) => customIncludeItem.as === includeItem),
+			  )
+			: include;
+
+		const defaultIncludes = createIncludes(model, filteredInclude);
 
 		const result = (await model.findOne({
-			where: { id },
+			where: {
+				id,
+				...(modelHasCommunityId && { communityId: community.id }),
+				...where,
+			},
 			...(attributes && { attributes }),
-			...(include && { include: createIncludes(model, include) }),
+			include: [...defaultIncludes, ...includes],
 		})) as InstanceType<M>;
 
 		if (!result) {

@@ -1,6 +1,9 @@
 import { initServer } from '@ts-rest/express';
 
 import { ForbiddenError } from 'server/utils/errors';
+import { Pub } from 'server/pub/model';
+import { Collection } from 'server/collection/model';
+import { Community } from 'server/community/model';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
@@ -39,11 +42,28 @@ const chooseTargetFromRequestIds = ({
 
 const s = initServer();
 
+const customMemberScope = [
+	{
+		model: Pub,
+		as: 'pub',
+		foreignKey: 'pubId',
+	},
+	{
+		model: Collection,
+		as: 'collection',
+		foreignKey: 'collectionId',
+	},
+	{
+		model: Community,
+		as: 'community',
+		foreignKey: 'communityId',
+		communityIdIdentifier: 'id',
+	},
+];
+
 export const memberServer = s.router(contract.member, {
 	get: queryOne(Member),
-	getMany: queryMany(Member, {
-		checkOtherFieldsForAdminAccess: true,
-	}),
+	getMany: queryMany(Member, { customScope: customMemberScope }),
 	create: async ({ req, body }) => {
 		const { pubId, collectionId, communityId, userId: actorId } = getRequestIds(body, req.user);
 		const { targetUserId, value } = body;

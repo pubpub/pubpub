@@ -1,98 +1,85 @@
 import type { TsRestRequest } from '@ts-rest/express';
 import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
 import type { ModelCtor } from 'sequelize-typescript';
-import { type Attributes, Op } from 'sequelize';
+import { Op } from 'sequelize';
 import type { Express, Response } from 'express-serve-static-core';
 
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { SerializedModel } from 'types/serializedModel';
-import { Collection, Pub } from 'server/models';
-import { ForbiddenError } from 'server/utils/errors';
 
 import { buildWhereClause } from './filter';
 import { createIncludes } from './include';
 import type { GetManyQueryAny } from './createGetManyQuery';
 
-/**
- * Some entries for some models are implicitly scoped to a community
- * E.g. members can have a pubId or collectionId, and even though they do not have a communityId,
- * we don't want users to be able to query members from other communities if they are not an admin
- *
- * This function checks if the community that we are trying to access is the same as the community of the pub or collection
- *
- * @throws ForbiddenError
- */
-const extendedAccessCheck = async (
-	checkOtherFieldsForAdminAccess: boolean | undefined,
-	filterParams: Record<string, any>,
+export type CustomScopeInput = {
+	/**
+	 * The associated model you want to make sure is scoped to the community.
+	 */
+	model: ModelCtor;
+	/**
+	 * The alias of the model you want to make sure is scoped to the community.
+	 */
+	as: string;
+	/**
+	 * This is the foreign key of the model that is being queried.
+	 *
+	 * @example
+	 * ```markdown
+	 * You are querying `Member` and want to make sure the `pubId` of the member is in the community.
+	 *
+	 * Then the `foreignKey` would be `pubId`
+	 * ```
+	 */
+	foreignKey: string;
+	/**
+	 * This is the identifier of the communityId in the model.
+	 * You should only specify this if the communityId is not called `communityId`,
+	 * e.g. `id` for the `Community` model
+	 *
+	 * @default `communityId`
+	 */
+	communityIdIdentifier?: string;
+};
+
+export const createCustomWhereClause = (
+	customScopeInput: CustomScopeInput[],
 	communityId: string,
 ) => {
-	if (!checkOtherFieldsForAdminAccess) {
-		return false;
-	}
-
-	const pubOrCollectionIdsInQuery = Object.keys(filterParams).filter((filterParam) =>
-		['pubId', 'collectionId'].includes(filterParam),
-	);
-
-	if (pubOrCollectionIdsInQuery.length === 0) {
-		return false;
-	}
-
-	const keyValueModel = pubOrCollectionIdsInQuery.map(
-		(key) =>
-			[key, filterParams[key] as string, key === 'pubId' ? Pub : Collection] as
-				| ['pubId', string | string[], typeof Pub]
-				| ['collectionId', string | string[], typeof Collection],
-	);
-
-	const accessOrInaccessibleScope = await Promise.all(
-		keyValueModel.map(async ([key, value, modelToCheck]) => {
-			console.log({ key, value, modelToCheck });
-			if (key !== 'pubId' && key !== 'collectionId') {
-				return false as const;
-			}
-
-			// @ts-expect-error This is fine
-			const results = await modelToCheck.findAll({
-				where: {
-					id: {
-						[Op.in]: typeof value === 'string' ? [value] : value,
+	const whereMap = customScopeInput.map(
+		({ as, foreignKey, communityIdIdentifier = 'communityId' }) => ({
+			[Op.and]: [
+				{
+					[foreignKey]: {
+						[Op.not]: null,
 					},
-					communityId,
 				},
-			});
-			console.log(results);
-
-			return results.length > 0 || ([key === 'pubId' ? 'pub' : 'collection', value] as const);
+				{
+					[`$${as}.${communityIdIdentifier}$`]: communityId,
+				},
+			],
 		}),
 	);
-
-	const hasAccess = accessOrInaccessibleScope.filter(
-		(access): access is ['collection' | 'pub', string] => typeof access !== 'boolean',
-	);
-
-	if (hasAccess.length > 0) {
-		const [type, id] = hasAccess[0];
-		throw new ForbiddenError(
-			new Error(
-				`You are not the admin of ${type} with id ${id} and therefore cannot access it's members. You can only access members of your own community with id ${communityId}`,
-			),
-		);
-	}
-
-	return true;
+	return {
+		...(whereMap.length && {
+			where: {
+				[Op.or]: whereMap,
+			},
+		}),
+		includes: customScopeInput.map(({ model, as }) => ({
+			model,
+			as,
+		})),
+	};
 };
 
 export const queryMany =
 	<M extends ModelCtor>(
 		model: M,
 		options?: {
-			checkOtherFieldsForAdminAccess?: 'pubId' extends keyof Attributes<InstanceType<M>>
-				? boolean
-				: 'collectionId' extends keyof Attributes<InstanceType<M>>
-				? boolean
-				: never;
+			/**
+			 * If provided, this will create additional where clauses to make sure that the
+			 */
+			customScope?: CustomScopeInput[];
 		},
 	) =>
 	async <T extends AppRouteQuery>(
@@ -105,10 +92,19 @@ export const queryMany =
 
 		const community = await ensureUserIsCommunityAdmin(req);
 
-		const { limit, offset, attributes, order, sort, filter, include, ...rest } =
-			(query as GetManyQueryAny) ?? {};
+		const {
+			limit,
+			offset,
+			attributes,
+			order,
+			sort,
+			filter,
+			include = [],
+			...rest
+		} = (query as GetManyQueryAny) ?? {};
 
 		const modelAttributes = model.getAttributes();
+
 		// users can supply things like ?slug=foo instead of ?filter={slug: 'foo'}, we filter those out here
 		const restQueryFilterParams = rest
 			? Object.fromEntries(Object.entries(rest).filter(([k]) => k in modelAttributes))
@@ -121,35 +117,38 @@ export const queryMany =
 
 		const modelHasCommunityId = 'communityId' in modelAttributes;
 
-		const shouldScopeToCommunity =
-			(await extendedAccessCheck(
-				options?.checkOtherFieldsForAdminAccess,
-				filterParams,
-				community.id,
-			)) === false && modelHasCommunityId;
+		const shouldScopeToCommunity = !options?.customScope && modelHasCommunityId;
 
 		const whereClause = (filter || restQueryFilterParams) && buildWhereClause(filterParams);
 
+		const { includes, where } = createCustomWhereClause(
+			options?.customScope ?? [],
+			community.id,
+		);
+
 		// if you include a field but aren't adding it to the attributes, sequelize will throw an error
 		const filteredInclude = attributes
-			? (include ?? []).filter((includeItem) =>
-					(attributes as string[]).includes(includeItem),
+			? include.filter(
+					(includeItem) =>
+						(attributes as string[]).includes(includeItem) &&
+						!includes.some((customIncludeItem) => customIncludeItem.as === includeItem),
 			  )
-			: include ?? [];
+			: include;
+
+		const defaultIncludes = createIncludes(model, filteredInclude);
 
 		const result = (await model.findAll({
-			...(Object.keys(whereClause).length > 0 && {
-				where: {
-					// @ts-expect-error FIXME: The 'filter' type does not work well generically
-					...whereClause,
-					...(shouldScopeToCommunity && { communityId: community.id }),
-				},
-			}),
+			where: {
+				// @ts-expect-error FIXME: The 'filter' type does not work well generically
+				...(Object.keys(whereClause).length > 0 && whereClause),
+				...(shouldScopeToCommunity && { communityId: community.id }),
+				...where,
+			},
 			order: [[sort ?? 'createdAt', order ?? 'DESC']],
 			...(attributes && { attributes }),
 			limit: limit ?? 10,
 			offset: offset ?? 0,
-			...(filteredInclude.length > 0 && { include: createIncludes(model, filteredInclude) }),
+			include: [...defaultIncludes, ...includes],
 			// the 'SerializedModel' type is kind of cheating since this isn't actually a serialized model,
 			// but since this is only used to be returned immediately to the client, which forces it to be serialized, it's fine
 		})) as SerializedModel<InstanceType<M>>[];
