@@ -626,7 +626,9 @@ describe('GET /api/members', () => {
 	});
 
 	it('should allow you to query members of your own community', async () => {
-		const { body: members } = await adminAgent.get('/api/members').expect(200);
+		const { body: members } = await adminAgent
+			.get(`/api/members?communityId=${models.community.id}`)
+			.expect(200);
 
 		expect(members.length).toEqual(4);
 	});
@@ -644,9 +646,9 @@ describe('GET /api/members', () => {
 		const { otherCommunityCollection, anotherCommunityCollection } = models;
 		const { body: members } = await adminAgent
 			.get(`/api/members?collectionId=${otherCommunityCollection.id}`)
-			.expect(403);
+			.expect(200);
 
-		expect(members).toEqual({});
+		expect(members).toEqual([]);
 
 		const { body: twoCollectionMembers } = await adminAgent
 			.get(
@@ -654,9 +656,9 @@ describe('GET /api/members', () => {
 					JSON.stringify([otherCommunityCollection.id, anotherCommunityCollection.id]),
 				)}`,
 			)
-			.expect(403);
+			.expect(200);
 
-		expect(twoCollectionMembers).toEqual({});
+		expect(twoCollectionMembers).toEqual([]);
 	});
 
 	it('should allow you to query members of multiple pubs and collections', async () => {
@@ -683,19 +685,17 @@ describe('GET /api/members', () => {
 		expect(pubMembers.length).toEqual(4);
 	});
 
-	it('should allow you to query members from other communities if you know their id', async () => {
+	it('should not allow you to query members from other communities if you know their id', async () => {
 		const { anotherCommunityCollectionAdminMember } = models;
 
 		const { body: members } = await adminAgent
 			.get(`/api/members/${anotherCommunityCollectionAdminMember.id}`)
-			.expect(200);
-
-		expect(members?.id).toEqual(anotherCommunityCollectionAdminMember.id);
+			.expect(404);
 	});
 
-	it('should allow you to get all members which are admins, by default only scoped to your community', async () => {
+	it('should allow you to get all members which are admins', async () => {
 		const { body: members } = await adminAgent
-			.get('/api/members?permissions=admin')
+			.get(`/api/members?permissions=admin&communityId=${models.community.id}`)
 			.expect(200);
 
 		expect(members.length).toEqual(1);
