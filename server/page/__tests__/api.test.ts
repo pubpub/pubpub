@@ -279,11 +279,11 @@ describe('/api/pages', () => {
 
 		it('should order pages differently for different sort parameters', async () => {
 			const { body: orderByTitle } = await adminAgent
-				.get('/api/pages?sort=title')
+				.get('/api/pages?sortBy=title')
 				.expect(200);
 
 			const { body: orderByUpdatedAt } = await adminAgent
-				.get('/api/pages?sort=updatedAt')
+				.get('/api/pages?sortBy=updatedAt')
 				.expect(200);
 
 			expect(orderByTitle[0].id).not.toEqual(orderByUpdatedAt[0].id);
@@ -291,9 +291,9 @@ describe('/api/pages', () => {
 
 		it('should reverse the order of pages when changing sort order', async () => {
 			const [{ body: orderAsc }, { body: orderDesc }] = await Promise.all([
-				adminAgent.get('/api/pages?sort=slug&orderBy=ASC&limit=100').expect(200),
+				adminAgent.get('/api/pages?sortBy=slug&orderBy=ASC&limit=100').expect(200),
 
-				adminAgent.get('/api/pages?sort=slug&orderBy=DESC&limit=100').expect(200),
+				adminAgent.get('/api/pages?sortBy=slug&orderBy=DESC&limit=100').expect(200),
 			]);
 
 			expect(orderAsc.length).toEqual(orderDesc.length);

@@ -431,12 +431,12 @@ describe('GET /api/pubs', () => {
 		const agent = await login(admin);
 
 		const { body: orderByTitle } = await agent
-			.get('/api/pubs?sort=slug')
+			.get('/api/pubs?sortBy=slug')
 			.set('Host', getHost(community))
 			.expect(200);
 
 		const { body: orderBySlug } = await agent
-			.get('/api/pubs?sort=title')
+			.get('/api/pubs?sortBy=title')
 			.set('Host', getHost(community))
 			.expect(200);
 
@@ -450,12 +450,12 @@ describe('GET /api/pubs', () => {
 
 		const [{ body: orderAsc }, { body: orderDesc }] = await Promise.all([
 			agent
-				.get('/api/pubs?sort=slug&orderBy=ASC&limit=100')
+				.get('/api/pubs?sortBy=slug&orderBy=ASC&limit=100')
 				.set('Host', getHost(community))
 				.expect(200),
 
 			agent
-				.get('/api/pubs?sort=slug&orderBy=DESC&limit=100')
+				.get('/api/pubs?sortBy=slug&orderBy=DESC&limit=100')
 				.set('Host', getHost(community))
 				.expect(200),
 		]);

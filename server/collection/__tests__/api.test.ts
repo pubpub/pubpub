@@ -463,12 +463,12 @@ describe('GET /api/collections', () => {
 		const agent = await login(admin);
 
 		const { body: orderByTitle } = await agent
-			.get('/api/collections?sort=title')
+			.get('/api/collections?sortBy=title')
 			.set('Host', getHost(community))
 			.expect(200);
 
 		const { body: orderByUpdatedAt } = await agent
-			.get('/api/collections?sort=updatedAt')
+			.get('/api/collections?sortBy=updatedAt')
 			.set('Host', getHost(community))
 			.expect(200);
 
