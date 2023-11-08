@@ -393,7 +393,7 @@ describe('GET /api/collections', () => {
 		const agent = await login(admin);
 
 		const { body } = await agent
-			.get('/api/collections?limit=5&offset=5&sort=updatedAt&order=ASC')
+			.get('/api/collections?limit=5&offset=5&sortBy=updatedAt&orderBy=ASC')
 			.set('Host', getHost(community))
 			.expect(200);
 
@@ -482,12 +482,12 @@ describe('GET /api/collections', () => {
 
 		const [{ body: orderAsc }, { body: orderDesc }] = await Promise.all([
 			agent
-				.get('/api/collections?sort=slug&order=ASC&limit=100')
+				.get('/api/collections?sortBy=slug&orderBy=ASC&limit=100')
 				.set('Host', getHost(community))
 				.expect(200),
 
 			agent
-				.get('/api/collections?sort=slug&order=DESC&limit=100')
+				.get('/api/collections?sortBy=slug&orderBy=DESC&limit=100')
 				.set('Host', getHost(community))
 				.expect(200),
 		]);

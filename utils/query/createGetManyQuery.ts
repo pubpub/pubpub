@@ -36,7 +36,7 @@ export function createGetManyQueryOptions<
 		...(keyof Schema['_output'] & string)[],
 	] = [],
 	OmitOptions extends { [K in keyof Schema['_output'] & string]?: true } = {},
-	SortDefault extends SortOptions[number] | 'createdAt' | 'updatedAt' = 'createdAt',
+	SortByDefault extends SortOptions[number] | 'createdAt' | 'updatedAt' = 'createdAt',
 	NonRelationFields extends [
 		Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>,
 		...Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>[],
@@ -81,9 +81,14 @@ export function createGetManyQueryOptions<
 			/**
 			 * Which field is the default sort
 			 *
-			 * @default 'createdAt'
+			 * If only a string is provided, it will be sorted by that field in descending order
+			 *
+			 * @default ['createdAt', 'DESC']
+			 *
+			 * @example
+			 * ['updatedAt', 'ASC']
 			 */
-			default?: SortDefault;
+			default?: SortByDefault | [SortByDefault, 'ASC' | 'DESC'];
 		};
 		/**
 		 * Omit certain fields from being filterable.
@@ -114,6 +119,10 @@ export function createGetManyQueryOptions<
 		schema.omit({ ...omit }).pick(nonAssocFields) as unknown as OmittedSchema,
 	);
 
+	const [defaultSortBy = 'createdAt', defaultOrderBy = 'DESC'] = Array.isArray(defaultSort)
+		? defaultSort
+		: [defaultSort];
+
 	return z
 		.object({
 			/**
@@ -127,16 +136,16 @@ export function createGetManyQueryOptions<
 			/**
 			 * Sorting
 			 */
-			sort: z
+			sortBy: z
 				.enum(['createdAt', 'updatedAt', ...sortOptions])
 				// @ts-expect-error This works, but Zod doesn't like it
-				.default(defaultSort ?? 'createdAt'),
+				.default(defaultSortBy),
 			/**
 			 * Sorting order
 			 *
 			 * @default 'DESC'
 			 */
-			order: z.enum(['ASC', 'DESC']).default('DESC'),
+			orderBy: z.enum(['ASC', 'DESC']).default(defaultOrderBy),
 			/**
 			 * Here you can specify filters for certain fields
 			 *

@@ -96,8 +96,8 @@ export const queryMany =
 			limit,
 			offset,
 			attributes,
-			order,
-			sort,
+			orderBy: order,
+			sortBy: sort,
 			filter,
 			include = [],
 			...rest

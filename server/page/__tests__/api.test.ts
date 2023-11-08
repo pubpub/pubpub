@@ -245,7 +245,7 @@ describe('/api/pages', () => {
 			const agent = await login(admin);
 
 			const { body } = await agent
-				.get('/api/pages?limit=5&offset=5&sort=updatedAt&order=ASC')
+				.get('/api/pages?limit=5&offset=5&sortBy=updatedAt&orderBy=ASC')
 				.set('Host', getHost(community))
 				.expect(200);
 
@@ -291,9 +291,9 @@ describe('/api/pages', () => {
 
 		it('should reverse the order of pages when changing sort order', async () => {
 			const [{ body: orderAsc }, { body: orderDesc }] = await Promise.all([
-				adminAgent.get('/api/pages?sort=slug&order=ASC&limit=100').expect(200),
+				adminAgent.get('/api/pages?sort=slug&orderBy=ASC&limit=100').expect(200),
 
-				adminAgent.get('/api/pages?sort=slug&order=DESC&limit=100').expect(200),
+				adminAgent.get('/api/pages?sort=slug&orderBy=DESC&limit=100').expect(200),
 			]);
 
 			expect(orderAsc.length).toEqual(orderDesc.length);
