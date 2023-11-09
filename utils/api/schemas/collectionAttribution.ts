@@ -7,8 +7,6 @@ import {
 	attributionSchema,
 	updateAttributionSchema,
 } from './attribution';
-import { collectionSchema } from './collection';
-import { userSchema } from './user';
 
 extendZodWithOpenApi(z);
 
