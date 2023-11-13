@@ -74,20 +74,22 @@ const validateFileNameAndMimeType = ({
 }): { filename: string; mimeType: string } => {
 	switch (true) {
 		/**
-		 * no filename or mimetype provided, exit
+		 * filename === undefined || 'blob' and mimetype === undefined || 'application/octect-stream'
+		 * Exit, because we will not be able to properly set the mimetype or filename
+		 * which makes donwloading the file from AWS weird
 		 */
 		case isDefaultMimeType(mimeType) && isDefaultFileName(filename): {
 			throw new Error('No filename or mimetype provided');
 		}
 		/**
-		 * no mimetype provided, infer from filename
+		 * no mimetype provided or it's `application/octet-stream`, infer from filename
 		 */
 		case isDefaultMimeType(mimeType) && !isDefaultFileName(filename): {
 			mimeType = inferMimeTypeFromFileName(filename);
 			break;
 		}
 		/**
-		 * mimetype provided, no filename provided, generate filename from mimetype
+		 * mimetype provided, no filename provided or filename = 'blob' || 'file', generate filename from mimetype
 		 */
 		case !isDefaultMimeType(mimeType) && isDefaultFileName(filename): {
 			filename = generateFileNameFromMimeType(mimeType as string);
@@ -113,56 +115,33 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> 
 
 		const result: Promise<{ url: string; key: string; size: number }> = new Promise(
 			(resolve, reject) => {
-				let explicitlyPassedFilename: string | undefined;
-				let explicitlyPassedMimeType: string | undefined;
+				busboy.on('file', async (fieldname, file, { filename, mimeType }) => {
+					try {
+						const {
+							filename: possiblyDerivedFilename,
+							mimeType: possiblyDerivedMimeType,
+						} = validateFileNameAndMimeType({
+							filename,
+							mimeType,
+						});
 
-				busboy.on('field', (fieldname, value) => {
-					switch (fieldname) {
-						case 'name':
-							explicitlyPassedFilename = value;
-							break;
-						case 'mimeType':
-							explicitlyPassedMimeType = value;
-							break;
-						default:
-							reject(
-								new Error(
-									`Unknown field '${fieldname}': '${value}' found. Do not include other data with the form.`,
-								),
-							);
+						const key = generateFileNameForUpload(possiblyDerivedFilename);
+
+						let size = 0;
+						await s3Client.uploadFileSplit(key, file, {
+							contentType: possiblyDerivedMimeType,
+							progressCallback: (progress) => {
+								// the pubpub fronted returns the size of the file
+								// so we are mimicing that here
+								size = progress.loaded ?? 0;
+							},
+						});
+
+						resolve({ url: `https://assets.pubpub.org/${key}`, size, key });
+					} catch (err: any) {
+						reject(err);
 					}
 				});
-
-				busboy.on(
-					'file',
-					async (
-						fieldname,
-						file,
-						{ filename: filenameFromFile, mimeType: mimeTypeFromFile },
-					) => {
-						try {
-							const { filename, mimeType } = validateFileNameAndMimeType({
-								filename: explicitlyPassedFilename ?? filenameFromFile,
-								mimeType: explicitlyPassedMimeType ?? mimeTypeFromFile,
-							});
-
-							const key = generateFileNameForUpload(filename);
-
-							let size = 0;
-							await s3Client.uploadFileSplit(key, file, {
-								contentType:
-									mimeType === 'application/octet-stream' ? undefined : mimeType,
-								progressCallback: (progress) => {
-									size = progress.loaded ?? 0;
-								},
-							});
-
-							resolve({ url: `https://assets.pubpub.org/${key}`, size, key });
-						} catch (err: any) {
-							reject(err);
-						}
-					},
-				);
 			},
 		);
 

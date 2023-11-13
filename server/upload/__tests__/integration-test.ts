@@ -47,21 +47,13 @@ describe('POST /api/upload', () => {
 			.expect(403);
 	});
 
-	it('should be able to upload a text html file with only filename set via field', async () => {
+	it('should not be able to upload a text html file with only filename set via field', async () => {
 		const testContent = 'test file';
-		const result = await adminAgent
+		await adminAgent
 			.post('/api/upload')
 			.field('name', 'test file name.html')
 			.attach('file', Buffer.from(testContent))
-			.expect(201);
-
-		const res = await fetch(result.body.url);
-
-		expect(res.status).toEqual(200);
-
-		const body = await res.text();
-
-		expect(body).toEqual('test file');
+			.expect(400);
 	});
 
 	it('should be able to upload a text html buffer with properly set filename and content', async () => {

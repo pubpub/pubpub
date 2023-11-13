@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+
+extendZodWithOpenApi(z);
 
 export const textMimeTypes = [
 	'text/tex-x',
@@ -26,22 +29,16 @@ export const allowedMimeTypes = [
 
 const fileSchema = z.union([z.string(), z.custom<File | Blob>()]);
 
-export const mimeTypeSchema = z.union([z.enum(allowedMimeTypes), z.string().regex(/image\/.*/)], {
-	// invalid_type_error: `Invalid mime type. Allowed types are: ${allowedMimeTypes.join(
-	// 	', ',
-	// )} or image/*`,
-});
+export const mimeTypeSchema = z.union(
+	[z.enum(allowedMimeTypes), z.string().regex(/image\/.*/)],
+	{},
+);
 
 export const uploadSchema = z.object({
-	name: z.string().optional().openapi({
-		description:
-			'Name of the file being uploaded. Include the extension here! Only strictly necessary if you upload files without proper file information (e.g. from a buffer). \nMake sure you include the file name before the file in the formdata, fields included after the file field are ignored.',
-	}),
-	mimeType: mimeTypeSchema.optional().openapi({
-		description:
-			'Mime type of the file being uploaded. Only strictly necessary if you upload files without proper file information (e.g. from a buffer). \nMake sure you include the mime-type before the file in the formdata, fields included after the file field are ignored.\nMime-type gets inferred from the file extension if not provided, so only strictly necessary if you upload extensionless files.',
-	}),
-	file: z.custom<Blob | File>(),
+	file: z
+		.tuple([z.custom<Blob>(), z.string({ description: 'Name of the file' }).min(1)])
+		.or(z.custom<File>())
+		.openapi({ description: `Allowed mime types are: ${allowedMimeTypes.join(', ')}` }),
 });
 
 export const awsFormdataSchema = z.object({
