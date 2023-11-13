@@ -1,12 +1,11 @@
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
 import uuid from 'uuid/v4';
 
-import { pubSchema } from 'utils/api/schemas/pub';
 import supertest from 'supertest';
 
 import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
 import { CollectionPub, Pub, Draft } from 'server/models';
-import { fullImportOutput } from 'utils/api/schemas/pub';
+import { fullImportOutput, pubSchema } from 'utils/api/schemas/pub';
 import { stubModule } from 'stubstub/stub';
 
 import { issueCreatePubToken } from '../tokens';
@@ -27,17 +26,10 @@ const models = modelize`
         }
 		Member {
 			permissions: "admin"
-<<<<<<< HEAD
-<<<<<<< HEAD
 			User admin {}
-=======
-			User communityAdmin {}
->>>>>>> 445a9faa0 (chore: finish initial bad import api)
-=======
 			User communityAdmin {
 				name: "Testy McTestface"
 			}
->>>>>>> f6d76ce41 (feat: further improve import routes)
 		}
 		Collection collection {
             Member {
@@ -312,9 +304,8 @@ describe('/api/pubs', () => {
 
 const getHost = (community: any) => `${community.subdomain}.pubpub.org`;
 
-let adminAgent: Awaited<ReturnType<typeof login>>;
-
 describe('GET /api/pubs', () => {
+	let adminAgent: Awaited<ReturnType<typeof login>>;
 	beforeEach(async () => {
 		adminAgent = await login(models.admin);
 		adminAgent.set('Host', getHost(models.community));
@@ -566,42 +557,19 @@ describe('GET /api/pubs', () => {
 	});
 });
 
-describe('import', () => {
-	const testImportPayload = {
-		pubId: '2a213f49-5f4b-4b3f-a2cb-68654612d40d',
-		sourceFiles: [
-			{
-				id: 0,
-				state: 'complete',
-				clientPath: 'Fiddly DOCX.docx',
-				loaded: 385756,
-				total: 385756,
-				label: 'document',
-				assetKey: '_testing/Fiddly DOCX-41697539601783.docx',
-			},
-		],
-	};
-	it('is able to import', async () => {
-		const { community, communityAdmin } = models;
-
-		const agent = await login(communityAdmin);
-
-		const result = await agent
-			.post('/api/pubs/import')
-			.set('Host', getHost(community))
-			.send({ ...testImportPayload });
-
-		expect(result.status).toBe(201);
-=======
-const getCommunityHost = (community) => `${community.subdomain}.pubpub.org`;
-
-let adminAgent!: supertest.SuperAgentTest;
-
 describe('/api/pubs/text', () => {
 	let restore = () => {};
 	const isAWSAccessKeySet = !!process.env.AWS_ACCESS_KEY_ID;
+	let adminAgent: Awaited<ReturnType<typeof login>>;
 
-	beforeEach(() => {
+	beforeAll(async () => {
+		const { community, communityAdmin } = models;
+
+		adminAgent = (await login(communityAdmin)).set(
+			'Host',
+			getHost(community),
+		) as unknown as supertest.SuperAgentTest;
+
 		if (!isAWSAccessKeySet) {
 			// eslint-disable-next-line global-require
 			const stubbed = stubModule(require('utils/import/uploadAndConvertImages'), {
@@ -609,15 +577,6 @@ describe('/api/pubs/text', () => {
 			});
 			restore = stubbed.restore;
 		}
-	});
-
-	beforeAll(async () => {
-		const { community, communityAdmin } = models;
-
-		adminAgent = (await login(communityAdmin)).set(
-			'Host',
-			getCommunityHost(community),
-		) as unknown as supertest.SuperAgentTest;
 	});
 
 	let importedPubId!: string;
@@ -840,10 +799,9 @@ describe('/api/pubs/text', () => {
 		expect(pub2.title).toEqual('A new title that might be inferred');
 	});
 
-	afterEach(() => {
+	afterAll(() => {
 		if (!isAWSAccessKeySet) {
 			restore();
 		}
->>>>>>> f6d76ce41 (feat: further improve import routes)
 	});
 });

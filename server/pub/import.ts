@@ -231,6 +231,8 @@ export function handleImport(options: CreatePubImportInput): Promise<{
 export async function handleImport(options: ToPubImportInput | CreatePubImportInput) {
 	const { files, tmpDir, metadataOptions, userId } = options;
 
+	console.log(options);
+
 	if ('pubId' in options) {
 		const { pubId, method } = options;
 
