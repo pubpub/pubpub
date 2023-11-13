@@ -585,7 +585,6 @@ describe('/api/pubs/text', () => {
 
 		const { body } = await adminAgent
 			.post('/api/pubs/text/import')
-			.field('filenames', 'text.txt')
 			.attach('files', Buffer.from(textFile), 'text.txt')
 			.expect(201);
 
@@ -608,7 +607,6 @@ describe('/api/pubs/text', () => {
 
 		const { body } = await adminAgent
 			.post(`/api/pubs/${importedPubId}/text/import`)
-			.field('filenames', 'text.txt')
 			.attach('files', Buffer.from(textFile), 'text.txt')
 			.expect(200);
 
@@ -631,7 +629,6 @@ describe('/api/pubs/text', () => {
 		const { body } = await adminAgent
 			.post(`/api/pubs/${importedPubId}/text/import`)
 			.field('method', 'prepend')
-			.field('filenames', 'text.txt')
 			.attach('files', Buffer.from(textFile), 'text.txt')
 			.expect(200);
 
@@ -655,7 +652,6 @@ describe('/api/pubs/text', () => {
 		const { body: body2 } = await adminAgent
 			.post(`/api/pubs/${importedPubId}/text/import`)
 			.field('method', 'append')
-			.field('filenames', 'text.txt')
 			.attach('files', Buffer.from(textFile2), 'text.txt')
 			.expect(200);
 
@@ -706,7 +702,6 @@ describe('/api/pubs/text', () => {
 
 		const { body } = await adminAgent
 			.post('/api/pubs/text/convert')
-			.field('filenames', 'text.txt')
 			.attach('files', Buffer.from(textFile), 'text.txt')
 			.expect(200);
 
@@ -730,12 +725,9 @@ describe('/api/pubs/text', () => {
 		} = await adminAgent
 			.post('/api/pubs/text/import')
 			.field('attributions', 'match')
-			.field('filenames', paths[0])
-			.field('filenames', paths[1])
-			.field('filenames', paths[2])
-			.attach('files', fixturePaths[0])
-			.attach('files', fixturePaths[1])
-			.attach('files', fixturePaths[2])
+			.attach('files', fixturePaths[0], paths[0])
+			.attach('files', fixturePaths[1], paths[1])
+			.attach('files', fixturePaths[2], paths[2])
 			.expect(201);
 
 		complicatedPubId = pub.id;
@@ -781,8 +773,7 @@ describe('/api/pubs/text', () => {
 			body: { pub },
 		} = await adminAgent
 			.post(`/api/pubs/${complicatedPubId}/text/import`)
-			.field('filenames', 'test.html')
-			.attach('files', Buffer.from(text), 'test.html')
+			.attach('files', Buffer.from(text), { filename: 'test.html', contentType: 'text/html' })
 			.expect(200);
 
 		expect(pub.title).toEqual('On Testing');
@@ -792,8 +783,7 @@ describe('/api/pubs/text', () => {
 		} = await adminAgent
 			.post(`/api/pubs/${complicatedPubId}/text/import`)
 			.field('overrides', 'title')
-			.field('filenames', 'test.html')
-			.attach('files', Buffer.from(text), 'test.html')
+			.attach('files', Buffer.from(text), { filename: 'test.html', contentType: 'text/html' })
 			.expect(200);
 
 		expect(pub2.title).toEqual('A new title that might be inferred');

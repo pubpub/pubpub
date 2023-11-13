@@ -246,8 +246,12 @@ export const importCreateParams = optionalPubCreateParamSchema
 export type ImportCreatePubParams = (typeof importCreateParams)['_input'];
 
 export const base = z.object({
-	filenames: z.union([z.array(z.string()), z.string()]),
-	files: z.union([z.custom<Blob[]>(), z.custom<Blob>()]),
+	files: z.union([
+		z
+			.tuple([z.custom<Blob[]>(), z.string({ description: 'filename' })])
+			.openapi({ title: 'Blob + filename (Node 18)' }),
+		z.custom<File>().openapi({ title: 'File (Node 20+, browser)' }),
+	]),
 });
 
 export const importMethodSchema = z

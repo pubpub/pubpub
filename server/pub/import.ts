@@ -42,32 +42,18 @@ export const createUploadMiddleware = async () => {
 			cb(null, tmpDirPath);
 		},
 		filename: (req, file, cb) => {
-			// Instead of using file.originalname, pull from req.body
-			// This assumes that filenames are provided in pairs with files
-
-			const f = req.body.filenames;
-
-			// if only one filename is provided, req.body.filenames will be a string
-			const suppliedFilename = Array.isArray(f) ? f.shift() : f;
-
-			const filename = suppliedFilename ?? file.originalname;
-
-			if (!filename) {
-				throw new BadRequestError(
-					new Error(
-						'No filename provided, either in the body or as the original filename.\n Check the order of your files and filenames, filenames should come before the files they refer to.',
-					),
-				);
+			if (!file.originalname) {
+				throw new BadRequestError(new Error('No filename provided.'));
 			}
 
 			if (file.mimetype === 'application/octet-stream') {
-				const mimeType = mime.contentType(filename);
+				const mimeType = mime.contentType(file.originalname);
 				if (mimeType) {
 					file.mimetype = mimeType;
 				}
 			}
 
-			cb(null, suppliedFilename || file.originalname);
+			cb(null, file.originalname);
 		},
 	});
 
@@ -230,8 +216,6 @@ export function handleImport(options: CreatePubImportInput): Promise<{
 }>;
 export async function handleImport(options: ToPubImportInput | CreatePubImportInput) {
 	const { files, tmpDir, metadataOptions, userId } = options;
-
-	console.log(options);
 
 	if ('pubId' in options) {
 		const { pubId, method } = options;

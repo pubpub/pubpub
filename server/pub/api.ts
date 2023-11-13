@@ -296,11 +296,12 @@ export const pubServer = s.router(contract.pub, {
 				const community = await ensureUserIsCommunityAdmin(req);
 
 				const pubCreateParams = omitKeys(body, [
-					'filenames',
 					'files',
 					'overrides',
 					'attributions',
+					'overrideAll',
 				]);
+
 				return handleImport({
 					// @ts-expect-error shh
 					tmpDir: req.tmpDir,
