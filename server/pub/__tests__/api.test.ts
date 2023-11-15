@@ -27,9 +27,6 @@ const models = modelize`
 		Member {
 			permissions: "admin"
 			User admin {}
-			User communityAdmin {
-				name: "Testy McTestface"
-			}
 		}
 		Collection collection {
             Member {
@@ -306,7 +303,7 @@ const getHost = (community: any) => `${community.subdomain}.pubpub.org`;
 
 describe('GET /api/pubs', () => {
 	let adminAgent: Awaited<ReturnType<typeof login>>;
-	beforeEach(async () => {
+	beforeAll(async () => {
 		adminAgent = await login(models.admin);
 		adminAgent.set('Host', getHost(models.community));
 	});
@@ -563,9 +560,9 @@ describe('/api/pubs/text', () => {
 	let adminAgent: Awaited<ReturnType<typeof login>>;
 
 	beforeAll(async () => {
-		const { community, communityAdmin } = models;
+		const { community, admin } = models;
 
-		adminAgent = (await login(communityAdmin)).set(
+		adminAgent = (await login(admin)).set(
 			'Host',
 			getHost(community),
 		) as unknown as supertest.SuperAgentTest;
@@ -758,7 +755,7 @@ describe('/api/pubs/text', () => {
 		const html = String.raw;
 
 		const text = html`
-			<!DOCTYPE html>
+			<!doctype html>
 			<html>
 				<head>
 					<title>A new title that might be inferred</title>
