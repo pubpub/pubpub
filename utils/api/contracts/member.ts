@@ -30,6 +30,13 @@ export const memberWithRelationsSchema = memberSchema.extend({
 const c = initContract();
 
 export const memberContract = c.router({
+	/**
+	 * summary: "Get a member by it's id"
+	 *
+	 * @description
+	 * 'Get a member'
+	 */
+
 	get: {
 		path: '/api/members/:id',
 		method: 'GET',

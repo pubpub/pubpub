@@ -31,6 +31,12 @@ extendZodWithOpenApi(z);
 const c = initContract();
 
 export const pubContract = c.router({
+	/**
+	 * summary: "Get a pub by it's slug or id"
+	 *
+	 * @description
+	 * "Get a pub by it's slug or id.\n\n The slug is the thing after `/pub/` in the URL, but before `/release` or `/draft`."
+	 */
 	get: {
 		path: '/api/pubs/:slugOrId',
 		method: 'GET',
