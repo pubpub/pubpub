@@ -345,12 +345,13 @@ describe('GET /api/pubAttributions', () => {
 		const { queryPub } = models;
 
 		const { body: unsorted } = await adminAgent
-			.get(`/api/pubAttributions?pubId=${queryPub.id}`)
+			.get(`/api/pubAttributions?pubId=${queryPub.id}&orderBy=DESC&sortBy=order`)
 			.expect(200);
 
 		const unsortedOrder = unsorted.map((attr: any) => attr.order);
 
 		expect(unsortedOrder).not.toEqual(structuredClone(unsortedOrder).sort());
+
 		const { body: pubAttributions } = await adminAgent
 			.get(`/api/pubAttributions?pubId=${queryPub.id}&orderBy=ASC&sortBy=order`)
 			.expect(200);
