@@ -755,7 +755,7 @@ describe('/api/pubs/text', () => {
 		const html = String.raw;
 
 		const text = html`
-			<!doctype html>
+			<!DOCTYPE html>
 			<html>
 				<head>
 					<title>A new title that might be inferred</title>
