@@ -93,7 +93,7 @@ const getRequestIds = createGetRequestIds<{
 const s = initServer();
 
 export const pubServer = s.router(contract.pub, {
-	get: queryOne(Pub),
+	get: queryOne(Pub, { allowSlug: true }),
 	getMany: queryMany(Pub),
 
 	create: async ({ body, req }) => {

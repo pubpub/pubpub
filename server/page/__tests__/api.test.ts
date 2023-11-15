@@ -197,6 +197,14 @@ describe('/api/pages', () => {
 			expect(body.title).toEqual(wow.title);
 		});
 
+		it('should get a page by slug', async () => {
+			const { wow } = models;
+
+			const { body } = await adminAgent.get(`/api/pages/${wow.slug}`).expect(200);
+
+			expect(body.title).toEqual(wow.title);
+		});
+
 		it('should be able to include the community in the get response, but not do so by default', async () => {
 			const { wow, community } = models;
 

@@ -1,16 +1,21 @@
 import type { TsRestRequest } from '@ts-rest/express';
 import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
 import type { ModelCtor } from 'sequelize-typescript';
+import { z } from 'zod';
+
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { NotFoundError } from 'server/utils/errors';
 import type { Express, Response } from 'express-serve-static-core';
 import { createIncludes } from './include';
 import { CustomScopeInput, createCustomWhereClause } from './queryMany';
 
+const isUUID = (slugOrId: string) => z.string().uuid().safeParse(slugOrId).success;
+
 export const queryOne =
 	<M extends ModelCtor>(
 		model: M,
 		options?: {
+			allowSlug?: boolean;
 			customScope?: CustomScopeInput[];
 		},
 	) =>
@@ -27,7 +32,12 @@ export const queryOne =
 		const modelAttributes = model.getAttributes();
 		const modelHasCommunityId = 'communityId' in modelAttributes;
 
-		const { id } = params;
+		const bySlugOrId = options?.allowSlug
+			? isUUID(params.slugOrId)
+				? { id: params.slugOrId }
+				: { slug: params.slugOrId }
+			: { id: params.id };
+
 		const { attributes, include = [] } = query;
 
 		const { where, includes } = createCustomWhereClause(
@@ -47,7 +57,7 @@ export const queryOne =
 
 		const result = (await model.findOne({
 			where: {
-				id,
+				...bySlugOrId,
 				...(modelHasCommunityId && { communityId: community.id }),
 				...where,
 			},

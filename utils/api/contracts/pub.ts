@@ -31,12 +31,16 @@ const c = initContract();
 
 export const pubContract = c.router({
 	get: {
-		path: '/api/pubs/:id',
+		path: '/api/pubs/:slugOrId',
 		method: 'GET',
-		summary: "Get a pub by it's id",
-		description: 'Get a pub',
+		summary: "Get a pub by it's slug or id",
+		description:
+			"Get a pub by it's slug or id.\n\n The slug is the thing after `/pub/` in the URL, but before `/release` or `/draft`.",
 		pathParams: z.object({
-			id: z.string().uuid(),
+			slugOrId: z.string().openapi({
+				description:
+					'The id is a UUID, the slug is a string. The slug is `/pub/<slug>/` <- this part',
+			}),
 		}),
 		query: createGetQueryOptions(pubWithRelationsSchema, {
 			include: {

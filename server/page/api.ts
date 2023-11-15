@@ -17,7 +17,7 @@ const getRequestIds = createGetRequestIds<{
 const s = initServer();
 
 export const pageServer = s.router(contract.page, {
-	get: queryOne(Page),
+	get: queryOne(Page, { allowSlug: true }),
 	getMany: queryMany(Page),
 	create: async ({ req, body }) => {
 		const { userId, communityId, pageId } = getRequestIds(body, req.user);

@@ -16,12 +16,15 @@ const c = initContract();
 
 export const pageContract = c.router({
 	get: {
-		path: '/api/pages/:id',
+		path: '/api/pages/:slugOrId',
 		method: 'GET',
-		summary: "Get a page by it's id",
-		description: 'Get a page',
+		summary: "Get a page by it's slug or id",
+		description: "Get a page by it's slug or id.",
 		pathParams: z.object({
-			id: z.string().uuid(),
+			slugOrId: z.string().openapi({
+				description:
+					'UUID input will be interpreted as an ID, otherwise it will be interpreted as a slug.',
+			}),
 		}),
 		query: createGetQueryOptions(pageWithRelationsSchema, {
 			include: {
