@@ -19,12 +19,15 @@ const c = initContract();
 
 export const collectionContract = c.router({
 	get: {
-		path: '/api/collections/:id',
+		path: '/api/collections/:slugOrId',
 		method: 'GET',
-		summary: "Get a collection by it's id",
-		description: 'Get a collection',
+		summary: "Get a collection by it's id or slug",
+		description: "Get a collection by it's id or slug",
 		pathParams: z.object({
-			id: z.string().uuid(),
+			slugOrId: z.string().openapi({
+				description:
+					'UUID input will be interpreted as an ID, otherwise it will be interpreted as a slug.',
+			}),
 		}),
 		query: createGetQueryOptions(collectionWithRelationsSchema, {
 			include: {

@@ -27,7 +27,7 @@ const getRequestIds = createGetRequestIds<{
 const s = initServer();
 
 export const collectionServer = s.router(contract.collection, {
-	get: queryOne(Collection),
+	get: queryOne(Collection, { allowSlug: true }),
 	getMany: queryMany(Collection),
 
 	create: async ({ req, body }) => {
