@@ -313,10 +313,18 @@ describe('GET /api/pubs', () => {
 		expect(body.title).toEqual(wowPub.title);
 	});
 
+	it('should get a pub by slug', async () => {
+		const { wowPub } = models;
+
+		const { body } = await adminAgent.get(`/api/pubs/${wowPub.slug}`).expect(200);
+
+		expect(body.title).toEqual(wowPub.title);
+	});
+
 	it('should be able to include the community in the get response, but not do so by default', async () => {
 		const { wowPub, community } = models;
 
-		const { body } = await adminAgent.get(`/api/pubs/${wowPub.id}`).expect(200);
+		const { body } = await adminAgent.get(`/api/pubs/${wowPub.slug}`).expect(200);
 
 		expect(body.community).toBeUndefined();
 

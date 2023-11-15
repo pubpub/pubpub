@@ -332,6 +332,19 @@ describe('GET /api/collections', () => {
 		expect(body.title).toEqual(confCyberSec.title);
 	});
 
+	it('should get a collection by slug', async () => {
+		const { confCyberSec, admin, community } = models;
+
+		const agent = await login(admin);
+
+		const { body } = await agent
+			.get(`/api/collections/${confCyberSec.slug}`)
+			.set('Host', getHost(community))
+			.expect(200);
+
+		expect(body.title).toEqual(confCyberSec.title);
+	});
+
 	it('should be able to include the community in the get response, but not do so by default', async () => {
 		const { confCyberSec, admin, community } = models;
 
