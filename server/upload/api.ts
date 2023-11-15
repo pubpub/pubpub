@@ -25,6 +25,7 @@ export const generateFileNameForUpload = (file: string) => {
  */
 if (
 	process.env.NODE_ENV === 'test' &&
+	process.env.INTEGRATION_TESTING &&
 	(!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY)
 ) {
 	// eslint-disable-next-line global-require, import/extensions
