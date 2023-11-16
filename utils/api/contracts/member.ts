@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 import { memberPermissions } from 'types/member';
-import { createGetQueryOptions, createGetManyQueryOptions } from 'utils/query';
+import { createGetQueryOptions } from 'utils/query/createGetQuery';
+import { createGetManyQueryOptions } from 'utils/query/createGetManyQuery';
 import {
 	memberCreateSchema,
 	memberRemoveSchema,

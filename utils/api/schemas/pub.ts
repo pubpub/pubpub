@@ -247,10 +247,12 @@ export type ImportCreatePubParams = (typeof importCreateParams)['_input'];
 
 export const base = z.object({
 	files: z.union([
-		z
-			.tuple([z.custom<Blob[]>(), z.string({ description: 'filename' })])
-			.openapi({ title: 'Blob + filename (Node 18)' }),
-		z.custom<File>().openapi({ title: 'File (Node 20+, browser)' }),
+		z.array(
+			z
+				.tuple([z.custom<Blob>(), z.string({ description: 'filename' })])
+				.openapi({ title: 'Blob + filename (Node 18)' }),
+		),
+		z.custom<File[]>().openapi({ title: 'File (Node 20+, browser)' }),
 	]),
 });
 

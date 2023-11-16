@@ -10,7 +10,8 @@ import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { transformCollectionToResource } from 'deposit/transform/collection';
 import { contract } from 'utils/api/contract';
 import { createGetRequestIds } from 'utils/getRequestIds';
-import { queryOne, queryMany } from 'utils/query';
+import { queryOne } from 'utils/query/queryOne';
+import { queryMany } from 'utils/query/queryMany';
 
 import { getPermissions } from './permissions';
 import { createCollection, destroyCollection, findCollection, updateCollection } from './queries';

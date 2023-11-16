@@ -8,7 +8,7 @@ export type SerializedModel<
 	S extends C extends false ? Attributes<T> : CreationAttributes<T> = C extends false
 		? Attributes<T>
 		: CreationAttributes<T>,
-> = Prettify<{
+> = {
 	[P in keyof S]: S[P] extends Model | Model[] | undefined
 		? S[P] extends Array<infer M extends Model> | undefined
 			? SerializedModel<M, C>[] | undefined
@@ -18,6 +18,6 @@ export type SerializedModel<
 			? string
 			: string | null
 		: S[P];
-}>;
+};
 
 export type RecursiveCreationAttributes<T extends Model> = SerializedModel<T, true>;

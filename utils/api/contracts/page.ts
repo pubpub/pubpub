@@ -1,7 +1,8 @@
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { createGetManyQueryOptions, createGetQueryOptions } from 'utils/query';
+import { createGetQueryOptions } from 'utils/query/createGetQuery';
+import { createGetManyQueryOptions } from 'utils/query/createGetManyQuery';
 import {
 	pageCreateSchema,
 	pageRemoveSchema,

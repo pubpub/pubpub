@@ -7,7 +7,8 @@ import { Community } from 'server/community/model';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
-import { queryOne, queryMany } from 'utils/query';
+import { queryOne } from 'utils/query/queryOne';
+import { queryMany } from 'utils/query/queryMany';
 
 import { getPermissions } from './permissions';
 import { createMember, updateMember, destroyMember } from './queries';

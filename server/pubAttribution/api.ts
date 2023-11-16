@@ -7,7 +7,8 @@ import * as types from 'types';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { contract } from 'utils/api/contract';
 import { initServer } from '@ts-rest/express';
-import { queryMany, queryOne } from 'utils/query';
+import { queryMany } from 'utils/query/queryMany';
+import { queryOne } from 'utils/query/queryOne';
 import { getPermissions } from './permissions';
 import {
 	createPubAttribution,

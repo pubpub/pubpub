@@ -13,7 +13,8 @@ import { generateDoi } from 'server/doi/queries';
 import { assert, expect } from 'utils/assert';
 import { prepareResource } from 'deposit/datacite/deposit';
 import { assertValidResource } from 'deposit/validate';
-import { queryMany, queryOne } from 'utils/query';
+import { queryOne } from 'utils/query/queryOne';
+import { queryMany } from 'utils/query/queryMany';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
 

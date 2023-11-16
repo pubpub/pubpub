@@ -5,7 +5,8 @@ import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { initServer } from '@ts-rest/express';
 import { contract } from 'utils/api/contract';
-import { queryOne, queryMany } from 'utils/query';
+import { queryOne } from 'utils/query/queryOne';
+import { queryMany } from 'utils/query/queryMany';
 import { expect } from 'utils/assert';
 import {
 	createCollectionAttribution,
