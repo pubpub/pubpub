@@ -7,7 +7,7 @@ import type { Express, Response } from 'express-serve-static-core';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { SerializedModel } from 'types/serializedModel';
 
-import { buildWhereClause } from './filter';
+import { buildWhereClause } from './buildWhereClause';
 import { createIncludes } from './include';
 import type { GetManyQueryAny } from './createGetManyQuery';
 

@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import * as types from 'types';
+// import * as types from 'types';
+import { OptionalKeys } from 'types';
 import { generateFilterForModelSchema } from './filter';
 
 export function nonRelationFields(schema: z.ZodObject<any>) {
@@ -23,8 +24,8 @@ export function createGetManyQueryOptions<
 	Schema extends z.ZodObject<any>,
 	IncludeOptions extends
 		| [
-				types.OptionalKeys<Schema['_output']> & string,
-				...(types.OptionalKeys<Schema['_output']> & string)[],
+				OptionalKeys<Schema['_output']> & string,
+				...(OptionalKeys<Schema['_output']> & string)[],
 		  ]
 		| [] = [],
 	IncludeDefaults extends [
@@ -38,11 +39,11 @@ export function createGetManyQueryOptions<
 	OmitOptions extends { [K in keyof Schema['_output'] & string]?: true } = {},
 	SortByDefault extends SortOptions[number] | 'createdAt' | 'updatedAt' = 'createdAt',
 	NonRelationFields extends [
-		Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>,
-		...Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>[],
+		Exclude<keyof Schema['_output'] & string, OptionalKeys<Schema['_output']>>,
+		...Exclude<keyof Schema['_output'] & string, OptionalKeys<Schema['_output']>>[],
 	] = [
-		Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>,
-		...Exclude<keyof Schema['_output'] & string, types.OptionalKeys<Schema['_output']>>[],
+		Exclude<keyof Schema['_output'] & string, OptionalKeys<Schema['_output']>>,
+		...Exclude<keyof Schema['_output'] & string, OptionalKeys<Schema['_output']>>[],
 	],
 	OmittedSchema extends z.ZodObject<
 		Omit<Pick<Schema['shape'], NonRelationFields[number]>, keyof OmitOptions>
