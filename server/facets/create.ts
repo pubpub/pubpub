@@ -2,6 +2,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 import { FacetBinding } from './models/facetBinding';
 
 import { ALL_FACET_DEFINITIONS, FacetName, FacetProp, FacetProps } from '../../facets';
+import { Model, ModelCtor } from 'sequelize-typescript';
 
 type Column = {
 	type: (typeof DataTypes)[keyof typeof DataTypes];
@@ -55,7 +56,11 @@ export const createSequelizeModelsFromFacetDefinitions = (sequelize: Sequelize) 
 		}
 	});
 	return {
-		facetModels: modelsByName as Record<FacetName, any>,
+		facetModels: modelsByName as {
+			[N in FacetName]: ModelCtor<
+				Model<FacetProps[N], Omit<FacetProps[N], '__facetProp' | 'propType'>>
+			>;
+		},
 		FacetBinding,
 	};
 };
