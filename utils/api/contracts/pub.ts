@@ -6,14 +6,24 @@ import { createGetManyQueryOptions, createGetQueryOptions } from 'utils/query';
 
 import { resourceSchema } from '../schemas/resource';
 import {
+	base,
+	baseWithImport,
+	baseWithPubId,
+	fullImportOutput,
 	getManyQuerySchema,
-	pubPostSchema,
+	importMethodSchema,
+	optionalPubCreateParamSchema,
+	pandocOutputSchema,
+	pubCreateSchema,
 	pubPutSchema,
 	pubSchema,
 	pubWithRelationsSchema,
 	resourceASTSchema,
 	sanitizedPubSchema,
+	toPubImportOutput,
 } from '../schemas/pub';
+import { docJsonSchema } from '../schemas/release';
+import { sourceFileSchema } from '../schemas/import';
 
 extendZodWithOpenApi(z);
 
@@ -87,7 +97,7 @@ export const pubContract = c.router({
 		method: 'POST',
 		summary: 'Create a Pub',
 		description: 'Create a Pub',
-		body: pubPostSchema,
+		body: pubCreateSchema,
 		responses: {
 			201: pubSchema,
 		},
@@ -133,7 +143,7 @@ export const pubContract = c.router({
 	},
 	doi: {
 		deposit: {
-			path: '/api/pub/:pubId/doi',
+			path: '/api/pubs/:pubId/doi',
 			method: 'POST',
 			summary: 'Create a DOI',
 			description: 'Deposit metadata to create a DOI',
@@ -147,7 +157,7 @@ export const pubContract = c.router({
 			},
 		},
 		preview: {
-			path: '/api/pub/:pubId/doi/preview',
+			path: '/api/pubs/:pubId/doi/preview',
 			method: 'POST',
 			summary: 'Preview a DOI deposit',
 			description: 'Preview a DOI deposit',
@@ -162,7 +172,7 @@ export const pubContract = c.router({
 		},
 	},
 	getResource: {
-		path: '/api/pub/:pubId/resource',
+		path: '/api/pubs/:pubId/resource',
 		method: 'GET',
 		summary: 'Get pub as a resource',
 		description: 'Get pub as a resource',
@@ -171,6 +181,94 @@ export const pubContract = c.router({
 		}),
 		responses: {
 			200: resourceSchema,
+		},
+	},
+	text: {
+		get: {
+			path: '/api/pubs/:pubId/text',
+			method: 'GET',
+			summary: 'Get the text of a Pub',
+			description: 'Get the text of a Pub as a ProseMirror document',
+			pathParams: z.object({
+				pubId: z.string().uuid(),
+			}),
+			responses: {
+				200: docJsonSchema,
+			},
+		},
+		update: {
+			path: '/api/pubs/:pubId/text',
+			method: 'PUT',
+			summary: 'Replace the text of a pub',
+			description: 'Replace the text of a pub with a different ProseMirror document',
+			pathParams: z.object({
+				pubId: z.string().uuid(),
+			}),
+			body: z.object({
+				doc: docJsonSchema,
+				clientID: z.string().default('api'),
+				publishRelease: z.boolean().default(false),
+				method: importMethodSchema,
+			}),
+			responses: {
+				200: z.object({
+					doc: docJsonSchema,
+					url: z.string().url().optional(),
+				}),
+				400: z.object({ error: z.string() }),
+			},
+		},
+		importOld: {
+			path: '/api/pubs/text/importOld',
+			method: 'POST',
+			summary: 'Create a pub and import files to it',
+			description: 'Create a pub and upload a file and import it to a pub.',
+			body: z.object({
+				pub: optionalPubCreateParamSchema
+					.extend({ collectionId: z.string().uuid().optional() })
+					.partial()
+					.optional(),
+				sourceFiles: z.array(sourceFileSchema),
+			}),
+			responses: {
+				201: z.object({ doc: docJsonSchema, pub: pubSchema }),
+			},
+		},
+		import: {
+			path: '/api/pubs/text/import',
+			method: 'POST',
+			summary: 'Create a pub and import files to it',
+			description: 'Create a pub and upload a file and import it to a pub.',
+			contentType: 'multipart/form-data',
+			body: baseWithImport,
+			responses: {
+				201: fullImportOutput,
+			},
+		},
+		importToPub: {
+			path: '/api/pubs/:pubId/text/import',
+			method: 'POST',
+			summary: 'Import a file to a pub',
+			description: 'Upload files and import it to a pub.',
+			pathParams: z.object({
+				pubId: z.string().uuid(),
+			}),
+			body: baseWithPubId,
+			responses: {
+				200: toPubImportOutput,
+			},
+		},
+		convert: {
+			path: '/api/pubs/text/convert',
+			method: 'POST',
+			summary: 'Convert files to a ProseMirror document',
+			description:
+				'Convert files to a ProseMirror document.\n\n Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.',
+			contentType: 'multipart/form-data',
+			body: base,
+			responses: {
+				200: pandocOutputSchema,
+			},
 		},
 	},
 });

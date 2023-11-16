@@ -1,11 +1,12 @@
 import { z } from 'zod';
-import { Request } from 'express';
+import { Request, Express } from 'express';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { initServer } from '@ts-rest/express';
 
-import { ForbiddenError, NotFoundError } from 'server/utils/errors';
+import * as types from 'types';
+
+import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
-import { PubGetOptions, PubsQuery } from 'types';
 import { indexByProperty } from 'utils/arrays';
 import { transformPubToResource } from 'deposit/transform/pub';
 import { generateDoi } from 'server/doi/queries';
@@ -16,17 +17,26 @@ import { queryMany, queryOne } from 'utils/query';
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { contract } from 'utils/api/contract';
 
-import { getPubsById, queryPubIds } from './queryMany';
-import { createPub, destroyPub, findPub, updatePub } from './queries';
-import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
+
+import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
+import { isDuqDuq, isProd } from 'utils/environment';
+import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
+import { omitKeys } from 'utils/objects';
 import { Pub } from './model';
+
+import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
+
+import { createPub, destroyPub, findPub, importToPub, updatePub } from './queries';
+import { getPubsById, queryPubIds } from './queryMany';
+import { convertFiles, createUploadMiddleware, handleImport } from './import';
 
 extendZodWithOpenApi(z);
 
 type ManyRequestParams = {
-	query: Omit<PubsQuery, 'communityId'>;
+	query: Omit<types.PubsQuery, 'communityId'>;
 	alreadyFetchedPubIds: string[];
-	pubOptions: PubGetOptions;
+	pubOptions: types.PubGetOptions;
 };
 
 const getManyQueryParams = <
@@ -92,12 +102,23 @@ export const pubServer = s.router(contract.pub, {
 		if (!create) {
 			throw new ForbiddenError();
 		}
-		const newPub = await createPub({ communityId: ids.communityId, collectionIds }, ids.userId);
-		const jsonedPub = newPub.toJSON();
-		return {
-			status: 201,
-			body: jsonedPub,
-		};
+		const createParams = omitKeys(body, ['communityId', 'collectionId', 'createPubToken']);
+		try {
+			const newPub = await createPub(
+				{ communityId: ids.communityId, collectionIds, ...createParams },
+				ids.userId,
+			);
+			const jsonedPub = newPub.toJSON();
+			return {
+				status: 201,
+				body: jsonedPub,
+			};
+		} catch (e: any) {
+			if (e.message === 'Slug is already in use') {
+				throw new BadRequestError(e);
+			}
+			throw new Error(e);
+		}
 	},
 	update: async ({ body, req }) => {
 		const { userId, pubId } = getRequestIds(body, req.user);
@@ -190,6 +211,7 @@ export const pubServer = s.router(contract.pub, {
 				throw new ForbiddenError();
 			}
 			const pub = expect(await findPub(pubId));
+
 			const pubDoi =
 				pub.doi ??
 				(
@@ -198,6 +220,7 @@ export const pubServer = s.router(contract.pub, {
 						'pub',
 					)
 				).pub;
+
 			const jsonedPub = pub.toJSON();
 			const resource = await transformPubToResource(jsonedPub, expect(jsonedPub.community));
 			try {
@@ -222,5 +245,118 @@ export const pubServer = s.router(contract.pub, {
 		const jsonedPub = pub.toJSON();
 		const resource = await transformPubToResource(jsonedPub, expect(jsonedPub.community));
 		return { status: 200, body: resource };
+	},
+	text: {
+		get: async ({ params }) => {
+			const doc = await getPubDraftDoc(params.pubId);
+
+			return { status: 200, body: doc.doc };
+		},
+		update: async ({ req, params, body }) => {
+			await ensureUserIsCommunityAdmin(req);
+
+			await writeDocumentToPubDraft(params.pubId, body.doc, { method: body.method });
+
+			const { doc } = await getPubDraftDoc(params.pubId);
+
+			return { status: 200, body: { doc } };
+		},
+		importOld: async ({ req, body }) => {
+			const community = await ensureUserIsCommunityAdmin(req);
+
+			const { collectionId, ...createPubArgs } = body.pub ?? {};
+
+			const baseUrl = `${req.protocol}://${req.get(
+				isProd() || isDuqDuq() ? 'host' : 'localhost',
+			)}`;
+
+			const pub = await createPub({
+				communityId: community.id,
+				collectionIds: collectionId ? [collectionId] : undefined,
+				...createPubArgs,
+			});
+
+			const task = await importToPub({
+				pubId: pub.id,
+				baseUrl,
+				importBody: {
+					sourceFiles: body.sourceFiles,
+				},
+			});
+
+			return { status: 201, body: { doc: task.doc, pub: pub.toJSON() } };
+		},
+		import: {
+			middleware: [
+				async (req, res, next) => {
+					return (await createUploadMiddleware())(req, res, next);
+				},
+			],
+			handler: async ({ req, body, files }) => {
+				const community = await ensureUserIsCommunityAdmin(req);
+
+				const pubCreateParams = omitKeys(body, [
+					'files',
+					'overrides',
+					'attributions',
+					'overrideAll',
+				]);
+
+				return handleImport({
+					// @ts-expect-error shh
+					tmpDir: req.tmpDir,
+					files: files as Express.Multer.File[],
+					communityId: community.id,
+					pubCreateParams,
+					metadataOptions: {
+						attributions: body.attributions,
+						overrides: body.overrides,
+					},
+					userId: req.user.id,
+				});
+			},
+		},
+		importToPub: {
+			middleware: [
+				async (req, res, next) => {
+					return (await createUploadMiddleware())(req, res, next);
+				},
+			],
+			handler: async ({ req, body, files, params }) => {
+				await ensureUserIsCommunityAdmin(req);
+
+				return handleImport({
+					// @ts-expect-error shh
+					tmpDir: req.tmpDir,
+					files: files as Express.Multer.File[],
+					pubId: params.pubId,
+					method: body.method,
+					metadataOptions: {
+						attributions: body.attributions,
+						overrides: body.overrides,
+					},
+					userId: req.user.id,
+				});
+			},
+		},
+		convert: {
+			middleware: [
+				async (req, res, next) => {
+					return (await createUploadMiddleware())(req, res, next);
+				},
+			],
+			handler: async ({ req, files }) => {
+				const result = await convertFiles({
+					// @ts-expect-error shh
+					tmpDir: req.tmpDir,
+					files: files as Express.Multer.File[],
+				});
+
+				return {
+					status: 200,
+					body: result,
+				};
+			},
+		},
 	},
 });

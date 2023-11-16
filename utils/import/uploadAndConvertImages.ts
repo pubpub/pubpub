@@ -1,31 +1,31 @@
-/* eslint-disable no-restricted-syntax */
 import path from 'path';
 import { ensureDir } from 'fs-extra';
 import tmp from 'tmp-promise';
+import mime from 'mime-types';
 
-import { SourceFile } from 'utils/api/schemas/import';
+import { BaseSourceFile } from 'utils/api/schemas/import';
 
-import { downloadFileFromAssetStore, uploadFileToAssetStore } from './assetStore';
-import { convertFileTypeIfNecessary } from './images';
+import { uploadFileToAssetStore } from 'workers/tasks/import/assetStore';
+import { convertFileTypeIfNecessary } from 'workers/tasks/import/images';
 
 tmp.setGracefulCleanup();
 
-export const downloadAndConvertFiles = async (
-	sourceFiles: SourceFile[],
+export const uploadAndConvertImages = async (
+	sourceFiles: BaseSourceFile[],
 	tmpDirectoryPath: string,
 ) => {
 	return Promise.all(
 		sourceFiles.map(async (sourceFile) => {
-			const { assetKey, clientPath } = sourceFile;
+			const { clientPath } = sourceFile;
 			const tmpPath = path.join(tmpDirectoryPath, clientPath);
 			await ensureDir(path.dirname(tmpPath));
-			await downloadFileFromAssetStore(assetKey, tmpPath);
 			const convertedTmpPath = await convertFileTypeIfNecessary(tmpPath);
-			if (convertedTmpPath !== tmpPath) {
+			const mimeType = mime.contentType(path.extname(convertedTmpPath));
+			if (mimeType && /image\/*/.test(mimeType)) {
 				const convertedKey = await uploadFileToAssetStore(convertedTmpPath);
 				return { ...sourceFile, assetKey: convertedKey, tmpPath: convertedTmpPath };
 			}
-			return { ...sourceFile, tmpPath };
+			return { ...sourceFile, tmpPath: convertedTmpPath };
 		}),
 	);
 };
