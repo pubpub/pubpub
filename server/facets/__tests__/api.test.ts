@@ -151,7 +151,7 @@ describe('/api/facets', () => {
 				facetName: 'CitationStyle',
 				facetProps: {
 					citationStyle: {
-						from: 'apa-7',
+						from: null,
 						to: 'cell',
 					},
 				},
