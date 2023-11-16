@@ -1,6 +1,5 @@
 import { Attributes, CreationAttributes } from 'sequelize';
 import { Model } from 'sequelize-typescript';
-import { Prettify } from './util';
 
 export type SerializedModel<
 	T extends Model,

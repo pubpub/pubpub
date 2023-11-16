@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { collectionSchema } from '../../api/schemas/collection';
-import { buildWhereClause, generateFilterForModelSchema } from '../filter';
+import { generateFilterForModelSchema } from '../filter';
+import { buildWhereClause } from '../buildWhereClause';
 
 describe('generateFilterSchema', () => {
 	it('should generate a filter schema', () => {
