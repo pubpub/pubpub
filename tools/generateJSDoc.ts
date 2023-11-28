@@ -10,7 +10,7 @@ import {
 } from 'ts-morph';
 import { execSync } from 'child_process';
 
-function updateJSDocComments(dir: string, template) {
+function updateJSDocComments(dir: string) {
 	const project = new Project({
 		tsConfigFilePath: 'tsconfig.json',
 	});
@@ -18,159 +18,103 @@ function updateJSDocComments(dir: string, template) {
 	const sourceFiles = project.getSourceFiles(`${dir}/pub.ts`);
 
 	sourceFiles.forEach((sourceFile) => {
-		sourceFile.forEachDescendant((node) => {
-			if (ts.isObjectLiteralExpression(node.compilerNode)) {
-				const objL = node.asKind(SyntaxKind.ObjectLiteralExpression);
-				objL?.getProperties().forEach((prop) => {
-					if (prop.getKind() === SyntaxKind.PropertyAssignment) {
-						const propertyAssignment = prop.asKind(SyntaxKind.PropertyAssignment);
-						const initializer = propertyAssignment?.getInitializerIfKind(
-							SyntaxKind.ObjectLiteralExpression,
-						);
+		let paths: string[] = [];
 
-						if (initializer && initializer.getProperty('path')) {
-							const summary = initializer.getProperty('summary')?.getText();
-							const description = initializer
-								.getProperty('description')
-								?.getChildAtIndex(2)
-								?.getText();
-							// Check for existing JSDoc comments
-							const comments = propertyAssignment.getLeadingCommentRanges();
-
-							let existingComment = '';
-							let startPos = propertyAssignment?.getStart();
-							if (comments.length > 0) {
-								// Assuming the last comment is the relevant one
-								const lastComment = comments[comments.length - 1];
-								existingComment = sourceFile
-									.getFullText()
-									.substring(lastComment.getPos(), lastComment.getEnd());
-
-								// Process the existing comment (example: log it)
-								console.log('Existing Comment:', existingComment);
-
-								const commentStartPos = lastComment.getPos();
-								startPos = commentStartPos;
-								// Remove the existing comment
-								// lastComment.remove();
-								sourceFile.removeText(commentStartPos, lastComment.getEnd());
-							}
-
-							// Your logic to generate a new comment, possibly using existingComment data
-							const newJsDocComment = `/**\n * ${summary}\n *\n * @description\n * ${description}\n */`;
-
-							// Determine position for inserting the new JSDoc comment
-
-							// Insert the new JSDoc comment
-							sourceFile.insertText(startPos, newJsDocComment);
-						}
-					}
-				});
+		sourceFile.forEachDescendant((node, traversal) => {
+			if (!ts.isObjectLiteralExpression(node.compilerNode)) {
+				return;
 			}
+			const objL = node.asKind(SyntaxKind.ObjectLiteralExpression)!;
+
+			const properties = objL.getProperties();
+
+			properties.forEach((prop, idx) => {
+				if (prop.getKind() !== SyntaxKind.PropertyAssignment) {
+					return;
+				}
+				const propertyAssignment = prop.asKind(SyntaxKind.PropertyAssignment)!;
+				const initializer = propertyAssignment.getInitializerIfKind(
+					SyntaxKind.ObjectLiteralExpression,
+				)!;
+				const name = propertyAssignment.getName();
+				if (paths.includes(name)) {
+					return;
+				}
+
+				if (!initializer || !initializer.getProperty('path')) {
+					return;
+				}
+				const newJsDocComment = template(initializer);
+
+				const ogText = propertyAssignment.getText();
+				// Determine position for inserting the new JSDoc comment
+
+				const newThing = propertyAssignment.replaceWithText(
+					`${newJsDocComment}\n${ogText}`,
+				);
+				// Insert the new JSDoc comment
+				// sourceFile.insertText(startPos, newJsDocComment);
+				// paths.push(name);
+
+				// traversal.stop();
+			});
 		});
-		// sourceFile.forEachDescendant((node) => {
-		// 	if (isObjectLiteralExpression(node) && Boolean(node.getProperty('path'))) {
-		// 		const parent = node.getParent() as PropertyDeclaration;
-		// 		console.log({
-		// 			nodeText: node.getText(),
-		// 			node: node,
-		// 			parentText: parent.getText(),
-		// 			parentParent: parent.getParent(),
-		// 			parent,
-		// 			parentNode: parent.compilerNode,
-		// 			parentJsdoc: parent.compilerNode.jsDoc,
-		// 		});
-
-		// 		const parentNode = parent.compilerNode;
-
-		// 		parent.compilerNode.jsDoc[0].comment = 'gayboy';
-
-		// 		// properties.forEach((property) => {
-		// 		// 	const propNode = node.getProperty(property);
-		// 		// 	if (propNode) {
-		// 		// 		// eslint-disable-next-line @typescript-eslint/no-use-before-define
-		// 		// 		const comment = createJSDocCommentFromTemplate(propNode, template);
-
-		// 		// 		// Add or replace JSDoc comment
-		// 		// 		const existingComments = parent.getLeadingCommentRanges();
-		// 		// 		if (existingComments.length) {
-		// 		// 			existingComments[0].replaceWithText(comment);
-		// 		// 		} else {
-		// 		// 			parent.({ description: comment });
-		// 		// 		}
-		// 		// 	}
-		// 		// });
-		// 	}
-		// });
-
-		// let thing;
-		// let isParent = false;
-		// sourceFile.transform((traversal) => {
-		// 	const node = traversal.visitChildren(); // recommend always visiting the children first (post order)
-
-		// 	if (isParent) {
-		// 		isParent = false;
-
-		// 		return ts.factory.updatePropertyAssignment(node, node.name);
-		// 		ts.factory.updateExpressionStatement;
-		// 	}
-		// 	// console.log(node);
-		// 	if (!ts.isObjectLiteralExpression(node)) {
-		// 		return node;
-		// 	}
-		// 	const hasPath = node.properties.some((prop) => prop?.name?.getText() === 'path');
-
-		// 	if (!hasPath) {
-		// 		return node;
-		// 	}
-		// 	const thing = node.properties.reduce((acc, prop) => {
-		// 		const name = prop.name?.getText();
-		// 		if (!name) {
-		// 			return acc;
-		// 		}
-		// 		acc[name] = prop
-		// 			.getChildren()
-		// 			.find((child) => child.kind === ts.SyntaxKind.StringLiteral)
-		// 			?.getText();
-		// 		return acc;
-		// 	}, {});
-
-		// 	console.log(node);
-
-		// 	console.log(thing);
-		// 	const parent = node.parent;
-
-		// 	parent.jsDoc = ts.factory.createJSDocComment('gayboy');
-		// 	console.log(parent.kind);
-		// 	console.log(parent.jsDoc);
-
-		// 	return node;
-		// });
 		sourceFile.saveSync();
 	});
 
 	execSync(`npx prettier ${dir} -w`);
 }
 
-const template = ({ summary, description, path, method, metadata }: Record<string, any>) => [
-	`/**`,
-	` * ${method} ${path}`,
-	summary ? ` * ${summary}` : '',
-	description ? ` * @description\n * ${description}` : '',
-];
+const ifLine = (arg: string | undefined | boolean, template = arg, noNewline = false) =>
+	arg ? ` * ${template}${noNewline ? '' : '\n *'}` : '';
 
-function createJSDocCommentFromTemplate(node: PropertyAssignment, template: string) {
-	let comment = template;
-	const properties = node.getProperties();
+const getText = (initializer?: ObjectLiteralExpression, prop: string) => {
+	const thing = initializer?.getProperty(prop)?.getChildAtIndex(2);
 
-	properties.forEach((prop) => {
-		const propName = prop.getName();
-		const propValue = prop.getInitializer()?.getText() || '';
-		comment = comment.replace(`{{${propName}}}`, propValue);
-	});
+	if (
+		!thing?.isKind(SyntaxKind.NoSubstitutionTemplateLiteral) &&
+		!thing?.isKind(SyntaxKind.StringLiteral)
+	) {
+		return;
+	}
 
-	return comment;
+	return thing.compilerNode.text?.replace(/\t/g, '').replace(/\n/g, '\n * ');
+};
+
+function template(initializer: ObjectLiteralExpression) {
+	const [summary, description, path, method] = ['summary', 'description', 'path', 'method'].map(
+		(prop) => getText(initializer, prop),
+	);
+
+	const metadataRaw = initializer.getProperty('metadata')?.getChildAtIndex(2);
+	const metadata = metadataRaw?.asKind(SyntaxKind.ObjectLiteralExpression);
+
+	const [loggedIn, example, since] = ['loggedIn', 'example', 'since'].map((prop) =>
+		getText(metadata, prop),
+	);
+
+	return [
+		`/**`,
+		` * \`${method} ${path}\``,
+		` *`,
+		ifLine(summary),
+		ifLine(description, `@description\n * ${description}`),
+		ifLine(example, `@example\n * ${example}`),
+		ifLine(since),
+		ifLine(
+			loggedIn !== 'false',
+			`@access ${loggedIn === 'admin' ? 'admin only' : 'logged in'}`,
+		),
+		` * @link https://pubpub.org/apiDocs#/paths/${path
+			?.replace(/^\//, '')
+			.replace(/\//g, '-')
+			.replace(/:(\w+)-/g, '$1-')
+			.replace(/:(\w+)/g, '$1')}/${method?.toLowerCase()}`,
+		' */',
+	]
+		.filter(Boolean)
+		.join('\n');
 }
 
 // Usage Example
-updateJSDocComments('utils/api/contracts', '/** {{summary}} - {{description}} */');
+updateJSDocComments('utils/api/contracts');
