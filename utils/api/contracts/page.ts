@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { createGetQueryOptions } from 'utils/query/createGetQuery';
@@ -13,9 +13,7 @@ import {
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const pageContract = c.router({
+export const pageRouter = {
 	/**
 	 * summary: "Get a page by it's slug or id"
 	 *
@@ -95,4 +93,8 @@ export const pageContract = c.router({
 			}),
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type PageRouterType = typeof pageRouter;
+
+export interface PageRouter extends PageRouterType {}

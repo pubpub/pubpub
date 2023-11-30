@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
@@ -27,9 +27,7 @@ export const memberWithRelationsSchema = memberSchema.extend({
 	collection: collectionSchema.optional(),
 });
 
-const c = initContract();
-
-export const memberContract = c.router({
+export const memberRouter = {
 	/**
 	 * summary: "Get a member by it's id"
 	 *
@@ -105,4 +103,8 @@ export const memberContract = c.router({
 			200: z.string({ description: 'The ID of the removed member' }).uuid(),
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type MemberRouterType = typeof memberRouter;
+
+export interface MemberRouter extends MemberRouterType {}

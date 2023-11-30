@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import { type AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import {
@@ -10,9 +10,7 @@ import { pubSchema } from '../schemas/pub';
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const collectionPubContract = c.router({
+export const collectionPubRouter = {
 	/**
 	 * summary: 'Get the pubs associated with a collection'
 	 *
@@ -71,4 +69,8 @@ export const collectionPubContract = c.router({
 			200: z.string().uuid(),
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type CollectionPubRouterType = typeof collectionPubRouter;
+
+export interface CollectionPubRouter extends CollectionPubRouterType {}

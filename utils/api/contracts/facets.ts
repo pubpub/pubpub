@@ -1,13 +1,11 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { facetSchema } from '../schemas/facets';
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const facetsContract = c.router({
+export const facetsRouter = {
 	/**
 	 * summary: 'Update facets for a scope'
 	 *
@@ -26,4 +24,8 @@ export const facetsContract = c.router({
 			200: z.object({}),
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type FacetsRouterType = typeof facetsRouter;
+
+export interface FacetsRouter extends FacetsRouterType {}

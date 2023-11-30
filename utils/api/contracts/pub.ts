@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
@@ -28,9 +28,22 @@ import { sourceFileSchema } from '../schemas/import';
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const pubContract = c.router({
+export const pubRouter = {
+	/**
+	 * `GET /api/pubs/:slugOrId`
+	 *
+	 * Get a pub by it's slug or id
+	 *
+	 * @description
+	 *
+	 * Get a pub by it's slug or id.
+	 *
+	 * The slug is the thing after `/pub/` in the URL, but before `/release` or `/draft`.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-slugOrId/get
+	 */
 	get: {
 		path: '/api/pubs/:slugOrId',
 		method: 'GET',
@@ -66,6 +79,18 @@ export const pubContract = c.router({
 			200: pubWithRelationsSchema,
 		},
 	},
+	/**
+	 * `GET /api/pubs`
+	 *
+	 * Get many pubs
+	 *
+	 * @description
+	 * Get many pubs
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs/get
+	 */
 	getMany: {
 		path: '/api/pubs',
 		method: 'GET',
@@ -95,6 +120,18 @@ export const pubContract = c.router({
 			200: z.array(pubWithRelationsSchema),
 		},
 	},
+	/**
+	 * `POST /api/pubs`
+	 *
+	 * Create a Pub
+	 *
+	 * @description
+	 * Create a Pub
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs/post
+	 */
 	create: {
 		path: '/api/pubs',
 		method: 'POST',
@@ -105,6 +142,18 @@ export const pubContract = c.router({
 			201: pubSchema,
 		},
 	},
+	/**
+	 * `PUT /api/pubs`
+	 *
+	 * Update a Pub
+	 *
+	 * @description
+	 * Update a Pub
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs/put
+	 */
 	update: {
 		path: '/api/pubs',
 		method: 'PUT',
@@ -117,6 +166,18 @@ export const pubContract = c.router({
 			}),
 		},
 	},
+	/**
+	 * `DELETE /api/pubs`
+	 *
+	 * Remove a Pub
+	 *
+	 * @description
+	 * Remove a Pub
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs/delete
+	 */
 	remove: {
 		path: '/api/pubs',
 		method: 'DELETE',
@@ -129,6 +190,18 @@ export const pubContract = c.router({
 			200: z.object({}),
 		},
 	},
+	/**
+	 * `POST /api/pubs/many`
+	 *
+	 * Search for Pubs
+	 *
+	 * @description
+	 * Search for many pubs. This is an older alternative to the more standardised `GET /api/pubs`, offering different options.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-many/post
+	 */
 	queryMany: {
 		path: '/api/pubs/many',
 		method: 'POST',
@@ -145,6 +218,18 @@ export const pubContract = c.router({
 		},
 	},
 	doi: {
+		/**
+		 * `POST /api/pubs/:pubId/doi`
+		 *
+		 * Create a DOI
+		 *
+		 * @description
+		 * Deposit metadata to create a DOI
+		 *
+		 * @access logged in
+		 *
+		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-doi/post
+		 */
 		deposit: {
 			path: '/api/pubs/:pubId/doi',
 			method: 'POST',
@@ -159,6 +244,18 @@ export const pubContract = c.router({
 				400: z.object({ error: z.string() }),
 			},
 		},
+		/**
+		 * `POST /api/pubs/:pubId/doi/preview`
+		 *
+		 * Preview a DOI deposit
+		 *
+		 * @description
+		 * Preview a DOI deposit
+		 *
+		 * @access logged in
+		 *
+		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-doi-preview/post
+		 */
 		preview: {
 			path: '/api/pubs/:pubId/doi/preview',
 			method: 'POST',
@@ -174,6 +271,18 @@ export const pubContract = c.router({
 			},
 		},
 	},
+	/**
+	 * `GET /api/pubs/:pubId/resource`
+	 *
+	 * Get pub as a resource
+	 *
+	 * @description
+	 * Get pub as a resource
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-resource/get
+	 */
 	getResource: {
 		path: '/api/pubs/:pubId/resource',
 		method: 'GET',
@@ -187,6 +296,18 @@ export const pubContract = c.router({
 		},
 	},
 	text: {
+		/**
+		 * `GET /api/pubs/:pubId/text`
+		 *
+		 * Get the text of a Pub
+		 *
+		 * @description
+		 * Get the text of a Pub as a ProseMirror document
+		 *
+		 * @access logged in
+		 *
+		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/get
+		 */
 		get: {
 			path: '/api/pubs/:pubId/text',
 			method: 'GET',
@@ -199,6 +320,18 @@ export const pubContract = c.router({
 				200: docJsonSchema,
 			},
 		},
+		/**
+		 * `PUT /api/pubs/:pubId/text`
+		 *
+		 * Replace the text of a pub
+		 *
+		 * @description
+		 * Replace the text of a pub with a different ProseMirror document
+		 *
+		 * @access logged in
+		 *
+		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/put
+		 */
 		update: {
 			path: '/api/pubs/:pubId/text',
 			method: 'PUT',
@@ -221,6 +354,18 @@ export const pubContract = c.router({
 				400: z.object({ error: z.string() }),
 			},
 		},
+		/**
+		 * `POST /api/pubs/text/importOld`
+		 *
+		 * Create a pub and import files to it
+		 *
+		 * @description
+		 * Create a pub and upload a file and import it to a pub.
+		 *
+		 * @access logged in
+		 *
+		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-importOld/post
+		 */
 		importOld: {
 			path: '/api/pubs/text/importOld',
 			method: 'POST',
@@ -237,6 +382,18 @@ export const pubContract = c.router({
 				201: z.object({ doc: docJsonSchema, pub: pubSchema }),
 			},
 		},
+		/**
+		 * `POST /api/pubs/text/import`
+		 *
+		 * Create a pub and import files to it
+		 *
+		 * @description
+		 * Create a pub and upload a file and import it to a pub.
+		 *
+		 * @access logged in
+		 *
+		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-import/post
+		 */
 		import: {
 			path: '/api/pubs/text/import',
 			method: 'POST',
@@ -248,6 +405,18 @@ export const pubContract = c.router({
 				201: fullImportOutput,
 			},
 		},
+		/**
+		 * `POST /api/pubs/:pubId/text/import`
+		 *
+		 * Import a file to a pub
+		 *
+		 * @description
+		 * Upload files and import it to a pub.
+		 *
+		 * @access logged in
+		 *
+		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text-import/post
+		 */
 		importToPub: {
 			path: '/api/pubs/:pubId/text/import',
 			method: 'POST',
@@ -261,6 +430,20 @@ export const pubContract = c.router({
 				200: toPubImportOutput,
 			},
 		},
+		/**
+		 * `POST /api/pubs/text/convert`
+		 *
+		 * Convert files to a ProseMirror document
+		 *
+		 * @description
+		 * Convert files to a ProseMirror document.
+		 *
+		 *  Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.
+		 *
+		 * @access logged in
+		 *
+		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-convert/post
+		 */
 		convert: {
 			path: '/api/pubs/text/convert',
 			method: 'POST',
@@ -274,4 +457,8 @@ export const pubContract = c.router({
 			},
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type PubRouterType = typeof pubRouter;
+
+export interface PubRouter extends PubRouterType {}

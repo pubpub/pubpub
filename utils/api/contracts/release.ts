@@ -1,13 +1,11 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { releaseSchema } from '../schemas/release';
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const releaseContract = c.router({
+export const releaseRouter = {
 	/**
 	 * summary: 'Create a release'
 	 *
@@ -33,4 +31,8 @@ export const releaseContract = c.router({
 			400: z.string(),
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type ReleaseRouterType = typeof releaseRouter;
+
+export interface ReleaseRouter extends ReleaseRouterType {}

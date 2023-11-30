@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { pubEdgeCreateSchema, pubEdgeSchema, pubEdgeUpdateSchema } from '../schemas/pubEdge';
@@ -6,9 +6,7 @@ import { sanitizedPubSchema } from '../schemas/pub';
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const pubEdgeContract = c.router({
+export const pubEdgeRouter = {
 	/**
 	 * summary: 'Get a pubEdge'
 	 *
@@ -77,4 +75,8 @@ export const pubEdgeContract = c.router({
 			200: z.object({}),
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type PubEdgeRouterType = typeof pubEdgeRouter;
+
+export interface PubEdgeRouter extends PubEdgeRouterType {}

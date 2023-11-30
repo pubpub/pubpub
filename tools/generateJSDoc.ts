@@ -68,7 +68,7 @@ function updateJSDocComments(dir: string) {
 const ifLine = (arg: string | undefined | boolean, template = arg, noNewline = false) =>
 	arg ? ` * ${template}${noNewline ? '' : '\n *'}` : '';
 
-const getText = (initializer?: ObjectLiteralExpression, prop: string) => {
+const getText = (initializer: ObjectLiteralExpression | undefined, prop: string) => {
 	const thing = initializer?.getProperty(prop)?.getChildAtIndex(2);
 
 	if (

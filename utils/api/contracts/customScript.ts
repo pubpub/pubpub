@@ -1,13 +1,11 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { createCustomScriptSchema, customScriptSchema } from '../schemas/customScript';
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const customScriptContract = c.router({
+export const customScriptRouter = {
 	/**
 	 * summary: 'Set a custom script'
 	 *
@@ -26,4 +24,8 @@ export const customScriptContract = c.router({
 			200: customScriptSchema,
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type CustomScriptRouterType = typeof customScriptRouter;
+
+export interface CustomScriptRouter extends CustomScriptRouterType {}

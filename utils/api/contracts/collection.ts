@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import { initContract, type AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { createGetManyQueryOptions } from 'utils/query/createGetManyQuery';
@@ -15,16 +15,7 @@ import { resourceASTSchema } from '../schemas/pub';
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const collectionContract = c.router({
-	/**
-	 * summary: "Get a collection by it's id or slug"
-	 *
-	 * @description
-	 * "Get a collection by it's id or slug"
-	 */
-
+export const collectionRouter = {
 	get: {
 		path: '/api/collections/:slugOrId',
 		method: 'GET',
@@ -137,4 +128,8 @@ export const collectionContract = c.router({
 			200: resourceSchema,
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type CollectionRouterType = typeof collectionRouter;
+
+export interface CollectionRouter extends CollectionRouterType {}

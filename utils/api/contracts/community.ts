@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import {
@@ -9,9 +9,7 @@ import {
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-export const communityContract = c.router({
+export const communityRouter = {
 	/**
 	 * summary: 'Get the current community'
 	 *
@@ -60,4 +58,8 @@ export const communityContract = c.router({
 			200: communityUpdateSchema.partial(),
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type CommunityRouterType = typeof communityRouter;
+
+export interface CommunityRouter extends CommunityRouterType {}

@@ -1,14 +1,10 @@
-import { initContract } from '@ts-rest/core';
+import type { AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
 extendZodWithOpenApi(z);
 
-const c = initContract();
-
-const md = String.raw;
-
-export const workerTaskContract = c.router({
+export const workerTaskRouter = {
 	/**
 	 * summary: 'Get a worker task'
 	 *
@@ -37,33 +33,26 @@ export const workerTaskContract = c.router({
 			}),
 		},
 		metadata: {
-			example: md`
-				    			    			    			    			# hey
+			example: `
+			# hey
 
-				    			    			    			    			-   hey
-				    			    			    			    			-   ho
+			-   hey
+			-   ho
 
-				    			    			    			    			## h
+			## h
 
-				    			    			    			    			~~~ts
-				    			    			    			    			function go() {}
-				    			    			    			    			hello;
-				    			    			    			    			~~~
+			~~~ts
+			function go() {}
+			hello;
+			~~~
 
-				    			    			    			    			    const x = 'hey';
-				    			    			    			    			    function gamed({ hey }) {}
-
-
-
-
-
-
-
-
-
-
-
+			const x = 'hey';
+			function gamed({ hey }) {}
 			`,
 		},
 	},
-});
+} as const satisfies AppRouter;
+
+type WorkerTaskRouterType = typeof workerTaskRouter;
+
+export interface WorkerTaskRouter extends WorkerTaskRouterType {}
