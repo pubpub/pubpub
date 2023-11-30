@@ -89,7 +89,7 @@
 		"@pubpub/prosemirror-reactive": "^0.2.0",
 		"@sentry/node": "^7.77.0",
 		"@sentry/react": "^7.77.0",
-		"@ts-rest/core": "^3.30.5",
+		"@ts-rest/core": "github:pubpub/ts-rest#ts-rest-core-v3.30.5-gitpkg",
 		"@ts-rest/express": "^3.30.5",
 		"@ts-rest/open-api": "^3.30.5",
 		"@types/html-minifier": "^4.0.1",
