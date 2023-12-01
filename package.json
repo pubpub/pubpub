@@ -219,7 +219,7 @@
 		"sass": "^1.57.1",
 		"sass-loader": "^7.1.0",
 		"sequelize": "^6.31.1",
-		"sequelize-typescript": "^2.1.5",
+		"sequelize-typescript": "^2.1.6",
 		"sequelize-typescript-generator": "^10.1.2",
 		"sitemap": "^6.2.0",
 		"slowdance": "0.0.2",
