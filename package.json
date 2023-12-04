@@ -135,7 +135,7 @@
 		"file-saver": "^2.0.2",
 		"filesize": "^4.1.2",
 		"firebase": "^7.5.2",
-		"firebase-admin": "^9.4.2",
+		"firebase-admin": "^11.11.1",
 		"firebase-server": "^1.1.0",
 		"fs-extra": "^8.1.0",
 		"fuzzysearch": "^1.0.3",
