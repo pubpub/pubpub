@@ -1,4 +1,4 @@
-import { initContract, type AppRouter } from '@ts-rest/core';
+import { type AppRouter } from '@ts-rest/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { createGetManyQueryOptions } from 'utils/query/createGetManyQuery';
@@ -67,10 +67,10 @@ export const collectionRouter = {
 			sort: {
 				options: ['title', 'kind', 'slug'],
 			},
-			// include: {
-			// 	options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
-			// 	defaults: ['attributions', 'collectionPubs'],
-			// },
+			include: {
+				options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
+				defaults: ['attributions', 'collectionPubs'],
+			},
 		}),
 		responses: {
 			200: z.array(collectionWithRelationsSchema),
