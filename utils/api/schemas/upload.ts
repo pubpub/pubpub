@@ -15,8 +15,8 @@ export const textMimeTypes = [
 	'application/x-tex',
 ] as const;
 /**
- * Non-exhaustive list of mime-types that we allow to be uploaded to PubPub,
- * minus image types, which are handled separately.
+ * Non-exhaustive list of mime-types that we allow to be uploaded to PubPub, minus image types,
+ * which are handled separately.
  */
 export const allowedMimeTypes = [
 	...textMimeTypes,

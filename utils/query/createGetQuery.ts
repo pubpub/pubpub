@@ -27,21 +27,18 @@ export const createGetQueryOptions = <
 >(
 	schema: Schema,
 	options: {
-		/**
-		 * Which relations are includeable and what are their defaults
-		 */
+		/** Which relations are includeable and what are their defaults */
 		include?: {
 			/**
 			 * Which relations are includeable
 			 *
-			 * @default []
-			 *
+			 * @default [ ]
 			 */
 			options: IncludeOptions;
 			/**
 			 * Which relations are included by default
 			 *
-			 * @default []
+			 * @default [ ]
 			 */
 			defaults?: IncludeDefaults;
 		};
@@ -51,6 +48,7 @@ export const createGetQueryOptions = <
 	return z.object({
 		/**
 		 * Include certain relations
+		 *
 		 * @internal
 		 */
 		include:

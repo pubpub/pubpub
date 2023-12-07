@@ -55,6 +55,7 @@ const buildFieldWhereClause = <T extends FilterTypes>(filterField: T, arrayDepth
 
 /**
  * Builds a Sequelize `where` clause based on the provided filters.
+ *
  * @param filters - An object containing the filters to apply to the query.
  * @returns A Sequelize `where` clause object.
  */

@@ -25,9 +25,7 @@ extendZodWithOpenApi(z);
 const c = initContract();
 
 const router = {
-	/**
-	 * Methods for dealing with authentication
-	 */
+	/** Methods for dealing with authentication */
 	auth: authRouter as AuthRouter,
 	collection: collectionRouter as CollectionRouter,
 	collectionAttribution: collectionAttributionRouter as CollectionAttributionRouter,
@@ -41,9 +39,7 @@ const router = {
 	pubAttribution: pubAttributionRouter as PubAttributionRouter,
 	pubEdge: pubEdgeRouter as PubEdgeRouter,
 	release: releaseRouter as ReleaseRouter,
-	/**
-	 * Methods for dealing with worker tasks, i.e. imports and exports
-	 */
+	/** Methods for dealing with worker tasks, i.e. imports and exports */
 	workerTask: workerTaskRouter as WorkerTaskRouter,
 	upload: uploadRouter as UploadRouter,
 } as const satisfies AppRouter;
