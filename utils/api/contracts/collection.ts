@@ -21,12 +21,10 @@ export const collectionRouter = {
 	 *
 	 * Get a collection by it's id or slug
 	 *
-	 * @description
-	 * Get a collection by it's id or slug
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collections-slugOrId/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collections-slugOrId/get}
 	 */
 	get: {
 		path: '/api/collections/:slugOrId',
@@ -54,12 +52,10 @@ export const collectionRouter = {
 	 *
 	 * Get many collections
 	 *
-	 * @description
-	 * Get many collections
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collections/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collections/get}
 	 */
 	getMany: {
 		path: '/api/collections',
@@ -85,12 +81,10 @@ export const collectionRouter = {
 	 *
 	 * Create a collection
 	 *
-	 * @description
-	 * Create a collection
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collections/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collections/post}
 	 */
 	create: {
 		path: '/api/collections',
@@ -107,12 +101,10 @@ export const collectionRouter = {
 	 *
 	 * Update a collection
 	 *
-	 * @description
-	 * Update a collection
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collections/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collections/put}
 	 */
 	update: {
 		path: '/api/collections',
@@ -129,12 +121,10 @@ export const collectionRouter = {
 	 *
 	 * Remove a collection
 	 *
-	 * @description
-	 * Remove a collection
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collections/delete
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collections/delete}
 	 */
 	remove: {
 		path: '/api/collections',
@@ -150,14 +140,12 @@ export const collectionRouter = {
 		/**
 		 * `POST /api/collections/:collectionId/doi`
 		 *
-		 * Create a DOI
-		 *
-		 * @description
 		 * Deposit metadata to create a DOI
 		 *
 		 * @access logged in
 		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-doi/post
+		 * @apiDocs
+		 * {@link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-doi/post}
 		 */
 		deposit: {
 			path: '/api/collections/:collectionId/doi',
@@ -178,12 +166,10 @@ export const collectionRouter = {
 		 *
 		 * Preview a DOI deposit
 		 *
-		 * @description
-		 * Preview a DOI deposit
-		 *
 		 * @access logged in
 		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-doi-preview/post
+		 * @apiDocs
+		 * {@link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-doi-preview/post}
 		 */
 		preview: {
 			path: '/api/collections/:collectionId/doi/preview',
@@ -205,12 +191,10 @@ export const collectionRouter = {
 	 *
 	 * Get collection as a resource
 	 *
-	 * @description
-	 * Get collection as a resource
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-resource/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-resource/get}
 	 */
 	getResource: {
 		path: '/api/collections/:collectionId/resource',

@@ -13,14 +13,12 @@ export const communityRouter = {
 	/**
 	 * `GET /api/communities`
 	 *
-	 * Get the current community
-	 *
-	 * @description
 	 * Get a list of communities. Currently only returns the current community.
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-communities/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-communities/get}
 	 */
 	getCommunities: {
 		path: '/api/communities',
@@ -34,14 +32,12 @@ export const communityRouter = {
 	/**
 	 * `GET /api/communities/:id`
 	 *
-	 * Get a community by it's id
-	 *
-	 * @description
 	 * Get a community
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-communities-id/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-communities-id/get}
 	 */
 	get: {
 		path: '/api/communities/:id',
@@ -60,12 +56,10 @@ export const communityRouter = {
 	 *
 	 * Create a community
 	 *
-	 * @description
-	 * Create a community
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-communities/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-communities/post}
 	 */
 	create: {
 		path: '/api/communities',
@@ -82,12 +76,10 @@ export const communityRouter = {
 	 *
 	 * Update a community
 	 *
-	 * @description
-	 * Update a community
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-communities/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-communities/put}
 	 */
 	update: {
 		path: '/api/communities',

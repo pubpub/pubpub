@@ -8,14 +8,12 @@ export const authRouter = {
 	/**
 	 * `POST /api/login`
 	 *
-	 * Login
-	 *
-	 * @description
 	 * Login and returns authentication cookie
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-login/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-login/post}
 	 */
 	login: {
 		path: '/api/login',
@@ -44,14 +42,12 @@ export const authRouter = {
 	/**
 	 * `GET /api/logout`
 	 *
-	 * Logout
-	 *
-	 * @description
 	 * Logout and clear authentication cookie
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-logout/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-logout/get}
 	 */
 	logout: {
 		path: '/api/logout',

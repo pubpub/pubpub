@@ -16,12 +16,10 @@ export const collectionPubRouter = {
 	 *
 	 * Get the pubs associated with a collection
 	 *
-	 * @description
-	 * Get the pubs associated with a collection
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionPubs/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionPubs/get}
 	 */
 	get: {
 		path: '/api/collectionPubs',
@@ -42,12 +40,10 @@ export const collectionPubRouter = {
 	 *
 	 * Add a pub to a collection
 	 *
-	 * @description
-	 * Add a pub to a collection
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionPubs/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionPubs/post}
 	 */
 	create: {
 		path: '/api/collectionPubs',
@@ -62,14 +58,12 @@ export const collectionPubRouter = {
 	/**
 	 * `PUT /api/collectionPubs`
 	 *
-	 * Update pubs for collection
-	 *
-	 * @description
 	 * Change the pubs that are associated with a collection
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionPubs/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionPubs/put}
 	 */
 	update: {
 		path: '/api/collectionPubs',
@@ -90,12 +84,10 @@ export const collectionPubRouter = {
 	 *
 	 * Remove a pub from a collection
 	 *
-	 * @description
-	 * Remove a pub from a collection
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionPubs/delete
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionPubs/delete}
 	 */
 	remove: {
 		path: '/api/collectionPubs',

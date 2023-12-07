@@ -29,12 +29,10 @@ export const pubAttributionRouter = {
 	 *
 	 * Get a pub attribution
 	 *
-	 * @description
-	 * Get a pub attribution
+	 * @access admin only
 	 *
-	 * @access logged in
-	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions-id/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions-id/get}
 	 */
 	get: {
 		path: '/api/pubAttributions/:id',
@@ -55,14 +53,12 @@ export const pubAttributionRouter = {
 	/**
 	 * `GET /api/pubAttributions`
 	 *
-	 * Get multiple pub attributions
-	 *
-	 * @description
 	 * Get multiple pub attributions. You are limited to attributions in your community.
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions/get}
 	 */
 	getMany: {
 		path: '/api/pubAttributions',
@@ -88,12 +84,10 @@ export const pubAttributionRouter = {
 	 *
 	 * Batch create pub attributions
 	 *
-	 * @description
-	 * Batch create pub attributions
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions-batch/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions-batch/post}
 	 */
 	batchCreate: {
 		path: '/api/pubAttributions/batch',
@@ -108,14 +102,12 @@ export const pubAttributionRouter = {
 	/**
 	 * `POST /api/pubAttributions`
 	 *
-	 * Create a pub attribution
-	 *
-	 * @description
 	 * Add an attribution to a pub
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions/post}
 	 */
 	create: {
 		path: '/api/pubAttributions',
@@ -133,12 +125,10 @@ export const pubAttributionRouter = {
 	 *
 	 * Update a pub attribution
 	 *
-	 * @description
-	 * Update a pub attribution
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions/put}
 	 */
 	update: {
 		path: '/api/pubAttributions',
@@ -156,12 +146,10 @@ export const pubAttributionRouter = {
 	 *
 	 * Remove a pub attribution
 	 *
-	 * @description
-	 * Remove a pub attribution
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions/delete
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions/delete}
 	 */
 	remove: {
 		path: '/api/pubAttributions',

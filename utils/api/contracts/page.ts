@@ -18,14 +18,12 @@ export const pageRouter = {
 	/**
 	 * `GET /api/pages/:slugOrId`
 	 *
-	 * Get a page by it's slug or id
-	 *
-	 * @description
 	 * Get a page by it's slug or id.
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pages-slugOrId/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pages-slugOrId/get}
 	 */
 	get: {
 		path: '/api/pages/:slugOrId',
@@ -56,12 +54,10 @@ export const pageRouter = {
 	 *
 	 * Get many pages
 	 *
-	 * @description
-	 * Get many pages
+	 * @access admin only
 	 *
-	 * @access logged in
-	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pages/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pages/get}
 	 */
 	getMany: {
 		path: '/api/pages',
@@ -90,12 +86,10 @@ export const pageRouter = {
 	 *
 	 * Create a page
 	 *
-	 * @description
-	 * Create a page
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pages/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pages/post}
 	 */
 	create: {
 		path: '/api/pages',
@@ -112,12 +106,10 @@ export const pageRouter = {
 	 *
 	 * Update a page
 	 *
-	 * @description
-	 * Update a page
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pages/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pages/put}
 	 */
 	update: {
 		path: '/api/pages',
@@ -134,12 +126,10 @@ export const pageRouter = {
 	 *
 	 * Remove a page
 	 *
-	 * @description
-	 * Remove a page
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pages/delete
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pages/delete}
 	 */
 	remove: {
 		path: '/api/pages',

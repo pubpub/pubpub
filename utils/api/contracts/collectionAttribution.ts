@@ -28,12 +28,10 @@ export const collectionAttributionRouter = {
 	 *
 	 * Get a collection attribution
 	 *
-	 * @description
-	 * Get a collection attribution
+	 * @access admin only
 	 *
-	 * @access logged in
-	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions-id/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions-id/get}
 	 */
 	get: {
 		path: '/api/collectionAttributions/:id',
@@ -54,14 +52,12 @@ export const collectionAttributionRouter = {
 	/**
 	 * `GET /api/collectionAttributions`
 	 *
-	 * Get multiple collection attributions
-	 *
-	 * @description
 	 * Get multiple collection attributions. You are limited to attributions in your community.
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/get}
 	 */
 	getMany: {
 		path: '/api/collectionAttributions',
@@ -87,12 +83,10 @@ export const collectionAttributionRouter = {
 	 *
 	 * Batch create collection attributions
 	 *
-	 * @description
-	 * Batch create collection attributions
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions-batch/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions-batch/post}
 	 */
 	batchCreate: {
 		path: '/api/collectionAttributions/batch',
@@ -109,12 +103,10 @@ export const collectionAttributionRouter = {
 	 *
 	 * Create a collection attribution
 	 *
-	 * @description
-	 * Create a collection attribution
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/post}
 	 */
 	create: {
 		path: '/api/collectionAttributions',
@@ -131,12 +123,10 @@ export const collectionAttributionRouter = {
 	 *
 	 * Update a collection attribution
 	 *
-	 * @description
-	 * Update a collection attribution
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/put}
 	 */
 	update: {
 		path: '/api/collectionAttributions',
@@ -153,12 +143,10 @@ export const collectionAttributionRouter = {
 	 *
 	 * Remove a collection attribution
 	 *
-	 * @description
-	 * Remove a collection attribution
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/delete
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/delete}
 	 */
 	remove: {
 		path: '/api/collectionAttributions',

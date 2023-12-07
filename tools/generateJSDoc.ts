@@ -87,34 +87,40 @@ function template(initializer: ObjectLiteralExpression) {
 		(prop) => getText(initializer, prop),
 	);
 
-	const metadataRaw = initializer.getProperty('metadata')?.getChildAtIndex(2);
-	const metadata = metadataRaw?.asKind(SyntaxKind.ObjectLiteralExpression);
+	const metadataRaw = initializer
+		.getProperty('metadata')
+		?.getChildAtIndex(2)
+		?.getChildrenOfKind(SyntaxKind.ObjectLiteralExpression);
+
+	const metadata = metadataRaw?.[0];
 
 	const [loggedIn, example, since] = ['loggedIn', 'example', 'since'].map((prop) =>
 		getText(metadata, prop),
 	);
 
-	return [
+	const result = [
 		`/**`,
 		` * \`${method} ${path}\``,
 		` *`,
-		ifLine(summary),
-		ifLine(description, `@description\n * ${description}`),
+		ifLine(description),
 		ifLine(example, `@example\n * ${example}`),
 		ifLine(since),
 		ifLine(
 			loggedIn !== 'false',
 			`@access ${loggedIn === 'admin' ? 'admin only' : 'logged in'}`,
 		),
-		` * @link https://pubpub.org/apiDocs#/paths/${path
+		` * @apiDocs
+* {@link https://pubpub.org/apiDocs#/paths/${path
 			?.replace(/^\//, '')
 			.replace(/\//g, '-')
 			.replace(/:(\w+)-/g, '$1-')
-			.replace(/:(\w+)/g, '$1')}/${method?.toLowerCase()}`,
+			.replace(/:(\w+)/g, '$1')}/${method?.toLowerCase()}}`,
 		' */',
 	]
 		.filter(Boolean)
 		.join('\n');
+
+	return result;
 }
 
 // Usage Example

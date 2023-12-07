@@ -10,14 +10,13 @@ export const workerTaskRouter = {
 	/**
 	 * `GET /api/workerTasks`
 	 *
-	 * Get a worker task
-	 *
-	 * @description
-	 * Get the status of a worker task. This is used to poll for the status of a worker task, such as an import or export.
+	 * Get the status of a worker task. This is used to poll for the status of a worker task, such
+	 * as an import or export.
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-workerTasks/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-workerTasks/get}
 	 */
 	get: {
 		path: '/api/workerTasks',
@@ -44,19 +43,22 @@ export const workerTaskRouter = {
 	/**
 	 * `POST /api/import`
 	 *
-	 * Import files to a pub
-	 *
-	 * @description
 	 * Import files to a pub.
 	 *
-	 * This requires you to first upload the files using `/api/upload`, create a Pub using `POST /api/pubs`, then create an import task using this endpoint, and then ping `/api/workerTasks?workerTaskId={UUID}` to check the status of the import.
+	 * This requires you to first upload the files using `/api/upload`, create a Pub using `POST
+	 * /api/pubs`, then create an import task using this endpoint, and then ping
+	 * `/api/workerTasks?workerTaskId={UUID}` to check the status of the import.
 	 *
-	 * It's much easier to use `/api/pubs/text/import` or `/api/pubs/{pubId}/text/import` instead to import and create a Pub or just import to a Pub respectively.
-	 * You can directly upload files to these endpoints, do not need to poll the status of the import, and, if you are importing to a Pub, you can determine whether the imported files should be added to the existing Pub or replace the existing Pub's content.
+	 * It's much easier to use `/api/pubs/text/import` or `/api/pubs/{pubId}/text/import` instead to
+	 * import and create a Pub or just import to a Pub respectively. You can directly upload files
+	 * to these endpoints, do not need to poll the status of the import, and, if you are importing
+	 * to a Pub, you can determine whether the imported files should be added to the existing Pub or
+	 * replace the existing Pub's content.
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-import/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-import/post}
 	 */
 	createImport: {
 		path: '/api/import',
@@ -81,20 +83,20 @@ export const workerTaskRouter = {
 	/**
 	 * `POST /api/export`
 	 *
-	 * Export a pub
-	 *
-	 * @description
 	 * Export a pub to a file. Returns the export task's status.
 	 *
 	 * Requires authentication for unreleased pubs.
 	 *
-	 * This returns an id of an export task. You will have to poll the status of the task to see if it is complete.
+	 * This returns an id of an export task. You will have to poll the status of the task to see if
+	 * it is complete.
 	 *
-	 * Alternatively, the SDK has a helper function that will poll the status for you, see the `exportPub` in `@pubpub/sdk`.
+	 * Alternatively, the SDK has a helper function that will poll the status for you, see the
+	 * `exportPub` in `@pubpub/sdk`.
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-export/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-export/post}
 	 */
 	createExport: {
 		path: '/api/export',

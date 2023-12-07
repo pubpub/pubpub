@@ -10,14 +10,24 @@ export const customScriptRouter = {
 	/**
 	 * `POST /api/customScripts`
 	 *
-	 * Set a custom script
-	 *
-	 * @description
 	 * Set a custom scripts, i.e. the CSS or JS (if you have access) for this community
 	 *
-	 * @access logged in
+	 * @example
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-customScripts/post
+	 * ```ts
+	 * const pubpub = await PubPub.createSDK({
+	 * 	// ...
+	 * });
+	 * const { body } = await pubpub.customScript.set({
+	 * 	type: 'css', // js only if your community has access to it
+	 * 	content: '...', // raw css
+	 * });
+	 * ```
+	 *
+	 * @access admin only
+	 *
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-customScripts/post}
 	 */
 	set: {
 		path: '/api/customScripts',
@@ -31,12 +41,15 @@ export const customScriptRouter = {
 		},
 		metadata: {
 			loggedIn: 'admin',
-			example: `
-const pubpub = await PubPub.createSDK({/*...*/})
+			example: `~~~ts
+const pubpub = await PubPub.createSDK({
+	// ...
+})
 const { body } = await pubpub.customScript.set({
 	type: 'css', // js only if your community has access to it
 	content: '...', // raw css	
-})`,
+})
+~~~`,
 		} satisfies Metadata,
 	},
 } as const satisfies AppRouter;

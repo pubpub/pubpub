@@ -333,6 +333,7 @@
 		"postcss-loader": "^3.0.0",
 		"prettier": "^3.1.0",
 		"prettier-plugin-embed": "^0.2.5",
+		"prettier-plugin-jsdoc": "^1.1.1",
 		"prosemirror-dev-tools": "^4.0.0",
 		"resolve-url-loader": "^3.1.1",
 		"sinon": "^7.3.2",

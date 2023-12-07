@@ -9,16 +9,15 @@ export const facetsRouter = {
 	/**
 	 * `POST /api/facets`
 	 *
-	 * Update facets for a scope
-	 *
-	 * @description
-	 * Facets are properties that cascade down from a community, collection, or publication to all of its children, like the style of citation used or the license for content.
+	 * Facets are properties that cascade down from a community, collection, or publication to all
+	 * of its children, like the style of citation used or the license for content.
 	 *
 	 * You cannot "unset" facets, so passing an empty object will just be treated as no change.
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-facets/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-facets/post}
 	 */
 	update: {
 		path: '/api/facets',

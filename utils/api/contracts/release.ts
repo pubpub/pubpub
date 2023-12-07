@@ -11,12 +11,10 @@ export const releaseRouter = {
 	 *
 	 * Create a release
 	 *
-	 * @description
-	 * Create a release
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-releases/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-releases/post}
 	 */
 	create: {
 		path: '/api/releases',

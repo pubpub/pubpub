@@ -33,14 +33,12 @@ const textRouter = {
 	/**
 	 * `GET /api/pubs/:pubId/text`
 	 *
-	 * Get the text of a Pub
-	 *
-	 * @description
 	 * Get the text of a Pub as a ProseMirror document
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/get}
 	 */
 	get: {
 		path: '/api/pubs/:pubId/text',
@@ -60,14 +58,12 @@ const textRouter = {
 	/**
 	 * `PUT /api/pubs/:pubId/text`
 	 *
-	 * Replace the text of a pub
-	 *
-	 * @description
 	 * Replace the text of a pub with a different ProseMirror document
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/put}
 	 */
 	update: {
 		path: '/api/pubs/:pubId/text',
@@ -97,14 +93,12 @@ const textRouter = {
 	/**
 	 * `POST /api/pubs/text/importOld`
 	 *
-	 * Create a pub and import files to it
-	 *
-	 * @description
 	 * Create a pub and upload a file and import it to a pub.
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-importOld/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-text-importOld/post}
 	 */
 	importOld: {
 		path: '/api/pubs/text/importOld',
@@ -128,14 +122,12 @@ const textRouter = {
 	/**
 	 * `POST /api/pubs/text/import`
 	 *
-	 * Create a pub and import files to it
-	 *
-	 * @description
 	 * Create a pub and upload a file and import it to a pub.
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-import/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-text-import/post}
 	 */
 	import: {
 		path: '/api/pubs/text/import',
@@ -154,14 +146,12 @@ const textRouter = {
 	/**
 	 * `POST /api/pubs/:pubId/text/import`
 	 *
-	 * Import a file to a pub
-	 *
-	 * @description
 	 * Upload files and import it to a pub.
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text-import/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text-import/post}
 	 */
 	importToPub: {
 		path: '/api/pubs/:pubId/text/import',
@@ -182,16 +172,14 @@ const textRouter = {
 	/**
 	 * `POST /api/pubs/text/convert`
 	 *
-	 * Convert files to a ProseMirror document
-	 *
-	 * @description
 	 * Convert files to a ProseMirror document.
 	 *
-	 *  Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.
+	 * Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-convert/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-text-convert/post}
 	 */
 	convert: {
 		path: '/api/pubs/text/convert',
@@ -217,17 +205,14 @@ export const pubRouter = {
 	/**
 	 * `GET /api/pubs/:slugOrId`
 	 *
-	 * Get a pub by it's slug or id
-	 *
-	 * @description
-	 *
 	 * Get a pub by it's slug or id.
 	 *
 	 * The slug is the thing after `/pub/` in the URL, but before `/release` or `/draft`.
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-slugOrId/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-slugOrId/get}
 	 */
 	get: {
 		path: '/api/pubs/:slugOrId',
@@ -272,12 +257,10 @@ export const pubRouter = {
 	 *
 	 * Get many pubs
 	 *
-	 * @description
-	 * Get many pubs
+	 * @access admin only
 	 *
-	 * @access logged in
-	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs/get}
 	 */
 	getMany: {
 		path: '/api/pubs',
@@ -316,12 +299,10 @@ export const pubRouter = {
 	 *
 	 * Create a Pub
 	 *
-	 * @description
-	 * Create a Pub
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs/post}
 	 */
 	create: {
 		path: '/api/pubs',
@@ -338,12 +319,10 @@ export const pubRouter = {
 	 *
 	 * Update a Pub
 	 *
-	 * @description
-	 * Update a Pub
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs/put}
 	 */
 	update: {
 		path: '/api/pubs',
@@ -362,12 +341,10 @@ export const pubRouter = {
 	 *
 	 * Remove a Pub
 	 *
-	 * @description
-	 * Remove a Pub
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs/delete
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs/delete}
 	 */
 	remove: {
 		path: '/api/pubs',
@@ -384,14 +361,13 @@ export const pubRouter = {
 	/**
 	 * `POST /api/pubs/many`
 	 *
-	 * Search for Pubs
-	 *
-	 * @description
-	 * Search for many pubs. This is an older alternative to the more standardised `GET /api/pubs`, offering different options.
+	 * Search for many pubs. This is an older alternative to the more standardised `GET /api/pubs`,
+	 * offering different options.
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-many/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-many/post}
 	 */
 	queryMany: {
 		path: '/api/pubs/many',
@@ -412,14 +388,12 @@ export const pubRouter = {
 		/**
 		 * `POST /api/pubs/:pubId/doi`
 		 *
-		 * Create a DOI
-		 *
-		 * @description
 		 * Deposit metadata to create a DOI
 		 *
 		 * @access logged in
 		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-doi/post
+		 * @apiDocs
+		 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-doi/post}
 		 */
 		deposit: {
 			path: '/api/pubs/:pubId/doi',
@@ -440,12 +414,10 @@ export const pubRouter = {
 		 *
 		 * Preview a DOI deposit
 		 *
-		 * @description
-		 * Preview a DOI deposit
-		 *
 		 * @access logged in
 		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-doi-preview/post
+		 * @apiDocs
+		 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-doi-preview/post}
 		 */
 		preview: {
 			path: '/api/pubs/:pubId/doi/preview',
@@ -467,12 +439,10 @@ export const pubRouter = {
 	 *
 	 * Get pub as a resource
 	 *
-	 * @description
-	 * Get pub as a resource
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-resource/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-resource/get}
 	 */
 	getResource: {
 		path: '/api/pubs/:pubId/resource',
@@ -486,9 +456,7 @@ export const pubRouter = {
 			200: resourceSchema,
 		},
 	},
-	/**
-	 * Methods for working with the text of a pub
-	 */
+	/** Methods for working with the text of a pub */
 	text: textRouter as TextRouter,
 } as const satisfies AppRouter;
 

@@ -5,5 +5,7 @@
 	"tabWidth": 4,
 	"trailingComma": "all",
 	"useTabs": true,
-	"plugins": ["prettier-plugin-embed"]
+	"plugins": ["prettier-plugin-jsdoc"],
+	"tsdoc": true,
+	"jsdocPreferCodeFences": true
 }

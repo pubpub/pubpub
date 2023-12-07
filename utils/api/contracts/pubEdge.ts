@@ -10,14 +10,12 @@ export const pubEdgeRouter = {
 	/**
 	 * `GET /api/pubEdges/:id`
 	 *
-	 * Get a pubEdge
-	 *
-	 * @description
 	 * Get a pubEdge by id
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubEdges-id/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges-id/get}
 	 */
 	get: {
 		path: '/api/pubEdges/:id',
@@ -34,14 +32,12 @@ export const pubEdgeRouter = {
 	/**
 	 * `POST /api/pubEdges`
 	 *
-	 * Create a pub edge
-	 *
-	 * @description
 	 * Create a connection from one pub to another, or to an external publication
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubEdges/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges/post}
 	 */
 	create: {
 		path: '/api/pubEdges',
@@ -64,12 +60,10 @@ export const pubEdgeRouter = {
 	 *
 	 * Update a pubEdge
 	 *
-	 * @description
-	 * Update a pubEdge
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubEdges/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges/put}
 	 */
 	update: {
 		path: '/api/pubEdges',
@@ -82,14 +76,12 @@ export const pubEdgeRouter = {
 	/**
 	 * `PUT /api/pubEdges/approvedByTarget`
 	 *
-	 * Update approvedByTarget for pubEdge
-	 *
-	 * @description
 	 * Update the approvedByTarget field of a pubEdge
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubEdges-approvedByTarget/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges-approvedByTarget/put}
 	 */
 	updateApprovedByTarget: {
 		path: '/api/pubEdges/approvedByTarget',
@@ -107,14 +99,12 @@ export const pubEdgeRouter = {
 	/**
 	 * `DELETE /api/pubEdges`
 	 *
-	 * Remove a pubEdge
-	 *
-	 * @description
 	 * Remove a connection for a pub
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-pubEdges/delete
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges/delete}
 	 */
 	remove: {
 		path: '/api/pubEdges',

@@ -32,14 +32,12 @@ export const memberRouter = {
 	/**
 	 * `GET /api/members/:id`
 	 *
-	 * Get a member by it's id
-	 *
-	 * @description
 	 * Get a member
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-members-id/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-members-id/get}
 	 */
 	get: {
 		path: '/api/members/:id',
@@ -65,14 +63,12 @@ export const memberRouter = {
 	/**
 	 * `GET /api/members`
 	 *
-	 * Get all members from a community
-	 *
-	 * @description
 	 * Get many members
 	 *
-	 * @access logged in
+	 * @access admin only
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-members/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-members/get}
 	 */
 	getMany: {
 		path: '/api/members',
@@ -97,12 +93,10 @@ export const memberRouter = {
 	 *
 	 * Create a member
 	 *
-	 * @description
-	 * Create a member
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-members/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-members/post}
 	 */
 	create: {
 		path: '/api/members',
@@ -119,12 +113,10 @@ export const memberRouter = {
 	 *
 	 * Update a member
 	 *
-	 * @description
-	 * Update a member
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-members/put
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-members/put}
 	 */
 	update: {
 		path: '/api/members',
@@ -146,12 +138,10 @@ export const memberRouter = {
 	 *
 	 * Remove a member
 	 *
-	 * @description
-	 * Remove a member
-	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-members/delete
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-members/delete}
 	 */
 	remove: {
 		path: '/api/members',

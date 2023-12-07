@@ -6,16 +6,15 @@ export const uploadRouter = {
 	/**
 	 * `POST /api/upload`
 	 *
-	 * Upload a file
-	 *
-	 * @description
-	 * Upload a file to PubPub. For if you want to upload PDFs/images to use as formatted downloads or within a Pub.
+	 * Upload a file to PubPub. For if you want to upload PDFs/images to use as formatted downloads
+	 * or within a Pub.
 	 *
 	 * Abuse of this endpoint will result in a ban.
 	 *
-	 * @access admin only
+	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-upload/post
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-upload/post}
 	 */
 	file: {
 		path: '/api/upload',
@@ -41,14 +40,12 @@ export const uploadRouter = {
 	/**
 	 * `GET /api/uploadPolicy`
 	 *
-	 * Get upload policy
-	 *
-	 * @description
 	 * Get upload policy. Used for doing manual uploads.
 	 *
 	 * @access logged in
 	 *
-	 * @link https://pubpub.org/apiDocs#/paths/api-uploadPolicy/get
+	 * @apiDocs
+	 * {@link https://pubpub.org/apiDocs#/paths/api-uploadPolicy/get}
 	 */
 	policy: {
 		path: '/api/uploadPolicy',
