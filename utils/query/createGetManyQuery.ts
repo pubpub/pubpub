@@ -126,16 +126,18 @@ export function createGetManyQueryOptions<
 
 	return z
 		.object({
-			/**
-			 * Pagination
+			/** Pagination
+			 * @internal
+			 *
 			 */
 			limit: z.coerce.number().int().positive().default(10),
-			/**
-			 * Pagination
+			/** Pagination
+			 * @internal
 			 */
 			offset: z.coerce.number().int().default(0),
-			/**
-			 * Sorting
+			/** Sorting
+			 *
+			 * @internal
 			 */
 			sortBy: z
 				.enum(['createdAt', 'updatedAt', ...sortOptions])
@@ -145,6 +147,8 @@ export function createGetManyQueryOptions<
 			 * Sorting order
 			 *
 			 * @default 'DESC'
+			 *
+			 * @internal
 			 */
 			orderBy: z.enum(['ASC', 'DESC']).default(defaultOrderBy),
 			/**
@@ -153,14 +157,16 @@ export function createGetManyQueryOptions<
 			 * There are 4 types of filters for different kinds of fields, which can either be
 			 * supplied directly, or as an array of filters.
 			 *
-			 * ## String fields
+			 * **String fields**
 			 *
 			 * String fields can take the following types as options
 			 * - `string` - a string that must match exactly
+			 *
+			 * @internal
 			 */
 			filter: filterOptions.optional(),
-			/**
-			 * Include certain relations
+			/** Include certain relations
+			 * @internal
 			 */
 			include:
 				includeOptions && (includeOptions?.length ?? 0) > 0
@@ -172,7 +178,10 @@ export function createGetManyQueryOptions<
 			/**
 			 * Which non-relation fields to include in the response
 			 *
-			 * @default All fields
+			 * @default
+			 * All fields
+			 *
+			 * @internal
 			 */
 			attributes: z.array(z.enum(nonRelationFields(schema) as NonRelationFields)).optional(),
 		})

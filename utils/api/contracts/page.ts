@@ -10,17 +10,23 @@ import {
 	pageUpdateSchema,
 	pageWithRelationsSchema,
 } from '../schemas/page';
+import { Metadata } from '../utils/metadataType';
 
 extendZodWithOpenApi(z);
 
 export const pageRouter = {
 	/**
-	 * summary: "Get a page by it's slug or id"
+	 * `GET /api/pages/:slugOrId`
+	 *
+	 * Get a page by it's slug or id
 	 *
 	 * @description
-	 * "Get a page by it's slug or id."
+	 * Get a page by it's slug or id.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pages-slugOrId/get
 	 */
-
 	get: {
 		path: '/api/pages/:slugOrId',
 		method: 'GET',
@@ -41,7 +47,22 @@ export const pageRouter = {
 		responses: {
 			200: pageSchema,
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
+	/**
+	 * `GET /api/pages`
+	 *
+	 * Get many pages
+	 *
+	 * @description
+	 * Get many pages
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pages/get
+	 */
 	getMany: {
 		path: '/api/pages',
 		method: 'GET',
@@ -60,7 +81,22 @@ export const pageRouter = {
 		responses: {
 			200: z.array(pageSchema),
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
+	/**
+	 * `POST /api/pages`
+	 *
+	 * Create a page
+	 *
+	 * @description
+	 * Create a page
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pages/post
+	 */
 	create: {
 		path: '/api/pages',
 		method: 'POST',
@@ -71,6 +107,18 @@ export const pageRouter = {
 			201: pageSchema,
 		},
 	},
+	/**
+	 * `PUT /api/pages`
+	 *
+	 * Update a page
+	 *
+	 * @description
+	 * Update a page
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pages/put
+	 */
 	update: {
 		path: '/api/pages',
 		method: 'PUT',
@@ -81,6 +129,18 @@ export const pageRouter = {
 			201: pageUpdateSchema.omit({ pageId: true, communityId: true }).partial(),
 		},
 	},
+	/**
+	 * `DELETE /api/pages`
+	 *
+	 * Remove a page
+	 *
+	 * @description
+	 * Remove a page
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pages/delete
+	 */
 	remove: {
 		path: '/api/pages',
 		method: 'DELETE',

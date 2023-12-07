@@ -89,7 +89,7 @@
 		"@pubpub/prosemirror-reactive": "^0.2.0",
 		"@sentry/node": "^7.77.0",
 		"@sentry/react": "^7.77.0",
-		"@ts-rest/core": "github:pubpub/ts-rest#ts-rest-core-v3.30.5-gitpkg",
+		"@ts-rest/core": "github:pubpub/ts-rest#ts-rest-core-v3.30.52-gitpkg",
 		"@ts-rest/express": "^3.30.5",
 		"@ts-rest/open-api": "^3.30.5",
 		"@types/html-minifier": "^4.0.1",
@@ -315,7 +315,7 @@
 		"eslint-import-resolver-alias": "^1.1.2",
 		"eslint-plugin-import": "^2.22.0",
 		"eslint-plugin-jsx-a11y": "^6.3.1",
-		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-prettier": "^5.0.1",
 		"eslint-plugin-pubpub-rules": "file:eslint",
 		"eslint-plugin-react": "^7.32.2",
 		"eslint-plugin-react-hooks": "^4.1.0",
@@ -341,11 +341,20 @@
 		"terser-webpack-plugin": "^1.2.3",
 		"ts-jest": "^29.1.0",
 		"ts-loader": "^8.0.11",
+		"ts-morph": "^21.0.1",
 		"ts-node": "^10.9.1",
 		"typescript": "^5.2.2",
 		"webpack": "^4.41.5",
 		"webpack-bundle-analyzer": "^3.1.0",
 		"webpack-cli": "^3.3.1",
 		"webpack-manifest-plugin": "^2.0.4"
+	},
+	"overrides": {
+		"@ts-rest/express": {
+			"@ts-rest/core": "3.30.52"
+		},
+		"@ts-rest/open-api": {
+			"@ts-rest/core": "3.30.52"
+		}
 	}
 }

@@ -36,9 +36,8 @@ const buildFieldWhereClause = <T extends FilterTypes>(filterField: T, arrayDepth
 				acc[Op.eq] = value;
 			}
 			if (key === 'contains') {
-				acc[
-					'not' in filterField && filterField.not ? Op.notILike : Op.iLike
-				] = `%${value}%`;
+				acc['not' in filterField && filterField.not ? Op.notILike : Op.iLike] =
+					`%${value}%`;
 			}
 
 			if (['gt', 'lt', 'gte', 'lte', 'eq', 'ne'].includes(key)) {

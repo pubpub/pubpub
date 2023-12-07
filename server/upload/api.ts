@@ -108,7 +108,7 @@ const validateFileNameAndMimeType = ({
 	return { filename: filename as string, mimeType: mimeType as string };
 };
 
-export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload> = {
+export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload.file> = {
 	handler: async ({ req }) => {
 		await ensureUserIsCommunityAdmin(req);
 

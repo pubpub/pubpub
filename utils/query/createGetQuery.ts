@@ -35,6 +35,7 @@ export const createGetQueryOptions = <
 			 * Which relations are includeable
 			 *
 			 * @default []
+			 *
 			 */
 			options: IncludeOptions;
 			/**
@@ -50,6 +51,7 @@ export const createGetQueryOptions = <
 	return z.object({
 		/**
 		 * Include certain relations
+		 * @internal
 		 */
 		include:
 			includeOptions && (includeOptions?.length ?? 0) > 0
@@ -62,6 +64,7 @@ export const createGetQueryOptions = <
 		 * Which non-relation fields to include in the response
 		 *
 		 * @default All fields
+		 * @internal
 		 */
 		attributes: z.array(z.enum(nonRelationFields(schema) as NonRelationFields)).optional(),
 	});

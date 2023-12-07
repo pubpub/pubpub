@@ -13,6 +13,7 @@ import {
 import { updateAttributionSchema } from '../schemas/attribution';
 import { pubSchema } from '../schemas/pub';
 import { userSchema } from '../schemas/user';
+import { Metadata } from '../utils/metadataType';
 
 extendZodWithOpenApi(z);
 
@@ -24,12 +25,17 @@ export const pubAttributionWithRelationsSchema = pubAttributionSchema.extend({
 
 export const pubAttributionRouter = {
 	/**
-	 * summary: 'Get a pub attribution'
+	 * `GET /api/pubAttributions/:id`
+	 *
+	 * Get a pub attribution
 	 *
 	 * @description
-	 * 'Get a pub attribution'
+	 * Get a pub attribution
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions-id/get
 	 */
-
 	get: {
 		path: '/api/pubAttributions/:id',
 		method: 'GET',
@@ -42,7 +48,22 @@ export const pubAttributionRouter = {
 		responses: {
 			200: pubAttributionWithRelationsSchema,
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
+	/**
+	 * `GET /api/pubAttributions`
+	 *
+	 * Get multiple pub attributions
+	 *
+	 * @description
+	 * Get multiple pub attributions. You are limited to attributions in your community.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions/get
+	 */
 	getMany: {
 		path: '/api/pubAttributions',
 		method: 'GET',
@@ -58,7 +79,22 @@ export const pubAttributionRouter = {
 		responses: {
 			200: z.array(pubAttributionWithRelationsSchema),
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
+	/**
+	 * `POST /api/pubAttributions/batch`
+	 *
+	 * Batch create pub attributions
+	 *
+	 * @description
+	 * Batch create pub attributions
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions-batch/post
+	 */
 	batchCreate: {
 		path: '/api/pubAttributions/batch',
 		method: 'POST',
@@ -69,6 +105,18 @@ export const pubAttributionRouter = {
 			201: z.array(pubAttributionSchema),
 		},
 	},
+	/**
+	 * `POST /api/pubAttributions`
+	 *
+	 * Create a pub attribution
+	 *
+	 * @description
+	 * Add an attribution to a pub
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions/post
+	 */
 	create: {
 		path: '/api/pubAttributions',
 		method: 'POST',
@@ -80,6 +128,18 @@ export const pubAttributionRouter = {
 			500: z.string(),
 		},
 	},
+	/**
+	 * `PUT /api/pubAttributions`
+	 *
+	 * Update a pub attribution
+	 *
+	 * @description
+	 * Update a pub attribution
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions/put
+	 */
 	update: {
 		path: '/api/pubAttributions',
 		method: 'PUT',
@@ -91,6 +151,18 @@ export const pubAttributionRouter = {
 			500: z.string(),
 		},
 	},
+	/**
+	 * `DELETE /api/pubAttributions`
+	 *
+	 * Remove a pub attribution
+	 *
+	 * @description
+	 * Remove a pub attribution
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubAttributions/delete
+	 */
 	remove: {
 		path: '/api/pubAttributions',
 		method: 'DELETE',

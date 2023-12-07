@@ -7,12 +7,17 @@ extendZodWithOpenApi(z);
 
 export const releaseRouter = {
 	/**
-	 * summary: 'Create a release'
+	 * `POST /api/releases`
+	 *
+	 * Create a release
 	 *
 	 * @description
-	 * 'Create a release'
+	 * Create a release
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-releases/post
 	 */
-
 	create: {
 		path: '/api/releases',
 		method: 'POST',

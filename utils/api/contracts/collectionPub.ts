@@ -12,12 +12,17 @@ extendZodWithOpenApi(z);
 
 export const collectionPubRouter = {
 	/**
-	 * summary: 'Get the pubs associated with a collection'
+	 * `GET /api/collectionPubs`
+	 *
+	 * Get the pubs associated with a collection
 	 *
 	 * @description
-	 * 'Get the pubs associated with a collection'
+	 * Get the pubs associated with a collection
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionPubs/get
 	 */
-
 	get: {
 		path: '/api/collectionPubs',
 		method: 'GET',
@@ -32,6 +37,18 @@ export const collectionPubRouter = {
 			200: z.array(pubSchema),
 		},
 	},
+	/**
+	 * `POST /api/collectionPubs`
+	 *
+	 * Add a pub to a collection
+	 *
+	 * @description
+	 * Add a pub to a collection
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionPubs/post
+	 */
 	create: {
 		path: '/api/collectionPubs',
 		method: 'POST',
@@ -42,6 +59,18 @@ export const collectionPubRouter = {
 			201: collectionPubSchema,
 		},
 	},
+	/**
+	 * `PUT /api/collectionPubs`
+	 *
+	 * Update pubs for collection
+	 *
+	 * @description
+	 * Change the pubs that are associated with a collection
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionPubs/put
+	 */
 	update: {
 		path: '/api/collectionPubs',
 		method: 'PUT',
@@ -56,6 +85,18 @@ export const collectionPubRouter = {
 			200: updateCollectionPubSchema.omit({ id: true }),
 		},
 	},
+	/**
+	 * `DELETE /api/collectionPubs`
+	 *
+	 * Remove a pub from a collection
+	 *
+	 * @description
+	 * Remove a pub from a collection
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionPubs/delete
+	 */
 	remove: {
 		path: '/api/collectionPubs',
 		method: 'DELETE',

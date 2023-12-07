@@ -25,8 +25,193 @@ import {
 } from '../schemas/pub';
 import { docJsonSchema } from '../schemas/release';
 import { sourceFileSchema } from '../schemas/import';
+import { Metadata } from '../utils/metadataType';
 
 extendZodWithOpenApi(z);
+
+const textRouter = {
+	/**
+	 * `GET /api/pubs/:pubId/text`
+	 *
+	 * Get the text of a Pub
+	 *
+	 * @description
+	 * Get the text of a Pub as a ProseMirror document
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/get
+	 */
+	get: {
+		path: '/api/pubs/:pubId/text',
+		method: 'GET',
+		summary: 'Get the text of a Pub',
+		description: 'Get the text of a Pub as a ProseMirror document',
+		pathParams: z.object({
+			pubId: z.string().uuid(),
+		}),
+		responses: {
+			200: docJsonSchema,
+		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
+	},
+	/**
+	 * `PUT /api/pubs/:pubId/text`
+	 *
+	 * Replace the text of a pub
+	 *
+	 * @description
+	 * Replace the text of a pub with a different ProseMirror document
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/put
+	 */
+	update: {
+		path: '/api/pubs/:pubId/text',
+		method: 'PUT',
+		summary: 'Replace the text of a pub',
+		description: 'Replace the text of a pub with a different ProseMirror document',
+		pathParams: z.object({
+			pubId: z.string().uuid(),
+		}),
+		body: z.object({
+			doc: docJsonSchema,
+			clientID: z.string().default('api'),
+			publishRelease: z.boolean().default(false),
+			method: importMethodSchema,
+		}),
+		responses: {
+			200: z.object({
+				doc: docJsonSchema,
+				url: z.string().url().optional(),
+			}),
+			400: z.object({ error: z.string() }),
+		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
+	},
+	/**
+	 * `POST /api/pubs/text/importOld`
+	 *
+	 * Create a pub and import files to it
+	 *
+	 * @description
+	 * Create a pub and upload a file and import it to a pub.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-importOld/post
+	 */
+	importOld: {
+		path: '/api/pubs/text/importOld',
+		method: 'POST',
+		summary: 'Create a pub and import files to it',
+		description: 'Create a pub and upload a file and import it to a pub.',
+		body: z.object({
+			pub: optionalPubCreateParamSchema
+				.extend({ collectionId: z.string().uuid().optional() })
+				.partial()
+				.optional(),
+			sourceFiles: z.array(sourceFileSchema),
+		}),
+		responses: {
+			201: z.object({ doc: docJsonSchema, pub: pubSchema }),
+		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
+	},
+	/**
+	 * `POST /api/pubs/text/import`
+	 *
+	 * Create a pub and import files to it
+	 *
+	 * @description
+	 * Create a pub and upload a file and import it to a pub.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-import/post
+	 */
+	import: {
+		path: '/api/pubs/text/import',
+		method: 'POST',
+		summary: 'Create a pub and import files to it',
+		description: 'Create a pub and upload a file and import it to a pub.',
+		contentType: 'multipart/form-data',
+		body: baseWithImport,
+		responses: {
+			201: fullImportOutput,
+		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
+	},
+	/**
+	 * `POST /api/pubs/:pubId/text/import`
+	 *
+	 * Import a file to a pub
+	 *
+	 * @description
+	 * Upload files and import it to a pub.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text-import/post
+	 */
+	importToPub: {
+		path: '/api/pubs/:pubId/text/import',
+		method: 'POST',
+		summary: 'Import a file to a pub',
+		description: 'Upload files and import it to a pub.',
+		pathParams: z.object({
+			pubId: z.string().uuid(),
+		}),
+		body: baseWithPubId,
+		responses: {
+			200: toPubImportOutput,
+		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
+	},
+	/**
+	 * `POST /api/pubs/text/convert`
+	 *
+	 * Convert files to a ProseMirror document
+	 *
+	 * @description
+	 * Convert files to a ProseMirror document.
+	 *
+	 *  Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-convert/post
+	 */
+	convert: {
+		path: '/api/pubs/text/convert',
+		method: 'POST',
+		summary: 'Convert files to a ProseMirror document',
+		description:
+			'Convert files to a ProseMirror document.\n\n Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.',
+		contentType: 'multipart/form-data',
+		body: base,
+		responses: {
+			200: pandocOutputSchema,
+		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
+	},
+} as const satisfies AppRouter;
+
+type TextRouterType = typeof textRouter;
+export interface TextRouter extends TextRouterType {}
 
 export const pubRouter = {
 	/**
@@ -78,6 +263,9 @@ export const pubRouter = {
 		responses: {
 			200: pubWithRelationsSchema,
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
 	/**
 	 * `GET /api/pubs`
@@ -119,6 +307,9 @@ export const pubRouter = {
 		responses: {
 			200: z.array(pubWithRelationsSchema),
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
 	/**
 	 * `POST /api/pubs`
@@ -295,168 +486,10 @@ export const pubRouter = {
 			200: resourceSchema,
 		},
 	},
-	text: {
-		/**
-		 * `GET /api/pubs/:pubId/text`
-		 *
-		 * Get the text of a Pub
-		 *
-		 * @description
-		 * Get the text of a Pub as a ProseMirror document
-		 *
-		 * @access logged in
-		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/get
-		 */
-		get: {
-			path: '/api/pubs/:pubId/text',
-			method: 'GET',
-			summary: 'Get the text of a Pub',
-			description: 'Get the text of a Pub as a ProseMirror document',
-			pathParams: z.object({
-				pubId: z.string().uuid(),
-			}),
-			responses: {
-				200: docJsonSchema,
-			},
-		},
-		/**
-		 * `PUT /api/pubs/:pubId/text`
-		 *
-		 * Replace the text of a pub
-		 *
-		 * @description
-		 * Replace the text of a pub with a different ProseMirror document
-		 *
-		 * @access logged in
-		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/put
-		 */
-		update: {
-			path: '/api/pubs/:pubId/text',
-			method: 'PUT',
-			summary: 'Replace the text of a pub',
-			description: 'Replace the text of a pub with a different ProseMirror document',
-			pathParams: z.object({
-				pubId: z.string().uuid(),
-			}),
-			body: z.object({
-				doc: docJsonSchema,
-				clientID: z.string().default('api'),
-				publishRelease: z.boolean().default(false),
-				method: importMethodSchema,
-			}),
-			responses: {
-				200: z.object({
-					doc: docJsonSchema,
-					url: z.string().url().optional(),
-				}),
-				400: z.object({ error: z.string() }),
-			},
-		},
-		/**
-		 * `POST /api/pubs/text/importOld`
-		 *
-		 * Create a pub and import files to it
-		 *
-		 * @description
-		 * Create a pub and upload a file and import it to a pub.
-		 *
-		 * @access logged in
-		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-importOld/post
-		 */
-		importOld: {
-			path: '/api/pubs/text/importOld',
-			method: 'POST',
-			summary: 'Create a pub and import files to it',
-			description: 'Create a pub and upload a file and import it to a pub.',
-			body: z.object({
-				pub: optionalPubCreateParamSchema
-					.extend({ collectionId: z.string().uuid().optional() })
-					.partial()
-					.optional(),
-				sourceFiles: z.array(sourceFileSchema),
-			}),
-			responses: {
-				201: z.object({ doc: docJsonSchema, pub: pubSchema }),
-			},
-		},
-		/**
-		 * `POST /api/pubs/text/import`
-		 *
-		 * Create a pub and import files to it
-		 *
-		 * @description
-		 * Create a pub and upload a file and import it to a pub.
-		 *
-		 * @access logged in
-		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-import/post
-		 */
-		import: {
-			path: '/api/pubs/text/import',
-			method: 'POST',
-			summary: 'Create a pub and import files to it',
-			description: 'Create a pub and upload a file and import it to a pub.',
-			contentType: 'multipart/form-data',
-			body: baseWithImport,
-			responses: {
-				201: fullImportOutput,
-			},
-		},
-		/**
-		 * `POST /api/pubs/:pubId/text/import`
-		 *
-		 * Import a file to a pub
-		 *
-		 * @description
-		 * Upload files and import it to a pub.
-		 *
-		 * @access logged in
-		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text-import/post
-		 */
-		importToPub: {
-			path: '/api/pubs/:pubId/text/import',
-			method: 'POST',
-			summary: 'Import a file to a pub',
-			description: 'Upload files and import it to a pub.',
-			pathParams: z.object({
-				pubId: z.string().uuid(),
-			}),
-			body: baseWithPubId,
-			responses: {
-				200: toPubImportOutput,
-			},
-		},
-		/**
-		 * `POST /api/pubs/text/convert`
-		 *
-		 * Convert files to a ProseMirror document
-		 *
-		 * @description
-		 * Convert files to a ProseMirror document.
-		 *
-		 *  Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.
-		 *
-		 * @access logged in
-		 *
-		 * @link https://pubpub.org/apiDocs#/paths/api-pubs-text-convert/post
-		 */
-		convert: {
-			path: '/api/pubs/text/convert',
-			method: 'POST',
-			summary: 'Convert files to a ProseMirror document',
-			description:
-				'Convert files to a ProseMirror document.\n\n Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.',
-			contentType: 'multipart/form-data',
-			body: base,
-			responses: {
-				200: pandocOutputSchema,
-			},
-		},
-	},
+	/**
+	 * Methods for working with the text of a pub
+	 */
+	text: textRouter as TextRouter,
 } as const satisfies AppRouter;
 
 type PubRouterType = typeof pubRouter;

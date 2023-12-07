@@ -1,3 +1,4 @@
+import { Prettify } from 'types';
 import { z, ZodRawShape, ZodTypeAny } from 'zod';
 
 const plainAndBooleanAndArrayFilter = <Z extends ZodTypeAny>(schema: Z) => {
@@ -31,19 +32,14 @@ const stringFilter = <Z extends z.ZodString>(schema: Z, strict?: boolean) =>
 					schema,
 					z.union([
 						z.object({
-							exact: schema.optional(),
-							contains: z.undefined(),
-							not: z.undefined(),
+							exact: schema,
 						}),
 						z.object({
-							exact: z.undefined(),
-							contains: z.string().optional(),
-							not: z.boolean().optional(),
+							contains: z.string(),
 						}),
 						z.object({
-							exact: z.undefined(),
-							contains: z.undefined(),
-							not: z.undefined(),
+							contains: z.string(),
+							not: z.literal(true),
 						}),
 					]),
 				]),
@@ -107,35 +103,35 @@ export type FilterType<T, isUUID extends boolean = false> = T extends z.ZodType<
 	? U extends Array<infer X>
 		? Array<FilterType<z.ZodType<X, any, any>>>
 		: U extends string
-		? string extends U
-			? isUUID extends false
-				? // @ts-expect-error FIXME: Typescript doesn't understand that if
-				  StringFilter<T>
-				: string | string[]
-			: EnumFilter<T>
-		: U extends number | Date
-		? // @ts-expect-error FIXME: Typescript doesn't understand that if
-		  // `U extends number | Date` then `T extends z.ZodType<number> | z.ZodType<Date>`
-		  NumberDateFilter<T>
-		: U extends boolean
-		? boolean
-		: U extends object
-		? ObjectFilter<U>
-		: never
+		  ? string extends U
+				? isUUID extends false
+					? // @ts-expect-error FIXME: Typescript doesn't understand that if
+					  StringFilter<T>
+					: string | string[]
+				: EnumFilter<T>
+		  : U extends number | Date
+		    ? // @ts-expect-error FIXME: Typescript doesn't understand that if
+		      // `U extends number | Date` then `T extends z.ZodType<number> | z.ZodType<Date>`
+		      NumberDateFilter<T>
+		    : U extends boolean
+		      ? boolean
+		      : U extends object
+		        ? ObjectFilter<U>
+		        : never
 	: never;
 
-type EnumFilter<T> = T extends z.ZodType<infer U, any, any>
+export type EnumFilter<T> = T extends z.ZodType<infer U, any, any>
 	? U | Array<T extends z.ZodType<infer Y, any, any> ? Y : never>
 	: never;
-type StringFilter<T extends z.ZodString> = z.infer<ReturnType<typeof stringFilter<T>>>;
-type NumberDateFilter<T extends z.ZodType<number> | z.ZodType<Date>> = z.infer<
+export type StringFilter<T extends z.ZodString> = z.infer<ReturnType<typeof stringFilter<T>>>;
+export type NumberDateFilter<T extends z.ZodType<number> | z.ZodType<Date>> = z.infer<
 	ReturnType<typeof dateNumberFilter<T>>
 >;
-export type ObjectFilter<T extends Record<string, any>> = {
+export type ObjectFilter<T extends Record<string, any>> = Prettify<{
 	[K in keyof T]?: K extends 'id' | `${string}Id`
 		? FilterType<z.ZodType<T[K], any, any>, true>
 		: FilterType<z.ZodType<T[K], any, any>>;
-};
+}>;
 
 type FilterT<T> = z.ZodType<FilterType<T>>;
 

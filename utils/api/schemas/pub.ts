@@ -17,6 +17,7 @@ import { memberSchema } from './member';
 import { pubEdgeSchema } from './pubEdge';
 import { submissionSchema } from './submission';
 import { docJsonSchema, releaseSchema } from './release';
+import { fileSchema } from './upload';
 
 extendZodWithOpenApi(z);
 
@@ -226,6 +227,9 @@ export const resourceASTSchema = z.object({
 });
 
 export const pubWithRelationsSchema = pubSchema.extend({
+	/**
+	 * Attributions
+	 */
 	attributions: pubAttributionSchema.array().optional(),
 	collectionPubs: collectionPubSchema.array().optional(),
 	community: communitySchema.optional(),
@@ -246,14 +250,7 @@ export const importCreateParams = optionalPubCreateParamSchema
 export type ImportCreatePubParams = (typeof importCreateParams)['_input'];
 
 export const base = z.object({
-	files: z.union([
-		z.array(
-			z
-				.tuple([z.custom<Blob>(), z.string({ description: 'filename' })])
-				.openapi({ title: 'Blob + filename (Node 18)' }),
-		),
-		z.custom<File[]>().openapi({ title: 'File (Node 20+, browser)' }),
-	]),
+	files: z.union([z.array(fileSchema), fileSchema]),
 });
 
 export const importMethodSchema = z
@@ -266,6 +263,9 @@ export const overrideableMetadata = ['title', 'slug', 'description', 'customPubl
 export const overrideableMetadataSchema = z.enum(overrideableMetadata);
 
 export const metadataOptionsSchema = z.object({
+	/**
+	 * Whether to import author information.\n\n- `false` will not import authors.\n- `true` will import authors.\n- `'match'` will import authors and attempt to match to match them to existing users.\n
+	 */
 	attributions: z
 		.union([z.boolean(), z.literal('match')], {
 			invalid_type_error: 'Must be a boolean or "match"',

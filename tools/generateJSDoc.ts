@@ -9,13 +9,14 @@ import {
 	SyntaxKind,
 } from 'ts-morph';
 import { execSync } from 'child_process';
+import { argv } from 'process';
 
 function updateJSDocComments(dir: string) {
 	const project = new Project({
 		tsConfigFilePath: 'tsconfig.json',
 	});
 
-	const sourceFiles = project.getSourceFiles(`${dir}/pub.ts`);
+	const sourceFiles = project.getSourceFiles(`${dir.replace(/\/$/, '')}/*.ts`);
 
 	sourceFiles.forEach((sourceFile) => {
 		let paths: string[] = [];
@@ -117,4 +118,4 @@ function template(initializer: ObjectLiteralExpression) {
 }
 
 // Usage Example
-updateJSDocComments('utils/api/contracts');
+updateJSDocComments(argv[2]);

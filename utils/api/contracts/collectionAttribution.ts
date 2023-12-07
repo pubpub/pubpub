@@ -13,6 +13,7 @@ import {
 import { updateAttributionSchema } from '../schemas/attribution';
 import { collectionSchema } from '../schemas/collection';
 import { userSchema } from '../schemas/user';
+import { Metadata } from '../utils/metadataType';
 
 extendZodWithOpenApi(z);
 
@@ -23,12 +24,17 @@ export const collectionAttributionWithRelationsSchema = collectionAttributionSch
 
 export const collectionAttributionRouter = {
 	/**
-	 * summary: 'Get a collection attribution'
+	 * `GET /api/collectionAttributions/:id`
+	 *
+	 * Get a collection attribution
 	 *
 	 * @description
-	 * 'Get a collection attribution'
+	 * Get a collection attribution
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions-id/get
 	 */
-
 	get: {
 		path: '/api/collectionAttributions/:id',
 		method: 'GET',
@@ -41,7 +47,22 @@ export const collectionAttributionRouter = {
 		responses: {
 			200: collectionAttributionWithRelationsSchema,
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
+	/**
+	 * `GET /api/collectionAttributions`
+	 *
+	 * Get multiple collection attributions
+	 *
+	 * @description
+	 * Get multiple collection attributions. You are limited to attributions in your community.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/get
+	 */
 	getMany: {
 		path: '/api/collectionAttributions',
 		method: 'GET',
@@ -57,7 +78,22 @@ export const collectionAttributionRouter = {
 		responses: {
 			200: z.array(collectionAttributionWithRelationsSchema),
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
+	/**
+	 * `POST /api/collectionAttributions/batch`
+	 *
+	 * Batch create collection attributions
+	 *
+	 * @description
+	 * Batch create collection attributions
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions-batch/post
+	 */
 	batchCreate: {
 		path: '/api/collectionAttributions/batch',
 		method: 'POST',
@@ -68,6 +104,18 @@ export const collectionAttributionRouter = {
 			201: z.array(collectionAttributionSchema),
 		},
 	},
+	/**
+	 * `POST /api/collectionAttributions`
+	 *
+	 * Create a collection attribution
+	 *
+	 * @description
+	 * Create a collection attribution
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/post
+	 */
 	create: {
 		path: '/api/collectionAttributions',
 		method: 'POST',
@@ -78,6 +126,18 @@ export const collectionAttributionRouter = {
 			201: collectionAttributionSchema,
 		},
 	},
+	/**
+	 * `PUT /api/collectionAttributions`
+	 *
+	 * Update a collection attribution
+	 *
+	 * @description
+	 * Update a collection attribution
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/put
+	 */
 	update: {
 		path: '/api/collectionAttributions',
 		method: 'PUT',
@@ -88,6 +148,18 @@ export const collectionAttributionRouter = {
 			200: updateAttributionSchema.partial().omit({ id: true }),
 		},
 	},
+	/**
+	 * `DELETE /api/collectionAttributions`
+	 *
+	 * Remove a collection attribution
+	 *
+	 * @description
+	 * Remove a collection attribution
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/delete
+	 */
 	remove: {
 		path: '/api/collectionAttributions',
 		method: 'DELETE',

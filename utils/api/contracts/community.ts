@@ -11,12 +11,17 @@ extendZodWithOpenApi(z);
 
 export const communityRouter = {
 	/**
-	 * summary: 'Get the current community'
+	 * `GET /api/communities`
+	 *
+	 * Get the current community
 	 *
 	 * @description
-	 * 'Get a list of communities. Currently only returns the current community.'
+	 * Get a list of communities. Currently only returns the current community.
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-communities/get
 	 */
-
 	getCommunities: {
 		path: '/api/communities',
 		method: 'GET',
@@ -26,6 +31,18 @@ export const communityRouter = {
 			200: z.array(communitySchema),
 		},
 	},
+	/**
+	 * `GET /api/communities/:id`
+	 *
+	 * Get a community by it's id
+	 *
+	 * @description
+	 * Get a community
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-communities-id/get
+	 */
 	get: {
 		path: '/api/communities/:id',
 		method: 'GET',
@@ -38,6 +55,18 @@ export const communityRouter = {
 			200: communitySchema,
 		},
 	},
+	/**
+	 * `POST /api/communities`
+	 *
+	 * Create a community
+	 *
+	 * @description
+	 * Create a community
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-communities/post
+	 */
 	create: {
 		path: '/api/communities',
 		method: 'POST',
@@ -48,6 +77,18 @@ export const communityRouter = {
 			201: z.string().url(),
 		},
 	},
+	/**
+	 * `PUT /api/communities`
+	 *
+	 * Update a community
+	 *
+	 * @description
+	 * Update a community
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-communities/put
+	 */
 	update: {
 		path: '/api/communities',
 		method: 'PUT',

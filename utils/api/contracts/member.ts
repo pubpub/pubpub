@@ -15,6 +15,7 @@ import { collectionSchema } from '../schemas/collection';
 import { communitySchema } from '../schemas/community';
 import { pubSchema } from '../schemas/pub';
 import { userSchema } from '../schemas/user';
+import { Metadata } from '../utils/metadataType';
 
 extendZodWithOpenApi(z);
 
@@ -29,12 +30,17 @@ export const memberWithRelationsSchema = memberSchema.extend({
 
 export const memberRouter = {
 	/**
-	 * summary: "Get a member by it's id"
+	 * `GET /api/members/:id`
+	 *
+	 * Get a member by it's id
 	 *
 	 * @description
-	 * 'Get a member'
+	 * Get a member
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-members-id/get
 	 */
-
 	get: {
 		path: '/api/members/:id',
 		method: 'GET',
@@ -52,7 +58,22 @@ export const memberRouter = {
 		responses: {
 			200: memberWithRelationsSchema,
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
+	/**
+	 * `GET /api/members`
+	 *
+	 * Get all members from a community
+	 *
+	 * @description
+	 * Get many members
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-members/get
+	 */
 	getMany: {
 		path: '/api/members',
 		method: 'GET',
@@ -67,7 +88,22 @@ export const memberRouter = {
 		responses: {
 			200: z.array(memberWithRelationsSchema),
 		},
+		metadata: {
+			loggedIn: 'admin',
+		} satisfies Metadata,
 	},
+	/**
+	 * `POST /api/members`
+	 *
+	 * Create a member
+	 *
+	 * @description
+	 * Create a member
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-members/post
+	 */
 	create: {
 		path: '/api/members',
 		method: 'POST',
@@ -78,6 +114,18 @@ export const memberRouter = {
 			201: memberSchema,
 		},
 	},
+	/**
+	 * `PUT /api/members`
+	 *
+	 * Update a member
+	 *
+	 * @description
+	 * Update a member
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-members/put
+	 */
 	update: {
 		path: '/api/members',
 		method: 'PUT',
@@ -93,6 +141,18 @@ export const memberRouter = {
 			}),
 		},
 	},
+	/**
+	 * `DELETE /api/members`
+	 *
+	 * Remove a member
+	 *
+	 * @description
+	 * Remove a member
+	 *
+	 * @access logged in
+	 *
+	 * @link https://pubpub.org/apiDocs#/paths/api-members/delete
+	 */
 	remove: {
 		path: '/api/members',
 		method: 'DELETE',
