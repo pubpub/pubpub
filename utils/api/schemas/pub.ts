@@ -227,9 +227,7 @@ export const resourceASTSchema = z.object({
 });
 
 export const pubWithRelationsSchema = pubSchema.extend({
-	/**
-	 * Attributions
-	 */
+	/** Attributions */
 	attributions: pubAttributionSchema.array().optional(),
 	collectionPubs: collectionPubSchema.array().optional(),
 	community: communitySchema.optional(),
@@ -264,7 +262,9 @@ export const overrideableMetadataSchema = z.enum(overrideableMetadata);
 
 export const metadataOptionsSchema = z.object({
 	/**
-	 * Whether to import author information.\n\n- `false` will not import authors.\n- `true` will import authors.\n- `'match'` will import authors and attempt to match to match them to existing users.\n
+	 * Whether to import author information.\n\n- `false` will not import authors.\n- `true` will
+	 * import authors.\n- `'match'` will import authors and attempt to match to match them to
+	 * existing users.\n
 	 */
 	attributions: z
 		.union([z.boolean(), z.literal('match')], {

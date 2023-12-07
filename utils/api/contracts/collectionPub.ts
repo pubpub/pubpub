@@ -16,9 +16,9 @@ export const collectionPubRouter = {
 	 *
 	 * Get the pubs associated with a collection
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionPubs/get}
 	 */
 	get: {
@@ -40,9 +40,9 @@ export const collectionPubRouter = {
 	 *
 	 * Add a pub to a collection
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionPubs/post}
 	 */
 	create: {
@@ -60,9 +60,9 @@ export const collectionPubRouter = {
 	 *
 	 * Change the pubs that are associated with a collection
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionPubs/put}
 	 */
 	update: {
@@ -84,9 +84,9 @@ export const collectionPubRouter = {
 	 *
 	 * Remove a pub from a collection
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionPubs/delete}
 	 */
 	remove: {

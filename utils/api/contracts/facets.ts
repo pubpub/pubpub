@@ -14,9 +14,9 @@ export const facetsRouter = {
 	 *
 	 * You cannot "unset" facets, so passing an empty object will just be treated as no change.
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-facets/post}
 	 */
 	update: {

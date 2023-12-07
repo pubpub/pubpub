@@ -10,9 +10,9 @@ export const authRouter = {
 	 *
 	 * Login and returns authentication cookie
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-login/post}
 	 */
 	login: {
@@ -44,9 +44,9 @@ export const authRouter = {
 	 *
 	 * Logout and clear authentication cookie
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-logout/get}
 	 */
 	logout: {

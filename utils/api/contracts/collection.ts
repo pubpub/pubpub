@@ -21,9 +21,9 @@ export const collectionRouter = {
 	 *
 	 * Get a collection by it's id or slug
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collections-slugOrId/get}
 	 */
 	get: {
@@ -38,10 +38,10 @@ export const collectionRouter = {
 			}),
 		}),
 		query: createGetQueryOptions(collectionWithRelationsSchema, {
-			include: {
-				options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
-				defaults: ['attributions', 'collectionPubs'],
-			},
+			// include: {
+			// 	options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
+			// 	defaults: ['attributions', 'collectionPubs'],
+			// },
 		}),
 		responses: {
 			200: collectionWithRelationsSchema,
@@ -52,9 +52,9 @@ export const collectionRouter = {
 	 *
 	 * Get many collections
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collections/get}
 	 */
 	getMany: {
@@ -67,10 +67,10 @@ export const collectionRouter = {
 			sort: {
 				options: ['title', 'kind', 'slug'],
 			},
-			include: {
-				options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
-				defaults: ['attributions', 'collectionPubs'],
-			},
+			// include: {
+			// 	options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
+			// 	defaults: ['attributions', 'collectionPubs'],
+			// },
 		}),
 		responses: {
 			200: z.array(collectionWithRelationsSchema),
@@ -81,9 +81,9 @@ export const collectionRouter = {
 	 *
 	 * Create a collection
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collections/post}
 	 */
 	create: {
@@ -101,9 +101,9 @@ export const collectionRouter = {
 	 *
 	 * Update a collection
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collections/put}
 	 */
 	update: {
@@ -121,9 +121,9 @@ export const collectionRouter = {
 	 *
 	 * Remove a collection
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collections/delete}
 	 */
 	remove: {
@@ -142,9 +142,9 @@ export const collectionRouter = {
 		 *
 		 * Deposit metadata to create a DOI
 		 *
-		 * @access logged in
+		 * @access You need to be **logged in** and have access to this resource.
 		 *
-		 * @apiDocs
+		 * @routeDocumentation
 		 * {@link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-doi/post}
 		 */
 		deposit: {
@@ -166,9 +166,9 @@ export const collectionRouter = {
 		 *
 		 * Preview a DOI deposit
 		 *
-		 * @access logged in
+		 * @access You need to be **logged in** and have access to this resource.
 		 *
-		 * @apiDocs
+		 * @routeDocumentation
 		 * {@link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-doi-preview/post}
 		 */
 		preview: {
@@ -191,9 +191,9 @@ export const collectionRouter = {
 	 *
 	 * Get collection as a resource
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collections-collectionId-resource/get}
 	 */
 	getResource: {

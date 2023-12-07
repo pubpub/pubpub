@@ -34,9 +34,9 @@ export const memberRouter = {
 	 *
 	 * Get a member
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-members-id/get}
 	 */
 	get: {
@@ -65,9 +65,9 @@ export const memberRouter = {
 	 *
 	 * Get many members
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-members/get}
 	 */
 	getMany: {
@@ -93,9 +93,9 @@ export const memberRouter = {
 	 *
 	 * Create a member
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-members/post}
 	 */
 	create: {
@@ -113,9 +113,9 @@ export const memberRouter = {
 	 *
 	 * Update a member
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-members/put}
 	 */
 	update: {
@@ -138,9 +138,9 @@ export const memberRouter = {
 	 *
 	 * Remove a member
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-members/delete}
 	 */
 	remove: {

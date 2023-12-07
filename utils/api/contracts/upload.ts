@@ -11,9 +11,9 @@ export const uploadRouter = {
 	 *
 	 * Abuse of this endpoint will result in a ban.
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-upload/post}
 	 */
 	file: {
@@ -42,9 +42,9 @@ export const uploadRouter = {
 	 *
 	 * Get upload policy. Used for doing manual uploads.
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-uploadPolicy/get}
 	 */
 	policy: {

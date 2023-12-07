@@ -28,9 +28,9 @@ export const collectionAttributionRouter = {
 	 *
 	 * Get a collection attribution
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions-id/get}
 	 */
 	get: {
@@ -54,9 +54,9 @@ export const collectionAttributionRouter = {
 	 *
 	 * Get multiple collection attributions. You are limited to attributions in your community.
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/get}
 	 */
 	getMany: {
@@ -83,9 +83,9 @@ export const collectionAttributionRouter = {
 	 *
 	 * Batch create collection attributions
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions-batch/post}
 	 */
 	batchCreate: {
@@ -103,9 +103,9 @@ export const collectionAttributionRouter = {
 	 *
 	 * Create a collection attribution
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/post}
 	 */
 	create: {
@@ -123,9 +123,9 @@ export const collectionAttributionRouter = {
 	 *
 	 * Update a collection attribution
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/put}
 	 */
 	update: {
@@ -143,9 +143,9 @@ export const collectionAttributionRouter = {
 	 *
 	 * Remove a collection attribution
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-collectionAttributions/delete}
 	 */
 	remove: {

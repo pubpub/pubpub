@@ -20,9 +20,9 @@ export const pageRouter = {
 	 *
 	 * Get a page by it's slug or id.
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pages-slugOrId/get}
 	 */
 	get: {
@@ -54,9 +54,9 @@ export const pageRouter = {
 	 *
 	 * Get many pages
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pages/get}
 	 */
 	getMany: {
@@ -86,9 +86,9 @@ export const pageRouter = {
 	 *
 	 * Create a page
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pages/post}
 	 */
 	create: {
@@ -106,9 +106,9 @@ export const pageRouter = {
 	 *
 	 * Update a page
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pages/put}
 	 */
 	update: {
@@ -126,9 +126,9 @@ export const pageRouter = {
 	 *
 	 * Remove a page
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pages/delete}
 	 */
 	remove: {

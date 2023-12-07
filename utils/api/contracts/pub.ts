@@ -35,9 +35,9 @@ const textRouter = {
 	 *
 	 * Get the text of a Pub as a ProseMirror document
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/get}
 	 */
 	get: {
@@ -60,9 +60,9 @@ const textRouter = {
 	 *
 	 * Replace the text of a pub with a different ProseMirror document
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text/put}
 	 */
 	update: {
@@ -95,9 +95,9 @@ const textRouter = {
 	 *
 	 * Create a pub and upload a file and import it to a pub.
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-text-importOld/post}
 	 */
 	importOld: {
@@ -124,9 +124,9 @@ const textRouter = {
 	 *
 	 * Create a pub and upload a file and import it to a pub.
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-text-import/post}
 	 */
 	import: {
@@ -148,9 +148,9 @@ const textRouter = {
 	 *
 	 * Upload files and import it to a pub.
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-text-import/post}
 	 */
 	importToPub: {
@@ -176,9 +176,9 @@ const textRouter = {
 	 *
 	 * Mostly for use in conjunction with `PUT /api/pubs/:pubId/text`.
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-text-convert/post}
 	 */
 	convert: {
@@ -209,9 +209,9 @@ export const pubRouter = {
 	 *
 	 * The slug is the thing after `/pub/` in the URL, but before `/release` or `/draft`.
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-slugOrId/get}
 	 */
 	get: {
@@ -257,9 +257,9 @@ export const pubRouter = {
 	 *
 	 * Get many pubs
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs/get}
 	 */
 	getMany: {
@@ -299,9 +299,9 @@ export const pubRouter = {
 	 *
 	 * Create a Pub
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs/post}
 	 */
 	create: {
@@ -319,9 +319,9 @@ export const pubRouter = {
 	 *
 	 * Update a Pub
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs/put}
 	 */
 	update: {
@@ -341,9 +341,9 @@ export const pubRouter = {
 	 *
 	 * Remove a Pub
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs/delete}
 	 */
 	remove: {
@@ -364,9 +364,9 @@ export const pubRouter = {
 	 * Search for many pubs. This is an older alternative to the more standardised `GET /api/pubs`,
 	 * offering different options.
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-many/post}
 	 */
 	queryMany: {
@@ -390,9 +390,9 @@ export const pubRouter = {
 		 *
 		 * Deposit metadata to create a DOI
 		 *
-		 * @access logged in
+		 * @access You need to be **logged in** and have access to this resource.
 		 *
-		 * @apiDocs
+		 * @routeDocumentation
 		 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-doi/post}
 		 */
 		deposit: {
@@ -414,9 +414,9 @@ export const pubRouter = {
 		 *
 		 * Preview a DOI deposit
 		 *
-		 * @access logged in
+		 * @access You need to be **logged in** and have access to this resource.
 		 *
-		 * @apiDocs
+		 * @routeDocumentation
 		 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-doi-preview/post}
 		 */
 		preview: {
@@ -439,9 +439,9 @@ export const pubRouter = {
 	 *
 	 * Get pub as a resource
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubs-pubId-resource/get}
 	 */
 	getResource: {

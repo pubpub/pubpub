@@ -29,9 +29,9 @@ export const pubAttributionRouter = {
 	 *
 	 * Get a pub attribution
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions-id/get}
 	 */
 	get: {
@@ -55,9 +55,9 @@ export const pubAttributionRouter = {
 	 *
 	 * Get multiple pub attributions. You are limited to attributions in your community.
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions/get}
 	 */
 	getMany: {
@@ -84,9 +84,9 @@ export const pubAttributionRouter = {
 	 *
 	 * Batch create pub attributions
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions-batch/post}
 	 */
 	batchCreate: {
@@ -104,9 +104,9 @@ export const pubAttributionRouter = {
 	 *
 	 * Add an attribution to a pub
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions/post}
 	 */
 	create: {
@@ -125,9 +125,9 @@ export const pubAttributionRouter = {
 	 *
 	 * Update a pub attribution
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions/put}
 	 */
 	update: {
@@ -146,9 +146,9 @@ export const pubAttributionRouter = {
 	 *
 	 * Remove a pub attribution
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubAttributions/delete}
 	 */
 	remove: {

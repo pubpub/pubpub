@@ -24,9 +24,9 @@ export const customScriptRouter = {
 	 * });
 	 * ```
 	 *
-	 * @access admin only
+	 * @access You need to be an **admin** of this community in order to access this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-customScripts/post}
 	 */
 	set: {

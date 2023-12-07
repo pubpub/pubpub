@@ -11,9 +11,9 @@ export const releaseRouter = {
 	 *
 	 * Create a release
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-releases/post}
 	 */
 	create: {

@@ -13,9 +13,9 @@ export const workerTaskRouter = {
 	 * Get the status of a worker task. This is used to poll for the status of a worker task, such
 	 * as an import or export.
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-workerTasks/get}
 	 */
 	get: {
@@ -55,9 +55,9 @@ export const workerTaskRouter = {
 	 * to a Pub, you can determine whether the imported files should be added to the existing Pub or
 	 * replace the existing Pub's content.
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-import/post}
 	 */
 	createImport: {
@@ -93,9 +93,9 @@ export const workerTaskRouter = {
 	 * Alternatively, the SDK has a helper function that will poll the status for you, see the
 	 * `exportPub` in `@pubpub/sdk`.
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-export/post}
 	 */
 	createExport: {

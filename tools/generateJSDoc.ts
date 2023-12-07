@@ -107,9 +107,13 @@ function template(initializer: ObjectLiteralExpression) {
 		ifLine(since),
 		ifLine(
 			loggedIn !== 'false',
-			`@access ${loggedIn === 'admin' ? 'admin only' : 'logged in'}`,
+			`@access ${
+				loggedIn === 'admin'
+					? 'You need to be an **admin** of this community in order to access this resource.'
+					: 'You need to be **logged in** and have access to this resource.'
+			}`,
 		),
-		` * @apiDocs
+		` * @routeDocumentation
 * {@link https://pubpub.org/apiDocs#/paths/${path
 			?.replace(/^\//, '')
 			.replace(/\//g, '-')

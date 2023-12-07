@@ -48,9 +48,7 @@ const stringFilter = <Z extends z.ZodString>(schema: Z, strict?: boolean) =>
 const enumFilter = <Z extends z.ZodEnum<any>>(schema: Z) => plainAndBooleanAndArrayFilter(schema);
 
 export const generateFilterSchema = <Z extends z.ZodType<any>>(baseSchema: Z) => {
-	/**
-	 * Unwrap nested optionals, nullables, and defaults
-	 */
+	/** Unwrap nested optionals, nullables, and defaults */
 	while (
 		baseSchema instanceof z.ZodOptional ||
 		baseSchema instanceof z.ZodNullable ||

@@ -15,9 +15,9 @@ export const communityRouter = {
 	 *
 	 * Get a list of communities. Currently only returns the current community.
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-communities/get}
 	 */
 	getCommunities: {
@@ -34,9 +34,9 @@ export const communityRouter = {
 	 *
 	 * Get a community
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-communities-id/get}
 	 */
 	get: {
@@ -56,9 +56,9 @@ export const communityRouter = {
 	 *
 	 * Create a community
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-communities/post}
 	 */
 	create: {
@@ -76,9 +76,9 @@ export const communityRouter = {
 	 *
 	 * Update a community
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-communities/put}
 	 */
 	update: {

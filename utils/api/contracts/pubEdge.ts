@@ -12,9 +12,9 @@ export const pubEdgeRouter = {
 	 *
 	 * Get a pubEdge by id
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges-id/get}
 	 */
 	get: {
@@ -34,9 +34,9 @@ export const pubEdgeRouter = {
 	 *
 	 * Create a connection from one pub to another, or to an external publication
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges/post}
 	 */
 	create: {
@@ -60,9 +60,9 @@ export const pubEdgeRouter = {
 	 *
 	 * Update a pubEdge
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges/put}
 	 */
 	update: {
@@ -78,9 +78,9 @@ export const pubEdgeRouter = {
 	 *
 	 * Update the approvedByTarget field of a pubEdge
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges-approvedByTarget/put}
 	 */
 	updateApprovedByTarget: {
@@ -101,9 +101,9 @@ export const pubEdgeRouter = {
 	 *
 	 * Remove a connection for a pub
 	 *
-	 * @access logged in
+	 * @access You need to be **logged in** and have access to this resource.
 	 *
-	 * @apiDocs
+	 * @routeDocumentation
 	 * {@link https://pubpub.org/apiDocs#/paths/api-pubEdges/delete}
 	 */
 	remove: {
