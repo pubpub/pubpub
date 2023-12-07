@@ -115,8 +115,8 @@ export function createGetManyQueryOptions<
 		? defaultSort
 		: [defaultSort];
 
-	return z
-		.intersection(
+	return z.optional(
+		z.intersection(
 			z.object({
 				/**
 				 * Pagination
@@ -186,6 +186,6 @@ export function createGetManyQueryOptions<
 					.optional(),
 			}),
 			filterOptions,
-		)
-		.optional();
+		),
+	);
 }

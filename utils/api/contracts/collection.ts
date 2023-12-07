@@ -38,10 +38,10 @@ export const collectionRouter = {
 			}),
 		}),
 		query: createGetQueryOptions(collectionWithRelationsSchema, {
-			// include: {
-			// 	options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
-			// 	defaults: ['attributions', 'collectionPubs'],
-			// },
+			include: {
+				options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
+				defaults: ['attributions', 'collectionPubs'],
+			},
 		}),
 		responses: {
 			200: collectionWithRelationsSchema,
@@ -71,7 +71,7 @@ export const collectionRouter = {
 				options: ['community', 'page', 'attributions', 'collectionPubs', 'members'],
 				defaults: ['attributions', 'collectionPubs'],
 			},
-		}),
+		}).optional(),
 		responses: {
 			200: z.array(collectionWithRelationsSchema),
 		},
