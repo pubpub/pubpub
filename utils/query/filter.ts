@@ -36,10 +36,7 @@ const stringFilter = <Z extends z.ZodString>(schema: Z, strict?: boolean) =>
 						}),
 						z.object({
 							contains: z.string(),
-						}),
-						z.object({
-							contains: z.string(),
-							not: z.literal(true),
+							not: z.literal(true).optional(),
 						}),
 					]),
 				]),

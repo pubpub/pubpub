@@ -77,7 +77,8 @@ if (typeof window !== 'undefined') {
 if (typeof window === 'undefined') {
 	/**
 	 * This is here because Jest overrides setImmediate in a strange way. This fixes
-	 * @see{../utils/async/**tests**/async.test.ts}
+	 *
+	 * @see {../utils/async/__tests__/async.test.ts}
 	 */
 	global.setImmediateNode = setImmediate;
 }
