@@ -25,6 +25,7 @@ const baseDateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date> | z.
 	);
 
 const dateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date> | z.ZodString>(
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	fieldSchema: Z,
 ) => baseDateNumberFilter(z.string()) as ReturnType<typeof baseDateNumberFilter<Z>>;
 
