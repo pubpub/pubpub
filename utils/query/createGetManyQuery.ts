@@ -6,6 +6,9 @@ import { generateFilterForModelSchema } from './filter';
 export function nonRelationFields(schema: z.ZodObject<any>) {
 	return Object.entries(schema.shape)
 		.map(([key, value]) => {
+			if (key === 'createdAt' || key === 'updatedAt') {
+				return key;
+			}
 			if (value instanceof z.ZodOptional) {
 				return;
 			}
