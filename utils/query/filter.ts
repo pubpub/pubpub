@@ -26,7 +26,7 @@ const booleanFilter = z.boolean();
 
 const stringFilter = <Z extends z.ZodString>(schema: Z, strict?: boolean) =>
 	strict
-		? z.union([schema, schema.array()])
+		? z.union([schema, schema.array(), z.boolean()])
 		: plainAndBooleanAndArrayFilter(
 				z.union([
 					schema,
@@ -102,7 +102,7 @@ export type FilterType<T, isUUID extends boolean = false> = T extends z.ZodType<
 				? isUUID extends false
 					? // @ts-expect-error FIXME: Typescript doesn't understand that if
 					  StringFilter<T>
-					: string | string[]
+					: string | string[] | boolean
 				: EnumFilter<T>
 		  : U extends number | Date
 		    ? // @ts-expect-error FIXME: Typescript doesn't understand that if
@@ -131,11 +131,13 @@ export type ObjectFilter<T extends Record<string, any>> = Prettify<{
 type FilterT<T> = z.ZodType<FilterType<T>>;
 
 export const generateFilterForModelSchema = <Z extends z.ZodObject<any>>(modelSchema: Z) => {
-	const result = generateFilterSchema(
-		modelSchema.extend({
-			createdAt: z.date(),
-			updatedAt: z.date(),
-		}),
-	) as FilterT<Z>;
+	const modelWithCreatedAtAndUpdatedAt = modelSchema.extend({
+		createdAt: z.date(),
+		updatedAt: z.date(),
+	});
+
+	const result = generateFilterSchema(modelWithCreatedAtAndUpdatedAt) as FilterT<
+		typeof modelWithCreatedAtAndUpdatedAt
+	>;
 	return result;
 };
