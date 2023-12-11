@@ -117,6 +117,7 @@ app.use(cookieParser());
 /* Configure app session */
 /* --------------------- */
 import session from 'express-session';
+import { purgeMiddleware } from 'utils/caching/purgeMiddleware';
 
 const SequelizeStore = CreateSequelizeStore(session.Store);
 
@@ -240,6 +241,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 app.use(errorHandler);
 app.use(errorMiddleware);
+
+/**
+ * Finally, purge the cache if necessary
+ */
+app.use(purgeMiddleware);
 
 /* ------------ */
 /* Start Server */
