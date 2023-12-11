@@ -36,11 +36,6 @@ const buildFieldWhereClause = <T extends FilterTypes>(filterField: T, arrayDepth
 				acc[Op.eq] = value;
 			}
 			if (key === 'contains') {
-				console.log({
-					filterField,
-					key,
-					value,
-				});
 				const symbol = 'not' in filterField && filterField.not ? Op.notILike : Op.iLike;
 
 				acc[symbol] = `%${value}%`;
