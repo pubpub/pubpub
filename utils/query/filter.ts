@@ -24,10 +24,10 @@ const baseDateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date> | z.
 		]),
 	);
 
-const dateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date> | z.ZodString>(
+const dateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date>>(
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	fieldSchema: Z,
-) => baseDateNumberFilter(z.string()) as ReturnType<typeof baseDateNumberFilter<Z>>;
+) => baseDateNumberFilter(z.number().or(z.string()) as any) as unknown as NumberDateFilter<Z>;
 
 const booleanFilter = z.boolean();
 
@@ -135,7 +135,7 @@ export type EnumFilter<T> = T extends z.ZodType<infer U, any, any>
 	: never;
 export type StringFilter<T extends z.ZodString> = z.infer<ReturnType<typeof stringFilter<T>>>;
 export type NumberDateFilter<T extends z.ZodType<number> | z.ZodType<Date>> = z.infer<
-	ReturnType<typeof dateNumberFilter<T>>
+	ReturnType<typeof baseDateNumberFilter<T>>
 >;
 export type ObjectFilter<T extends Record<string, any>> = Prettify<{
 	[K in keyof T]?: K extends 'id' | `${string}Id`
