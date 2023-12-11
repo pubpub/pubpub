@@ -7,7 +7,9 @@ const plainAndBooleanAndArrayFilter = <Z extends ZodTypeAny>(schema: Z) => {
 	return z.union([plainOrBooleanOrArray, z.array(plainOrBooleanOrArray)]);
 };
 
-const dateNumberFilter = <Z extends ZodTypeAny>(fieldSchema: Z) =>
+const baseDateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date> | z.ZodString>(
+	fieldSchema: Z,
+) =>
 	plainAndBooleanAndArrayFilter(
 		z.union([
 			fieldSchema,
@@ -21,6 +23,10 @@ const dateNumberFilter = <Z extends ZodTypeAny>(fieldSchema: Z) =>
 			}),
 		]),
 	);
+
+const dateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date> | z.ZodString>(
+	fieldSchema: Z,
+) => baseDateNumberFilter(z.string()) as ReturnType<typeof baseDateNumberFilter<Z>>;
 
 const booleanFilter = z.boolean();
 
@@ -82,6 +88,9 @@ export const generateFilterSchema = <Z extends z.ZodType<any>>(baseSchema: Z) =>
 		return enumFilter(baseSchema);
 	}
 	if (baseSchema instanceof z.ZodString) {
+		if (baseSchema.isDatetime) {
+			return dateNumberFilter(baseSchema);
+		}
 		return stringFilter(baseSchema, baseSchema.isUUID);
 	}
 	if (baseSchema instanceof z.ZodNumber || baseSchema instanceof z.ZodDate) {
@@ -94,15 +103,20 @@ export const generateFilterSchema = <Z extends z.ZodType<any>>(baseSchema: Z) =>
 	return z.any();
 };
 
-export type FilterType<T, isUUID extends boolean = false> = T extends z.ZodType<infer U, any, any>
+export type FilterType<
+	T,
+	Kind extends 'UUID' | 'Date' | undefined = undefined,
+> = T extends z.ZodType<infer U, any, any>
 	? U extends Array<infer X>
 		? Array<FilterType<z.ZodType<X, any, any>>>
 		: U extends string
 		  ? string extends U
-				? isUUID extends false
-					? // @ts-expect-error FIXME: Typescript doesn't understand that if
-					  StringFilter<T>
-					: string | string[] | boolean
+				? Kind extends 'Date'
+					? NumberDateFilter<z.ZodType<Date>>
+					: Kind extends 'UUID'
+					  ? string | string[] | boolean
+					  : // @ts-expect-error FIXME: Typescript doesn't understand that if
+					    StringFilter<T>
 				: EnumFilter<T>
 		  : U extends number | Date
 		    ? // @ts-expect-error FIXME: Typescript doesn't understand that if
@@ -124,20 +138,17 @@ export type NumberDateFilter<T extends z.ZodType<number> | z.ZodType<Date>> = z.
 >;
 export type ObjectFilter<T extends Record<string, any>> = Prettify<{
 	[K in keyof T]?: K extends 'id' | `${string}Id`
-		? FilterType<z.ZodType<T[K], any, any>, true>
-		: FilterType<z.ZodType<T[K], any, any>>;
+		? FilterType<z.ZodType<T[K], any, any>, 'UUID'>
+		: K extends `${string}At`
+		  ? FilterType<z.ZodType<T[K], any, any>, 'Date'>
+		  : FilterType<z.ZodType<T[K], any, any>>;
 }>;
 
 type FilterT<T> = z.ZodType<FilterType<T>>;
 
 export const generateFilterForModelSchema = <Z extends z.ZodObject<any>>(modelSchema: Z) => {
-	const modelWithCreatedAtAndUpdatedAt = modelSchema.extend({
-		createdAt: z.date(),
-		updatedAt: z.date(),
-	});
+	const modelWithCreatedAtAndUpdatedAt = modelSchema;
 
-	const result = generateFilterSchema(modelWithCreatedAtAndUpdatedAt) as FilterT<
-		typeof modelWithCreatedAtAndUpdatedAt
-	>;
+	const result = generateFilterSchema(modelWithCreatedAtAndUpdatedAt) as FilterT<Z>;
 	return result;
 };

@@ -18,11 +18,11 @@ import { pubEdgeSchema } from './pubEdge';
 import { submissionSchema } from './submission';
 import { docJsonSchema, releaseSchema } from './release';
 import { fileSchema } from './upload';
+import { baseSchema } from '../utils/baseSchema';
 
 extendZodWithOpenApi(z);
 
-export const pubSchema = z.object({
-	id: z.string().uuid(),
+export const pubSchema = baseSchema.extend({
 	slug: z
 		.string({
 			description: 'Slug',
@@ -205,9 +205,12 @@ export const sanitizedPubSchema = pubSchema.merge(
 
 export type PubPut = types.UpdateParams<Pub> & { pubId: string };
 
-export const pubPutSchema = pubSchema
+export const pubUpdateSchema = pubSchema
 	.partial()
 	.omit({
+		id: true,
+		createdAt: true,
+		updatedAt: true,
 		communityId: true,
 		draftId: true,
 		scopeSummaryId: true,

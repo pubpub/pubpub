@@ -16,7 +16,7 @@ import {
 	optionalPubCreateParamSchema,
 	pandocOutputSchema,
 	pubCreateSchema,
-	pubPutSchema,
+	pubUpdateSchema,
 	pubSchema,
 	pubWithRelationsSchema,
 	resourceASTSchema,
@@ -329,9 +329,9 @@ export const pubRouter = {
 		method: 'PUT',
 		summary: 'Update a Pub',
 		description: 'Update a Pub',
-		body: pubPutSchema,
+		body: pubUpdateSchema,
 		responses: {
-			200: pubPutSchema.omit({
+			200: pubUpdateSchema.omit({
 				pubId: true,
 			}),
 		},
