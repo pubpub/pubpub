@@ -6,6 +6,12 @@ _Collaborative Community Publishing_
 
 The roadmap is intended to be a general overview of our plans. It will provide a high-level list of what we're thinking about, what we've prioritized, what we're currently working on, and what we've done. It is not intended to be an exhaustive or completely up-to-date list of features or projects. We use GitHub milestones in the main [PubPub Repo](https://github.com/pubpub/pubpub/milestones) to track specific sprints of work.
 
+## API Documentation
+
+The easiest way to access the PubPub API is through the [PubPub SDK](https://github.com/pubpub/sdk).
+
+You can find documentation about the PubPub API at https://pubpub.org/apiDocs, or https://<yourcommunityURL>/apiDocs.
+
 ## Bugs, Feature Requests, Help, and Feedback
 
 If you have a specific bug to report, feel free to add a [new issue](https://github.com/pubpub/pubpub/issues/new/choose) to the PubPub Repo. Please search the [issue list](https://github.com/pubpub/pubpub/issues) first to make sure your bug hasn't already been reported. If it has, add your feedback to the preexisting issue. For new bug reports, please fill out all the applicable parts of the bug report template before submitting.
