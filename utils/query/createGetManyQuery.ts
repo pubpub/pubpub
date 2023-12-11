@@ -11,11 +11,11 @@ export function nonRelationFields(schema: z.ZodObject<any>) {
 			if (key === 'createdAt' || key === 'updatedAt') {
 				return key;
 			}
+
 			if (value instanceof z.ZodOptional) {
-				return;
+				return '';
 			}
 
-			// eslint-disable-next-line consistent-return
 			return key;
 		})
 		.filter(Boolean) as string[];
