@@ -197,6 +197,14 @@ app.use((req, res, next) => {
 	next();
 });
 
+/**
+ * Set up purge middleware before api routes are initialized and
+ * after hostname is set
+ *
+ * This modifies `res.json`, so it must be set up before any routes
+ */
+app.use(purgeMiddleware);
+
 /* ------------------------- */
 /* Create ts-rest api routes */
 /* ------------------------- */
@@ -241,11 +249,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 app.use(errorHandler);
 app.use(errorMiddleware);
-
-/**
- * Finally, purge the cache if necessary
- */
-app.use(purgeMiddleware);
 
 /* ------------ */
 /* Start Server */

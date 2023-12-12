@@ -7,19 +7,24 @@
  */
 export const purgeSurrogateTag = async (tag: string, duqduq = false, soft = false) => {
 	let id: string;
-	try {
-		const serviceId = duqduq
-			? process.env.FASTLY_SERVICE_ID_DUQDUQ
-			: process.env.FASTLY_SERVICE_ID_PROD;
 
-		const purge = await fetch(`https://api.fastly.com/service/${serviceId}/purge/${tag}`, {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Fastly-Key': process.env.PURGE_TOKEN!,
-				...(soft ? { 'Fastly-Soft-Purge': '1' } : {}),
+	const serviceId = duqduq
+		? process.env.FASTLY_SERVICE_ID_DUQDUQ
+		: process.env.FASTLY_SERVICE_ID_PROD;
+
+	const modifiedTag = duqduq ? tag.replace('pubpub.org', 'duqduq.org') : tag;
+	try {
+		const purge = await fetch(
+			`https://api.fastly.com/service/${serviceId}/purge/${modifiedTag}`,
+			{
+				method: 'POST',
+				headers: {
+					Accept: 'application/json',
+					'Fastly-Key': process.env.PURGE_TOKEN!,
+					...(soft ? { 'Fastly-Soft-Purge': '1' } : {}),
+				},
 			},
-		});
+		);
 
 		const response = await purge.json();
 
@@ -28,7 +33,7 @@ export const purgeSurrogateTag = async (tag: string, duqduq = false, soft = fals
 		}
 
 		id = response.id as string;
-	} catch (e) {
+	} catch (e: any) {
 		console.error(e);
 		throw new Error(e);
 	}

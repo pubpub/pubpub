@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { defer } from 'server/utils/deferred';
-import { isDuqDuq } from 'utils/environment';
+import { isDuqDuq, isProd } from 'utils/environment';
 import { purgeSurrogateTag } from './purgeSurrogateTag';
 
 /**
@@ -10,9 +10,22 @@ const nonPurgeNonGetRoutes = {
 	'/api/pubs/many': ['POST'],
 	'/api/upload': ['POST'],
 	'/api/pubs/text/convert': ['POST'],
+	'/api/login': ['POST'],
+	'/api/logout': ['POST'],
+	'/api/register': ['POST'],
+	'/api/export': ['POST'],
+	'/api/signup': ['POST'],
+	'/api/subscribe': ['POST'],
+	'/api/activityItems': ['POST'],
 } satisfies {
 	[Path in `/api/${string}`]: ('POST' | 'PUT' | 'DELETE' | 'PATCH')[];
 };
+
+/**
+ * These are routes with path parameters that we don't want to purge
+ * They aren't easily caught in the map above
+ */
+const otherNonPurgeRoutes = /\/api\/(pubs|collections)\/[^/]+\/doi\/preview/;
 
 /**
  * Purge domain cache on CRUD operations
@@ -22,37 +35,37 @@ const nonPurgeNonGetRoutes = {
  */
 export const purgeMiddleware = async (req: Request, res: Response, next: NextFunction) => {
 	/**
-	 * Very strong fail safe, but don't purge cache on non-API requests
-	 */
-	if (!req.path.startsWith('/api')) {
-		next();
-	}
-
-	/**
-	 * Only purge in prod
-	 */
-	if (process.env.NODE_ENV !== 'production') {
-		next();
-	}
-
-	/**
 	 * We don't want to purge GET requests, that's the whole point!
 	 */
 	if (req.method === 'GET') {
-		next();
+		return next();
 	}
 
 	/**
-	 * We don't want to purge if the status code is an error
+	 * Very strong fail safe, but don't purge cache on non-API requests
 	 */
-	if (res.statusCode >= 400) {
-		next();
+	if (!req.path.startsWith('/api')) {
+		return next();
+	}
+
+	const duqduq = isDuqDuq();
+	const prod = isProd();
+
+	/**
+	 * Only purge in prod or on duqduq
+	 */
+	if (!duqduq && !prod) {
+		return next();
 	}
 
 	const shouldNotPurgeMethodsForPath = nonPurgeNonGetRoutes[req.path];
 
 	if (shouldNotPurgeMethodsForPath && shouldNotPurgeMethodsForPath.includes(req.method)) {
-		next();
+		return next();
+	}
+
+	if (otherNonPurgeRoutes.test(req.path)) {
+		return next();
 	}
 
 	/**
@@ -61,10 +74,26 @@ export const purgeMiddleware = async (req: Request, res: Response, next: NextFun
 	const surrogateTag = req.hostname; // req.headers['surrogate-tag'];
 
 	if (!surrogateTag) {
-		next();
+		return next();
 	}
 
-	defer(async () => {
-		await purgeSurrogateTag(surrogateTag as string, isDuqDuq());
-	});
+	const originalJson = res.json;
+
+	res.json = function (body) {
+		const result = originalJson.call(this, body);
+
+		/**
+		 * We only now know the status code, so check if the request was actually successful
+		 */
+		if (res.statusCode >= 400) {
+			return result;
+		}
+
+		defer(async () => {
+			await purgeSurrogateTag(surrogateTag as string, duqduq);
+		});
+		return result;
+	};
+
+	return next();
 };
