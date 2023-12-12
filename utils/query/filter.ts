@@ -7,9 +7,7 @@ const plainAndBooleanAndArrayFilter = <Z extends ZodTypeAny>(schema: Z) => {
 	return z.union([plainOrBooleanOrArray, z.array(plainOrBooleanOrArray)]);
 };
 
-const baseDateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date> | z.ZodString>(
-	fieldSchema: Z,
-) =>
+const numberFilter = <Z extends z.ZodType<number>>(fieldSchema: Z) =>
 	plainAndBooleanAndArrayFilter(
 		z.union([
 			fieldSchema,
@@ -24,10 +22,22 @@ const baseDateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date> | z.
 		]),
 	);
 
-const dateNumberFilter = <Z extends z.ZodType<number> | z.ZodType<Date>>(
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	fieldSchema: Z,
-) => baseDateNumberFilter(z.number().or(z.string()) as any) as unknown as NumberDateFilter<Z>;
+const dateFilter = () => {
+	const fieldSchema = z.string().datetime().or(z.date());
+	return plainAndBooleanAndArrayFilter(
+		z.union([
+			fieldSchema,
+			z.object({
+				eq: fieldSchema.optional(),
+				gt: fieldSchema.optional(),
+				gte: fieldSchema.optional(),
+				lt: fieldSchema.optional(),
+				lte: fieldSchema.optional(),
+				ne: fieldSchema.optional(),
+			}),
+		]),
+	);
+};
 
 const booleanFilter = z.boolean();
 
@@ -90,13 +100,17 @@ export const generateFilterSchema = <Z extends z.ZodType<any>>(baseSchema: Z) =>
 	}
 	if (baseSchema instanceof z.ZodString) {
 		if (baseSchema.isDatetime) {
-			return dateNumberFilter(baseSchema);
+			return dateFilter();
 		}
 		return stringFilter(baseSchema, baseSchema.isUUID);
 	}
-	if (baseSchema instanceof z.ZodNumber || baseSchema instanceof z.ZodDate) {
-		return dateNumberFilter(baseSchema);
+	if (baseSchema instanceof z.ZodNumber) {
+		return numberFilter(baseSchema);
 	}
+	if (baseSchema instanceof z.ZodDate) {
+		return dateFilter();
+	}
+
 	if (baseSchema instanceof z.ZodBoolean) {
 		return booleanFilter;
 	}
@@ -113,30 +127,30 @@ export type FilterType<
 		: U extends string
 		  ? string extends U
 				? Kind extends 'Date'
-					? NumberDateFilter<z.ZodType<Date>>
+					? DateFilter
 					: Kind extends 'UUID'
 					  ? string | string[] | boolean
-					  : // @ts-expect-error FIXME: Typescript doesn't understand that if
+					  : // @ts-expect-error FIXME: Typescript doesn't understand
 					    StringFilter<T>
 				: EnumFilter<T>
-		  : U extends number | Date
-		    ? // @ts-expect-error FIXME: Typescript doesn't understand that if
-		      // `U extends number | Date` then `T extends z.ZodType<number> | z.ZodType<Date>`
-		      NumberDateFilter<T>
-		    : U extends boolean
-		      ? boolean
-		      : U extends object
-		        ? ObjectFilter<U>
-		        : never
+		  : U extends number
+		    ? // @ts-expect-error FIXME: Typescript doesn't understand
+		      NumberFilter<T>
+		    : U extends Date
+		      ? DateFilter
+		      : U extends boolean
+		        ? boolean
+		        : U extends object
+		          ? ObjectFilter<U>
+		          : never
 	: never;
 
 export type EnumFilter<T> = T extends z.ZodType<infer U, any, any>
 	? U | Array<T extends z.ZodType<infer Y, any, any> ? Y : never>
 	: never;
 export type StringFilter<T extends z.ZodString> = z.infer<ReturnType<typeof stringFilter<T>>>;
-export type NumberDateFilter<T extends z.ZodType<number> | z.ZodType<Date>> = z.infer<
-	ReturnType<typeof baseDateNumberFilter<T>>
->;
+export type NumberFilter<T extends z.ZodType<number>> = z.infer<ReturnType<typeof numberFilter<T>>>;
+export type DateFilter = z.infer<ReturnType<typeof dateFilter>>;
 export type ObjectFilter<T extends Record<string, any>> = Prettify<{
 	[K in keyof T]?: K extends 'id' | `${string}Id`
 		? FilterType<z.ZodType<T[K], any, any>, 'UUID'>
