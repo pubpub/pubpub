@@ -57,16 +57,6 @@ export const purgeMiddleware = (errorHandler = (error: any): any => console.erro
 			return next();
 		}
 
-		const duqduq = isDuqDuq();
-		const prod = isProd();
-
-		/**
-		 * Only purge in prod or on duqduq
-		 */
-		if (!duqduq && !prod) {
-			return next();
-		}
-
 		const shouldNotPurgeMethodsForPath = nonPurgeNonGetRoutes[req.path];
 
 		if (shouldNotPurgeMethodsForPath && shouldNotPurgeMethodsForPath.includes(req.method)) {
@@ -80,29 +70,31 @@ export const purgeMiddleware = (errorHandler = (error: any): any => console.erro
 		/**
 		 * On Fastly, we set the surrogate tag to the hostname
 		 */
-		const surrogateTag = req.hostname; // req.headers['surrogate-tag'];
+		const surrogateTag = req.hostname;
 
 		if (!surrogateTag) {
 			return next();
 		}
 
-		const originalJson = res.json;
-
-		res.json = function (body) {
-			const result = originalJson.call(this, body);
-
+		/**
+		 * When the request finishes, schedule a purge
+		 */
+		res.on('finish', () => {
 			/**
 			 * We only now know the status code, so check if the request was actually successful
 			 */
 			if (res.statusCode >= 400) {
-				return result;
+				return;
 			}
 
 			defer(async () => {
-				schedulePurge(surrogateTag);
+				/**
+				 * this await is here so you can wait on the purge requests
+				 * using `finishDeferredTasks` in tests or other short lived processes
+				 */
+				await schedulePurge(surrogateTag);
 			});
-			return result;
-		};
+		});
 
 		return next();
 	};

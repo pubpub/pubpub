@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const schedulePurgeWorker = createCachePurgeDebouncer({
-	errorHandler: Sentry.captureException,
+	errorHandler: process.env.NODE_ENV === 'production' ? Sentry.captureException : undefined,
 	debounceTime: 5000,
 	throttleTime: 1000,
 });

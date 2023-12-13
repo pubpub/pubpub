@@ -203,7 +203,9 @@ app.use((req, res, next) => {
  *
  * This modifies `res.json`, so it must be set up before any routes
  */
-app.use(purgeMiddleware(Sentry.captureException));
+app.use(
+	purgeMiddleware(process.env.NODE_ENV === 'production' ? Sentry.captureException : undefined),
+);
 
 /* ------------------------- */
 /* Create ts-rest api routes */

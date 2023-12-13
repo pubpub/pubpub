@@ -11,11 +11,30 @@ export const purgeSurrogateTag = async (tag: string, soft = false) => {
 
 	const duqduq = isDuqDuq();
 
-	const serviceId = duqduq
-		? process.env.FASTLY_SERVICE_ID_DUQDUQ
-		: process.env.FASTLY_SERVICE_ID_PROD;
+	const [serviceId, token] = duqduq
+		? [process.env.FASTLY_SERVICE_ID_DUQDUQ, process.env.FASTLY_PURGE_TOKEN_DUQDUQ]
+		: [process.env.FASTLY_SERVICE_ID_PROD, process.env.FASTLY_PURGE_TOKEN_PROD];
+
+	if (!token) {
+		throw new Error(`No Fastly purge token found for ${duqduq ? 'DuqDuq' : 'prod'}'}
+		Did you forget to set FASTLY_PURGE_TOKEN_${duqduq ? 'DUQDUQ' : 'PROD'}?`);
+	}
+	if (!serviceId) {
+		throw new Error(`No Fastly service ID found for ${duqduq ? 'DuqDuq' : 'prod'}'}
+		Did you forget to set FASTLY_SERVICE_ID_${duqduq ? 'DUQDUQ' : 'PROD'}?`);
+	}
 
 	const modifiedTag = duqduq ? tag.replace('pubpub.org', 'duqduq.org') : tag;
+
+	if (process.env.NODE_ENV !== 'production' && !process.env.TEST_FASTLY_PURGE) {
+		console.log(
+			`Skipping Fastly purge for ${modifiedTag} in ${
+				duqduq ? 'DuqDuq' : 'prod'
+			} because NODE_ENV is not production and TEST_FASTLY_PURGE is not set`,
+		);
+		return '';
+	}
+
 	try {
 		const purge = await fetch(
 			`https://api.fastly.com/service/${serviceId}/purge/${modifiedTag}`,
@@ -23,7 +42,7 @@ export const purgeSurrogateTag = async (tag: string, soft = false) => {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
-					'Fastly-Key': process.env.PURGE_TOKEN!,
+					'Fastly-Key': token,
 					...(soft ? { 'Fastly-Soft-Purge': '1' } : {}),
 				},
 			},
@@ -32,13 +51,18 @@ export const purgeSurrogateTag = async (tag: string, soft = false) => {
 		const response = await purge.json();
 
 		if (response.status !== 'ok') {
-			throw new Error(response.msg);
+			throw new Error(
+				`Purge action on service ${
+					duqduq ? 'DuqDuq' : 'prod'
+				}/${serviceId} for ${modifiedTag} did not succeed.\n${response.msg}`,
+			);
 		}
 
 		id = response.id as string;
 	} catch (e: any) {
-		console.error(e);
-		throw new Error(e);
+		throw new Error(
+			`Purge action on service ${serviceId} for ${modifiedTag} did not succeed.\n${e}`,
+		);
 	}
 
 	return id;

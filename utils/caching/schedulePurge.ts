@@ -53,6 +53,7 @@ export const createCachePurgeDebouncer = (
 			const existingRequest = purgeRequests.get(key);
 			if (existingRequest) {
 				clearTimeout(existingRequest.timer);
+				resolvePromiseForKey(key);
 			}
 			purgeRequests.set(key, {
 				timer: setTimeout(() => {
