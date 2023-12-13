@@ -23,6 +23,7 @@ import { fetchFacetsForScope } from 'server/facets';
 import { expect } from 'utils/assert';
 import { isDuqDuq } from 'utils/environment';
 import { PubMetadata } from './types';
+import { getCorrectHostname } from 'utils/caching/getCorrectHostname';
 
 const getPrimaryCollectionMetadata = (collectionPubs: types.CollectionPub[] | CollectionPub[]) => {
 	const primaryCollection = getPrimaryCollection(collectionPubs);
@@ -89,10 +90,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
 	const attributions = getAllPubContributors(pubData, 'contributors', false, true);
 
-	const hostname = isDuqDuq()
-		? `${pubData.community.subdomain}.duqduq.org`
-		: pubData.community.domain ?? `${pubData.community.subdomain}.pubpub.org`;
-
+	const hostname = getCorrectHostname(pubData.community.subdomain, pubData.community.domain);
 	return {
 		title: pubData.title,
 		slug: pubData.slug,
