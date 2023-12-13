@@ -200,8 +200,6 @@ app.use((req, res, next) => {
 /**
  * Set up purge middleware before api routes are initialized and
  * after hostname is set
- *
- * This modifies `res.json`, so it must be set up before any routes
  */
 app.use(
 	purgeMiddleware(process.env.NODE_ENV === 'production' ? Sentry.captureException : undefined),

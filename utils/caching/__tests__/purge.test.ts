@@ -1,6 +1,5 @@
 import { finishDeferredTasks } from 'server/utils/deferred';
 import { login, modelize, setup, teardown } from 'stubstub';
-import { sleep } from 'utils/promises';
 
 const models = modelize`
     Community community {
