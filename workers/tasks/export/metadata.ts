@@ -21,6 +21,7 @@ import { getAllPubContributors } from 'utils/contributors';
 import { fetchFacetsForScope } from 'server/facets';
 
 import { expect } from 'utils/assert';
+import { isDuqDuq } from 'utils/environment';
 import { PubMetadata } from './types';
 
 const getPrimaryCollectionMetadata = (collectionPubs: types.CollectionPub[] | CollectionPub[]) => {
@@ -87,6 +88,11 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 	const updatedDateString = updatedDate && dateFormat(updatedDate, 'mmm dd, yyyy');
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
 	const attributions = getAllPubContributors(pubData, 'contributors', false, true);
+
+	const hostname = isDuqDuq()
+		? `${pubData.community.subdomain}.duqduq.org`
+		: pubData.community.domain ?? `${pubData.community.subdomain}.pubpub.org`;
+
 	return {
 		title: pubData.title,
 		slug: pubData.slug,
@@ -107,5 +113,6 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		publisher: pubData.community.publishAs,
 		...getPrimaryCollectionMetadata(pubData.collectionPubs),
 		license,
+		hostname,
 	};
 };

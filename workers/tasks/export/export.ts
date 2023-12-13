@@ -3,6 +3,9 @@ import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { Maybe } from 'types';
 
 import { expect } from 'utils/assert';
+import { defer } from 'server/utils/deferred';
+import { schedulePurge } from 'utils/caching/schedulePurge';
+import { purgeSurrogateTag } from 'utils/caching/purgeSurrogateTag';
 import { renderStaticHtml } from './html';
 import { getPubMetadata } from './metadata';
 import { getNotesData } from './notes';
@@ -50,5 +53,12 @@ export const exportTask = async ({ exportId }: { exportId: string }) => {
 		url = await uploadDocument(pubId, tmpFile, extension);
 	}
 	await assignFileToExportById(exportId, url);
-	return { url };
+
+	//	defer(async () => {
+	const { hostname } = pubMetadata;
+
+	// console.log('purginggg');
+	// await schedulePurge(hostname);
+	//	});
+	return { url, hostname };
 };

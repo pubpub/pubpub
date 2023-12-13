@@ -1,12 +1,15 @@
+import { isDuqDuq } from 'utils/environment';
+
 /**
  * Purge a surrogate tag from Fastly
  *
  * @param tag The tag to purge, this should be the domain
- * @param duqduq Whether to purge the duqduq service or prod
  * @param soft Whether to do a soft purge. This marks the content as stale and will serve stale content while the new content is being fetched
  */
-export const purgeSurrogateTag = async (tag: string, duqduq = false, soft = false) => {
+export const purgeSurrogateTag = async (tag: string, soft = false) => {
 	let id: string;
+
+	const duqduq = isDuqDuq();
 
 	const serviceId = duqduq
 		? process.env.FASTLY_SERVICE_ID_DUQDUQ
@@ -28,7 +31,7 @@ export const purgeSurrogateTag = async (tag: string, duqduq = false, soft = fals
 
 		const response = await purge.json();
 
-		if (!response.status) {
+		if (response.status !== 'ok') {
 			throw new Error(response.msg);
 		}
 

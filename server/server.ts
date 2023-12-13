@@ -203,7 +203,7 @@ app.use((req, res, next) => {
  *
  * This modifies `res.json`, so it must be set up before any routes
  */
-app.use(purgeMiddleware);
+app.use(purgeMiddleware(Sentry.captureException));
 
 /* ------------------------- */
 /* Create ts-rest api routes */
