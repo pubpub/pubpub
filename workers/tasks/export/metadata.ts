@@ -17,13 +17,12 @@ import {
 } from 'server/models';
 
 import { renderLicenseForPub } from 'utils/licenses';
+import { getCorrectHostname } from 'utils/caching/getCorrectHostname';
 import { getAllPubContributors } from 'utils/contributors';
 import { fetchFacetsForScope } from 'server/facets';
 
 import { expect } from 'utils/assert';
-import { isDuqDuq } from 'utils/environment';
 import { PubMetadata } from './types';
-import { getCorrectHostname } from 'utils/caching/getCorrectHostname';
 
 const getPrimaryCollectionMetadata = (collectionPubs: types.CollectionPub[] | CollectionPub[]) => {
 	const primaryCollection = getPrimaryCollection(collectionPubs);
