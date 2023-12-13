@@ -1,4 +1,4 @@
-import { isDuqDuq } from 'utils/environment';
+import { isDuqDuq, isQubQub } from 'utils/environment';
 
 /**
  * Purge a surrogate tag from Fastly
@@ -10,6 +10,7 @@ export const purgeSurrogateTag = async (tag: string, soft = false) => {
 	let id: string;
 
 	const duqduq = isDuqDuq();
+	const qubqub = isQubQub();
 
 	const [serviceId, token] = duqduq
 		? [process.env.FASTLY_SERVICE_ID_DUQDUQ, process.env.FASTLY_PURGE_TOKEN_DUQDUQ]
@@ -25,11 +26,15 @@ export const purgeSurrogateTag = async (tag: string, soft = false) => {
 	}
 
 	const modifiedTag = duqduq ? tag.replace('pubpub.org', 'duqduq.org') : tag;
+	if (qubqub) {
+		console.log(`Skipping Fastly purge for ${modifiedTag} because qubqub doesn't use Fastly`);
+		return '';
+	}
 
 	if (process.env.NODE_ENV !== 'production' && !process.env.TEST_FASTLY_PURGE) {
 		console.log(
 			`Skipping Fastly purge for ${modifiedTag} in ${
-				duqduq ? 'DuqDuq' : 'prod'
+				duqduq ? 'DuqDuq' : qubqub ? 'qubqub' : 'prod'
 			} because NODE_ENV is not production and TEST_FASTLY_PURGE is not set`,
 		);
 		return '';
