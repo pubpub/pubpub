@@ -3,7 +3,6 @@ import { getManyPubs } from 'server/pub/queryMany';
 import { getUserScopeVisits } from 'server/userScopeVisit/queries';
 import { InitialData, SanitizedPubData } from 'types';
 
-import { expect } from 'utils/assert';
 import sanitizeCollection from './collectionSanitize';
 
 type Options = {
