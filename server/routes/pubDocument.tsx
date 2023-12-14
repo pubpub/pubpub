@@ -194,7 +194,7 @@ const setSurrogateKeysHeadersForPubEdges = async (
 		return;
 	}
 
-	const { id, domain, subdomain } = initialData.communityData;
+	const { id } = initialData.communityData;
 	const hostnames = edges.reduce(
 		(acc, edge: PubEdge) => {
 			const { pub, targetPub } = edge;
@@ -207,15 +207,18 @@ const setSurrogateKeysHeadersForPubEdges = async (
 				return acc;
 			}
 
-			const hostname = getCorrectHostname(
-				maybePub.community!.subdomain,
-				maybePub.community!.domain,
-			);
+			const { subdomain, domain } = maybePub.community ?? {};
+
+			const hostname = getCorrectHostname(subdomain, domain);
+
+			if (acc.includes(hostname)) {
+				return acc;
+			}
 
 			acc.push(hostname);
 			return acc;
 		},
-		[getCorrectHostname(subdomain, domain)] as string[],
+		[req.hostname] as string[],
 	);
 
 	res.setHeader('Surrogate-Key', hostnames.join(' '));
