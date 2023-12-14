@@ -35,12 +35,12 @@ export const createCachePurgeDebouncer = (
 		}
 	};
 
-	const executePurge = (key: string) => {
+	const executePurge = (key: string, soft = false) => {
 		const now = Date.now();
 		if (now - lastExecutionTime > throttleTime) {
 			lastExecutionTime = now;
 
-			purgeSurrogateTag(key)
+			purgeSurrogateTag(key, soft)
 				.then(() => resolvePromiseForKey(key))
 				.catch(errorHandler);
 		} else {
@@ -48,7 +48,7 @@ export const createCachePurgeDebouncer = (
 		}
 	};
 
-	const schedulePurge = (key: string): Promise<void> => {
+	const schedulePurge = (key: string, soft = false): Promise<void> => {
 		return new Promise((resolve) => {
 			const existingRequest = purgeRequests.get(key);
 			if (existingRequest) {
@@ -57,19 +57,20 @@ export const createCachePurgeDebouncer = (
 			}
 			purgeRequests.set(key, {
 				timer: setTimeout(() => {
-					executePurge(key);
+					executePurge(key, soft);
 				}, debounceTime),
 				resolver: resolve,
 			});
 		});
 	};
-	return schedulePurge;
+	return {
+		/**
+		 * Schedule a purge for a surrogate tag from Fastly
+		 *
+		 * @param tag The tag to purge, e.g. the hostname
+		 * @param soft Whether to do a soft purge. This marks the content as stale and will serve stale content while the new content is being fetched
+		 *
+		 */
+		schedulePurge,
+	};
 };
-
-/**
- * Schedule a purge for a surrogate tag from Fastly
- *
- * @param tag The tag to purge, this should be the domain
- * @param soft Whether to do a soft purge. This marks the content as stale and will serve stale content while the new content is being fetched
- */
-export const schedulePurge = createCachePurgeDebouncer();

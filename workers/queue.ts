@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === 'production') {
 	});
 }
 
-const schedulePurgeWorker = createCachePurgeDebouncer({
+const { schedulePurge: schedulePurgeWorker } = createCachePurgeDebouncer({
 	errorHandler: process.env.NODE_ENV === 'production' ? Sentry.captureException : undefined,
 	debounceTime: 5000,
 	throttleTime: 1000,
@@ -70,7 +70,6 @@ const processTask = (channel) => async (message) => {
 		);
 
 		// Export tasks return a URL and a hostname as output, we want to purge the cache of the hostname
-		console.log({ updatedTaskData, taskData });
 		const { output, ...rest } = updatedTaskData;
 
 		const { hostname, ...restOutput } = output || {};

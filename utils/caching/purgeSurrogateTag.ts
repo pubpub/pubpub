@@ -5,6 +5,9 @@ import { isDuqDuq, isQubQub } from 'utils/environment';
  *
  * @param tag The tag to purge, this should be the domain
  * @param soft Whether to do a soft purge. This marks the content as stale and will serve stale content while the new content is being fetched
+ *
+ * @throws {Error} If the purge action did not succeed, or if
+ * FASTLY_SERVICE_ID_${PROD|DUQDUQ} or FASTLY_PURGE_TOKEN_${PROD|DUQDUQ} is not set
  */
 export const purgeSurrogateTag = async (tag: string, soft = false) => {
 	let id: string;

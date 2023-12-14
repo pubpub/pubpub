@@ -39,7 +39,7 @@ const otherNonPurgeRoutes = /\/api\/(pubs|collections)\/[^/]+\/doi\/preview/;
  * It runs after the response has been sent, so returning anything will cause an error
  */
 export const purgeMiddleware = (errorHandler = (error: any): any => console.error(error)) => {
-	const schedulePurge = createCachePurgeDebouncer({ errorHandler });
+	const { schedulePurge } = createCachePurgeDebouncer({ errorHandler });
 
 	return async (req: Request, res: Response, next: NextFunction) => {
 		/**
