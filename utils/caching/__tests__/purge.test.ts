@@ -1,5 +1,6 @@
 import { finishDeferredTasks } from 'server/utils/deferred';
 import { login, modelize, setup, teardown } from 'stubstub';
+import { setEnvironment } from 'utils/environment';
 
 const models = modelize`
     Community community {
@@ -41,6 +42,7 @@ describe('purging', () => {
 	beforeEach(() => {
 		// reset "has been called" status of all mocks
 		jest.clearAllMocks();
+		setEnvironment(false, false, false);
 	});
 	it('should purge on creating pub', async () => {
 		const { community, admin } = models;
@@ -177,4 +179,72 @@ describe('purging', () => {
 			},
 		);
 	}, 50000);
+
+	it('should not purge on qubqub', async () => {
+		const { community, admin } = models;
+
+		const agent = await login(admin);
+
+		setEnvironment(false, false, true);
+
+		const host = `something.pubpub.org`;
+
+		await agent
+			.post('/api/pubs')
+			.send({
+				communityId: community.id,
+			})
+			.set('Host', host)
+			.expect(201);
+
+		await finishDeferredTasks();
+
+		expect(global.fetch).toHaveBeenCalledTimes(0);
+
+		setEnvironment(true, false, false);
+
+		await agent
+			.post('/api/pubs')
+			.send({
+				communityId: community.id,
+			})
+			.set('Host', host)
+			.expect(201);
+
+		await finishDeferredTasks();
+
+		expect(global.fetch).toHaveBeenCalledTimes(1);
+	});
+
+	it('should purge the appropriate host depending on env', async () => {
+		const { community, admin } = models;
+
+		setEnvironment(false, true, false);
+
+		const agent = await login(admin);
+
+		const host = `something.pubpub.org`;
+
+		await agent
+			.post('/api/pubs')
+			.send({
+				communityId: community.id,
+			})
+			.set('Host', host)
+			.expect(201);
+
+		await finishDeferredTasks();
+
+		expect(global.fetch).toHaveBeenCalledTimes(1);
+		expect(global.fetch).toHaveBeenCalledWith(
+			`https://api.fastly.com/service/${process.env.FASTLY_SERVICE_ID_DUQDUQ}/purge/something.duqduq.org`,
+			{
+				headers: {
+					Accept: 'application/json',
+					'Fastly-Key': process.env.FASTLY_PURGE_TOKEN_DUQDUQ,
+				},
+				method: 'POST',
+			},
+		);
+	});
 });
