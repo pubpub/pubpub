@@ -167,18 +167,10 @@ const getScopeElements = async (scopeInputs: {
 		activeTargetType = 'collection';
 	}
 
-	// if (!activeCommunity && communityId) {
-	// 	activeCommunity = expect(
-	// 		await Community.findOne({
-	// 			where: { id: communityId },
-	// 		}),
-	// 	);
-	// }
-
 	if (activeTargetType === 'pub') {
 		activePub = await Pub.findOne({
 			where: stripFalsyIdsFromQuery({
-				//	communityId: activeCommunity && activeCommunity.id,
+				communityId: communityId ?? null,
 				slug: pubSlug,
 				id: pubId,
 			}),
@@ -218,11 +210,6 @@ const getScopeElements = async (scopeInputs: {
 		}
 
 		activeCommunity = activePub.community || null;
-		// const collections = await Collection.findAll({
-		// 	where: {
-		// 		id: { [Op.in]: (activePub.collectionPubs || []).map((cp) => cp.collectionId) },
-		// 	},
-		// });
 		const collections = activePub.collectionPubs!.map((cp) => cp.collection!);
 
 		inactiveCollections = collections.filter((collection) => {
@@ -239,23 +226,23 @@ const getScopeElements = async (scopeInputs: {
 			collectionSlug,
 			collectionId,
 			includeCommunity: true,
-			//	communityId: activeCommunity?.id,
+			communityId: communityId ?? null,
 		});
 
 		activeTarget = activeCollection;
 		activeCommunity = activeCollection?.community!;
 	}
 
-	if (!activeCommunity) {
-		if (activeTarget) {
-			activeCommunity = await Community.findOne({
-				where: { id: expect(activeTarget.communityId) },
-			});
-		} else if (communityId) {
+	if (!activeCommunity || activeCommunity.id !== communityId) {
+		if (communityId) {
 			activeCommunity = await Community.findOne({
 				where: {
 					id: communityId,
 				},
+			});
+		} else if (activeTarget) {
+			activeCommunity = await Community.findOne({
+				where: { id: expect(activeTarget.communityId) },
 			});
 		}
 	}

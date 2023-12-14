@@ -39,7 +39,7 @@ const getRecentItems = async (initialData: InitialData) => {
 		loginData: { id: userId },
 		communityData: { id: communityId },
 	} = initialData;
-	const userScopeVisits = await getUserScopeVisits({ userId: expect(userId), communityId });
+	const userScopeVisits = await getUserScopeVisits({ userId, communityId });
 	const result = await getManyPubs({
 		query: {
 			withinPubIds: userScopeVisits.map(({ pubId }) => pubId).filter(Boolean) as string[],
