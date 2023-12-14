@@ -209,7 +209,7 @@ const setSurrogateKeysHeadersForPubEdges = async (
 
 			const { subdomain, domain } = maybePub.community ?? {};
 
-			const hostname = getCorrectHostname(subdomain, domain);
+			const hostname = subdomain ? getCorrectHostname(subdomain, domain) : req.hostname;
 
 			if (acc.includes(hostname)) {
 				return acc;
