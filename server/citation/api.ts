@@ -61,7 +61,8 @@ app.get(
 
 		const zoteroId = parseInt(expect(zoteroIntegration.zoteroUserId), 10);
 		const zoteroAPI = zoteroClient(integrationDataOAuth1.accessToken).library('user', zoteroId);
-		const results = zoteroAPI.items().get({ q, include, style: zoteroStyle });
+		const results = await zoteroAPI.items().get({ q, include, style: zoteroStyle });
+
 		return res.status(200).json({ items: results.raw });
 	}),
 );
