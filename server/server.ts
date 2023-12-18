@@ -227,7 +227,10 @@ createExpressEndpoints(contract, server, app, {
 			console.error(prettifiedError);
 		}
 
-		return res.status(400).json(prettifiedError);
+		return res.status(400).json({
+			...prettifiedError,
+			message: prettifiedError.message,
+		});
 	},
 	jsonQuery: true,
 });
