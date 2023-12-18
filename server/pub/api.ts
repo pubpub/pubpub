@@ -5,7 +5,7 @@ import { initServer } from '@ts-rest/express';
 
 import * as types from 'types';
 
-import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
+import { ForbiddenError, NotFoundError, PubPubError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { indexByProperty } from 'utils/arrays';
 import { transformPubToResource } from 'deposit/transform/pub';
@@ -24,6 +24,7 @@ import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
 import { isDuqDuq, isProd } from 'utils/environment';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { omitKeys } from 'utils/objects';
+import { ValidationError } from 'sequelize';
 import { Pub } from './model';
 
 import { canCreatePub, canDestroyPub, getUpdatablePubFields } from './permissions';
@@ -115,9 +116,14 @@ export const pubServer = s.router(contract.pub, {
 				body: jsonedPub,
 			};
 		} catch (e: any) {
-			if (e.message === 'Slug is already in use') {
-				throw new BadRequestError(e);
+			if (e instanceof ValidationError) {
+				e.errors.forEach((error) => {
+					if (error.message === 'slug must be unique') {
+						throw new PubPubError.ForbiddenSlugError(expect(error.value), 'used');
+					}
+				});
 			}
+
 			throw new Error(e);
 		}
 	},
@@ -131,11 +137,23 @@ export const pubServer = s.router(contract.pub, {
 			throw new ForbiddenError();
 		}
 
-		const updateResult = await updatePub(req.body, updatableFields, userId);
-		return {
-			status: 200,
-			body: updateResult,
-		};
+		try {
+			const updateResult = await updatePub(req.body, updatableFields, userId);
+			return {
+				status: 200,
+				body: updateResult,
+			};
+		} catch (e: any) {
+			if (e instanceof ValidationError) {
+				e.errors.forEach((error) => {
+					if (error.message === 'slug must be unique') {
+						throw new PubPubError.ForbiddenSlugError(expect(error.value), 'used');
+					}
+				});
+			}
+
+			throw new Error(e);
+		}
 	},
 	remove: async ({ body, req }) => {
 		const { userId, pubId } = getRequestIds(body, req.user);
