@@ -65,15 +65,6 @@ const PubSettings = (props: Props) => {
 			}, 0);
 		}
 	});
-	console.log({
-		pubData,
-		hasChanges,
-		updatePubData,
-		updatePersistedPubData,
-		persistedPubData,
-		persist,
-		error,
-	});
 	const headerBackgroundImage = useFacetsQuery((F) => F.PubHeaderTheme.backgroundImage);
 
 	const slugError = !pubData.slug
