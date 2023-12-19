@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { defer } from 'server/utils/deferred';
 import { sequelize } from 'server/models';
 import { QueryTypes } from 'sequelize';
-import { createCachePurgeDebouncer } from './schedulePurge';
+import type { createCachePurgeDebouncer } from './schedulePurge';
 import { uniqueCommunitiesFromMembersQuery } from './uniqueCommunitiesFromMembersQuery';
 import { getCorrectHostname } from './getCorrectHostname';
 import { getPPLic } from './getHashedUserId';
@@ -99,9 +99,9 @@ async function getSurrogateTag(req: Request) {
 /**
  * Purge domain cache on CRUD operations
  */
-export const purgeMiddleware = (errorHandler = (error: any): any => console.error(error)) => {
-	const { schedulePurge } = createCachePurgeDebouncer({ errorHandler });
-
+export const purgeMiddleware = (
+	schedulePurge: ReturnType<typeof createCachePurgeDebouncer>['schedulePurge'],
+) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		const surrogateTag = await getSurrogateTag(req);
 

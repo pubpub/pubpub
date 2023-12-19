@@ -7,9 +7,22 @@ import {
 } from 'server/activityItem/queries';
 import { setUserSubscriptionStatus } from 'server/userSubscription/queries';
 import { getOrCreateUserNotificationPreferences } from 'server/userNotificationPreferences/queries';
+import { schedulePurge } from 'server/server';
+import { defer } from 'server/utils/deferred';
+
+function purgeUser(userId: string) {
+	defer(async () => {
+		await schedulePurge(userId);
+	});
+}
 
 Member.afterCreate(async (member) => {
-	const { userId, pubId } = member;
+	const { userId, pubId, collectionId } = member;
+
+	if (pubId || collectionId) {
+		purgeUser(userId);
+	}
+
 	if (pubId) {
 		const userNotificationPreferences = await getOrCreateUserNotificationPreferences(userId);
 		if (userNotificationPreferences.subscribeToPubsAsMember) {
@@ -20,6 +33,12 @@ Member.afterCreate(async (member) => {
 				setAutomatically: true,
 			});
 		}
+	}
+});
+
+Member.afterDestroy(async ({ userId, collectionId, pubId }) => {
+	if (pubId || collectionId) {
+		purgeUser(userId);
 	}
 });
 
