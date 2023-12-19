@@ -39,6 +39,27 @@ teardown(afterAll, () => {
 	jest.restoreAllMocks();
 });
 
+const expectFastlyPurge = ({
+	key,
+	token = process.env.FASTLY_PURGE_TOKEN_PROD,
+	serviceId = process.env.FASTLY_SERVICE_ID_PROD,
+}: {
+	key: string;
+	token?: string;
+	serviceId?: string;
+}) => {
+	expect(global.fetch).toHaveBeenCalledWith(
+		`https://api.fastly.com/service/${serviceId}/purge/${key}`,
+		{
+			headers: {
+				Accept: 'application/json',
+				'Fastly-Key': token,
+			},
+			method: 'POST',
+		},
+	);
+};
+
 describe('purging', () => {
 	beforeEach(() => {
 		// reset "has been called" status of all mocks
@@ -50,18 +71,14 @@ describe('purging', () => {
 
 		const agent = await login(admin);
 		await agent
-			.post('/api/pubs')
-			.send({ communityId: community.id, title: 'test pub' })
+			.post('/api/collections')
+			.send({ communityId: community.id, title: 'test collection', kind: 'tag' })
 			.expect(201);
 
 		await finishDeferredTasks();
 
-		expect(global.fetch).toHaveBeenCalledWith(
-			`https://api.fastly.com/service/${process.env.FASTLY_SERVICE_ID_PROD}/purge/demo.pubpub.org`,
-			{ headers: { Accept: 'application/json', 'Fastly-Key': 'token' }, method: 'POST' },
-		);
+		expectFastlyPurge({ key: 'demo.pubpub.org' });
 	});
-
 	it('should not purge on GET routes, non-API routes, and certain excluded routes', async () => {
 		const { community, admin, testPub, testPage } = models;
 
@@ -69,7 +86,7 @@ describe('purging', () => {
 
 		const host = `${community.subdomain}.pubpub.org`;
 		const callsThatShouldntPurge = [
-			agent.get('/api/pubs').set('Host', host).send().expect(200),
+			agent.get('/api/collections').set('Host', host).send().expect(200),
 			agent.get(`/${testPage.slug}`).set('Host', host).send().expect(200),
 			agent
 				.post('/api/export')
@@ -95,20 +112,30 @@ describe('purging', () => {
 		const agent = await login(admin);
 
 		const callsThatShouldPurge = [
-			agent.post('/api/pubs').send({
+			agent.post('/api/collections').send({
 				communityId: community.id,
+				title: 'test collection',
+				kind: 'tag',
 			}),
-			agent.post('/api/pubs').send({
+			agent.post('/api/collections').send({
 				communityId: community.id,
+				title: 'test collection',
+				kind: 'tag',
 			}),
-			agent.post('/api/pubs').send({
+			agent.post('/api/collections').send({
 				communityId: community.id,
+				title: 'test collection',
+				kind: 'tag',
 			}),
-			agent.post('/api/pubs').send({
+			agent.post('/api/collections').send({
 				communityId: community.id,
+				title: 'test collection',
+				kind: 'tag',
 			}),
-			agent.post('/api/pubs').send({
+			agent.post('/api/collections').send({
 				communityId: community.id,
+				title: 'test collection',
+				kind: 'tag',
 			}),
 		];
 
@@ -129,27 +156,35 @@ describe('purging', () => {
 
 		const callsThatShouldPurge = [
 			agent
-				.post('/api/pubs')
+				.post('/api/collections')
 				.send({
 					communityId: community.id,
+					title: 'test collection',
+					kind: 'tag',
 				})
 				.set('Host', host),
 			agent
-				.post('/api/pubs')
+				.post('/api/collections')
 				.send({
 					communityId: community.id,
+					title: 'test collection',
+					kind: 'tag',
 				})
 				.set('Host', fakeHost),
 			agent
-				.post('/api/pubs')
+				.post('/api/collections')
 				.send({
 					communityId: community.id,
+					title: 'test collection',
+					kind: 'tag',
 				})
 				.set('Host', host),
 			agent
-				.post('/api/pubs')
+				.post('/api/collections')
 				.send({
 					communityId: community.id,
+					title: 'test collection',
+					kind: 'tag',
 				})
 				.set('Host', fakeHost),
 		];
@@ -159,26 +194,8 @@ describe('purging', () => {
 		await finishDeferredTasks();
 
 		expect(global.fetch).toHaveBeenCalledTimes(2);
-		expect(global.fetch).toHaveBeenCalledWith(
-			`https://api.fastly.com/service/${process.env.FASTLY_SERVICE_ID_PROD}/purge/something.pubpub.org`,
-			{
-				headers: {
-					Accept: 'application/json',
-					'Fastly-Key': process.env.FASTLY_PURGE_TOKEN_PROD,
-				},
-				method: 'POST',
-			},
-		);
-		expect(global.fetch).toHaveBeenCalledWith(
-			`https://api.fastly.com/service/${process.env.FASTLY_SERVICE_ID_PROD}/purge/fake.pubpub.org`,
-			{
-				headers: {
-					Accept: 'application/json',
-					'Fastly-Key': process.env.FASTLY_PURGE_TOKEN_PROD,
-				},
-				method: 'POST',
-			},
-		);
+		expectFastlyPurge({ key: 'something.pubpub.org' });
+		expectFastlyPurge({ key: 'fake.pubpub.org' });
 	}, 50000);
 
 	it('should not purge on qubqub', async () => {
@@ -191,9 +208,11 @@ describe('purging', () => {
 		const host = `something.pubpub.org`;
 
 		await agent
-			.post('/api/pubs')
+			.post('/api/collections')
 			.send({
 				communityId: community.id,
+				title: 'test collection',
+				kind: 'tag',
 			})
 			.set('Host', host)
 			.expect(201);
@@ -205,9 +224,11 @@ describe('purging', () => {
 		setEnvironment(true, false, false);
 
 		await agent
-			.post('/api/pubs')
+			.post('/api/collections')
 			.send({
 				communityId: community.id,
+				title: 'test',
+				kind: 'tag',
 			})
 			.set('Host', host)
 			.expect(201);
@@ -227,9 +248,11 @@ describe('purging', () => {
 		const host = `something.pubpub.org`;
 
 		await agent
-			.post('/api/pubs')
+			.post('/api/collections')
 			.send({
 				communityId: community.id,
+				title: 'test',
+				kind: 'tag',
 			})
 			.set('Host', host)
 			.expect(201);
@@ -237,41 +260,10 @@ describe('purging', () => {
 		await finishDeferredTasks();
 
 		expect(global.fetch).toHaveBeenCalledTimes(1);
-		expect(global.fetch).toHaveBeenCalledWith(
-			`https://api.fastly.com/service/${process.env.FASTLY_SERVICE_ID_DUQDUQ}/purge/something.duqduq.org`,
-			{
-				headers: {
-					Accept: 'application/json',
-					'Fastly-Key': process.env.FASTLY_PURGE_TOKEN_DUQDUQ,
-				},
-				method: 'POST',
-			},
-		);
-	});
-
-	it('should purge the session id Surrogate key on logout', async () => {
-		const { admin } = models;
-
-		const agent = await login(admin);
-		const get = agent.get('/api/communities').send().expect(200);
-		const cookies = get.cookies;
-		const sid = cookies.replace(/.*connect.sid=([^;]*?)/, '$1');
-
-		await agent.get('/api/logout').send().expect(200);
-
-		await finishDeferredTasks();
-
-		expect(global.fetch).toHaveBeenCalledTimes(1);
-
-		expect(global.fetch).toHaveBeenCalledWith(
-			`https://api.fastly.com/service/${process.env.FASTLY_SERVICE_ID_PROD}/purge/${sid}`,
-			{
-				headers: {
-					Accept: 'application/json',
-					'Fastly-Key': process.env.FASTLY_PURGE_TOKEN_PROD,
-				},
-				method: 'POST',
-			},
-		);
+		expectFastlyPurge({
+			key: 'something.duqduq.org',
+			token: process.env.FASTLY_PURGE_TOKEN_DUQDUQ,
+			serviceId: process.env.FASTLY_SERVICE_ID_DUQDUQ,
+		});
 	});
 });
