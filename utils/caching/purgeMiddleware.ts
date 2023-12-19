@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { defer } from 'server/utils/deferred';
+import { sequelize } from 'server/models';
+import { QueryTypes } from 'sequelize';
 import { createCachePurgeDebouncer } from './schedulePurge';
+import { uniqueCommunitiesFromMembersQuery } from './uniqueCommunitiesFromMembersQuery';
+import { getCorrectHostname } from './getCorrectHostname';
+import { getPPLic } from './getHashedUserId';
 
 const ALLOWED_METHODS = ['POST', 'PUT', 'DELETE', 'PATCH'] as const;
 type AllowedMethods = (typeof ALLOWED_METHODS)[number];
@@ -25,20 +30,32 @@ const nonPurgeNonGetRoutes = {
 	[Path in `/api/${string}`]: AllowedMethods[];
 };
 
+const userPaths = [
+	'/api/userNotifications',
+	'/api/threads/subscriptions',
+	'/api/pubs/subscriptions',
+	'/api/userNotificationPreferences',
+	'/api/userDismissable',
+] as const;
+
+async function getUniqueHostnamesForUserId(userId: string) {
+	const result = (await sequelize.query(uniqueCommunitiesFromMembersQuery, {
+		replacements: { userId },
+		type: QueryTypes.SELECT,
+	})) as { domain: string | null; subdomain: string }[];
+
+	const hostnames = result.map(({ domain, subdomain }) => getCorrectHostname(subdomain, domain));
+
+	return hostnames;
+}
+
 /**
  * These are routes with path parameters that we don't want to purge
  * They aren't easily caught in the map above
  */
 const otherNonPurgeRoutes = /\/api\/(pubs|collections)\/[^/]+\/doi\/preview/;
 
-function getSurrogateTag(req: Request): string | null {
-	// after logout we want to purge the surrogate keys for the session
-	if (req.method === 'GET' && req.path === '/api/logout') {
-		const connectionSid = req.cookies['connect.sid'];
-
-		return connectionSid ? encodeURIComponent(connectionSid) : null;
-	}
-
+async function getSurrogateTag(req: Request) {
 	/**
 	 * We don't want to purge GET/CORS/HEAD etc requests, that's the whole point!
 	 */
@@ -64,6 +81,14 @@ function getSurrogateTag(req: Request): string | null {
 	}
 
 	/**
+	 * these routes only affect the user who made the request
+	 * and should affect the cache across communities
+	 */
+	if (userPaths.some((path) => path === req.path)) {
+		return req.cookies['pp-lic'];
+	}
+
+	/**
 	 * On Fastly, we set the surrogate tag to the hostname
 	 */
 	const surrogateTag = req.hostname;
@@ -73,15 +98,12 @@ function getSurrogateTag(req: Request): string | null {
 
 /**
  * Purge domain cache on CRUD operations
- *
- * WARNING: Do not return anything from this middleware!
- * It runs after the response has been sent, so returning anything will cause an error
  */
 export const purgeMiddleware = (errorHandler = (error: any): any => console.error(error)) => {
 	const { schedulePurge } = createCachePurgeDebouncer({ errorHandler });
 
 	return async (req: Request, res: Response, next: NextFunction) => {
-		const surrogateTag = getSurrogateTag(req);
+		const surrogateTag = await getSurrogateTag(req);
 
 		if (!surrogateTag) {
 			return next();
@@ -99,11 +121,29 @@ export const purgeMiddleware = (errorHandler = (error: any): any => console.erro
 			}
 
 			defer(async () => {
-				/**
-				 * this await is here so you can wait on the purge requests
-				 * using `finishDeferredTasks` in tests or other short lived processes
-				 */
-				await schedulePurge(surrogateTag);
+				if (req.path === '/api/users' && req.method === 'PUT') {
+					const hostnames = await getUniqueHostnamesForUserId(req.user.id);
+
+					const allPurges = [
+						// all the communities the user is a member of,
+						// either directly or through a pub/collection
+						...hostnames,
+						// the current community
+						surrogateTag,
+						// purge the cache for the logged in user
+						getPPLic(req.user),
+						// purge all the /user pages
+						req.user.id,
+					];
+
+					await Promise.all(allPurges.map(async (tag) => schedulePurge(tag)));
+				} else {
+					/**
+					 * this await is here so you can wait on the purge requests
+					 * using `finishDeferredTasks` in tests or other short lived processes
+					 */
+					await schedulePurge(surrogateTag);
+				}
 			});
 		});
 
