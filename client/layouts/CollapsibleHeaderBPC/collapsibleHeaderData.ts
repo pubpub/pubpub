@@ -25,8 +25,29 @@ export default {
 		[
 			{ isMobileOnly: true, url: '/', title: 'Home' },
 			{ isMobileOnly: true, url: '/about', title: 'About' },
+			{ isMobileOnly: false, url: '/inside-elife', title: 'Inside eLife' },
 		],
-		[{ isMobileOnly: true, url: '/search', title: 'Search' }],
+		[
+			{ isMobileOnly: true, url: '/search', title: 'Search' },
+			{ isMobileOnly: true, url: '/content-alerts', title: 'Subscribe to alerts' },
+		],
+		[
+			{
+				isMobileOnly: true,
+				url: 'https://elifesciences.org/submit-your-research',
+				title: 'Submit your research',
+			},
+			{
+				isMobileOnly: false,
+				url: 'https://reviewer.elifesciences.org/author-guide/editorial-process',
+				title: 'Author guide',
+			},
+			{
+				isMobileOnly: false,
+				url: 'https://reviewer.elifesciences.org/reviewer-guide/review-process',
+				title: 'Reviewer guide',
+			},
+		],
 	],
 	twitterUrl: '',
 } as CollapsibleHeaderProps;
