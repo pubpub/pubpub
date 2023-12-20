@@ -7,23 +7,21 @@ import { defer } from 'server/utils/deferred';
 PubAttribution.afterCreate(async (attribution) => {
 	const { userId, pubId } = attribution;
 	if (!userId) {
-		return
+		return;
 	}
 
 	defer(async () => {
 		// refresh all the user pages that have this pub
 		await schedulePurge(userId);
-	})
+	});
 
-
-		const userNotificationPreferences = await getOrCreateUserNotificationPreferences(userId);
-		if (userNotificationPreferences.subscribeToPubsAsContributor) {
-			await setUserSubscriptionStatus({
-				userId,
-				pubId,
-				status: 'active',
-				setAutomatically: true,
-			});
-		}
+	const userNotificationPreferences = await getOrCreateUserNotificationPreferences(userId);
+	if (userNotificationPreferences.subscribeToPubsAsContributor) {
+		await setUserSubscriptionStatus({
+			userId,
+			pubId,
+			status: 'active',
+			setAutomatically: true,
+		});
 	}
 });
