@@ -6,6 +6,7 @@ import type { createCachePurgeDebouncer } from './schedulePurge';
 import { uniqueCommunitiesFromMembersQuery } from './uniqueCommunitiesFromMembersQuery';
 import { getCorrectHostname } from './getCorrectHostname';
 import { getPPLic } from './getHashedUserId';
+import { shouldntPurge } from './skipPurgeConditions';
 
 const ALLOWED_METHODS = ['POST', 'PUT', 'DELETE', 'PATCH'] as const;
 type AllowedMethods = (typeof ALLOWED_METHODS)[number];
@@ -103,6 +104,10 @@ export const purgeMiddleware = (
 	schedulePurge: ReturnType<typeof createCachePurgeDebouncer>['schedulePurge'],
 ) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
+		if (shouldntPurge()) {
+			return next();
+		}
+
 		const surrogateTag = await getSurrogateTag(req);
 
 		if (!surrogateTag) {
