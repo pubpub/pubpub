@@ -138,7 +138,7 @@ export const purgeMiddleware = (
 						// purge the cache for the logged in user
 						getPPLic(req.user),
 						// purge all the /user pages
-						req.user.id,
+						req.user.slug,
 					];
 
 					await Promise.all(allPurges.map(async (tag) => schedulePurge(tag)));
