@@ -38,7 +38,17 @@ type PurgeHook<
 export const createPurgeHooks = <M extends ModelCtor>(options: {
 	model: M;
 	onModelCreated?: PurgeHook<M, 'afterCreate'>;
+	/**
+	 * Only runs by default on <instance>.update(), not on <Model>.update()
+	 *
+	 * If this isn't running, be sure to check that you have `{individualHooks: true}` in your `Model.update` call.
+	 */
 	onModelUpdated?: PurgeHook<M, 'afterUpdate'>;
+	/**
+	 * Only runs by default on <instance>.update(), not on <Model>.update()
+	 *
+	 * If this isn't running, be sure to check that you have `{individualHooks: true}` in your `Model.destroy` call.
+	 */
 	onModelDestroyed?: PurgeHook<M, 'afterDestroy'>;
 }) => {
 	const { model, onModelCreated, onModelUpdated, onModelDestroyed } = options;

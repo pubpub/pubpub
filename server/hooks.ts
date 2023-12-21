@@ -13,4 +13,5 @@ import './scopeSummary/hooks';
 import './submission/hooks';
 import './threadComment/hooks';
 import './visibility/hooks';
+import './user/hooks';
 import './userNotification/hooks';
