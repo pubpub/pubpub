@@ -158,6 +158,7 @@ const textRouter = {
 		method: 'POST',
 		summary: 'Import a file to a pub',
 		description: 'Upload files and import it to a pub.',
+		contentType: 'multipart/form-data',
 		pathParams: z.object({
 			pubId: z.string().uuid(),
 		}),
