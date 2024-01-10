@@ -34,6 +34,7 @@ import SpamBanner from './SpamBanner';
 
 import getPaths from './paths';
 import { usePageState } from './usePageState';
+import { createAnalytics } from 'utils/analytics/createAnalytics';
 
 require('../../styles/base.scss');
 require('./app.scss');
@@ -45,6 +46,10 @@ type Props = {
 };
 
 const App = (props: Props) => {
+	const analytics = createAnalytics({
+		gid: 'G-9GK39XDD27',
+	});
+	analytics.page();
 	const { chunkName, initialData, viewData } = props;
 	const pageContextProps = usePageState(initialData, viewData);
 	const { communityData, locationData, scopeData, loginData, featureFlags } = pageContextProps;

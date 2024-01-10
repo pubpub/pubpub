@@ -103,6 +103,17 @@ const Html = (props: Props) => {
 					href="/opensearch.xml"
 				/>
 			</head>
+			{/* <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GK39XDD27"></script>
+			<script
+				dangerouslySetInnerHTML={{
+					__html: `<!-- Google tag (gtag.js) -->
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9GK39XDD27');`,
+				}}
+			></script> */}
 			<body
 				className={classNames(
 					props.bodyClassPrefix && `${props.bodyClassPrefix}-body-wrapper`,
