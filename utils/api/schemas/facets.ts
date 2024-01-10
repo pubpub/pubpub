@@ -45,7 +45,7 @@ const facetSchemas = Object.entries(ALL_FACET_DEFINITIONS).reduce((acc, [njame, 
 }, {} as FacetSchema);
 
 export const facetSchema = z.object({
-	facets: z.object(facetSchemas).partial().default({}) satisfies z.ZodType<
+	facets: z.object(facetSchemas).deepPartial().default({}) satisfies z.ZodType<
 		UpdateFacetsQuery,
 		any,
 		any
