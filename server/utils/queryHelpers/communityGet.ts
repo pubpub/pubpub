@@ -1,4 +1,12 @@
-import { Collection, Community, Page, Member, ScopeSummary, SpamTag } from 'server/models';
+import {
+	Collection,
+	Community,
+	Page,
+	Member,
+	ScopeSummary,
+	SpamTag,
+	AnalyticsSettings,
+} from 'server/models';
 import { Community as CommunityType, DefinitelyHas } from 'types';
 
 export default async (locationData, whereQuery) => {
@@ -32,11 +40,18 @@ export default async (locationData, whereQuery) => {
 				model: SpamTag,
 				as: 'spamTag',
 			},
+			{
+				model: AnalyticsSettings,
+				as: 'analyticsSettings',
+			},
 		],
 	}).then((communityResult) => {
 		if (!communityResult) {
 			throw new Error('Community Not Found');
 		}
-		return communityResult.toJSON() as DefinitelyHas<CommunityType, 'pages' | 'collections'>;
+		return communityResult.toJSON() as DefinitelyHas<
+			CommunityType,
+			'pages' | 'collections' | 'analyticsSettings' | 'spamTag' | 'scopeSummary'
+		>;
 	});
 };

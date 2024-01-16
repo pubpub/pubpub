@@ -51,25 +51,6 @@ export const hydrateWrapper = (Component) => {
 				username: initialData.loginData.slug,
 			});
 		}
-		// const head = document.getElementsByTagName('head')[0];
-		// console.log({ head });
-		// const mainScript = window.document.createElement('script');
-
-		// mainScript.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=G-9GK39XDD27');
-		// mainScript.setAttribute('async', 'true');
-
-		// head.insertAdjacentElement('afterend', mainScript);
-
-		// const gtagScript = window.document.createElement('script');
-		// gtagScript.innerText = `
-		//   window.dataLayer = window.dataLayer || [];
-		//   function gtag(){dataLayer.push(arguments);}
-		//   gtag('js', new Date());
-
-		//   gtag('config', 'G-9GK39XDD27');
-		// 	`;
-
-		// head.insertAdjacentElement('afterend', gtagScript);
 
 		hydrate(
 			<Component initialData={initialData} viewData={viewData} chunkName={chunkName} />,

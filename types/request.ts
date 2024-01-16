@@ -82,7 +82,7 @@ export type ScopeData = {
 
 export type InitialCommunityData = DefinitelyHas<
 	Community,
-	'collections' | 'pages' | 'scopeSummary'
+	'collections' | 'pages' | 'scopeSummary' | 'analyticsSettings'
 >;
 
 export type InitialNotificationsData = {

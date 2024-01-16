@@ -90,6 +90,7 @@ export const communitySchema = baseSchema.extend({
 	organizationId: z.string().uuid().nullable(),
 	scopeSummaryId: z.string().uuid().nullable(),
 	accentTextColor: z.string(),
+	analyticsSettingsId: z.string().uuid().nullable(),
 }) satisfies z.ZodType<types.Community, any, any>;
 
 export const communityCreateSchema = communitySchema

@@ -34,7 +34,6 @@ import SpamBanner from './SpamBanner';
 
 import getPaths from './paths';
 import { usePageState } from './usePageState';
-import { createAnalytics } from 'utils/analytics/createAnalytics';
 
 require('../../styles/base.scss');
 require('./app.scss');
@@ -45,14 +44,19 @@ type Props = {
 	viewData: any;
 };
 
+import { createAnalytics } from 'utils/analytics/createAnalytics';
+
+import { AnalyticsProvider } from 'use-analytics';
+
 const App = (props: Props) => {
-	const analytics = createAnalytics({
-		gid: 'G-9GK39XDD27',
-	});
-	analytics.page();
 	const { chunkName, initialData, viewData } = props;
 	const pageContextProps = usePageState(initialData, viewData);
 	const { communityData, locationData, scopeData, loginData, featureFlags } = pageContextProps;
+
+	const analytics = createAnalytics({
+		type: communityData.analyticsSettings.type,
+		credentials: communityData.analyticsSettings.credentials,
+	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
 	const { ActiveComponent, hideNav, hideFooter, hideHeader, isDashboard } = pathObject;
@@ -109,40 +113,42 @@ const App = (props: Props) => {
 
 	return (
 		<PageContext.Provider value={pageContextProps}>
-			<FacetsStateProvider
-				options={{ currentScope: scopeData.scope, cascadeResults: scopeData.facets }}
-			>
-				<RKProvider>
-					<div id="app" className={classNames({ dashboard: isDashboard })}>
-						{communityData.spamTag?.status === 'confirmed-spam' && <SpamBanner />}
-						<AccentStyle communityData={communityData} isNavHidden={!showNav} />
-						{(locationData.isDuqDuq || locationData.isQubQub) && (
-							<div className="duqduq-warning">Development Environment</div>
-						)}
-						<SkipLink targetId="main-content">Skip to main content</SkipLink>
-						<LegalBanner />
-						{showHeader && header}
-						{showNav && <NavBar />}
-						{isDashboard && (
-							<MobileAware
-								mobile={({ className }) => (
-									<BottomMenu isMobile className={className} />
-								)}
-								desktop={({ className }) => (
-									<>
-										<SideMenu className={className} />
-										<Breadcrumbs className={className} />
-									</>
-								)}
-							/>
-						)}
-						<div id="main-content" tabIndex={-1}>
-							<ActiveComponent {...viewData} />
+			<AnalyticsProvider instance={analytics}>
+				<FacetsStateProvider
+					options={{ currentScope: scopeData.scope, cascadeResults: scopeData.facets }}
+				>
+					<RKProvider>
+						<div id="app" className={classNames({ dashboard: isDashboard })}>
+							{communityData.spamTag?.status === 'confirmed-spam' && <SpamBanner />}
+							<AccentStyle communityData={communityData} isNavHidden={!showNav} />
+							{(locationData.isDuqDuq || locationData.isQubQub) && (
+								<div className="duqduq-warning">Development Environment</div>
+							)}
+							<SkipLink targetId="main-content">Skip to main content</SkipLink>
+							<LegalBanner />
+							{showHeader && header}
+							{showNav && <NavBar />}
+							{isDashboard && (
+								<MobileAware
+									mobile={({ className }) => (
+										<BottomMenu isMobile className={className} />
+									)}
+									desktop={({ className }) => (
+										<>
+											<SideMenu className={className} />
+											<Breadcrumbs className={className} />
+										</>
+									)}
+								/>
+							)}
+							<div id="main-content" tabIndex={-1}>
+								<ActiveComponent {...viewData} />
+							</div>
+							{showFooter && footer}
 						</div>
-						{showFooter && footer}
-					</div>
-				</RKProvider>
-			</FacetsStateProvider>
+					</RKProvider>
+				</FacetsStateProvider>
+			</AnalyticsProvider>
 		</PageContext.Provider>
 	);
 };

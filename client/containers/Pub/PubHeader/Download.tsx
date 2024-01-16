@@ -7,8 +7,10 @@ import { pingTask } from 'client/utils/pingTask';
 import { usePageContext } from 'utils/hooks';
 import { ExportFormat } from 'utils/export/formats';
 
+import { useTrack } from 'use-analytics';
 import { usePubHistory } from '../pubHooks';
 import { getFormattedDownload } from './headerUtils';
+import { useAnalytics } from 'utils/analytics/useAnalytics';
 
 require('./download.scss');
 
@@ -46,6 +48,7 @@ const Download = (props: Props) => {
 	const [downloadUrl, setDownloadUrl] = useState<null | string>(null);
 	const { latestKey } = usePubHistory();
 	const { communityData, locationData } = usePageContext();
+	const { track } = useAnalytics();
 	const formattedDownload = getFormattedDownload(downloads);
 
 	const download = (url) => {
@@ -55,17 +58,26 @@ const Download = (props: Props) => {
 	};
 
 	const handleStartDownload = (type) => {
+		track('download', {
+			format: type.format,
+			pubId: pubData.id,
+		});
+		if (type.format === 'formatted') {
+			return download(formattedDownload.url);
+		}
+
 		const matchingExport = pubData.exports.find(
 			(ex) => ex.format === type.format && ex.historyKey >= latestKey,
 		);
+
 		if (matchingExport && matchingExport.url) {
-			download(matchingExport.url);
-		} else {
-			setSelectedType(type);
-			setSelectedKey(latestKey);
-			setIsError(false);
-			setIsLoading(true);
+			return download(matchingExport.url);
 		}
+
+		setSelectedType(type);
+		setSelectedKey(latestKey);
+		setIsError(false);
+		setIsLoading(true);
 	};
 
 	useEffect(() => {
@@ -138,7 +150,7 @@ const Download = (props: Props) => {
 						text={`Formatted ${formattedDownload.url.split('.').pop().toUpperCase()}`}
 						// @ts-expect-error ts-migrate(2322) FIXME: Type '{ dismissOnClick: false; labelElement: Eleme... Remove this comment to see the full error message
 						loading={isLoading && selectedType?.format === 'formatted'}
-						onClick={() => window.open(formattedDownload.url)}
+						onClick={() => handleStartDownload({ format: 'formatted' })}
 					/>
 				</React.Fragment>
 			)}

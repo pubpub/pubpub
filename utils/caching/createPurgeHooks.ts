@@ -1,7 +1,7 @@
 import type { Attributes, CreateOptions, DestroyOptions, UpdateOptions } from 'sequelize';
 import type { Model, ModelCtor } from 'sequelize-typescript';
-import { schedulePurge } from 'server/server';
 import { defer } from 'server/utils/deferred';
+import { schedulePurge } from './schedulePurgeWithSentry';
 
 const deferPurge =
 	<M extends Model<any, any>>(

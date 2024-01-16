@@ -12,11 +12,13 @@ import {
 	Unique,
 	BelongsTo,
 	HasMany,
+	HasOne,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import type { SerializedModel } from 'types';
 import { CommunityHeaderLink, CommunityHeroButton, CommunityNavigationEntry } from 'types';
 import {
+	AnalyticsSettings,
 	Organization,
 	Collection,
 	Pub,
@@ -201,6 +203,9 @@ export class Community extends Model<
 	@Column(DataType.UUID)
 	declare scopeSummaryId: string | null;
 
+	@Column(DataType.UUID)
+	declare analyticsSettingsId: string | null;
+
 	@BelongsTo(() => Organization, {
 		onDelete: 'CASCADE',
 		as: 'organization',
@@ -237,6 +242,13 @@ export class Community extends Model<
 
 	@BelongsTo(() => SpamTag, { as: 'spamTag', foreignKey: 'spamTagId' })
 	declare spamTag?: SpamTag;
+
+	@BelongsTo(() => AnalyticsSettings, {
+		as: 'analyticsSettings',
+		foreignKey: 'analyticsSettingsId',
+		onDelete: 'CASCADE',
+	})
+	declare analyticsSettings?: AnalyticsSettings;
 
 	declare accentTextColor: CreationOptional<string>;
 }
