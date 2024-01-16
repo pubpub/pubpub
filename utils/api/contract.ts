@@ -19,6 +19,7 @@ import { type WorkerTaskRouter, workerTaskRouter } from './contracts/workerTask'
 import { type ReleaseRouter, releaseRouter } from './contracts/release';
 import { UploadRouter, uploadRouter } from './contracts/upload';
 import { type AuthRouter, authRouter } from './contracts/auth';
+import { type AuthTokenRouter, authTokenRouter } from './contracts/authToken';
 
 extendZodWithOpenApi(z);
 
@@ -27,6 +28,7 @@ const c = initContract();
 const router = {
 	/** Methods for dealing with authentication */
 	auth: authRouter as AuthRouter,
+	authToken: authTokenRouter as AuthTokenRouter,
 	collection: collectionRouter as CollectionRouter,
 	collectionAttribution: collectionAttributionRouter as CollectionAttributionRouter,
 	collectionPub: collectionPubRouter as CollectionPubRouter,

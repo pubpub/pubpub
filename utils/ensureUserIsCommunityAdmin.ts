@@ -56,6 +56,7 @@ export const ensureUserIsCommunityAdmin = async (req: { hostname: string; user?:
 
 	const domainOrSubmdomain = req.hostname.replace(/\.pubpub\.org$|\.duqduq\.org$/, '');
 
+	console.log('ensureUserIsCommunityAdmin', req.user);
 	if (req.user.isSuperAdmin) {
 		return expect(await findCommunityByDomain(domainOrSubmdomain));
 	}

@@ -10,8 +10,8 @@ const baseRedirectUrl = isDuqDuq()
 	  ? 'http://lvh.me:9876'
 	  : 'https://pubpub.org';
 
-export const zoteroAuthStrategy = () =>
-	new passportOAuth1.Strategy(
+export const zoteroAuthStrategy = () => {
+	return new passportOAuth1.Strategy(
 		{
 			requestTokenURL: 'https://www.zotero.org/oauth/request',
 			accessTokenURL: 'https://www.zotero.org/oauth/access',
@@ -58,3 +58,4 @@ export const zoteroAuthStrategy = () =>
 				.catch((err) => cb(err));
 		},
 	);
+};

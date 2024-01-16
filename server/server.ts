@@ -9,6 +9,7 @@ import express, { ErrorRequestHandler, RequestHandler } from 'express';
 import fs from 'fs';
 import noSlash from 'no-slash';
 import passport from 'passport';
+import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import path from 'path';
 import CreateSequelizeStore from 'connect-session-sequelize';
 
@@ -120,6 +121,7 @@ import session from 'express-session';
 import { purgeMiddleware } from 'utils/caching/purgeMiddleware';
 import { fromZodError } from 'zod-validation-error';
 import { createCachePurgeDebouncer } from 'utils/caching/schedulePurge';
+import { bearerStrategy } from './authToken/strategy';
 
 const SequelizeStore = CreateSequelizeStore(session.Store);
 
@@ -160,9 +162,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
 passport.use('zotero', zoteroAuthStrategy());
+passport.use('bearer', bearerStrategy());
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
 /* ---------------- */
 /* Server Endpoints */
 /* ---------------- */
@@ -197,6 +200,26 @@ app.use((req, res, next) => {
 		req.headers.host = req.hostname.replace('duqduq.org', 'pubpub.org');
 	}
 	next();
+});
+
+app.use(async (req, res, next) => {
+	if (!req.path.includes('/api')) {
+		return next();
+	}
+	console.log('Authenticating bearer token...');
+	const authenticate = new Promise((resolve, reject) => {
+		passport.authenticate('bearer', (authErr: Error, user: any) => {
+			if (authErr) {
+				return reject(authErr);
+			}
+			return resolve(user);
+		})(req, res);
+	});
+
+	const user = await authenticate;
+	req.user = user;
+
+	return next();
 });
 
 /**
