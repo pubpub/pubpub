@@ -54,8 +54,8 @@ const App = (props: Props) => {
 	const { communityData, locationData, scopeData, loginData, featureFlags } = pageContextProps;
 
 	const analytics = createAnalytics({
-		type: communityData.analyticsSettings.type,
-		credentials: communityData.analyticsSettings.credentials,
+		type: communityData.analyticsSettings?.type || 'default',
+		credentials: communityData.analyticsSettings?.credentials || null,
 	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
