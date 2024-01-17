@@ -1,10 +1,11 @@
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import type express from 'express';
-import { includeUserModel, AuthToken } from '../models';
+
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 
+import { includeUserModel, AuthToken } from '../models';
+
 export const bearerStrategy = () => {
-	console.log('bearing');
 	return new BearerStrategy(
 		{
 			passReqToCallback: true,
@@ -14,7 +15,6 @@ export const bearerStrategy = () => {
 			token: string,
 			done: (error: any, user?: any, message?: string) => void,
 		) => {
-			console.log('AAA');
 			if (!token) {
 				return done(null, false);
 			}
@@ -23,7 +23,7 @@ export const bearerStrategy = () => {
 				return done(null, req.user);
 			}
 
-			return AuthToken.findOne({
+			const authToken = await AuthToken.findOne({
 				where: { token },
 				include: [
 					includeUserModel({
@@ -31,40 +31,34 @@ export const bearerStrategy = () => {
 						attributes: ['isSuperAdmin'],
 					}),
 				],
-			})
-				.then(async (authToken) => {
-					if (!authToken) {
-						return done(null, false);
-					}
+			});
 
-					const { expiresAt, user } = authToken;
-					console.log({ user });
+			if (!authToken) {
+				return done(null, false);
+			}
 
-					try {
-						await ensureUserIsCommunityAdmin({
-							hostname: req.hostname,
-							user,
-						});
+			const { expiresAt, user } = authToken;
 
-						if (expiresAt === null) {
-							return done(null, user);
-						}
-
-						if (expiresAt < new Date()) {
-							return done(null, false, 'Token expired');
-						}
-						req.user = user;
-
-						return done(null, user);
-					} catch (e) {
-						console.log(e);
-						return done(null, false);
-					}
-				})
-				.catch((err) => {
-					console.error(err);
-					return done(err);
+			try {
+				await ensureUserIsCommunityAdmin({
+					hostname: req.hostname,
+					user,
 				});
+
+				if (expiresAt === null) {
+					return done(null, user);
+				}
+
+				if (expiresAt < new Date()) {
+					return done(null, false, 'Token expired');
+				}
+				req.user = user;
+
+				return done(null, user);
+			} catch (e) {
+				console.error(e);
+				return done(null, false);
+			}
 		},
 	);
 };

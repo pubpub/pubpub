@@ -9,7 +9,6 @@ import express, { ErrorRequestHandler, RequestHandler } from 'express';
 import fs from 'fs';
 import noSlash from 'no-slash';
 import passport from 'passport';
-import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import path from 'path';
 import CreateSequelizeStore from 'connect-session-sequelize';
 
@@ -206,7 +205,6 @@ app.use(async (req, res, next) => {
 	if (!req.path.includes('/api')) {
 		return next();
 	}
-	console.log('Authenticating bearer token...');
 	const authenticate = new Promise((resolve, reject) => {
 		passport.authenticate('bearer', (authErr: Error, user: any) => {
 			if (authErr) {
