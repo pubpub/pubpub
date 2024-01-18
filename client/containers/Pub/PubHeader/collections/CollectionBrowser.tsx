@@ -11,6 +11,7 @@ import { Collection, Pub } from 'types';
 
 import { usePubContext } from '../../pubHooks';
 import CollectionsBarButton from './CollectionsBarButton';
+import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
 require('./collectionBrowser.scss');
 
@@ -23,7 +24,19 @@ const CollectionBrowser = (props: Props) => {
 	const { collection, currentPub } = props;
 	const { updateLocalData } = usePubContext();
 	const { communityData } = usePageContext();
-	const { pubs, error, isLoading } = useCollectionPubs(updateLocalData, collection);
+	const menuRef = React.useRef<HTMLUListElement | null>(null);
+	const { pubs, error, isLoading, hasLoadedAllPubs, requestMorePubs } = useCollectionPubs(
+		updateLocalData,
+		collection,
+	);
+	const [visible, setVisible] = React.useState(false);
+
+	useInfiniteScroll({
+		enabled: !isLoading && !hasLoadedAllPubs && !error && visible,
+		element: menuRef.current,
+		onRequestMoreItems: requestMorePubs,
+		scrollTolerance: 0,
+	});
 	const { bpDisplayIcon } = getSchemaForKind(collection.kind)!;
 	const readingPubUrl = (pub) => createReadingParamUrl(pubUrl(communityData, pub), collection.id);
 
@@ -47,6 +60,8 @@ const CollectionBrowser = (props: Props) => {
 			className="collection-browser-component_menu"
 			disclosure={renderDisclosure}
 			aria-label="Browse this collection"
+			menuListRef={menuRef}
+			onVisibleChange={setVisible}
 		>
 			<MenuItem
 				icon="collection"
@@ -54,17 +69,8 @@ const CollectionBrowser = (props: Props) => {
 				href={collectionUrl(communityData, collection)}
 			/>
 			<MenuItemDivider />
-			{isLoading && (
-				<MenuItem
-					disabled
-					className="loading-menu-item"
-					textClassName="menu-item-text"
-					icon={<Spinner size={30} />}
-					text="Loading..."
-				/>
-			)}
 			{pubs &&
-				!isLoading &&
+				pubs.length &&
 				pubs.map((pub) => (
 					<MenuItem
 						active={currentPub.id === pub.id}
@@ -82,6 +88,15 @@ const CollectionBrowser = (props: Props) => {
 						}
 					/>
 				))}
+			{isLoading && (
+				<MenuItem
+					disabled
+					className="loading-menu-item"
+					textClassName="menu-item-text"
+					icon={<Spinner size={30} />}
+					text="Loading..."
+				/>
+			)}
 			{error && (
 				<MenuItem
 					disabled

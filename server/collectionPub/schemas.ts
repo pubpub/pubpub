@@ -19,10 +19,6 @@ export const collectionPubQuerySchema = z.object({
 	communityId: z.string().uuid(),
 	limit: z.number().int().min(1).default(10),
 	offset: z.number().int().min(0).default(0),
-	orderBy: z.enum(['asc', 'desc']).default('asc'),
-	sortBy: z.enum(['createdAt', 'updatedAt', 'pubRank']).default('pubRank'),
-	include: z.enum(['collection', 'pub']).array().default(['pub']),
-	attributes: collectionPubSchema.keyof().array().optional(),
 });
 
 export type CollectionPubQueryInput = (typeof collectionPubQuerySchema)['_input'];

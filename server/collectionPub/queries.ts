@@ -20,11 +20,6 @@ export const getPubsInCollection = async ({
 	userId,
 	limit,
 	offset,
-	attributes,
-	include,
-	orderBy,
-	pubId,
-	sortBy,
 }: CollectionPubQueryInput & { userId?: string | null }) => {
 	const collectionPubsQuery = CollectionPub.findAll({
 		where: { collectionId: collectionId ?? null },
