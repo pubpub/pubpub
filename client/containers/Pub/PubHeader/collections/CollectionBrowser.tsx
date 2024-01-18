@@ -31,12 +31,25 @@ const CollectionBrowser = (props: Props) => {
 	);
 	const [visible, setVisible] = React.useState(false);
 
+	const shouldFetchMoreCollectionPubs =
+		// the menu will have 0 height if it is invisible, which will
+		// make the check in useInfiniteScroll always return true
+		// so we only start fetching more pubs when the user clicks the menu
+		visible &&
+		// otherwise it'll fetch a whole bunch of pubs at once rather than 10 at a time
+		!isLoading &&
+		!hasLoadedAllPubs &&
+		// stop fetching more pubs if there's an error.
+		// possible improvement: retry once if there's an error
+		!error;
+
 	useInfiniteScroll({
-		enabled: !isLoading && !hasLoadedAllPubs && !error && visible,
+		enabled: shouldFetchMoreCollectionPubs,
 		element: menuRef.current,
 		onRequestMoreItems: requestMorePubs,
 		scrollTolerance: 0,
 	});
+
 	const { bpDisplayIcon } = getSchemaForKind(collection.kind)!;
 	const readingPubUrl = (pub) => createReadingParamUrl(pubUrl(communityData, pub), collection.id);
 

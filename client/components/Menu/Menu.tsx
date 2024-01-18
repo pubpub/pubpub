@@ -52,6 +52,8 @@ export const Menu = React.forwardRef((props: MenuProps, ref) => {
 		unstable_fixed,
 	});
 
+	// RK doesn't provide a way to listen to visibility changes
+	// so we implement it ourselves here
 	useEffect(() => {
 		if (onVisibleChange) {
 			onVisibleChange(menu.visible);
