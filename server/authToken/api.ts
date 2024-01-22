@@ -65,4 +65,23 @@ export const authTokenServer = s.router(contract.authToken, {
 			body: tokenId,
 		};
 	},
+
+	removeByToken: async ({ body: { token }, req: { user } }) => {
+		if (user?.isSuperAdmin) {
+			throw new ForbiddenError(new Error('User is not a superadmin'));
+		}
+
+		const destroyed = await AuthToken.destroy({
+			where: { token },
+		});
+
+		if (destroyed === 0) {
+			throw new NotFoundError(new Error('Token not found'));
+		}
+
+		return {
+			status: 200,
+			body: token,
+		};
+	},
 });

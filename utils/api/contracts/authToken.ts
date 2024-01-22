@@ -42,6 +42,18 @@ export const authTokenRouter = {
 			200: z.string().uuid(),
 		},
 	},
+	removeByToken: {
+		path: '/api/authToken',
+		method: 'DELETE',
+		summary: 'Delete an authentication token by token',
+		description: 'Delete an authentication token by token. Only accessible to super admins.',
+		body: z.object({
+			token: z.string(),
+		}),
+		responses: {
+			200: z.string().uuid(),
+		},
+	},
 } as const satisfies AppRouter;
 
 type AuthTokenType = typeof authTokenRouter;
