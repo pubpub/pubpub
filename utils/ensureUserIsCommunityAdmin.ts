@@ -1,5 +1,6 @@
 import { Op } from 'sequelize';
-import { Community, Member, User, includeUserModel } from 'server/models';
+import { Community, Member, includeUserModel } from 'server/models';
+import { User } from 'types';
 import { ForbiddenError } from 'server/utils/errors';
 import { expect } from './assert';
 
@@ -38,7 +39,8 @@ export const findCommunityByHostname = async (hostname: string) => {
 };
 
 /**
- * Checks if the user is an admin of the community associated with the given hostname.
+ * Checks if the user is an admin of the community associated with the given hostname, or by the
+ * community's id.
  *
  * @param req - An object containing at least the hostname and user information. Usually an Express
  *   request object.
@@ -63,7 +65,7 @@ export const ensureUserIsCommunityAdmin = async (
 	}
 
 	if ('id' in req) {
-		if (req.user.isSuperAdmin) {
+		if (req.user.isSuperAdmin || req.user.isAdminOfThisCommunity) {
 			return expect(await Community.findByPk(req.id));
 		}
 
@@ -83,12 +85,14 @@ export const ensureUserIsCommunityAdmin = async (
 			throw new ForbiddenError(new Error('User is not an admin of this community'));
 		}
 
+		req.user.isAdminOfThisCommunity = true;
+
 		return expect(autherMember.community);
 	}
 
 	const domainOrSubmdomain = req.hostname.replace(/\.pubpub\.org$|\.duqduq\.org$/, '');
 
-	if (req.user.isSuperAdmin) {
+	if (req.user.isSuperAdmin || req.user.isAdminOfThisCommunity) {
 		return expect(await findCommunityByDomain(domainOrSubmdomain));
 	}
 
@@ -124,6 +128,8 @@ export const ensureUserIsCommunityAdmin = async (
 	if (!autherMember) {
 		throw new ForbiddenError(new Error('User is not an admin of this community'));
 	}
+
+	req.user.isAdminOfThisCommunity = true;
 
 	return expect(autherMember.community);
 };

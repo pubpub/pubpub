@@ -1,5 +1,5 @@
 import { initServer } from '@ts-rest/express';
-import { NotFoundError } from 'server/utils/errors';
+import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { contract } from 'utils/api/contract';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { AuthToken } from './model';
@@ -44,18 +44,19 @@ export const authTokenServer = s.router(contract.authToken, {
 		};
 	},
 	remove: async ({ params, req }) => {
+		if (!req.user) {
+			throw new BadRequestError(new Error('User not found'));
+		}
+
 		const { id: tokenId } = params;
 
-		const authToken = await AuthToken.findByPk(tokenId);
+		const authToken = await AuthToken.findOne({
+			where: { id: tokenId, userId: req.user.id },
+		});
 
 		if (!authToken) {
 			throw new NotFoundError(new Error('Token not found'));
 		}
-
-		await ensureUserIsCommunityAdmin({
-			id: authToken.communityId,
-			user: req.user,
-		});
 
 		await authToken.destroy();
 

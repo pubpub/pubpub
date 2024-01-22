@@ -163,7 +163,7 @@ describe('authToken', () => {
 			adminToken.token,
 			community,
 			`http://localhost:${port}/api/authToken/${anotherAuthToken.id}`,
-			403,
+			404,
 			{ method: 'DELETE' },
 		);
 	});
@@ -179,4 +179,12 @@ describe('authToken', () => {
 			{ method: 'DELETE' },
 		);
 	});
+
+	test.todo(
+		'users should always we able to remove their own tokens, even if they are no longer admins',
+	);
+
+	test.todo('admins should not be able to remove tokens from other users');
+
+	test.todo('superadmins should be able to revoke tokens');
 });
