@@ -12,7 +12,12 @@ export const authTokenRouter = {
 		description:
 			'Create a new authentication token. Only accessible to admins. Tokens are scoped to a specific community and user.',
 		body: z.object({
-			expiresAt: z.enum(['never', '1d', '1w', '1m', '3m', '1y']),
+			communityId: z.string().uuid().openapi({
+				description: 'The ID of the community to which the token will be scoped',
+			}),
+			expiresAt: z.enum(['never', '1d', '1w', '1m', '3m', '1y']).openapi({
+				description: 'The expiration date of the token',
+			}),
 		}),
 		responses: {
 			201: z.object({
@@ -32,7 +37,7 @@ export const authTokenRouter = {
 		pathParams: z.object({
 			id: z.string().uuid(),
 		}),
-		body: z.null().optional(),
+		body: z.union([z.null(), z.object({})]).optional(),
 		responses: {
 			200: z.string().uuid(),
 		},

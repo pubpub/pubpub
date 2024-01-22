@@ -32,7 +32,19 @@ const models = modelize`
        }
     }
 
-    Community anotherCommunity {}
+    Community anotherCommunity {
+        Member {
+            permissions: "admin"
+            User anotherCommunityAdmin {
+                id: "530cf446-f220-4e51-b6ba-68def3f5a8b5"
+            }
+        }
+
+        AuthToken anotherAuthToken {
+            expiresAt: null
+            userId: "530cf446-f220-4e51-b6ba-68def3f5a8b5"
+        }
+    }
 `;
 
 setup(beforeAll, async () => {
@@ -77,7 +89,7 @@ describe('authToken', () => {
 		const result = await agent
 			.post(`/api/authToken`)
 			.set('Host', `${community.subdomain}.pubpub.org`)
-			.send({ expiresAt: 'never' })
+			.send({ expiresAt: 'never', communityId: community.id })
 			.expect(201);
 
 		// @ts-expect-error shh
@@ -105,7 +117,7 @@ describe('authToken', () => {
 		await agent
 			.post(`/api/authToken`)
 			.set('Host', `${community.subdomain}.pubpub.org`)
-			.send({ expiresAt: 'never' })
+			.send({ expiresAt: 'never', communityId: community.id })
 			.expect(403);
 	});
 
@@ -139,6 +151,32 @@ describe('authToken', () => {
 			community,
 			`http://localhost:${port}/api/members`,
 			403,
+		);
+	});
+
+	// any other tests you want to write
+
+	it("should not be possible for an admin to delete another community's admins token", async () => {
+		const { adminToken, community, anotherAuthToken } = models;
+
+		await fetchWithToken(
+			adminToken.token,
+			community,
+			`http://localhost:${port}/api/authToken/${anotherAuthToken.id}`,
+			403,
+			{ method: 'DELETE' },
+		);
+	});
+
+	it('should be possible for an admin to delete a token', async () => {
+		const { adminToken, community } = models;
+
+		await fetchWithToken(
+			adminToken.token,
+			community,
+			`http://localhost:${port}/api/authToken/${adminToken.id}`,
+			200,
+			{ method: 'DELETE' },
 		);
 	});
 });

@@ -1,4 +1,5 @@
 import { initServer } from '@ts-rest/express';
+import { NotFoundError } from 'server/utils/errors';
 import { contract } from 'utils/api/contract';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { AuthToken } from './model';
@@ -7,7 +8,10 @@ const s = initServer();
 
 export const authTokenServer = s.router(contract.authToken, {
 	create: async ({ body, req }) => {
-		const community = await ensureUserIsCommunityAdmin(req);
+		const community = await ensureUserIsCommunityAdmin({
+			user: req.user,
+			id: body.communityId,
+		});
 
 		const expiresAt = (() => {
 			switch (body.expiresAt) {
@@ -28,7 +32,6 @@ export const authTokenServer = s.router(contract.authToken, {
 			}
 		})();
 
-		console.log({ communityId: community.id, userId: req.user.id, expiresAt });
 		const authToken = await AuthToken.create({
 			userId: req.user.id,
 			communityId: community.id,
@@ -43,13 +46,18 @@ export const authTokenServer = s.router(contract.authToken, {
 	remove: async ({ params, req }) => {
 		const { id: tokenId } = params;
 
-		const community = await ensureUserIsCommunityAdmin(req);
-		await AuthToken.destroy({
-			where: {
-				id: tokenId,
-				communityId: community.id,
-			},
+		const authToken = await AuthToken.findByPk(tokenId);
+
+		if (!authToken) {
+			throw new NotFoundError(new Error('Token not found'));
+		}
+
+		await ensureUserIsCommunityAdmin({
+			id: authToken.communityId,
+			user: req.user,
 		});
+
+		await authToken.destroy();
 
 		return {
 			status: 200,
