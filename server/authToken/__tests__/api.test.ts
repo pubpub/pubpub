@@ -87,7 +87,7 @@ describe('authToken', () => {
 		const agent = await login(communityAdmin);
 
 		const result = await agent
-			.post(`/api/authToken`)
+			.post(`/api/authTokens`)
 			.set('Host', `${community.subdomain}.pubpub.org`)
 			.send({ expiresAt: 'never', communityId: community.id })
 			.expect(201);
@@ -115,7 +115,7 @@ describe('authToken', () => {
 		const agent = await login(communityManager);
 
 		await agent
-			.post(`/api/authToken`)
+			.post(`/api/authTokens`)
 			.set('Host', `${community.subdomain}.pubpub.org`)
 			.send({ expiresAt: 'never', communityId: community.id })
 			.expect(403);
@@ -162,7 +162,7 @@ describe('authToken', () => {
 		await fetchWithToken(
 			adminToken.token,
 			community,
-			`http://localhost:${port}/api/authToken/${anotherAuthToken.id}`,
+			`http://localhost:${port}/api/authTokens/${anotherAuthToken.id}`,
 			404,
 			{ method: 'DELETE' },
 		);
@@ -174,7 +174,7 @@ describe('authToken', () => {
 		await fetchWithToken(
 			adminToken.token,
 			community,
-			`http://localhost:${port}/api/authToken/${adminToken.id}`,
+			`http://localhost:${port}/api/authTokens/${adminToken.id}`,
 			200,
 			{ method: 'DELETE' },
 		);

@@ -6,7 +6,7 @@ extendZodWithOpenApi(z);
 
 export const authTokenRouter = {
 	create: {
-		path: '/api/authToken',
+		path: '/api/authTokens',
 		method: 'POST',
 		summary: 'Create a new authentication token',
 		description:
@@ -30,7 +30,7 @@ export const authTokenRouter = {
 		},
 	},
 	remove: {
-		path: '/api/authToken/:id',
+		path: '/api/authTokens/:id',
 		method: 'DELETE',
 		summary: 'Delete an authentication token',
 		description: 'Delete an authentication token. Only accessible to admins.',
@@ -43,7 +43,7 @@ export const authTokenRouter = {
 		},
 	},
 	removeByToken: {
-		path: '/api/authToken',
+		path: '/api/authTokens',
 		method: 'DELETE',
 		summary: 'Delete an authentication token by token',
 		description: 'Delete an authentication token by token. Only accessible to super admins.',
