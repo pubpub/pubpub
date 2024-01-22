@@ -1,9 +1,5 @@
 import { modelize, teardown, setup, login } from 'stubstub';
 
-const COMMUNITY_ID = '9138e6f5-68a1-4f35-98a5-aa962091fc30' as const;
-const ADMIN_USER_ID = '430cf446-f220-4e51-b6ba-68def3f5a8b5' as const;
-const MANAGE_USER_ID = '930cf446-f220-4e51-b6ba-68def3f5a8b5' as const;
-
 const models = modelize`
     Community community {
        Member {
@@ -64,7 +60,7 @@ const fetchWithToken = async (
 	expect(result.status).toBe(expectedStatus);
 
 	if (!result.ok) {
-		return;
+		return {};
 	}
 
 	return result.json();

@@ -1,10 +1,10 @@
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import type express from 'express';
 
+import { ForbiddenError } from 'server/utils/errors';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 
 import { includeUserModel, AuthToken } from '../models';
-import { ForbiddenError } from 'server/utils/errors';
 
 export const bearerStrategy = () => {
 	return new BearerStrategy(
