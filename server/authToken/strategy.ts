@@ -3,6 +3,7 @@ import type express from 'express';
 
 import { ForbiddenError } from 'server/utils/errors';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
+import type { UserWithPrivateFields } from 'types';
 
 import { includeUserModel, AuthToken } from '../models';
 
@@ -43,7 +44,7 @@ export const bearerStrategy = () => {
 			try {
 				await ensureUserIsCommunityAdmin({
 					hostname: req.hostname,
-					user,
+					user: user as UserWithPrivateFields,
 				});
 			} catch (e) {
 				return done(e, false, 'User is not an admin of this community');

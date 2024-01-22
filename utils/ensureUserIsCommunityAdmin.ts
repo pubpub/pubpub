@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { Community, Member, includeUserModel } from 'server/models';
-import { User } from 'types';
 import { ForbiddenError } from 'server/utils/errors';
+import { type UserWithPrivateFields } from 'types';
 import { expect } from './assert';
 
 /**
@@ -53,12 +53,12 @@ export const findCommunityByHostname = async (hostname: string) => {
  * @throws A {@link ForbiddenError} - If the user is not an admin.
  */
 export const ensureUserIsCommunityAdmin = async (
-	req:
-		| { hostname: string; user?: User }
+	req: { user?: UserWithPrivateFields } & (
+		| { hostname: string }
 		| {
 				id: string;
-				user?: User;
-		  },
+		  }
+	),
 ) => {
 	if (!req.user?.id) {
 		throw new ForbiddenError(new Error('User not found'));

@@ -2,7 +2,6 @@ import { User as UserModel } from 'server/models';
 import { SerializedModel } from './serializedModel';
 
 type UserType = SerializedModel<UserModel> & {
-	// this is useful to prevent repeated checks for admin status
 	isAdminOfThisCommunity?: boolean;
 };
 
@@ -33,13 +32,19 @@ export type User = Pick<
 	| 'googleScholar'
 	| 'authRedirectHost'
 	| 'isAdminOfThisCommunity'
-	| 'isSuperAdmin'
 	| keyof MinimalUser
 >;
 
 export type UserWithPrivateFields = Pick<
 	UserType,
-	keyof User | 'passwordDigest' | 'hash' | 'salt' | 'email' | 'resetHash' | 'resetHashExpiration'
+	| keyof User
+	| 'isSuperAdmin'
+	| 'passwordDigest'
+	| 'hash'
+	| 'salt'
+	| 'email'
+	| 'resetHash'
+	| 'resetHashExpiration'
 >;
 
 export type UserWithPrivateFieldsAndHashedPassword = Pick<
