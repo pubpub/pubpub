@@ -4,6 +4,7 @@ import type express from 'express';
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 
 import { includeUserModel, AuthToken } from '../models';
+import { ForbiddenError } from 'server/utils/errors';
 
 export const bearerStrategy = () => {
 	return new BearerStrategy(
@@ -44,21 +45,20 @@ export const bearerStrategy = () => {
 					hostname: req.hostname,
 					user,
 				});
-
-				if (expiresAt === null) {
-					return done(null, user);
-				}
-
-				if (expiresAt < new Date()) {
-					return done(null, false, 'Token expired');
-				}
-				req.user = user;
-
-				return done(null, user);
 			} catch (e) {
-				console.error(e);
-				return done(null, false);
+				return done(e, false, 'User is not an admin of this community');
 			}
+
+			if (expiresAt === null) {
+				return done(null, user);
+			}
+
+			if (expiresAt < new Date()) {
+				return done(new ForbiddenError(new Error('Token expired')), false, 'Token expired');
+			}
+			req.user = user;
+
+			return done(null, user);
 		},
 	);
 };

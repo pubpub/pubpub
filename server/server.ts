@@ -205,19 +205,28 @@ app.use(async (req, res, next) => {
 	if (!req.path.includes('/api')) {
 		return next();
 	}
-	const authenticate = new Promise((resolve, reject) => {
-		passport.authenticate('bearer', (authErr: Error, user: any) => {
-			if (authErr) {
-				return reject(authErr);
-			}
-			return resolve(user);
-		})(req, res);
-	});
 
-	const user = await authenticate;
-	req.user = user;
+	if (req.user != null) {
+		return next();
+	}
 
-	return next();
+	try {
+		const authenticate = new Promise((resolve, reject) => {
+			passport.authenticate('bearer', (authErr: Error, user: any) => {
+				if (authErr) {
+					return reject(authErr);
+				}
+				return resolve(user);
+			})(req, res);
+		});
+
+		const user = await authenticate;
+		req.user = user;
+
+		return next();
+	} catch (err) {
+		return next(err);
+	}
 });
 
 /**

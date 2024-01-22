@@ -28,6 +28,7 @@ export const authTokenServer = s.router(contract.authToken, {
 			}
 		})();
 
+		console.log({ communityId: community.id, userId: req.user.id, expiresAt });
 		const authToken = await AuthToken.create({
 			userId: req.user.id,
 			communityId: community.id,

@@ -56,7 +56,6 @@ export const ensureUserIsCommunityAdmin = async (req: { hostname: string; user?:
 
 	const domainOrSubmdomain = req.hostname.replace(/\.pubpub\.org$|\.duqduq\.org$/, '');
 
-	console.log('ensureUserIsCommunityAdmin', req.user);
 	if (req.user.isSuperAdmin) {
 		return expect(await findCommunityByDomain(domainOrSubmdomain));
 	}
@@ -91,7 +90,7 @@ export const ensureUserIsCommunityAdmin = async (req: { hostname: string; user?:
 	});
 
 	if (!autherMember) {
-		throw new ForbiddenError();
+		throw new ForbiddenError(new Error('User is not an admin of this community'));
 	}
 
 	return expect(autherMember.community);
