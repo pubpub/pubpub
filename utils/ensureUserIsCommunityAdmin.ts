@@ -45,13 +45,45 @@ export const findCommunityByHostname = async (hostname: string) => {
  * @param req.hostname - The hostname of the community to check.
  * @param req.user - An optional object containing the user ID.
  * @param req.user.id - The ID of the user to check.
+ * @param req.id - An alternative to req.hostname, the ID of the community to check.
  * @returns The community if the user is an admin, throws othewise
  * @throws A {@link NotFoundError} - If the community or member is not found.
  * @throws A {@link ForbiddenError} - If the user is not an admin.
  */
-export const ensureUserIsCommunityAdmin = async (req: { hostname: string; user?: User }) => {
+export const ensureUserIsCommunityAdmin = async (
+	req:
+		| { hostname: string; user?: User }
+		| {
+				id: string;
+				user?: User;
+		  },
+) => {
 	if (!req.user?.id) {
 		throw new ForbiddenError(new Error('User not found'));
+	}
+
+	if ('id' in req) {
+		if (req.user.isSuperAdmin) {
+			return expect(await Community.findByPk(req.id));
+		}
+
+		const autherMember = await Member.findOne({
+			include: [
+				includeUserModel({ as: 'user', required: true }),
+				{ model: Community, as: 'community', required: true },
+			],
+			where: {
+				userId: req.user.id,
+				permissions: 'admin',
+				communityId: req.id,
+			},
+		});
+
+		if (!autherMember) {
+			throw new ForbiddenError(new Error('User is not an admin of this community'));
+		}
+
+		return expect(autherMember.community);
 	}
 
 	const domainOrSubmdomain = req.hostname.replace(/\.pubpub\.org$|\.duqduq\.org$/, '');
