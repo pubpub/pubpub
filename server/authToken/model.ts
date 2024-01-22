@@ -10,8 +10,8 @@ import {
 	Table,
 	Unique,
 } from 'sequelize-typescript';
-import { Community, User } from 'server/models';
 import type { SerializedModel } from 'types/serializedModel';
+import { Community, User } from '../models';
 
 @Table
 export class AuthToken extends Model<
