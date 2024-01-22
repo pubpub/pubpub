@@ -30,7 +30,6 @@ export const bearerStrategy = () => {
 				include: [
 					includeUserModel({
 						as: 'user',
-						attributes: ['isSuperAdmin'],
 					}),
 				],
 			});
