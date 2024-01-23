@@ -1,9 +1,9 @@
 import Cookies from 'js-cookie';
+import type { InitialCommunityData, LoginData } from 'types';
 
 import { apiFetch } from '../apiFetch';
 
 import { getCookieOptions } from './cookieOptions';
-import { LoginData } from 'types';
 
 const cookieKey = 'gdpr-consent';
 const persistSignupCookieKey = 'gdpr-consent-survives-login';
@@ -31,7 +31,18 @@ export const getGdprConsentElection = (loginData: LoginData | null = null) => {
 	return null;
 };
 
-export const shouldShowGdprBanner = (loginData) => {
+export const shouldShowGdprBanner = ({
+	loginData,
+	communityData: { analyticsSettings },
+}: {
+	loginData: LoginData;
+	communityData: InitialCommunityData;
+}) => {
+	// the first check is mostly to safeguard against bad data in the db, should be 'default' by default
+	if (!analyticsSettings?.type || analyticsSettings.type === 'default') {
+		return false;
+	}
+
 	if (loginData.id && loginData.gdprConsent === null) {
 		return true;
 	}
