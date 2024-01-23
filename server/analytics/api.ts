@@ -7,7 +7,7 @@ const s = initServer();
 
 const fingerPrint = (req: Request) => {
 	const {
-		headers: { ['user-agent']: userAgent, ['x-forwarded-for']: forwardedFor },
+		headers: { 'user-agent': userAgent, 'x-forwarded-for': forwardedFor },
 	} = req;
 	const { id: userId } = req.user || {};
 
