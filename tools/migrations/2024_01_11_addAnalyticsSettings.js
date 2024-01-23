@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * @param {object} options
  * @param {import('sequelize').Sequelize} options.Sequelize
@@ -5,7 +7,8 @@
  */
 export const up = async ({ Sequelize, sequelize }) => {
 	await sequelize.getQueryInterface().addColumn('Communities', 'analyticsSettings', {
-		type: Sequelize.json,
+		// @ts-expect-error
+		type: Sequelize.JSONB,
 		defaultValue: {
 			type: 'default',
 			credentials: null,
