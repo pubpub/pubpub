@@ -243,12 +243,5 @@ export class Community extends Model<
 	@BelongsTo(() => SpamTag, { as: 'spamTag', foreignKey: 'spamTagId' })
 	declare spamTag?: SpamTag;
 
-	// @BelongsTo(() => AnalyticsSettings, {
-	// 	as: 'analyticsSettings',
-	// 	foreignKey: 'analyticsSettingsId',
-	// 	onDelete: 'CASCADE',
-	// })
-	// declare analyticsSettings?: AnalyticsSettings;
-
 	declare accentTextColor: CreationOptional<string>;
 }

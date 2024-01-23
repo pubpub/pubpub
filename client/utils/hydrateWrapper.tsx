@@ -3,11 +3,11 @@ import * as Sentry from '@sentry/react';
 import { hydrate } from 'react-dom';
 import { FocusStyleManager } from '@blueprintjs/core';
 
+import { shouldUseNewAnalytics } from 'utils/analytics/shouldUseNewAnalytics';
 import { setEnvironment, setAppCommit } from 'utils/environment';
 
 import { getClientInitialData } from './initialData';
 import { setupHeap } from './heap';
-import { shouldUseNewAnalytics } from 'utils/analytics/shouldUseNewAnalytics';
 
 const isStorybookEnv = (windowObj) =>
 	windowObj.location.origin === 'http://localhost:9001' || windowObj.STORYBOOK_ENV === 'react';

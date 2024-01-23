@@ -110,6 +110,7 @@ app.use(noSlash());
 app.use(compression());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+// needed to parse analytics events from the client sent with `navigator.sendBeacon`
 app.use(express.text(), (req, res, next) => {
 	if (typeof req.body === 'string') {
 		try {
