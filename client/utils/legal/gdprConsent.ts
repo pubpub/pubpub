@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import { apiFetch } from '../apiFetch';
 
 import { getCookieOptions } from './cookieOptions';
+import { LoginData } from 'types';
 
 const cookieKey = 'gdpr-consent';
 const persistSignupCookieKey = 'gdpr-consent-survives-login';
@@ -18,9 +19,8 @@ const deleteOdiousCookies = () => {
 
 export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey) === 'yes';
 
-export const getGdprConsentElection = (loginData = null) => {
+export const getGdprConsentElection = (loginData: LoginData | null = null) => {
 	const cookieValue = Cookies.get(cookieKey);
-	// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 	if (loginData && loginData.id && loginData.gdprConsent !== null) {
 		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		return loginData.gdprConsent === true;

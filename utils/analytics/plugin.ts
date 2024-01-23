@@ -21,3 +21,13 @@ export const analyticsPlugin = () => {
 		ready: () => true,
 	} satisfies AnalyticsPlugin;
 };
+
+export const stubPlugin = () => {
+	return {
+		name: 'stub-plugin',
+		page: () => {},
+		track: () => {},
+		loaded: () => true,
+		ready: () => true,
+	} satisfies AnalyticsPlugin;
+};

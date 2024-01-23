@@ -17,6 +17,7 @@ import {
 } from 'components';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
+import { getGdprConsentElection } from 'client/utils/legal/gdprConsent';
 import {
 	MinimalHeader,
 	minimalHeaderData,
@@ -52,9 +53,17 @@ const App = (props: Props) => {
 	const pageContextProps = usePageState(initialData, viewData);
 	const { communityData, locationData, scopeData, loginData, featureFlags } = pageContextProps;
 
+	const { analyticsSettings } = communityData;
+	const { type = 'default', credentials = null } = analyticsSettings || {};
+	// TODO: Add some effect that listens for changes to the user's consent
+	// so that analytics can get activated/deactivated as needed.
+	const consent = type !== 'default' ? Boolean(getGdprConsentElection(loginData)) : false;
+
+	// TODO: figure out some way to lazy load plugins
 	const analyticsInstance = createAnalyticsInstance({
-		type: communityData.analyticsSettings?.type || 'default',
-		credentials: communityData.analyticsSettings?.credentials || null,
+		type,
+		credentials,
+		consent,
 	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);

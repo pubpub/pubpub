@@ -36,6 +36,8 @@ const Layout = (props: Props) => {
 
 	const { page } = useAnalytics();
 
+	// TODO: replace this with an effect that listens to changes in user cookie consent
+	// fire again if the user agrees to analytics
 	useEffectOnce(() => {
 		if (locationData.isDashboard) {
 			return;
