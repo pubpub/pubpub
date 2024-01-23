@@ -6,11 +6,10 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { pingTask } from 'client/utils/pingTask';
 import { usePageContext } from 'utils/hooks';
 import { ExportFormat } from 'utils/export/formats';
+import { useAnalytics } from 'utils/analytics/useAnalytics';
 
-import { useTrack } from 'use-analytics';
 import { usePubHistory } from '../pubHooks';
 import { getFormattedDownload } from './headerUtils';
-import { useAnalytics } from 'utils/analytics/useAnalytics';
 
 require('./download.scss');
 
@@ -57,6 +56,7 @@ const Download = (props: Props) => {
 		window.open(url);
 	};
 
+	// eslint-disable-next-line consistent-return
 	const handleStartDownload = (type) => {
 		track('download', {
 			format: type.format,
