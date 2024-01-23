@@ -3,7 +3,6 @@ import React from 'react';
 import { Layout } from 'components';
 import { Pub } from 'types';
 import { LayoutBlock, LayoutPubsByBlock } from 'utils/layout';
-import { useAnalytics } from 'utils/analytics/useAnalytics';
 
 type Props = {
 	pageData: {
@@ -19,13 +18,6 @@ type Props = {
 
 const Page = (props: Props) => {
 	const { pageData } = props;
-	const { page } = useAnalytics();
-	page({
-		type: 'page',
-		communityId: pageData.communityId,
-		title: pageData.title,
-		pageSlug: pageData.slug,
-	});
 
 	return (
 		<Layout

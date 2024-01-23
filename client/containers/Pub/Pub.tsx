@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { PubPageData } from 'types';
-import { useAnalytics } from 'utils/analytics/useAnalytics';
 
 import PubHeader from './PubHeader';
 import SpubHeader from './SpubHeader';

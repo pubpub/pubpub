@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useEffectOnce } from 'react-use';
 
 import { Collection, Pub } from 'types';
 import {
@@ -9,6 +10,7 @@ import {
 	resolveLayoutPubsByBlock,
 } from 'utils/layout';
 import { usePageContext } from 'utils/hooks';
+import { useAnalytics } from 'utils/analytics/useAnalytics';
 
 import LayoutPubs from './LayoutPubs';
 import LayoutHtml from './LayoutHtml';
@@ -28,9 +30,41 @@ type Props = LayoutOptions & {
 };
 
 const Layout = (props: Props) => {
-	const { locationData, loginData, communityData } = usePageContext();
+	const { locationData, loginData, communityData, pageData } = usePageContext();
 	const { blocks, isNarrow, layoutPubsByBlock, id = '', collection } = props;
 	const pubsByBlockId = resolveLayoutPubsByBlock(layoutPubsByBlock, blocks);
+
+	const { page } = useAnalytics();
+
+	useEffectOnce(() => {
+		if (locationData.isDashboard) {
+			return;
+		}
+
+		const payload = collection
+			? {
+					type: 'collection' as const,
+					communityId: collection.communityId,
+					title: collection.title,
+					collectionId: collection.id,
+					collectionTitle: collection.title,
+					collectionSlug: collection.slug,
+			  }
+			: pageData
+			  ? {
+						type: 'page' as const,
+						communityId: communityData.id,
+						pageSlug: pageData.slug,
+						title: pageData.title,
+			    }
+			  : undefined;
+
+		if (!payload) {
+			return;
+		}
+
+		page(payload);
+	});
 
 	const renderBlock = (block: LayoutBlock, index: number) => {
 		if (block.type === 'pubs') {
