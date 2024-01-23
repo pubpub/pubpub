@@ -3,7 +3,7 @@ import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
 import { AnalyticsProvider } from 'use-analytics';
 
-import { createAnalyticsInstance } from 'utils/analytics/createAnalytics';
+import { createAnalyticsInstance } from 'utils/analytics/createAnalyticsInstance';
 
 import {
 	Header,

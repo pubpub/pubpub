@@ -1,15 +1,13 @@
-// import { Analytics } from 'analytics';
 import googleAnalytics from '@analytics/google-analytics';
 // @ts-expect-error h
 import { Analytics } from '@analytics/core';
-import googleTagPlugin from '@analytics/google-tag-manager';
-import { analyticsPlugin } from './plugin';
+// import googleTagPlugin from '@analytics/google-tag-manager';
 import type { AnalyticsSettings } from 'server/models';
+import { analyticsPlugin } from './plugin';
 
 type AnalyticsSettingsType = ReturnType<AnalyticsSettings['toJSON']>;
 
-const ourGID = 'G-9GK39XDD27';
-
+// POSSIBLE IMPROVEMENT: lazy load the plugins. Might be hard as they are needed when the page first loads
 const getPluginForType = (type: AnalyticsSettingsType['type'], credentials: string | null) => {
 	switch (type) {
 		case 'GA': {
@@ -23,7 +21,7 @@ const getPluginForType = (type: AnalyticsSettingsType['type'], credentials: stri
 	}
 };
 
-export const createAnalytics = (
+export const createAnalyticsInstance = (
 	{
 		type,
 		credentials,
@@ -36,7 +34,6 @@ export const createAnalytics = (
 		appname: 'pubpub',
 	},
 ) => {
-	console.log('AAA');
 	const plugin = getPluginForType(type, credentials);
 
 	const analytics = Analytics({
