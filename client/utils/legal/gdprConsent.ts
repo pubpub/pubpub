@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
-import type { InitialCommunityData, LoginData } from 'types';
+import type { InitialCommunityData, InitialData, LoginData } from 'types';
+import { shouldUseNewAnalytics } from 'utils/analytics/shouldUseNewAnalytics';
 
 import { apiFetch } from '../apiFetch';
 
@@ -34,13 +35,17 @@ export const getGdprConsentElection = (loginData: LoginData | null = null) => {
 
 export const shouldShowGdprBanner = ({
 	loginData,
+	featureFlags,
 	communityData: { analyticsSettings },
 }: {
 	loginData: LoginData;
+	featureFlags: InitialData['featureFlags'];
 	communityData: InitialCommunityData;
 }) => {
-	// the first check is mostly to safeguard against bad data in the db, should be 'default' by default
-	if (!analyticsSettings?.type || analyticsSettings.type === 'default') {
+	if (
+		shouldUseNewAnalytics(featureFlags) &&
+		(!analyticsSettings?.type || analyticsSettings.type === 'default')
+	) {
 		return false;
 	}
 

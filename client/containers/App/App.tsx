@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { AnalyticsProvider } from 'use-analytics';
 
 import { createAnalyticsInstance } from 'utils/analytics/createAnalyticsInstance';
+import { shouldUseNewAnalytics } from 'utils/analytics/shouldUseNewAnalytics';
 
 import {
 	Header,
@@ -17,7 +18,6 @@ import {
 } from 'components';
 import { PageContext } from 'utils/hooks';
 import { hydrateWrapper } from 'client/utils/hydrateWrapper';
-import { getGdprConsentElection } from 'client/utils/legal/gdprConsent';
 import {
 	MinimalHeader,
 	minimalHeaderData,
@@ -66,7 +66,10 @@ const App = (props: Props) => {
 			  };
 
 	// TODO: figure out some way to lazy load plugins
-	const analyticsInstance = createAnalyticsInstance(settings);
+	const analyticsInstance = createAnalyticsInstance({
+		shouldUseNewAnalytics: !shouldUseNewAnalytics(initialData),
+		...settings,
+	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
 	const { ActiveComponent, hideNav, hideFooter, hideHeader, isDashboard } = pathObject;
