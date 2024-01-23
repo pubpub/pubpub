@@ -8,9 +8,37 @@ type Tracks = {
 	};
 };
 
+type PageViewPayloadBase = {
+	communityId: string;
+	communityName?: string;
+	title: string;
+};
+
+type PageViewPub = PageViewPayloadBase & {
+	type: 'pub';
+	pubId: string;
+	pubSlug: string;
+	pubTitle: string;
+	collectionIds?: string[];
+};
+
+type PageViewCollection = PageViewPayloadBase & {
+	type: 'collection';
+	collectionId: string;
+	collectionSlug: string;
+	collectionTitle: string;
+};
+
+type PageViewPage = PageViewPayloadBase & {
+	type: 'page';
+	pageSlug: string;
+};
+
+export type PageViewPayload = PageViewPub | PageViewCollection | PageViewPage;
+
 type Analytics = {
 	track: <T extends Tracks>(event: T['type'], data: T['payload']) => void;
-	page: (payload?: any) => void;
+	page: <Payload extends PageViewPayload>(payload?: Payload) => void;
 };
 
 export const useAnalytics = () => {
