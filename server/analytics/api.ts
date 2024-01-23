@@ -39,19 +39,6 @@ const sendToStitch = async (payload: any) => {
 };
 
 export const analyticsServer = s.router(contract.analytics, {
-	page: async ({ body: payload, req }) => {
-		const userFingerPrint = fingerPrint(req);
-
-		await sendToStitch({
-			...payload,
-			fingerprint: userFingerPrint,
-		});
-
-		return {
-			status: 204,
-			body: undefined,
-		};
-	},
 	track: async ({ body: payload, req }) => {
 		const userFingerPrint = fingerPrint(req);
 

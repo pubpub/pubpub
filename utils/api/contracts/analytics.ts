@@ -5,15 +5,6 @@ import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 extendZodWithOpenApi(z);
 
 export const analyticsRouter = {
-	page: {
-		path: '/api/analytics/page',
-		method: 'POST',
-		summary: 'Track page view',
-		body: z.record(z.any()),
-		responses: {
-			204: z.never().optional(),
-		},
-	},
 	track: {
 		path: '/api/analytics/track',
 		method: 'POST',
