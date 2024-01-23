@@ -8,35 +8,7 @@ import {
 	PrimaryKey,
 	Table,
 } from 'sequelize-typescript';
-import { Prettify, SerializedModel } from 'types';
-
-type AnalyticsCredentials =
-	| {
-			type: 'GA';
-			credentials: `G-${string}`;
-	  }
-	| {
-			type: 'GTM';
-			credentials: `GTM-${string}`;
-	  }
-	| {
-			type: 'simple';
-			credentials: string;
-	  }
-	| {
-			type: 'fathom';
-			credentials: string;
-	  }
-	| {
-			type: 'default';
-			credentials: null;
-	  };
-
-type AnalyticsType = AnalyticsCredentials['type'];
-
-type Analytics<T extends AnalyticsType = AnalyticsType> = Prettify<
-	AnalyticsCredentials & { type: T }
->;
+import type { Analytics, AnalyticsType, SerializedModel } from 'types';
 
 @Table
 export class AnalyticsSettings<
