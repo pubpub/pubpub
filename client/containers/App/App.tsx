@@ -1,6 +1,9 @@
 import React, { ReactNode } from 'react';
 import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
+import { AnalyticsProvider } from 'use-analytics';
+
+import { createAnalyticsInstance } from 'utils/analytics/createAnalytics';
 
 import {
 	Header,
@@ -44,16 +47,12 @@ type Props = {
 	viewData: any;
 };
 
-import { createAnalytics } from 'utils/analytics/createAnalytics';
-
-import { AnalyticsProvider } from 'use-analytics';
-
 const App = (props: Props) => {
 	const { chunkName, initialData, viewData } = props;
 	const pageContextProps = usePageState(initialData, viewData);
 	const { communityData, locationData, scopeData, loginData, featureFlags } = pageContextProps;
 
-	const analytics = createAnalytics({
+	const analyticsInstance = createAnalyticsInstance({
 		type: communityData.analyticsSettings?.type || 'default',
 		credentials: communityData.analyticsSettings?.credentials || null,
 	});
@@ -113,7 +112,7 @@ const App = (props: Props) => {
 
 	return (
 		<PageContext.Provider value={pageContextProps}>
-			<AnalyticsProvider instance={analytics}>
+			<AnalyticsProvider instance={analyticsInstance}>
 				<FacetsStateProvider
 					options={{ currentScope: scopeData.scope, cascadeResults: scopeData.facets }}
 				>
