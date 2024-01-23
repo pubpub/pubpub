@@ -1,6 +1,6 @@
 /**
- * The analytics packages have very bad to nonexistent types. Here we supplement them with our own
- * types.
+ * The analytics packages have very bad to nonexistent types. Here we supplement some of them with
+ * our owntypes.
  */
 
 declare module 'use-analytics' {
@@ -20,5 +20,6 @@ declare module 'use-analytics' {
 	export function AnalyticsProvider(props: {
 		instance: AnalyticsInstance;
 		children: ReactNode;
+		// eslint-disable-next-line no-undef
 	}): JSX.Element;
 }

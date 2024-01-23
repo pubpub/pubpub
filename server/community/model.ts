@@ -12,7 +12,6 @@ import {
 	Unique,
 	BelongsTo,
 	HasMany,
-	HasOne,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import type { SerializedModel } from 'types';

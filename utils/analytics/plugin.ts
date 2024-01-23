@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
-import { AnalyticsPlugin } from 'analytics';
+/* eslint-disable no-undef, import/no-unresolved */
+import { type AnalyticsPlugin } from 'analytics';
 
 const sendData = ({ payload, route }: { payload: any; route: 'page' | 'track' | 'identify' }) => {
 	if (!globalThis.navigator || typeof globalThis?.navigator?.sendBeacon !== 'function') {
