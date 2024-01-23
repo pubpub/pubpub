@@ -11,13 +11,21 @@ type Props = {
 		isNarrow: boolean;
 		isNarrowWidth: boolean;
 		layout: LayoutBlock[];
+		communityId: string;
+		title: string;
+		slug: string;
 	};
 };
 
 const Page = (props: Props) => {
 	const { pageData } = props;
 	const { page } = useAnalytics();
-	page();
+	page({
+		type: 'page',
+		communityId: pageData.communityId,
+		title: pageData.title,
+		pageSlug: pageData.slug,
+	});
 
 	return (
 		<Layout
