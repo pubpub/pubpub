@@ -38,7 +38,10 @@ const Layout = (props: Props) => {
 
 	// TODO: replace this with an effect that listens to changes in user cookie consent
 	// fire again if the user agrees to analytics
+
+	/** Page track should only be done on mount & on client side */
 	useEffectOnce(() => {
+		/** Only track actual page visits, not dashboard visits e.g. when editing a page */
 		if (locationData.isDashboard) {
 			return;
 		}
