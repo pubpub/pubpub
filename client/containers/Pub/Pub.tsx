@@ -26,7 +26,7 @@ const SomePubHeader = () => {
 const Pub = (props: Props) => {
 	const { pubData } = props;
 	const uniqueCollectionIds = Array.from(
-		new Set(...(pubData.collectionPubs ?? []).map((cp) => cp.collectionId)),
+		new Set((pubData.collectionPubs ?? []).map((cp) => cp.collectionId)),
 	);
 
 	const { page } = useAnalytics();
