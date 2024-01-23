@@ -24,7 +24,6 @@ export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey
 export const getGdprConsentElection = (loginData: LoginData | null = null) => {
 	const cookieValue = Cookies.get(cookieKey);
 	if (loginData && loginData.id && loginData.gdprConsent !== null) {
-		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		return loginData.gdprConsent === true;
 	}
 	if (cookieValue) {
@@ -55,7 +54,11 @@ export const shouldShowGdprBanner = ({
 	return getGdprConsentElection(loginData) === null;
 };
 
-export const updateGdprConsent = (loginData, doesUserConsent) => {
+export const updateGdprConsent = (
+	loginData: LoginData,
+	doesUserConsent: boolean | null,
+	setGDPRConsent: (consent: boolean | null) => void,
+) => {
 	const loggedIn = !!loginData.id;
 	const cookieOptions = getCookieOptions();
 	Cookies.set(cookieKey, doesUserConsent ? 'accept' : 'decline', cookieOptions);
@@ -67,6 +70,9 @@ export const updateGdprConsent = (loginData, doesUserConsent) => {
 		}
 		deleteOdiousCookies();
 	}
+
+	setGDPRConsent(doesUserConsent);
+
 	if (loggedIn) {
 		return apiFetch('/api/users', {
 			method: 'PUT',

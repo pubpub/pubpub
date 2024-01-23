@@ -72,9 +72,9 @@ const banners: Banner[] = [
 			);
 		},
 		// eslint-disable-next-line react/prop-types
-		buttons: ({ loginData }, next) => {
+		buttons: ({ loginData, setGdprConsent }, next) => {
 			const closeWithConsent = (doesConsent) => {
-				updateGdprConsent(loginData, doesConsent);
+				updateGdprConsent(loginData, doesConsent, setGdprConsent);
 				next();
 			};
 			return (

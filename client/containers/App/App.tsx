@@ -51,17 +51,16 @@ type Props = {
 const App = (props: Props) => {
 	const { chunkName, initialData, viewData } = props;
 	const pageContextProps = usePageState(initialData, viewData);
-	const { communityData, locationData, scopeData, loginData, featureFlags } = pageContextProps;
+	const { communityData, locationData, scopeData, loginData, featureFlags, gdprConsent } =
+		pageContextProps;
 
 	const { analyticsSettings } = communityData;
 
-	// TODO: Add some effect that listens for changes to the user's consent
-	// so that analytics can get activated/deactivated as needed.
 	const settings =
 		analyticsSettings.type === 'default'
 			? { consent: false as const, ...analyticsSettings }
 			: {
-					consent: Boolean(getGdprConsentElection(loginData)),
+					consent: Boolean(gdprConsent),
 					...analyticsSettings,
 			  };
 

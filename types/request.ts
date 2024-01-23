@@ -21,7 +21,7 @@ export type LoginData = {
 	lastName?: string;
 	avatar?: string;
 	title?: string;
-	gdprConsent?: string;
+	gdprConsent?: boolean | null;
 	isSuperAdmin: boolean;
 	integrations?: Integration[];
 };
@@ -82,7 +82,7 @@ export type ScopeData = {
 
 export type InitialCommunityData = DefinitelyHas<
 	Community,
-	'collections' | 'pages' | 'scopeSummary' | 'analyticsSettings'
+	'collections' | 'pages' | 'scopeSummary'
 >;
 
 export type InitialNotificationsData = {
