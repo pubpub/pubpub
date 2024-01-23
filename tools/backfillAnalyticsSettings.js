@@ -49,6 +49,7 @@ async function main() {
 
 		offset += LIMIT;
 	}
+	process.exit(0);
 }
 
 main();
