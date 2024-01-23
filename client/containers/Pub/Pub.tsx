@@ -25,21 +25,6 @@ const SomePubHeader = () => {
 
 const Pub = (props: Props) => {
 	const { pubData } = props;
-	const uniqueCollectionIds = Array.from(
-		new Set((pubData.collectionPubs ?? []).map((cp) => cp.collectionId)),
-	);
-
-	const { page } = useAnalytics();
-
-	page({
-		type: 'pub',
-		communityId: pubData.communityId,
-		title: pubData.title,
-		pubSlug: pubData.slug,
-		pubId: pubData.id,
-		pubTitle: pubData.title,
-		collectionIds: uniqueCollectionIds,
-	});
 
 	return (
 		<div id="pub-container">

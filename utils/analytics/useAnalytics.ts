@@ -14,20 +14,24 @@ type PageViewPayloadBase = {
 	title: string;
 };
 
+type CollectionPayloadPart = {
+	collectionId: string;
+	collectionSlug: string;
+	collectionTitle: string;
+};
+
 type PageViewPub = PageViewPayloadBase & {
 	type: 'pub';
 	pubId: string;
 	pubSlug: string;
 	pubTitle: string;
 	collectionIds?: string[];
-};
+	primaryCollectionId?: string;
+} & Partial<CollectionPayloadPart>;
 
 type PageViewCollection = PageViewPayloadBase & {
 	type: 'collection';
-	collectionId: string;
-	collectionSlug: string;
-	collectionTitle: string;
-};
+} & CollectionPayloadPart;
 
 type PageViewPage = PageViewPayloadBase & {
 	type: 'page';
