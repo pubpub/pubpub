@@ -1,11 +1,9 @@
+// @ts-check
 /* eslint-disable no-console */
-import { Community, AnalyticsSettings } from 'server/models';
+import { Community } from 'server/models';
 import { asyncMap } from 'utils/async';
 
 async function main() {
-	// batch fetch all communities
-	// then for each community, create an analyticsSettings record
-
 	let offset = 0;
 	let done = false;
 
@@ -16,36 +14,21 @@ async function main() {
 		// eslint-disable-next-line no-await-in-loop
 		const communities = await Community.findAll({
 			limit: LIMIT,
-			attributes: ['id'],
+			attributes: ['id', 'analyticsSettings'],
 			offset,
-			include: [
-				{
-					model: AnalyticsSettings,
-					as: 'analyticsSettings',
-				},
-			],
 		});
 
 		console.log(`Creating analyticsSettings for ${communities.length} communities`);
-		// eslint-disable-next-line no-await-in-loop
-		const analyticsSettings = await asyncMap(
-			communities,
-			() =>
-				AnalyticsSettings.create({
-					type: 'default',
-					credentials: null,
-				}),
-			{
-				concurrency: 10,
-			},
-		);
 
 		// eslint-disable-next-line no-await-in-loop
 		await asyncMap(
 			communities,
-			(community, index) =>
+			(community) =>
 				community.update({
-					analyticsSettingsId: analyticsSettings[index].id,
+					analyticsSettings: {
+						type: 'default',
+						credentials: null,
+					},
 				}),
 			{
 				concurrency: 10,
@@ -54,7 +37,7 @@ async function main() {
 
 		console.log(
 			`✅ Sucessfully backfilled analyticsSettings for communities ${offset} to ${
-				offset + LIMIT
+				offset + communities.length
 			}`,
 		);
 

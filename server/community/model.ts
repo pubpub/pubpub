@@ -14,10 +14,9 @@ import {
 	HasMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
+import type { AnalyticsSettings, SerializedModel } from 'types';
 import { CommunityHeaderLink, CommunityHeroButton, CommunityNavigationEntry } from 'types';
 import {
-	AnalyticsSettings,
 	Organization,
 	Collection,
 	Pub,
@@ -193,6 +192,11 @@ export class Community extends Model<
 	@Column(DataType.JSONB)
 	declare defaultPubCollections: string[] | null;
 
+	@AllowNull(false)
+	@Default({ type: 'default', credentials: null } satisfies AnalyticsSettings)
+	@Column(DataType.JSONB)
+	declare analyticsSettings: CreationOptional<AnalyticsSettings>;
+
 	@Column(DataType.UUID)
 	declare spamTagId: string | null;
 
@@ -201,9 +205,6 @@ export class Community extends Model<
 
 	@Column(DataType.UUID)
 	declare scopeSummaryId: string | null;
-
-	@Column(DataType.UUID)
-	declare analyticsSettingsId: string | null;
 
 	@BelongsTo(() => Organization, {
 		onDelete: 'CASCADE',
@@ -242,12 +243,12 @@ export class Community extends Model<
 	@BelongsTo(() => SpamTag, { as: 'spamTag', foreignKey: 'spamTagId' })
 	declare spamTag?: SpamTag;
 
-	@BelongsTo(() => AnalyticsSettings, {
-		as: 'analyticsSettings',
-		foreignKey: 'analyticsSettingsId',
-		onDelete: 'CASCADE',
-	})
-	declare analyticsSettings?: AnalyticsSettings;
+	// @BelongsTo(() => AnalyticsSettings, {
+	// 	as: 'analyticsSettings',
+	// 	foreignKey: 'analyticsSettingsId',
+	// 	onDelete: 'CASCADE',
+	// })
+	// declare analyticsSettings?: AnalyticsSettings;
 
 	declare accentTextColor: CreationOptional<string>;
 }

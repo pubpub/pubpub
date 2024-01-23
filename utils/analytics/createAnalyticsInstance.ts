@@ -1,20 +1,15 @@
 // @ts-expect-error h
 import { Analytics } from '@analytics/core';
+import type { AnalyticsInstance } from 'analytics';
 import googleTagPlugin from '@analytics/google-tag-manager';
 import googleAnalytics from '@analytics/google-analytics';
-import type { AnalyticsSettings } from 'server/models';
+import type { AnalyticsWithConsent } from 'types';
 import { analyticsPlugin, stubPlugin } from './plugin';
-
-type AnalyticsSettingsType = ReturnType<AnalyticsSettings['toJSON']>;
 
 // TODO: lazy load the plugins. Might be hard as they are needed when the page first loads
 // TODO: Add other analytics options
 // TODO: Figure out whether all analytics need consent
-const getPluginForType = (
-	type: AnalyticsSettingsType['type'],
-	credentials: string | null,
-	consent = false,
-) => {
+const getPluginForType = ({ type, credentials, consent }: AnalyticsWithConsent) => {
 	if (type !== 'default' && !consent) {
 		return stubPlugin();
 	}
@@ -38,21 +33,18 @@ const getPluginForType = (
 
 export const createAnalyticsInstance = (
 	{
-		type,
-		credentials,
 		appname = 'pubpub',
-		consent = false,
+		...settings
 	}: {
 		appname?: string;
-		consent?: boolean;
-	} & Omit<AnalyticsSettingsType, 'id'> = {
+	} & AnalyticsWithConsent = {
 		type: 'default',
 		credentials: null,
 		appname: 'pubpub',
 		consent: false,
 	},
 ) => {
-	const plugin = getPluginForType(type, credentials, consent);
+	const plugin = getPluginForType(settings);
 
 	const analytics = Analytics({
 		app: appname,
@@ -60,5 +52,5 @@ export const createAnalyticsInstance = (
 		plugins: [plugin],
 	});
 
-	return analytics;
+	return analytics as AnalyticsInstance;
 };

@@ -4,9 +4,12 @@
  * @param {import('server/sequelize').sequelize} options.sequelize
  */
 export const up = async ({ Sequelize, sequelize }) => {
-	await sequelize.getQueryInterface().addColumn('Communities', 'analyticsSettingsId', {
-		type: Sequelize.UUID,
-		defaultValue: null,
+	await sequelize.getQueryInterface().addColumn('Communities', 'analyticsSettings', {
+		type: Sequelize.json,
+		defaultValue: {
+			type: 'default',
+			credentials: null,
+		},
 	});
 };
 
@@ -15,5 +18,5 @@ export const up = async ({ Sequelize, sequelize }) => {
  * @param {import('server/sequelize').sequelize} options.sequelize
  */
 export const down = async ({ sequelize }) => {
-	await sequelize.getQueryInterface().removeColumn('Communities', 'analyticsSettingsId');
+	await sequelize.getQueryInterface().removeColumn('Communities', 'analyticsSettings');
 };

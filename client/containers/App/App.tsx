@@ -54,17 +54,19 @@ const App = (props: Props) => {
 	const { communityData, locationData, scopeData, loginData, featureFlags } = pageContextProps;
 
 	const { analyticsSettings } = communityData;
-	const { type = 'default', credentials = null } = analyticsSettings || {};
+
 	// TODO: Add some effect that listens for changes to the user's consent
 	// so that analytics can get activated/deactivated as needed.
-	const consent = type !== 'default' ? Boolean(getGdprConsentElection(loginData)) : false;
+	const settings =
+		analyticsSettings.type === 'default'
+			? { consent: false as const, ...analyticsSettings }
+			: {
+					consent: Boolean(getGdprConsentElection(loginData)),
+					...analyticsSettings,
+			  };
 
 	// TODO: figure out some way to lazy load plugins
-	const analyticsInstance = createAnalyticsInstance({
-		type,
-		credentials,
-		consent,
-	});
+	const analyticsInstance = createAnalyticsInstance(settings);
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
 	const { ActiveComponent, hideNav, hideFooter, hideHeader, isDashboard } = pathObject;

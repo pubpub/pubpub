@@ -16,7 +16,6 @@ import { uploadPolicyRouteImplementation } from 'server/uploadPolicy/api';
 import { communityServer } from 'server/community/api';
 import { uploadRouteImplementation } from 'server/upload/api';
 import { analyticsServer } from 'server/analytics/api';
-import { analyticsSettingsServer } from 'server/analyticsSettings/api';
 import { contract } from './contract';
 
 const s = initServer();
@@ -27,7 +26,6 @@ const { customScript, ...contractWithScriptsAndCommunity } = contract;
 
 export const server = s.router(contractWithScriptsAndCommunity, {
 	analytics: analyticsServer,
-	analyticsSettings: analyticsSettingsServer,
 	auth: {
 		login: loginRouteImplementation,
 		logout: logoutRouteImplementation,
