@@ -53,60 +53,30 @@ setup(beforeAll, async () => {
 
 teardown(afterAll);
 
-const fetchWithToken = async (
-	token: string,
-	community: { subdomain: string },
-	url: string,
-	expectedStatus: number,
-	config?: any,
-) => {
-	const result = await fetch(url, {
-		...config,
-		headers: {
-			...config?.headers,
-			Authorization: `Bearer ${token}`,
-			communityhostname: `${community.subdomain}.pubpub.org`,
-		},
-	});
-
-	expect(result.status).toBe(expectedStatus);
-
-	if (!result.ok) {
-		return {};
-	}
-
-	return result.json();
-};
-
-let port: string;
-
 describe('authToken', () => {
 	it('should be possible for an admin to create a token', async () => {
 		const { community, communityAdmin } = models;
 
 		const agent = await login(communityAdmin);
 
-		const result = await agent
+		await agent
 			.post(`/api/authTokens`)
 			.set('Host', `${community.subdomain}.pubpub.org`)
 			.send({ expiresAt: 'never', communityId: community.id })
 			.expect(201);
-
-		// @ts-expect-error shh
-		port = result.req.path.match(/:(\d+)/)[1];
 	});
 
 	it('should be possible for an admin to use a token to access admin only routes', async () => {
 		const { adminToken, community } = models;
 
-		const result = await fetchWithToken(
-			adminToken.token,
-			community,
-			`http://localhost:${port}/api/members`,
-			200,
-		);
+		const agent = await login();
+		const result = await agent
+			.get('/api/members')
+			.set('Authorization', `Bearer ${adminToken.token}`)
+			.set('communityhostname', `${community.subdomain}.pubpub.org`)
+			.expect(200);
 
-		expect(result.length).toBeGreaterThan(0);
+		expect(result.body.length).toBeGreaterThan(0);
 	});
 
 	it('should not be possible for a non-admin to create a token', async () => {
@@ -124,60 +94,53 @@ describe('authToken', () => {
 	it('should not be possible for a non-admin to use a token to access admin only routes', async () => {
 		const { manageToken, community } = models;
 
-		await fetchWithToken(
-			manageToken.token,
-			community,
-			`http://localhost:${port}/api/members`,
-			403,
-		);
+		await (await login())
+			.get('/api/members')
+			.set('Authorization', `Bearer ${manageToken.token}`)
+			.set('Host', `${community.subdomain}.pubpub.org`)
+			.expect(403);
+		//		await fetchWithToken(manageToken.token, community, `/api/members`, 403);
 	});
 
 	it('should not be possible to use a token for a different community', async () => {
 		const { adminToken, anotherCommunity } = models;
 
-		await fetchWithToken(
-			adminToken.token,
-			anotherCommunity,
-			`http://localhost:${port}/api/members`,
-			403,
-		);
+		await (await login())
+			.get('/api/members')
+			.set('Authorization', `Bearer ${adminToken.token}`)
+			.set('Host', `${anotherCommunity.subdomain}.pubpub.org`)
+			.expect(403);
 	});
 
 	it('should throw an error for expired tokens', async () => {
 		const { expiredToken, community } = models;
 
-		await fetchWithToken(
-			expiredToken.token,
-			community,
-			`http://localhost:${port}/api/members`,
-			403,
-		);
+		await (await login())
+			.get('/api/members')
+			.set('Authorization', `Bearer ${expiredToken.token}`)
+			.set('Host', `${community.subdomain}.pubpub.org`)
+			.expect(403);
 	});
-
-	// any other tests you want to write
 
 	it("should not be possible for an admin to delete another community's admins token", async () => {
 		const { adminToken, community, anotherAuthToken } = models;
 
-		await fetchWithToken(
-			adminToken.token,
-			community,
-			`http://localhost:${port}/api/authTokens/${anotherAuthToken.id}`,
-			404,
-			{ method: 'DELETE' },
-		);
+		await (await login())
+			.delete(`/api/authTokens/${anotherAuthToken.id}`)
+			.set('Authorization', `Bearer ${adminToken.token}`)
+			.set('Host', `${community.subdomain}.pubpub.org`)
+			.expect(404);
 	});
 
 	it('should be possible for an admin to delete a token', async () => {
 		const { adminToken, community } = models;
 
-		await fetchWithToken(
-			adminToken.token,
-			community,
-			`http://localhost:${port}/api/authTokens/${adminToken.id}`,
-			200,
-			{ method: 'DELETE' },
-		);
+		await (await login())
+			.delete(`/api/authTokens/${adminToken.id}`)
+			.set('Authorization', `Bearer ${adminToken.token}`)
+			.set('Host', `${community.subdomain}.pubpub.org`)
+			.send()
+			.expect(200);
 	});
 
 	test.todo(
