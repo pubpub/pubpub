@@ -19,7 +19,7 @@ const getPluginsForType = ({
 	analyticsSettings: AnalyticsSettings;
 }) => {
 	if (shouldStub) {
-		return stubPlugin();
+		return [stubPlugin()];
 	}
 
 	const analyticsPlugins = [analyticsPlugin()];
