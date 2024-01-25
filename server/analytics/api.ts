@@ -1,7 +1,7 @@
 /** This should all be moved to an AWS lambda */
 
 import { initServer } from '@ts-rest/express';
-import { Request } from 'express';
+import express, { Request } from 'express';
 
 import { contract } from 'utils/api/contract';
 
@@ -39,17 +39,34 @@ const sendToStitch = async (payload: any) => {
 };
 
 export const analyticsServer = s.router(contract.analytics, {
-	track: async ({ body: payload, req }) => {
-		const userFingerPrint = fingerPrint(req);
+	track: {
+		middleware: [
+			// needed to parse analytics events from the client sent with `navigator.sendBeacon`
+			express.text(),
+			(req, res, next) => {
+				if (typeof req.body === 'string') {
+					try {
+						req.body = JSON.parse(req.body);
+					} catch (err) {
+						console.error(err);
+						// do nothing
+					}
+				}
+				next();
+			},
+		],
+		handler: async ({ body: payload, req }) => {
+			const userFingerPrint = fingerPrint(req);
 
-		await sendToStitch({
-			...payload,
-			fingerprint: userFingerPrint,
-		});
+			await sendToStitch({
+				...payload,
+				fingerprint: userFingerPrint,
+			});
 
-		return {
-			status: 204,
-			body: undefined,
-		};
+			return {
+				status: 204,
+				body: undefined,
+			};
+		},
 	},
 });
