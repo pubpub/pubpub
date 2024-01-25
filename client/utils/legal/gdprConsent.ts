@@ -41,10 +41,10 @@ export const shouldShowGdprBanner = ({
 	featureFlags: InitialData['featureFlags'];
 	communityData: InitialCommunityData;
 }) => {
-	if (
-		shouldUseNewAnalytics(featureFlags) &&
-		(analyticsSettings?.type !== 'GA' || !canUseCustomAnalyticsProvider(featureFlags))
-	) {
+	const doesNotNeedCookieBanner =
+		analyticsSettings?.type !== 'google-analytics' ||
+		!canUseCustomAnalyticsProvider(featureFlags);
+	if (shouldUseNewAnalytics(featureFlags) && doesNotNeedCookieBanner) {
 		return false;
 	}
 

@@ -29,7 +29,7 @@ const getPluginsForType = ({
 	}
 
 	switch (analyticsSettings?.type) {
-		case 'simple': {
+		case 'simple-analytics': {
 			analyticsPlugins.push(
 				simpleAnalyticsPlugin({
 					autoCollect: false,
@@ -37,7 +37,7 @@ const getPluginsForType = ({
 			);
 			break;
 		}
-		case 'GA': {
+		case 'google-analytics': {
 			if (googleAnalyticsRefused) {
 				break;
 			}
@@ -68,7 +68,7 @@ export const createAnalyticsInstance = ({
 	gdprConsent?: boolean | null;
 	analyticsSettings: AnalyticsSettings;
 }) => {
-	const googleAnalyticsRefused = analyticsSettings?.type === 'GA' && !gdprConsent;
+	const googleAnalyticsRefused = analyticsSettings?.type === 'google-analytics' && !gdprConsent;
 
 	const plugins = getPluginsForType({
 		shouldStub: !shouldUseNewAnalytics,
