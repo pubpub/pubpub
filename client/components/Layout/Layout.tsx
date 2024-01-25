@@ -11,6 +11,7 @@ import {
 } from 'utils/layout';
 import { usePageContext } from 'utils/hooks';
 import { useAnalytics } from 'utils/analytics/useAnalytics';
+import { assert } from 'utils/assert';
 
 import LayoutPubs from './LayoutPubs';
 import LayoutHtml from './LayoutHtml';
@@ -43,29 +44,26 @@ const Layout = (props: Props) => {
 			return;
 		}
 
-		const payload = collection
-			? {
-					type: 'collection' as const,
-					communityId: collection.communityId,
-					title: collection.title,
-					collectionId: collection.id,
-					collectionTitle: collection.title,
-					collectionSlug: collection.slug,
-			  }
-			: pageData
-			  ? {
-						type: 'page' as const,
-						communityId: communityData.id,
-						pageSlug: pageData.slug,
-						title: pageData.title,
-			    }
-			  : undefined;
-
-		if (!payload) {
+		if (collection) {
+			page({
+				type: 'collection' as const,
+				communityId: collection.communityId,
+				title: collection.title,
+				collectionId: collection.id,
+				collectionTitle: collection.title,
+				collectionSlug: collection.slug,
+			});
 			return;
 		}
 
-		page(payload);
+		assert(!!pageData);
+
+		page({
+			type: 'page' as const,
+			communityId: communityData.id,
+			pageSlug: pageData.slug,
+			title: pageData.title,
+		});
 	});
 
 	const renderBlock = (block: LayoutBlock, index: number) => {
