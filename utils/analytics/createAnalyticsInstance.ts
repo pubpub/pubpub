@@ -9,11 +9,13 @@ import { analyticsPlugin, stubPlugin } from './plugin';
 // TODO: lazy load the plugins. Might be hard as they are needed when the page first loads, forcing a lot of rerenders
 const getPluginsForType = ({
 	shouldStub,
+	canUseCustomAnalyticsProvider,
 	googleAnalyticsRefused,
 	analyticsSettings,
 }: {
 	shouldStub?: boolean;
 	googleAnalyticsRefused?: boolean;
+	canUseCustomAnalyticsProvider?: boolean;
 	analyticsSettings: AnalyticsSettings;
 }) => {
 	if (shouldStub) {
@@ -21,6 +23,10 @@ const getPluginsForType = ({
 	}
 
 	const analyticsPlugins = [analyticsPlugin()];
+
+	if (!canUseCustomAnalyticsProvider) {
+		return analyticsPlugins;
+	}
 
 	switch (analyticsSettings?.type) {
 		case 'simple': {
@@ -52,11 +58,13 @@ const getPluginsForType = ({
 export const createAnalyticsInstance = ({
 	appname = 'pubpub',
 	shouldUseNewAnalytics,
+	canUseCustomAnalyticsProvider,
 	gdprConsent,
 	analyticsSettings,
 }: {
 	appname?: string;
 	shouldUseNewAnalytics?: boolean;
+	canUseCustomAnalyticsProvider?: boolean;
 	gdprConsent?: boolean | null;
 	analyticsSettings: AnalyticsSettings;
 }) => {
@@ -64,6 +72,7 @@ export const createAnalyticsInstance = ({
 
 	const plugins = getPluginsForType({
 		shouldStub: !shouldUseNewAnalytics,
+		canUseCustomAnalyticsProvider,
 		googleAnalyticsRefused,
 		analyticsSettings,
 	});

@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import type { InitialCommunityData, InitialData, LoginData } from 'types';
-import { shouldUseNewAnalytics } from 'utils/analytics/shouldUseNewAnalytics';
+import { canUseCustomAnalyticsProvider, shouldUseNewAnalytics } from 'utils/analytics/featureFlags';
 
 import { apiFetch } from '../apiFetch';
 
@@ -41,7 +41,10 @@ export const shouldShowGdprBanner = ({
 	featureFlags: InitialData['featureFlags'];
 	communityData: InitialCommunityData;
 }) => {
-	if (shouldUseNewAnalytics(featureFlags) && analyticsSettings?.type !== 'GA') {
+	if (
+		shouldUseNewAnalytics(featureFlags) &&
+		(analyticsSettings?.type !== 'GA' || !canUseCustomAnalyticsProvider(featureFlags))
+	) {
 		return false;
 	}
 

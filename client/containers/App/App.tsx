@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { AnalyticsProvider } from 'use-analytics';
 
 import { createAnalyticsInstance } from 'utils/analytics/createAnalyticsInstance';
-import { shouldUseNewAnalytics } from 'utils/analytics/shouldUseNewAnalytics';
+import { canUseCustomAnalyticsProvider, shouldUseNewAnalytics } from 'utils/analytics/featureFlags';
 
 import {
 	Header,
@@ -58,7 +58,8 @@ const App = (props: Props) => {
 
 	// TODO: figure out some way to lazy load plugins
 	const analyticsInstance = createAnalyticsInstance({
-		shouldUseNewAnalytics: !shouldUseNewAnalytics(initialData),
+		shouldUseNewAnalytics: shouldUseNewAnalytics(initialData.featureFlags),
+		canUseCustomAnalyticsProvider: canUseCustomAnalyticsProvider(initialData.featureFlags),
 		gdprConsent,
 		analyticsSettings,
 	});
