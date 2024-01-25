@@ -56,18 +56,11 @@ const App = (props: Props) => {
 
 	const { analyticsSettings } = communityData;
 
-	const settings =
-		analyticsSettings.type === 'default'
-			? { consent: false as const, ...analyticsSettings }
-			: {
-					consent: Boolean(gdprConsent),
-					...analyticsSettings,
-			  };
-
 	// TODO: figure out some way to lazy load plugins
 	const analyticsInstance = createAnalyticsInstance({
 		shouldUseNewAnalytics: !shouldUseNewAnalytics(initialData),
-		...settings,
+		gdprConsent,
+		analyticsSettings,
 	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);

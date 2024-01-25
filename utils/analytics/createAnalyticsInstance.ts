@@ -1,59 +1,77 @@
 // @ts-expect-error FIXME: types from @analytics/core are not bundled properly
 import { Analytics } from '@analytics/core';
 import type { AnalyticsInstance } from 'analytics';
-import googleTagPlugin from '@analytics/google-tag-manager';
-import googleAnalytics from '@analytics/google-analytics';
-import type { AnalyticsSettings, AnalyticsWithConsent } from 'types';
+import googleAnalyticsPlugin from '@analytics/google-analytics';
+import simpleAnalyticsPlugin from '@analytics/simple-analytics';
+import type { AnalyticsSettings } from 'types';
 import { analyticsPlugin, stubPlugin } from './plugin';
 
 // TODO: lazy load the plugins. Might be hard as they are needed when the page first loads, forcing a lot of rerenders
-// TODO: Add other analytics options
-// TODO: Figure out whether all analytics need consent
-const getPluginForType = ({
-	type,
-	credentials,
+const getPluginsForType = ({
 	shouldStub,
-}: AnalyticsSettings & { shouldStub?: boolean }) => {
+	googleAnalyticsRefused,
+	analyticsSettings,
+}: {
+	shouldStub?: boolean;
+	googleAnalyticsRefused?: boolean;
+	analyticsSettings: AnalyticsSettings;
+}) => {
 	if (shouldStub) {
 		return stubPlugin();
 	}
 
-	switch (type) {
-		case 'GTM': {
-			return googleTagPlugin({
-				containerId: credentials,
-			});
+	const analyticsPlugins = [analyticsPlugin()];
+
+	switch (analyticsSettings?.type) {
+		case 'simple': {
+			analyticsPlugins.push(
+				simpleAnalyticsPlugin({
+					autoCollect: false,
+				}),
+			);
+			break;
 		}
 		case 'GA': {
-			return googleAnalytics({
-				measurementIds: [credentials],
-			});
+			if (googleAnalyticsRefused) {
+				break;
+			}
+			analyticsPlugins.push(
+				googleAnalyticsPlugin({
+					measurementIds: [analyticsSettings.credentials],
+				}),
+			);
+			break;
 		}
-		default: {
-			return analyticsPlugin();
-		}
+		default:
+			break;
 	}
+
+	return analyticsPlugins;
 };
 
 export const createAnalyticsInstance = ({
 	appname = 'pubpub',
 	shouldUseNewAnalytics,
-	...settings
+	gdprConsent,
+	analyticsSettings,
 }: {
 	appname?: string;
 	shouldUseNewAnalytics?: boolean;
-} & AnalyticsWithConsent) => {
-	const noConsent = settings.type !== 'default' && !settings.consent;
+	gdprConsent?: boolean | null;
+	analyticsSettings: AnalyticsSettings;
+}) => {
+	const googleAnalyticsRefused = analyticsSettings?.type === 'GA' && !gdprConsent;
 
-	const plugin = getPluginForType({
-		...settings,
-		shouldStub: !shouldUseNewAnalytics || noConsent,
+	const plugins = getPluginsForType({
+		shouldStub: !shouldUseNewAnalytics,
+		googleAnalyticsRefused,
+		analyticsSettings,
 	});
 
 	const analytics = Analytics({
 		app: appname,
 		debug: true,
-		plugins: [plugin],
+		plugins,
 	});
 
 	return analytics as AnalyticsInstance;

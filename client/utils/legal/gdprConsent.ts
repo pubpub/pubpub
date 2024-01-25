@@ -41,10 +41,7 @@ export const shouldShowGdprBanner = ({
 	featureFlags: InitialData['featureFlags'];
 	communityData: InitialCommunityData;
 }) => {
-	if (
-		shouldUseNewAnalytics(featureFlags) &&
-		(!analyticsSettings?.type || analyticsSettings.type === 'default')
-	) {
+	if (shouldUseNewAnalytics(featureFlags) && analyticsSettings?.type !== 'GA') {
 		return false;
 	}
 
