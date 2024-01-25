@@ -7,6 +7,7 @@ import { usePageContext } from 'utils/hooks';
 import { createReadingParamUrl, useCollectionPubs } from 'client/utils/collections';
 import { pubUrl, collectionUrl } from 'utils/canonicalUrls';
 import { getSchemaForKind } from 'utils/collections/schemas';
+import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import { Collection, Pub } from 'types';
 
 import { usePubContext } from '../../pubHooks';
@@ -23,7 +24,32 @@ const CollectionBrowser = (props: Props) => {
 	const { collection, currentPub } = props;
 	const { updateLocalData } = usePubContext();
 	const { communityData } = usePageContext();
-	const { pubs, error, isLoading } = useCollectionPubs(updateLocalData, collection);
+	const menuRef = React.useRef<HTMLUListElement | null>(null);
+	const { pubs, error, isLoading, hasLoadedAllPubs, requestMorePubs } = useCollectionPubs(
+		updateLocalData,
+		collection,
+	);
+	const [visible, setVisible] = React.useState(false);
+
+	const shouldFetchMoreCollectionPubs =
+		// the menu will have 0 height if it is invisible, which will
+		// make the check in useInfiniteScroll always return true
+		// so we only start fetching more pubs when the user clicks the menu
+		visible &&
+		// otherwise it'll fetch a whole bunch of pubs at once rather than 10 at a time
+		!isLoading &&
+		!hasLoadedAllPubs &&
+		// stop fetching more pubs if there's an error.
+		// possible improvement: retry once if there's an error
+		!error;
+
+	useInfiniteScroll({
+		enabled: shouldFetchMoreCollectionPubs,
+		element: menuRef.current,
+		onRequestMoreItems: requestMorePubs,
+		scrollTolerance: 0,
+	});
+
 	const { bpDisplayIcon } = getSchemaForKind(collection.kind)!;
 	const readingPubUrl = (pub) => createReadingParamUrl(pubUrl(communityData, pub), collection.id);
 
@@ -47,6 +73,8 @@ const CollectionBrowser = (props: Props) => {
 			className="collection-browser-component_menu"
 			disclosure={renderDisclosure}
 			aria-label="Browse this collection"
+			menuListRef={menuRef}
+			onVisibleChange={setVisible}
 		>
 			<MenuItem
 				icon="collection"
@@ -54,6 +82,25 @@ const CollectionBrowser = (props: Props) => {
 				href={collectionUrl(communityData, collection)}
 			/>
 			<MenuItemDivider />
+			{pubs?.length > 0
+				? pubs.map((pub) => (
+						<MenuItem
+							active={currentPub.id === pub.id}
+							href={readingPubUrl(pub)}
+							textClassName="menu-item-text"
+							icon="pubDoc"
+							key={pub.id}
+							text={
+								<>
+									<div className="title">
+										<PubTitle pubData={pub} />
+									</div>
+									<PubByline pubData={pub} linkToUsers={false} />
+								</>
+							}
+						/>
+				  ))
+				: null}
 			{isLoading && (
 				<MenuItem
 					disabled
@@ -63,25 +110,6 @@ const CollectionBrowser = (props: Props) => {
 					text="Loading..."
 				/>
 			)}
-			{pubs &&
-				!isLoading &&
-				pubs.map((pub) => (
-					<MenuItem
-						active={currentPub.id === pub.id}
-						href={readingPubUrl(pub)}
-						textClassName="menu-item-text"
-						icon="pubDoc"
-						key={pub.id}
-						text={
-							<>
-								<div className="title">
-									<PubTitle pubData={pub} />
-								</div>
-								<PubByline pubData={pub} linkToUsers={false} />
-							</>
-						}
-					/>
-				))}
 			{error && (
 				<MenuItem
 					disabled
