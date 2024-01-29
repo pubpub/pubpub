@@ -7,9 +7,18 @@ const sendData = ({ payload }: { payload: any }) => {
 		return;
 	}
 
+	const {
+		event,
+		type,
+		meta: { ts },
+		properties,
+	} = payload;
 	// we use navigator.sendBeacon to make sure the request is sent even if the user navigates away from the page
 	// and doesn't block the rest of the page
-	navigator.sendBeacon(`/api/analytics/track`, JSON.stringify(payload));
+	navigator.sendBeacon(
+		`/api/analytics/track`,
+		JSON.stringify({ event, type, timestamp: ts, ...properties }),
+	);
 };
 
 export const analyticsPlugin = () => {

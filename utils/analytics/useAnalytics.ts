@@ -1,49 +1,10 @@
 import { useEffect, useState } from 'react';
 import type { AnalyticsType } from 'types';
+import { PageViewPayload, Tracks } from 'types/analytics';
 import { usePage, useTrack } from 'use-analytics';
 
-type Tracks = {
-	type: 'download';
-	payload: {
-		format: string;
-		pubId: string;
-	};
-};
-
-type PageViewPayloadBase = {
-	communityId: string;
-	communityName?: string;
-	title: string;
-};
-
-type CollectionPayloadPart = {
-	collectionId: string;
-	collectionSlug: string;
-	collectionTitle: string;
-};
-
-type PageViewPub = PageViewPayloadBase & {
-	type: 'pub';
-	pubId: string;
-	pubSlug: string;
-	pubTitle: string;
-	collectionIds?: string[];
-	primaryCollectionId?: string;
-} & Partial<CollectionPayloadPart>;
-
-type PageViewCollection = PageViewPayloadBase & {
-	type: 'collection';
-} & CollectionPayloadPart;
-
-type PageViewPage = PageViewPayloadBase & {
-	type: 'page';
-	pageSlug: string;
-};
-
-export type PageViewPayload = PageViewPub | PageViewCollection | PageViewPage;
-
 type Analytics = {
-	track: <T extends Tracks>(event: T['type'], data: T['payload']) => void;
+	track: <T extends Tracks>(event: T['event'], data: Omit<T, 'type' | 'event'>) => void;
 	page: <Payload extends PageViewPayload>(
 		payload?: Payload,
 		options?: {
