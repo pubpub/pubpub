@@ -1,10 +1,13 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
 import { AnalyticsProvider } from 'use-analytics';
 
-import { createAnalyticsInstance } from 'utils/analytics/createAnalyticsInstance';
-import { canUseCustomAnalyticsProvider, shouldUseNewAnalytics } from 'utils/analytics/featureFlags';
+import {
+	createAnalyticsInstance,
+	createStubAnalyticsInstance,
+} from 'utils/analytics/createAnalyticsInstance';
+import { shouldUseNewAnalytics, canUseCustomAnalyticsProvider } from 'utils/analytics/featureFlags';
 
 import {
 	Header,
@@ -56,23 +59,18 @@ const App = (props: Props) => {
 
 	const { analyticsSettings } = communityData;
 
+	const [analyticsInstance, setAnalyticsInstance] = useState(createStubAnalyticsInstance());
+
 	useEffect(() => {
-		import(
-			// /* webpackChunkName: "dist/@analytics/google-analytics" */
-			'@analytics/google-analytics'
-		).then(({ default: googleAnalytics }) => {
-			console.log('Loaded Google Analytics plugin');
-			console.log(googleAnalytics);
+		createAnalyticsInstance({
+			shouldUseNewAnalytics: shouldUseNewAnalytics(featureFlags),
+			canUseCustomAnalyticsProvider: canUseCustomAnalyticsProvider(featureFlags),
+			analyticsSettings,
+			gdprConsent,
+		}).then((newAnalyticsInstance) => {
+			setAnalyticsInstance(newAnalyticsInstance);
 		});
 	}, []);
-
-	// TODO: figure out some way to lazy load plugins
-	const analyticsInstance = createAnalyticsInstance({
-		shouldUseNewAnalytics: shouldUseNewAnalytics(initialData.featureFlags),
-		canUseCustomAnalyticsProvider: canUseCustomAnalyticsProvider(initialData.featureFlags),
-		gdprConsent,
-		analyticsSettings,
-	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
 	const { ActiveComponent, hideNav, hideFooter, hideHeader, isDashboard } = pathObject;

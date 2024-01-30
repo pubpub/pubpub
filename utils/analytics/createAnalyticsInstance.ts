@@ -1,13 +1,11 @@
 // @ts-expect-error FIXME: types from @analytics/core are not bundled properly
 import { Analytics } from '@analytics/core';
 import type { AnalyticsInstance } from 'analytics';
-// import googleAnalyticsPlugin from '@analytics/google-analytics';
-import simpleAnalyticsPlugin from '@analytics/simple-analytics';
 import type { AnalyticsSettings } from 'types';
 import { analyticsPlugin, stubPlugin } from './plugin';
 
 // TODO: lazy load the plugins. Might be hard as they are needed when the page first loads, forcing a lot of rerenders
-const getPluginsForType = ({
+const getPluginsForType = async ({
 	shouldStub,
 	canUseCustomAnalyticsProvider,
 	googleAnalyticsRefused,
@@ -30,6 +28,11 @@ const getPluginsForType = ({
 
 	switch (analyticsSettings?.type) {
 		case 'simple-analytics': {
+			const { default: simpleAnalyticsPlugin } = await import(
+				/* webpackChunkName: "@analytics/simple-analytics" */
+				'@analytics/simple-analytics'
+			);
+
 			analyticsPlugins.push(
 				simpleAnalyticsPlugin({
 					autoCollect: false,
@@ -37,17 +40,23 @@ const getPluginsForType = ({
 			);
 			break;
 		}
-		// case 'google-analytics': {
-		// 	if (googleAnalyticsRefused) {
-		// 		break;
-		// 	}
-		// 	analyticsPlugins.push(
-		// 		googleAnalyticsPlugin({
-		// 			measurementIds: [analyticsSettings.credentials],
-		// 		}),
-		// 	);
-		// 	break;
-		// }
+		case 'google-analytics': {
+			if (googleAnalyticsRefused) {
+				break;
+			}
+
+			const { default: googleAnalyticsPlugin } = await import(
+				/* webpackChunkName: "@analytics/google-analytics" */
+				'@analytics/google-analytics'
+			);
+
+			analyticsPlugins.push(
+				googleAnalyticsPlugin({
+					measurementIds: [analyticsSettings.credentials],
+				}),
+			);
+			break;
+		}
 		default:
 			break;
 	}
@@ -55,7 +64,7 @@ const getPluginsForType = ({
 	return analyticsPlugins;
 };
 
-export const createAnalyticsInstance = ({
+export const createAnalyticsInstance = async ({
 	appname = 'pubpub',
 	shouldUseNewAnalytics,
 	canUseCustomAnalyticsProvider,
@@ -70,7 +79,7 @@ export const createAnalyticsInstance = ({
 }) => {
 	const googleAnalyticsRefused = analyticsSettings?.type === 'google-analytics' && !gdprConsent;
 
-	const plugins = getPluginsForType({
+	const plugins = await getPluginsForType({
 		shouldStub: !shouldUseNewAnalytics,
 		canUseCustomAnalyticsProvider,
 		googleAnalyticsRefused,
@@ -84,4 +93,12 @@ export const createAnalyticsInstance = ({
 	});
 
 	return analytics as AnalyticsInstance;
+};
+
+export const createStubAnalyticsInstance = () => {
+	return Analytics({
+		app: 'pubpub',
+		debug: true,
+		plugins: [stubPlugin()],
+	});
 };

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { AnalyticsType } from 'types';
 import { usePage, useTrack } from 'use-analytics';
+import { stubPlugin } from './plugin';
 
 type Tracks = {
 	type: 'download';
@@ -43,8 +44,8 @@ type PageViewPage = PageViewPayloadBase & {
 export type PageViewPayload = PageViewPub | PageViewCollection | PageViewPage;
 
 type Analytics = {
-	track: <T extends Tracks>(event: T['type'], data: T['payload']) => void;
-	page: <Payload extends PageViewPayload>(
+	track: (<T extends Tracks>(event: T['type'], data: T['payload']) => void) & { stub?: true };
+	page: (<Payload extends PageViewPayload>(
 		payload?: Payload,
 		options?: {
 			plugins: {
@@ -52,7 +53,7 @@ type Analytics = {
 				'analytics-plugin'?: boolean;
 			} & { [K in AnalyticsType]?: boolean };
 		},
-	) => void;
+	) => void) & { stub?: true };
 };
 
 export const useAnalytics = () => {
@@ -60,9 +61,10 @@ export const useAnalytics = () => {
 	const track = useTrack();
 
 	if (typeof window === 'undefined') {
+		const { track, page } = stubPlugin();
 		return {
-			track: () => {},
-			page: () => {},
+			track,
+			page,
 		} as Analytics;
 	}
 
@@ -109,17 +111,25 @@ export const usePageOnce = (
 	const toBeSentPayload = typeof payload === 'function' ? payload() : payload;
 
 	useEffect(() => {
+		// this is the stub call
+		if (calls === 0) {
+			setCalls((currentCalls) => currentCalls + 1);
+			return;
+		}
+
 		if (toBeSentPayload === null) {
 			return;
 		}
 
-		if (calls > 1 || (calls === 1 && !gdprConsent)) {
+		if (calls > 2 || (calls === 2 && !gdprConsent)) {
 			return;
 		}
 
-		if (calls === 0) {
+		// first actual call
+		if (calls === 1) {
 			page(toBeSentPayload, {
 				plugins: {
+					// if users do not consent to Google Analytics, we don't want to send the page view
 					'google-analytics': Boolean(gdprConsent),
 				},
 			});
@@ -127,7 +137,9 @@ export const usePageOnce = (
 			return;
 		}
 
-		if (calls === 1 && gdprConsent) {
+		// user has accepted the GDPR banner, so send the page view to Google Analytics if not done so already
+		// TODO: if the page rerenders after the user has accepted the GDPR banner, we will send the page view twice, not good
+		if (calls === 2 && gdprConsent) {
 			page(toBeSentPayload, {
 				plugins: {
 					all: false,
@@ -137,5 +149,5 @@ export const usePageOnce = (
 			setCalls((currentRenders) => currentRenders + 1);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [Boolean(gdprConsent)]);
+	}, [page, Boolean(gdprConsent)]);
 };
