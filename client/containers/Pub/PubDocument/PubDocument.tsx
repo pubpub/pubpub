@@ -8,6 +8,9 @@ import {
 	Mode as PubEdgeMode,
 } from 'components/PubEdgeListing';
 import { useFacetsQuery } from 'client/utils/useFacets';
+import { usePageOnce } from 'utils/analytics/useAnalytics';
+import { chooseCollectionForPub } from 'client/utils/collections';
+import { getPrimaryCollection } from 'utils/collections/primary';
 
 import { usePubContext } from '../pubHooks';
 import { usePermalinkOnMount } from '../usePermalinkOnMount';
@@ -34,7 +37,7 @@ const PubDocument = () => {
 		pubBodyState: { isReadOnly, hidePubBody },
 	} = usePubContext();
 	const { isViewingHistory } = historyData;
-	const { communityData, scopeData, featureFlags } = usePageContext();
+	const { communityData, scopeData, featureFlags, locationData, gdprConsent } = usePageContext();
 	const pubEdgeDisplay = useFacetsQuery((F) => F.PubEdgeDisplay);
 	const { canEdit, canEditDraft } = scopeData.activePermissions;
 	const { isReviewingPub } = pubData;
@@ -46,6 +49,29 @@ const PubDocument = () => {
 	usePubHrefs({ enabled: !isReadOnly });
 
 	const showPubFileImport = (canEdit || canEditDraft) && !isReadOnly;
+
+	const uniqueCollectionIds = Array.from(
+		new Set((pubData.collectionPubs ?? []).map((cp) => cp.collectionId)),
+	);
+	const collection = chooseCollectionForPub(pubData, locationData);
+
+	usePageOnce(
+		{
+			type: 'pub',
+			communityId: pubData.communityId,
+			communityName: communityData.title,
+			title: pubData.title,
+			pubSlug: pubData.slug,
+			pubId: pubData.id,
+			pubTitle: pubData.title,
+			collectionIds: uniqueCollectionIds,
+			collectionId: collection?.id,
+			collectionTitle: collection?.title,
+			collectionSlug: collection?.slug,
+			primaryCollectionId: getPrimaryCollection(pubData?.collectionPubs)?.id,
+		},
+		gdprConsent,
+	);
 
 	if (hidePubBody) {
 		return null;

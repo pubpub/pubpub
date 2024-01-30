@@ -14,7 +14,7 @@ import {
 	HasMany,
 } from 'sequelize-typescript';
 import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
+import type { AnalyticsSettings, SerializedModel } from 'types';
 import { CommunityHeaderLink, CommunityHeroButton, CommunityNavigationEntry } from 'types';
 import {
 	Organization,
@@ -191,6 +191,10 @@ export class Community extends Model<
 	// TODO: Add validation for defaultPubCollections
 	@Column(DataType.JSONB)
 	declare defaultPubCollections: string[] | null;
+
+	@Default(null)
+	@Column(DataType.JSONB)
+	declare analyticsSettings: CreationOptional<AnalyticsSettings | null>;
 
 	@Column(DataType.UUID)
 	declare spamTagId: string | null;
