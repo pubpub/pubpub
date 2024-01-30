@@ -10,7 +10,6 @@ const crypto = require('crypto');
 const cryptoCreateHash = crypto.createHash;
 crypto.createHash = (algorithm) => cryptoCreateHash(algorithm === 'md4' ? 'sha256' : algorithm);
 
-/** @type {import('webpack').Configuration} */
 module.exports = {
 	mode: 'development',
 	entry: {
@@ -45,9 +44,9 @@ module.exports = {
 		assets: false,
 		children: false,
 		timings: true,
-		chunks: false,
-		chunkModules: false,
-		entrypoints: false,
+		chunks: true,
+		chunkModules: true,
+		entrypoints: true,
 		modules: false,
 	},
 	module: {
