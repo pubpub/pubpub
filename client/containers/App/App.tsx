@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
 import { AnalyticsProvider } from 'use-analytics';
@@ -55,6 +55,16 @@ const App = (props: Props) => {
 		pageContextProps;
 
 	const { analyticsSettings } = communityData;
+
+	useEffect(() => {
+		import(
+			// /* webpackChunkName: "dist/@analytics/google-analytics" */
+			'@analytics/google-analytics'
+		).then(({ default: googleAnalytics }) => {
+			console.log('Loaded Google Analytics plugin');
+			console.log(googleAnalytics);
+		});
+	}, []);
 
 	// TODO: figure out some way to lazy load plugins
 	const analyticsInstance = createAnalyticsInstance({

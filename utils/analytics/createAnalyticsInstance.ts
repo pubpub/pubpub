@@ -1,7 +1,7 @@
 // @ts-expect-error FIXME: types from @analytics/core are not bundled properly
 import { Analytics } from '@analytics/core';
 import type { AnalyticsInstance } from 'analytics';
-import googleAnalyticsPlugin from '@analytics/google-analytics';
+// import googleAnalyticsPlugin from '@analytics/google-analytics';
 import simpleAnalyticsPlugin from '@analytics/simple-analytics';
 import type { AnalyticsSettings } from 'types';
 import { analyticsPlugin, stubPlugin } from './plugin';
@@ -37,17 +37,17 @@ const getPluginsForType = ({
 			);
 			break;
 		}
-		case 'google-analytics': {
-			if (googleAnalyticsRefused) {
-				break;
-			}
-			analyticsPlugins.push(
-				googleAnalyticsPlugin({
-					measurementIds: [analyticsSettings.credentials],
-				}),
-			);
-			break;
-		}
+		// case 'google-analytics': {
+		// 	if (googleAnalyticsRefused) {
+		// 		break;
+		// 	}
+		// 	analyticsPlugins.push(
+		// 		googleAnalyticsPlugin({
+		// 			measurementIds: [analyticsSettings.credentials],
+		// 		}),
+		// 	);
+		// 	break;
+		// }
 		default:
 			break;
 	}

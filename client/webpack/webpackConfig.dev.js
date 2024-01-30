@@ -10,6 +10,7 @@ const crypto = require('crypto');
 const cryptoCreateHash = crypto.createHash;
 crypto.createHash = (algorithm) => cryptoCreateHash(algorithm === 'md4' ? 'sha256' : algorithm);
 
+/** @type {import('webpack').Configuration} */
 module.exports = {
 	mode: 'development',
 	entry: {
@@ -34,8 +35,9 @@ module.exports = {
 	output: {
 		filename: '[name].js',
 		path: resolve(__dirname, '../../dist/client'),
-		publicPath: '/',
+		publicPath: '/dist/',
 		hashFunction: 'sha256',
+		chunkFilename: '[name].bundle.js',
 	},
 	stats: {
 		colors: true,
@@ -111,20 +113,20 @@ module.exports = {
 		// Allow shared utils to import the sentry/node package by replacing it in the webpack build
 		new webpack.NormalModuleReplacementPlugin(/@sentry\/node/, '@sentry/react'),
 	],
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				vendors: {
-					// TODO: bundle components into vendor, I think...
-					// test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
-					test: /([\\/]node_modules[\\/])/,
-					name: 'vendor',
-					chunks: 'all',
-					// minChunks: 2,
-				},
-			},
-		},
-	},
+	// optimization: {
+	// 	splitChunks: {
+	// 		cacheGroups: {
+	// 			vendors: {
+	// 				// TODO: bundle components into vendor, I think...
+	// 				// test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
+	// 				test: /([\\/]node_modules[\\/])/,
+	// 				name: 'vendor',
+	// 				chunks: 'all',
+	// 				// minChunks: 2,
+	// 			},
+	// 		},
+	// 	},
+	// },
 	node: {
 		net: 'empty',
 		tls: 'empty',
