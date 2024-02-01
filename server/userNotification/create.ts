@@ -13,6 +13,7 @@ import { filterUsersWhoCanSeeThread } from 'server/thread/queries';
 import { expect } from 'utils/assert';
 import { getPPLic } from 'utils/caching/getHashedUserId';
 import { createCachePurgeDebouncer } from 'utils/caching/createCachePurgeDebouncer';
+import { shouldntPurge } from 'utils/caching/skipPurgeConditions';
 
 type ActivityItemResponder<Kind extends types.ActivityItemKind> = (
 	item: types.ActivityItemOfKind<Kind>,
@@ -106,10 +107,14 @@ const createNotificationsForThreadComment = async (
 
 	await Promise.all(
 		users.map(async (user) => {
+			if (shouldntPurge('true')) {
+				return;
+			}
+
 			// we need to purge the user pages they see if they're logged in
 			const lic = getPPLic(user);
 
-			return schedulePurge(lic);
+			await schedulePurge(lic);
 		}),
 	);
 };
