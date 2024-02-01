@@ -30,7 +30,7 @@ export const thirdPartyPlugins = {
 		key: 'simple-analytics',
 		name: 'Simple Analytics',
 		needsGdprConsent: false,
-		load: (_credentials) =>
+		load: () =>
 			import(
 				/* webpackChunkName: "@analytics/simple-analytics" */
 				'@analytics/simple-analytics'

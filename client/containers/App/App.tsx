@@ -1,13 +1,10 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
 import { AnalyticsProvider } from 'use-analytics';
 
-import {
-	createAnalyticsInstance,
-	createInitialAnalyticsInstance,
-} from 'utils/analytics/createAnalyticsInstance';
 import { shouldUseNewAnalytics, canUseCustomAnalyticsProvider } from 'utils/analytics/featureFlags';
+import { useLazyLoadedAnalyticsInstance } from 'utils/analytics/useLazyLoadedAnalyticsInstance';
 
 import {
 	Header,
@@ -41,7 +38,6 @@ import SpamBanner from './SpamBanner';
 
 import getPaths from './paths';
 import { usePageState } from './usePageState';
-import { useLazyLoadedAnalyticsInstance } from 'utils/analytics/useLazyLoadedAnalyticsInstance';
 
 require('../../styles/base.scss');
 require('./app.scss');
