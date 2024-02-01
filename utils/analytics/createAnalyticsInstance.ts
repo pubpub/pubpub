@@ -1,21 +1,24 @@
+// we use @analytics/core instead of analytics to avoid setting cookies
 // @ts-expect-error FIXME: types from @analytics/core are not bundled properly
 import { Analytics } from '@analytics/core';
 import type { AnalyticsInstance } from 'analytics';
 import type { AnalyticsSettings } from 'types';
 import { analyticsPlugin, stubPlugin } from './plugin';
+import { thirdPartyPlugins, thirdPartyPluginsThatNeedGdprConsent } from './thirdPartyPlugins';
 
-// TODO: lazy load the plugins. Might be hard as they are needed when the page first loads, forcing a lot of rerenders
-const getPluginsForType = async ({
+const loadAnalyticsPlugins = async ({
 	shouldStub,
 	canUseCustomAnalyticsProvider,
-	googleAnalyticsRefused,
+	gdprConsent,
 	analyticsSettings,
 }: {
 	shouldStub?: boolean;
-	googleAnalyticsRefused?: boolean;
+	gdprConsent?: boolean | null;
 	canUseCustomAnalyticsProvider?: boolean;
 	analyticsSettings: AnalyticsSettings;
 }) => {
+	const { type = null, credentials = null } = analyticsSettings ?? {};
+
 	if (shouldStub) {
 		return [stubPlugin()];
 	}
@@ -26,42 +29,42 @@ const getPluginsForType = async ({
 		return analyticsPlugins;
 	}
 
-	switch (analyticsSettings?.type) {
-		case 'simple-analytics': {
-			const { default: simpleAnalyticsPlugin } = await import(
-				/* webpackChunkName: "@analytics/simple-analytics" */
-				'@analytics/simple-analytics'
-			);
-
-			analyticsPlugins.push(
-				simpleAnalyticsPlugin({
-					autoCollect: false,
-				}),
-			);
-			break;
-		}
-		case 'google-analytics': {
-			if (googleAnalyticsRefused) {
-				break;
-			}
-
-			const { default: googleAnalyticsPlugin } = await import(
-				/* webpackChunkName: "@analytics/google-analytics" */
-				'@analytics/google-analytics'
-			);
-
-			analyticsPlugins.push(
-				googleAnalyticsPlugin({
-					measurementIds: [analyticsSettings.credentials],
-				}),
-			);
-			break;
-		}
-		default:
-			break;
+	if (!type) {
+		return analyticsPlugins;
 	}
 
-	return analyticsPlugins;
+	const provider = thirdPartyPlugins[type];
+	if (!provider) {
+		throw new Error(`Unknown analytics provider: ${type}`);
+	}
+
+	if (provider.needsGdprConsent && !gdprConsent) {
+		return analyticsPlugins;
+	}
+
+	const loadedPlugin = await provider.load(credentials);
+
+	return [...analyticsPlugins, loadedPlugin];
+};
+
+export const setGdprSensitivePlugins = async (
+	analytics: AnalyticsInstance,
+	gdprConsent?: boolean | null,
+) => {
+	const { plugins } = analytics.getState();
+
+	if (!thirdPartyPluginsThatNeedGdprConsent.some((plugin) => plugin in plugins)) {
+		return;
+	}
+
+	await Promise.all(
+		thirdPartyPluginsThatNeedGdprConsent.map((pluginName) => {
+			if (gdprConsent) {
+				return analytics.plugins.enable(pluginName);
+			}
+			return analytics.plugins.disable(pluginName, () => {});
+		}),
+	);
 };
 
 export const createAnalyticsInstance = async ({
@@ -77,28 +80,34 @@ export const createAnalyticsInstance = async ({
 	gdprConsent?: boolean | null;
 	analyticsSettings: AnalyticsSettings;
 }) => {
-	const googleAnalyticsRefused = analyticsSettings?.type === 'google-analytics' && !gdprConsent;
-
-	const plugins = await getPluginsForType({
+	const plugins = await loadAnalyticsPlugins({
 		shouldStub: !shouldUseNewAnalytics,
 		canUseCustomAnalyticsProvider,
-		googleAnalyticsRefused,
 		analyticsSettings,
+		gdprConsent,
 	});
 
 	const analytics = Analytics({
 		app: appname,
 		debug: true,
 		plugins,
-	});
+	}) as AnalyticsInstance;
 
-	return analytics as AnalyticsInstance;
+	await setGdprSensitivePlugins(analytics, gdprConsent);
+
+	return analytics;
 };
 
-export const createStubAnalyticsInstance = () => {
-	return Analytics({
+export const createInitialAnalyticsInstance = (shouldUseNewAnalytics = true) => {
+	const initialAnalyticsPluginToUse = shouldUseNewAnalytics ? analyticsPlugin() : stubPlugin();
+
+	const stubInstance = Analytics({
 		app: 'pubpub',
 		debug: true,
-		plugins: [stubPlugin()],
+		plugins: [initialAnalyticsPluginToUse],
 	});
+
+	stubInstance.isStub = true;
+
+	return stubInstance as AnalyticsInstance & { isStub: true };
 };

@@ -5,7 +5,7 @@ import { AnalyticsProvider } from 'use-analytics';
 
 import {
 	createAnalyticsInstance,
-	createStubAnalyticsInstance,
+	createInitialAnalyticsInstance,
 } from 'utils/analytics/createAnalyticsInstance';
 import { shouldUseNewAnalytics, canUseCustomAnalyticsProvider } from 'utils/analytics/featureFlags';
 
@@ -41,6 +41,7 @@ import SpamBanner from './SpamBanner';
 
 import getPaths from './paths';
 import { usePageState } from './usePageState';
+import { useLazyLoadedAnalyticsInstance } from 'utils/analytics/useLazyLoadedAnalyticsInstance';
 
 require('../../styles/base.scss');
 require('./app.scss');
@@ -59,18 +60,12 @@ const App = (props: Props) => {
 
 	const { analyticsSettings } = communityData;
 
-	const [analyticsInstance, setAnalyticsInstance] = useState(createStubAnalyticsInstance());
-
-	useEffect(() => {
-		createAnalyticsInstance({
-			shouldUseNewAnalytics: shouldUseNewAnalytics(featureFlags),
-			canUseCustomAnalyticsProvider: canUseCustomAnalyticsProvider(featureFlags),
-			analyticsSettings,
-			gdprConsent,
-		}).then((newAnalyticsInstance) => {
-			setAnalyticsInstance(newAnalyticsInstance);
-		});
-	}, []);
+	const analyticsInstance = useLazyLoadedAnalyticsInstance({
+		shouldUseNewAnalytics: shouldUseNewAnalytics(featureFlags),
+		canUseCustomAnalyticsProvider: canUseCustomAnalyticsProvider(featureFlags),
+		analyticsSettings,
+		gdprConsent,
+	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
 	const { ActiveComponent, hideNav, hideFooter, hideHeader, isDashboard } = pathObject;
