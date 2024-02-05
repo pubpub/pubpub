@@ -4,6 +4,18 @@ export const baseSchema = z.object({
 	type: z.enum(['page', 'track']),
 	event: z.string(),
 	timestamp: z.number(),
+	referrer: z.string().nullish(),
+	unique: z.boolean().optional(),
+	search: z.string().optional(),
+	utm_source: z.string().optional(),
+	utm_medium: z.string().optional(),
+	utm_campaign: z.string().optional(),
+	utm_term: z.string().optional(),
+	utm_content: z.string().optional(),
+	timezone: z.string(),
+	locale: z.string(),
+	userAgent: z.string(),
+	os: z.string(),
 });
 
 export const basePageViewSchema = baseSchema.merge(
@@ -15,18 +27,6 @@ export const basePageViewSchema = baseSchema.merge(
 		height: z.number().int(),
 		width: z.number().int(),
 		path: z.string().optional(),
-		referrer: z.string().nullish(),
-		unique: z.boolean().optional(),
-		search: z.string().optional(),
-		utm_source: z.string().optional(),
-		utm_medium: z.string().optional(),
-		utm_campaign: z.string().optional(),
-		utm_term: z.string().optional(),
-		utm_content: z.string().optional(),
-		timezone: z.string(),
-		locale: z.string(),
-		userAgent: z.string(),
-		os: z.string(),
 	}),
 );
 
@@ -76,16 +76,26 @@ export const pageViewPayloadSchema = z.discriminatedUnion('event', [
 
 export const pageViewSchema = pageViewPayloadSchema.and(basePageViewSchema);
 
-export const pubDownloadPayloadSchema = z.object({
+export const pubDownloadTrackPayloadSchema = z.object({
 	format: z.string(),
 	pubId: z.string().uuid(),
 });
 
-export const pubDownloadSchema = baseSchema.merge(
-	pubDownloadPayloadSchema.extend({
-		type: z.literal('track'),
-		event: z.literal('download'),
-	}),
-);
+export const pubDownloadTrackSchema = pubDownloadTrackPayloadSchema.extend({
+	type: z.literal('track'),
+	event: z.literal('download'),
+});
 
-export const analyticsEventSchema = z.union([pubDownloadSchema, pageViewSchema]);
+// this is just here to set up the discriminated union, can't have a union of one
+export const stubTrackPayloadSchema = z.object({});
+
+export const stubTrackSchema = z.object({
+	type: z.literal('track'),
+	event: z.literal('stub'),
+});
+
+export const trackSchema = z.discriminatedUnion('event', [pubDownloadTrackSchema, stubTrackSchema]);
+
+export const trackSchemaFull = baseSchema.and(trackSchema);
+
+export const analyticsEventSchema = z.union([trackSchemaFull, pageViewSchema]);
