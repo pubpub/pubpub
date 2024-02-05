@@ -3,11 +3,6 @@ import { isQubQub } from 'utils/environment';
 export const isntProdOrTest = () =>
 	process.env.NODE_ENV !== 'production' && !process.env.TEST_FASTLY_PURGE;
 
-/**
- * Check if we should skip purging Fastly
- *
- * Mostly useful to avoid creating excessive deferred tasks during tests
- */
 export const shouldntPurge = (tag?: string) => {
 	const qubqub = isQubQub();
 	const skip = isntProdOrTest();
