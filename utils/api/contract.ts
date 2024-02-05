@@ -29,7 +29,7 @@ const c = initContract();
 const router = {
 	/** Methods for dealing with authentication */
 	auth: authRouter as AuthRouter,
-  /** @internal */
+	/** @internal */
 	authToken: authTokenRouter as AuthTokenRouter,
 	/** @internal */
 	analytics: analyticsRouter as AnalyticsRouter,
