@@ -41,9 +41,7 @@ export const analyticsServer = s.router(contract.analytics, {
 			},
 		],
 		handler: async ({ body: payload }) => {
-			await sendToStitch({
-				payload,
-			});
+			await sendToStitch(payload);
 
 			return {
 				status: 204,
