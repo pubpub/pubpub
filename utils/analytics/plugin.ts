@@ -27,7 +27,7 @@ const sendData = ({ payload }: { payload: any }) => {
 	if (!globalThis.navigator || typeof globalThis?.navigator?.sendBeacon !== 'function') {
 		return;
 	}
-  
+
 	const {
 		event,
 		type,
@@ -37,7 +37,7 @@ const sendData = ({ payload }: { payload: any }) => {
 	// we use navigator.sendBeacon to make sure the request is sent even if the user navigates away from the page
 	// and doesn't block the rest of the page
 	navigator.sendBeacon(
-    ANALYTICS_ENDPOINT,
+		ANALYTICS_ENDPOINT,
 		JSON.stringify({ event, type, timestamp: ts, ...properties, ...getReferrerAndUnique() }),
 	);
 };
