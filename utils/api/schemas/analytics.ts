@@ -18,15 +18,15 @@ export const basePageViewSchema = baseSchema.merge(
 		referrer: z.string().nullish(),
 		unique: z.boolean().optional(),
 		search: z.string().optional(),
-		utm: z
-			.object({
-				source: z.string().optional(),
-				medium: z.string().optional(),
-				campaign: z.string().optional(),
-				term: z.string().optional(),
-				content: z.string().optional(),
-			})
-			.optional(),
+		utm_source: z.string().optional(),
+		utm_medium: z.string().optional(),
+		utm_campaign: z.string().optional(),
+		utm_term: z.string().optional(),
+		utm_content: z.string().optional(),
+		timezone: z.string(),
+		locale: z.string(),
+		userAgent: z.string(),
+		os: z.string(),
 	}),
 );
 

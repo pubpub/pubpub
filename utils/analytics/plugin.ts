@@ -1,5 +1,5 @@
 /* eslint-disable no-undef, import/no-unresolved */
-import { type AnalyticsPlugin } from 'analytics';
+import { AnalyticsInstance, type AnalyticsPlugin } from 'analytics';
 
 const ANALYTICS_ENDPOINT = '/api/analytics/track' as const;
 
@@ -22,11 +22,23 @@ const getReferrerAndUnique = () => {
 	return { referrer: document.referrer, unique: referrerUrl.origin === currentUrl.origin };
 };
 
-const sendData = ({ payload }: { payload: any }) => {
+const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
+	const { payload, instance } = data;
+
 	// we don't want to track page renders on the server, as we cache most pages
 	if (!globalThis.navigator || typeof globalThis?.navigator?.sendBeacon !== 'function') {
 		return;
 	}
+
+	const { context } = instance.getState();
+
+	const {
+		timezone,
+		os: { name: os },
+		locale,
+		campaign,
+		userAgent,
+	} = context;
 
 	const {
 		event,
@@ -34,11 +46,32 @@ const sendData = ({ payload }: { payload: any }) => {
 		meta: { ts },
 		properties,
 	} = payload;
+
+	const utmCampaign =
+		campaign &&
+		Object.fromEntries(
+			Object.entries(campaign).map(([key, value]) => [
+				`utm_${key === 'name' ? 'campaign' : key}`,
+				value,
+			]),
+		);
+
 	// we use navigator.sendBeacon to make sure the request is sent even if the user navigates away from the page
 	// and doesn't block the rest of the page
 	navigator.sendBeacon(
 		ANALYTICS_ENDPOINT,
-		JSON.stringify({ event, type, timestamp: ts, ...properties, ...getReferrerAndUnique() }),
+		JSON.stringify({
+			event,
+			type,
+			timestamp: ts,
+			timezone,
+			locale,
+			userAgent,
+			os,
+			...properties,
+			...getReferrerAndUnique(),
+			...utmCampaign,
+		}),
 	);
 };
 
