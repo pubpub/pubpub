@@ -2,7 +2,6 @@ import type { z } from 'zod';
 import type {
 	analyticsEventSchema,
 	pageViewPayloadSchema,
-	pubDownloadTrackSchema,
 	pageViewSchema,
 	pubDownloadTrackPayloadSchema,
 	trackSchema,
