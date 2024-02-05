@@ -61,6 +61,7 @@ const App = (props: Props) => {
 		canUseCustomAnalyticsProvider: canUseCustomAnalyticsProvider(featureFlags),
 		analyticsSettings,
 		gdprConsent,
+		locationData,
 	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
