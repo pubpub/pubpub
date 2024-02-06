@@ -13,7 +13,7 @@ const ANALYTICS_ENDPOINT = '/api/analytics/track' as const;
  */
 const getReferrerAndUnique = () => {
 	if (!document.referrer) {
-		return { referrer: null, unique: false };
+		return { referrer: null, unique: true };
 	}
 
 	const referrerUrl = new URL(document.referrer);
