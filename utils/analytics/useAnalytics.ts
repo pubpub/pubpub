@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { AnalyticsType } from 'types';
-import { PageViewPayload, Track } from 'types/analytics';
 import { usePage, useTrack } from 'use-analytics';
+import type { AnalyticsType } from 'types';
+import type { PageViewPayload, Track } from 'utils/api/schemas/analytics';
 
 type Analytics = {
 	track: <T extends Track>(event: T['event'], data: Omit<T, 'type' | 'event'>) => void;

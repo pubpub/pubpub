@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import type { Prettify } from 'types/util';
+
 export const baseSchema = z.object({
 	type: z.enum(['page', 'track']),
 	event: z.string(),
@@ -99,3 +101,17 @@ export const trackSchema = z.discriminatedUnion('event', [pubDownloadTrackSchema
 export const trackSchemaFull = baseSchema.and(trackSchema);
 
 export const analyticsEventSchema = z.union([trackSchemaFull, pageViewSchema]);
+
+export type AnalyticsEvent = z.infer<typeof analyticsEventSchema>;
+
+export type PageViewPayload = z.infer<typeof pageViewPayloadSchema>;
+
+export type PageView = z.infer<typeof pageViewSchema>;
+
+export type PubDownloadPayload = z.infer<typeof pubDownloadTrackPayloadSchema>;
+
+export type Track = z.infer<typeof trackSchema>;
+
+export type TrackPayload<T extends Track = Track> = T extends any
+	? Prettify<Omit<T, 'event' | 'type'>>
+	: never;

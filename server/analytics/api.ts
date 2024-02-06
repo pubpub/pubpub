@@ -3,9 +3,9 @@
 import { getCountryForTimezone } from 'countries-and-timezones';
 import { initServer } from '@ts-rest/express';
 import express from 'express';
-import { AnalyticsEvent } from 'types/analytics';
 
 import { contract } from 'utils/api/contract';
+import type { AnalyticsEvent } from 'utils/api/schemas/analytics';
 
 const s = initServer();
 
