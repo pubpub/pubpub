@@ -19,7 +19,7 @@ const getReferrerAndUnique = () => {
 	const referrerUrl = new URL(document.referrer);
 	const currentUrl = new URL(window.location.href);
 
-	return { referrer: document.referrer, unique: referrerUrl.origin === currentUrl.origin };
+	return { referrer: document.referrer, unique: referrerUrl.origin !== currentUrl.origin };
 };
 
 const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
