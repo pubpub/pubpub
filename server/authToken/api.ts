@@ -67,7 +67,7 @@ export const authTokenServer = s.router(contract.authToken, {
 	},
 
 	removeByToken: async ({ body: { token }, req: { user } }) => {
-		if (user?.isSuperAdmin) {
+		if (!user?.isSuperAdmin) {
 			throw new ForbiddenError(new Error('User is not a superadmin'));
 		}
 
