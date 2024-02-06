@@ -9,7 +9,7 @@ import {
 	resolveLayoutPubsByBlock,
 } from 'utils/layout';
 import { usePageContext } from 'utils/hooks';
-import { assert } from 'utils/assert';
+import { assert, expect } from 'utils/assert';
 import { usePageOnce } from 'utils/analytics/usePageOnce';
 
 import LayoutPubs from './LayoutPubs';
@@ -49,7 +49,7 @@ const Layout = (props: Props) => {
 				collectionId: collection.id,
 				collectionTitle: collection.title,
 				collectionSlug: collection.slug,
-				collectionKind: collection.kind,
+				collectionKind: expect(collection.kind),
 				communityName: communityData.title,
 			};
 		}
