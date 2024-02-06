@@ -121,6 +121,7 @@ import { fromZodError } from 'zod-validation-error';
 import { schedulePurge } from 'utils/caching/schedulePurgeWithSentry';
 
 import { bearerStrategy } from './authToken/strategy';
+import { authTokenMiddleware } from './authToken/authTokenMiddleware';
 
 const SequelizeStore = CreateSequelizeStore(session.Store);
 
@@ -201,33 +202,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use(async (req, res, next) => {
-	if (!req.path.includes('/api')) {
-		return next();
-	}
-
-	if (req.user != null) {
-		return next();
-	}
-
-	try {
-		const authenticate = new Promise((resolve, reject) => {
-			passport.authenticate('bearer', (authErr: Error, user: any) => {
-				if (authErr) {
-					return reject(authErr);
-				}
-				return resolve(user);
-			})(req, res);
-		});
-
-		const user = await authenticate;
-		req.user = user;
-
-		return next();
-	} catch (err) {
-		return next(err);
-	}
-});
+app.use(authTokenMiddleware);
 
 /** Set up purge middleware before api routes are initialized and after hostname is set */
 app.use(purgeMiddleware(schedulePurge));
