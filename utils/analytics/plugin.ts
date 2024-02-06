@@ -47,14 +47,16 @@ const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
 		properties,
 	} = payload;
 
-	const utmCampaign =
-		campaign &&
-		Object.fromEntries(
-			Object.entries(campaign).map(([key, value]) => [
-				`utm_${key === 'name' ? 'campaign' : key}`,
-				value,
-			]),
-		);
+	const utmCampaign = campaign
+		? Object.fromEntries(
+				Object.entries(campaign).map(([key, value]) => [
+					`utm${
+						key === 'name' ? 'Campaign' : key.charAt(0).toUpperCase() + key.slice(1)
+					}`,
+					value,
+				]),
+		  )
+		: {};
 
 	// we use navigator.sendBeacon to make sure the request is sent even if the user navigates away from the page
 	// and doesn't block the rest of the page
