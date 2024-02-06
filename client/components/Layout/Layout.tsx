@@ -9,8 +9,8 @@ import {
 	resolveLayoutPubsByBlock,
 } from 'utils/layout';
 import { usePageContext } from 'utils/hooks';
-import { usePageOnce } from 'utils/analytics/useAnalytics';
-import { assert, expect } from 'utils/assert';
+import { assert } from 'utils/assert';
+import { usePageOnce } from 'utils/analytics/usePageOnce';
 
 import LayoutPubs from './LayoutPubs';
 import LayoutHtml from './LayoutHtml';
@@ -49,7 +49,7 @@ const Layout = (props: Props) => {
 				collectionId: collection.id,
 				collectionTitle: collection.title,
 				collectionSlug: collection.slug,
-				collectionKind: expect(collection.kind),
+				collectionKind: collection.kind,
 				communityName: communityData.title,
 			};
 		}
