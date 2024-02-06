@@ -5,31 +5,34 @@ const models = modelize`
        Member {
             permissions: "admin"
             User communityAdmin {
-                id: "430cf446-f220-4e51-b6ba-68def3f5a8b5"
+            	id: "430cf446-f220-4e51-b6ba-68def3f5a8b5"
+				AuthToken adminToken {
+					expiresAt: null
+				}
+				AuthToken expiredToken {
+					expiresAt: "2021-01-01T00:00:00.000Z"
+				}
             }
-       }
-
-       AuthToken adminToken {
-            expiresAt: null
-            userId: "430cf446-f220-4e51-b6ba-68def3f5a8b5"
-       }
-
-       AuthToken expiredToken {
-            expiresAt: "2021-01-01T00:00:00.000Z"
-            userId: "430cf446-f220-4e51-b6ba-68def3f5a8b5"
        }
 
        Member {
             permissions: "manage"
             User communityManager {
                 id: "930cf446-f220-4e51-b6ba-68def3f5a8b5"
+				AuthToken manageToken {
+					expiresAt: null
+				}
             }
        }
 
-       AuthToken manageToken {
-            expiresAt: null
-            userId: "930cf446-f220-4e51-b6ba-68def3f5a8b5"
-       }
+	   Member {
+			permissions: "admin"
+			User anotherAdmin {
+				AuthToken anotherToken {
+					expiresAt: null
+				}
+			}
+	   }
     }
 
     Community anotherCommunity {
@@ -37,14 +40,16 @@ const models = modelize`
             permissions: "admin"
             User anotherCommunityAdmin {
                 id: "530cf446-f220-4e51-b6ba-68def3f5a8b5"
+				AuthToken anotherAuthToken {
+					expiresAt: null
+				}
             }
         }
-
-        AuthToken anotherAuthToken {
-            expiresAt: null
-            userId: "530cf446-f220-4e51-b6ba-68def3f5a8b5"
-        }
     }
+
+	User superAdmin {
+		isSuperAdmin: true
+	}
 `;
 
 setup(beforeAll, async () => {
@@ -143,11 +148,34 @@ describe('authToken', () => {
 			.expect(200);
 	});
 
-	test.todo(
-		'users should always we able to remove their own tokens, even if they are no longer admins',
-	);
+	it('users should always we able to remove their own tokens, even if they are not/no longer admins', async () => {
+		const { communityManager, manageToken } = models;
 
-	test.todo('admins should not be able to remove tokens from other users');
+		const agent = await login(communityManager);
 
-	test.todo('superadmins should be able to revoke tokens');
+		await agent
+			.delete(`/api/authTokens/${manageToken.id}`)
+			.set('Host', `${communityManager.subdomain}.pubpub.org`)
+			.expect(200);
+	});
+
+	it('admins should not be able to remove tokens from other users', async () => {
+		const { communityAdmin, community, anotherToken } = models;
+
+		const agent = await login(communityAdmin);
+
+		await agent
+			.delete(`/api/authTokens/${anotherToken.id}`)
+			.set('Host', `${community.subdomain}.pubpub.org`)
+			// 404 is thrown because token lookup is by id and user id
+			.expect(404);
+	});
+
+	it('superadmins should be able to revoke any token', async () => {
+		const { superAdmin, expiredToken } = models;
+
+		const agent = await login(superAdmin);
+
+		await agent.delete(`/api/authTokens`).send({ token: expiredToken.token }).expect(200);
+	});
 });
