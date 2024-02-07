@@ -41,16 +41,21 @@ const Layout = (props: Props) => {
 			return null;
 		}
 
+		const base = {
+			communityId: communityData.id,
+			communityName: communityData.title,
+			communitySubdomain: communityData.subdomain,
+		};
+
 		if (collection) {
 			return {
 				event: 'collection' as const,
-				communityId: collection.communityId,
 				title: collection.title,
 				collectionId: collection.id,
 				collectionTitle: collection.title,
 				collectionSlug: collection.slug,
 				collectionKind: expect(collection.kind),
-				communityName: communityData.title,
+				...base,
 			};
 		}
 
@@ -58,11 +63,10 @@ const Layout = (props: Props) => {
 
 		return {
 			event: 'page' as const,
-			communityId: communityData.id,
-			communityName: communityData.title,
 			pageSlug: pageData.slug,
 			pageTitle: pageData.title,
 			pageId: pageData.id,
+			...base,
 		};
 	}, gdprConsent);
 
