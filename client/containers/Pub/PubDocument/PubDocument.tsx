@@ -70,6 +70,7 @@ const PubDocument = () => {
 			communityId: pubData.communityId,
 			communityName: communityData.title,
 			communitySubdomain: communityData.subdomain,
+			isProd: locationData.isProd,
 		},
 		gdprConsent,
 	);

@@ -25,6 +25,7 @@ export const sharedEventPayloadSchema = z.object({
 	communityId: z.string().uuid(),
 	communitySubdomain: z.string(),
 	communityName: z.string(),
+	isProd: z.boolean(),
 });
 
 export const basePageViewSchema = baseSchema.merge(
