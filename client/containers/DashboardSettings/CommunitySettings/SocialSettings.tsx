@@ -31,7 +31,7 @@ const SocialSettings = (props: Props) => {
 				label="Twitter"
 				type="text"
 				value={twitter}
-				helperText={`https://twitter.com/${twitter}`}
+				helperText={`https://twitter.com/${twitter ?? '<your twitter hanlde>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ twitter: evt.target.value });
 				}}
@@ -40,7 +40,7 @@ const SocialSettings = (props: Props) => {
 				label="Instagram"
 				type="text"
 				value={instagram}
-				helperText={`https://instagram.com/${instagram}`}
+				helperText={`https://instagram.com/${instagram ?? '<your instagram handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ instagram: evt.target.value });
 				}}
@@ -49,7 +49,7 @@ const SocialSettings = (props: Props) => {
 				label="Mastodon"
 				type="text"
 				value={mastodon}
-				helperText={`${mastodon}`}
+				helperText={mastodon ?? '<Mastodon instance URL>/@<handle>'}
 				onChange={(evt) => {
 					updateCommunityData({ mastodon: evt.target.value });
 				}}
