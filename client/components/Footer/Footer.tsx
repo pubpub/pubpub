@@ -255,7 +255,6 @@ const Footer = (props: Props) => {
 					{!!socialItems.length && (
 						<ul className="social-list">
 							{socialItems.map((item) => {
-								console.log(socialItems);
 								return (
 									<li key={`social-item-${item.id}`}>
 										<a
