@@ -80,6 +80,8 @@ export const communitySchema = baseSchema.extend({
 	website: z.string().nullable(),
 	facebook: z.string().nullable(),
 	twitter: z.string().nullable(),
+	instagram: z.string().nullable(),
+	mastodon: z.string().nullable(),
 	email: z.string().nullable(),
 	issn: z.string().nullable(),
 	isFeatured: z.boolean().nullable(),
