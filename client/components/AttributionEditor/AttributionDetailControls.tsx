@@ -3,8 +3,10 @@ import { Checkbox, Classes, InputGroup, MenuItem, Position, Tag } from '@bluepri
 import { MultiSelect } from '@blueprintjs/select';
 
 import { AttributionWithUser } from 'types';
+import { ORCID_ID_PATTERN } from 'utils/orcid';
 
 import { getFilteredRoles } from './roles';
+import InputField from '../InputField/InputField';
 
 type Props = {
 	attribution: AttributionWithUser;
@@ -18,6 +20,8 @@ const AttributionDetailControls = (props: Props) => {
 	const { attribution, isShadowAttribution, listOnBylineText, onAttributionUpdate, roles } =
 		props;
 	const { affiliation, id, isAuthor, orcid } = attribution;
+
+	const isOrcidInvalid = Boolean(orcid && !orcid.match(ORCID_ID_PATTERN));
 
 	return (
 		<div className="detail-controls">
@@ -112,7 +116,7 @@ const AttributionDetailControls = (props: Props) => {
 					}
 				/>
 				{isShadowAttribution && (
-					<InputGroup
+					<InputField
 						// @ts-expect-error ts-migrate(2322) FIXME: Type '"" | Element | undefined' is not assignable ... Remove this comment to see the full error message
 						rightElement={orcid && <Tag minimal>ORCID</Tag>}
 						placeholder="ORCID"
@@ -127,6 +131,11 @@ const AttributionDetailControls = (props: Props) => {
 								id,
 								orcid: evt.target.value.trim(),
 							})
+						}
+						error={
+							isOrcidInvalid
+								? 'Invalid ORCID. Please enter a valid ORCID or leave the field blank.'
+								: undefined
 						}
 					/>
 				)}
