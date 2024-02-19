@@ -29,9 +29,16 @@ export type SocialItem = {
 	title: string;
 	value: string;
 	url: string;
+	/**
+	 * For rendering additional attributes on a link, e.g. for verification purposes (mastodon
+	 * requires rel="me" for verification, for example)
+	 */
+	additionalAttributes?: {
+		rel: string;
+	};
 };
 
-export const createSocialNavItems = (communityData: types.NavBuilderCommunity): SocialItem[] => {
+export const createSocialNavItems = (communityData: types.NavBuilderCommunity) => {
 	const possibleItems = [
 		{
 			id: 'si-0',
@@ -66,7 +73,10 @@ export const createSocialNavItems = (communityData: types.NavBuilderCommunity): 
 			icon: 'mastodon' as const,
 			title: 'Mastodon',
 			value: communityData.mastodon,
-			url: communityData.mastodon,
+			url: `https://${communityData.mastodon}`,
+			additionalAttributes: {
+				rel: 'me',
+			},
 		},
 		{
 			id: 'si-5',
@@ -76,7 +86,8 @@ export const createSocialNavItems = (communityData: types.NavBuilderCommunity): 
 			url: `mailto:${communityData.email}`,
 		},
 	];
-	return possibleItems.filter((item) => !!item.value) as SocialItem[];
+
+	return possibleItems.filter((item) => Boolean(item.value && item.url)) as SocialItem[];
 };
 
 const getNavbarChildForPageOrCollection = (

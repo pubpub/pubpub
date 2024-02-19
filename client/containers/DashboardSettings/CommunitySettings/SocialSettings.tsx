@@ -49,7 +49,7 @@ const SocialSettings = (props: Props) => {
 				label="Mastodon"
 				type="text"
 				value={mastodon}
-				helperText={mastodon ?? '<Mastodon instance URL>/@<handle>'}
+				helperText={`https://${mastodon ?? '<Mastodon instance URL>/@<handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ mastodon: evt.target.value });
 				}}

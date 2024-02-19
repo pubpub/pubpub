@@ -39,7 +39,7 @@ const basePubPubFooterLinks = [
 	{ id: '4', title: 'Legal', href: '/legal' },
 ];
 
-const baseSocialItems: SocialItem[] = [
+const baseSocialItems = [
 	{
 		id: 'si-1',
 		icon: 'twitter',
@@ -61,7 +61,7 @@ const baseSocialItems: SocialItem[] = [
 		value: 'hello@pubpub.org',
 		url: 'mailto:hello@pubpub.org?subject=Contact',
 	},
-];
+] satisfies SocialItem[];
 
 const Footer = (props: Props) => {
 	const [email, setEmail] = useState('');
@@ -255,9 +255,14 @@ const Footer = (props: Props) => {
 					{!!socialItems.length && (
 						<ul className="social-list">
 							{socialItems.map((item) => {
+								console.log(socialItems);
 								return (
 									<li key={`social-item-${item.id}`}>
-										<a href={item.url} aria-label={item.title}>
+										<a
+											href={item.url}
+											aria-label={item.title}
+											{...item.additionalAttributes}
+										>
 											<Icon icon={item.icon} />
 										</a>
 									</li>
