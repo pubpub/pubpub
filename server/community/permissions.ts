@@ -34,6 +34,8 @@ export const getPermissions = async ({
 		'website',
 		'twitter',
 		'facebook',
+		'instagram',
+		'mastodon',
 		'email',
 		'hideCreatePubButton',
 		'hideNav',
