@@ -12,7 +12,7 @@ type Props = {
 
 const SocialSettings = (props: Props) => {
 	const { communityData, updateCommunityData } = props;
-	const { website, twitter, facebook, email, avatar } = communityData;
+	const { website, twitter, facebook, email, avatar, instagram, mastodon } = communityData;
 
 	return (
 		<SettingsSection
@@ -34,6 +34,24 @@ const SocialSettings = (props: Props) => {
 				helperText={`https://twitter.com/${twitter}`}
 				onChange={(evt) => {
 					updateCommunityData({ twitter: evt.target.value });
+				}}
+			/>
+			<InputField
+				label="Instagram"
+				type="text"
+				value={instagram}
+				helperText={`https://instagram.com/${instagram}`}
+				onChange={(evt) => {
+					updateCommunityData({ instagram: evt.target.value });
+				}}
+			/>
+			<InputField
+				label="Mastodon"
+				type="text"
+				value={mastodon}
+				helperText={`${mastodon}`}
+				onChange={(evt) => {
+					updateCommunityData({ mastodon: evt.target.value });
 				}}
 			/>
 			<InputField

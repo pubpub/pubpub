@@ -56,6 +56,20 @@ export const createSocialNavItems = (communityData: types.NavBuilderCommunity): 
 		},
 		{
 			id: 'si-3',
+			icon: 'instagram' as const,
+			title: 'Instagram',
+			value: communityData.instagram,
+			url: `https://instagram.com/${communityData.instagram}`,
+		},
+		{
+			id: 'si-4',
+			icon: 'mastodon' as const,
+			title: 'Mastodon',
+			value: communityData.mastodon,
+			url: communityData.mastodon,
+		},
+		{
+			id: 'si-5',
 			icon: 'envelope' as const,
 			title: 'Contact',
 			value: communityData.email,
