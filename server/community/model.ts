@@ -170,6 +170,12 @@ export class Community extends Model<
 	declare twitter: string | null;
 
 	@Column(DataType.TEXT)
+	declare instagram: string | null;
+
+	@Column(DataType.TEXT)
+	declare mastodon: string | null;
+
+	@Column(DataType.TEXT)
 	declare email: string | null;
 
 	@Column(DataType.TEXT)
