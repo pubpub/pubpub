@@ -3,6 +3,7 @@ import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { PubAttribution } from 'server/models';
 import * as types from 'types';
 import { DEFAULT_ROLES } from 'types/attribution';
+import { ORCID_ID_OR_URL_PATTERN, ORCID_PATTERN } from 'utils/orcid';
 import { baseSchema } from '../utils/baseSchema';
 
 extendZodWithOpenApi(z);
@@ -14,7 +15,15 @@ export const attributionSchema = baseSchema.extend({
 	isAuthor: z.boolean().nullable(),
 	userId: z.string().uuid().nullable(),
 	name: z.string().nullable(),
-	orcid: z.string().nullable(),
+	orcid: z
+		.string()
+		// allow both url or id to be submitted
+		.regex(ORCID_ID_OR_URL_PATTERN)
+		// grab just the id part of the pattern
+		.transform((orcid) => orcid.match(ORCID_PATTERN)?.[0]!)
+		.nullable()
+		// for historical reasons, we allow empty strings to be submitted
+		.or(z.literal('')),
 	avatar: z.string().url().nullable(),
 	title: z.string().nullable().openapi({
 		deprecated: true,

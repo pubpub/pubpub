@@ -3,7 +3,7 @@ import { Checkbox, Classes, InputGroup, MenuItem, Position, Tag } from '@bluepri
 import { MultiSelect } from '@blueprintjs/select';
 
 import { AttributionWithUser } from 'types';
-import { ORCID_ID_PATTERN } from 'utils/orcid';
+import { ORCID_ID_OR_URL_PATTERN } from 'utils/orcid';
 
 import { getFilteredRoles } from './roles';
 import InputField from '../InputField/InputField';
@@ -21,7 +21,7 @@ const AttributionDetailControls = (props: Props) => {
 		props;
 	const { affiliation, id, isAuthor, orcid } = attribution;
 
-	const isOrcidInvalid = Boolean(orcid && !orcid.match(ORCID_ID_PATTERN));
+	const isOrcidInvalid = Boolean(orcid && !orcid.match(ORCID_ID_OR_URL_PATTERN));
 
 	return (
 		<div className="detail-controls">
