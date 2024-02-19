@@ -12,6 +12,8 @@ const socialItems = createSocialNavItems({
 	twitter: communityData.twitter,
 	facebook: communityData.facebook,
 	email: communityData.email,
+	mastodon: communityData.mastodon,
+	instagram: communityData.instagram,
 });
 
 storiesOf('components/Footer', module)
