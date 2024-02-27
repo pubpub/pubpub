@@ -18,6 +18,8 @@ export const baseSchema = z.object({
 	locale: z.string(),
 	userAgent: z.string(),
 	os: z.string(),
+	/** Either a number or the literal "draft" */
+	release: z.string().optional(),
 });
 
 /** Information that should always be included in any event payload */

@@ -1,5 +1,6 @@
 /* eslint-disable no-undef, import/no-unresolved */
 import { AnalyticsInstance, type AnalyticsPlugin } from 'analytics';
+import type { AnalyticsEvent } from 'utils/api/schemas/analytics';
 
 const ANALYTICS_ENDPOINT = '/api/analytics/track' as const;
 
@@ -20,6 +21,28 @@ const getReferrerAndUnique = () => {
 	const currentUrl = new URL(window.location.href);
 
 	return { referrer: document.referrer, unique: referrerUrl.origin !== currentUrl.origin };
+};
+
+/**
+ * For Pubs, retrieve the release. This is bc the URL that gets sent is the canonical URL, which
+ * does not include the release, but we do want to show the release in the analytics.
+ */
+const getRelease = () => {
+	const path = window.location.pathname;
+
+	const isPub = path.startsWith('/pub/');
+
+	if (!isPub) {
+		return null;
+	}
+
+	const releaseOrDraft = path.split('/')[3];
+
+	if (releaseOrDraft === 'draft') {
+		return { release: 'draft' };
+	}
+
+	return { release: releaseOrDraft.match(/\d+/)?.[0] || null };
 };
 
 const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
@@ -58,23 +81,22 @@ const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
 		  )
 		: {};
 
+	const toBeSentPayload = {
+		event,
+		type,
+		timestamp: ts,
+		timezone,
+		locale,
+		userAgent,
+		os,
+		...properties,
+		...getReferrerAndUnique(),
+		...utmCampaign,
+		...getRelease(),
+	} satisfies AnalyticsEvent;
 	// we use navigator.sendBeacon to make sure the request is sent even if the user navigates away from the page
 	// and doesn't block the rest of the page
-	navigator.sendBeacon(
-		ANALYTICS_ENDPOINT,
-		JSON.stringify({
-			event,
-			type,
-			timestamp: ts,
-			timezone,
-			locale,
-			userAgent,
-			os,
-			...properties,
-			...getReferrerAndUnique(),
-			...utmCampaign,
-		}),
-	);
+	navigator.sendBeacon(ANALYTICS_ENDPOINT, JSON.stringify(toBeSentPayload));
 };
 
 export const analyticsPlugin = () => {
