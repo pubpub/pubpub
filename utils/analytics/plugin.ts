@@ -36,13 +36,11 @@ const getRelease = () => {
 		return null;
 	}
 
-	const releaseOrDraft = path.split('/')[3];
-
-	if (releaseOrDraft === 'draft') {
+	if (path.endsWith('/draft')) {
 		return { release: 'draft' };
 	}
 
-	return { release: releaseOrDraft.match(/\d+/)?.[0] || null };
+	return { release: path.match(/\/pub\/.*?\/release\/(\d+)/)?.[1] || null };
 };
 
 const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
