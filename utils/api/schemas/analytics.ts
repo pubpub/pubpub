@@ -18,8 +18,6 @@ export const baseSchema = z.object({
 	locale: z.string(),
 	userAgent: z.string(),
 	os: z.string(),
-	/** Either a number or the literal "draft" */
-	release: z.string().optional(),
 });
 
 /** Information that should always be included in any event payload */
@@ -74,11 +72,8 @@ export const pubPageViewPayloadSchema = sharedPageViewPayloadSchema
 			pubTitle: z.string(),
 			pubId: z.string().uuid(),
 			pubSlug: z.string(),
-			collectionIds: z
-				.string()
-				.regex(/^[a-f0-9-]+(,[a-f0-9-]+)*$/)
-				.optional(),
 			primaryCollectionId: z.string().uuid().optional(),
+			release: z.literal('draft').or(z.number().int()),
 		}),
 	)
 	.merge(collectionPageViewPayloadSchema.omit({ event: true }).partial());

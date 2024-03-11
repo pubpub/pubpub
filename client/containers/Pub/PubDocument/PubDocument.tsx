@@ -50,16 +50,6 @@ const PubDocument = () => {
 
 	const showPubFileImport = (canEdit || canEditDraft) && !isReadOnly;
 
-	const uniqueCollectionIds = Array.from(
-		new Set((pubData.collectionPubs ?? []).map((cp) => cp.collectionId)),
-	);
-	// we want to make this a string of comma separated UUIDs instead of an array
-	// because Stitch will turn an array into a separate table with an event for each
-	// UUID in the array, which creates a ton of events for a single page view if the pub
-	// is in a lot of collections
-	// much easier to just have a single event with a string of UUIDs and then do some
-	// processing in Metabase
-	const collectionIds = uniqueCollectionIds.join(',') || undefined;
 	const collection = chooseCollectionForPub(pubData, locationData);
 
 	usePageOnce(
@@ -68,7 +58,6 @@ const PubDocument = () => {
 			pubSlug: pubData.slug,
 			pubId: pubData.id,
 			pubTitle: pubData.title,
-			collectionIds,
 			collectionId: collection?.id,
 			collectionTitle: collection?.title,
 			collectionSlug: collection?.slug,
@@ -78,6 +67,7 @@ const PubDocument = () => {
 			communityName: communityData.title,
 			communitySubdomain: communityData.subdomain,
 			isProd: locationData.isProd,
+			release: pubData.isRelease && pubData.releaseNumber ? pubData.releaseNumber : 'draft',
 		},
 		gdprConsent,
 	);

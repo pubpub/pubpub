@@ -23,26 +23,6 @@ const getReferrerAndUnique = () => {
 	return { referrer: document.referrer, unique: referrerUrl.origin !== currentUrl.origin };
 };
 
-/**
- * For Pubs, retrieve the release. This is bc the URL that gets sent is the canonical URL, which
- * does not include the release, but we do want to show the release in the analytics.
- */
-const getRelease = () => {
-	const path = window.location.pathname;
-
-	const isPub = path.startsWith('/pub/');
-
-	if (!isPub) {
-		return null;
-	}
-
-	if (path.endsWith('/draft')) {
-		return { release: 'draft' };
-	}
-
-	return { release: path.match(/\/pub\/.*?\/release\/(\d+)/)?.[1] || null };
-};
-
 const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
 	const { payload, instance } = data;
 
@@ -90,7 +70,6 @@ const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
 		...properties,
 		...getReferrerAndUnique(),
 		...utmCampaign,
-		...getRelease(),
 	} satisfies AnalyticsEvent;
 	// we use navigator.sendBeacon to make sure the request is sent even if the user navigates away from the page
 	// and doesn't block the rest of the page
