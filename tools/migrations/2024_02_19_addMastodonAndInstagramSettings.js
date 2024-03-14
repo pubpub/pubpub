@@ -1,21 +1,42 @@
 // @ts-check
 
+const newCommunityColumns = ['instagram', 'mastodon', 'linkedin', 'bluesky', 'github'];
+const newUserColumns = ['mastodon', 'instagram', 'linkedin', 'bluesky', 'github'];
+
 /**
  * @param {object} options
  * @param {import('sequelize').Sequelize} options.Sequelize
  * @param {import('server/sequelize').sequelize} options.sequelize
  */
 export const up = async ({ Sequelize, sequelize }) => {
-	await sequelize.getQueryInterface().addColumn('Communities', 'instagram', {
-		// @ts-expect-error
-		type: Sequelize.TEXT,
-		defaultValue: null,
+	const queryInterface = sequelize.getQueryInterface();
+
+	const communityColumnsPromises = newCommunityColumns.map(async (column) => {
+		const newCol = await queryInterface.addColumn('Communities', column, {
+			// @ts-expect-error
+			type: Sequelize.TEXT,
+			defaultValue: null,
+		});
+		return newCol;
 	});
-	await sequelize.getQueryInterface().addColumn('Communities', 'mastodon', {
-		// @ts-expect-error
-		type: Sequelize.TEXT,
-		defaultValue: null,
+
+	const userColumnsPromises = newUserColumns.map(async (column) => {
+		const newCol = await queryInterface.addColumn('Users', column, {
+			// @ts-expect-error
+			type: Sequelize.TEXT,
+			defaultValue: null,
+		});
+		return newCol;
 	});
+
+	const result = await Promise.allSettled([...communityColumnsPromises, ...userColumnsPromises]);
+
+	result.forEach((promise) => {
+		if (promise.status === 'rejected') {
+			throw promise.reason;
+		}
+	});
+	console.log('Migration has been completed');
 };
 
 /**
@@ -23,6 +44,24 @@ export const up = async ({ Sequelize, sequelize }) => {
  * @param {import('server/sequelize').sequelize} options.sequelize
  */
 export const down = async ({ sequelize }) => {
-	await sequelize.getQueryInterface().removeColumn('Communities', 'instagram');
-	await sequelize.getQueryInterface().removeColumn('Communities', 'mastodon');
+	const queryInterface = sequelize.getQueryInterface();
+
+	const communityColumnsPromises = newCommunityColumns.map(async (column) => {
+		const newCol = await queryInterface.removeColumn('Communities', column);
+		return newCol;
+	});
+
+	const userColumnsPromises = newUserColumns.map(async (column) => {
+		const newCol = await queryInterface.removeColumn('Users', column);
+		return newCol;
+	});
+
+	const result = await Promise.allSettled([...communityColumnsPromises, ...userColumnsPromises]);
+
+	result.forEach((promise) => {
+		if (promise.status === 'rejected') {
+			throw promise.reason;
+		}
+	});
+	console.log('Migration has been completed');
 };

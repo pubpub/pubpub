@@ -176,6 +176,15 @@ export class Community extends Model<
 	declare mastodon: string | null;
 
 	@Column(DataType.TEXT)
+	declare linkedin: string | null;
+
+	@Column(DataType.TEXT)
+	declare bluesky: string | null;
+
+	@Column(DataType.TEXT)
+	declare github: string | null;
+
+	@Column(DataType.TEXT)
 	declare email: string | null;
 
 	@Column(DataType.TEXT)
