@@ -1,7 +1,8 @@
 /* eslint-disable no-undef, import/no-unresolved */
 import { AnalyticsInstance, type AnalyticsPlugin } from 'analytics';
 
-const ANALYTICS_ENDPOINT = '/api/analytics/track' as const;
+const ANALYTICS_ENDPOINT =
+	'https://yhzkpvgmsji7wkkmeplrtgoj5y0qbzpp.lambda-url.us-east-1.on.aws' as const;
 
 /**
  * Retrieves the referrer URL and determines if the visit is from a unique visitor If there is no
@@ -60,21 +61,20 @@ const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
 
 	// we use navigator.sendBeacon to make sure the request is sent even if the user navigates away from the page
 	// and doesn't block the rest of the page
-	navigator.sendBeacon(
-		ANALYTICS_ENDPOINT,
-		JSON.stringify({
-			event,
-			type,
-			timestamp: ts,
-			timezone,
-			locale,
-			userAgent,
-			os,
-			...properties,
-			...getReferrerAndUnique(),
-			...utmCampaign,
-		}),
-	);
+	const payloadToSend = {
+		event,
+		type,
+		timestamp: ts,
+		timezone,
+		locale,
+		userAgent,
+		os,
+		...properties,
+		...getReferrerAndUnique(),
+		...utmCampaign,
+	};
+
+	navigator.sendBeacon(ANALYTICS_ENDPOINT, JSON.stringify(payloadToSend));
 };
 
 export const analyticsPlugin = () => {
