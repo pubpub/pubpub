@@ -101,7 +101,7 @@ export const createSocialNavItems = (
 			icon: 'bluesky' as const,
 			title: 'Bluesky',
 			value: communityData.bluesky,
-			url: `https://bsky.app/@${communityData.bluesky}`,
+			url: `https://bsky.app/profile/@${communityData.bluesky}`,
 		},
 		{
 			id: 'si-7',

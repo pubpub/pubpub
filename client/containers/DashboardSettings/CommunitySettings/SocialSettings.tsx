@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Icon, ImageUpload, InputField, SettingsSection } from 'components';
+import { ImageUpload, InputField, SettingsSection } from 'components';
 import { Callback, Community } from 'types';
-import { Button, Classes, MenuItem, Tooltip } from '@blueprintjs/core';
+import { Button, Classes, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
 import LabelWithInfo from '../LabelWithInfo';
@@ -120,7 +120,9 @@ const SocialSettings = (props: Props) => {
 				label="Bluesky"
 				type="text"
 				value={bluesky}
-				helperText={`https://bsky.app/@${bluesky || '<your bluesky handle>'}`}
+				helperText={`https://bsky.app/profile/@${
+					bluesky || '<your bluesky handle>.<your-server.social>'
+				}`}
 				onChange={(evt) => {
 					updateCommunityData({ bluesky: evt.target.value });
 				}}
