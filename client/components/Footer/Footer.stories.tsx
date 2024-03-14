@@ -13,6 +13,10 @@ const socialItems = createSocialNavItems({
 	facebook: communityData.facebook,
 	email: communityData.email,
 	mastodon: communityData.mastodon,
+	linkedin: communityData.linkedin,
+	github: communityData.github,
+	bluesky: communityData.bluesky,
+	socialLinksLocation: null,
 	instagram: communityData.instagram,
 });
 
