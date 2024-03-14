@@ -108,7 +108,9 @@ const Footer = (props: Props) => {
 			? '/static/logoBlack.svg'
 			: '/static/logoWhite.svg';
 	const wrapperClasses = isBasePubPub ? 'base-pubpub' : 'accent-background accent-color';
-	const socialItems = isBasePubPub ? baseSocialItems : createSocialNavItems(communityData);
+	const socialItems = isBasePubPub
+		? baseSocialItems
+		: createSocialNavItems(communityData, 'footer');
 	return (
 		<div className={`footer-component ${wrapperClasses}`}>
 			<GridWrapper>

@@ -38,7 +38,18 @@ export type SocialItem = {
 	};
 };
 
-export const createSocialNavItems = (communityData: types.NavBuilderCommunity) => {
+export const createSocialNavItems = (
+	communityData: types.NavBuilderCommunity,
+	location?: 'header' | 'footer',
+) => {
+	if (
+		Boolean(communityData.socialLinksLocation) &&
+		Boolean(location) &&
+		communityData.socialLinksLocation !== location
+	) {
+		return [] as SocialItem[];
+	}
+
 	const possibleItems = [
 		{
 			id: 'si-0',

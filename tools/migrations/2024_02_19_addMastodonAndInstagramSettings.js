@@ -1,7 +1,7 @@
 // @ts-check
 
 const newCommunityColumns = ['instagram', 'mastodon', 'linkedin', 'bluesky', 'github'];
-const newUserColumns = ['mastodon', 'instagram', 'linkedin', 'bluesky', 'github'];
+const newUserColumns = ['mastodon', 'instagram', 'linkedin', 'bluesky'];
 
 /**
  * @param {object} options
@@ -36,6 +36,16 @@ export const up = async ({ Sequelize, sequelize }) => {
 			console.error(promise.reason);
 		}
 	});
+
+	try {
+		await queryInterface.addColumn('Communities', 'socialLinksLocation', {
+			// @ts-expect-error
+			type: Sequelize.ENUM('footer', 'header'),
+			defaultValue: null,
+		});
+	} catch (error) {
+		console.error(error);
+	}
 	console.log('Migration has been completed');
 };
 
@@ -63,5 +73,12 @@ export const down = async ({ sequelize }) => {
 			console.error(promise.reason);
 		}
 	});
+
+	try {
+		await queryInterface.removeColumn('Communities', 'socialLinksLocation');
+	} catch (error) {
+		console.error(error);
+	}
+
 	console.log('Migration has been completed');
 };

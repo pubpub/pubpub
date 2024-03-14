@@ -31,7 +31,7 @@ const NavBar = function (props) {
 		pages,
 		collections,
 	});
-	const socialItems = createSocialNavItems(communityData);
+	const socialItems = createSocialNavItems(communityData, 'header');
 
 	const renderMenuSubitem = (subitem: NavbarItem, index: number) => {
 		if (!isNavbarMenu(subitem)) {

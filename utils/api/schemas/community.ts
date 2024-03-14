@@ -86,6 +86,7 @@ export const communitySchema = baseSchema.extend({
 	bluesky: z.string().nullable(),
 	github: z.string().nullable(),
 	email: z.string().nullable(),
+	socialLinksLocation: z.enum(['header', 'footer']).nullable(),
 	issn: z.string().nullable(),
 	isFeatured: z.boolean().nullable(),
 	viewHash: z.string().nullable(),

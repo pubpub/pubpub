@@ -1,7 +1,9 @@
 import React from 'react';
 
-import { ImageUpload, InputField, SettingsSection } from 'components';
+import { Icon, ImageUpload, InputField, SettingsSection } from 'components';
 import { Callback, Community } from 'types';
+import { Button, Classes, MenuItem, Tooltip } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 
 import LabelWithInfo from '../LabelWithInfo';
 
@@ -9,6 +11,12 @@ type Props = {
 	communityData: Community;
 	updateCommunityData: Callback<Partial<Community>>;
 };
+
+const socialLocations = [
+	{ title: 'header only.', key: 'header' } as const,
+	{ title: 'footer only.', key: 'footer' } as const,
+	{ title: 'header and footer.', key: null } as const,
+];
 
 const SocialSettings = (props: Props) => {
 	const { communityData, updateCommunityData } = props;
@@ -25,11 +33,45 @@ const SocialSettings = (props: Props) => {
 		github,
 	} = communityData;
 
+	const socialLocation = communityData.socialLinksLocation;
+
 	return (
-		<SettingsSection
-			title="Social Media"
-			description="These links will appear in your Community's header and footer."
-		>
+		<SettingsSection title="Social Media">
+			<div className={Classes.FORM_GROUP}>
+				<div>
+					<span>These links will appear in your Community's &nbsp;</span>
+					<Select
+						items={socialLocations}
+						itemRenderer={(page, { handleClick }) => {
+							return (
+								<MenuItem
+									key={page.title}
+									onClick={handleClick}
+									text={page.title}
+								/>
+							);
+						}}
+						filterable={false}
+						onItemSelect={(item) => {
+							updateCommunityData({ socialLinksLocation: item.key });
+						}}
+						popoverProps={{ popoverClassName: Classes.MINIMAL }}
+					>
+						<Button
+							className="linked-page-select-button"
+							text={socialLocations.find((loc) => loc.key === socialLocation)?.title}
+							rightIcon="chevron-down"
+							minimal
+							outlined
+						/>
+						&nbsp;
+						<LabelWithInfo
+							label=""
+							info="Social links are never shown in the header on mobile devices."
+						/>
+					</Select>
+				</div>
+			</div>
 			<InputField
 				label="Website"
 				type="text"
@@ -42,7 +84,7 @@ const SocialSettings = (props: Props) => {
 				label="Twitter"
 				type="text"
 				value={twitter}
-				helperText={`https://twitter.com/${twitter ?? '<your twitter hanlde>'}`}
+				helperText={`https://twitter.com/${twitter || '<your twitter hanlde>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ twitter: evt.target.value });
 				}}
@@ -51,7 +93,7 @@ const SocialSettings = (props: Props) => {
 				label="Instagram"
 				type="text"
 				value={instagram}
-				helperText={`https://instagram.com/${instagram ?? '<your instagram handle>'}`}
+				helperText={`https://instagram.com/${instagram || '<your instagram handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ instagram: evt.target.value });
 				}}
@@ -60,7 +102,7 @@ const SocialSettings = (props: Props) => {
 				label="Mastodon"
 				type="text"
 				value={mastodon}
-				helperText={`https://${mastodon ?? '<Mastodon instance URL>/@<handle>'}`}
+				helperText={`https://${mastodon || '<Mastodon instance URL>/@<handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ mastodon: evt.target.value });
 				}}
@@ -69,7 +111,7 @@ const SocialSettings = (props: Props) => {
 				label="LinkedIn"
 				type="text"
 				value={linkedin}
-				helperText={`https://linkedin.com/in/${linkedin}`}
+				helperText={`https://linkedin.com/in/${linkedin || '<your linkedin handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ linkedin: evt.target.value });
 				}}
@@ -78,7 +120,7 @@ const SocialSettings = (props: Props) => {
 				label="Bluesky"
 				type="text"
 				value={bluesky}
-				helperText={`https://bsky.app/@${bluesky}}`}
+				helperText={`https://bsky.app/@${bluesky || '<your bluesky handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ bluesky: evt.target.value });
 				}}
@@ -87,7 +129,7 @@ const SocialSettings = (props: Props) => {
 				label="GitHub"
 				type="text"
 				value={github}
-				helperText={`https://github.com/${github}`}
+				helperText={`https://github.com/${github || '<your github handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ github: evt.target.value });
 				}}
@@ -96,7 +138,7 @@ const SocialSettings = (props: Props) => {
 				label="Facebook"
 				type="text"
 				value={facebook}
-				helperText={`https://facebook.com/${facebook}`}
+				helperText={`https://facebook.com/${facebook || '<your facebook handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ facebook: evt.target.value });
 				}}

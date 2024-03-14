@@ -15,6 +15,7 @@ export type NavBuilderCommunity = Pick<
 	| 'bluesky'
 	| 'github'
 	| 'email'
+	| 'socialLinksLocation'
 >;
 export type NavBuilderPage = Pick<Page, 'title' | 'id' | 'isPublic' | 'slug'>;
 export type NavBuilderCollection = Pick<Collection, 'title' | 'id' | 'isPublic' | 'slug'>;

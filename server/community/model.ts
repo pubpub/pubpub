@@ -187,6 +187,10 @@ export class Community extends Model<
 	@Column(DataType.TEXT)
 	declare email: string | null;
 
+	// null means both
+	@Column(DataType.ENUM('header', 'footer'))
+	declare socialLinksLocation: 'header' | 'footer' | null;
+
 	@Column(DataType.TEXT)
 	declare issn: string | null;
 
