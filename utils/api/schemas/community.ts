@@ -2,6 +2,7 @@ import { z } from 'zod';
 import * as types from 'types';
 import { baseSchema } from '../utils/baseSchema';
 import { analyticsSettingsSchema } from './analyticsSettings';
+import { link } from 'fs';
 
 const communityHeaderLinkSchema = z.object({
 	title: z.string(),
@@ -82,6 +83,9 @@ export const communitySchema = baseSchema.extend({
 	twitter: z.string().nullable(),
 	instagram: z.string().nullable(),
 	mastodon: z.string().nullable(),
+	linkedin: z.string().nullable(),
+	bluesky: z.string().nullable(),
+	github: z.string().nullable(),
 	email: z.string().nullable(),
 	issn: z.string().nullable(),
 	isFeatured: z.boolean().nullable(),

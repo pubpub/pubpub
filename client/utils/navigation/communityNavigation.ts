@@ -80,6 +80,27 @@ export const createSocialNavItems = (communityData: types.NavBuilderCommunity) =
 		},
 		{
 			id: 'si-5',
+			icon: 'linkedin' as const,
+			title: 'LinkedIn',
+			value: communityData.linkedin,
+			url: `https://linkedin.com/in/${communityData.linkedin}`,
+		},
+		{
+			id: 'si-6',
+			icon: 'bluesky' as const,
+			title: 'Bluesky',
+			value: communityData.bluesky,
+			url: `https://bsky.app/@${communityData.bluesky}`,
+		},
+		{
+			id: 'si-7',
+			icon: 'github' as const,
+			title: 'GitHub',
+			value: communityData.github,
+			url: `https://github.com/${communityData.github}`,
+		},
+		{
+			id: 'si-8',
 			icon: 'envelope' as const,
 			title: 'Contact',
 			value: communityData.email,

@@ -12,7 +12,18 @@ type Props = {
 
 const SocialSettings = (props: Props) => {
 	const { communityData, updateCommunityData } = props;
-	const { website, twitter, facebook, email, avatar, instagram, mastodon } = communityData;
+	const {
+		website,
+		twitter,
+		facebook,
+		email,
+		avatar,
+		instagram,
+		mastodon,
+		linkedin,
+		bluesky,
+		github,
+	} = communityData;
 
 	return (
 		<SettingsSection
@@ -52,6 +63,33 @@ const SocialSettings = (props: Props) => {
 				helperText={`https://${mastodon ?? '<Mastodon instance URL>/@<handle>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ mastodon: evt.target.value });
+				}}
+			/>
+			<InputField
+				label="LinkedIn"
+				type="text"
+				value={linkedin}
+				helperText={`https://linkedin.com/in/${linkedin}`}
+				onChange={(evt) => {
+					updateCommunityData({ linkedin: evt.target.value });
+				}}
+			/>
+			<InputField
+				label="Bluesky"
+				type="text"
+				value={bluesky}
+				helperText={`https://bsky.app/@${bluesky}}`}
+				onChange={(evt) => {
+					updateCommunityData({ bluesky: evt.target.value });
+				}}
+			/>
+			<InputField
+				label="GitHub"
+				type="text"
+				value={github}
+				helperText={`https://github.com/${github}`}
+				onChange={(evt) => {
+					updateCommunityData({ github: evt.target.value });
 				}}
 			/>
 			<InputField
