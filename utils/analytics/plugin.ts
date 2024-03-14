@@ -2,6 +2,7 @@
 import { AnalyticsInstance, type AnalyticsPlugin } from 'analytics';
 import type { AnalyticsEvent } from 'utils/api/schemas/analytics';
 
+// this gets rewritten to the AWS lambda on fastly
 const ANALYTICS_ENDPOINT = '/api/analytics/track' as const;
 
 /**
