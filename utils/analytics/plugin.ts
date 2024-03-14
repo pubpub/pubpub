@@ -1,8 +1,8 @@
 /* eslint-disable no-undef, import/no-unresolved */
 import { AnalyticsInstance, type AnalyticsPlugin } from 'analytics';
 
-const ANALYTICS_ENDPOINT =
-	'https://yhzkpvgmsji7wkkmeplrtgoj5y0qbzpp.lambda-url.us-east-1.on.aws' as const;
+// this gets rewritten to the AWS lambda on fastly
+const ANALYTICS_ENDPOINT = '/api/analytics/track' as const;
 
 /**
  * Retrieves the referrer URL and determines if the visit is from a unique visitor If there is no
