@@ -33,7 +33,7 @@ export const up = async ({ Sequelize, sequelize }) => {
 
 	result.forEach((promise) => {
 		if (promise.status === 'rejected') {
-			throw promise.reason;
+			console.error(promise.reason);
 		}
 	});
 	console.log('Migration has been completed');
@@ -60,7 +60,7 @@ export const down = async ({ sequelize }) => {
 
 	result.forEach((promise) => {
 		if (promise.status === 'rejected') {
-			throw promise.reason;
+			console.error(promise.reason);
 		}
 	});
 	console.log('Migration has been completed');

@@ -2,7 +2,6 @@ import { z } from 'zod';
 import * as types from 'types';
 import { baseSchema } from '../utils/baseSchema';
 import { analyticsSettingsSchema } from './analyticsSettings';
-import { link } from 'fs';
 
 const communityHeaderLinkSchema = z.object({
 	title: z.string(),
