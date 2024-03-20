@@ -162,9 +162,9 @@ const UserEdit = (props: Props) => {
 			},
 		},
 		{
-			label: 'Twitter',
+			label: 'X (Twitter)',
 			// icon: `${Classes.ICON}-twitter`,
-			helperText: `https://twitter.com/${twitter || '<your twitter handle>'} `,
+			helperText: `https://twitter.com/${twitter || '<your x/twitter handle>'} `,
 			value: twitter,
 			onChange: (evt) => {
 				setTwitter(evt.target.value);

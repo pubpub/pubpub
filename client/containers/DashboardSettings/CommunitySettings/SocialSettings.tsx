@@ -81,10 +81,10 @@ const SocialSettings = (props: Props) => {
 				}}
 			/>
 			<InputField
-				label="Twitter"
+				label="X (Twitter)"
 				type="text"
 				value={twitter}
-				helperText={`https://twitter.com/${twitter || '<your twitter hanlde>'}`}
+				helperText={`https://twitter.com/${twitter || '<your x/twitter hanlde>'}`}
 				onChange={(evt) => {
 					updateCommunityData({ twitter: evt.target.value });
 				}}
