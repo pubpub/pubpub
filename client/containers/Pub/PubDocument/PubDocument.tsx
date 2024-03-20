@@ -123,15 +123,16 @@ const PubDocument = () => {
 					{featureFlags.suggestedEdits && !isViewingHistory && (
 						<PubInlineSuggestedEdits />
 					)}
-					{/* TODO: FEATURE FLAG THIS */}
-					<div className="body-contributors">
-						<h5 className="body-contributors-header">
-							Contributors
-							<br />
-							(A-Z)
-						</h5>
-						<ContributorsListCondensed attributions={contributors} />
-					</div>
+					{featureFlags.bodyContributors && (
+						<div className="body-contributors">
+							<h5 className="body-contributors-header">
+								Contributors
+								<br />
+								(A-Z)
+							</h5>
+							<ContributorsListCondensed attributions={contributors} />
+						</div>
+					)}
 					<PubEdgeListing
 						className="bottom-pub-edges"
 						pubData={pubData}
