@@ -30,6 +30,7 @@ import {
 	CollapsibleHeaderBPC,
 	collapsibleHeaderDataBPC,
 } from 'client/layouts';
+import { usePageOnce } from 'utils/analytics/usePageOnce';
 
 import SideMenu from './SideMenu';
 import Breadcrumbs from './Breadcrumbs';
@@ -51,6 +52,7 @@ type Props = {
 const App = (props: Props) => {
 	const { chunkName, initialData, viewData } = props;
 	const pageContextProps = usePageState(initialData, viewData);
+
 	const { communityData, locationData, scopeData, loginData, featureFlags, gdprConsent } =
 		pageContextProps;
 
@@ -61,6 +63,13 @@ const App = (props: Props) => {
 		analyticsSettings,
 		gdprConsent,
 		locationData,
+	});
+
+	usePageOnce({
+		analyticsInstance,
+		initialData,
+		viewData,
+		gdprConsent,
 	});
 
 	const pathObject = getPaths(viewData, locationData, chunkName);
