@@ -3,7 +3,7 @@ import type { PageViewPayload } from 'utils/api/schemas/analytics';
 // eslint-disable-next-line import/no-unresolved
 import { AnalyticsInstance } from 'analytics';
 import { InitialData, Page, PubPageData } from 'types';
-import { assert, expect } from 'utils/assert';
+import { expect } from 'utils/assert';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { getThirdPartyPluginsObjectWithGdprConsent } from './thirdPartyPlugins';
@@ -87,7 +87,13 @@ const determinePayload = (
 	}
 
 	const pageData = viewData.pageData as Page;
-	assert(!!pageData);
+
+	if (!pageData) {
+		return {
+			event: 'other' as const,
+			...base,
+		};
+	}
 
 	// normal pageview
 	return {
