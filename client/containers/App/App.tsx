@@ -3,7 +3,7 @@ import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
 import { AnalyticsProvider } from 'use-analytics';
 
-import { shouldUseNewAnalytics, canUseCustomAnalyticsProvider } from 'utils/analytics/featureFlags';
+import { canUseCustomAnalyticsProvider } from 'utils/analytics/featureFlags';
 import { useLazyLoadedAnalyticsInstance } from 'utils/analytics/useLazyLoadedAnalyticsInstance';
 
 import {
@@ -57,7 +57,6 @@ const App = (props: Props) => {
 	const { analyticsSettings } = communityData;
 
 	const analyticsInstance = useLazyLoadedAnalyticsInstance({
-		shouldUseNewAnalytics: shouldUseNewAnalytics(featureFlags),
 		canUseCustomAnalyticsProvider: canUseCustomAnalyticsProvider(featureFlags),
 		analyticsSettings,
 		gdprConsent,
