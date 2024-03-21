@@ -22,6 +22,7 @@ app.get(
 			const { activeTargetType, activeTarget } = initialData.scopeData.elements;
 			const impactData = {
 				baseToken: generateMetabaseToken(activeTargetType, activeTarget.id, 'base'),
+				newToken: generateMetabaseToken(activeTargetType, activeTarget.id, 'new'),
 				benchmarkToken: generateMetabaseToken(
 					activeTargetType,
 					activeTarget.id,
