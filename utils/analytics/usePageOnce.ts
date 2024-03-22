@@ -7,6 +7,7 @@ import { expect } from 'utils/assert';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { getThirdPartyPluginsObjectWithGdprConsent } from './thirdPartyPlugins';
+import { shouldPathBeIgnored } from './ignoredPaths';
 
 const determinePayload = (
 	props:
@@ -22,12 +23,17 @@ const determinePayload = (
 		const { payload } = props;
 		return typeof payload === 'function' ? payload() : payload;
 	}
+
 	const { initialData, viewData } = props;
 	const { scopeData, communityData, locationData } = initialData;
 
 	// pub pageview
-	if ('pubId' in scopeData.scope && scopeData.scope.pubId) {
-		const pubData = viewData.pubData as PubPageData;
+	if (scopeData.scope && 'pubId' in scopeData.scope && scopeData.scope.pubId) {
+		const pubData = viewData.pubData as PubPageData | null; // null if 404;
+
+		if (!pubData) {
+			return null;
+		}
 
 		const uniqueCollectionIds = Array.from(
 			new Set((pubData.collectionPubs ?? []).map((cp) => cp.collectionId)),
@@ -60,11 +66,6 @@ const determinePayload = (
 		};
 	}
 
-	/** Only track actual page visits, not dashboard visits e.g. when editing a page */
-	if (locationData.isDashboard) {
-		return null;
-	}
-
 	const base = {
 		communityId: communityData.id,
 		communityName: communityData.title,
@@ -72,7 +73,7 @@ const determinePayload = (
 		isProd: locationData.isProd,
 	};
 
-	const collection = scopeData.elements.activeCollection;
+	const collection = scopeData?.elements?.activeCollection;
 
 	// collection pageview
 	if (collection) {
@@ -86,8 +87,10 @@ const determinePayload = (
 		};
 	}
 
-	const pageData = viewData.pageData as Page;
+	const pageData = viewData?.pageData as Page;
 
+	// it's not a pub, page, or collection, so it's something else,
+	// like the explore page or a user page
 	if (!pageData) {
 		return {
 			event: 'other' as const,
@@ -161,6 +164,20 @@ export const usePageOnce = (
 	useEffect(() => {
 		const allEventsHaveFired = hasFiredInitialEvent && hasFiredLazyPlugin;
 		if (allEventsHaveFired) {
+			return;
+		}
+
+		const { path } =
+			rest && 'initialData' in rest ? rest.initialData.locationData : { path: '' };
+		const shouldIgnorePath = shouldPathBeIgnored(path);
+
+		// we do not track analytics for such paths
+		if (shouldIgnorePath) {
+			return;
+		}
+
+		// we don't want to track 404 pages
+		if (/^Not Found ·/.test(window.document?.title)) {
 			return;
 		}
 
