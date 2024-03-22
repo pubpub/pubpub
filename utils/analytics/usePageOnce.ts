@@ -95,6 +95,9 @@ const determinePayload = (
 		return {
 			event: 'other' as const,
 			...base,
+			communityId: communityData.id ?? null,
+			communityName: communityData.title ?? 'pubpub',
+			communitySubdomain: communityData.subdomain ?? 'www',
 		};
 	}
 
@@ -176,7 +179,8 @@ export const usePageOnce = (
 			return;
 		}
 
-		// we don't want to track 404 pages
+		// we don't want to track 404 pages. not really a path per se
+		// hence we don't include it in the above
 		if (/^Not Found ·/.test(window.document?.title)) {
 			return;
 		}
