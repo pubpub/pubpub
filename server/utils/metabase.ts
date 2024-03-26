@@ -36,12 +36,17 @@ export const generateMetabaseToken = <T extends keyof DashboardNums>(
 	scopeType: T,
 	scopeId: string | null,
 	dashboardType: T extends T ? keyof DashboardNums[T] : never,
+	isProd?: boolean,
 ) => {
 	const dashboardNum = dashboardNums[scopeType][dashboardType];
 
+	if (!dashboardNum) {
+		return null;
+	}
+
 	const payload = {
 		// @ts-expect-error
-		resource: { dashboard: dashboardNum.id },
+		resource: { dashboard: dashboardNum?.id },
 		params: {
 			[scopeType]: scopeId,
 			...((scopeType === 'collection' &&
@@ -50,6 +55,7 @@ export const generateMetabaseToken = <T extends keyof DashboardNums>(
 				'options' in dashboardNum &&
 				dashboardNum.options) ||
 				{}),
+			//		...(isProd !== undefined && { isProd }),
 		},
 		exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minute expiration
 	};

@@ -13,8 +13,8 @@ require('./dashboardImpact.scss');
 type Props = {
 	impactData: {
 		baseToken: string;
-		benchmarkToken?: string;
-		newToken?: string;
+		benchmarkToken?: string | null;
+		newToken?: string | null;
 	};
 };
 
@@ -53,16 +53,16 @@ const DashboardImpact = (props: Props) => {
 		return width < 960 ? 45 : 61;
 	};
 
-	const [showNewAnalytics, setShowNewAnalytics] = React.useState(false);
-	// const newAnalyticsSection = useRef<HTMLElement>(null);
-	// console.log({ newAnalyticsSection });
-	// // const isInView = useIsInView(newAnalyticsSection.current, 100);
-	// const isInView = useInView(newAnalyticsSection, {
-	// 	once: true,
-	// 	amount: 1,
-	// });
+	// const [showNewAnalytics, setShowNewAnalytics] = React.useState(false);
+	// // const newAnalyticsSection = useRef<HTMLElement>(null);
+	// // console.log({ newAnalyticsSection });
+	// // // const isInView = useIsInView(newAnalyticsSection.current, 100);
+	// // const isInView = useInView(newAnalyticsSection, {
+	// // 	once: true,
+	// // 	amount: 1,
+	// // });
 
-	// console.log(isInView);
+	// // console.log(isInView);
 
 	return (
 		<DashboardFrame
@@ -70,6 +70,33 @@ const DashboardImpact = (props: Props) => {
 			className="dashboard-impact-container"
 			details={`Learn more about who your ${activeTargetName} is reaching.`}
 		>
+			<section>
+				{newToken && canView && (
+					<>
+						<h3 id="historical_benchmark_new" className="absolute-header">
+							{!isCollection && displayDataWarning && (
+								<LabelWithInfo
+									info={`These analytics are collected using a new system that was implemented in March 2024.
+									They do not map directly to the historical analytics system, but should be close.
+									In the near future the old system will stop collecting data, and the new system will be the only source of analytics. We will provide a way to view both the old and new data side by side for a period of time, after which we will work on migrating the old data to the new system.
+								`}
+									label="New Analytics"
+								/>
+							)}
+						</h3>
+						<IframeResizer
+							className="metabase new"
+							src={genUrl(newToken)}
+							title="New Analytics"
+							frameBorder="0"
+							onResized={({ iframe, height, width }) => {
+								/* eslint-disable-next-line no-param-reassign */
+								iframe.style.height = `${height - getOffset(width)}px`;
+							}}
+						/>
+					</>
+				)}
+			</section>
 			<section>
 				<h3 id="historical_benchmark" className="absolute-header">
 					Analytics
@@ -126,34 +153,7 @@ const DashboardImpact = (props: Props) => {
 				)}
 			</section>
 			<section>
-				{newToken && canView && (
-					<>
-						<h3 id="historical_benchmark_new" className="absolute-header">
-							{!isCollection && displayDataWarning && (
-								<LabelWithInfo
-									info={`These analytics are collected using a new system that was implemented in March 2024.
-									They do not map directly to the historical analytics system, but should be close.
-									In the near future the old system will stop collecting data, and the new system will be the only source of analytics. We will provide a way to view both the old and new data side by side for a period of time, after which we will work on migrating the old data to the new system.
-								`}
-									label="New Analytics"
-								/>
-							)}
-						</h3>
-						<IframeResizer
-							className="metabase new"
-							src={genUrl(newToken)}
-							title="New Analytics"
-							frameBorder="0"
-							onResized={({ iframe, height, width }) => {
-								/* eslint-disable-next-line no-param-reassign */
-								iframe.style.height = `${height - getOffset(width)}px`;
-							}}
-						/>
-					</>
-				)}
-			</section>
-			<section>
-				{canView && displayDataWarning && (
+				{benchmarkToken && canView && displayDataWarning && (
 					<React.Fragment>
 						<h3 id="historical_benchmark" className="absolute-header">
 							Historical User Benchmark
