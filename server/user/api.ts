@@ -7,6 +7,7 @@ import { isProd, isDuqDuq } from 'utils/environment';
 import { getHashedUserId } from 'utils/caching/getHashedUserId';
 import { getPermissions } from './permissions';
 import { createUser, updateUser, getSuggestedEditsUserInfo } from './queries';
+import { z } from 'zod';
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
@@ -47,11 +48,13 @@ app.post('/api/users', (req, res) => {
 		});
 });
 
+const uuidParser = z.string().uuid();
+
 app.get(
 	'/api/users/:id',
 	wrap(async (req, res) => {
 		const { id } = req.params;
-		if (!id) {
+		if (!id || !uuidParser.safeParse(id).success) {
 			throw new NotFoundError();
 		}
 
