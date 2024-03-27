@@ -144,7 +144,7 @@ export const analyticsEventSchema = z.union([trackSchema, pageViewSchema]);
 
 export type AnalyticsEvent = z.infer<typeof analyticsEventSchema>;
 
-export type PageViewPayload = z.infer<typeof pageViewPayloadSchema>;
+export type PageViewPayload = (typeof pageViewPayloadSchema)['_input'];
 
 export type PageView = z.infer<typeof pageViewSchema>;
 
