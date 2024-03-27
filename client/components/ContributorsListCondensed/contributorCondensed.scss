@@ -2,6 +2,14 @@
 
 $bp: vendor.$bp-namespace;
 
+.body-contributors {
+	display: flex;
+	gap: 92px;
+	.body-contributors-header {
+		line-height: 24px;
+	}
+}
+
 .contributors-list-condensed_contributor-component {
 	display: flex;
 	margin-bottom: 8px;
@@ -20,10 +28,9 @@ $bp: vendor.$bp-namespace;
 	}
 
 	.details-wrapper {
-		flex-grow: 1;
 		padding-left: 7px;
-		width: calc(100% - 40px);
 		.name {
+			font-size: 16px;
 			font-weight: 600;
 			width: 100%;
 			white-space: nowrap;
@@ -35,32 +42,58 @@ $bp: vendor.$bp-namespace;
 				color: inherit;
 			}
 			&:first-child:last-child {
-				line-height: 30px; // Center w.r.t. avatar
+				line-height: 26px; // Center w.r.t. avatar
 			}
 		}
 	}
 
-	.orcid {
-		display: flex;
-		align-items: center;
-		margin-top: 3px;
-		font-size: 12px;
-		.#{$bp}-icon {
-			margin-right: 3px;
-		}
+	.avatar-component {
+		margin-bottom: 2px;
 	}
 
-	.affiliation {
-		font-style: italic;
-		margin-top: 3px;
-		font-size: 12px;
+	.separator {
+		color: #ffa35c;
+		margin-left: 12px;
+		margin-right: 12px;
 	}
 
 	.roles {
-		font-size: 11px;
-		text-transform: uppercase;
-		letter-spacing: 0.03em;
+		font-size: 16px;
 		margin-top: 3px;
-		font-size: 11px;
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	.contributors-list-condensed_contributor-component {
+		.body-contributors {
+			display: block;
+		}
+	}
+	.pub-document-component {
+		.body-contributors {
+			display: block;
+		}
+	}
+}
+
+@media screen and (max-width: 720px) {
+	.contributors-list-condensed_contributor-component {
+		display: block;
+		.avatar-wrapper {
+			float: left;
+		}
+		.details-wrapper {
+			display: inline-block;
+		}
+		.avatar-component {
+			margin-top: 3px;
+		}
+		.roles {
+			margin-top: 0;
+			margin-bottom: 16px;
+		}
+	}
+	.separator {
+		display: none;
 	}
 }

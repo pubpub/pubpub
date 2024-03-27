@@ -128,7 +128,7 @@ const PubDocument = () => {
 							<h5 className="body-contributors-header">
 								Contributors
 								<br />
-								(A-Z)
+								(A–Z)
 							</h5>
 							<ContributorsListCondensed attributions={contributors} />
 						</div>
