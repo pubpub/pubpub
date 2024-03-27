@@ -2,43 +2,42 @@ import type { AnalyticsInstance } from 'analytics';
 import { useEffect, useState } from 'react';
 import { AnalyticsSettings, LocationData } from 'types';
 import { createAnalyticsInstance, createInitialAnalyticsInstance } from './createAnalyticsInstance';
-import { ingoredPaths } from './ignoredPaths';
+import { ignoredPaths } from './ignoredPaths';
 
 export const useLazyLoadedAnalyticsInstance = ({
 	appname = 'pubpub',
-	shouldUseNewAnalytics,
 	canUseCustomAnalyticsProvider,
 	gdprConsent,
 	analyticsSettings,
 	locationData,
 }: {
 	appname?: string;
-	shouldUseNewAnalytics?: boolean;
 	canUseCustomAnalyticsProvider?: boolean;
 	gdprConsent?: boolean | null;
 	analyticsSettings: AnalyticsSettings;
 	locationData: LocationData;
 }) => {
+	const isIgnoredPath = ignoredPaths.some((path) => path.test(locationData.path));
+
+	// first we load the initial instance without any third party plugins
 	const [analytics, setAnalytics] = useState<AnalyticsInstance>(
-		createInitialAnalyticsInstance(shouldUseNewAnalytics),
+		createInitialAnalyticsInstance({
+			// we don't want the analytics plugin to load on ignored paths
+			stub: isIgnoredPath,
+		}),
 	);
 
-	const isIgnoredPath = ingoredPaths.some((path) => path.test(locationData.path));
-
-	const needsCustomPlugin =
-		shouldUseNewAnalytics &&
-		canUseCustomAnalyticsProvider &&
-		analyticsSettings !== null &&
-		!isIgnoredPath;
+	const needsCustomPlugin = canUseCustomAnalyticsProvider && analyticsSettings !== null;
 
 	useEffect(() => {
-		if (!needsCustomPlugin) {
+		if (!needsCustomPlugin || isIgnoredPath) {
 			return;
 		}
 
+		// only now do we load the custom plugin asynchonously, that way users
+		// that e.g. decline google analytics will never interact with GA
 		createAnalyticsInstance({
 			appname,
-			shouldUseNewAnalytics,
 			canUseCustomAnalyticsProvider,
 			gdprConsent,
 			analyticsSettings,

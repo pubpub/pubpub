@@ -23,6 +23,7 @@ export const baseSchema = z.object({
 /** Information that should always be included in any event payload */
 export const sharedEventPayloadSchema = z.object({
 	communityId: z.string().uuid(),
+	// if it's null, it 'www.pubpub.org'
 	communitySubdomain: z.string(),
 	communityName: z.string(),
 	isProd: z.boolean(),
@@ -42,7 +43,18 @@ export const basePageViewSchema = baseSchema.merge(
 
 export const sharedPageViewPayloadSchema = sharedEventPayloadSchema.merge(
 	z.object({
-		event: z.enum(['page', 'collection', 'pub']),
+		communityId: z.string().uuid().nullable(),
+		// if it's null, it 'www.pubpub.org'
+		communitySubdomain: z.string().nullable().default('www'),
+		communityName: z.string().nullable().default('pubpub'),
+		event: z.enum(['page', 'collection', 'pub', 'other']),
+	}),
+);
+
+// for search, legal, explore, etc
+export const otherPageViewPayloadSchema = sharedPageViewPayloadSchema.merge(
+	z.object({
+		event: z.literal('other'),
 	}),
 );
 
@@ -83,6 +95,7 @@ export const pubPageViewPayloadSchema = sharedPageViewPayloadSchema
 	.merge(collectionPageViewPayloadSchema.omit({ event: true }).partial());
 
 export const pageViewPayloadSchema = z.discriminatedUnion('event', [
+	otherPageViewPayloadSchema,
 	pagePageViewPayloadSchema,
 	collectionPageViewPayloadSchema,
 	pubPageViewPayloadSchema,
