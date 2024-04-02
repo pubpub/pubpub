@@ -26,7 +26,7 @@ app.get(
 					activeTargetType,
 					activeTarget.id,
 					'new',
-					initialData.locationData.isProd,
+					Boolean(initialData.locationData.isProd),
 				),
 				benchmarkToken: generateMetabaseToken(
 					activeTargetType,

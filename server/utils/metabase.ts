@@ -55,7 +55,7 @@ export const generateMetabaseToken = <T extends keyof DashboardNums>(
 				'options' in dashboardNum &&
 				dashboardNum.options) ||
 				{}),
-			//		...(isProd !== undefined && { isProd }),
+			...(isProd !== undefined && { is_prod: isProd }),
 		},
 		exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minute expiration
 	};
