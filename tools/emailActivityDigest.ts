@@ -3,6 +3,7 @@
 import { Op } from 'sequelize';
 import mailgun from 'mailgun.js';
 
+import * as Sentry from '@sentry/node';
 import { asyncMap } from 'utils/async';
 import { iterAllCommunities } from 'server/community/queries';
 import { Member, includeUserModel } from 'server/models';
@@ -58,6 +59,7 @@ async function main() {
 					} catch (err) {
 						// eslint-disable-next-line no-console
 						console.log(`sending email failed: ${err}`);
+						Sentry.captureException(err);
 					}
 				},
 				{ concurrency: 10 },
