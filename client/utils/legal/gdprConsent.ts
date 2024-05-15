@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import type { InitialCommunityData, InitialData, LoginData } from 'types';
-// import { canUseCustomAnalyticsProvider, shouldUseNewAnalytics } from 'utils/analytics/featureFlags';
 
+import { canUseCustomAnalyticsProvider, noCookieBanner } from 'utils/analytics/featureFlags';
 import { apiFetch } from '../apiFetch';
 
 import { getCookieOptions } from './cookieOptions';
@@ -33,23 +33,22 @@ export const getGdprConsentElection = (loginData: LoginData | null = null) => {
 };
 
 export const shouldShowGdprBanner = ({
-	loginData /*
- featureFlags,
- communityData: { analyticsSettings },
-*/,
+	loginData,
+	featureFlags,
+	communityData: { analyticsSettings },
 }: {
 	loginData: LoginData;
 	featureFlags: InitialData['featureFlags'];
 	communityData: InitialCommunityData;
 }) => {
-	// TODO: reinstate this behavior when heap is removed
-	// const doesNotNeedCookieBanner =
-	// 	analyticsSettings?.type !== 'google-analytics' ||
-	// 	!canUseCustomAnalyticsProvider(featureFlags);
+	const doesNotNeedCookieBanner =
+		analyticsSettings?.type !== 'google-analytics' ||
+		!canUseCustomAnalyticsProvider(featureFlags) ||
+		noCookieBanner(featureFlags);
 
-	// if (doesNotNeedCookieBanner) {
-	// 	return false;
-	// }
+	if (doesNotNeedCookieBanner) {
+		return false;
+	}
 
 	if (loginData.id && loginData.gdprConsent === null) {
 		return true;
