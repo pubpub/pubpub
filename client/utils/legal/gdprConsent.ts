@@ -9,14 +9,12 @@ import { getCookieOptions } from './cookieOptions';
 const cookieKey = 'gdpr-consent';
 const persistSignupCookieKey = 'gdpr-consent-survives-login';
 
-// TODO: replace with Google/Fathom/Simple cookies
-const odiousCookies = ['heap'];
-const deleteOdiousCookies = () => {
-	// @ts-expect-error ts-migrate(2339) FIXME: Property 'heap' does not exist on type 'Window & t... Remove this comment to see the full error message
-	window.heap?.resetIdentity();
-	// @ts-expect-error ts-migrate(2339) FIXME: Property 'heap' does not exist on type 'Window & t... Remove this comment to see the full error message
-	window.heap?.clearEventProperties();
-	odiousCookies.map((key) => Cookies.remove(key, { path: '' }));
+const deleteGoogleCookies = () => {
+	Object.keys(Cookies.get()).forEach((key) => {
+		if (key.startsWith('_ga')) {
+			Cookies.remove(key);
+		}
+	});
 };
 
 export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey) === 'yes';
@@ -66,11 +64,7 @@ export const updateGdprConsent = (
 	Cookies.set(cookieKey, doesUserConsent ? 'accept' : 'decline', cookieOptions);
 	Cookies.set(persistSignupCookieKey, 'yes', cookieOptions);
 	if (!doesUserConsent) {
-		if (!loggedIn) {
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'heap' does not exist on type 'Window & t... Remove this comment to see the full error message
-			window.heap?.identify(Math.random());
-		}
-		deleteOdiousCookies();
+		deleteGoogleCookies();
 	}
 
 	setGDPRConsent(doesUserConsent);
