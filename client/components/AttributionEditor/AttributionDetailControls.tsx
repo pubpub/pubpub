@@ -129,8 +129,6 @@ const AttributionDetailControls = (props: Props) => {
 				/>
 				{isShadowAttribution && (
 					<InputField
-						// @ts-expect-error ts-migrate(2322) FIXME: Type '"" | Element | undefined' is not assignable ... Remove this comment to see the full error message
-						rightElement={orcid && <Tag minimal>ORCID</Tag>}
 						placeholder="ORCID"
 						defaultValue={orcid ?? undefined}
 						onChange={(evt) => {
