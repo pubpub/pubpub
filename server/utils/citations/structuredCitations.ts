@@ -64,7 +64,7 @@ const getSingleCitationAsync = expiringPromise(
 	async (structuredValue: string) => {
 		return Cite.async(structuredValue);
 	},
-	{ timeout: 8000, throws: () => new Error('Citation data failed to load') },
+	{ timeout: 1500, throws: () => new Error('Citation data failed to load') },
 );
 
 const getSingleStructuredCitation = async (
@@ -100,9 +100,9 @@ const getSingleStructuredCitation = async (
 		};
 	} catch (err) {
 		return {
-			html: 'Error',
+			html: '<div>' + structuredInput + '</div>',
 			json: 'Error',
-			inline: '(Error)',
+			inline: null,
 			error: true,
 		};
 	}
