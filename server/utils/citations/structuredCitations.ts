@@ -72,8 +72,8 @@ const getSingleStructuredCitation = async (
 	citationStyle: CitationStyleKind,
 	inlineStyle: CitationInlineStyleKind,
 ) => {
+	const fallbackValue = generateFallbackHash(structuredInput);
 	try {
-		const fallbackValue = generateFallbackHash(structuredInput);
 		const citationData = await getSingleCitationAsync(structuredInput);
 		if (citationData) {
 			const citationJson = citationData.format('data', { format: 'object' });
@@ -102,7 +102,7 @@ const getSingleStructuredCitation = async (
 		return {
 			html: '<div>' + structuredInput + '</div>',
 			json: 'Error',
-			inline: null,
+			inline: inlineStyle === 'label' ? `(${fallbackValue})` : null,
 		};
 	}
 };
