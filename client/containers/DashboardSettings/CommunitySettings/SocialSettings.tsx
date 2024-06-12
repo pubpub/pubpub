@@ -120,7 +120,7 @@ const SocialSettings = (props: Props) => {
 				label="Bluesky"
 				type="text"
 				value={bluesky}
-				helperText={`https://bsky.app/profile/@${
+				helperText={`https://bsky.app/profile/${
 					bluesky || '<your bluesky handle>.<your-server.social>'
 				}`}
 				onChange={(evt) => {

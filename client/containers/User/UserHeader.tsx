@@ -65,7 +65,7 @@ const UserHeader = function (props) {
 		{
 			icon: 'bluesky' as const,
 			value: props.userData.bluesky,
-			url: `https://bsky.app/profile/@${props.userData.bluesky}`,
+			url: `https://bsky.app/profile/${props.userData.bluesky}`,
 		},
 		{
 			value: props.userData.googleScholar,

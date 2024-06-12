@@ -208,7 +208,7 @@ const UserEdit = (props: Props) => {
 		{
 			label: 'Bluesky',
 			// icon: `${Classes.ICON}-bluesky`,
-			helperText: `https://bsky.app/profile/@${
+			helperText: `https://bsky.app/profile/${
 				bluesky || '<your bluesky handle>.<your-server.social>'
 			}`,
 			value: bluesky,
