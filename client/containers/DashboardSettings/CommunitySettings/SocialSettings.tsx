@@ -111,7 +111,9 @@ const SocialSettings = (props: Props) => {
 				label="LinkedIn"
 				type="text"
 				value={linkedin}
-				helperText={`https://linkedin.com/in/${linkedin || '<your linkedin handle>'}`}
+				helperText={`https://linkedin.com/${
+					linkedin || '<in|company|school>/<your linkedin handle>'
+				}`}
 				onChange={(evt) => {
 					updateCommunityData({ linkedin: evt.target.value });
 				}}
