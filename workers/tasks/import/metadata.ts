@@ -3,6 +3,7 @@ import { metaValueToString, metaValueToJsonSerializable } from '@pubpub/prosemir
 
 import { getSearchUsers } from 'server/search/queries';
 import { isValidDate } from 'utils/dates';
+import { asyncMap } from 'utils/async';
 import { Falsy } from 'types';
 
 const getAuthorsArray = (author) => {
@@ -23,17 +24,20 @@ const getDateStringFromMetaValue = (metaDateString) => {
 	return null;
 };
 
+const getAuthorEntries = async (authorEntry) => {
+	if (typeof authorEntry === 'string') {
+		const users = await getSearchUsers(authorEntry);
+		return { name: authorEntry, users: users.map((user) => user.toJSON()) };
+	}
+	return authorEntry;
+};
 const getAttributions = async (author) => {
 	if (author) {
 		const authorsArray = getAuthorsArray(author);
 		const authorEntries = authorsArray.map(metaValueToJsonSerializable) as any[];
 		const attributions = await Promise.all(
-			authorEntries.map(async (authorEntry: string) => {
-				if (typeof authorEntry === 'string') {
-					const users = await getSearchUsers(authorEntry);
-					return { name: authorEntry, users: users.map((user) => user.toJSON()) };
-				}
-				return authorEntry;
+			await asyncMap(authorEntries, (authorEntry) => getAuthorEntries(authorEntry), {
+				concurrency: 5,
 			}),
 		);
 		return attributions;
