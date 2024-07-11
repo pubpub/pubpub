@@ -25,10 +25,10 @@ const getPubExports = async (pubId, dest) => {
 		return Promise.resolve();
 	}
 	const pdfUrl = getBestDownloadUrl(pubData, 'pdf');
-	const jatsUrl = null; // getBestDownloadUrl(pubData, 'jats');
+	const jatsUrl = getBestDownloadUrl(pubData, 'jats');
 	const finalDest = `${dest}/${pubData.slug}`;
 
-	if (!pdfUrl /* || !jatsUrl */) {
+	if (!pdfUrl || !jatsUrl) {
 		console.log('Missing:', pubData.slug);
 		await createPubExportsForLatestRelease(pubId);
 		await getPubExports(pubId, dest);
