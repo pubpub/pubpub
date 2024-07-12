@@ -35,10 +35,12 @@ const getAttributions = async (author) => {
 	if (author) {
 		const authorsArray = getAuthorsArray(author);
 		const authorEntries = authorsArray.map(metaValueToJsonSerializable) as any[];
-		const attributions = await Promise.all(
-			await asyncMap(authorEntries, (authorEntry) => getAuthorEntries(authorEntry), {
-				concurrency: 5,
-			}),
+		const attributions = await asyncMap(
+			authorEntries,
+			(authorEntry) => getAuthorEntries(authorEntry),
+			{
+				concurrency: 2,
+			},
 		);
 		return attributions;
 	}
