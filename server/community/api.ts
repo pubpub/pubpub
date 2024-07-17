@@ -42,7 +42,7 @@ export const communityServer = s.router(contract.community, {
 		};
 	},
 	create: async ({ req }) => {
-		if (!req.user.dataValues.isSuperAdmin) {
+		if (!req.user || !req.user.dataValues.isSuperAdmin) {
 			throw new ForbiddenError();
 		}
 		try {

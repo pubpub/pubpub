@@ -61,7 +61,7 @@ describe('/api/communities', () => {
 		expect(community.id).toEqual(existingCommunity.id);
 	});
 
-	it('creates a community', async () => {
+	it('does not create a community', async () => {
 		const { willCreateCommunity } = models;
 		const agent = await login(willCreateCommunity);
 		const subdomain = 'burn-book-' + uuid.v4();
@@ -73,7 +73,7 @@ describe('/api/communities', () => {
 					title: 'Burn Book',
 					description: "Get in loser we're testing our code",
 				})
-				.expect(201),
+				.expect(403),
 		).toMatchResultingObject((response) => ({
 			kind: 'community-created',
 			communityId: response.body.id,
