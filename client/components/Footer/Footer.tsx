@@ -149,7 +149,7 @@ const Footer = (props: Props) => {
 									<a href="https://github.com/pubpub/pubpub/discussions">Forum</a>
 								</li>
 								<li>
-									<a href="https://www.knowledgefutures.org/updates/pubpub-platform/">
+									<a href="https://www.knowledgefutures.org/pubpub/">
 										Learn about the new PubPub Platform
 									</a>
 								</li>
