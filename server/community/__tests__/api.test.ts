@@ -89,8 +89,8 @@ describe('/api/communities', () => {
 	});
 
 	it('does not create a community if you are not a superAdmin', async () => {
-		const { willCreateCommunity } = models;
-		const agent = await login(willCreateCommunity);
+		const { willNotCreateCommunity } = models;
+		const agent = await login(willNotCreateCommunity);
 		await agent
 			.post('/api/communities')
 			.send({
