@@ -100,7 +100,7 @@ const GlobalControls = (props: Props) => {
 			return (
 				<>
 					<GlobalControlsButton
-						href="https://knowledgefutures.org"
+						href="https://www.knowledgefutures.org/pubpub/"
 						mobileOrDesktop={{ text: 'PubPub Platform (new!)' }}
 					/>
 					{renderSearch()}

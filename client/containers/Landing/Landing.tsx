@@ -26,7 +26,7 @@ const Landing = () => {
 							</p>
 							<div className="buttons">
 								<a
-									href="https://knowledgefutures.org"
+									href="https://www.knowledgefutures.org/updates/pubpub-platform/"
 									className="custom-button black"
 								>
 									Learn More
