@@ -77,7 +77,7 @@ describe('/api/communities', () => {
 					title: 'Burn Book',
 					description: "Get in loser we're testing our code",
 				})
-				.expect(403),
+				.expect(201),
 		).toMatchResultingObject((response) => ({
 			kind: 'community-created',
 			communityId: response.body.id,
