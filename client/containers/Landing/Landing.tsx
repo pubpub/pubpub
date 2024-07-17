@@ -145,8 +145,7 @@ const Landing = () => {
 
 	const communityGrid = communities.map((community) => {
 		return (
-			// @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element[]; className: string; ke... Remove this comment to see the full error message
-			<div className="community" ker={community.name}>
+			<div className="community" key={community.name}>
 				<div className="type">
 					<strong>{community.type}</strong> / {community.category}
 				</div>
@@ -174,20 +173,26 @@ const Landing = () => {
 				<div className="container">
 					<div className="row content">
 						<div className="col-4">
-							<h1>PubPub</h1>
+							<h1>PubPub Legacy</h1>
 							<p className="subtitle">
-								The open-source, community-led, end-to-end publishing platform for
-								knowledge communities.
+								PubPub is evolving. Read our announcement to learn about the new
+								PubPub Platform for creating full-stack knowledge infrastructure and
+								our plans for helping PubPub Legacy users transition by May 2025.
 							</p>
-							<h2>Create knowledge. Share it with audiences who care.</h2>
 							<div className="buttons">
-								<a href="/community/create" className="custom-button black">
-									Create your community
+								<a
+									href="https://knowledgefutures.org"
+									className="custom-button black"
+								>
+									Learn More
 								</a>
 							</div>
 							<div className="buttons">
-								<a href="/pricing" className="custom-button">
-									Support PubPub
+								<a
+									href="https://knowledgefutures.org/contact/"
+									className="custom-button"
+								>
+									Get In Touch
 								</a>
 							</div>
 						</div>
@@ -195,189 +200,6 @@ const Landing = () => {
 				</div>
 			</div>
 			{/* END Jumbotron */}
-			{/* BEGIN Main; content */}
-			<div id="main">
-				{/* BEGIN Mission Block */}
-				<div id="mission">
-					<div className="container restricted-width">
-						<div>
-							<h3>Mission</h3>
-						</div>
-						<div>
-							As a product of the{' '}
-							<a href="https://www.knowledgefutures.org">
-								<strong>Knowledge Futures Group</strong>
-							</a>
-							, PubPub is open and accessible to all. That means a free, robust
-							version of PubPub will always be available, operating under a
-							non-profit, sustainable business model.
-						</div>
-						<div>
-							<h3>Open & Community-Led</h3>
-						</div>
-						<div>
-							<a className="git" href="https://github.com/pubpub/pubpub">
-								<Icon icon="git-repo" /> code
-							</a>
-							<a className="git" href="https://github.com/orgs/pubpub/projects/9">
-								<Icon icon="map" /> roadmap
-							</a>
-							<a className="git" href="https://github.com/pubpub/pubpub/discussions">
-								<Icon icon="comment" /> forum
-							</a>
-						</div>
-					</div>
-				</div>
-				{/* END Mission Block */}
-				{/* BEGIN Features Block */}
-				<div id="features">
-					<div className="container key">
-						<div>
-							<h3>Key Features</h3>
-						</div>
-					</div>
-					<div className="container reverse">
-						<div>
-							<h4>Collaborate & edit with co-authors in real time</h4>
-							<img
-								src="/static/landing/authoring.png"
-								alt="Screenshot of a PubPub editor interface with multiple users editing at the same time."
-							/>
-						</div>
-						<div>
-							<p className="feature-number">01</p>
-							<ul>
-								<li key="01-01">Keep everyone in the loop</li>
-								{/* <li key="01-02">Collaborate in real-time</li> */}
-								<li key="01-03">Assign roles on-the-fly</li>
-							</ul>
-						</div>
-						<div>
-							<h4>Import your work from any source</h4>
-							<img
-								src="/static/landing/importing.png"
-								alt="Screenshot of the PubPub import interface uploading a complex LaTeX document."
-							/>
-						</div>
-						<div>
-							<p className="feature-number">02</p>
-							<ul>
-								<li key="02-01">Easy multi-file imports</li>
-								<li key="02-02">Complex-content friendly</li>
-								<li key="02-03">Word, XML, LaTeX, and Markdown</li>
-							</ul>
-						</div>
-						<div>
-							<h4>Embed rich multimedia in your publication</h4>
-							<img
-								src="/static/landing/multimedia.png"
-								alt="Examples of rich content embedded in Pubs, including an equation, a stem and tree chart, and an interactive song picker."
-							/>
-						</div>
-						<div>
-							<p className="feature-number">03</p>
-							<ul>
-								<li key="03-01">Data visualizations</li>
-								<li key="03-02">Images, videos, and math</li>
-								<li key="03-03">Code, interactives, and more</li>
-							</ul>
-						</div>
-						<div className="other-features">
-							<h3>Other Features</h3>
-						</div>
-						<div className="feature-grid">{featureGrid}</div>
-					</div>
-				</div>
-				{/* END Features Block */}
-				{/* BEGIN Case Study Block */}
-				<div id="case-study">
-					<div className="container">
-						<div>
-							<h3>Community Services</h3>
-						</div>
-						<div>
-							<p>
-								For groups that want personalized support we offer production,
-								training, and strategy services for building high quality, effective
-								publishing communities.
-							</p>
-							<blockquote>
-								"The team’s innovation and experience made for an incredible
-								collaboration."
-								<br />
-								<span className="attribution">
-									- Jeremy Bailenson, Author, “
-									<a href="https://doi.org/10.1037/tmb0000030">
-										A Theoretical Argument for the Causes of Zoom Fatigue
-									</a>
-									”
-								</span>
-							</blockquote>
-							<div className="buttons">
-								<a href="/community-services" className="custom-button light">
-									Learn more
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				{/* END Case Study Block */}
-				{/* BEGIN Communities Block */}
-				<div id="communities">
-					<div className="container">
-						<div>
-							<h3>Use Cases</h3>
-						</div>
-						<div>
-							<p>
-								Thousands of communities are tailoring PubPub to suit their
-								publishing needs, goals, and content types.
-							</p>
-							<div className="community-grid">{communityGrid}</div>
-							<div className="buttons">
-								<a href="/explore" className="custom-button">
-									Explore Communities
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				{/* END Communities Block */}
-				{/* BEGIN Create Block */}
-				<div id="create">
-					<div className="container restricted-width">
-						<div>
-							<h3>Create</h3>
-						</div>
-						<div>
-							<h4>Anyone can start a PubPub Community, anytime, for free.</h4>
-							<div className="buttons">
-								<a href="/community/create" className="custom-button">
-									Create your community
-								</a>
-							</div>
-							<p className="disclaimer">
-								* A community can be your individual space to create content, or you
-								can invite others to collaborate with you!
-							</p>
-						</div>
-					</div>
-				</div>
-				{/* END Create Block */}
-				{/* BEGIN Pitch Block */}
-				<div id="pitch">
-					<div className="container restricted-width reverse">
-						<div>
-							<p>
-								PubPub empowers knowledge communities to define their own community
-								engagement models and manage their publishing workflows. Use PubPub
-								to more closely align knowledge sharing with community building.
-							</p>
-						</div>
-					</div>
-				</div>
-				{/* END Create Block */}
-			</div>
 			{/* END Main content */}
 		</div>
 	);
