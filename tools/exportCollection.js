@@ -37,20 +37,18 @@ const getPubExports = async (pubId, dest) => {
 	}
 	// Make the empty dir
 	fs.mkdirSync(finalDest);
-	promises.push(
-		fetch(jatsUrl).then(async (res) => {
-			console.log('getting JATS...', jatsUrl);
-			res.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.xml`));
-		}),
-	);
-	promises.push(
-		fetch(pdfUrl).then(async (res) => {
-			console.log('getting PDF...', pdfUrl);
-			res.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.pdf`));
-		}),
-	);
-	console.log('resolving internal loop...', promises);
-	return Promise.all(promises);
+	try {
+		const jats = await fetch(jatsUrl);
+		console.log('getting JATS...', jatsUrl);
+		jats.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.xml`));
+		const pdf = await fetch(pdfUrl);
+		console.log('getting PDF...', pdfUrl);
+		pdf.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.pdf`));
+		console.log('resolving promise...');
+		return Promise.resolve();
+	} catch (error) {
+		throw new Error(error);
+	}
 };
 
 const main = async () => {
