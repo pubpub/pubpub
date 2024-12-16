@@ -27,9 +27,9 @@ const renderStaticCode = (node: Node): DOMOutputSpec => {
 	if (parser) {
 		const tree = parser.parse(node.textContent);
 		const children = fromLezer(node.textContent, tree as unknown as Tree);
-		return ['pre', ['code', ...children]] as DOMOutputSpec;
+		return ['pre', node.attrs, ['code', ...children]] as DOMOutputSpec;
 	}
-	return ['pre', ['code', node.textContent]] as DOMOutputSpec;
+	return ['pre', node.attrs, ['code', node.textContent]] as DOMOutputSpec;
 };
 
 const codeSchema: { [key: string]: NodeSpec } = {
