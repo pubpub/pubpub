@@ -399,7 +399,7 @@ export const pubServer = s.router(contract.pub, {
 					? {
 							id: d.commenter.id,
 							name: d.commenter.name ?? '',
-						}
+					  }
 					: null,
 			}));
 		return { status: 200, body: discussions };
