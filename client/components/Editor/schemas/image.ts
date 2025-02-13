@@ -65,7 +65,8 @@ export default {
 			},
 		],
 		toDOM: (node, { isStaticallyRendered } = { isStaticallyRendered: false }) => {
-			const { url, align, id, altText, caption, fullResolution, size, hideLabel, href } = node.attrs;
+			const { url, align, id, altText, caption, fullResolution, size, hideLabel, href } =
+				node.attrs;
 
 			const width = align === 'breakout' ? 1920 : 800;
 			const isResizeable = isResizeableFormat(url) && !fullResolution;
