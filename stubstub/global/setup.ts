@@ -28,6 +28,7 @@ export default async () => {
 		await initTestDatabase();
 		global.testDbServerProcess = await startTestDatabaseServer();
 		process.env.DATABASE_URL = await setupTestDatabase();
+		process.env.DATABASE_READ_REPLICA_1_URL = process.env.DATABASE_URL;
 	}
 
 	// see hack comment above
