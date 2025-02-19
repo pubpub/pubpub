@@ -15,6 +15,7 @@ const setupLocalDatabase = async (definitely) => {
 			dbPath: path.join(process.cwd(), 'pubpub-localdb'),
 			drop: false,
 		});
+		process.env.DATABASE_READ_REPLICA_1_URL = process.env.DATABASE_URL;
 	}
 };
 
