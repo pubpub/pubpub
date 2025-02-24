@@ -4,6 +4,7 @@ import { knex } from 'knex';
 
 const database_url = process.env.DATABASE_URL;
 const database_read_replica_1_url = process.env.DATABASE_READ_REPLICA_1_URL;
+const database_read_replica_2_url = process.env.DATABASE_READ_REPLICA_2_URL;
 
 class SequelizeWithId extends Sequelize {
 	/* Create standard id type for our database */
@@ -20,6 +21,9 @@ if (!database_url) {
 if (!database_read_replica_1_url) {
 	throw new Error('DATABASE_READ_REPLICA_1_URL environment variable not set');
 }
+if (!database_read_replica_2_url) {
+	throw new Error('DATABASE_READ_REPLICA_2_URL environment variable not set');
+}
 
 const useSSL = database_url.indexOf('localhost') === -1;
 
@@ -34,12 +38,12 @@ const parseDBUrl = (url: string): ConnectionOptions => {
 	};
 };
 
-export const sequelize = new SequelizeWithId({
+export const sequelize = new SequelizeWithId(database_url, {
 	logging: false,
 	dialectOptions: { ssl: useSSL ? { rejectUnauthorized: false } : false },
 	dialect: 'postgres',
 	replication: {
-		read: [parseDBUrl(database_url), parseDBUrl(database_read_replica_1_url)],
+		read: [parseDBUrl(database_read_replica_1_url), parseDBUrl(database_read_replica_2_url)],
 		write: parseDBUrl(database_url),
 	},
 	pool: {
