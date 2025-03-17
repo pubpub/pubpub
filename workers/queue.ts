@@ -58,8 +58,6 @@ const processTask = (channel) => async (message) => {
 		workerData: taskData,
 	});
 
-	console.log(worker);
-
 	const onWorkerFinished = async (updatedTaskData) => {
 		if (hasFinished) {
 			return;
@@ -93,9 +91,6 @@ const processTask = (channel) => async (message) => {
 	};
 
 	const onWorkerError = async (error) => {
-		console.log(error);
-
-		//
 		console.error('In task:', error);
 		if (process.env.NODE_ENV === 'production') {
 			Sentry.captureException(error);

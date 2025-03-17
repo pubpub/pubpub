@@ -1,18 +1,16 @@
 // eslint-disable-next-line import/no-unresolved
-console.log('worker');
-
 import { parentPort, isMainThread, workerData } from 'worker_threads';
 
-// import {
-// 	deletePageSearchData,
-// 	setPageSearchData,
-// 	deletePubSearchData,
-// 	setPubSearchData,
-// 	updateCommunityData,
-// 	updateUserData,
-// } from './tasks/search';
-// import { exportTask } from './tasks/export';
-// import { importTask } from './tasks/import';
+import {
+	deletePageSearchData,
+	setPageSearchData,
+	deletePubSearchData,
+	setPubSearchData,
+	updateCommunityData,
+	updateUserData,
+} from './tasks/search';
+import { exportTask } from './tasks/export';
+import { importTask } from './tasks/import';
 import { archiveTask } from './tasks/archive';
 
 if (isMainThread) {
@@ -21,14 +19,14 @@ if (isMainThread) {
 }
 
 const taskMap = {
-	// export: exportTask,
-	// import: importTask,
-	// deletePageSearchData,
-	// setPageSearchData,
-	// deletePubSearchData,
-	// setPubSearchData,
-	// updateCommunityData,
-	// updateUserData,
+	export: exportTask,
+	import: importTask,
+	deletePageSearchData,
+	setPageSearchData,
+	deletePubSearchData,
+	setPubSearchData,
+	updateCommunityData,
+	updateUserData,
 	archive: archiveTask,
 };
 
@@ -50,8 +48,6 @@ const main = async (taskData) => {
 
 	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 	const collectSubprocess = (ps) => subprocesses.push(ps);
-
-	console.log(taskData);
 
 	const taskPromise = taskFn(input, collectSubprocess);
 
