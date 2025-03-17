@@ -34,6 +34,7 @@ const ExportAndDeleteSettings = () => {
 		scopeData: {
 			activePermissions: { canAdminCommunity },
 		},
+		loginData: { isSuperAdmin },
 	} = usePageContext();
 
 	const { exportEmailBody, deleteEmailBody } = useMemo(
@@ -61,6 +62,11 @@ const ExportAndDeleteSettings = () => {
 					</AnchorButton>
 				</Callout>
 			</SettingsSection>
+			{isSuperAdmin && (
+				<SettingsSection title="Export">
+					<p>Export you data</p>
+				</SettingsSection>
+			)}
 			<SettingsSection title="Data Export">
 				<p>
 					You can request an export of the data associated with your Community on PubPub

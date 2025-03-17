@@ -13,9 +13,9 @@ export const getTmpDirectoryPath = async () => {
 	return tmpDir.path;
 };
 
-export const archiveTask = async ({ communityId }: { communityId: string }) => {
+export const archiveTask = async ({ communityId, key }: { communityId: string; key: string }) => {
 	let offset = 0;
-	const limit = 100;
+	const limit = 200;
 
 	const tmpDirPath = await getTmpDirectoryPath();
 
@@ -70,11 +70,7 @@ export const archiveTask = async ({ communityId }: { communityId: string }) => {
 	// upload to s3
 	const readStream = fs.createReadStream(tmpFilePath);
 
-	const now = Date.now();
-	await assetsClient.uploadFileSplit(
-		`legacy-archive/${communityId}/${now}/pubs.json`,
-		readStream,
-	);
+	await assetsClient.uploadFileSplit(key, readStream);
 
-	return `https://assets.pubpub.org/legacy-archive/${communityId}/${now}/pubs.json`;
+	return `https://assets.pubpub.org/${key}`;
 };
