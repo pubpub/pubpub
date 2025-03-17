@@ -10,6 +10,18 @@ import {
 extendZodWithOpenApi(z);
 
 export const communityRouter = {
+	archive: {
+		path: '/api/communities/archive',
+		method: 'POST',
+		summary: 'Archive a community',
+		description: 'Archive a community. Super admin only',
+		body: z.object({}),
+		responses: {
+			200: z.object({
+				url: z.string(),
+			}),
+		},
+	},
 	/**
 	 * `GET /api/communities`
 	 *

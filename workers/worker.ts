@@ -1,16 +1,19 @@
 // eslint-disable-next-line import/no-unresolved
-const { parentPort, isMainThread, workerData } = require('worker_threads');
+console.log('worker');
 
-const {
-	deletePageSearchData,
-	setPageSearchData,
-	deletePubSearchData,
-	setPubSearchData,
-	updateCommunityData,
-	updateUserData,
-} = require('./tasks/search');
-const { exportTask } = require('./tasks/export');
-const { importTask } = require('./tasks/import');
+import { parentPort, isMainThread, workerData } from 'worker_threads';
+
+// import {
+// 	deletePageSearchData,
+// 	setPageSearchData,
+// 	deletePubSearchData,
+// 	setPubSearchData,
+// 	updateCommunityData,
+// 	updateUserData,
+// } from './tasks/search';
+// import { exportTask } from './tasks/export';
+// import { importTask } from './tasks/import';
+import { archiveTask } from './tasks/archive';
 
 if (isMainThread) {
 	// Don't run outside of a thread spawned by worker_threads in queue.js
@@ -18,14 +21,15 @@ if (isMainThread) {
 }
 
 const taskMap = {
-	export: exportTask,
-	import: importTask,
-	deletePageSearchData,
-	setPageSearchData,
-	deletePubSearchData,
-	setPubSearchData,
-	updateCommunityData,
-	updateUserData,
+	// export: exportTask,
+	// import: importTask,
+	// deletePageSearchData,
+	// setPageSearchData,
+	// deletePubSearchData,
+	// setPubSearchData,
+	// updateCommunityData,
+	// updateUserData,
+	archive: archiveTask,
 };
 
 const main = async (taskData) => {
@@ -37,7 +41,7 @@ const main = async (taskData) => {
 		throw new Error(`No task function available for task type ${type}`);
 	}
 
-	parentPort.on('message', (message) => {
+	parentPort?.on('message', (message) => {
 		if (message === 'yield') {
 			// @ts-expect-error ts-migrate(2339) FIXME: Property 'kill' does not exist on type 'never'.
 			subprocesses.forEach((ps) => ps.kill());
@@ -46,15 +50,18 @@ const main = async (taskData) => {
 
 	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 	const collectSubprocess = (ps) => subprocesses.push(ps);
+
+	console.log(taskData);
+
 	const taskPromise = taskFn(input, collectSubprocess);
 
 	let taskResult;
 	try {
 		taskResult = await taskPromise;
-		parentPort.postMessage({ result: taskResult });
+		parentPort?.postMessage({ result: taskResult });
 		process.exit(0);
 	} catch (error) {
-		parentPort.postMessage({ error });
+		parentPort?.postMessage({ error });
 		process.exit(1);
 	}
 };

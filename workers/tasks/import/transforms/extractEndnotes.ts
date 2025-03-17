@@ -1,3 +1,5 @@
+console.log('jsoonnnnnnn');
+
 import jp from 'jsonpath';
 
 import { walkAndReplace } from './util';
