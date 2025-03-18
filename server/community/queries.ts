@@ -10,6 +10,7 @@ import {
 	CollectionAttribution,
 	PubAttribution,
 	Pub,
+	WorkerTask,
 } from 'server/models';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
@@ -237,4 +238,18 @@ export const iterAllCommunities = async function* (limit = 10): AsyncGenerator<t
 		if (communities.length < limit) break;
 		offset += limit;
 	}
+};
+
+export const getComunityArchives = async (communityId: string) => {
+	const archives = await WorkerTask.findAll({
+		where: {
+			type: 'archive',
+			input: {
+				communityId,
+			},
+			isProcessing: false,
+			error: null,
+		},
+	});
+	return archives;
 };

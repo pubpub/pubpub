@@ -6,6 +6,8 @@ import { Community } from 'types';
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
 import { SettingsSection } from 'components';
+import type { WorkerTask } from 'server/models';
+import { ExportCommunityDataButton } from './ExportCommunityDataButton';
 
 const getEmails = (communityData: Community) => {
 	const exportEmailBody = stripIndent(`
@@ -28,7 +30,12 @@ const getEmails = (communityData: Community) => {
 	return { exportEmailBody, deleteEmailBody };
 };
 
-const ExportAndDeleteSettings = () => {
+type Props = {
+	settingsData: {
+		archives?: WorkerTask[];
+	};
+};
+const ExportAndDeleteSettings = (props: Props) => {
 	const {
 		communityData,
 		scopeData: {
@@ -64,7 +71,20 @@ const ExportAndDeleteSettings = () => {
 			</SettingsSection>
 			{isSuperAdmin && (
 				<SettingsSection title="Export">
-					<p>Export you data</p>
+					<p>Export your data</p>
+					<ExportCommunityDataButton />
+					{props.settingsData.archives?.map((archive) => (
+						<div key={archive.id}>
+							<p>
+								<span>
+									Data export from {new Date(archive.createdAt).toLocaleString()}
+								</span>
+								<AnchorButton href={JSON.stringify(archive.output)} target="_blank">
+									Download
+								</AnchorButton>
+							</p>
+						</div>
+					))}
 				</SettingsSection>
 			)}
 			<SettingsSection title="Data Export">
