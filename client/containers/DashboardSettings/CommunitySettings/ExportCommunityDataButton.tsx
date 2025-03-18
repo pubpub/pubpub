@@ -3,7 +3,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { pingTask } from 'client/utils/pingTask';
 import React, { useState } from 'react';
 
-export const ExportCommunityDataButton = () => {
+export const ExportCommunityDataButton = ({ disabled }: { disabled?: boolean }) => {
 	const [isExporting, setIsExporting] = useState(false);
 	const [exportUrl, setExportUrl] = useState<string | null>(null);
 
@@ -15,7 +15,7 @@ export const ExportCommunityDataButton = () => {
 				</a>
 			)}
 			<Button
-				disabled={isExporting}
+				disabled={isExporting || disabled}
 				onClick={() => {
 					setIsExporting(true);
 					apiFetch('/api/communities/archive', {

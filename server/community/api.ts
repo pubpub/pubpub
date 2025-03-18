@@ -1,5 +1,6 @@
 import { initServer } from '@ts-rest/express';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
+import { Op } from 'sequelize';
 
 import { createGetRequestIds } from 'utils/getRequestIds';
 import { expect } from 'utils/assert';
@@ -26,6 +27,8 @@ const getRequestIds = createGetRequestIds<{
 
 const s = initServer();
 
+const MAX_DAILY_EXPORTS = 5;
+
 export const communityServer = s.router(contract.community, {
 	// @ts-expect-error
 	archive: async ({ req }) => {
@@ -33,6 +36,23 @@ export const communityServer = s.router(contract.community, {
 
 		if (!req.user || !req.user?.dataValues.isSuperAdmin) {
 			throw new ForbiddenError();
+		}
+
+		const remainingExports = await WorkerTask.count({
+			where: {
+				type: 'archive',
+				createdAt: {
+					[Op.lt]: new Date(),
+					[Op.gt]: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
+				},
+				input: {
+					communityId: community.id,
+				},
+			},
+		});
+
+		if (!req.user?.dataValues.isSuperAdmin && remainingExports >= MAX_DAILY_EXPORTS) {
+			throw new Error('You have reached the maximum number of daily exports.');
 		}
 
 		const key = `legacy-archive/${community.id}/${Date.now()}/pubs.json`;
