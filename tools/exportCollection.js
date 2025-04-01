@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import fs from 'fs';
+import { pipeline } from 'stream/promises';
 import fetch from 'node-fetch';
 
 import { Collection, CollectionPub } from 'server/models';
@@ -39,11 +40,13 @@ const getPubExports = async (pubId, dest) => {
 	fs.mkdirSync(finalDest);
 	try {
 		const jats = await fetch(jatsUrl);
-		console.log('getting JATS...', jatsUrl);
-		jats.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.xml`));
+		console.log('got JATS...', jatsUrl);
+		await pipeline(jats.body, fs.createWriteStream(`${finalDest}/${pubData.slug}.xml`));
+
 		const pdf = await fetch(pdfUrl);
-		console.log('getting PDF...', pdfUrl);
-		pdf.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.pdf`));
+		console.log('got PDF...', pdfUrl);
+		await pipeline(pdf.body, fs.createWriteStream(`${finalDest}/${pubData.slug}.pdf`));
+
 		console.log('resolving promise...');
 		return Promise.resolve();
 	} catch (error) {
