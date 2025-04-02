@@ -1,7 +1,10 @@
 import archiver from 'archiver';
-import { createWriteStream } from 'fs';
+import { createReadStream, createWriteStream } from 'fs';
 import fs from 'fs/promises';
 import { Community } from 'server/models';
+import { createPubPubS3Client } from 'server/utils/s3';
+import * as stream from 'stream';
+import { pipeline } from 'stream/promises';
 import tmp from 'tmp-promise';
 import { expect } from 'utils/assert.js';
 import { communityUrl } from 'utils/canonicalUrls';
@@ -11,14 +14,10 @@ type DownloadTaskOptions = {
 	communityId: string;
 };
 
-const zipDir = async (dirPath: string) => {
+const zipDir = (dirPath: string) => {
 	return new Promise<string>((resolve, reject) => {
 		const archivePath = `${dirPath}.zip`;
-		const archiveWriter = createWriteStream(archivePath)
-			.on('end', () => {
-				resolve(archivePath);
-			})
-			.on('error', reject);
+		const archiveWriteStream = createWriteStream(archivePath);
 		const archive = archiver('zip', {
 			zlib: { level: 9 },
 		})
@@ -29,29 +28,50 @@ const zipDir = async (dirPath: string) => {
 					reject(error);
 				}
 			})
+			.on('end', () => {
+				resolve(archivePath);
+			})
+			.on('error', reject)
 			.directory(dirPath, false);
-		archive.pipe(archiveWriter);
+		archive.pipe(archiveWriteStream);
 		archive.finalize();
 	});
 };
 
+const s3 = createPubPubS3Client({
+	accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+	bucket: 'archive.pubpub.org',
+	ACL: 'public-read',
+});
+
+const uploadFromStream = (key: string) => {
+	const pass = new stream.PassThrough();
+	s3.uploadFile(key, pass, true)
+		.then(() => pass.end())
+		.catch((err) => console.error(err));
+	return pass;
+};
+
 const downloadTask = async (options: DownloadTaskOptions) => {
-	const tmpDir = await tmp.dir();
 	const community = expect(await Community.findByPk(options.communityId));
 	const communityURL = communityUrl(community);
-	const communityArchiveDir = `${tmpDir.path}/${community.id}`;
+	const tmpDir = await tmp.dir();
+	const archiveDir = `${tmpDir.path}/${community.id}`;
 	const urlFilter = (url: string) => url.indexOf(communityURL) === 0;
 	await scrape({
-		directory: communityArchiveDir,
+		directory: archiveDir,
 		urls: [communityURL],
 		urlFilter,
 		recursive: true,
-		maxDepth: 3,
-		requestConcurrency: 1,
+		maxDepth: 2,
+		requestConcurrency: 2,
 		filenameGenerator: 'bySiteStructure',
 	});
-	await zipDir(communityArchiveDir);
-	await fs.rm(communityArchiveDir, { recursive: true, force: true });
+	const archivePath = await zipDir(archiveDir);
+	const archiveReadStream = createReadStream(archivePath);
+	await pipeline(archiveReadStream, uploadFromStream(`${community.id}.zip`));
+	await Promise.all([fs.rm(archiveDir, { recursive: true, force: true }), fs.rm(archivePath)]);
 	await tmpDir.cleanup();
 };
 
