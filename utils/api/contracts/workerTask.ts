@@ -1,7 +1,7 @@
-import type { AppRouter } from '@ts-rest/core';
-import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import type { AppRouter } from '@ts-rest/core';
 import { exportFormatsArray } from 'utils/export/formats';
+import { z } from 'zod';
 import { createImportTaskSchema } from '../schemas/import';
 
 extendZodWithOpenApi(z);
@@ -141,6 +141,44 @@ export const workerTaskRouter = {
 						})
 						.openapi({
 							title: 'Export is cached',
+						}),
+				),
+		},
+	},
+
+	createDownload: {
+		path: '/api/download',
+		method: 'POST',
+		summary: 'Download a community',
+		description: `Export a community to an archive containing the complete public HTML of a community. Returns the export task's status. 
+		
+		Requires authentication.
+		
+		This returns an id of an download task. You will have to poll the status of the task to see if it is complete.`,
+		body: z.object({
+			accessHash: z.string().nullish(),
+			communityId: z.string().uuid(),
+		}),
+		responses: {
+			201: z
+				.object({
+					taskId: z.string().uuid().openapi({
+						description:
+							'The id of the download task, if no existing download already exists.',
+					}),
+				})
+				.openapi({
+					title: 'Uncached community',
+				})
+				.or(
+					z
+						.object({
+							url: z.string().url().openapi({
+								description: 'The url of the already existing community archive.',
+							}),
+						})
+						.openapi({
+							title: 'Community download is cached',
 						}),
 				),
 		},

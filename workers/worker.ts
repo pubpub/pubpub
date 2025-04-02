@@ -11,6 +11,7 @@ const {
 } = require('./tasks/search');
 const { exportTask } = require('./tasks/export');
 const { importTask } = require('./tasks/import');
+const { downloadTask } = require('./tasks/download');
 
 if (isMainThread) {
 	// Don't run outside of a thread spawned by worker_threads in queue.js
@@ -20,6 +21,7 @@ if (isMainThread) {
 const taskMap = {
 	export: exportTask,
 	import: importTask,
+	download: downloadTask,
 	deletePageSearchData,
 	setPageSearchData,
 	deletePubSearchData,

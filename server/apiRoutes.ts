@@ -10,6 +10,7 @@ require('./communityServices/api');
 require('./customScript/api');
 require('./discussion/api');
 require('./doi/api');
+require('./download/api');
 require('./editor/api');
 require('./export/api');
 require('./facets/api');
