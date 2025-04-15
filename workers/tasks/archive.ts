@@ -1,6 +1,16 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
-import { Pub, sequelize } from 'server/models';
+import {
+	Community,
+	Collection,
+	Page,
+	Pub,
+	sequelize,
+	CollectionAttribution,
+	includeUserModel,
+	ScopeSummary,
+	Member,
+} from 'server/models';
 
 import fs from 'fs';
 import tmp from 'tmp-promise';
@@ -9,6 +19,7 @@ import { buildPubOptions } from 'server/utils/queryHelpers';
 import { Transform, Readable, PassThrough } from 'stream';
 import { performance } from 'perf_hooks';
 import { isProd } from 'utils/environment';
+import { CollectionPub } from 'server/collectionPub/model';
 
 export const getTmpDirectoryPath = async () => {
 	const tmpDirPossiblySymlinked = await tmp.dir();
@@ -16,21 +27,21 @@ export const getTmpDirectoryPath = async () => {
 	return tmpDir.path;
 };
 
-const createJsonTransform = () => {
-	let isFirst = true;
-	return new Transform({
-		objectMode: true,
-		transform(chunk, _, callback) {
-			const json = JSON.stringify(chunk);
-			const prefix = isFirst ? '[\n' : ',\n';
-			isFirst = false;
-			callback(null, prefix + json);
-		},
-		flush(callback) {
-			callback(null, '\n]');
-		},
-	});
-};
+// const createJsonTransform = () => {
+// 	let isFirst = true;
+// 	return new Transform({
+// 		objectMode: true,
+// 		transform(chunk, _, callback) {
+// 			const json = JSON.stringify(chunk);
+// 			const prefix = isFirst ? '[\n' : ',\n';
+// 			isFirst = false;
+// 			callback(null, prefix + json);
+// 		},
+// 		flush(callback) {
+// 			callback(null, '\n]');
+// 		},
+// 	});
+// };
 
 const createPubStream = async (communityId: string, batchSize = 100) => {
 	let offset = 0;
@@ -51,9 +62,9 @@ const createPubStream = async (communityId: string, batchSize = 100) => {
 			const pubs = await Pub.findAll({
 				where: { communityId },
 				...buildPubOptions({
-					getCollections: true,
+					getCollections: false,
 					getMembers: true,
-					getEdges: 'approved-only',
+					getEdges: 'all',
 					getExports: true,
 					getDiscussions: true,
 					getSubmissions: true,
@@ -140,17 +151,110 @@ const createDevTools = () => {
 const devTools = createDevTools();
 const BATCH_SIZE = 500;
 
+// create a transform that prepends community data before pubs array
+const createCommunityJsonTransform = (communityData: any) => {
+	let hasWrittenPrefix = false;
+	return new Transform({
+		objectMode: true,
+		transform(chunk, _, callback) {
+			if (!hasWrittenPrefix) {
+				// write the community data first, then start the pubs array
+				let prefix = JSON.stringify(
+					{
+						community: communityData.community,
+						collections: communityData.collections,
+						pages: communityData.pages,
+						pubs: [],
+					},
+					null,
+					2,
+				);
+
+				// so we end up with `"pubs": [`
+				prefix = prefix.slice(0, -3);
+
+				hasWrittenPrefix = true;
+				callback(null, prefix + '\n' + JSON.stringify(chunk));
+			} else {
+				callback(null, ',\n' + JSON.stringify(chunk));
+			}
+		},
+		flush(callback) {
+			callback(null, '\n]}');
+		},
+	});
+};
+
+const getCommunityData = async (communityId: string) => {
+	// fetch all community data in one transaction
+	const result = await sequelize.transaction(async (trx) => {
+		const [community, collections, pages] = await Promise.all([
+			Community.findByPk(communityId, {
+				transaction: trx,
+				include: [
+					{ model: ScopeSummary, as: 'scopeSummary' },
+					{
+						model: Member,
+						as: 'members',
+						include: [includeUserModel({ as: 'user', required: false })],
+					},
+				],
+			}),
+			Collection.findAll({
+				where: { communityId },
+				transaction: trx,
+				include: [
+					{
+						model: CollectionPub,
+						as: 'collectionPubs',
+						foreignKey: 'collectionId',
+					},
+					{ model: ScopeSummary, as: 'scopeSummary' },
+					{
+						model: CollectionAttribution,
+						as: 'attributions',
+						include: [includeUserModel({ as: 'user', required: false })],
+					},
+					{
+						model: Member,
+						as: 'members',
+						include: [includeUserModel({ as: 'user', required: false })],
+					},
+					// add collection-specific includes here
+				],
+			}),
+			Page.findAll({
+				where: { communityId },
+				transaction: trx,
+			}),
+		]);
+
+		return {
+			community: community?.toJSON(),
+			collections: collections.map((c) => c.toJSON()),
+			pages: pages.map((p) => p.toJSON()),
+		};
+	});
+
+	return result;
+};
+
 export const archiveTask = async ({ communityId, key }: { communityId: string; key: string }) => {
 	const startTime = performance.now();
 	devTools.getMemoryStats();
 
+	// get community data first
+	const communityData = await getCommunityData(communityId);
+
+	// create streams
 	const pubStream = await createPubStream(communityId, BATCH_SIZE);
-	const jsonTransform = createJsonTransform();
+	const jsonTransform = createCommunityJsonTransform(communityData);
 	const multiStream = new PassThrough();
 
 	const pubTracker = devTools.createMemoryTracker(pubStream, BATCH_SIZE);
 	const jsonTracker = devTools.createMemoryTracker(jsonTransform, BATCH_SIZE);
 
+	// pipe everything together
 	pubStream.pipe(jsonTransform).pipe(multiStream);
 
 	await assetsClient.uploadFileSplit(key, multiStream);
