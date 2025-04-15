@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
-import { Pub } from 'server/models';
+import { Pub, sequelize } from 'server/models';
 
 import fs from 'fs';
 import tmp from 'tmp-promise';
@@ -36,10 +36,14 @@ const createPubStream = async (communityId: string, batchSize = 100) => {
 	let offset = 0;
 	let hasMore = true;
 
+	// we put this in one transaction to ensure we are getting the pubs from the same db
+	const trx = await sequelize.transaction();
+
 	return new Readable({
 		objectMode: true,
 		async read() {
 			if (!hasMore) {
+				await trx.commit();
 				this.push(null);
 				return;
 			}
@@ -63,6 +67,7 @@ const createPubStream = async (communityId: string, batchSize = 100) => {
 				}),
 				offset,
 				limit: batchSize,
+				transaction: trx,
 			});
 
 			hasMore = pubs.length === batchSize;
