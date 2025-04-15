@@ -40,7 +40,9 @@ export const ExportCommunityDataButton = ({ disabled }: { disabled?: boolean }) 
 							});
 					}}
 				>
-					{isExporting ? 'Exporting...' : 'Export Community Data'}
+					{isExporting
+						? 'Exporting... This may take up to 4 minutes'
+						: 'Export Community Data'}
 				</Button>
 			</div>
 
