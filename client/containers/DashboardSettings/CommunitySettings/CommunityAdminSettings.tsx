@@ -69,29 +69,33 @@ const ExportDataSection = (props: Props) => {
 			</Button>
 			{seePreviousExports && (
 				<section>
-					{props.settingsData.archives?.map((archive) => (
-						<div
-							key={archive.id}
-							style={{
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between',
-								marginBottom: '4px',
-								fontSize: '10px',
-							}}
-						>
-							<span>
-								Data export from {new Date(archive.createdAt).toLocaleString()}{' '}
-							</span>
-							<AnchorButton
-								minimal
-								href={JSON.stringify(archive.output)}
-								target="_blank"
-							>
-								Download
-							</AnchorButton>
-						</div>
-					))}
+					{props.settingsData.archives?.map(
+						(archive) =>
+							typeof archive.output === 'string' && (
+								<div
+									key={archive.id}
+									style={{
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'space-between',
+										marginBottom: '4px',
+										fontSize: '10px',
+									}}
+								>
+									<span>
+										Data export from{' '}
+										{new Date(archive.createdAt).toLocaleString()}{' '}
+									</span>
+									<AnchorButton
+										minimal
+										href={archive.output as string}
+										target="_blank"
+									>
+										Download
+									</AnchorButton>
+								</div>
+							),
+					)}
 				</section>
 			)}
 		</SettingsSection>
