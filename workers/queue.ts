@@ -54,7 +54,6 @@ const incrementAttemptCount = async (taskId, maxAttemptCount = 2) => {
 const processTask = (channel) => async (message) => {
 	currentWorkerThreads += 1;
 	const taskData = JSON.parse(message.content.toString());
-	console.log('taskData', taskData);
 	let hasFinished = false;
 	let taskTimeout;
 	const startTime = Date.now();
