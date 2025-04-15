@@ -30,6 +30,8 @@ const taskMap = {
 	archive: archiveTask,
 };
 
+export type TaskType = keyof typeof taskMap;
+
 const main = async (taskData) => {
 	const { type, input } = taskData;
 	const subprocesses = [];
