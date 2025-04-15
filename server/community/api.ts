@@ -55,7 +55,7 @@ export const communityServer = s.router(contract.community, {
 			throw new Error('You have reached the maximum number of daily exports.');
 		}
 
-		const key = `legacy-archive/${community.id}/${Date.now()}/pubs.json`;
+		const key = `legacy-archive/${community.subdomain}/${Date.now()}/static.json`;
 
 		const workerTask = await addWorkerTask({
 			type: 'archive',
