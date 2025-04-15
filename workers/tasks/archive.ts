@@ -196,6 +196,14 @@ const getCommunityData = async (communityId: string) => {
 					{
 						model: Member,
 						as: 'members',
+						foreignKey: 'communityId',
+						attributes: [
+							'id',
+							'userId',
+							'permissions',
+							'isOwner',
+							'subscribedToActivityDigest',
+						],
 						include: [includeUserModel({ as: 'user', required: false })],
 					},
 				],
@@ -218,6 +226,15 @@ const getCommunityData = async (communityId: string) => {
 					{
 						model: Member,
 						as: 'members',
+						foreignKey: 'collectionId',
+						// we dont care about communityId etc
+						attributes: [
+							'id',
+							'userId',
+							'permissions',
+							'isOwner',
+							'subscribedToActivityDigest',
+						],
 						include: [includeUserModel({ as: 'user', required: false })],
 					},
 					// add collection-specific includes here
