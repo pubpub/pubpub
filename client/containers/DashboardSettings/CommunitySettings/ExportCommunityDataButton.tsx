@@ -1,4 +1,4 @@
-import { Button, Classes } from '@blueprintjs/core';
+import { Button, Callout } from '@blueprintjs/core';
 import { apiFetch } from 'client/utils/apiFetch';
 import { pingTask } from 'client/utils/pingTask';
 import React, { useState } from 'react';
@@ -36,6 +36,14 @@ export const ExportCommunityDataButton = ({ disabled }: { disabled?: boolean }) 
 							})
 							.catch((e) => {
 								setIsExporting(false);
+								setExportUrl(null);
+								if (typeof e === 'string') {
+									setError(e);
+								} else {
+									setError(
+										'Somethig went wrong while exporting, please try again later.',
+									);
+								}
 								console.error(e);
 							});
 					}}
@@ -45,6 +53,7 @@ export const ExportCommunityDataButton = ({ disabled }: { disabled?: boolean }) 
 						: 'Export Community Data'}
 				</Button>
 			</div>
+			<br />
 
 			{exportUrl && (
 				<p>
@@ -53,7 +62,12 @@ export const ExportCommunityDataButton = ({ disabled }: { disabled?: boolean }) 
 					</a>
 				</p>
 			)}
-			{error && <p className={Classes.INTENT_DANGER}>{error}</p>}
+			<br />
+			{error && (
+				<Callout intent="danger">
+					<p>{error}</p>
+				</Callout>
+			)}
 		</div>
 	);
 };
