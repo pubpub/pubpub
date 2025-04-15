@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 import { Pub } from 'server/models';
 
@@ -7,6 +8,7 @@ import { assetsClient } from 'server/utils/s3';
 import { buildPubOptions } from 'server/utils/queryHelpers';
 import { Transform, Readable, PassThrough } from 'stream';
 import { performance } from 'perf_hooks';
+import { isProd } from 'utils/environment';
 
 export const getTmpDirectoryPath = async () => {
 	const tmpDirPossiblySymlinked = await tmp.dir();
@@ -74,64 +76,81 @@ const createPubStream = async (communityId: string, batchSize = 100) => {
 	});
 };
 
-// memory stats helper that returns formatted memory usage
-const getMemoryStats = () => {
-	const used = process.memoryUsage();
+// memory tracking utilities only exported in dev
+const createDevTools = () => {
+	if (isProd()) {
+		return {
+			getMemoryStats: () => ({}),
+			createMemoryTracker: () => ({ maxHeapUsed: 0, dataCount: 0 }),
+			logStats: () => {},
+		};
+	}
+
+	const getMemoryStats = () => {
+		const used = process.memoryUsage();
+		return {
+			heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)} MB`,
+			heapTotal: `${Math.round(used.heapTotal / 1024 / 1024)} MB`,
+			rss: `${Math.round(used.rss / 1024 / 1024)} MB`,
+		};
+	};
+
 	return {
-		heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)} MB`,
-		heapTotal: `${Math.round(used.heapTotal / 1024 / 1024)} MB`,
-		rss: `${Math.round(used.rss / 1024 / 1024)} MB`,
+		getMemoryStats,
+		// eslint-disable-next-line no-undef
+		createMemoryTracker: (stream: NodeJS.ReadableStream, batchSize = 100) => {
+			let maxHeapUsed = 0;
+			let dataCount = 0;
+
+			stream.on('data', () => {
+				const { heapUsed } = process.memoryUsage();
+				maxHeapUsed = Math.max(maxHeapUsed, heapUsed);
+				dataCount++;
+
+				if (dataCount % batchSize === 0) {
+					console.log(`Memory after ${dataCount} items:`, getMemoryStats());
+				}
+			});
+
+			return { maxHeapUsed, dataCount };
+		},
+		logStats: (
+			startTime: number,
+			pubTracker: ReturnType<typeof devTools.createMemoryTracker>,
+			jsonTracker: ReturnType<typeof devTools.createMemoryTracker>,
+		) => {
+			const endTime = performance.now();
+			const duration = ((endTime - startTime) / 1000).toFixed(2);
+
+			console.log('Final memory usage:', getMemoryStats());
+			console.log(`Total time: ${duration} seconds`);
+			console.log('Peak memory usage during streaming:', {
+				pubStream: `${Math.round(pubTracker.maxHeapUsed / 1024 / 1024)} MB`,
+				jsonTransform: `${Math.round(jsonTracker.maxHeapUsed / 1024 / 1024)} MB`,
+			});
+		},
 	};
 };
 
-// wraps a stream to track memory at each data event
-// eslint-disable-next-line no-undef
-const createMemoryTracker = (stream: NodeJS.ReadableStream, batchSize = 100) => {
-	let maxHeapUsed = 0;
-	let dataCount = 0;
-
-	stream.on('data', () => {
-		const { heapUsed } = process.memoryUsage();
-		maxHeapUsed = Math.max(maxHeapUsed, heapUsed);
-		dataCount++;
-
-		// log every 100 items to avoid console spam
-		if (dataCount % batchSize === 0) {
-			console.log(`Memory after ${dataCount} items:`, getMemoryStats());
-		}
-	});
-
-	return { maxHeapUsed, dataCount };
-};
-
+const devTools = createDevTools();
 const BATCH_SIZE = 500;
 
 export const archiveTask = async ({ communityId, key }: { communityId: string; key: string }) => {
 	const startTime = performance.now();
-	console.log('Initial memory usage:', getMemoryStats());
+	devTools.getMemoryStats();
 
 	const pubStream = await createPubStream(communityId, BATCH_SIZE);
 	const jsonTransform = createJsonTransform();
-
 	const multiStream = new PassThrough();
 
-	const pubTracker = createMemoryTracker(pubStream, BATCH_SIZE);
-	const jsonTracker = createMemoryTracker(jsonTransform, BATCH_SIZE);
+	const pubTracker = devTools.createMemoryTracker(pubStream, BATCH_SIZE);
+	const jsonTracker = devTools.createMemoryTracker(jsonTransform, BATCH_SIZE);
 
 	pubStream.pipe(jsonTransform).pipe(multiStream);
 
-	// upload directly to s3
 	await assetsClient.uploadFileSplit(key, multiStream);
 
-	const endTime = performance.now();
-	const duration = ((endTime - startTime) / 1000).toFixed(2);
-
-	console.log('Final memory usage:', getMemoryStats());
-	console.log(`Total time: ${duration} seconds`);
-	console.log('Peak memory usage during streaming:', {
-		pubStream: `${Math.round(pubTracker.maxHeapUsed / 1024 / 1024)} MB`,
-		jsonTransform: `${Math.round(jsonTracker.maxHeapUsed / 1024 / 1024)} MB`,
-	});
+	devTools.logStats(startTime, pubTracker, jsonTracker);
 
 	return `https://assets.pubpub.org/${key}`;
 };
