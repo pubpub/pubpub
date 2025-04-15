@@ -54,6 +54,7 @@ const createPubStream = async (communityId: string, batchSize = 100) => {
 					getReviews: true,
 					getDraft: true,
 					getFacets: true,
+					getFullReleases: true,
 					getEdgesOptions: {
 						includeTargetPub: true,
 					},
