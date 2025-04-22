@@ -74,13 +74,18 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 					}),
 					transaction: trx,
 				}),
-				Promise.all([
-					pubIdSlice.map((p) =>
-						p.draft?.firebasePath
-							? getPubDraftDoc(getDatabaseRef(p.draft.firebasePath), null, false)
-							: null,
-					),
-				]),
+				Promise.all(
+					pubIdSlice.map(async (p) => {
+						const firebasePath = p.draft?.firebasePath;
+						console.log('firebasePath', firebasePath);
+
+						if (!firebasePath) {
+							return null;
+						}
+
+						return getPubDraftDoc(getDatabaseRef(firebasePath), null, true);
+					}),
+				),
 			]);
 
 			const pubsWithDrafts = foundPubs.map((pub, index) => {
