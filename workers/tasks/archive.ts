@@ -111,7 +111,7 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 					...pubJson,
 					draft: {
 						...pubJson.draft,
-						doc: draft,
+						content: draft,
 					},
 				};
 			});
