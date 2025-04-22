@@ -72,30 +72,42 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 							includeTargetPub: true,
 						},
 					}),
+					order: [['createdAt', 'ASC']],
 					transaction: trx,
 				}),
 				Promise.all(
 					pubIdSlice.map(async (p) => {
 						const firebasePath = p.draft?.firebasePath;
-						console.log('firebasePath', firebasePath);
 
 						if (!firebasePath) {
 							return null;
 						}
 
-						return getPubDraftDoc(getDatabaseRef(firebasePath), null, true);
+						const draftDoc = await getPubDraftDoc(
+							getDatabaseRef(firebasePath),
+							null,
+							true,
+						);
+						return {
+							...draftDoc,
+							firebasePath,
+						};
 					}),
 				),
 			]);
 
-			const pubsWithDrafts = foundPubs.map((pub, index) => {
+			const pubsWithDrafts = foundPubs.map((pub) => {
 				const pubJson = pub.toJSON();
-				const draft = drafts[index];
+				const draft = drafts.find((d) => d?.firebasePath === pubJson.draft?.firebasePath);
+				if (!draft) {
+					console.error(`Draft not found for pub ${pubJson.id}`);
+					return null;
+				}
 				return {
 					...pubJson,
 					draft: {
 						...pubJson.draft,
-						...draft,
+						doc: draft,
 					},
 				};
 			});
@@ -314,7 +326,8 @@ const getPubs = async (communityId: string) => {
 				attributes: ['firebasePath'],
 			},
 		],
-		limit: 1000_000,
+		order: [['createdAt', 'ASC']],
+		limit: 1_000_000,
 	});
 
 	return pubs;
