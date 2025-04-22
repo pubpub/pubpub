@@ -10,6 +10,7 @@ import {
 	includeUserModel,
 	ScopeSummary,
 	Member,
+	Draft,
 } from 'server/models';
 
 import fs from 'fs';
@@ -20,6 +21,8 @@ import { Transform, Readable, PassThrough } from 'stream';
 import { performance } from 'perf_hooks';
 import { isProd } from 'utils/environment';
 import { CollectionPub } from 'server/collectionPub/model';
+import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
+import { Op } from 'sequelize';
 
 export const getTmpDirectoryPath = async () => {
 	const tmpDirPossiblySymlinked = await tmp.dir();
@@ -27,23 +30,7 @@ export const getTmpDirectoryPath = async () => {
 	return tmpDir.path;
 };
 
-// const createJsonTransform = () => {
-// 	let isFirst = true;
-// 	return new Transform({
-// 		objectMode: true,
-// 		transform(chunk, _, callback) {
-// 			const json = JSON.stringify(chunk);
-// 			const prefix = isFirst ? '[\n' : ',\n';
-// 			isFirst = false;
-// 			callback(null, prefix + json);
-// 		},
-// 		flush(callback) {
-// 			callback(null, '\n]');
-// 		},
-// 	});
-// };
-
-const createPubStream = async (communityId: string, batchSize = 100) => {
+const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 	let offset = 0;
 	let hasMore = true;
 
@@ -59,33 +46,59 @@ const createPubStream = async (communityId: string, batchSize = 100) => {
 				return;
 			}
 
-			const pubs = await Pub.findAll({
-				where: { communityId },
-				...buildPubOptions({
-					getCollections: false,
-					getMembers: true,
-					getEdges: 'all',
-					getExports: true,
-					getDiscussions: true,
-					getSubmissions: true,
-					getReviews: true,
-					getDraft: true,
-					getFacets: true,
-					getFullReleases: true,
-					getEdgesOptions: {
-						includeTargetPub: true,
-					},
+			// its more efficient to first get all the pub ids + draftRefs, then get the pubs + drafts in one go,
+			// rather than first getting the pubs, looking at their draftRefs, and then getting the drafts
+			// the latter would take too much time, but the current uses more memory
+			const pubIdSlice = pubs.slice(offset, offset + batchSize);
+			console.log(`Getting ${pubIdSlice.length} pubs`);
+			performance.mark('get pubs start');
+			const [foundPubs, drafts] = await Promise.all([
+				Pub.findAll({
+					where: { id: { [Op.in]: pubIdSlice.map((p) => p.id) } },
+					...buildPubOptions({
+						getCollections: false,
+						getMembers: true,
+						getEdges: 'all',
+						getExports: true,
+						getDiscussions: true,
+						getSubmissions: true,
+						getReviews: true,
+						getDraft: true,
+						getFacets: true,
+						getFullReleases: true,
+						getEdgesOptions: {
+							includeTargetPub: true,
+						},
+					}),
+					transaction: trx,
 				}),
-				offset,
-				limit: batchSize,
-				transaction: trx,
+				Promise.all([
+					pubIdSlice.map((p) =>
+						p.draft?.firebasePath
+							? getPubDraftDoc(getDatabaseRef(p.draft.firebasePath), null, false)
+							: null,
+					),
+				]),
+			]);
+
+			const pubsWithDrafts = foundPubs.map((pub, index) => {
+				const pubJson = pub.toJSON();
+				const draft = drafts[index];
+				return {
+					...pubJson,
+					draft: {
+						...pubJson.draft,
+						...draft,
+					},
+				};
 			});
 
-			hasMore = pubs.length === batchSize;
+			hasMore = foundPubs.length === batchSize;
 			offset += batchSize;
+			console.log(`Has more: ${hasMore}. Offset: ${offset}. Limit: ${pubs.length}`);
 
 			// eslint-disable-next-line no-restricted-syntax
-			for (const pub of pubs) {
+			for (const pub of pubsWithDrafts) {
 				this.push(pub);
 			}
 		},
@@ -149,7 +162,7 @@ const createDevTools = () => {
 };
 
 const devTools = createDevTools();
-const BATCH_SIZE = 500;
+const BATCH_SIZE = 1000;
 
 // create a transform that prepends community data before pubs array
 const createCommunityJsonTransform = (communityData: any) => {
@@ -174,9 +187,21 @@ const createCommunityJsonTransform = (communityData: any) => {
 				prefix = prefix.slice(0, -3);
 
 				hasWrittenPrefix = true;
-				callback(null, prefix + '\n' + JSON.stringify(chunk));
+				try {
+					const chunkString = prefix + '\n' + JSON.stringify(chunk);
+					callback(null, chunkString);
+				} catch (e) {
+					console.dir(chunk, { depth: 6 });
+					throw e;
+				}
 			} else {
-				callback(null, ',\n' + JSON.stringify(chunk));
+				try {
+					const chunkString = ',\n' + JSON.stringify(chunk);
+					callback(null, chunkString);
+				} catch (e) {
+					console.dir(chunk, { depth: null });
+					throw e;
+				}
 			}
 		},
 		flush(callback) {
@@ -256,15 +281,36 @@ const getCommunityData = async (communityId: string) => {
 	return result;
 };
 
+const getPubs = async (communityId: string) => {
+	const pubs = await Pub.findAll({
+		where: { communityId },
+		attributes: ['id'],
+		include: [
+			{
+				model: Draft,
+				as: 'draft',
+				attributes: ['firebasePath'],
+			},
+		],
+		limit: 1000_000,
+	});
+
+	return pubs;
+};
+
 export const archiveTask = async ({ communityId, key }: { communityId: string; key: string }) => {
 	const startTime = performance.now();
 	devTools.getMemoryStats();
 
-	// get community data first
-	const communityData = await getCommunityData(communityId);
+	// get community data + all pubs first
+	const [communityData, pubs] = await Promise.all([
+		getCommunityData(communityId),
+		getPubs(communityId),
+	]);
 
+	console.log(`Found ${pubs.length} pubs`);
 	// create streams
-	const pubStream = await createPubStream(communityId, BATCH_SIZE);
+	const pubStream = await createPubStream(pubs, BATCH_SIZE);
 	const jsonTransform = createCommunityJsonTransform(communityData);
 	const multiStream = new PassThrough();
 
@@ -277,6 +323,8 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 	await assetsClient.uploadFileSplit(key, multiStream);
 
 	devTools.logStats(startTime, pubTracker, jsonTracker);
+	const endTime = performance.now();
+	console.log(`Time taken to archive: ${endTime - startTime} milliseconds`);
 
 	return `https://assets.pubpub.org/${key}`;
 };
