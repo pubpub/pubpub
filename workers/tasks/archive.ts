@@ -83,15 +83,20 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 							return null;
 						}
 
-						const draftDoc = await getPubDraftDoc(
-							getDatabaseRef(firebasePath),
-							null,
-							true,
-						);
-						return {
-							...draftDoc,
-							firebasePath,
-						};
+						try {
+							const draftDoc = await getPubDraftDoc(
+								getDatabaseRef(firebasePath),
+								null,
+								false,
+							);
+							return {
+								...draftDoc,
+								firebasePath,
+							};
+						} catch (e) {
+							console.error(`Error getting draft doc for pub ${p.id}:`, e);
+							return null;
+						}
 					}),
 				),
 			]);
@@ -101,7 +106,6 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 				const draft = drafts.find((d) => d?.firebasePath === pubJson.draft?.firebasePath);
 				if (!draft) {
 					console.error(`Draft not found for pub ${pubJson.id}`);
-					return null;
 				}
 				return {
 					...pubJson,
