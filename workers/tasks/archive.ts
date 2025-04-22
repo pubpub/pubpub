@@ -11,6 +11,7 @@ import {
 	ScopeSummary,
 	Member,
 	Draft,
+	CustomScript,
 } from 'server/models';
 
 import fs from 'fs';
@@ -23,6 +24,7 @@ import { isProd } from 'utils/environment';
 import { CollectionPub } from 'server/collectionPub/model';
 import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { Op } from 'sequelize';
+import { fetchFacetsForScopeIds } from 'server/facets';
 
 export const getTmpDirectoryPath = async () => {
 	const tmpDirPossiblySymlinked = await tmp.dir();
@@ -213,7 +215,7 @@ const createCommunityJsonTransform = (communityData: any) => {
 const getCommunityData = async (communityId: string) => {
 	// fetch all community data in one transaction
 	const result = await sequelize.transaction(async (trx) => {
-		const [community, collections, pages] = await Promise.all([
+		const [community, customScripts, collections, pages] = await Promise.all([
 			Community.findByPk(communityId, {
 				transaction: trx,
 				include: [
@@ -232,6 +234,10 @@ const getCommunityData = async (communityId: string) => {
 						include: [includeUserModel({ as: 'user', required: false })],
 					},
 				],
+			}),
+			CustomScript.findAll({
+				where: { communityId },
+				transaction: trx,
 			}),
 			Collection.findAll({
 				where: { communityId },
@@ -262,7 +268,6 @@ const getCommunityData = async (communityId: string) => {
 						],
 						include: [includeUserModel({ as: 'user', required: false })],
 					},
-					// add collection-specific includes here
 				],
 			}),
 			Page.findAll({
@@ -271,9 +276,21 @@ const getCommunityData = async (communityId: string) => {
 			}),
 		]);
 
+		const facets = await fetchFacetsForScopeIds({
+			community: [communityId],
+			collection: collections.map((c) => c.id),
+		});
+
 		return {
-			community: community?.toJSON(),
-			collections: collections.map((c) => c.toJSON()),
+			community: {
+				...community?.toJSON(),
+				facets: facets.community[communityId],
+				customScripts,
+			},
+			collections: collections.map((c) => ({
+				...c.toJSON(),
+				facets: facets.collection[c.id],
+			})),
 			pages: pages.map((p) => p.toJSON()),
 		};
 	});
