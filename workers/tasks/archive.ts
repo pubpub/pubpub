@@ -24,7 +24,7 @@ import { isProd } from 'utils/environment';
 import { CollectionPub } from 'server/collectionPub/model';
 import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { Op } from 'sequelize';
-import { fetchFacetsForScopeIds } from 'server/facets';
+import { fetchFacetsForScope, fetchFacetsForScopeIds } from 'server/facets';
 
 export const getTmpDirectoryPath = async () => {
 	const tmpDirPossiblySymlinked = await tmp.dir();
@@ -54,7 +54,7 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 			const pubIdSlice = pubs.slice(offset, offset + batchSize);
 			console.log(`Getting ${pubIdSlice.length} pubs`);
 			performance.mark('get pubs start');
-			const [foundPubs, drafts] = await Promise.all([
+			const [foundPubs, facets, drafts] = await Promise.all([
 				Pub.findAll({
 					where: { id: { [Op.in]: pubIdSlice.map((p) => p.id) } },
 					...buildPubOptions({
@@ -74,6 +74,9 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 					}),
 					order: [['createdAt', 'ASC']],
 					transaction: trx,
+				}),
+				fetchFacetsForScopeIds({
+					pub: pubIdSlice.map((p) => p.id),
 				}),
 				Promise.all(
 					pubIdSlice.map(async (p) => {
@@ -110,8 +113,9 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 				),
 			]);
 
-			const pubsWithDrafts = foundPubs.map((pub) => {
+			const pubsWithDraftsAndFacets = foundPubs.map((pub) => {
 				const pubJson = pub.toJSON();
+				const pubFacets = facets.pub[pubJson.id];
 				const firebaseDraft = drafts.find(
 					(d) => d?.firebasePath === pubJson.draft?.firebasePath,
 				);
@@ -121,6 +125,7 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 
 				return {
 					...pubJson,
+					facets: pubFacets,
 					draft: {
 						...pubJson.draft,
 						doc: firebaseDraft,
@@ -133,7 +138,7 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 			console.log(`Has more: ${hasMore}. Offset: ${offset}. Limit: ${pubs.length}`);
 
 			// eslint-disable-next-line no-restricted-syntax
-			for (const pub of pubsWithDrafts) {
+			for (const pub of pubsWithDraftsAndFacets) {
 				this.push(pub);
 			}
 		},
