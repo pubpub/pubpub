@@ -24,7 +24,7 @@ import { isProd } from 'utils/environment';
 import { CollectionPub } from 'server/collectionPub/model';
 import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { Op } from 'sequelize';
-import { fetchFacetsForScope, fetchFacetsForScopeIds } from 'server/facets';
+import { fetchFacetsForScopeIds } from 'server/facets';
 
 export const getTmpDirectoryPath = async () => {
 	const tmpDirPossiblySymlinked = await tmp.dir();
