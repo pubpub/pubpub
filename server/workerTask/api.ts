@@ -1,7 +1,8 @@
 import { initServer } from '@ts-rest/express';
-import { contract } from 'utils/api/contract';
-import { importRouteImplementation } from 'server/import/api';
+import { downloadRouteImplementation } from 'server/download/api';
 import { exportRouteImplementation } from 'server/export/api';
+import { importRouteImplementation } from 'server/import/api';
+import { contract } from 'utils/api/contract';
 import { getWorkerTask } from './queries';
 
 const s = initServer();
@@ -16,4 +17,5 @@ export const workerTaskServer = s.router(contract.workerTask, {
 	},
 	createImport: importRouteImplementation,
 	createExport: exportRouteImplementation,
+	createDownload: downloadRouteImplementation,
 });

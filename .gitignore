@@ -16,3 +16,4 @@ pubpub-localdb/
 .pubpub_repl_history*
 tsconfig.tsbuildinfo
 .jest/secret-env.js
+.env
