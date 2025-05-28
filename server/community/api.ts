@@ -1,24 +1,24 @@
 import { initServer } from '@ts-rest/express';
-import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { Op } from 'sequelize';
+import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 
-import { createGetRequestIds } from 'utils/getRequestIds';
-import { expect } from 'utils/assert';
 import { contract } from 'utils/api/contract';
+import { expect } from 'utils/assert';
 import {
 	ensureUserIsCommunityAdmin,
 	findCommunityByHostname,
 } from 'utils/ensureUserIsCommunityAdmin';
+import { createGetRequestIds } from 'utils/getRequestIds';
 
+import { WorkerTask } from 'server/models';
 import { addWorkerTask } from 'server/utils/workers';
 import { getWorkerTask } from 'server/workerTask/queries';
-import { WorkerTask } from 'server/models';
 import { getPermissions } from './permissions';
 import {
+	CommunityURLAlreadyExistsError,
 	createCommunity,
 	getCommunity,
 	updateCommunity,
-	CommunityURLAlreadyExistsError,
 } from './queries';
 
 const getRequestIds = createGetRequestIds<{
@@ -55,7 +55,7 @@ export const communityServer = s.router(contract.community, {
 			throw new Error('You have reached the maximum number of daily exports.');
 		}
 
-		const key = `legacy-archive/${community.subdomain}/${Date.now()}/static.json`;
+		const key = `legacy-archive/${community.subdomain}/${Date.now()}/static.zip`;
 
 		const workerTask = await addWorkerTask({
 			type: 'archive',

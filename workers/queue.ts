@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
 import path from 'path';
 // eslint-disable-next-line import/no-unresolved
-import { Worker } from 'worker_threads';
-import amqplib from 'amqplib';
 import * as Sentry from '@sentry/node';
+import amqplib from 'amqplib';
+import { Worker } from 'worker_threads';
 
-import { isProd, getAppCommit } from 'utils/environment';
-import { TaskPriority, taskQueueName } from 'utils/workers';
 import { WorkerTask } from 'server/models';
 import { expect } from 'utils/assert';
 import { createCachePurgeDebouncer } from 'utils/caching/createCachePurgeDebouncer';
+import { getAppCommit, isProd } from 'utils/environment';
+import { TaskPriority, taskQueueName } from 'utils/workers';
 import type { TaskType } from './worker';
 
 const maxWorkerTimeSeconds = 120;
@@ -60,7 +60,7 @@ const processTask = (channel) => async (message) => {
 	console.log(`Beginning ${taskData.id} (load ${currentWorkerThreads}/${maxWorkerThreads})`);
 
 	const worker = new Worker(path.join(__dirname, 'initWorker.js'), {
-		execArgv: ['-r', 'esm'],
+		execArgv: ['-r', 'esm-wallaby'],
 		workerData: taskData,
 	});
 
