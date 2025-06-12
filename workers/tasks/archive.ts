@@ -57,9 +57,7 @@ const zipDir = (dirPath: string) => {
 };
 
 const archiveCommunityHtml = async (directory: string, community: SerializedModel<Community>) => {
-	const url =
-		// process.env.NODE_ENV === 'development' ?
-		'http://localhost:9876'; // : communityUrl(community);
+	const url = communityUrl(community);
 	const urlFilter = (u: string) => u.indexOf(url) === 0 && !u.includes('login');
 	const result = await scrape({
 		directory,
