@@ -60,7 +60,6 @@ const processTask = (channel) => async (message) => {
 	console.log(`Beginning ${taskData.id} (load ${currentWorkerThreads}/${maxWorkerThreads})`);
 
 	const worker = new Worker(path.join(__dirname, 'initWorker.js'), {
-		execArgv: ['-r', 'esm-wallaby'],
 		workerData: taskData,
 	});
 

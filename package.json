@@ -254,7 +254,7 @@
 		"zustand": "^4.0.0-rc.1"
 	},
 	"engines": {
-		"node": "18.7.0"
+		"node": "24.2.0"
 	},
 	"devDependencies": {
 		"@blueprintjs/eslint-plugin": "^2.5.2",
