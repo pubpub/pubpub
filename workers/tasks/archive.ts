@@ -6,20 +6,24 @@ import {
 	Community,
 	CustomScript,
 	Draft,
+	Export,
 	includeUserModel,
 	Member,
 	Page,
 	Pub,
+	Release,
 	ScopeSummary,
 	sequelize,
 } from 'server/models';
 
 import archiver from 'archiver';
+import cheerio from 'cheerio';
 import { createReadStream, createWriteStream } from 'fs';
 import fs from 'fs/promises';
 import { performance } from 'perf_hooks';
 import { Op } from 'sequelize';
 import { CollectionPub } from 'server/collectionPub/model';
+import { getOrStartExportTask } from 'server/export/queries';
 import { fetchFacetsForScopeIds } from 'server/facets';
 import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { buildPubOptions } from 'server/utils/queryHelpers';
@@ -27,7 +31,8 @@ import { assetsClient } from 'server/utils/s3';
 import { Readable, Transform } from 'stream';
 import { pipeline } from 'stream/promises';
 import tmp from 'tmp-promise';
-import { SerializedModel } from 'types';
+import { DefinitelyHas, SerializedModel } from 'types';
+import { expect } from 'utils/assert';
 import { communityUrl } from 'utils/canonicalUrls';
 import { isProd } from 'utils/environment';
 import scrape from 'website-scraper';
@@ -83,7 +88,46 @@ const archiveCommunityHtml = async (directory: string, community: SerializedMode
 							requestOptions,
 						};
 					});
-					register('afterResponse', ({ response }) => {
+					register('afterResponse', async ({ response }) => {
+						// example pub path: pub/e0de7uq7/release/1
+						// extract slug and release number
+						const match = (response.requestUrl as URL).pathname.match(
+							/^\/pub\/([a-z0-9]+)\/release\/(\d+)/,
+						);
+						if (match !== null) {
+							const [slug, releaseNumberString] = match.slice(1);
+							const pub = await Pub.findOne({
+								where: { slug },
+								include: [
+									{
+										model: Release,
+										as: 'releases',
+									},
+								],
+							});
+							if (pub?.releases === undefined || pub.releases.length === 0) {
+								console.warn(
+									`No releases found for pub with slug ${slug} at ${response.requestUrl.href}`,
+								);
+								return response.body;
+							}
+							const releaseNumber = parseInt(releaseNumberString, 10);
+							const release = expect(pub.releases.at(releaseNumber - 1));
+							const downloads = await guaranteeDownloadsForRelease(release);
+							const $ = cheerio.load(response.body);
+							$('.pub-download-component')
+								.remove('[role=menuitem]')
+								.append(
+									downloads
+										.map((download) => {
+											return `<li tabindex="-1" aria-disabled="false" role="menuitem"><a target="_self" class="bp3-menu-item" href="${
+												download.url
+											}"><div class="bp3-text-overflow-ellipsis bp3-fill"><span class="bp3-popover-wrapper"><span class="bp3-popover-target"><span class="" tabindex="0">${download.format.toUpperCase()}</span></span></span></div><span class="bp3-menu-item-label"><span></span></span></a></li>`;
+										})
+										.join(''),
+								);
+							return $.html();
+						}
 						console.log(
 							`Fetched ${response.requestUrl.href} with status: ${response.statusCode}`,
 						);
@@ -418,6 +462,53 @@ const getPubs = async (communityId: string) => {
 	return pubs;
 };
 
+const guaranteedExportFormats = ['pdf', 'jats'];
+
+const wait = (ms: number) => {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+const waitForExport = async (workerTaskId: string): Promise<DefinitelyHas<Export, 'url'>> => {
+	while (true) {
+		const pubExport = expect(
+			await Export.findOne({
+				where: { workerTaskId },
+			}),
+		);
+
+		if (pubExport.url) {
+			return pubExport as DefinitelyHas<Export, 'url'>;
+		}
+
+		if (pubExport.workerTask?.error) {
+			throw new Error(`Export task ${workerTaskId} failed: ${pubExport.workerTask.error}`);
+		}
+
+		await wait(1000);
+	}
+};
+
+const guaranteeDownloadsForRelease = async (release: Release) => {
+	const tasks = await Promise.all(
+		guaranteedExportFormats.map((format) => {
+			return getOrStartExportTask({
+				pubId: release.pubId,
+				format,
+				historyKey: release.historyKey,
+			});
+		}),
+	);
+	const downloads = await Promise.all(
+		tasks.map((task) => {
+			if (typeof task.url === 'string') {
+				return task as DefinitelyHas<Export, 'url'>;
+			}
+			return waitForExport(task.taskId);
+		}),
+	);
+	return downloads;
+};
+
 export const archiveTask = async ({ communityId, key }: { communityId: string; key: string }) => {
 	const startTime = performance.now();
 	devTools.getMemoryStats();
@@ -433,15 +524,11 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 	const tmpDir = await tmp.dir();
 	const tmpArchiveDir = `${tmpDir.path}/${communityId}`;
 
-	console.log(`Gone scrapin' ${tmpArchiveDir}`);
-
 	// scrape community html and assets
 	await archiveCommunityHtml(
 		tmpArchiveDir,
 		communityData.community as SerializedModel<Community>,
 	);
-
-	console.log("Done scrapin'");
 
 	// create streams
 	const pubReadStream = await createPubStream(pubs, BATCH_SIZE);
