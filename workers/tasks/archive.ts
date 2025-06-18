@@ -1,35 +1,97 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 import {
-	Community,
 	Collection,
+	CollectionAttribution,
+	Community,
+	CustomScript,
+	Draft,
+	includeUserModel,
+	Member,
 	Page,
 	Pub,
-	sequelize,
-	CollectionAttribution,
-	includeUserModel,
 	ScopeSummary,
-	Member,
-	Draft,
-	CustomScript,
+	sequelize,
 } from 'server/models';
 
-import fs from 'fs';
-import tmp from 'tmp-promise';
-import { assetsClient } from 'server/utils/s3';
-import { buildPubOptions } from 'server/utils/queryHelpers';
-import { Transform, Readable, PassThrough } from 'stream';
+import archiver from 'archiver';
+import { createReadStream, createWriteStream } from 'fs';
+import fs from 'fs/promises';
 import { performance } from 'perf_hooks';
-import { isProd } from 'utils/environment';
-import { CollectionPub } from 'server/collectionPub/model';
-import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { Op } from 'sequelize';
+import { CollectionPub } from 'server/collectionPub/model';
 import { fetchFacetsForScopeIds } from 'server/facets';
+import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
+import { buildPubOptions } from 'server/utils/queryHelpers';
+import { assetsClient } from 'server/utils/s3';
+import { Readable, Transform } from 'stream';
+import { pipeline } from 'stream/promises';
+import tmp from 'tmp-promise';
+import { SerializedModel } from 'types';
+import { communityUrl } from 'utils/canonicalUrls';
+import { isProd } from 'utils/environment';
+import scrape from 'website-scraper';
 
-export const getTmpDirectoryPath = async () => {
-	const tmpDirPossiblySymlinked = await tmp.dir();
-	const tmpDir = fs.opendirSync(fs.realpathSync(tmpDirPossiblySymlinked.path));
-	return tmpDir.path;
+const zipDir = (dirPath: string) => {
+	return new Promise<string>((resolve, reject) => {
+		const archivePath = `${dirPath}.zip`;
+		const archiveWriteStream = createWriteStream(archivePath);
+		const archive = archiver('zip', {
+			zlib: { level: 9 },
+		})
+			.on('warning', (error) => {
+				if (error.code === 'ENOENT') {
+					console.error(error);
+				} else {
+					reject(error);
+				}
+			})
+			.on('end', () => {
+				resolve(archivePath);
+			})
+			.on('error', reject)
+			.directory(dirPath, false);
+		archive.pipe(archiveWriteStream);
+		archive.finalize();
+	});
+};
+
+const archiveCommunityHtml = async (directory: string, community: SerializedModel<Community>) => {
+	const url = communityUrl(community);
+	const urlFilter = (u: string) => u.indexOf(url) === 0 && !u.includes('login');
+	const result = await scrape({
+		directory,
+		urls: [url],
+		urlFilter,
+		recursive: true,
+		maxRecursiveDepth: 4,
+		requestConcurrency: 1,
+		filenameGenerator: 'bySiteStructure',
+		plugins: [
+			{
+				apply(register) {
+					register('error', async ({ error }) => {
+						console.error(error);
+					});
+					register('onResourceError', ({ resource, error }) => {
+						console.error(`Failed to fetch resource ${resource.url}`, error);
+					});
+					register('beforeRequest', ({ resource, requestOptions }) => {
+						console.log(`Fetching ${resource.url}`);
+						return {
+							resource,
+							requestOptions,
+						};
+					});
+					register('afterResponse', async ({ response }) => {
+						console.log(`Fetched ${response.url}: ${response.statusCode}`);
+						return response;
+					});
+				},
+			},
+		],
+	});
+	return result;
 };
 
 const createPubStream = async (pubs: Pub[], batchSize = 100) => {
@@ -365,18 +427,46 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 	]);
 
 	console.log(`Found ${pubs.length} pubs`);
-	// create streams
-	const pubStream = await createPubStream(pubs, BATCH_SIZE);
-	const jsonTransform = createCommunityJsonTransform(communityData);
-	const multiStream = new PassThrough();
 
-	const pubTracker = devTools.createMemoryTracker(pubStream, BATCH_SIZE);
-	const jsonTracker = devTools.createMemoryTracker(jsonTransform, BATCH_SIZE);
+	const tmpDir = await tmp.dir();
+	const tmpArchiveDir = `${tmpDir.path}/${communityId}`;
+
+	console.log(`Scraping ${communityUrl(communityData.community)}`);
+
+	// scrape community html and assets
+	await archiveCommunityHtml(
+		tmpArchiveDir,
+		communityData.community as SerializedModel<Community>,
+	);
+
+	console.log(`Scraped community HTML to ${tmpArchiveDir}`);
+
+	// create streams
+	const pubReadStream = await createPubStream(pubs, BATCH_SIZE);
+	const pubWriteStream = createWriteStream(`${tmpArchiveDir}/static.json`);
+	const communityJsonTransform = createCommunityJsonTransform(communityData);
+
+	const pubTracker = devTools.createMemoryTracker(pubReadStream, BATCH_SIZE);
+	const jsonTracker = devTools.createMemoryTracker(communityJsonTransform, BATCH_SIZE);
 
 	// pipe everything together
-	pubStream.pipe(jsonTransform).pipe(multiStream);
+	await pipeline(pubReadStream, communityJsonTransform, pubWriteStream);
 
-	await assetsClient.uploadFileSplit(key, multiStream);
+	const archivePath = await zipDir(tmpArchiveDir);
+	const archiveReadStream = createReadStream(archivePath);
+
+	await assetsClient.uploadFileSplit(`${key}.zip`, archiveReadStream);
+	await assetsClient.uploadFileSplit(`${key}.json`, createReadStream(pubWriteStream.path));
+
+	console.log(`Uploaded archive to ${key}`);
+
+	await Promise.all([
+		// remove the archive directory
+		fs.rm(tmpArchiveDir, { recursive: true, force: true }),
+		// remove the archive file
+		fs.rm(archivePath),
+	]);
+	await tmpDir.cleanup();
 
 	devTools.logStats(startTime, pubTracker, jsonTracker);
 	const endTime = performance.now();

@@ -31,7 +31,7 @@ export const ExportCommunityDataButton = ({ disabled }: { disabled?: boolean }) 
 									return;
 								}
 
-								setExportUrl(output);
+								setExportUrl(`${output}.zip`);
 								setIsExporting(false);
 							})
 							.catch((e) => {
