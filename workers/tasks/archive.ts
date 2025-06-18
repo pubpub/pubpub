@@ -455,7 +455,8 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 	const archivePath = await zipDir(tmpArchiveDir);
 	const archiveReadStream = createReadStream(archivePath);
 
-	await assetsClient.uploadFileSplit(key, archiveReadStream);
+	await assetsClient.uploadFileSplit(`${key}.zip`, archiveReadStream);
+	await assetsClient.uploadFileSplit(`${key}.json`, createReadStream(pubWriteStream.path));
 
 	console.log(`Uploaded archive to ${key}`);
 

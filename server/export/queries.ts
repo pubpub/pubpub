@@ -27,7 +27,7 @@ export const getOrStartExportTask = async ({
 	});
 
 	if (existingExport) {
-		const { url, workerTask, format } = existingExport;
+		const { url, workerTask } = existingExport;
 		if (url) {
 			return { url, format };
 		}
