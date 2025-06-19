@@ -210,6 +210,7 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 							pub.id,
 							releases[releases.length - 1].historyKey,
 						);
+						const firstPublished = releases[0].createdAt;
 						const pubMetadata = await getPubMetadata(pub.id);
 						const notesData = await getNotesData(pubMetadata, doc);
 						const { nodeLabels } = pubMetadata;
@@ -231,6 +232,7 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 						return {
 							...pub,
 							latestReleaseHtml: htmlDoc,
+							firstPublished,
 						};
 					}
 					return pub;
