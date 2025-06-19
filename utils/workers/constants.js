@@ -13,6 +13,6 @@ export const TaskPriority = {
 // a queue with this name will be created automatically. You'll need to visit the RabbitMQ
 // control panel, move all unfinished tasks into the new queue, and then delete the old one.
 const prodTaskQueueName = 'pubpubTaskQueue-2020-07-20';
-const localTaskQueueName = isDevelopment() && process.env.PUBPUB_LOCAL_TASK_QUEUE;
+const localTaskQueueName = process.env.PUBPUB_LOCAL_TASK_QUEUE;
 
 export const taskQueueName = localTaskQueueName || prodTaskQueueName;

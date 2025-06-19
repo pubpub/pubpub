@@ -32,6 +32,13 @@ import { communityUrl } from 'utils/canonicalUrls';
 import { isProd } from 'utils/environment';
 import scrape from 'website-scraper';
 
+import { renderStatic, editorSchema } from 'client/components/Editor';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import { addHrefsToNotes, filterNonExportableNodes } from './export/html';
+import { getNotesData } from './export/notes';
+import { getPubMetadata } from './export/metadata';
+
 const zipDir = (dirPath: string) => {
 	return new Promise<string>((resolve, reject) => {
 		const archivePath = `${dirPath}.zip`;
@@ -195,12 +202,47 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 				};
 			});
 
+			const pubsWithReleaseHtml = await Promise.all(
+				pubsWithDraftsAndFacets.map(async (pub) => {
+					const { releases } = pub;
+					if (releases && releases.length > 0) {
+						const { doc } = await getPubDraftDoc(
+							pub.id,
+							releases[releases.length - 1].historyKey,
+						);
+						const pubMetadata = await getPubMetadata(pub.id);
+						const notesData = await getNotesData(pubMetadata, doc);
+						const { nodeLabels } = pubMetadata;
+						const { noteManager } = notesData;
+
+						const renderableNodes = [filterNonExportableNodes, addHrefsToNotes]
+							.filter((x): x is (nodes: any) => any => !!x)
+							.reduce((nodes, fn) => fn(nodes), doc.content);
+
+						const docContent = renderStatic({
+							schema: editorSchema,
+							doc: { type: 'doc', content: renderableNodes },
+							noteManager,
+							nodeLabels,
+						});
+						const htmlDoc = ReactDOMServer.renderToStaticMarkup(
+							<article>{docContent}</article>,
+						);
+						return {
+							...pub,
+							latestReleaseHtml: htmlDoc,
+						};
+					}
+					return pub;
+				}),
+			);
+
 			hasMore = foundPubs.length === batchSize;
 			offset += batchSize;
 			console.log(`Has more: ${hasMore}. Offset: ${offset}. Limit: ${pubs.length}`);
 
 			// eslint-disable-next-line no-restricted-syntax
-			for (const pub of pubsWithDraftsAndFacets) {
+			for (const pub of pubsWithReleaseHtml) {
 				this.push(pub);
 			}
 		},

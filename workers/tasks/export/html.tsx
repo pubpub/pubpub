@@ -68,7 +68,7 @@ const createCss = () => {
 
 const staticCss = createCss();
 
-const filterNonExportableNodes = (nodes) =>
+export const filterNonExportableNodes = (nodes) =>
 	nodes.filter((n) => !nonExportableNodeTypes.includes(n.type));
 
 const addAttrsToNodes = (newAttrs, matchNodeTypes, nodes) =>
@@ -106,7 +106,7 @@ const getFootnoteLinkage = (index) => {
 	};
 };
 
-const addHrefsToNotes = (nodes) => {
+export const addHrefsToNotes = (nodes) => {
 	let footnoteIndex = -1;
 	return addAttrsToNodes(
 		(node) => {
@@ -136,7 +136,7 @@ const addHrefsToNotes = (nodes) => {
 	);
 };
 
-const blankIframes = (nodes) =>
+export const blankIframes = (nodes) =>
 	addAttrsToNodes(
 		{
 			url: 'data:text/html;charset=utf-8,%3Chtml%3E%3Cbody%20frameborder%3D%220%22%20style%3D%22background-color%3A%23ccc%3Bborder%3A0%3Btext-align%3Acenter%3B%22%3EVisit%20the%20web%20version%20of%20this%20article%20to%20view%20interactive%20content.%3C%2Fbody%3E%3C%2Fhtml%3E',
