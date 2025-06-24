@@ -34,7 +34,12 @@ export const communityServer = s.router(contract.community, {
 	archive: async ({ req }) => {
 		const community = await ensureUserIsCommunityAdmin(req);
 
-		if (!req.user || !req.user?.dataValues.isSuperAdmin) {
+		const permissions = await getPermissions({
+			userId: req.user?.id,
+			communityId: community.id,
+		});
+
+		if (!permissions.archive) {
 			throw new ForbiddenError();
 		}
 

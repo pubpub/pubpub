@@ -7,6 +7,7 @@ import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
 import { SettingsSection } from 'components';
 import type { WorkerTask } from 'server/models';
+import { isDataExportEnabled } from 'utils/analytics/featureFlags';
 import { ExportCommunityDataButton } from './ExportCommunityDataButton';
 
 const getEmails = (communityData: Community) => {
@@ -55,7 +56,11 @@ const ExportDataSection = (props: Props) => {
 
 	return (
 		<SettingsSection title="Export">
-			<p>Export your data.</p>
+			<p>
+				Export your communities data. Will create a zip archive with all publically
+				accessible pages in your community as HTML files, as well as a JSON file containing
+				structured information about your community.
+			</p>
 			<p>You have {remainingExports} remaining daily exports.</p>
 			<ExportCommunityDataButton disabled={remainingExports === 0} />
 
@@ -109,16 +114,16 @@ const ExportAndDeleteSettings = (props: Props) => {
 			activePermissions: { canAdminCommunity },
 		},
 		loginData: { isSuperAdmin },
+		featureFlags,
 	} = usePageContext();
 
-	const { exportEmailBody, deleteEmailBody } = useMemo(
-		() => getEmails(communityData),
-		[communityData],
-	);
+	const { deleteEmailBody } = useMemo(() => getEmails(communityData), [communityData]);
 
 	if (!canAdminCommunity) {
 		return null;
 	}
+
+	const canExportData = isDataExportEnabled(featureFlags) || isSuperAdmin;
 
 	return (
 		<>
@@ -136,8 +141,8 @@ const ExportAndDeleteSettings = (props: Props) => {
 					</AnchorButton>
 				</Callout>
 			</SettingsSection>
-			{isSuperAdmin && <ExportDataSection settingsData={props.settingsData} />}
-			<SettingsSection title="Data Export">
+			{canExportData && <ExportDataSection settingsData={props.settingsData} />}
+			{/* <SettingsSection title="Data Export">
 				<p>
 					You can request an export of the data associated with your Community on PubPub
 					using the button below.
@@ -148,7 +153,7 @@ const ExportAndDeleteSettings = (props: Props) => {
 				>
 					Request data export
 				</AnchorButton>
-			</SettingsSection>
+			</SettingsSection> */}
 			<SettingsSection title="Community Deletion">
 				<p>
 					You can request that we completely delete your PubPub Community using the button

@@ -37,7 +37,7 @@
 		"test-no-lint": "NODE_OPTIONS=--max-old-space-size=8192 firebase emulators:exec --only database --import .firebase/default-contents \"node --expose-gc ./node_modules/.bin/jest --runInBand\"",
 		"test-file-upload": "INGERATION_TESTING=true jest server/upload/__tests__/integration-test.ts --testMatch '**/*.ts'",
 		"test-import": "NODE_OPTIONS=--max-old-space-size=8192 firebase emulators:exec --only database --import .firebase/default-contents \"jest server/pub/__tests__/api.test.ts --runInBand\"",
-		"tools": "NODE_PATH=./client:./ node -r ts-node/register/transpile-only -r esm --max-old-space-size=12000 ./tools",
+		"tools": "NODE_PATH=./client:./ npx tsx ./tools",
 		"workers-dev": "NODE_PATH=./dist/server/client:./dist/server WORKER=true nodemon dist/server/workers/init --watch dist/server -e js,ts",
 		"workers-prod": "NODE_PATH=./dist/server/client:./dist/server WORKER=true node --enable-source-maps dist/server/workers/init",
 		"upload-sentry-sourcemaps": "sentry-cli sourcemaps inject -p pubpub-v6 dist/server && sentry-cli releases files -p pubpub-v6 $SOURCE_VERSION upload-sourcemaps --url-prefix /app --strip-common-prefix --wait dist/server",
