@@ -58,25 +58,30 @@ const zipDir = (dirPath: string) => {
 
 const archiveCommunityHtml = async (directory: string, community: SerializedModel<Community>) => {
 	const url = communityUrl(community);
-	const urlFilter = (u: string) => u.indexOf(url) === 0 && !u.includes('login');
+	const urlFilter = (resourceUrl: string) =>
+		(resourceUrl.indexOf(url) === 0 && !resourceUrl.includes('login')) ||
+		resourceUrl.includes('https://resize-v3.pubpub.org') ||
+		resourceUrl.includes('https://assets.pubpub.org');
 	const result = await scrape({
 		directory,
 		urls: [url],
 		urlFilter,
 		recursive: true,
-		maxRecursiveDepth: 4,
-		requestConcurrency: 1,
+		maxRecursiveDepth: 2,
+		requestConcurrency: 5,
 		filenameGenerator: 'bySiteStructure',
+		request: {
+			headers: {
+				'User-Agent': 'PubPub Archive Tool',
+			},
+		},
 		plugins: [
 			{
 				apply(register) {
-					register('error', async ({ error }) => {
-						console.error(error);
-					});
-					register('onResourceError', ({ resource, error }) => {
-						console.error(`Failed to fetch resource ${resource.url}`, error);
-					});
-					register('beforeRequest', ({ resource, requestOptions }) => {
+					register('beforeRequest', async ({ resource, requestOptions }) => {
+						const resourceUrl = new URL(resource.url);
+						resourceUrl.searchParams.delete('readingCollection');
+						resource.url = resourceUrl.toString();
 						console.log(`Fetching ${resource.url}`);
 						return {
 							resource,
