@@ -21,7 +21,11 @@ export const ExportCommunityDataButton = ({ disabled }: { disabled?: boolean }) 
 							method: 'POST',
 							body: JSON.stringify({ dontWait: true }),
 						})
-							.then(({ workerTaskId }) => {
+							.then(({ workerTaskId, message }) => {
+								if (message) {
+									// message warning user that a task is already running
+									setError(message);
+								}
 								return pingTask(workerTaskId, 1000);
 							})
 							.then((output) => {

@@ -56,11 +56,31 @@ export const communityServer = s.router(contract.community, {
 			},
 		});
 
-		if (!req.user?.dataValues.isSuperAdmin && remainingExports >= MAX_DAILY_EXPORTS) {
+		if (!req.user?.dataValues.isSuperAdmin && remainingExports <= MAX_DAILY_EXPORTS) {
 			throw new Error('You have reached the maximum number of daily exports.');
 		}
 
 		const key = `legacy-archive/${community.subdomain}/${Date.now()}/static`;
+
+		// check if there's already one running
+		const runningTask = await WorkerTask.findOne({
+			where: {
+				type: 'archive',
+				input: { communityId: community.id },
+				isProcessing: true,
+			},
+		});
+
+		if (runningTask) {
+			return {
+				body: {
+					url: `https://assets.pubpub.org/${key}`,
+					workerTaskId: runningTask.id,
+					message: 'Archive already in progress, please be patient.',
+				},
+				status: 200,
+			};
+		}
 
 		const workerTask = await addWorkerTask({
 			type: 'archive',
