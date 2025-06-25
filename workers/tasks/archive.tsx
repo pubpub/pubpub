@@ -100,10 +100,19 @@ const archiveCommunityHtml = async (directory: string, community: SerializedMode
 						const resourceUrl = new URL(resource.url);
 						resourceUrl.searchParams.delete('readingCollection');
 						resource.url = resourceUrl.toString();
-						console.log(`Fetching ${resource.url}`);
+						console.log(`Fetching ${resource.url}`, requestOptions);
+						requestOptions.url = resource.url;
+						const { searchParams } = requestOptions;
+						const { readingCollection: _, ...rest } = searchParams ?? {};
+
+						const newRequestOptions = {
+							...requestOptions,
+							searchParams: rest,
+						};
+
 						return {
 							resource,
-							requestOptions,
+							requestOptions: newRequestOptions,
 						};
 					});
 					register('afterResponse', async ({ response }) => {
