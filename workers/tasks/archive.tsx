@@ -13,6 +13,7 @@ import {
 	Member,
 	Page,
 	Pub,
+	Release,
 	ScopeSummary,
 	sequelize,
 } from 'server/models';
@@ -223,9 +224,11 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 							const { nodeLabels } = pubMetadata;
 							const { noteManager } = notesData;
 
-							const renderableNodes = doc.content
-								.map(filterNonExportableNodes)
-								.map(addHrefsToNotes);
+							// i don't really understand why this works, but
+							// doc.content?.map(filterNonExportableNotes) doesn't
+							const renderableNodes = [filterNonExportableNodes, addHrefsToNotes]
+								.filter((x): x is (nodes: any) => any => !!x)
+								.reduce((nodes, fn) => fn(nodes), doc.content);
 
 							const docContent = renderStatic({
 								schema: editorSchema,
@@ -268,6 +271,8 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 						...pubJson.draft,
 						doc: firebaseDraft,
 					},
+					// @ts-expect-error
+					html: firebaseDraft?.html,
 				};
 			});
 
@@ -483,6 +488,12 @@ const getPubs = async (communityId: string) => {
 				model: Draft,
 				as: 'draft',
 				attributes: ['firebasePath'],
+			},
+			{
+				model: Release,
+				as: 'releases',
+				attributes: ['historyKey', 'createdAt'],
+				separate: true,
 			},
 		],
 		order: [['createdAt', 'ASC']],
