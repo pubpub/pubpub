@@ -71,12 +71,21 @@ const archiveCommunityHtml = async (directory: string, community: SerializedMode
 		(resourceUrl.indexOf(url) === 0 && !resourceUrl.includes('login')) ||
 		resourceUrl.includes('https://resize-v3.pubpub.org') ||
 		resourceUrl.includes('https://assets.pubpub.org');
+
+	const sitemap = await (await fetch(new URL('sitemap-0.xml', url).toString())).text();
+	if (!sitemap) {
+		throw new Error('No sitemap found');
+	}
+
+	const urls = Array.from(sitemap.match(/https?[^<]+/g) ?? []).filter(urlFilter);
+
 	const result = await scrape({
 		directory,
-		urls: [url],
+		urls,
 		urlFilter,
 		recursive: true,
-		maxRecursiveDepth: 2,
+		maxRecursiveDepth: 1,
+
 		requestConcurrency: 5,
 		filenameGenerator: 'bySiteStructure',
 		request: {
