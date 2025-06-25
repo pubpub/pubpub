@@ -1,5 +1,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
+
+import React from 'react';
+
 import {
 	Collection,
 	CollectionAttribution,
@@ -31,6 +34,12 @@ import { SerializedModel } from 'types';
 import { communityUrl } from 'utils/canonicalUrls';
 import { isProd } from 'utils/environment';
 import scrape from 'website-scraper';
+import { renderStatic } from 'client/components/Editor/utils/renderStatic';
+import { editorSchema } from 'client/components/Editor/utils/schema';
+import ReactDOMServer from 'react-dom/server';
+import { getNotesData } from './export/notes';
+import { getPubMetadata } from './export/metadata';
+import { addHrefsToNotes, filterNonExportableNodes } from './export/html';
 
 const zipDir = (dirPath: string) => {
 	return new Promise<string>((resolve, reject) => {
@@ -154,22 +163,66 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 						}
 
 						try {
-							const draftDoc = await getPubDraftDoc(
-								getDatabaseRef(firebasePath),
-								null,
-								false,
-							);
+							const hasRelease = p.releases && p.releases.length > 0;
+							const latestRelease = hasRelease ? p.releases?.at(-1) : null;
+							const latestReleaseKey = latestRelease?.historyKey;
+							const latestReleaseIsDraft =
+								latestRelease?.createdAt > (p.draft?.latestKeyAt ?? new Date(0));
+
+							const shouldFetchLatestRelease =
+								latestReleaseKey && !latestReleaseIsDraft;
+
+							const [draftDoc, maybeLatestReleaseDoc] = await Promise.all([
+								getPubDraftDoc(getDatabaseRef(firebasePath), null, false),
+								shouldFetchLatestRelease
+									? getPubDraftDoc(p.id, latestReleaseKey, false)
+									: null,
+							]);
+
 							if (!draftDoc) {
 								return {
 									content: null,
 									firebasePath,
 								};
 							}
+
 							const { doc, ...rest } = draftDoc;
+
+							if (!latestRelease) {
+								return {
+									...rest,
+									content: doc,
+									firebasePath,
+								};
+							}
+
+							const releaseDoc = latestReleaseIsDraft
+								? draftDoc
+								: maybeLatestReleaseDoc!;
+
+							const pubMetadata = await getPubMetadata(p.id);
+							const notesData = await getNotesData(pubMetadata, releaseDoc.doc!);
+							const { nodeLabels } = pubMetadata;
+							const { noteManager } = notesData;
+
+							const renderableNodes = doc.content
+								.map(filterNonExportableNodes)
+								.map(addHrefsToNotes);
+
+							const docContent = renderStatic({
+								schema: editorSchema,
+								doc: { type: 'doc', content: renderableNodes },
+								noteManager,
+								nodeLabels,
+							});
+							const releaseHtml = ReactDOMServer.renderToStaticMarkup(
+								<article>{docContent}</article>,
+							);
 
 							return {
 								...rest,
 								content: doc,
+								html: releaseHtml,
 								firebasePath,
 							};
 						} catch (e) {
