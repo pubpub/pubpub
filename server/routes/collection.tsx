@@ -80,12 +80,16 @@ app.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, ne
 			},
 		} = initialData;
 
+		const isCollectionAccessible = communityData.collections.find(
+			(c) => c.slug === collectionSlug,
+		);
+
 		const collection = withValue(
 			activeCollection,
 			(c) => c && enrichCollectionWithPubTokens(c, initialData),
 		);
 
-		if (collection) {
+		if (collection && isCollectionAccessible) {
 			const { pageId, id: collectionId } = collection;
 
 			await enrichCollectionWithAttributions(collection);
