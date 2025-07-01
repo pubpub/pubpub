@@ -28,7 +28,7 @@ import { fetchFacetsForScopeIds } from 'server/facets';
 import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { buildPubOptions } from 'server/utils/queryHelpers';
 import { assetsClient } from 'server/utils/s3';
-import { Readable, Transform } from 'stream';
+import { PassThrough, Readable, Transform } from 'stream';
 import { pipeline } from 'stream/promises';
 import tmp from 'tmp-promise';
 import { SerializedModel } from 'types';
@@ -41,6 +41,8 @@ import ReactDOMServer from 'react-dom/server';
 import { getNotesData } from './export/notes';
 import { getPubMetadata } from './export/metadata';
 import { addHrefsToNotes, filterNonExportableNodes } from './export/html';
+import { createSitemapUrlStreams } from './archive/sitemapUrlStream';
+import { createSiteDownloaderTransform } from './archive/siteDownloaderTransform';
 
 const zipDir = (dirPath: string) => {
 	return new Promise<string>((resolve, reject) => {
@@ -86,8 +88,7 @@ const archiveCommunityHtml = async (directory: string, community: SerializedMode
 		urlFilter,
 		recursive: true,
 		maxRecursiveDepth: 1,
-
-		requestConcurrency: 5,
+		requestConcurrency: 3,
 		filenameGenerator: 'bySiteStructure',
 		request: {
 			headers: {
@@ -101,7 +102,7 @@ const archiveCommunityHtml = async (directory: string, community: SerializedMode
 						const resourceUrl = new URL(resource.url);
 						resourceUrl.searchParams.delete('readingCollection');
 						resource.url = resourceUrl.toString();
-						console.log(`Fetching ${resource.url}`, requestOptions);
+						console.log(`Fetching ${resource.url}`);
 						requestOptions.url = resource.url;
 						const { searchParams } = requestOptions;
 						const { readingCollection: _, ...rest } = searchParams ?? {};
@@ -515,45 +516,82 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 
 	console.log(`Found ${pubs.length} pubs`);
 
-	const tmpDir = await tmp.dir();
-	const tmpArchiveDir = `${tmpDir.path}/${communityId}`;
+	// const tmpDir = await tmp.dir();
+	// const tmpArchiveDir = `${tmpDir.path}/${communityId}`;
 
 	console.log(`Scraping ${communityUrl(communityData.community)}`);
 
-	// scrape community html and assets
-	await archiveCommunityHtml(
-		tmpArchiveDir,
-		communityData.community as SerializedModel<Community>,
+	const archiveStream = archiver('zip', { zlib: { level: 9 } });
+	const sitemapUrlStreams = await createSitemapUrlStreams(
+		communityUrl(communityData.community),
+		5,
 	);
 
-	console.log(`Scraped community HTML to ${tmpArchiveDir}`);
+	let nCompletedSitemapUrlStreams = 0;
+
+	const end = () => {
+		if (++nCompletedSitemapUrlStreams === sitemapUrlStreams.length) {
+			archiveStream.finalize();
+		}
+	};
+
+	for (const sitemapUrlStream of sitemapUrlStreams) {
+		sitemapUrlStream
+			.pipe(
+				createSiteDownloaderTransform({
+					headers: {
+						'User-Agent': 'PubPub-Archive-Bot/1.0',
+					},
+				}),
+			)
+			.on('data', (file) => {
+				archiveStream.append(file.stream, { name: file.name });
+			})
+			.on('end', end)
+			.on('error', (err) => {
+				console.error('Stream error:', err);
+				end();
+			});
+	}
+
+	// // scrape community html and assets
+	// await archiveCommunityHtml(
+	// 	tmpArchiveDir,
+	// 	communityData.community as SerializedModel<Community>,
+	// );
+
+	// console.log(`Scraped community HTML to ${tmpArchiveDir}`);
 
 	// create streams
 	const pubReadStream = await createPubStream(pubs, BATCH_SIZE);
-	const pubWriteStream = createWriteStream(`${tmpArchiveDir}/static.json`);
+	// const pubWriteStream = createWriteStream(`${tmpArchiveDir}/static.json`);
 	const communityJsonTransform = createCommunityJsonTransform(communityData);
 
 	const pubTracker = devTools.createMemoryTracker(pubReadStream, BATCH_SIZE);
 	const jsonTracker = devTools.createMemoryTracker(communityJsonTransform, BATCH_SIZE);
 
 	// pipe everything together
-	await pipeline(pubReadStream, communityJsonTransform, pubWriteStream);
+	// await pipeline(pubReadStream, communityJsonTransform, pubWriteStream);
 
-	const archivePath = await zipDir(tmpArchiveDir);
-	const archiveReadStream = createReadStream(archivePath);
+	// const archivePath = await zipDir(tmpArchiveDir);
+	// const archiveReadStream = createReadStream(archivePath);
 
-	await assetsClient.uploadFileSplit(`${key}.zip`, archiveReadStream);
-	await assetsClient.uploadFileSplit(`${key}.json`, createReadStream(pubWriteStream.path));
+	const passThrough = new PassThrough();
+
+	archiveStream.pipe(passThrough);
+
+	await assetsClient.uploadFileSplit(`${key}.zip`, passThrough);
+	// await assetsClient.uploadFileSplit(`${key}.json`, createReadStream(pubWriteStream.path));
 
 	console.log(`Uploaded archive to ${key}`);
 
-	await Promise.all([
-		// remove the archive directory
-		fs.rm(tmpArchiveDir, { recursive: true, force: true }),
-		// remove the archive file
-		fs.rm(archivePath),
-	]);
-	await tmpDir.cleanup();
+	// await Promise.all([
+	// 	// remove the archive directory
+	// 	fs.rm(tmpArchiveDir, { recursive: true, force: true }),
+	// 	// remove the archive file
+	// 	fs.rm(archivePath),
+	// ]);
+	// await tmpDir.cleanup();
 
 	devTools.logStats(startTime, pubTracker, jsonTracker);
 	const endTime = performance.now();
