@@ -19,9 +19,11 @@ import {
 } from 'server/models';
 
 import archiver from 'archiver';
-import { createReadStream, createWriteStream } from 'fs';
-import fs from 'fs/promises';
+import { renderStatic } from 'client/components/Editor/utils/renderStatic';
+import { editorSchema } from 'client/components/Editor/utils/schema';
+import { createWriteStream } from 'fs';
 import { performance } from 'perf_hooks';
+import ReactDOMServer from 'react-dom/server';
 import { Op } from 'sequelize';
 import { CollectionPub } from 'server/collectionPub/model';
 import { fetchFacetsForScopeIds } from 'server/facets';
@@ -29,104 +31,13 @@ import { getDatabaseRef, getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { buildPubOptions } from 'server/utils/queryHelpers';
 import { assetsClient } from 'server/utils/s3';
 import { PassThrough, Readable, Transform } from 'stream';
-import { pipeline } from 'stream/promises';
-import tmp from 'tmp-promise';
-import { SerializedModel } from 'types';
 import { communityUrl } from 'utils/canonicalUrls';
 import { isProd } from 'utils/environment';
-import scrape from 'website-scraper';
-import { renderStatic } from 'client/components/Editor/utils/renderStatic';
-import { editorSchema } from 'client/components/Editor/utils/schema';
-import ReactDOMServer from 'react-dom/server';
-import { getNotesData } from './export/notes';
-import { getPubMetadata } from './export/metadata';
-import { addHrefsToNotes, filterNonExportableNodes } from './export/html';
-import { createSitemapUrlStreams } from './archive/sitemapUrlStream';
 import { createSiteDownloaderTransform } from './archive/siteDownloaderTransform';
-
-const zipDir = (dirPath: string) => {
-	return new Promise<string>((resolve, reject) => {
-		const archivePath = `${dirPath}.zip`;
-		const archiveWriteStream = createWriteStream(archivePath);
-		const archive = archiver('zip', {
-			zlib: { level: 9 },
-		})
-			.on('warning', (error) => {
-				if (error.code === 'ENOENT') {
-					console.error(error);
-				} else {
-					reject(error);
-				}
-			})
-			.on('end', () => {
-				resolve(archivePath);
-			})
-			.on('error', reject)
-			.directory(dirPath, false);
-		archive.pipe(archiveWriteStream);
-		archive.finalize();
-	});
-};
-
-const archiveCommunityHtml = async (directory: string, community: SerializedModel<Community>) => {
-	const url = communityUrl(community);
-	const urlFilter = (resourceUrl: string) =>
-		(resourceUrl.indexOf(url) === 0 && !resourceUrl.includes('login')) ||
-		resourceUrl.includes('https://resize-v3.pubpub.org') ||
-		resourceUrl.includes('https://assets.pubpub.org');
-
-	const sitemap = await (await fetch(new URL('sitemap-0.xml', url).toString())).text();
-	if (!sitemap) {
-		throw new Error('No sitemap found');
-	}
-
-	const urls = Array.from(sitemap.match(/https?[^<]+/g) ?? []).filter(urlFilter);
-
-	const result = await scrape({
-		directory,
-		urls,
-		urlFilter,
-		recursive: true,
-		maxRecursiveDepth: 1,
-		requestConcurrency: 3,
-		filenameGenerator: 'bySiteStructure',
-		request: {
-			headers: {
-				'User-Agent': 'PubPub Archive Tool',
-			},
-		},
-		plugins: [
-			{
-				apply(register) {
-					register('beforeRequest', async ({ resource, requestOptions }) => {
-						const resourceUrl = new URL(resource.url);
-						resourceUrl.searchParams.delete('readingCollection');
-						resource.url = resourceUrl.toString();
-						console.log(`Fetching ${resource.url}`);
-						requestOptions.url = resource.url;
-						const { searchParams } = requestOptions;
-						const { readingCollection: _, ...rest } = searchParams ?? {};
-
-						const newRequestOptions = {
-							...requestOptions,
-							searchParams: rest,
-						};
-
-						return {
-							resource,
-							requestOptions: newRequestOptions,
-						};
-					});
-					register('afterResponse', async ({ response }) => {
-						console.log(`Fetched ${response.url}: ${response.statusCode}`);
-						return response;
-					});
-				},
-			},
-		],
-	});
-	return result;
-};
+import { createSitemapUrlStreams } from './archive/sitemapUrlStream';
+import { addHrefsToNotes, filterNonExportableNodes } from './export/html';
+import { getPubMetadata } from './export/metadata';
+import { getNotesData } from './export/notes';
 
 const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 	let offset = 0;

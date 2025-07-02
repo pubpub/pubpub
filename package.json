@@ -244,7 +244,6 @@
 		"uuid": "^3.3.0",
 		"uuid-validate": "0.0.3",
 		"valid-url": "^1.0.9",
-		"website-scraper": "^5.3.1",
 		"xmlbuilder": "^13.0.2",
 		"yaml": "^1.6.0",
 		"yargs": "^13.2.4",
