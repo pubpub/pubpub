@@ -21,7 +21,6 @@ import {
 import archiver from 'archiver';
 import { renderStatic } from 'client/components/Editor/utils/renderStatic';
 import { editorSchema } from 'client/components/Editor/utils/schema';
-import { createWriteStream } from 'fs';
 import { performance } from 'perf_hooks';
 import ReactDOMServer from 'react-dom/server';
 import { Op } from 'sequelize';
@@ -38,6 +37,7 @@ import { createSitemapUrlStreams } from './archive/sitemapUrlStream';
 import { addHrefsToNotes, filterNonExportableNodes } from './export/html';
 import { getPubMetadata } from './export/metadata';
 import { getNotesData } from './export/notes';
+import { ReadableStreamClone } from './archive/readableStreamClone';
 
 const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 	let offset = 0;
@@ -427,11 +427,6 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 
 	console.log(`Found ${pubs.length} pubs`);
 
-	// const tmpDir = await tmp.dir();
-	// const tmpArchiveDir = `${tmpDir.path}/${communityId}`;
-
-	console.log(`Scraping ${communityUrl(communityData.community)}`);
-
 	const archiveStream = archiver('zip', { zlib: { level: 9 } });
 	const sitemapUrlStreams = await createSitemapUrlStreams(
 		communityUrl(communityData.community),
@@ -465,44 +460,28 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 			});
 	}
 
-	// // scrape community html and assets
-	// await archiveCommunityHtml(
-	// 	tmpArchiveDir,
-	// 	communityData.community as SerializedModel<Community>,
-	// );
-
-	// console.log(`Scraped community HTML to ${tmpArchiveDir}`);
-
-	// create streams
 	const pubReadStream = await createPubStream(pubs, BATCH_SIZE);
-	// const pubWriteStream = createWriteStream(`${tmpArchiveDir}/static.json`);
 	const communityJsonTransform = createCommunityJsonTransform(communityData);
+	const communityJsonStream = pubReadStream.pipe(communityJsonTransform);
 
 	const pubTracker = devTools.createMemoryTracker(pubReadStream, BATCH_SIZE);
 	const jsonTracker = devTools.createMemoryTracker(communityJsonTransform, BATCH_SIZE);
 
-	// pipe everything together
-	// await pipeline(pubReadStream, communityJsonTransform, pubWriteStream);
+	const communityJsonArchiveStream = new ReadableStreamClone(communityJsonStream);
+	const communityJsonFileStream = new ReadableStreamClone(communityJsonStream);
 
-	// const archivePath = await zipDir(tmpArchiveDir);
-	// const archiveReadStream = createReadStream(archivePath);
+	archiveStream.append(communityJsonArchiveStream, {
+		name: 'static.json',
+	});
 
-	const passThrough = new PassThrough();
+	const communityArchiveStream = new PassThrough();
 
-	archiveStream.pipe(passThrough);
+	archiveStream.pipe(communityArchiveStream);
 
-	await assetsClient.uploadFileSplit(`${key}.zip`, passThrough);
-	// await assetsClient.uploadFileSplit(`${key}.json`, createReadStream(pubWriteStream.path));
+	await assetsClient.uploadFileSplit(`${key}.zip`, communityArchiveStream);
+	await assetsClient.uploadFileSplit(`${key}.json`, communityJsonFileStream);
 
 	console.log(`Uploaded archive to ${key}`);
-
-	// await Promise.all([
-	// 	// remove the archive directory
-	// 	fs.rm(tmpArchiveDir, { recursive: true, force: true }),
-	// 	// remove the archive file
-	// 	fs.rm(archivePath),
-	// ]);
-	// await tmpDir.cleanup();
 
 	devTools.logStats(startTime, pubTracker, jsonTracker);
 	const endTime = performance.now();
