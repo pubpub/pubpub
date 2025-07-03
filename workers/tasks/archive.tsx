@@ -469,10 +469,9 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 	const jsonTracker = devTools.createMemoryTracker(communityJsonTransform, BATCH_SIZE);
 
 	const communityJsonArchiveStream = new ReadableStreamClone(communityJsonStream);
-	const communityJsonFileStream = new ReadableStreamClone(communityJsonStream);
 
 	archiveStream.append(communityJsonArchiveStream, {
-		name: 'static.json',
+		name: 'export.json',
 	});
 
 	const communityArchiveStream = new PassThrough();
@@ -480,7 +479,6 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 	archiveStream.pipe(communityArchiveStream);
 
 	await assetsClient.uploadFileSplit(`${key}.zip`, communityArchiveStream);
-	await assetsClient.uploadFileSplit(`${key}.json`, communityJsonFileStream);
 
 	console.log(`Uploaded archive to ${key}`);
 
