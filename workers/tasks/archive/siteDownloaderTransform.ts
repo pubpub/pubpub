@@ -32,17 +32,21 @@ const transformAnchorTag = (tag: any, pageUrl: URL) => {
 	}
 };
 
-const transformAssetTag = (tag: any, pageUrl: URL, config: SiteDownloaderTransformConfig) => {
+const transformAssetTag = (
+	tag: any,
+	pageUrl: URL,
+	config: SiteDownloaderTransformConfig,
+): { assetUrl: URL; assetPath: string } | null => {
 	if (isLinkTag(tag) && !isStylesheetTag(tag)) {
-		return;
+		return null;
 	}
 	const assetSrc = tag.attrs.find((attr: any) => attr.name === 'src' || attr.name === 'href');
 	if (assetSrc === undefined) {
-		return;
+		return null;
 	}
 	const assetUrl = new URL(assetSrc.value, pageUrl);
 	if (config.assetUrlFilter?.(assetUrl.href) === false) {
-		return;
+		return null;
 	}
 	const assetDir = `/${config.assetDir}/${assetUrl.hostname.replace(/\./g, '_')}`;
 	const assetPath = `${assetDir}${assetUrl.pathname}`;
@@ -54,7 +58,7 @@ const transformAssetTag = (tag: any, pageUrl: URL, config: SiteDownloaderTransfo
 
 const defaultConfig: SiteDownloaderTransformConfig = {
 	assetDir: 'assets',
-	assetUrlFilter: (url: string) => true,
+	assetUrlFilter: () => true,
 	headers: {},
 };
 
@@ -111,15 +115,20 @@ export class SiteDownloaderTransform extends Transform {
 			case 'script':
 			case 'link': {
 				const result = transformAssetTag(tag, pageUrl, this.#config);
-				if (result === undefined) {
+				if (result === null) {
 					break;
 				}
 				this.#pushAsset(result.assetUrl, result.assetPath);
 				break;
 			}
+			default: {
+				break;
+			}
 		}
 	}
 
+	// eslint doesn't recognize BufferEncoding
+	// eslint-disable-next-line no-undef
 	async _transform(url: string, _: BufferEncoding, callback: (error?: Error | null) => void) {
 		try {
 			// need to get primary urls running at / instead of /blah_blah_org

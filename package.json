@@ -227,6 +227,7 @@
 		"sanitize-html": "^2.3.2",
 		"sass": "^1.57.1",
 		"sass-loader": "^7.1.0",
+		"saxes": "^6.0.0",
 		"sequelize": "^6.31.1",
 		"sequelize-typescript": "^2.1.5",
 		"sequelize-typescript-generator": "^10.1.2",

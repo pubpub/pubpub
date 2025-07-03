@@ -441,6 +441,7 @@ export const archiveTask = async ({ communityId, key }: { communityId: string; k
 		}
 	};
 
+	// eslint-disable-next-line no-restricted-syntax
 	for (const sitemapUrlStream of sitemapUrlStreams) {
 		sitemapUrlStream
 			.pipe(

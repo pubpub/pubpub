@@ -15,16 +15,9 @@ export class ReadableStreamClone extends Readable {
 			this.emit('error', err);
 		});
 	}
+
 	public _read() {}
 }
-
-export const promisifyWriteStreams = async (writableStreams: Writable[]) => {
-	return Promise.all(
-		writableStreams.map((writable: Writable) => {
-			return promisifyWriteStream(writable);
-		}),
-	);
-};
 
 export const promisifyWriteStream = async (writableStream: Writable) => {
 	return new Promise((resolve, reject) => {
@@ -35,4 +28,12 @@ export const promisifyWriteStream = async (writableStream: Writable) => {
 			reject(err);
 		});
 	});
+};
+
+export const promisifyWriteStreams = async (writableStreams: Writable[]) => {
+	return Promise.all(
+		writableStreams.map((writable: Writable) => {
+			return promisifyWriteStream(writable);
+		}),
+	);
 };
