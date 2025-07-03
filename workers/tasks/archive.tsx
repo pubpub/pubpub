@@ -564,11 +564,11 @@ export const archiveTask = async ({
 
 	await assetsClient.uploadFileSplit(`${key}.zip`, communityArchiveStream);
 
-	console.log(`Uploaded archive to ${key}`);
+	console.log(`Uploaded archive to ${key}.zip`);
 
 	devTools.logStats(startTime, pubTracker, jsonTracker);
 	const endTime = performance.now();
 	console.log(`Time taken to archive: ${endTime - startTime} milliseconds`);
 
-	return `https://assets.pubpub.org/${key}`;
+	return `https://assets.pubpub.org/${key}.zip`;
 };
