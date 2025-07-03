@@ -11,6 +11,8 @@ declare global {
 	}
 }
 
+const allowedExportFormats = ['formatted', 'pdf', 'jats'];
+
 export type SiteDownloaderTransformConfig = TransformOptions & {
 	assetDir?: string;
 	assetUrlFilter?: (url: string) => boolean;
@@ -129,7 +131,7 @@ export class SiteDownloaderTransform extends Transform {
 						exportHref: '',
 					},
 				);
-				if (exportAvailable) {
+				if (exportAvailable && allowedExportFormats.includes(exportFormat)) {
 					console.log(`Pushing ${exportFormat} export:`, exportHref);
 					this.#pushAsset(new URL(exportHref), exportHref);
 				}
