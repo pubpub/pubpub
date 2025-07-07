@@ -32,6 +32,7 @@ import { assetsClient } from 'server/utils/s3';
 import { PassThrough, Readable, Transform } from 'stream';
 import { communityUrl } from 'utils/canonicalUrls';
 import { isProd } from 'utils/environment';
+import { getTextAbstract } from 'utils/pub/metadata';
 import { createSiteDownloaderTransform } from './archive/siteDownloaderTransform';
 import { addHrefsToNotes, filterNonExportableNodes } from './export/html';
 import { getPubMetadata } from './export/metadata';
@@ -140,6 +141,8 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 								.filter((x): x is (nodes: any) => any => !!x)
 								.reduce((nodes, fn) => fn(nodes), doc.content);
 
+							const abstract = getTextAbstract(doc);
+
 							const docContent = renderStatic({
 								schema: editorSchema,
 								doc: { type: 'doc', content: renderableNodes },
@@ -154,6 +157,7 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 								...rest,
 								content: doc,
 								html: releaseHtml,
+								abstract,
 								firebasePath,
 							};
 						} catch (e) {
