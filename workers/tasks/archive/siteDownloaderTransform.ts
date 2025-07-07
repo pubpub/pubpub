@@ -114,7 +114,7 @@ export class SiteDownloaderTransform extends Transform {
 			case 'a': {
 				const { exportAvailable, exportFormat, exportHref } = tag.attrs.reduce(
 					(acc, attr) => {
-						if (attr.name === 'data-export-available' && attr.value === 'true') {
+						if (attr.name === 'data-export-available' && attr.value !== 'false') {
 							acc.exportAvailable = true;
 						}
 						if (attr.name === 'data-export-format') {
