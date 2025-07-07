@@ -60,6 +60,7 @@ export const sanitizePageHtml = (html: string) => {
 				'role',
 			],
 			a: ['href', 'target', 'rel'],
+			img: ['alt'],
 		},
 		allowedSchemes: ['https', 'mailto'],
 		transformTags: {
