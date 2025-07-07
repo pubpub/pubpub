@@ -146,7 +146,7 @@ const Download = (props: Props) => {
 						download
 						aria-hidden="true"
 						data-export-format="formatted"
-						data-export-available={formattedDownload.url}
+						data-export-available={Boolean(formattedDownload.url)}
 					>
 						Formatted Download
 					</a>
