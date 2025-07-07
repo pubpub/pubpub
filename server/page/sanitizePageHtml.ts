@@ -57,6 +57,7 @@ export const sanitizePageHtml = (html: string) => {
 				'viewBox',
 				'd',
 				'fill-rule',
+				'role',
 			],
 			a: ['href', 'target', 'rel'],
 		},
