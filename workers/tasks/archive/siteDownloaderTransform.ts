@@ -59,6 +59,32 @@ const transformAssetTag = (
 	return { assetUrl, assetPath };
 };
 
+const transformOgImageIshTag = (tag: any, pageUrl: URL, config: SiteDownloaderTransformConfig) => {
+	const content = tag.attrs.find((attr: any) => attr.name === 'content');
+	if (content === undefined) {
+		return null;
+	}
+
+	// property contains image
+	const isOgImageIshTag = tag.attrs.some(
+		(attr: any) => attr.name === 'property' && attr.value.includes('image'),
+	);
+	if (!isOgImageIshTag) {
+		return null;
+	}
+
+	const assetUrl = new URL(content.value, pageUrl);
+	if (config.assetUrlFilter?.(assetUrl.href) === false) {
+		return null;
+	}
+	const assetDir = `/${config.assetDir}/${assetUrl.hostname.replace(/\./g, '_')}`;
+	const assetPath = `${assetDir}${assetUrl.pathname}`;
+	tag.attrs = tag.attrs.map((attr: any) =>
+		attr.name === content.name ? { ...attr, value: assetPath } : attr,
+	);
+	return { assetUrl, assetPath };
+};
+
 const defaultConfig: SiteDownloaderTransformConfig = {
 	assetDir: 'assets',
 	assetUrlFilter: () => true,
@@ -132,14 +158,28 @@ export class SiteDownloaderTransform extends Transform {
 					},
 				);
 				if (exportAvailable && allowedExportFormats.includes(exportFormat)) {
+					const result = transformAssetTag(tag, pageUrl, this.#config);
+					if (result === null) {
+						console.log('Skipping asset tag:', tag.attrs);
+						break;
+					}
 					console.log(`Pushing ${exportFormat} export:`, exportHref);
-					this.#pushAsset(new URL(exportHref), exportHref);
+					this.#pushAsset(result.assetUrl, result.assetPath);
 				}
 				transformAnchorTag(tag, pageUrl);
 				break;
 			}
 			case 'img':
 			case 'script':
+			case 'meta': {
+				const result = transformOgImageIshTag(tag, pageUrl, this.#config);
+				if (result === null) {
+					break;
+				}
+				console.log('Pushing og imageish asset:', result.assetUrl.href);
+				this.#pushAsset(result.assetUrl, result.assetPath);
+				break;
+			}
 			case 'link': {
 				const result = transformAssetTag(tag, pageUrl, this.#config);
 				if (result === null) {
