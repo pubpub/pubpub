@@ -425,6 +425,7 @@ const createUrlStreams = (communityData: any, pubs: Pub[], numStreams: number) =
 			: 'http://localhost:9876';
 
 	const urls: string[] = [];
+	const param = '?pubpubArchiveBot=1';
 
 	// add public pages
 	communityData.pages
@@ -436,14 +437,14 @@ const createUrlStreams = (communityData: any, pubs: Pub[], numStreams: number) =
 				return;
 			}
 
-			urls.push(`${baseUrl}/${page.slug}`);
+			urls.push(`${baseUrl}/${page.slug}${param}`);
 		});
 
 	// add public collections
 	communityData.collections
 		.filter((collection: any) => collection.isPublic)
 		.forEach((collection: any) => {
-			urls.push(`${baseUrl}/${collection.slug}`);
+			urls.push(`${baseUrl}/${collection.slug}${param}`);
 		});
 
 	// add pub releases
@@ -451,8 +452,9 @@ const createUrlStreams = (communityData: any, pubs: Pub[], numStreams: number) =
 		if (pub.releases && pub.releases.length > 0) {
 			pub.releases.forEach((release, index) => {
 				const releaseNumber = index + 1;
-				urls.push(`${baseUrl}/pub/${pub.slug}/release/${releaseNumber}`);
+				urls.push(`${baseUrl}/pub/${pub.slug}/release/${releaseNumber}${param}`);
 			});
+			urls.push(`${baseUrl}/pub/${pub.slug}${param}`);
 		}
 	});
 
