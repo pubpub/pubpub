@@ -25,6 +25,10 @@ const isStylesheetTag = (tag: any) =>
 	tag.tagName === 'link' &&
 	tag.attrs.some((attr: any) => attr.name === 'rel' && attr.value === 'stylesheet');
 
+const isIconTag = (tag: any) =>
+	tag.tagName === 'link' &&
+	tag.attrs.some((attr: any) => attr.name === 'rel' && attr.value === 'icon');
+
 const transformAnchorTag = (tag: any, pageUrl: URL) => {
 	const href = tag.attrs.find((attr: any) => attr.name === 'href');
 	if (href?.value === undefined) {
@@ -40,7 +44,7 @@ const transformAssetTag = (
 	pageUrl: URL,
 	config: SiteDownloaderTransformConfig,
 ): { assetUrl: URL; assetPath: string } | null => {
-	if (isLinkTag(tag) && !isStylesheetTag(tag)) {
+	if (isLinkTag(tag) && !isStylesheetTag(tag) && !isIconTag(tag)) {
 		return null;
 	}
 	const assetSrc = tag.attrs.find((attr: any) => attr.name === 'src' || attr.name === 'href');
@@ -59,6 +63,8 @@ const transformAssetTag = (
 	return { assetUrl, assetPath };
 };
 
+const ogImageTags = ['og:image', 'twitter:image', 'og:image:url', ''];
+
 const transformOgImageIshTag = (tag: any, pageUrl: URL, config: SiteDownloaderTransformConfig) => {
 	const content = tag.attrs.find((attr: any) => attr.name === 'content');
 	if (content === undefined) {
@@ -67,7 +73,8 @@ const transformOgImageIshTag = (tag: any, pageUrl: URL, config: SiteDownloaderTr
 
 	// property contains image
 	const isOgImageIshTag = tag.attrs.some(
-		(attr: any) => attr.name === 'property' && attr.value.includes('image'),
+		(attr: any) =>
+			(attr.name === 'property' || attr.name === 'name') && ogImageTags.includes(attr.value),
 	);
 	if (!isOgImageIshTag) {
 		return null;
@@ -137,6 +144,34 @@ export class SiteDownloaderTransform extends Transform {
 
 	transformTag(tag: StartTag, pageUrl: URL) {
 		switch (tag.tagName) {
+			case 'div': {
+				const styleAttr = tag.attrs.find((attr: any) => attr.name === 'style');
+				if (!styleAttr || !styleAttr.value) {
+					break;
+				}
+				const style = styleAttr.value.match(/^background-image:url\('(.*)'\)$/);
+
+				const backgroundImage = style?.[1];
+				if (!backgroundImage) {
+					break;
+				}
+
+				const backgroundImageUrl = new URL(backgroundImage, pageUrl);
+				if (this.#config.assetUrlFilter?.(backgroundImageUrl.href) === false) {
+					break;
+				}
+
+				const assetDir = `/${this.#config.assetDir}/${backgroundImageUrl.hostname.replace(
+					/\./g,
+					'_',
+				)}`;
+				const assetPath = `${assetDir}${backgroundImageUrl.pathname}`;
+
+				console.log(`Pushing background image: ${backgroundImageUrl.href}`);
+				this.#pushAsset(backgroundImageUrl, assetPath);
+
+				break;
+			}
 			case 'a': {
 				const { exportAvailable, exportFormat, exportHref } = tag.attrs.reduce(
 					(acc, attr) => {
@@ -169,8 +204,7 @@ export class SiteDownloaderTransform extends Transform {
 				transformAnchorTag(tag, pageUrl);
 				break;
 			}
-			case 'img':
-			case 'script':
+
 			case 'meta': {
 				const result = transformOgImageIshTag(tag, pageUrl, this.#config);
 				if (result === null) {
@@ -180,6 +214,8 @@ export class SiteDownloaderTransform extends Transform {
 				this.#pushAsset(result.assetUrl, result.assetPath);
 				break;
 			}
+			case 'img':
+			case 'script':
 			case 'link': {
 				const result = transformAssetTag(tag, pageUrl, this.#config);
 				if (result === null) {
