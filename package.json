@@ -365,10 +365,10 @@
 	},
 	"overrides": {
 		"@ts-rest/express": {
-			"@ts-rest/core": "3.30.52"
+			"@ts-rest/core": "github:pubpub/ts-rest#ts-rest-core-v3.30.52-gitpkg"
 		},
 		"@ts-rest/open-api": {
-			"@ts-rest/core": "3.30.52"
+			"@ts-rest/core": "github:pubpub/ts-rest#ts-rest-core-v3.30.52-gitpkg"
 		}
 	}
 }
