@@ -316,7 +316,7 @@ const createDevTools = () => {
 };
 
 const devTools = createDevTools();
-const BATCH_SIZE = 50;
+const BATCH_SIZE = 1000;
 
 // create a transform that prepends community data before pubs array
 const createCommunityJsonTransform = (communityData: any) => {
