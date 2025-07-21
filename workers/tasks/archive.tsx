@@ -34,7 +34,7 @@ import { DocJson } from 'types';
 import { communityUrl } from 'utils/canonicalUrls';
 import { isProd } from 'utils/environment';
 import { getTextAbstract } from 'utils/pub/metadata';
-import { createSiteDownloaderTransform } from './archive/siteDownloaderTransform';
+import { createSiteDownloaderTransform, generateAssetUrl } from './archive/siteDownloaderTransform';
 import {
 	addHrefsToNotes,
 	filterNonExportableNodes,
@@ -46,7 +46,6 @@ import { getNotesData } from './export/notes';
 import SimpleNotesList from './export/SimpleNotesList';
 // for some reason when imported from utils/notes, it tries to import the client/utils/notes.ts file instead
 import { renderNotesForListing } from '../../utils/notes';
-import { generateAssetUrl } from './archive/siteDownloaderTransform';
 
 const getReleaseHtml = async (pub: Pub, doc: DocJson) => {
 	const pubMetadata = await getPubMetadata(pub.id);
