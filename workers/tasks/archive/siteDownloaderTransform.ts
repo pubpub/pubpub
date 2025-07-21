@@ -137,7 +137,7 @@ export class SiteDownloaderTransform extends Transform {
 
 	#pushAsset(assetUrl: URL, assetPath: string) {
 		if (SiteDownloaderTransform.hasAssetUrl(assetUrl.href)) {
-			// console.log(`Skipping ${assetUrl.href} because it's already been pushed`);
+			console.log(`Skipping ${assetUrl.href} because it's already been pushed`);
 			return;
 		}
 
@@ -238,7 +238,7 @@ export class SiteDownloaderTransform extends Transform {
 				if (result === null) {
 					break;
 				}
-				// console.log('Pushing asset:', result.assetUrl.href);
+				console.log('Pushing asset:', result.assetUrl.href);
 				this.#pushAsset(result.assetUrl, result.assetPath);
 				break;
 			}
@@ -257,7 +257,7 @@ export class SiteDownloaderTransform extends Transform {
 			const pagePath =
 				pageUrl.pathname + (pageUrl.pathname.endsWith('/') ? '' : '/') + 'index.html';
 
-			// console.log('Fetching page:', url.toString());
+			console.log('Fetching page:', url.toString());
 
 			const response = await this.#fetch(url);
 
