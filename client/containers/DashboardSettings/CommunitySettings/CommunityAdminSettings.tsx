@@ -103,9 +103,11 @@ const ExportDataSection = (props: Props) => {
 										minimal
 										href={`${archive.output}` as string}
 										target="_blank"
-									>
-										Download
-									</AnchorButton>
+										icon="download"
+										title="Download Archive"
+										aria-label="Download Archive"
+										download
+									/>
 								</div>
 							),
 					)}

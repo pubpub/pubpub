@@ -135,6 +135,7 @@ export const ExportCommunityDataButton = (props: {
 						target="_blank"
 						icon="download"
 						title="Download Archive"
+						text="Download Archive"
 						aria-label="Download Archive"
 						download
 					/>
