@@ -3,8 +3,8 @@ import { RewritingStream } from 'parse5-html-rewriting-stream';
 import type { StartTag } from 'parse5-sax-parser';
 
 import type * as streamWeb from 'node:stream/web';
-import { getAssetUrlFromResizedUrl } from 'utils/images';
 import { defer } from 'server/utils/deferred';
+import { getAssetUrlFromResizedUrl } from 'utils/images';
 
 // https://stackoverflow.com/questions/76958222/how-to-pipe-response-from-nodejs-fetch-response-to-an-express-response#comment139165202_77589444
 declare global {
@@ -141,7 +141,7 @@ export class SiteDownloaderTransform extends Transform {
 
 	#pushAsset(assetUrl: URL, assetPath: string) {
 		if (SiteDownloaderTransform.hasAssetUrl(assetUrl.href)) {
-			// console.log(`Skipping ${assetUrl.href} because it's already been pushed`);
+			console.log(`Skipping ${assetUrl.href} because it's already been pushed`);
 			return;
 		}
 
@@ -190,7 +190,7 @@ export class SiteDownloaderTransform extends Transform {
 				)}`;
 				const assetPath = `${assetDir}${backgroundImageUrl.pathname}`;
 
-				// console.log(`Pushing background image: ${backgroundImageUrl.href}`);
+				console.log(`Pushing background image: ${backgroundImageUrl.href}`);
 				this.#pushAsset(backgroundImageUrl, assetPath);
 
 				break;
@@ -221,7 +221,7 @@ export class SiteDownloaderTransform extends Transform {
 						console.log('Skipping asset tag:', tag.attrs);
 						break;
 					}
-					// console.log(`Pushing ${exportFormat} export:`, exportHref);
+					console.log(`Pushing ${exportFormat} export:`, exportHref);
 					this.#pushAsset(result.assetUrl, result.assetPath);
 				}
 				transformAnchorTag(tag, pageUrl);
@@ -233,7 +233,7 @@ export class SiteDownloaderTransform extends Transform {
 				if (result === null) {
 					break;
 				}
-				// console.log('Pushing og imageish asset:', result.assetUrl.href);
+				console.log('Pushing og imageish asset:', result.assetUrl.href);
 				this.#pushAsset(result.assetUrl, result.assetPath);
 				break;
 			}
@@ -244,7 +244,7 @@ export class SiteDownloaderTransform extends Transform {
 				if (result === null) {
 					break;
 				}
-				// console.log('Pushing asset:', result.assetUrl.href);
+				console.log('Pushing asset:', result.assetUrl.href);
 				this.#pushAsset(result.assetUrl, result.assetPath);
 				break;
 			}
