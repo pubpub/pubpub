@@ -12,7 +12,7 @@ import { getAppCommit, isProd } from 'utils/environment';
 import { TaskPriority, taskQueueName } from 'utils/workers';
 import type { TaskType } from './worker';
 
-const maxWorkerTimeSeconds = 120;
+const maxWorkerTimeSeconds = 300;
 const maxWorkerThreads = 5;
 let currentWorkerThreads = 0;
 
