@@ -1,3 +1,4 @@
+/* global RequestInit, RequestInfo */
 import { PassThrough, Readable, Transform, TransformOptions } from 'node:stream';
 import { RewritingStream } from 'parse5-html-rewriting-stream';
 import type { StartTag } from 'parse5-sax-parser';
@@ -15,17 +16,19 @@ declare global {
 
 const allowedExportFormats = ['formatted', 'pdf', 'jats', 'html'];
 
-const fetchWithRetry = (
+const fetchWithRetry = async (
 	options: RequestInfo | URL,
 	init?: RequestInit,
 	retries = 3,
 ): Promise<Response> => {
-	return fetch(options, init).catch((error) => {
+	try {
+		return await fetch(options, init);
+	} catch (error) {
 		if (retries > 0) {
 			return fetchWithRetry(options, init, retries - 1);
 		}
 		throw error;
-	});
+	}
 };
 
 export type SiteDownloaderTransformConfig = TransformOptions & {
