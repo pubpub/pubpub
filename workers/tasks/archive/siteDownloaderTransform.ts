@@ -15,6 +15,19 @@ declare global {
 
 const allowedExportFormats = ['formatted', 'pdf', 'jats', 'html'];
 
+const fetchWithRetry = (
+	options: RequestInfo | URL,
+	init?: RequestInit,
+	retries = 3,
+): Promise<Response> => {
+	return fetch(options, init).catch((error) => {
+		if (retries > 0) {
+			return fetchWithRetry(options, init, retries - 1);
+		}
+		throw error;
+	});
+};
+
 export type SiteDownloaderTransformConfig = TransformOptions & {
 	assetDir?: string;
 	assetUrlFilter?: (url: string) => boolean;
@@ -134,7 +147,7 @@ export class SiteDownloaderTransform extends Transform {
 	}
 
 	async #fetch(url: string | URL) {
-		return fetch(url, {
+		return fetchWithRetry(url, {
 			headers: this.#config.headers,
 		});
 	}
