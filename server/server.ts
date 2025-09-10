@@ -192,6 +192,11 @@ const TIMEOUT_MS = process.env.REQUEST_TIMEOUT_MS
 	: 30_000;
 
 app.use((req, res, next) => {
+	// don't abort requests in test environment
+	if (process.env.NODE_ENV === 'test') {
+		return next();
+	}
+
 	const abortController = new AbortController();
 
 	abortStorage.enterWith({ abortController });
@@ -212,7 +217,7 @@ app.use((req, res, next) => {
 		clearTimeout(abortTimeout);
 	});
 
-	next();
+	return next();
 });
 
 /* -------------------- */
