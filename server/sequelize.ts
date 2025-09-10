@@ -1,3 +1,4 @@
+/* eslint-disable */ // necessary otherwise i can't ignore the subpath error triggered by sequelize/types/...
 import { knex } from 'knex';
 import { ConnectionError, ConnectionOptions, DataTypes, PoolOptions } from 'sequelize';
 import type { Pool } from 'sequelize-pool';
@@ -6,6 +7,7 @@ import type {
 	Connection,
 	ConnectionManager,
 } from 'sequelize/types/dialects/abstract/connection-manager';
+/* eslint-enable */
 import { abortStorage } from './abort';
 import { DatabaseRequestAbortedError } from './utils/errors';
 
