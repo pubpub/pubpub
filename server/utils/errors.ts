@@ -1,5 +1,7 @@
-import { resolve } from 'path';
 import * as Sentry from '@sentry/node';
+import type { NextFunction, Request, Response } from 'express';
+import { resolve } from 'path';
+import { isRequestAborted } from 'server/abort';
 import type { ForbiddenSlugStatus } from 'types';
 
 export enum PubPubApplicationError {
@@ -65,8 +67,25 @@ export class NotFoundError extends HTTPStatusError {
 	}
 }
 
-export const handleErrors = (req, res, next) => {
+export class RequestAbortedError extends Error {
+	readonly name: string = 'RequestAbortedError';
+	constructor(details?: string) {
+		super('Request aborted' + (details ? `: ${details}` : ''));
+	}
+}
+export class DatabaseRequestAbortedError extends RequestAbortedError {
+	readonly name: string = 'DatabaseRequestAbortedError';
+	constructor() {
+		super('Database request aborted');
+	}
+}
+
+export const handleErrors = (req: Request, res: Response, next: NextFunction) => {
 	return (err) => {
+		if (isRequestAborted() || err.name.includes('DatabaseRequestAbortedError')) {
+			return res.status(408).json({ error: 'Request aborted' });
+		}
+
 		if (
 			err.message === 'Community Not Found' ||
 			err instanceof PubPubError.CommunityIsSpamError
@@ -107,13 +126,17 @@ export const handleErrors = (req, res, next) => {
 	};
 };
 
-export const errorMiddleware = (err, _, res, next) => {
+export const errorMiddleware = (err: Error, _, res: Response, next: NextFunction) => {
 	if (err instanceof PubPubError.ForbiddenSlugError) {
 		res.status(400).json({
 			type: err.type,
 			slugStatus: err.slugStatus,
 			desiredSlug: err.desiredSlug,
 		});
+	} else if (err instanceof RequestAbortedError) {
+		console.log('[REQUEST DESTROYED]: ENDING RESPONSE, DESTROYING CONNECTION', err);
+		res.end();
+		res.destroy();
 	} else if (err instanceof HTTPStatusError) {
 		if (!res.headersSent) {
 			res.status(err.status).send(err.message);
