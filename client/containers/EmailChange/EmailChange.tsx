@@ -24,7 +24,7 @@ const EmailChange = (props: Props) => {
 		setIsLoading(true);
 		setError(undefined);
 
-		return apiFetch('/api/user/email', {
+		return apiFetch('/api/account/email', {
 			method: 'PUT',
 			body: JSON.stringify({
 				token: emailChangeData.token,

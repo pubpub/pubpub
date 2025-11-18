@@ -9,7 +9,7 @@ import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 
 app.get('/email-change/:token', (req, res, next) => {
 	const findToken = EmailChangeToken.findOne({
-		where: { token: req.params.token ?? null, used: false },
+		where: { token: req.params.token ?? null, usedAt: null },
 	});
 
 	return Promise.all([getInitialData(req), findToken])

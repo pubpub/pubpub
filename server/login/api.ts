@@ -132,6 +132,7 @@ export const loginRouteImplementation: AppRouteImplementation<typeof contract.au
 		})
 		.catch((err) => {
 			const unaunthenticatedValues = ['Invalid password', 'Invalid email'];
+			console.log('err', err);
 			if (unaunthenticatedValues.includes(err.message)) {
 				return { status: 401, body: 'Login attempt failed' } as const;
 			}

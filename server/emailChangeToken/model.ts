@@ -46,10 +46,10 @@ export class EmailChangeToken extends Model<
 	@Column(DataType.DATE)
 	declare expiresAt: Date;
 
-	@Default(false)
-	@AllowNull(false)
-	@Column(DataType.BOOLEAN)
-	declare used: CreationOptional<boolean>;
+	@Default(null)
+	@AllowNull(true)
+	@Column(DataType.DATE)
+	declare usedAt: CreationOptional<Date | null>;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	declare user?: User;

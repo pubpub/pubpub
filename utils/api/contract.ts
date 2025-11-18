@@ -21,12 +21,15 @@ import { UploadRouter, uploadRouter } from './contracts/upload';
 import { type AuthRouter, authRouter } from './contracts/auth';
 import { type AuthTokenRouter, authTokenRouter } from './contracts/authToken';
 import { type AnalyticsRouter, analyticsRouter } from './contracts/analytics';
+import { type AccountRouter, accountRouter } from './contracts/account';
 
 extendZodWithOpenApi(z);
 
 const c = initContract();
 
 const router = {
+	/** Methods for dealing with user account settings */
+	account: accountRouter as AccountRouter,
 	/** Methods for dealing with authentication */
 	auth: authRouter as AuthRouter,
 	/** @internal */

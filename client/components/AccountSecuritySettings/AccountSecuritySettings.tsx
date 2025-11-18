@@ -43,7 +43,7 @@ const AccountSecuritySettings = ({ userEmail }: { userEmail: string }) => {
 		setPasswordError(undefined);
 		setPasswordSuccess(false);
 
-		apiFetch('/api/user/password', {
+		apiFetch('/api/account/password', {
 			method: 'PUT',
 			body: JSON.stringify({
 				currentPassword: SHA3(currentPassword).toString(encHex),
@@ -77,7 +77,7 @@ const AccountSecuritySettings = ({ userEmail }: { userEmail: string }) => {
 		setEmailError(undefined);
 		setSubmittedEmail(undefined);
 
-		apiFetch('/api/user/email', {
+		apiFetch('/api/account/email', {
 			method: 'POST',
 			body: JSON.stringify({
 				newEmail: submittedEmailValue,
