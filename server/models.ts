@@ -19,6 +19,7 @@ import { CrossrefDepositRecord } from './crossrefDepositRecord/model';
 import { CustomScript } from './customScript/model';
 import { DepositTarget } from './depositTarget/model';
 import { Discussion } from './discussion/model';
+import { EmailChangeToken } from './emailChangeToken/model';
 import { DiscussionAnchor } from './discussionAnchor/model';
 import { Doc } from './doc/model';
 import { Draft } from './draft/model';
@@ -79,6 +80,7 @@ sequelize.addModels([
 	DiscussionAnchor,
 	Doc,
 	Draft,
+	EmailChangeToken,
 	Export,
 	ExternalPublication,
 	FacetBindingModel,
@@ -170,6 +172,7 @@ export {
 	DepositTarget,
 	Discussion,
 	DiscussionAnchor,
+	EmailChangeToken,
 	Doc,
 	Draft,
 	Export,

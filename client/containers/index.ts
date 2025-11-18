@@ -29,6 +29,7 @@ export { default as Login } from './Login/Login';
 export { default as NoMatch } from './NoMatch/NoMatch';
 export { default as Page } from './Page/Page';
 export { default as PasswordReset } from './PasswordReset/PasswordReset';
+export { default as EmailChange } from './EmailChange/EmailChange';
 export { default as Pricing } from './Pricing/Pricing';
 export { default as Legal } from './Legal/Legal';
 export { default as Pub } from './Pub/Pub';

@@ -53,3 +53,22 @@ export const sendPasswordResetEmail = ({ toEmail, resetUrl }) => {
 		'h:Reply-To': 'hello@pubpub.org',
 	});
 };
+
+export const sendEmailChangeEmail = ({ toEmail, changeUrl }) => {
+	return mg.messages.create('mg.pubpub.org', {
+		from: 'PubPub Team <hello@mg.pubpub.org>',
+		to: [toEmail],
+		subject: 'Confirm Email Change · PubPub',
+		text: stripIndent(`
+			We've received a request to change your email address to this email. Follow the link below to confirm this change.
+
+			${changeUrl}
+
+			If you did not request this change, please ignore this email.
+
+			Sincerely,
+			PubPub Support
+		`),
+		'h:Reply-To': 'hello@pubpub.org',
+	});
+};

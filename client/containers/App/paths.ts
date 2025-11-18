@@ -29,6 +29,7 @@ import {
 	NoMatch,
 	Page,
 	PasswordReset,
+	EmailChange,
 	Pricing,
 	Pub,
 	Search,
@@ -161,6 +162,11 @@ export default (viewData, locationData, chunkName) => {
 		},
 		PasswordReset: {
 			ActiveComponent: PasswordReset,
+			hideNav: true,
+			hideFooter: true,
+		},
+		EmailChange: {
+			ActiveComponent: EmailChange,
 			hideNav: true,
 			hideFooter: true,
 		},

@@ -6,9 +6,11 @@ import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getGdprConsentElection, updateGdprConsent } from 'client/utils/legal/gdprConsent';
 import UserNotificationPreferences from 'components/UserNotifications/UserNotificationPreferences';
+import AccountSecuritySettings from 'components/AccountSecuritySettings';
 
 type PrivacySettingsProps = {
 	integrations: types.Integration[];
+	userEmail: string;
 	isLoggedIn: boolean;
 	userNotificationPreferences?: types.UserNotificationPreferences;
 	onUpdateUserNotificationPreferences: (
@@ -157,6 +159,7 @@ const PrivacySettings = (props: PrivacySettingsProps) => {
 							/>
 						</Card>
 					)}
+					<AccountSecuritySettings userEmail={props.userEmail} />
 					<Card>
 						<h5>Account deletion</h5>
 						<p>

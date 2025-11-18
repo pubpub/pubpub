@@ -43,6 +43,7 @@ require('./search'); // Route: '/search'
 require('./signup'); // Route: '/signup'
 require('./superAdminDashboard'); // Route: /superadmin
 require('./passwordReset'); // Route: ['/password-reset', '/password-reset/:resetHash/:slug']
+require('./emailChange'); // Route: '/email-change/:token'
 require('./userCreate'); // Route: '/user/create/:hash'
 require('./user'); // Route: ['/user/:slug', '/user/:slug/:mode']
 require('./page'); // Route: ['/', '/:slug']
