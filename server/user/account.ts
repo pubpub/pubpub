@@ -5,11 +5,15 @@ import { User, EmailChangeToken } from 'server/models';
 import { generateHash } from 'utils/hashes';
 import { sendEmailChangeEmail } from 'server/utils/email';
 import { contract } from 'utils/api/contract';
+import { authenticate } from 'server/utils/authenticate';
+import { logout } from 'server/utils/logout';
 
 const s = initServer();
 
+const ONE_DAY = 1000 * 60 * 60 * 24;
+
 export const accountServer = s.router(contract.account, {
-	changePassword: async ({ req, body }) => {
+	changePassword: async ({ req, res, body }) => {
 		const userId = req.user?.id;
 
 		if (!userId) {
@@ -28,43 +32,32 @@ export const accountServer = s.router(contract.account, {
 			};
 		}
 
-		return new Promise<
-			{ status: 200; body: { success: true } } | { status: 403; body: { message: string } }
-		>((resolve) => {
-			(userData as any).authenticate(
-				body.currentPassword,
-				async (err: any, authUser: any) => {
-					if (err || !authUser) {
-						resolve({
-							status: 403,
-							body: { message: 'Current password is incorrect' },
-						});
-						return;
-					}
+		try {
+			await authenticate(userData, body.currentPassword);
+		} catch (error) {
+			return { status: 403, body: { message: 'Current password is incorrect' } };
+		}
 
-					try {
-						const setPassword = promisify(userData.setPassword.bind(userData));
-						const updatedUser = await setPassword(body.newPassword);
+		try {
+			const setPassword = promisify(userData.setPassword.bind(userData));
+			const updatedUser = await setPassword(body.newPassword);
 
-						await User.update(
-							{
-								hash: updatedUser?.dataValues.hash,
-								salt: updatedUser?.dataValues.salt,
-								passwordDigest: 'sha512',
-							},
-							{ where: { id: userId } },
-						);
-
-						resolve({ status: 200, body: { success: true } });
-					} catch (error) {
-						resolve({
-							status: 403,
-							body: { message: 'Failed to change password' },
-						});
-					}
+			await User.update(
+				{
+					hash: updatedUser?.dataValues.hash,
+					salt: updatedUser?.dataValues.salt,
+					passwordDigest: 'sha512',
 				},
+				{ where: { id: userId } },
 			);
-		});
+
+			// force logout after password change
+			logout(req, res);
+
+			return { status: 200, body: { success: true } };
+		} catch (error) {
+			return { status: 403, body: { message: 'Failed to change password' } };
+		}
 	},
 
 	initiateEmailChange: async ({ req, body }) => {
@@ -96,61 +89,48 @@ export const accountServer = s.router(contract.account, {
 			};
 		}
 
-		return new Promise<
-			| { status: 200; body: { success: true } }
-			| { status: 400; body: { message: string } }
-			| { status: 403; body: { message: string } }
-		>((resolve) => {
-			(userData as any).authenticate(body.password, async (err: any, authUser: any) => {
-				if (err || !authUser) {
-					resolve({
-						status: 403,
-						body: { message: 'Password is incorrect' },
-					});
-					return;
-				}
+		try {
+			await authenticate(userData, body.password);
+		} catch (error) {
+			return { status: 403, body: { message: 'Password is incorrect' } };
+		}
 
-				try {
-					const token = generateHash();
-					const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24);
+		try {
+			const token = generateHash();
+			const expiresAt = new Date(Date.now() + ONE_DAY);
 
-					// invalidate any existing unused tokens for this user
-					await EmailChangeToken.update(
-						{ usedAt: new Date() },
-						{
-							where: {
-								userId,
-								usedAt: null,
-							},
-						},
-					);
-
-					// create new email change token
-					await EmailChangeToken.create({
+			// invalidate any existing unused tokens for this user
+			await EmailChangeToken.update(
+				{ usedAt: new Date() },
+				{
+					where: {
 						userId,
-						newEmail,
-						token,
-						expiresAt,
 						usedAt: null,
-					});
+					},
+				},
+			);
 
-					await sendEmailChangeEmail({
-						toEmail: newEmail,
-						changeUrl: `https://${req.hostname}/email-change/${token}`,
-					});
-
-					resolve({ status: 200, body: { success: true } });
-				} catch (error) {
-					resolve({
-						status: 400,
-						body: { message: 'Failed to initiate email change' },
-					});
-				}
+			// create new email change token
+			await EmailChangeToken.create({
+				userId,
+				newEmail,
+				token,
+				expiresAt,
+				usedAt: null,
 			});
-		});
+
+			await sendEmailChangeEmail({
+				toEmail: newEmail,
+				changeUrl: `https://${req.hostname}/email-change/${token}`,
+			});
+
+			return { status: 200, body: { success: true } };
+		} catch (error) {
+			return { status: 400, body: { message: 'Failed to initiate email change' } };
+		}
 	},
 
-	completeEmailChange: async ({ body }) => {
+	completeEmailChange: async ({ req, res, body }) => {
 		const { token } = body;
 		const currentTime = Date.now();
 
@@ -183,14 +163,15 @@ export const accountServer = s.router(contract.account, {
 			};
 		}
 
-		// mark token as used
 		await EmailChangeToken.update(
 			{ usedAt: new Date() },
 			{ where: { id: emailChangeToken.id } },
 		);
 
-		// update user email
 		await User.update({ email: newEmail }, { where: { id: userId } });
+
+		// force logout after email change
+		logout(req, res);
 
 		return { status: 200, body: { success: true, newEmail } };
 	},
