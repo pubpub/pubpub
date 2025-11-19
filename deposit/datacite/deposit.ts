@@ -60,9 +60,9 @@ export async function submitResource(
 		scopeResource.identifiers.find((identifier) => identifier.identifierKind === 'URL'),
 	);
 	const hasExistingMetadata = await hasDataciteDoiMetadata(scopeDoi, depositTarget);
-	const depositResult = await (hasExistingMetadata
-		? updateDataciteDoiMetadata
-		: createDataciteDoiWithMetadata)(resourceXml, resourceUrl, scopeDoi, depositTarget);
+	const depositResult = await (
+		hasExistingMetadata ? updateDataciteDoiMetadata : createDataciteDoiWithMetadata
+	)(resourceXml, resourceUrl, scopeDoi, depositTarget);
 	if (depositResult.errors?.length > 0) {
 		throw new Error('An unexpected error occurred when submitting the deposit to DataCite');
 	}

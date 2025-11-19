@@ -1,5 +1,5 @@
-import { deduplicateSlash } from '../deduplicateSlash';
 import { vi } from 'vitest';
+import { deduplicateSlash } from '../deduplicateSlash';
 
 describe('deduplicate Slash Middleware', () => {
 	let mockRes;

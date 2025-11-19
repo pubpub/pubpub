@@ -3,12 +3,13 @@ import React from 'react';
 import { Legal } from 'containers';
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getIntegrations } from 'server/utils/queryHelpers';
 import { getOrCreateUserNotificationPreferences } from 'server/userNotificationPreferences/queries';
+
+export const router = Router();
 
 router.get('/privacy', (_, res) => res.redirect('/legal/privacy'));
 router.get('/privacy/policy', (_, res) => res.redirect('/legal/privacy'));

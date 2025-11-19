@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 export const router = Router();
 
 const redirectHosts = {

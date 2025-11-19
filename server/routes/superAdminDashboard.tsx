@@ -3,7 +3,6 @@ import React from 'react';
 import * as types from 'types';
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import {
 	superAdminTabKinds,
 	SuperAdminTabKind,
@@ -16,6 +15,8 @@ import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getLandingPageFeatures } from 'server/landingPageFeature/queries';
 import { queryCommunitiesForSpamManagement } from 'server/spamTag/communities';
 import { filtersById as spamFiltersById } from 'client/containers/SuperAdminDashboard/CommunitySpam/filters';
+
+export const router = Router();
 
 const getTabProps = async (tabKind: SuperAdminTabKind, locationData: types.LocationData) => {
 	if (tabKind === 'landingPageFeatures') {

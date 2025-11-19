@@ -40,7 +40,7 @@ const ColorInput = function (props) {
 				communityData.accentColorLight,
 				'black',
 				'white',
-		  ]
+			]
 		: presetColors;
 	return (
 		<div className="color-input-component">

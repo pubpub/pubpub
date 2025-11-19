@@ -2,11 +2,12 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
+
+export const router = Router();
 
 router.get('/community-services', (req, res, next) => {
 	if (!hostIsValid(req, 'pubpub')) {

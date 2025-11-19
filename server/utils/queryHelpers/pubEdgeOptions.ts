@@ -47,7 +47,7 @@ export const getPubEdgeIncludes = ({
 							includeCommunity: includeCommunityForPubs,
 						}),
 					},
-			  ]
+				]
 			: []),
 		...(includePub
 			? [
@@ -58,7 +58,7 @@ export const getPubEdgeIncludes = ({
 							includeCommunity: includeCommunityForPubs,
 						}),
 					},
-			  ]
+				]
 			: []),
 		{
 			model: ExternalPublication,

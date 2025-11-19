@@ -14,6 +14,8 @@ import type { BaseSourceFile } from 'utils/api/schemas/import';
 
 import { getPotentialLabelsForFile } from './formats';
 
+import './fileImportEntry.scss';
+
 type Props = {
 	// file: {
 	// 	clientPath?: string;
@@ -26,8 +28,6 @@ type Props = {
 	onLabelFile: (...args: any[]) => any;
 	onDelete: (...args: any[]) => any;
 };
-
-import './fileImportEntry.scss';
 
 const FileImportEntry = (props: Props) => {
 	const { file, onDelete, onLabelFile } = props;

@@ -2,9 +2,8 @@ import { Op } from 'sequelize';
 
 import { ActivityItem } from 'server/models';
 import { setup, login, modelize, teardown } from 'stubstub';
-import { fetchFacetsForScope } from '..';
-import { vi } from 'vitest';
 import { finishDeferredTasks } from 'server/utils/deferred';
+import { fetchFacetsForScope } from '..';
 
 const models = modelize`
     Community community {

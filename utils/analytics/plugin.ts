@@ -57,7 +57,7 @@ const sendData = (data: { payload: any; instance: AnalyticsInstance }) => {
 					}`,
 					value,
 				]),
-		  )
+			)
 		: {};
 
 	const toBeSentPayload = {

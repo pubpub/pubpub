@@ -7,7 +7,7 @@ export class CustomScript extends Model<
 	InferAttributes<CustomScript>,
 	InferCreationAttributes<CustomScript>
 > {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

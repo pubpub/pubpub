@@ -1,8 +1,9 @@
 import { Router } from 'express';
-export const router = Router();
 import { getInitialData } from 'server/utils/initData';
 import { handleErrors, NotFoundError } from 'server/utils/errors';
 import { getCommunityRss } from './queries';
+
+export const router = Router();
 
 router.get('/rss.xml', async (req, res, next) => {
 	try {

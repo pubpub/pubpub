@@ -2,7 +2,6 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { handleErrors, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
@@ -12,6 +11,8 @@ import { getCommunityDepositTarget } from 'server/depositTarget/queries';
 import { InitialData } from 'types';
 import { getCommunityArchives } from 'server/community/queries';
 
+export const router = Router();
+
 const getSettingsData = async (initialData: InitialData, pubSlug?: string, isAdmin?: boolean) => {
 	const [depositTarget, pubData, archives] = await Promise.all([
 		getCommunityDepositTarget(initialData.communityData.id),
@@ -20,7 +21,7 @@ const getSettingsData = async (initialData: InitialData, pubSlug?: string, isAdm
 					slug: pubSlug,
 					initialData,
 					getEdges: 'all',
-			  })
+				})
 			: null,
 		isAdmin ? getCommunityArchives(initialData.communityData.id) : null,
 	]);

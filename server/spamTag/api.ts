@@ -1,12 +1,13 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError } from 'server/utils/errors';
 import { expect } from 'utils/assert';
 
 import { canManipulateSpamTags } from './permissions';
 import { updateSpamTagForCommunity } from './queries';
 import { queryCommunitiesForSpamManagement } from './communities';
+
+export const router = Router();
 
 router.put(
 	'/api/spamTags',

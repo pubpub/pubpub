@@ -104,7 +104,7 @@ const CollectionBrowser = (props: Props) => {
 									</>
 								}
 							/>
-					  ))
+						))
 					: null}
 				{isLoading && (
 					<MenuItem

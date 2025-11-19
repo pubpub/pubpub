@@ -15,7 +15,7 @@ import { User, Community, Pub, Collection } from '../models';
 
 @Table
 export class Member extends Model<InferAttributes<Member>, InferCreationAttributes<Member>> {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

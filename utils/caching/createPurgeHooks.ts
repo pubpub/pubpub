@@ -39,8 +39,8 @@ type PurgeHook<
 	options?: T extends 'afterCreate'
 		? CreateOptions<A>
 		: T extends 'afterUpdate'
-		  ? UpdateOptions<A>
-		  : DestroyOptions<A>,
+			? UpdateOptions<A>
+			: DestroyOptions<A>,
 ) => Promise<string | string[] | null | undefined | void>;
 
 export const createPurgeHooks = <M extends ModelCtor>(options: {

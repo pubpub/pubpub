@@ -1,9 +1,10 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { UserNotificationPreferences } from 'server/models';
 
 import { updateUserNotificationPreferences } from './queries';
+
+export const router = Router();
 
 const unwrapRequest = (req: any) => {
 	const { preferences } = req.body;

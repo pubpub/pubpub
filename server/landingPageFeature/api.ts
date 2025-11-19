@@ -1,6 +1,5 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 
 import { canModifyLandingPageFeatures } from './permissions';
@@ -10,6 +9,8 @@ import {
 	destroyLandingPageFeature,
 	updateLandingPageFeature,
 } from './queries';
+
+export const router = Router();
 
 router.post(
 	'/api/landingPageFeatures',

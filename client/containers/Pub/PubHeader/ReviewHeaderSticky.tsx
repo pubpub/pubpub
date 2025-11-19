@@ -73,10 +73,10 @@ const ReviewHeaderSticky = () => {
 					return currentPubData.reviews
 						? {
 								reviews: [...currentPubData.reviews, reviewRes],
-						  }
+							}
 						: {
 								reviews: [reviewRes],
-						  };
+							};
 				});
 				setIsLoading(false);
 				setReviewNumber(reviewRes.number);

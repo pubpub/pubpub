@@ -237,7 +237,7 @@ export default (schema, props, collabDocPluginKey) => {
 										a: 1,
 										h: 1,
 										t: 'text',
-								  }
+									}
 								: compressSelectionJSON(selection.toJSON()),
 						};
 

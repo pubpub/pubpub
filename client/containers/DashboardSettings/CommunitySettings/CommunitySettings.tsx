@@ -170,7 +170,7 @@ const CommunitySettings = (props: Props) => {
 							/>,
 						],
 					} as const,
-			  ]
+				]
 			: ([] as Subtab[])),
 	].filter((x): x is Subtab => Boolean(x)) satisfies Subtab[];
 

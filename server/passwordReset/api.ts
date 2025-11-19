@@ -1,10 +1,11 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { User } from 'types';
 
 import { sleep } from 'utils/promises';
 import { createPasswordReset, updatePasswordReset } from './queries';
+
+export const router = Router();
 
 router.post(
 	'/api/password-reset',

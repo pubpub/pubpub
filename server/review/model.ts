@@ -20,7 +20,7 @@ export class ReviewNew extends Model<
 	InferAttributes<ReviewNew>,
 	InferCreationAttributes<ReviewNew>
 > {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

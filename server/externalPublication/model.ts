@@ -15,7 +15,7 @@ export class ExternalPublication extends Model<
 	InferAttributes<ExternalPublication>,
 	InferCreationAttributes<ExternalPublication>
 > {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

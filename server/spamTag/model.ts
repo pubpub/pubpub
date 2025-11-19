@@ -13,7 +13,7 @@ import { SpamStatus } from 'types';
 
 @Table
 export class SpamTag extends Model<InferAttributes<SpamTag>, InferCreationAttributes<SpamTag>> {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

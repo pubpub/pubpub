@@ -70,12 +70,12 @@ export const persistCrossrefDepositRecord = async (ids, depositJson) => {
 					where: {
 						id: pubId,
 					},
-			  })
+				})
 			: await Collection.findOne({
 					where: {
 						id: collectionId,
 					},
-			  }),
+				}),
 	);
 	const { crossrefDepositRecordId } = targetModel;
 

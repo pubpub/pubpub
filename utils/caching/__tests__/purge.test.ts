@@ -2,11 +2,11 @@ import { createPubEdge } from 'server/pubEdge/queries';
 import { finishDeferredTasks } from 'server/utils/deferred';
 import { login, modelize, setup, teardown } from 'stubstub';
 import { setEnvironment } from 'utils/environment';
+import { vi } from 'vitest';
 import { getCorrectHostname } from '../getCorrectHostname';
 import { getPPLic } from '../getHashedUserId';
-import { vi } from 'vitest';
 
-const superAdmin = {
+const superAdminConfig = {
 	id: crypto.randomUUID(),
 	name: 'Super Admin',
 	slug: `${crypto.randomUUID()}-super-admin`,
@@ -29,10 +29,10 @@ const releaseTestPubSlug = `${crypto.randomUUID()}-release-test-pub`;
 
 const models = modelize`
 	User superAdmin {
-		id: ${superAdmin.id}
-		name: ${superAdmin.name}
-		slug: ${superAdmin.slug}
-		isSuperAdmin: ${superAdmin.isSuperAdmin}
+		id: ${superAdminConfig.id}
+		name: ${superAdminConfig.name}
+		slug: ${superAdminConfig.slug}
+		isSuperAdmin: ${superAdminConfig.isSuperAdmin}
 	}
 		
     Community community {
@@ -44,7 +44,7 @@ const models = modelize`
 				historyKey: 1
 			}
 			PubAttribution {
-				userId: ${superAdmin.id}
+				userId: ${superAdminConfig.id}
 				affiliation: "test"
 				order: 0.5
 			}
@@ -64,7 +64,7 @@ const models = modelize`
 		Pub connectionPub {
 			title: "connection pub"
 			PubAttribution {
-				userId: ${superAdmin.id}
+				userId: ${superAdminConfig.id}
 				affiliation: "test"
 				order: 0.5
 			}
@@ -85,7 +85,7 @@ const models = modelize`
 				historyKey: 1
 			}
 			PubAttribution {
-				userId: ${superAdmin.id}
+				userId: ${superAdminConfig.id}
 				affiliation: "test"
 				order: 0.5
 			}
@@ -96,7 +96,7 @@ const models = modelize`
 		subdomain: ${collectionAttributionCommunitySubdomain}
 		Collection collection {
 			CollectionAttribution {
-				userId: ${superAdmin.id}
+				userId: ${superAdminConfig.id}
 				affiliation: "test"
 				order: 0.5
 			}
@@ -106,7 +106,7 @@ const models = modelize`
 	Community communityMemberCommunity {
 		domain: ${communityMemberCommunityDomain}
 		Member {
-			userId: ${superAdmin.id}
+			userId: ${superAdminConfig.id}
 		}
 	}
 
@@ -114,7 +114,7 @@ const models = modelize`
 		domain: ${pubMemberCommunityDomain}
 		Pub {
 			Member {
-				userId: ${superAdmin.id}
+				userId: ${superAdminConfig.id}
 			}
 		}
 	}
@@ -123,7 +123,7 @@ const models = modelize`
 		domain: ${collectionMemberCommunityDomain}
 		Collection {
 			Member {
-				userId: ${superAdmin.id}
+				userId: ${superAdminConfig.id}
 			}
 		}
 	}
@@ -133,7 +133,7 @@ const models = modelize`
 		Pub releaseTestPub {
 			slug: ${releaseTestPubSlug}
 			PubAttribution {
-				userId: ${superAdmin.id}
+				userId: ${superAdminConfig.id}
 				affiliation: "test"
 				order: 0.5
 			}

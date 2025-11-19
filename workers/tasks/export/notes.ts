@@ -87,7 +87,7 @@ export const getPandocNotesById = (notesData: NotesData): PandocNotes => {
 		const structuredHtmlWithBareStyling = structuredHtmlFullOfDivs
 			? sanitizeHtml(structuredHtmlFullOfDivs, {
 					allowedTags: ['b', 'i', 'strong', 'em', 'a'],
-			  })
+				})
 			: null;
 		index[note.id] = {
 			id: getIdForNote(cslJson, note.id),

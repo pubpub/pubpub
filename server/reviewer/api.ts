@@ -1,8 +1,9 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { createReviewer } from './queries';
 import { getPermissions } from './permissions';
+
+export const router = Router();
 
 const getRequestIds = (req) => {
 	const user = req.user || {};

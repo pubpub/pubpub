@@ -2,7 +2,6 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError, NotFoundError, handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
@@ -11,6 +10,8 @@ import { getManyPubs } from 'server/pub/queryMany';
 import * as types from 'types';
 import { SubmissionWorkflow } from 'server/models';
 import { getDashUrl } from 'utils/dashboard';
+
+export const router = Router();
 
 const getInitialPubs = async (
 	collectionId: string,

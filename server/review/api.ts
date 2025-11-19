@@ -1,9 +1,10 @@
 import { Router } from 'express';
-export const router = Router();
 import { expect } from 'utils/assert';
 
 import { getPermissions } from './permissions';
 import { createReview, createReviewRelease, updateReview, destroyReview } from './queries';
+
+export const router = Router();
 
 const getRequestIds = (req) => {
 	const user = req.user || {};

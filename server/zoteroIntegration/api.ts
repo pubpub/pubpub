@@ -1,9 +1,10 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError } from 'server/utils/errors';
 
 import { getZoteroIntegration } from './queries';
+
+export const router = Router();
 
 router.get(
 	'/api/zoteroIntegration',

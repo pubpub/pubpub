@@ -1,9 +1,6 @@
-import sinon from 'sinon';
-
-import { setup, teardown, login, modelize } from 'stubstub';
 import { CrossrefDepositRecord } from 'server/models';
+import { login, modelize, setup, teardown } from 'stubstub';
 
-import * as submit from '../submit';
 import { vi } from 'vitest';
 
 const models = modelize`

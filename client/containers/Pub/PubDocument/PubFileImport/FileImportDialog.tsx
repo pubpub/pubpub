@@ -358,7 +358,7 @@ const FileImportDialog = ({
 					{incompleteUploads.length > 0
 						? `${currentFiles.length - incompleteUploads.length} of ${
 								currentFiles.length
-						  } files uploaded.`
+							} files uploaded.`
 						: `${currentFiles.length} files uploaded.`}
 				</div>
 				{currentFiles.map((file, index) => (

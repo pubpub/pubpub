@@ -15,7 +15,7 @@ export class ScopeSummary extends Model<
 	InferAttributes<ScopeSummary>,
 	InferCreationAttributes<ScopeSummary>
 > {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

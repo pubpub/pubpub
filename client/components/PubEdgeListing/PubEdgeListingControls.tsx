@@ -89,8 +89,8 @@ const PubEdgeListingControls = (props: Props) => {
 			<span className="filters">
 				{single && filters.length === 1
 					? // Show "1 of 1 parent" in the case of one filter selected
-					  // AND consumer has indicated a single item via `single` prop
-					  filters[0]
+						// AND consumer has indicated a single item via `single` prop
+						filters[0]
 					: filters.length > 0 && joinOxford(filters.map(filterToPlural))}
 			</span>
 			<ButtonGroup minimal>

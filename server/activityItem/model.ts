@@ -17,7 +17,7 @@ export class ActivityItem<T extends InsertableActivityItem = InsertableActivityI
 	InferAttributes<ActivityItem<T>, { omit: Extract<keyof ActivityItem<T>, keyof T> }> & T,
 	InferCreationAttributes<ActivityItem<T>, { omit: Extract<keyof ActivityItem<T>, keyof T> }> & T
 > {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

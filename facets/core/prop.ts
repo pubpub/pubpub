@@ -49,9 +49,9 @@ export type CascadedTypeOfFacetProp<Prop extends FacetProp> =
 	// If the root value of the prop is non-null...
 	IsNeverNull<RootValueOfFacetProp<Prop>> extends true
 		? // ...then we'll never get null as a cascaded value for this prop
-		  TypeOfFacetProp<Prop>
+			TypeOfFacetProp<Prop>
 		: // Otherwise, we might.
-		  NullableTypeOfFacetProp<Prop>;
+			NullableTypeOfFacetProp<Prop>;
 
 // Creates a prop definition.
 export const prop = <

@@ -68,7 +68,7 @@ const codeSchema: { [key: string]: NodeSpec } = {
 						'pre',
 						{ ...(node.attrs.id && { id: node.attrs.id }) },
 						['code', 0],
-				  ] as DOMOutputSpec),
+					] as DOMOutputSpec),
 	},
 };
 

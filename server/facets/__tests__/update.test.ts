@@ -2,8 +2,8 @@ import { setup, modelize, expectCreatedActivityItem, teardown } from 'stubstub';
 
 import { FacetsError } from 'facets';
 import { FacetBinding, facetModels } from 'server/models';
-import { updateFacetsForScope } from '..';
 import { finishDeferredTasks } from 'server/utils/deferred';
+import { updateFacetsForScope } from '..';
 
 const models = modelize`
 	Community community {

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-const rootRouter = Router();
 
 import { router as redirectsRouter } from './redirects'; // Redirect needed v3 routes;
 import { router as pubRedirectsRouter } from './pubRedirects';
@@ -51,7 +50,9 @@ import { router as userRouter } from './user'; // Route: ['/user/:slug', '/user/
 import { router as pageRouter } from './page'; // Route: ['/', '/:slug']
 import { router as sitemapRouter } from './sitemap'; // Route: /sitemap-*.xml
 import { router as robotsRouter } from './robots'; // Route: /robots.txt
-import { router as noMatchRouter } from './noMatch'; // Route: '/*'
+import { router as noMatchRouter } from './noMatch';
+
+const rootRouter = Router(); // Route: '/*'
 
 rootRouter
 	.use(redirectsRouter)

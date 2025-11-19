@@ -70,8 +70,8 @@ const PubSettings = (props: Props) => {
 	const slugError = !pubData.slug
 		? 'Required'
 		: error?.slugStatus === 'used'
-		  ? 'This URL is not available because it is in use by another Pub.'
-		  : null;
+			? 'This URL is not available because it is in use by another Pub.'
+			: null;
 
 	const renderDetails = () => {
 		return (

@@ -152,17 +152,17 @@ export default ({
 							page: false,
 							members: false,
 							attributions: false,
-					  }
+						}
 				: {
 						page: true,
 						members: true,
 						attributions: true,
-				  }
+					}
 			: {
 					page: false,
 					members: false,
 					attributions: false,
-			  };
+				};
 
 		collectionPubs = [
 			{

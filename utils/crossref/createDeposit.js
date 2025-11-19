@@ -38,9 +38,9 @@ const renderBody = (context) => {
 				parentDoi:
 					pub.id === pubEdge.targetPubId
 						? // inbound edge, use parent pub doi
-						  pubEdge.pub.doi
+							pubEdge.pub.doi
 						: // outbound edge, use target pub doi
-						  pubEdge.targetPub.doi,
+							pubEdge.targetPub.doi,
 			});
 		}
 

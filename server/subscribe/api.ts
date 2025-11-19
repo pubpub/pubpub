@@ -1,7 +1,8 @@
 import { Router } from 'express';
-export const router = Router();
 
 import { subscribeToMailchimp } from './queries';
+
+export const router = Router();
 
 router.post('/api/subscribe', (req, res) => {
 	return subscribeToMailchimp(req.body)

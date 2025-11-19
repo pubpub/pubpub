@@ -214,7 +214,7 @@ const PubEdgeListing = (props: Props) => {
 						>
 							{isolated && controls}
 						</PubEdgeListingCard>
-				  )
+					)
 				: filteredPubEdgesInContext.map(({ isInboundEdge, edge, isSibling, parentPub }) => (
 						<PubEdgeListingCard
 							pubEdgeDescriptionIsVisible={pubEdgeDescriptionIsVisible}
@@ -226,7 +226,7 @@ const PubEdgeListing = (props: Props) => {
 							isInboundEdge={isInboundEdge}
 							inPubBody
 						/>
-				  ));
+					));
 
 		return !isolated && (!activeEdgeInContext || filteredPubEdgesInContext.length === 0) ? (
 			<NonIdealState title="No Results" icon="search" />

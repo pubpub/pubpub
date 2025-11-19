@@ -19,7 +19,7 @@ export class SubmissionWorkflow extends Model<
 	InferAttributes<SubmissionWorkflow>,
 	InferCreationAttributes<SubmissionWorkflow>
 > {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

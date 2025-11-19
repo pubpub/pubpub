@@ -33,7 +33,7 @@ export class Collection extends Model<
 	InferAttributes<Collection>,
 	InferCreationAttributes<Collection>
 > {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

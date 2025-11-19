@@ -3,9 +3,9 @@ import { ForbiddenError } from 'server/utils/errors';
 import { getScope } from 'server/utils/queryHelpers';
 import { ActivityFilter, ScopeId } from 'types';
 
+import { Router } from 'express';
 import { fetchActivityItems } from './fetch';
 
-import { Router } from 'express';
 export const router = Router();
 
 const unwrapRequest = (req) => {

@@ -2,11 +2,12 @@ import queryString, { ParsedQuery } from 'query-string';
 
 import { isDuqDuq } from 'utils/environment';
 import { Router } from 'express';
-export const router = Router();
 import { Community, Pub, Release } from 'server/models';
 import { handleErrors } from 'server/utils/errors';
 import { hostIsValid } from 'server/utils/routes';
 import { DefinitelyHas } from 'types';
+
+export const router = Router();
 
 const getParams = (req) => {
 	const hostname = isDuqDuq()

@@ -50,7 +50,7 @@ const FormattingBar = (props: Props) => {
 		? props.buttons
 		: props.buttons.map((arr) => {
 				return arr.filter((button) => !button.key.startsWith('suggested-edits'));
-		  });
+			});
 	const buttonElementRefs = useRefMap();
 	const wrapperRef = useRef<null | HTMLDivElement>(null);
 	const toolbar = useToolbarState({ loop: true });

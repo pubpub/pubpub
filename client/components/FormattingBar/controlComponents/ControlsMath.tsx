@@ -22,11 +22,11 @@ const ControlsMath = (props: Props) => {
 			? {
 					icon: 'eye-open',
 					label: 'Show',
-			  }
+				}
 			: {
 					icon: 'eye-off',
 					label: 'Hide',
-			  };
+				};
 
 	const swapMathTypeButton: FormattingBarButtonData = {
 		key: 'change-math-node-type',

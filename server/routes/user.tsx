@@ -2,7 +2,6 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import type { Request, Response } from 'express';
 import { getUser } from 'server/utils/queryHelpers';
 import { handleErrors } from 'server/utils/errors';
@@ -12,6 +11,8 @@ import { getCustomScriptsForCommunity } from 'server/customScript/queries';
 import { isUserAffiliatedWithCommunity } from 'server/community/queries';
 import { expect } from 'utils/assert';
 import { getCorrectHostname } from 'utils/caching/getCorrectHostname';
+
+export const router = Router();
 
 /**
  * Get the Fastly surroagate keys for a user.

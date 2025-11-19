@@ -111,7 +111,7 @@ class ModelWithPassport<T extends {} = any, C extends {} = T> extends Model<T, C
 
 @Table
 export class User extends ModelWithPassport<InferAttributes<User>, InferCreationAttributes<User>> {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

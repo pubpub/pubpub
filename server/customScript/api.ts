@@ -1,11 +1,12 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError } from 'server/utils/errors';
 import { CustomScriptType } from 'types';
 
 import { canSetCustomScript } from './permissions';
 import { setCustomScriptForCommunity } from './queries';
+
+export const router = Router();
 
 const getRequestIds = (
 	req: any,

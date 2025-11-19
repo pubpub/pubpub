@@ -1,8 +1,9 @@
 import { Router } from 'express';
-export const router = Router();
 
 import { getPermissions } from './permissions';
 import { createThreadEvent, updateThreadEvent, destroyThreadEvent } from './queries';
+
+export const router = Router();
 
 const getRequestIds = (req) => {
 	const user = req.user || {};

@@ -1,9 +1,10 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { getInitialData } from 'server/utils/initData';
 import { getLayoutPubsByBlock } from 'server/utils/layouts';
 import { LayoutBlockPubs } from 'utils/layout';
+
+export const router = Router();
 
 export type RequestIds = {
 	alreadyFetchedPubIds?: string[];

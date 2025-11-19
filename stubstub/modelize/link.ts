@@ -121,7 +121,7 @@ const walkAst = (ast: ModelBlock[], parameters: Parameters) => {
 						? resolvedSpread
 						: {
 								[entry.value.value]: resolvedSpread,
-						  }),
+							}),
 				};
 			} else if (entry.type === 'keyValuePair') {
 				const { key, value } = entry;

@@ -5,7 +5,7 @@ import { ThreadComment, ThreadEvent } from '../models';
 
 @Table
 export class Thread extends Model<InferAttributes<Thread>, InferCreationAttributes<Thread>> {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

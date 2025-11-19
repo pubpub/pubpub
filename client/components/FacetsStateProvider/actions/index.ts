@@ -7,13 +7,14 @@ import { persistFacets } from './persistFacets';
 type ActionsArgs = [GetState<FacetsState>, SetState<FacetsState>, ...any[]];
 type Action = (...args: ActionsArgs) => void | Promise<void>;
 
-type ExtractRestArgs<ActionFn extends Action> = Parameters<ActionFn> extends [
-	infer _, // get
-	infer __, // set
-	...infer RestArgs,
-]
-	? RestArgs
-	: never;
+type ExtractRestArgs<ActionFn extends Action> =
+	Parameters<ActionFn> extends [
+		infer _, // get
+		infer __, // set
+		...infer RestArgs,
+	]
+		? RestArgs
+		: never;
 
 type BoundAction<ActionFn extends Action> = (...args: ExtractRestArgs<ActionFn>) => void;
 

@@ -1,11 +1,12 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { canUserSeeThread } from 'server/thread/queries';
 import { ForbiddenError } from 'server/utils/errors';
 import { UserSubscriptionStatus } from 'types';
 
 import { setUserSubscriptionStatus } from '../shared/queries';
+
+export const router = Router();
 
 const unwrapRequest = (req: any) => {
 	return {

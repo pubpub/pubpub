@@ -105,7 +105,7 @@ export default {
 							},
 
 							imgTag,
-					  ]
+						]
 					: imgTag,
 				[
 					'figcaption',

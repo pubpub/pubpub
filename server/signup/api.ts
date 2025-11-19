@@ -1,7 +1,8 @@
 import { Router } from 'express';
-export const router = Router();
 
 import { DuplicateEmailError, createSignup } from './queries';
+
+export const router = Router();
 
 router.post('/api/signup', (req, res) => {
 	return createSignup(req.body, req.hostname)

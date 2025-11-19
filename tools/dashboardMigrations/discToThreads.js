@@ -30,7 +30,7 @@ export default async () => {
 						databaseURL: getFirebaseConfig().databaseURL,
 					},
 					'firebase-pub-new',
-			  );
+				);
 	const database = firebaseApp.database();
 
 	/* Migrate Discussions to Threads */

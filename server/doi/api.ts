@@ -3,12 +3,13 @@ import xmlbuilder from 'xmlbuilder';
 import { Release } from 'server/models';
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError } from 'server/utils/errors';
 import { parentToSupplementNeedsDoiError } from 'utils/crossref/createDeposit';
 
 import { getPermissions } from './permissions';
 import { generateDoi, getDoiData, setDoiData } from './queries';
+
+export const router = Router();
 
 const assertUserAuthorized = async (target, requestIds) => {
 	const permissions = await getPermissions(requestIds);

@@ -1,8 +1,9 @@
 import stripIndent from 'strip-indent';
 
 import { Router } from 'express';
-export const router = Router();
 import { getInitialData } from 'server/utils/initData';
+
+export const router = Router();
 
 router.get('/opensearch.xml', (req, res) => {
 	return getInitialData(req)

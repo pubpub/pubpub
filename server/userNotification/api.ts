@@ -1,6 +1,5 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 
 import {
@@ -8,6 +7,8 @@ import {
 	fetchUserNotifications,
 	markUserNotificationsRead,
 } from './queries';
+
+export const router = Router();
 
 const unwrapGetRequest = (req: any) => {
 	const { offset, limit } = req.query;

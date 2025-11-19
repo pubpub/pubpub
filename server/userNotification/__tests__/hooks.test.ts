@@ -6,6 +6,10 @@ import { modelize, setup, teardown } from 'stubstub';
 import { DocJson } from 'types';
 import { vi } from 'vitest';
 
+// eslint-disable-next-line import/extensions
+// const mailgunMessages = require('../hooks.ts').mg.messages;
+import { mg } from '../hooks';
+
 const models = modelize`
     User rando {}
     User chattyUser {}
@@ -104,10 +108,6 @@ const models = modelize`
         }
     }
 `;
-
-// eslint-disable-next-line import/extensions
-// const mailgunMessages = require('../hooks.ts').mg.messages;
-import { mg } from '../hooks';
 
 const mailgunMessages = mg.messages;
 

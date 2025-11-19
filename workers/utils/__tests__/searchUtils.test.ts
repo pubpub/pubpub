@@ -79,7 +79,7 @@ setup(beforeAll, async () => {
 	await models.resolve();
 
 	vi.mock('server/utils/firebaseAdmin', () => ({
-		getPubDraftDoc: getPubDraftDoc,
+		getPubDraftDoc,
 	}));
 });
 

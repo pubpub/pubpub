@@ -22,7 +22,7 @@ const renderTitleToReact = (title: Title, context: ActivityRenderContext) => {
 			? `${communityUrl(Object.values(context.associations.community)[0])}/${href.replace(
 					/^\//,
 					'',
-			  )}`
+				)}`
 			: href);
 
 	const inner = communityHref ? (

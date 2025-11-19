@@ -2,12 +2,13 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { handleErrors, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { fetchFacetsForScope } from 'server/facets';
+
+export const router = Router();
 
 router.get(
 	['/dash/facets', '/dash/collection/:collectionSlug/facets', '/dash/pub/:pubSlug/facets'],

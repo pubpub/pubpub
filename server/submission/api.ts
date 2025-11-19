@@ -1,11 +1,12 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError } from 'server/utils/errors';
 import { getPub } from 'server/utils/queryHelpers';
 
 import { canCreateSubmission, canUpdateSubmission, canDeleteSubmission } from './permissions';
 import { createSubmission, updateSubmission, destroySubmission } from './queries';
+
+export const router = Router();
 
 router.post(
 	'/api/submissions',

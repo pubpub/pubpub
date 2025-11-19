@@ -2,7 +2,6 @@ import React from 'react';
 
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import Html from 'server/Html';
 import { handleErrors, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
@@ -10,6 +9,8 @@ import { hostIsValid } from 'server/utils/routes';
 
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getPubForRequest } from 'server/utils/queryHelpers';
+
+export const router = Router();
 
 router.get(
 	'/dash/pub/:pubSlug/connections',

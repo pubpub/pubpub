@@ -1,9 +1,10 @@
 import passport from 'passport';
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { User } from 'server/models';
 import { isDevelopment } from 'utils/environment';
+
+export const router = Router();
 
 router.get(
 	'/auth/zotero',

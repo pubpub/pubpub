@@ -397,7 +397,7 @@ const getActivePermissions = async (
 						? (typeof initialOptions)[P]
 						: T[P]
 					: T[P];
-		  }
+			}
 		: never;
 
 	const activePublicPermissions = publicPermissionsData

@@ -2,11 +2,12 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { Signup } from 'server/models';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
+
+export const router = Router();
 
 router.get('/user/create/:hash', (req, res, next) => {
 	const getSignup = Signup.findOne({

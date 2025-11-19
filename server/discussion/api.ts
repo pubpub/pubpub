@@ -1,11 +1,12 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError } from 'server/utils/errors';
 
 import { getCreatePermission, getUpdatePermissions, canReleaseDiscussions } from './permissions';
 import { createDiscussion, updateDiscussion, updateVisibilityForDiscussions } from './queries';
 import { createDiscussionAnchorsForLatestRelease } from './utils';
+
+export const router = Router();
 
 const getRequestIds = (req) => {
 	const user = req.user || {};

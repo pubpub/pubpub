@@ -1,9 +1,10 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { Community } from 'server/models';
 import { ForbiddenError, NotFoundError, BadRequestError } from 'server/utils/errors';
 import { canSelectCommunityForDevelopment } from 'utils/environment';
+
+export const router = Router();
 
 const setSubdomain = async (subdomain: string | null) => {
 	process.env.FORCE_BASE_PUBPUB = subdomain === null ? 'true' : '';

@@ -3,13 +3,14 @@ import { z } from 'zod';
 
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { BadRequestError, NotFoundError } from 'server/utils/errors';
 
 import { isProd, isDuqDuq } from 'utils/environment';
 import { getHashedUserId } from 'utils/caching/getHashedUserId';
 import { getPermissions } from './permissions';
 import { createUser, updateUser, getSuggestedEditsUserInfo } from './queries';
+
+export const router = Router();
 
 const getRequestIds = (req) => {
 	const user = req.user || {};

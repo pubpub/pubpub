@@ -1,10 +1,10 @@
 // Add this to your Express app for pool monitoring
 // You can add this to your server/routes/ or wherever you define routes
 
-import { Request, Response } from 'express';
-import { Router } from 'express';
-export const router = Router();
-import { poolOptions, sequelize } from '../sequelize'; // adjust path as needed
+import { Request, Response, Router } from 'express';
+import { poolOptions, sequelize } from '../sequelize';
+
+export const router = Router(); // adjust path as needed
 
 export const poolStatsHandler = (req: Request, res: Response) => {
 	if (process.env.NODE_ENV === 'production') {

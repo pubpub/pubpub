@@ -1,7 +1,8 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { sendServicesInquiryEmail } from 'server/utils/email/communityServices';
+
+export const router = Router();
 
 router.post(
 	'/api/communityServices',

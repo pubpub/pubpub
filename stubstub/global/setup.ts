@@ -2,7 +2,6 @@
 
 import { ChildProcessWithoutNullStreams } from 'child_process';
 import { setupTestDatabase, startTestDatabaseServer, initTestDatabase } from '../testDatabase';
-import { vi } from 'vitest';
 
 // HACK(ian): The PUBPUB_SYNCING_MODELS_FOR_TEST_DB flag tells the code that we're only going to use
 // it to sync Sequelize to a test database, and that it's safe to skip certain operations.

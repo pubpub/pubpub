@@ -1,8 +1,7 @@
 import type { Global } from '@jest/types';
-import { finishDeferredTasks } from 'server/utils/deferred';
+import { vi } from 'vitest';
 import { clearUserToAgentMap } from './userToAgentMap';
 import { sequelize } from '../server/sequelize';
-import { vi } from 'vitest';
 
 export const setup = (
 	beforeFn: Global.HookBase,

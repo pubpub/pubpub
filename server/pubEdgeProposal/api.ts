@@ -1,6 +1,5 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { parseUrl } from 'utils/urls';
 import { isDoi, extractDoiFromOrgUrl } from 'utils/crossref/parseDoi';
 
@@ -9,6 +8,8 @@ import {
 	createPubEdgeProposalFromCrossrefDoi,
 	getPubDataFromUrl,
 } from './queries';
+
+export const router = Router();
 
 router.get(
 	'/api/pubEdgeProposal',

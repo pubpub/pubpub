@@ -18,7 +18,7 @@ const firebaseApp =
 					databaseURL: 'https://pubpub-v6-prod.firebaseio.com',
 				},
 				'firebase-pub-new',
-		  );
+			);
 const database = firebaseApp.database();
 // TODO: There are a set of pubs (e.g. designandscience) that have changes written on their merge branch.
 // As such, there is not an associated Merge of PubVersion object. We will need to go through firebase,

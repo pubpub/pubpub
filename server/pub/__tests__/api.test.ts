@@ -7,8 +7,8 @@ import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stu
 import { CollectionPub, Pub, Draft } from 'server/models';
 import { fullImportOutput, pubSchema } from 'utils/api/schemas/pub';
 
-import { issueCreatePubToken } from '../tokens';
 import { vi } from 'vitest';
+import { issueCreatePubToken } from '../tokens';
 
 const defaultCollectionId = uuid();
 
@@ -585,7 +585,7 @@ describe('GET /api/pubs', () => {
 
 vi.mock('utils/import/uploadAndConvertImages', async () => {
 	if (process.env.AWS_ACCESS_KEY_ID) {
-		return await import('utils/import/uploadAndConvertImages');
+		return import('utils/import/uploadAndConvertImages');
 	}
 	return {
 		uploadAndConvertImages: (files) => files,

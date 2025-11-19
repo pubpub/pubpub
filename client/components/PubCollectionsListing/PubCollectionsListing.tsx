@@ -69,7 +69,7 @@ const PubCollectionsListing = (props: Props) => {
 						title: maybeCollection.tagTitleToCreate,
 						communityId: communityData.id,
 						isPublic: true,
-				  })
+					})
 				: maybeCollection;
 		const newCollectionPub = await pendingPromise(
 			api.addCollectionPub({
@@ -235,11 +235,11 @@ const PubCollectionsListing = (props: Props) => {
 				createNewItemRenderer: renderNewItem,
 				searchPlaceholder: 'Search for Collections (or create a Tag)',
 				emptyListPlaceholder: '',
-		  }
+			}
 		: {
 				emptyListPlaceholder: 'No Collections match this search.',
 				searchPlaceholder: 'Search for Collections',
-		  };
+			};
 	const renderQueryList = (triggerButton) => {
 		if (canAddCollections.length > 0) {
 			return (

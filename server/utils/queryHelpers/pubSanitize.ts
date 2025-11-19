@@ -47,7 +47,7 @@ export default (
 	const filteredCollectionPubs = pubData.collectionPubs
 		? pubData.collectionPubs.filter((item) => {
 				return visibleCollectionIds.includes(item.collectionId);
-		  })
+			})
 		: [];
 	const hasCollectionMemberAccess = filteredCollectionPubs.reduce((prev, currCp) => {
 		const currCollection = initialData.communityData.collections.find((cl) => {

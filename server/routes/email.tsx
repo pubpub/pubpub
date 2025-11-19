@@ -6,13 +6,14 @@ import { minify } from 'html-minifier';
 
 import { isProd } from 'utils/environment';
 import { Router } from 'express';
-export const router = Router();
 import { handleErrors } from 'server/utils/errors';
 import { hostIsValid } from 'server/utils/routes';
 import { getDigestData } from 'server/utils/email/digest';
 import { getInitialData } from 'server/utils/initData';
 import { reset, globals } from 'components/Email/styles';
 import { Digest } from 'components/Email';
+
+export const router = Router();
 
 const inlineStylesWithMarkup = (emailMarkup: React.ReactNode, extraStyles: string) => {
 	const stylesheet = new ServerStyleSheet();

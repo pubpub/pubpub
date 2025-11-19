@@ -7,12 +7,13 @@ import { isProd } from 'utils/environment';
 import { Page, Pub, Release } from 'server/models';
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { communityUrl, pubUrl, pageUrl } from 'utils/canonicalUrls';
 import { createPubPubS3Client } from 'server/utils/s3';
 import type { Community } from 'types';
+
+export const router = Router();
 
 const s3 = createPubPubS3Client({
 	accessKeyId: process.env.AWS_ACCESS_KEY_ID!,

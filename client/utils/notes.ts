@@ -12,7 +12,7 @@ const renderStructuredValues = (structuredValues, citationStyleKind, inlineStyle
 					inlineStyleKind,
 					citationStyleKind,
 				}),
-		  })
+			})
 		: Promise.resolve([]);
 
 export class NoteManager extends NoteManagerCore {

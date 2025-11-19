@@ -40,7 +40,7 @@ const WithinCommunityByline = (props: Props) => {
 							<Icon iconSize={12} icon="sort-alphabetical" className="byline-icon" />
 						}
 					/>
-			  ))
+				))
 			: bylinePrefix;
 	return <Byline {...props} bylinePrefix={bylinePrefix} contributors={sortedContributors} />;
 };

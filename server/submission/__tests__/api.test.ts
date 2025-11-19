@@ -1,4 +1,4 @@
-import { setup, teardown, login, modelize, expectCreatedActivityItem, stub } from 'stubstub';
+import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
 import { Submission, SubmissionWorkflow } from 'server/models';
 import { finishDeferredTasks } from 'server/utils/deferred';
 import { vi } from 'vitest';

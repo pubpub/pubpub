@@ -64,7 +64,7 @@ export const createPubEdgeProposalFromCrossrefDoi = async (doi: string) => {
 	return externalPublication
 		? {
 				externalPublication,
-		  }
+			}
 		: null;
 };
 

@@ -45,7 +45,7 @@ const DownloadChooser = (props: Props) => {
 						url: fileUrl,
 						createdAt: new Date(),
 					},
-			  ]
+				]
 			: [];
 		try {
 			setIsRemoving(true);

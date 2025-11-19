@@ -31,10 +31,10 @@ const derivePrimaryCollection = (
 	const collectionPubsPool =
 		collectionPubs.length > 0
 			? // Make sure to look at the most recent version of this CollectionPub
-			  collectionPubs.map((cp) => (cp.id === collectionPub.id ? linkedCollectionPub : cp))
+				collectionPubs.map((cp) => (cp.id === collectionPub.id ? linkedCollectionPub : cp))
 			: // In truth there must be at least one CollectionPub (this one) even if it's not
-			  // referenced in collectionPub.pub yet -- possibly it was recently created.
-			  [linkedCollectionPub];
+				// referenced in collectionPub.pub yet -- possibly it was recently created.
+				[linkedCollectionPub];
 	return getPrimaryCollection(collectionPubsPool);
 };
 

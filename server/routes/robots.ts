@@ -2,11 +2,12 @@ import stripIndent from 'strip-indent';
 
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { communityUrl } from 'utils/canonicalUrls';
 import { isProd } from 'utils/environment';
+
+export const router = Router();
 
 const buildRobotsFile = (community) => {
 	if (!isProd()) {

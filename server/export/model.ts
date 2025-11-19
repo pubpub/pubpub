@@ -14,7 +14,7 @@ import { WorkerTask } from '../models';
 
 @Table
 export class Export extends Model<InferAttributes<Export>, InferCreationAttributes<Export>> {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

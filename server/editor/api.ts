@@ -1,9 +1,10 @@
 import request from 'request-promise';
 
 import { Router } from 'express';
-export const router = Router();
 import { getStructuredCitations } from 'server/utils/citations';
 import { renderToKatexString } from 'utils/katex';
+
+export const router = Router();
 
 router.post('/api/editor/citation-format', (req, res) => {
 	const { structuredValues, citationStyleKind, inlineStyleKind } = req.body;

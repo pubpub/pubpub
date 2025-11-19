@@ -91,7 +91,7 @@ const Breadcrumbs = (props: Props) => {
 				href: activePub
 					? `/pub/${activePub.slug}${
 							activeCollection ? `?collectionSlug=${activeCollection.slug}` : ''
-					  }`
+						}`
 					: undefined,
 			},
 		],

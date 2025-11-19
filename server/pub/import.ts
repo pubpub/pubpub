@@ -116,7 +116,7 @@ async function addAttributionsToPub({
 						? { userId: mostLikelyUserId }
 						: {
 								name,
-						  }),
+							}),
 				});
 
 				return pubAttribution as types.PubAttribution;

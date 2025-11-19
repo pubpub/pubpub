@@ -4,13 +4,12 @@ import compression from 'compression';
 import CreateSequelizeStore from 'connect-session-sequelize';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { ErrorRequestHandler, RequestHandler, Router } from 'express';
+import express, { ErrorRequestHandler, Router } from 'express';
 import enforce from 'express-sslify';
 import fs from 'fs';
 import noSlash from 'no-slash';
 import passport from 'passport';
 import path from 'path';
-// import { app } from './app';
 
 const app = express();
 
@@ -32,7 +31,9 @@ if (isQubQub() && !process.env.HEROKU_SLUG_COMMIT) {
 }
 
 import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
+
 if (process.env.NODE_ENV !== 'test') {
+	// eslint-disable-next-line global-require
 	require('server/utils/serverModuleOverwrite');
 }
 
@@ -237,7 +238,7 @@ appRouter.use(authTokenMiddleware);
 /** Set up purge middleware before api routes are initialized and after hostname is set */
 appRouter.use(purgeMiddleware(schedulePurge));
 
-const { customScript, ...contractWithoutCustomScript } = contract;
+const { customScript: _, ...contractWithoutCustomScript } = contract;
 
 /* ------------------------- */
 /* Create ts-rest api routes */

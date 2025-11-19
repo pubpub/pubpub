@@ -1,10 +1,11 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
 
 import { getPermissions } from './permissions';
 import { restorePubDraftToHistoryKey } from './queries';
+
+export const router = Router();
 
 const parseHistoryKey = (providedHistoryKey: any) => {
 	const historyKeyInt = parseInt(providedHistoryKey, 10);

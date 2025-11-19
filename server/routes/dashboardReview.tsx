@@ -2,12 +2,13 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { NotFoundError, handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getReview, sanitizeReviews } from 'server/utils/queryHelpers';
+
+export const router = Router();
 
 router.get(['/dash/pub/:pubSlug/reviews/:reviewNumber'], async (req, res, next) => {
 	try {

@@ -23,7 +23,7 @@ export const reviewTitle: TitleRenderer<AcceptedItem> = (item, context) => {
 					pubSlug: pubFromContext.slug,
 					mode: 'reviews',
 					subMode: String(reviewFromContext.number),
-			  })
+				})
 			: null;
 
 	const title = reviewFromContext?.title || item.payload.review.title;

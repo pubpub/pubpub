@@ -142,7 +142,7 @@ async function transformEdgeToResourceRelationship(
 			: await transformPubToPartialResource(
 					expect(inbound ? pubEdge.pub : pubEdge.targetPub),
 					community,
-			  ),
+				),
 		relation: derivePubEdgeRelation(pubEdge),
 	};
 }

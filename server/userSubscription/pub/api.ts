@@ -1,9 +1,10 @@
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { UserSubscriptionStatus } from 'types';
 
 import { setUserSubscriptionStatus } from '../shared/queries';
+
+export const router = Router();
 
 const unwrapRequest = (req: any) => {
 	return {

@@ -4,7 +4,6 @@ import { promisify } from 'util';
 
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { ForbiddenError, NotFoundError, handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { getPubForRequest } from 'server/utils/queryHelpers';
@@ -12,6 +11,8 @@ import { getBestDownloadUrl } from 'utils/pub/downloads';
 import { defer } from 'server/utils/deferred';
 import { createPubExportsForLatestRelease } from 'server/export/queries';
 import { hostIsValid } from 'server/utils/routes';
+
+export const router = Router();
 
 router.get(
 	['/pub/:pubSlug/download', '/pub/:pubSlug/download/:format'],

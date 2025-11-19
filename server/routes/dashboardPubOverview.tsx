@@ -2,7 +2,6 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { handleErrors, ForbiddenError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
@@ -10,6 +9,8 @@ import { generateCitationHtml } from 'server/utils/citations';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getPubForRequest } from 'server/utils/queryHelpers';
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
+
+export const router = Router();
 
 router.get(['/dash/pub/:pubSlug', '/dash/pub/:pubSlug/overview'], async (req, res, next) => {
 	try {

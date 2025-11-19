@@ -2,7 +2,6 @@ import React from 'react';
 import { Op } from 'sequelize';
 
 import { Router } from 'express';
-export const router = Router();
 import Html from 'server/Html';
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
@@ -17,6 +16,8 @@ import { getCustomScriptsForCommunity } from 'server/customScript/queries';
 import { getEnabledSubmissionWorkflowForCollection } from 'server/submissionWorkflow/queries';
 import * as types from 'types';
 import { LayoutBlockSubmissionBanner } from 'utils/layout';
+
+export const router = Router();
 
 const findCollectionByPartialId = (maybePartialId: string) => {
 	return Collection.findOne({

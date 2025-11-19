@@ -2,7 +2,6 @@ import zoteroClient from 'zotero-api-client';
 
 import { wrap } from 'server/wrap';
 import { Router } from 'express';
-export const router = Router();
 import { CitationStyleKind } from 'utils/citations';
 
 import { ZoteroStyleKind } from 'types';
@@ -11,6 +10,8 @@ import { expect } from 'utils/assert';
 import { ForbiddenError, BadRequestError, NotFoundError } from 'server/utils/errors';
 
 import { ZoteroIntegration, IntegrationDataOAuth1 } from '../models';
+
+export const router = Router();
 
 // mapping our citation style keys to zotero's keys
 const zoteroStyleKindMap: Record<CitationStyleKind, ZoteroStyleKind> = {

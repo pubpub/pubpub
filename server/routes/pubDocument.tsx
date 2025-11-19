@@ -8,7 +8,6 @@ import { getPdfDownloadUrl, getTextAbstract, getGoogleScholarNotes } from 'utils
 import { chooseCollectionForPub } from 'client/utils/collections';
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { handleErrors, NotFoundError, ForbiddenError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
@@ -31,6 +30,8 @@ import { findUserSubscription } from 'server/userSubscription/shared/queries';
 import type { RequestHandler, Response, Request } from 'express';
 import { getCorrectHostname } from 'utils/caching/getCorrectHostname';
 import { getNextCollectionPub } from 'utils/collections/getNextCollectionPub';
+
+export const router = Router();
 
 const getInitialDataForPub = (req: Request) => getInitialData(req, { includeFacets: true });
 
@@ -166,7 +167,7 @@ const speedLimiter: RequestHandler =
 				delayAfter: 60, // allow 60 requests per minute, then...
 				delayMs: 100, // 60th request has a 100ms delay, 7th has a 200ms delay, 8th gets 300ms, etc.
 				maxDelayMs: 20000, // max time of request delay will be 20secs
-		  });
+			});
 
 const checkHistoryKey = (key) => {
 	const hasHistoryKey = key !== undefined;

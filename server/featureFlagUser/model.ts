@@ -16,7 +16,7 @@ export class FeatureFlagUser extends Model<
 	InferAttributes<FeatureFlagUser>,
 	InferCreationAttributes<FeatureFlagUser>
 > {
-	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

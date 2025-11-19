@@ -537,14 +537,14 @@ export const createPubEdgeActivityItem = async (
 					title: pubEdge.externalPublication.title,
 					url: pubEdge.externalPublication.url,
 				},
-		  }
+			}
 		: {
 				pub: {
 					id: pubEdge.targetPub.id,
 					title: pubEdge.targetPub.title,
 					slug: pubEdge.targetPub.slug,
 				},
-		  };
+			};
 	return createActivityItem({
 		kind,
 		actorId,

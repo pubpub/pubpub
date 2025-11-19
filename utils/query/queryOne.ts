@@ -50,7 +50,7 @@ export const queryOne =
 					(includeItem) =>
 						(attributes as string[]).includes(includeItem) &&
 						!includes.some((customIncludeItem) => customIncludeItem.as === includeItem),
-			  )
+				)
 			: include;
 
 		const defaultIncludes = createIncludes(model, filteredInclude);

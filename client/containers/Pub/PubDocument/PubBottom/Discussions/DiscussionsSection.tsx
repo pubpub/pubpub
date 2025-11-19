@@ -89,7 +89,7 @@ const DiscussionsSection = (props: Props) => {
 										filteredLabels.indexOf(labelId) > -1
 											? filteredLabels.filter((id) => {
 													return id !== labelId;
-											  })
+												})
 											: [...filteredLabels, labelId];
 									setFilteredLabels(newFilteredLabels);
 								}}

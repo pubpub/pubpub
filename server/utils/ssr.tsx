@@ -98,19 +98,19 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			<meta
 				key="t2"
 				property="og:title"
-				content={useCollectionTitle ? collection.title ?? undefined : title}
+				content={useCollectionTitle ? (collection.title ?? undefined) : title}
 			/>,
 			<meta key="t3" name="twitter:title" content={titleWithContext} />,
 			<meta key="t4" name="twitter:image:alt" content={titleWithContext} />,
 			<meta
 				key="t5"
 				name="citation_title"
-				content={useCollectionTitle ? collection.title ?? undefined : title}
+				content={useCollectionTitle ? (collection.title ?? undefined) : title}
 			/>,
 			<meta
 				key="t6"
 				name="dc.title"
-				content={useCollectionTitle ? collection.title ?? undefined : title}
+				content={useCollectionTitle ? (collection.title ?? undefined) : title}
 			/>,
 		];
 	}

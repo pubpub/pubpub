@@ -47,7 +47,7 @@ const Login = () => {
 					? `/${locationData.query.redirect.replace(
 							/^\/+/,
 							'',
-					  )}?breakCache=${cacheBreaker}`
+						)}?breakCache=${cacheBreaker}`
 					: `/?breakCache=${cacheBreaker}`;
 				// window.location.href =
 				// 	`/${trimStart(`${locationData.query.redirect}`, '/')}` || '/';

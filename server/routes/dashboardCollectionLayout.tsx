@@ -2,11 +2,12 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { Router } from 'express';
-export const router = Router();
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getLayoutPubsByBlock } from 'server/utils/layouts';
 import { handleErrors, NotFoundError } from 'server/utils/errors';
+
+export const router = Router();
 
 router.get('/dash/collection/:collectionSlug/layout', async (req, res, next) => {
 	try {

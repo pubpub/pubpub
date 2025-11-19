@@ -1,7 +1,8 @@
 import { Router } from 'express';
-export const router = Router();
 
 import { getSearchUsers } from './queries';
+
+export const router = Router();
 
 router.get('/api/search/users', (req, res) => {
 	return getSearchUsers(req.query.q as string)

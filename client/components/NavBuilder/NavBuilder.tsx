@@ -63,7 +63,7 @@ const NavBuilder = (props: Props) => {
 								} as CommunityNavigationEntry;
 							}
 							return item;
-					  });
+						});
 			const newNav = [...prefix, ...nextUserElements, ...suffix];
 			setCurrentNav(newNav);
 			onChange(newNav);
@@ -85,7 +85,7 @@ const NavBuilder = (props: Props) => {
 			dropdownId === 'main-list'
 				? userSetElements.map((item, currIndex) => {
 						return currIndex === index ? { ...item, ...newItemValues } : item;
-				  })
+					})
 				: userSetElements.map((item) => {
 						if (item.id === dropdownId && isCommunityNavigationMenu(item)) {
 							return {
@@ -98,7 +98,7 @@ const NavBuilder = (props: Props) => {
 							};
 						}
 						return item;
-				  });
+					});
 		const newNav = [...prefix, ...nextUserElements, ...suffix];
 		setCurrentNav(newNav);
 		onChange(newNav);
@@ -118,7 +118,7 @@ const NavBuilder = (props: Props) => {
 							};
 						}
 						return item;
-				  });
+					});
 		const newNav = [...prefix, ...nextUserElements, ...suffix];
 		setCurrentNav(newNav);
 		onChange(newNav);
