@@ -162,16 +162,18 @@ export const getManyQuerySchema = z.object({
 	pubOptions: z.object({
 		isAuth: z.boolean().optional(),
 		isPreview: z.boolean().optional(),
-		getCollections: z.union([
-			z.boolean(),
-			z.object({
-				collection: z.object({
-					page: z.boolean().optional(),
-					members: z.boolean().optional(),
-					attributions: z.boolean().optional(),
+		getCollections: z
+			.union([
+				z.boolean(),
+				z.object({
+					collection: z.object({
+						page: z.boolean().optional(),
+						members: z.boolean().optional(),
+						attributions: z.boolean().optional(),
+					}),
 				}),
-			}),
-		]),
+			])
+			.optional(),
 		getMembers: z.boolean().optional(),
 		getCommunity: z.boolean().optional(),
 		getExports: z.boolean().optional(),
