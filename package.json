@@ -259,7 +259,7 @@
 	"engines": {
 		"node": "24.x"
 	},
-	"packageManager": "pnpm@10.4.0+",
+	"packageManager": "pnpm@10.4.0",
 	"devDependencies": {
 		"@blueprintjs/eslint-plugin": "^2.5.2",
 		"@jest/globals": "^29.7.0",
