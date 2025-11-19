@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { NotFoundError } from 'server/utils/errors';
-import type { Express, Response } from 'express-serve-static-core';
+import type { Response, Request } from 'express';
 import { createIncludes } from './include';
 import { CustomScopeInput, createCustomWhereClause } from './queryMany';
 
@@ -20,7 +20,7 @@ export const queryOne =
 		},
 	) =>
 	async <T extends AppRouteQuery>(
-		input: ServerInferRequest<T, Express['request']['headers']> & {
+		input: ServerInferRequest<T, Request['headers']> & {
 			req: TsRestRequest<T>;
 			res: Response;
 		},

@@ -45,7 +45,7 @@ const codeBlockRule = (nodeType) => textblockTypeInputRule(/^```$/, nodeType);
 const inlineCodeRule = (markType) =>
 	new InputRule(
 		// \040 is the space character
-		/`([^`]+)`\040/,
+		/`([^`]+)`\x20/,
 		(state: EditorState, match: RegExpMatchArray, start: number, end: number) => {
 			const [_, content] = match;
 			const fragment = Fragment.fromArray([
@@ -76,7 +76,7 @@ const inlineMathRule = (
 ) =>
 	new InputRule(
 		// \040 is the space character
-		/\$([^$]+?)\$\040$/,
+		/\$([^$]+?)\$\x20$/,
 		(state: EditorState, matches: RegExpMatchArray, start: number, end: number) => {
 			const [_, match] = matches;
 			const resolvedStart = state.doc.resolve(start + 1); // +1 to capture non-inclusive marks

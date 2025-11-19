@@ -1,4 +1,4 @@
-import { MarkSpec, Node, NodeSpec, ParseRule } from 'prosemirror-model';
+import { MarkSpec, Node, NodeSpec, ParseRule, TagParseRule } from 'prosemirror-model';
 
 import { arraysHaveSameElements } from 'utils/arrays';
 import { assert } from 'utils/assert';
@@ -98,12 +98,12 @@ export const amendNodeSpecWithSuggestedEdits = (nodeKey: string, nodeSpec: NodeS
 			...attrs,
 			...newAttrs,
 		},
-		parseDOM: parseDOM?.map((rule: ParseRule) => {
+		parseDOM: parseDOM?.map((rule: TagParseRule) => {
 			const { getAttrs } = rule;
 			return {
 				...rule,
 				getAttrs: (element: string | HTMLElement) => {
-					const originalAttrs = getAttrs?.(element) ?? null;
+					const originalAttrs = getAttrs?.(element as HTMLElement) ?? null;
 					if (originalAttrs) {
 						if (typeof element === 'string') {
 							return originalAttrs;

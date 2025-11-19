@@ -2,7 +2,7 @@ import type { TsRestRequest } from '@ts-rest/express';
 import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
 import type { ModelCtor } from 'sequelize-typescript';
 import { Op } from 'sequelize';
-import type { Express, Response } from 'express-serve-static-core';
+import type { Response, Request } from 'express';
 
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { SerializedModel } from 'types/serializedModel';
@@ -77,7 +77,7 @@ export const queryMany =
 		},
 	) =>
 	async <T extends AppRouteQuery>(
-		input: ServerInferRequest<T, Express['request']['headers']> & {
+		input: ServerInferRequest<T, Request['headers']> & {
 			req: TsRestRequest<T>;
 			res: Response;
 		},

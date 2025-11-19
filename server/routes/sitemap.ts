@@ -10,6 +10,7 @@ import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { communityUrl, pubUrl, pageUrl } from 'utils/canonicalUrls';
 import { createPubPubS3Client } from 'server/utils/s3';
+import type { Community } from 'types';
 
 const s3 = createPubPubS3Client({
 	accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
@@ -29,9 +30,10 @@ const uploadFromStream = (key) => {
 	return pass;
 };
 
-// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
-const getSitemapKey = (community, { filename, index = 'index' } = {}) =>
-	`${keyPrefix}/${community.id}/${filename || `sitemap-${index}.xml`}.gz`;
+const getSitemapKey = (
+	community: Community,
+	{ filename, index = 'index' }: { filename?: string; index?: string } = {},
+) => `${keyPrefix}/${community.id}/${filename || `sitemap-${index}.xml`}.gz`;
 
 const shouldGenerateSitemapIndex = async (community) => {
 	const sitemapKey = getSitemapKey(community);

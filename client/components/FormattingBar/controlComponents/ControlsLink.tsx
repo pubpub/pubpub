@@ -337,7 +337,7 @@ const ControlsLink = (props: Props) => {
 									{isStatus(status, Status.UpdatingEdge) ? (
 										<Spinner size={16} />
 									) : (
-										'Save Connection' || errorUpdatingEdge
+										errorUpdatingEdge || 'Save Connection'
 									)}
 								</Button>
 							</div>

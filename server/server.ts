@@ -257,10 +257,12 @@ app.use(authTokenMiddleware);
 /** Set up purge middleware before api routes are initialized and after hostname is set */
 app.use(purgeMiddleware(schedulePurge));
 
+const { customScript, ...contractWithoutCustomScript } = contract;
+
 /* ------------------------- */
 /* Create ts-rest api routes */
 /* ------------------------- */
-createExpressEndpoints(contract, server, app, {
+createExpressEndpoints(contractWithoutCustomScript, server, app, {
 	logInitialization: false,
 	// eslint-disable-next-line consistent-return
 	requestValidationErrorHandler: (err, req, res, next) => {

@@ -30,7 +30,6 @@ export const resourceSchema = partialResourceSchema.extend({
 		description: 'The version of the resource expressed as a UTC datetime string',
 		example: '2021-01-01T00:00:00.000Z',
 	}),
-	description: z.string(),
 
 	descriptions: z.array(
 		z.object({
