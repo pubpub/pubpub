@@ -1,4 +1,5 @@
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 
 const redirectHosts = {
 	'www.pubpub.org': {
@@ -123,7 +124,7 @@ const redirectHosts = {
 	},
 };
 
-app.use((req, res, next) => {
+router.use((req, res, next) => {
 	const hostValues = redirectHosts[req.hostname];
 	if (hostValues) {
 		const pathValue = hostValues[req.path];

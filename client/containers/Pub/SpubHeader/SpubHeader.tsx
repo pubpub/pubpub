@@ -15,7 +15,7 @@ import DetailsTab from './DetailsTab';
 import ContributorsTab from './ContributorsTab';
 import SpubHeaderToolBar from './SpubHeaderToolBar';
 
-require('./spubHeader.scss');
+import './spubHeader.scss';
 
 export type SpubHeaderTab = 'instructions' | 'details' | 'contributors' | 'preview';
 

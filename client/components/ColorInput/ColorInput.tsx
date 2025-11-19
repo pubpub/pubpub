@@ -5,7 +5,7 @@ import { SketchPicker } from 'react-color';
 
 import { usePageContext } from 'utils/hooks';
 
-require('./colorInput.scss');
+import './colorInput.scss';
 
 const propTypes = {
 	value: PropTypes.string.isRequired,

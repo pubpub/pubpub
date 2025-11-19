@@ -8,7 +8,7 @@ import { usePageContext } from 'utils/hooks';
 import { relationTypeDefinitions, isViewingEdgeFromTarget } from 'utils/pubEdge';
 import { pubShortUrl } from 'utils/canonicalUrls';
 
-require('./pubEdgeListingCard.scss');
+import './pubEdgeListingCard.scss';
 
 export type PubEdgeListingCardProps = {
 	accentColor?: string;

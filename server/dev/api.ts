@@ -1,4 +1,6 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { Community } from 'server/models';
 import { ForbiddenError, NotFoundError, BadRequestError } from 'server/utils/errors';
 import { canSelectCommunityForDevelopment } from 'utils/environment';
@@ -14,7 +16,7 @@ const setSubdomain = async (subdomain: string | null) => {
 	}
 };
 
-app.post(
+router.post(
 	'/api/dev',
 	wrap(async (req, res) => {
 		const { subdomain } = req.body;

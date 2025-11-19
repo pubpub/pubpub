@@ -6,7 +6,7 @@ import { Icon } from 'components';
 import PubToc from './PubToc';
 import { usePubContext } from '../pubHooks';
 
-require('./pubHeaderSticky.scss');
+import './pubHeaderSticky.scss';
 
 const PubHeaderSticky = () => {
 	const { pubData } = usePubContext();

@@ -9,7 +9,7 @@ import { usePageContext } from 'utils/hooks';
 
 import VerdictDialog from './VerdictDialog';
 
-require('./arbitrationMenu.scss');
+import './arbitrationMenu.scss';
 
 type Props = {
 	pub: DefinitelyHas<Pub, 'submission'>;

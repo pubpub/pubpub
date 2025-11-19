@@ -5,7 +5,7 @@ import { MinimalEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./pubReleaseReviewDialog.scss');
+import './pubReleaseReviewDialog.scss';
 
 type OwnProps = {
 	isOpen: boolean;

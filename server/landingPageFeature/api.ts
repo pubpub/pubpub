@@ -1,4 +1,6 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 
 import { canModifyLandingPageFeatures } from './permissions';
@@ -9,7 +11,7 @@ import {
 	updateLandingPageFeature,
 } from './queries';
 
-app.post(
+router.post(
 	'/api/landingPageFeatures',
 	wrap(async (req, res) => {
 		const { proposal, proposalKind, rank } = req.body;
@@ -26,7 +28,7 @@ app.post(
 	}),
 );
 
-app.put(
+router.put(
 	'/api/landingPageFeatures',
 	wrap(async (req, res) => {
 		const {
@@ -41,7 +43,7 @@ app.put(
 	}),
 );
 
-app.delete(
+router.delete(
 	'/api/landingPageFeatures',
 	wrap(async (req, res) => {
 		const {

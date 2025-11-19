@@ -27,7 +27,7 @@ type Props = {
 	onDelete: (...args: any[]) => any;
 };
 
-require('./fileImportEntry.scss');
+import './fileImportEntry.scss';
 
 const FileImportEntry = (props: Props) => {
 	const { file, onDelete, onLabelFile } = props;

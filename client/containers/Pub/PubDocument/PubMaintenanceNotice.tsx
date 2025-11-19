@@ -3,7 +3,7 @@ import { AnchorButton, Callout } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
 
-require('./pubMaintenanceNotice.scss');
+import './pubMaintenanceNotice.scss';
 
 type Props = {
 	pubData: {

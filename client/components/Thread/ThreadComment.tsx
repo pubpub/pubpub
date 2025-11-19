@@ -5,7 +5,7 @@ import { Avatar } from 'components';
 import { timeAgoBaseProps } from 'utils/dates';
 import Editor from 'components/Editor';
 
-require('./threadComment.scss');
+import './threadComment.scss';
 
 type Props = {
 	commentData: any;

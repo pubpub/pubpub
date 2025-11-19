@@ -15,7 +15,7 @@ import ManyAuthorsByline from './ManyAuthorsByline';
 import PubPreviewEdges from './PubPreviewEdges';
 import ContributorAvatars from '../ContributorAvatars/ContributorAvatars';
 
-require('./pubPreview.scss');
+import './pubPreview.scss';
 
 type Props = {
 	pubData: Pub;

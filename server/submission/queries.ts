@@ -97,6 +97,7 @@ export const updateSubmission = async (options: UpdateOptions, actorId: string) 
 
 	defer(async () => {
 		if (!skipEmail) {
+			console.log('sending email');
 			await sendSubmissionEmail({
 				previousStatus,
 				submission: (await getSubmissionById(id))!,

@@ -5,7 +5,7 @@ import { Classes } from '@blueprintjs/core';
 
 import { Byline, PreviewImage } from 'components';
 
-require('./pubMenuItem.scss');
+import './pubMenuItem.scss';
 
 type BylineProps = React.ComponentProps<typeof Byline>;
 interface Props {

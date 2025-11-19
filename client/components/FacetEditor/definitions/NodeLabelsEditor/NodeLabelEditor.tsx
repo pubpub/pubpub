@@ -5,7 +5,7 @@ import { NodeLabels } from 'facets';
 
 import { FacetPropEditorProps } from '../../types';
 
-require('./nodeLabelEditor.scss');
+import './nodeLabelEditor.scss';
 
 type Props = FacetPropEditorProps<typeof NodeLabels, 'image', false>; // But could be any of 'em
 

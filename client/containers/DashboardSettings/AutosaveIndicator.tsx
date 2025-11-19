@@ -4,7 +4,7 @@ import { Spinner } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
-require('./autosaveIndicator.scss');
+import './autosaveIndicator.scss';
 
 type Props = {
 	isSaving: boolean;

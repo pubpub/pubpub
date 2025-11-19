@@ -10,7 +10,7 @@ import {
 	submissionWorkflowConfigStepLabels,
 } from './types';
 
-require('./submissionWorkflowStepPicker.scss');
+import './submissionWorkflowStepPicker.scss';
 
 type Props = {
 	selectedStep: SubmissionWorkflowConfigStep;

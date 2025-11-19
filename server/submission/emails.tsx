@@ -60,6 +60,7 @@ const deriveEmailCustomText = (
 };
 
 export const sendSubmissionEmail = async (options: SendEmailOptions) => {
+	console.log('sendSubmissionEmail', options);
 	const { previousStatus, submission, customText: providedCustomText } = options;
 	const emailKind = getEmailKindToSend(previousStatus, submission.status);
 	if (emailKind) {

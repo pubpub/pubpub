@@ -12,7 +12,7 @@ import { Menu, MenuItem } from 'components/Menu';
 import CollectionBrowser from './CollectionBrowser';
 import CollectionsBarButton from './CollectionsBarButton';
 
-require('./collectionsBar.scss');
+import './collectionsBar.scss';
 
 type CollectionPub = BareCollectionPub & { collection: Collection };
 

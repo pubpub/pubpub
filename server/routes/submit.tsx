@@ -1,11 +1,12 @@
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { hostIsValid } from 'server/utils/routes';
 import { ForbiddenError, handleErrors } from 'server/utils/errors';
 import { canCreateSubmission } from 'server/submission/permissions';
 import { createSubmission } from 'server/submission/queries';
 import { getPub } from 'server/utils/queryHelpers';
 
-app.get(['/submit/:submissionWorkflowId'], async (req, res, next) => {
+router.get(['/submit/:submissionWorkflowId'], async (req, res, next) => {
 	try {
 		if (!hostIsValid(req, 'community')) {
 			return next();

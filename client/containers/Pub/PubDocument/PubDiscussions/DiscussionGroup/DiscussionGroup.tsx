@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import DiscussionNav from './DiscussionNav';
 import Discussion from '../Discussion';
 
-require('./discussionGroup.scss');
+import './discussionGroup.scss';
 
 type Props = {
 	pubData: any;

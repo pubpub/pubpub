@@ -7,7 +7,7 @@ import UserHeader from './UserHeader';
 import UserNav from './UserNav';
 import UserEdit from './UserEdit';
 
-require('./user.scss');
+import './user.scss';
 
 type Props = {
 	userData: any;

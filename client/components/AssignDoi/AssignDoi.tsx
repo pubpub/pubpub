@@ -21,7 +21,7 @@ import AssignDoiPreview from './AssignDoiPreview';
 import { SubmitDepositStatus } from '../Deposit/SubmitDepositStatus';
 import SubmitDepositButton from '../Deposit/SubmitDepositButton';
 
-require('./assignDoi.scss');
+import './assignDoi.scss';
 
 const noop = () => {};
 

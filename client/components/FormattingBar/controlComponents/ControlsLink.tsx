@@ -27,7 +27,7 @@ import { MenuButton } from 'client/components/Menu';
 import { PubEdgeListingCard } from 'components';
 import { RelationTypeName } from 'utils/pubEdge/relations';
 
-require('./controlsLink.scss');
+import './controlsLink.scss';
 
 type Props = {
 	editorChangeObject: {

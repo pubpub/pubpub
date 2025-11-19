@@ -13,7 +13,7 @@ import SourceControls from './SourceControls';
 import { ControlsReferenceSettingsLink } from '../ControlsReference';
 import { EditorChangeObjectWithNode } from '../../types';
 
-require('./controlsMedia.scss');
+import './controlsMedia.scss';
 
 type Props = {
 	pendingAttrs: any;

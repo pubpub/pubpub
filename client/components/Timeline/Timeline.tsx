@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { TimelineContext } from './util';
 
-require('./timeline.scss');
+import './timeline.scss';
 
 type OwnProps = {
 	accentColor?: string | null;

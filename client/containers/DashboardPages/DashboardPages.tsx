@@ -7,7 +7,7 @@ import { DashboardFrame, DashboardRowListing, DashboardRow, Icon } from 'compone
 
 import CreatePageDialog from './CreatePageDialog';
 
-require('./dashboardPages.scss');
+import './dashboardPages.scss';
 
 const propTypes = {};
 

@@ -11,7 +11,7 @@ import Terms from './Terms';
 import PrivacyPolicy from './PrivacyPolicy';
 import AUP from './AUP';
 
-require('./legal.scss');
+import './legal.scss';
 
 type Props = {
 	integrations: Integration[];

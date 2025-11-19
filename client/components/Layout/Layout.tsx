@@ -18,7 +18,7 @@ import LayoutPagesCollections from './LayoutPagesCollections';
 import LayoutCollectionHeader from './LayoutCollectionHeader';
 import LayoutSubmissionBanner from './LayoutSubmissionBanner';
 
-require('./layout.scss');
+import './layout.scss';
 
 type Props = LayoutOptions & {
 	blocks: LayoutBlock[];

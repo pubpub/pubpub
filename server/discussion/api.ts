@@ -1,4 +1,6 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { ForbiddenError } from 'server/utils/errors';
 
 import { getCreatePermission, getUpdatePermissions, canReleaseDiscussions } from './permissions';
@@ -17,7 +19,7 @@ const getRequestIds = (req) => {
 		commentAccessHash: req.body.commentAccessHash,
 	};
 };
-app.post(
+router.post(
 	'/api/discussions',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
@@ -32,7 +34,7 @@ app.post(
 	}),
 );
 
-app.put(
+router.put(
 	'/api/discussions',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
@@ -42,7 +44,7 @@ app.put(
 	}),
 );
 
-app.put(
+router.put(
 	'/api/discussions/release',
 	wrap(async (req, res) => {
 		const { pubId, discussionIds } = req.body;

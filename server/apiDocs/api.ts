@@ -1,7 +1,8 @@
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { openApiMiddleware } from 'utils/api/openapi-router';
 
-app.use(
+router.use(
 	'/apidocs',
 	openApiMiddleware({
 		info: {

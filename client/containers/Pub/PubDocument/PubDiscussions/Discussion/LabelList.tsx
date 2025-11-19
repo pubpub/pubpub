@@ -1,7 +1,7 @@
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
 
-require('./labelList.scss');
+import './labelList.scss';
 
 type Props = {
 	pubData: any;

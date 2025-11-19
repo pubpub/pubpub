@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { usePageContext } from 'utils/hooks';
 
-require('./layoutSubmissionBannerSkeleton.scss');
+import './layoutSubmissionBannerSkeleton.scss';
 
 type Props = {
 	className?: string;

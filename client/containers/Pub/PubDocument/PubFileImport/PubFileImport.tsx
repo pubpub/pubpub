@@ -4,7 +4,7 @@ import { viewIsEmpty } from 'components/Editor';
 
 import FileImportDialog from './FileImportDialog';
 
-require('./pubFileImport.scss');
+import './pubFileImport.scss';
 
 type Props = {
 	editorChangeObject: {

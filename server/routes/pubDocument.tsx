@@ -7,7 +7,8 @@ import { pubUrl } from 'utils/canonicalUrls';
 import { getPdfDownloadUrl, getTextAbstract, getGoogleScholarNotes } from 'utils/pub/metadata';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import Html from 'server/Html';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { handleErrors, NotFoundError, ForbiddenError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
@@ -231,7 +232,7 @@ const setSurrogateKeysHeadersForPubEdges = async (
 	res.setHeader('Surrogate-Key', hostnames.join(' '));
 };
 
-app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, next) => {
+router.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
@@ -262,7 +263,7 @@ app.get('/pub/:pubSlug/release/:releaseNumber', speedLimiter, async (req, res, n
 	}
 });
 
-app.get('/pub/:pubSlug/release-id/:releaseId', speedLimiter, async (req, res, next) => {
+router.get('/pub/:pubSlug/release-id/:releaseId', speedLimiter, async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
@@ -281,7 +282,7 @@ app.get('/pub/:pubSlug/release-id/:releaseId', speedLimiter, async (req, res, ne
 	}
 });
 
-app.get('/pub/:pubSlug/discussion-id/:discussionId', async (req, res, next) => {
+router.get('/pub/:pubSlug/discussion-id/:discussionId', async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
@@ -307,7 +308,7 @@ app.get('/pub/:pubSlug/discussion-id/:discussionId', async (req, res, next) => {
 	}
 });
 
-app.get(
+router.get(
 	['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'],
 	speedLimiter,
 	async (req, res, next) => {

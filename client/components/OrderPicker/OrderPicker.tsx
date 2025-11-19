@@ -7,7 +7,7 @@ import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import { useHotkeys } from 'client/utils/useHotkey';
 import { generateHash } from 'utils/hashes';
 
-require('./orderPicker.scss');
+import './orderPicker.scss';
 
 type MinimalItem = { id: string };
 

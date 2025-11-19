@@ -9,7 +9,7 @@ import { Callback, PageContext } from 'types';
 import { usePageContext } from 'utils/hooks';
 import { dismissUserDismissable } from '../../utils/userDismissable';
 
-require('./legalBanner.scss');
+import './legalBanner.scss';
 
 type Banner = {
 	title: React.ReactNode;

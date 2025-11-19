@@ -13,7 +13,7 @@ import LabelList from './LabelList';
 import ManageTools, { SortType } from './ManageTools';
 import ThreadComment from './ThreadComment';
 
-require('./discussion.scss');
+import './discussion.scss';
 
 type PubPageThreadComment = PubPageDiscussion['thread']['comments'][number];
 

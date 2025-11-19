@@ -24,7 +24,7 @@ import PubMaintenanceNotice from './PubMaintenanceNotice';
 import ContributorsListCondensed from '../../../components/ContributorsListCondensed/ContributorsListCondensed';
 import { getAllPubContributors } from '../../../../utils/contributors';
 
-require('./pubDocument.scss');
+import './pubDocument.scss';
 
 const PubDocument = () => {
 	const {

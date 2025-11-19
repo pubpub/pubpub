@@ -3,7 +3,7 @@ import { Card, Classes, Switch } from '@blueprintjs/core';
 
 import LabelFilter from './LabelFilter';
 
-require('./filterMenu.scss');
+import './filterMenu.scss';
 
 type Props = {
 	isBrowsingArchive: boolean;

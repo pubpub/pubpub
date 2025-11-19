@@ -9,7 +9,7 @@ import AcceptSubmissionsToggle from './AcceptSubmissionsToggle';
 import SubmissionWorkflowButton from './SubmissionWorkflowButton';
 import { PubWithSubmission } from './types';
 
-require('./dashboardSubmissions.scss');
+import './dashboardSubmissions.scss';
 
 type Props = {
 	initialPubs: PubWithSubmission[];

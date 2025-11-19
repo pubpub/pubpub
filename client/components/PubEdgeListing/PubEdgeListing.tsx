@@ -11,7 +11,7 @@ import PubEdgeListingCard from './PubEdgeListingCard';
 import PubEdgeListingCounter from './PubEdgeListingCounter';
 import PubEdgeListingControls from './PubEdgeListingControls';
 
-require('./pubEdgeListing.scss');
+import './pubEdgeListing.scss';
 
 type Props = {
 	accentColor: string;

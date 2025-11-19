@@ -6,7 +6,7 @@ import { Avatar, GridWrapper, InputField } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./login.scss');
+import './login.scss';
 
 const Login = () => {
 	const [loginLoading, setLoginLoading] = useState(false);

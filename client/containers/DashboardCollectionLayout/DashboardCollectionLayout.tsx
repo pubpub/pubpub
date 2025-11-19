@@ -16,7 +16,7 @@ import { LayoutPubsByBlock } from 'utils/layout';
 import { usePersistableState } from 'client/utils/usePersistableState';
 import * as api from 'client/utils/collections/api';
 
-require('./dashboardCollectionLayout.scss');
+import './dashboardCollectionLayout.scss';
 
 type Props = {
 	collection: Collection;

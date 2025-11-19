@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Html from 'server/Html';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
@@ -10,7 +11,7 @@ import { getPage } from 'server/utils/queryHelpers';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
 import { Page } from 'types';
 
-app.get(['/', '/:slug'], async (req, res, next) => {
+router.get(['/', '/:slug'], async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}

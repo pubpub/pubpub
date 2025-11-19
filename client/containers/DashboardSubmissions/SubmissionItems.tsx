@@ -13,7 +13,7 @@ import { OverviewSearchGroup, PubsOverviewSearchFilter } from '../DashboardOverv
 import { PubWithSubmission } from './types';
 import SubmissionRow from './SubmissionRow';
 
-require('./submissionItems.scss');
+import './submissionItems.scss';
 
 type Props = {
 	collection: Collection;

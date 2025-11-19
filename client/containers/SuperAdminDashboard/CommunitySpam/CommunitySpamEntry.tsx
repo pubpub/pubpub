@@ -7,7 +7,7 @@ import { formatDate } from 'utils/dates';
 
 import MarkSpamStatusButton from './MarkSpamStatusButton';
 
-require('./communitySpamEntry.scss');
+import './communitySpamEntry.scss';
 
 type Props = {
 	community: DefinitelyHas<Community, 'spamTag'>;

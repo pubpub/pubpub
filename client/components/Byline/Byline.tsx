@@ -4,7 +4,7 @@ import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { joinOxford, naivePluralize } from 'utils/strings';
 import { MinimalUser, User } from 'types';
 
-require('./byline.scss');
+import './byline.scss';
 
 const isFullUser = (u: MinimalUser): u is User => 'slug' in u;
 

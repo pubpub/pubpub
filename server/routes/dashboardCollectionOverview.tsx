@@ -2,7 +2,8 @@ import React from 'react';
 import queryString, { ParsedQuery } from 'query-string';
 
 import Html from 'server/Html';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { handleErrors, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
@@ -17,7 +18,7 @@ const getSubmissionWorkflow = (collectionId: string) => {
 	});
 };
 
-app.get('/dash/collection/:collectionSlug', (req, res) => {
+router.get('/dash/collection/:collectionSlug', (req, res) => {
 	const { collectionSlug } = req.params;
 	res.redirect(
 		queryString.stringifyUrl({
@@ -27,7 +28,7 @@ app.get('/dash/collection/:collectionSlug', (req, res) => {
 	);
 });
 
-app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
+router.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 	try {
 		if (!hostIsValid(req, 'community')) {
 			next();

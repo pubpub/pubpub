@@ -7,7 +7,7 @@ import { getDashUrl } from 'utils/dashboard';
 
 import MemberRow from './MemberRow';
 
-require('./inheritedMembersBlock.scss');
+import './inheritedMembersBlock.scss';
 
 type Props = {
 	members: any[];

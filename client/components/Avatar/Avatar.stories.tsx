@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { Avatar } from 'components';
 
-require('components/Avatar/avatar.scss');
+import 'components/Avatar/avatar.scss';
 
 const wrapperStyle = { padding: '1em', display: 'flex', alignItems: 'flex-end' };
 

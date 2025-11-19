@@ -7,7 +7,7 @@ import ImageUpload from 'components/ImageUpload/ImageUpload';
 import { apiFetch } from 'client/utils/apiFetch';
 import { ORCID_PATTERN } from 'utils/orcid';
 
-require('./userEdit.scss');
+import './userEdit.scss';
 
 type Props = {
 	userData: any;

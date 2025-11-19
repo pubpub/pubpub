@@ -7,7 +7,7 @@ import { intersperse } from 'utils/arrays';
 import { getRelationTypeName } from 'utils/pubEdge/relations';
 import { usePageContext } from 'utils/hooks';
 
-require('./pubPreviewEdges.scss');
+import './pubPreviewEdges.scss';
 
 type Props = {
 	accentColor: string;

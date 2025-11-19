@@ -7,7 +7,7 @@ import { FormattingBar, buttons } from 'components/FormattingBar';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./threadInput.scss');
+import './threadInput.scss';
 
 type OwnProps = {
 	parentId: string;

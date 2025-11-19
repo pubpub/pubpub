@@ -5,7 +5,7 @@ import { Button } from 'reakit';
 import { Icon } from 'components';
 import DashboardRowListing from './DashboardRowListing';
 
-require('./dashboardRow.scss');
+import './dashboardRow.scss';
 
 type OwnProps = {
 	children?: React.ReactNode;

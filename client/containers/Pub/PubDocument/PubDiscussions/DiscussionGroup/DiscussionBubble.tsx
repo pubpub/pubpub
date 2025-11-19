@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 
-require('./discussionBubble.scss');
+import './discussionBubble.scss';
 
 type OwnProps = {
 	color: string;

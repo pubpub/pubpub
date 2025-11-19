@@ -16,7 +16,7 @@ import { Pub } from 'types';
 import SmallHeaderButton from '../SmallHeaderButton';
 import CitationsPreview from '../CitationsPreview';
 
-require('./pubDetails.scss');
+import './pubDetails.scss';
 
 type Props = {
 	pubData: Pub;

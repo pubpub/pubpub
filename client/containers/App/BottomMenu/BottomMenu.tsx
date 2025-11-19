@@ -5,7 +5,7 @@ import { Icon, MenuButton, MenuItem } from 'components';
 import { usePageContext } from 'utils/hooks';
 import ScopePicker from '../SideMenu/ScopePicker';
 
-require('./bottomMenu.scss');
+import './bottomMenu.scss';
 
 type Props = {
 	isMobile?: boolean;

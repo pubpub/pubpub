@@ -11,7 +11,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 import { usePubContext } from '../../pubHooks';
 
-require('./metadataEditor.scss');
+import './metadataEditor.scss';
 
 type Attribution = {
 	name?: string;

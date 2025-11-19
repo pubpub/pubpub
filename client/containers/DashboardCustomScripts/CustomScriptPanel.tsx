@@ -8,7 +8,7 @@ import { usePageContext } from 'utils/hooks';
 
 import { EditorComponentType } from './types';
 
-require('./customScriptPanel.scss');
+import './customScriptPanel.scss';
 
 type Props = {
 	EditorComponent: EditorComponentType;

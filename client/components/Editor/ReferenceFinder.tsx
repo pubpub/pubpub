@@ -4,7 +4,7 @@ import { Classes, Menu, MenuItem } from '@blueprintjs/core';
 import { buildLabel, getNodeLabelText, NodeReference } from './utils';
 import { NodeLabelMap } from './types';
 
-require('./referenceFinder.scss');
+import './referenceFinder.scss';
 
 export type ReferenceFinderProps = {
 	nodeLabels: NodeLabelMap;

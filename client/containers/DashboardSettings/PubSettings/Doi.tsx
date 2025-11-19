@@ -14,7 +14,7 @@ import {
 	relationTypeDefinitions,
 } from 'utils/pubEdge/relations';
 
-require('./doi.scss');
+import './doi.scss';
 
 type Props = {
 	canIssueDoi: boolean;

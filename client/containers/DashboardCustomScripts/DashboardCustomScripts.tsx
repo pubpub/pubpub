@@ -8,7 +8,7 @@ import { CustomScripts } from 'types';
 import { EditorComponentType } from './types';
 import CustomScriptPanel from './CustomScriptPanel';
 
-require('./dashboardCustomScripts.scss');
+import './dashboardCustomScripts.scss';
 
 type Props = {
 	customScripts: CustomScripts;

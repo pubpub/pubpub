@@ -12,7 +12,7 @@ import Editor from './Editor';
 import { buildSchema } from './utils/schema';
 import { renderStatic } from './utils/renderStatic';
 
-require('./clientServerDiffStories.scss');
+import './clientServerDiffStories.scss';
 
 const ServerEditor = (props) => {
 	const rendered = useRef();

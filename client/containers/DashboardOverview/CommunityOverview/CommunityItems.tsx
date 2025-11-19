@@ -15,7 +15,7 @@ import {
 } from '../overviewRows';
 import { KindToggle, PubsOverviewSearchFilter, OverviewSearchGroup } from '../helpers';
 
-require('./communityItems.scss');
+import './communityItems.scss';
 
 type Props = {
 	collections: Collection[];

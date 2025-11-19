@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Html from 'server/Html';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { handleErrors, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
@@ -36,7 +37,7 @@ const getSettingsData = async (initialData: InitialData, pubSlug?: string, isAdm
 	return baseSettingsData;
 };
 
-app.get(
+router.get(
 	[
 		'/dash/settings',
 		'/dash/collection/:collectionSlug/settings',

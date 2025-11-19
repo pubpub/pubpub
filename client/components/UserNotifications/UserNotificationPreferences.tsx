@@ -6,7 +6,7 @@ import * as types from 'types';
 import { MenuSelect } from 'components';
 import { UserNotificationMarkReadTrigger } from 'types';
 
-require('./userNotificationPreferences.scss');
+import './userNotificationPreferences.scss';
 
 type Props = {
 	preferences: types.UserNotificationPreferences;

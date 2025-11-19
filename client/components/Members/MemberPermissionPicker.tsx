@@ -7,7 +7,7 @@ import { usePageContext } from 'utils/hooks';
 
 import { permissionValues } from './permissionValues';
 
-require('./memberPermissionPicker.scss');
+import './memberPermissionPicker.scss';
 
 type OwnProps = {
 	activeTargetType: string;

@@ -9,7 +9,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 import CreateCollectionDialog from './CreateCollectionDialog';
 
-require('./breadcrumbs.scss');
+import './breadcrumbs.scss';
 
 type Props = {
 	className?: string;

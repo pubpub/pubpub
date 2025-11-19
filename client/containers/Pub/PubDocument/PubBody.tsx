@@ -15,7 +15,7 @@ import { usePubContext } from '../pubHooks';
 import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
 import PubErrorAlert from './PubErrorAlert';
 
-require('./pubBody.scss');
+import './pubBody.scss';
 
 type Props = {
 	editorWrapperRef: React.Ref<HTMLDivElement>;

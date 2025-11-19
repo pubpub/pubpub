@@ -25,7 +25,7 @@ import {
 	submissionWorkflowConfigStepLabels,
 } from './types';
 
-require('./submissionWorkflowEditor.scss');
+import './submissionWorkflowEditor.scss';
 
 type Props = {
 	collection: Collection;

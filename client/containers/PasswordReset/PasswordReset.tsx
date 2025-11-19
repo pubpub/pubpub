@@ -7,7 +7,7 @@ import { GridWrapper, InputField } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 import { usePageContext } from 'utils/hooks';
 
-require('./passwordReset.scss');
+import './passwordReset.scss';
 
 type Props = {
 	passwordResetData: any;

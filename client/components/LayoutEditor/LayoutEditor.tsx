@@ -16,7 +16,7 @@ import LayoutEditorHtml from './LayoutEditorHtml';
 import LayoutEditorBanner from './LayoutEditorBanner';
 import LayoutEditorCollectionHeader from './LayoutEditorCollectionHeader';
 
-require('./layoutEditor.scss');
+import './layoutEditor.scss';
 
 type Props = {
 	allowDuplicatePubs: boolean;

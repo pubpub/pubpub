@@ -5,7 +5,7 @@ import { AnchorButton, Classes, Tooltip } from '@blueprintjs/core';
 import { getResizedUrl } from 'utils/images';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./layoutBanner.scss');
+import './layoutBanner.scss';
 
 type Props = {
 	communityData: any;

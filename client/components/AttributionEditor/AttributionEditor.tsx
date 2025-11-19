@@ -9,7 +9,7 @@ import { UserAutocomplete } from 'components';
 import AttributionRow from './AttributionRow';
 import DragDropListing from '../DragDropListing/DragDropListing';
 
-require('./attributionEditor.scss');
+import './attributionEditor.scss';
 
 type OwnProps = {
 	apiRoute: string;

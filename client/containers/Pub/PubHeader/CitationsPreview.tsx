@@ -6,7 +6,7 @@ import { ClickToCopyButton } from 'components';
 
 import CitationsModal from './CitationsModal';
 
-require('./citationsPreview.scss');
+import './citationsPreview.scss';
 
 type OwnProps = {
 	pubData: Pub;

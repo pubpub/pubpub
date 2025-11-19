@@ -16,7 +16,7 @@ import {
 } from './labels';
 import OverviewRowSkeleton from './OverviewRowSkeleton';
 
-require('./collectionOverviewRow.scss');
+import './collectionOverviewRow.scss';
 
 type Props = {
 	className?: string;

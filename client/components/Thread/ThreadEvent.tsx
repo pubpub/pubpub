@@ -5,7 +5,7 @@ import { Avatar, Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { timeAgoBaseProps } from 'utils/dates';
 
-require('./threadEvent.scss');
+import './threadEvent.scss';
 
 type Props = {
 	eventData: any;

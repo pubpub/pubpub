@@ -3,7 +3,7 @@ import React from 'react';
 import { SubmissionEmail } from 'components';
 import { Community } from 'types';
 
-require('./emailPreview.scss');
+import './emailPreview.scss';
 
 type Props = {
 	from: string;

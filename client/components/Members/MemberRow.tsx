@@ -10,7 +10,7 @@ import { permissionValues } from './permissionValues';
 import SelfDestructiveActionDialog from './SelfDestructiveActionDialog';
 import MemberPermissionPicker from './MemberPermissionPicker';
 
-require('./memberRow.scss');
+import './memberRow.scss';
 
 type OwnProps = {
 	memberData: any;

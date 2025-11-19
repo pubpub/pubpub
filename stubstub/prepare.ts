@@ -2,6 +2,7 @@ import type { Global } from '@jest/types';
 import { finishDeferredTasks } from 'server/utils/deferred';
 import { clearUserToAgentMap } from './userToAgentMap';
 import { sequelize } from '../server/sequelize';
+import { vi } from 'vitest';
 
 export const setup = (
 	beforeFn: Global.HookBase,
@@ -35,9 +36,8 @@ export const teardown = (
 		if (actionsFn) {
 			await actionsFn();
 		}
+		vi.clearAllMocks();
 		clearUserToAgentMap();
 		await sequelize.close();
-		await finishDeferredTasks();
-		// global.gc?.();
 	});
 };

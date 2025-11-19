@@ -11,7 +11,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 import { usePubContext } from '../pubHooks';
 
-require('./pubInlineSuggestionMenu.scss');
+import './pubInlineSuggestionMenu.scss';
 
 const shouldOpenBelowSelection = () => {
 	return ['Android', 'iPad', 'iPhone'].some((device) =>

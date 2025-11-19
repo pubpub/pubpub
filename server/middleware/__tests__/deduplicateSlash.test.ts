@@ -1,4 +1,5 @@
 import { deduplicateSlash } from '../deduplicateSlash';
+import { vi } from 'vitest';
 
 describe('deduplicate Slash Middleware', () => {
 	let mockRes;
@@ -8,12 +9,12 @@ describe('deduplicate Slash Middleware', () => {
 
 	beforeEach(() => {
 		mockRes = {
-			redirect: jest.fn(),
+			redirect: vi.fn(),
 		};
 		mockReq = {
 			url: '',
 		};
-		nextFn = jest.fn();
+		nextFn = vi.fn();
 	});
 
 	it('redirects to a url with slashes deduplicated', async () => {

@@ -10,7 +10,7 @@ import {
 	isChildOf,
 } from './titleEditorFunctions';
 
-require('./titleEditor.scss');
+import './titleEditor.scss';
 
 type Props = {
 	isReadOnly?: boolean;

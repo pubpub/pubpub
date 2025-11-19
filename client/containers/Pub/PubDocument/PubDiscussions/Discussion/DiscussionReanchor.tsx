@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Card, Icon } from '@blueprintjs/core';
 import { reanchorDiscussion } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
 
-require('./discussionReanchor.scss');
+import './discussionReanchor.scss';
 
 type Props = {
 	discussionData: any;

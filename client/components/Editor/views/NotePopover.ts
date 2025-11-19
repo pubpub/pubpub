@@ -6,7 +6,7 @@ import { Classes } from '@blueprintjs/core';
 
 import { rectContainsPoint, rectUnion } from 'utils/geom';
 
-require('./notePopover.scss');
+import './notePopover.scss';
 
 const normalizePopoverString = (string: string) => string.split('\n').join('');
 

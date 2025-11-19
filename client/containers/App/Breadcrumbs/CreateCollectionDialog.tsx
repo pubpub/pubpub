@@ -19,7 +19,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { getSlugError } from 'client/utils/slug';
 import { SlugStatus } from 'types';
 
-require('./createCollectionDialog.scss');
+import './createCollectionDialog.scss';
 
 type Props = {
 	isOpen: boolean;

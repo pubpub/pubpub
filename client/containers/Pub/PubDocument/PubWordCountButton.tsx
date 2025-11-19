@@ -4,7 +4,7 @@ import { Node } from 'prosemirror-model';
 
 import { getWordAndCharacterCountsFromDoc } from 'utils/pub/metadata';
 
-require('./pubWordCountButton.scss');
+import './pubWordCountButton.scss';
 
 type Props = {
 	doc: Node;

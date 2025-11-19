@@ -7,7 +7,7 @@ import { isEmptyDoc } from 'client/components/Editor';
 
 import ReviewEditor from './ReviewEditor';
 
-require('./review.scss');
+import './review.scss';
 
 type Props = {
 	communityData: Community;

@@ -9,7 +9,7 @@ import ColorInput from 'components/ColorInput/ColorInput';
 import { getResizedUrl } from 'utils/images';
 import { getButtonText } from '../Layout/LayoutBanner';
 
-require('./layoutEditorBanner.scss');
+import './layoutEditorBanner.scss';
 
 type Props = {
 	onChange: (...args: any[]) => any;

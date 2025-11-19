@@ -11,7 +11,7 @@ import { useAnalytics } from 'utils/analytics/useAnalytics';
 import { usePubHistory } from '../pubHooks';
 import { getFormattedDownload } from './headerUtils';
 
-require('./download.scss');
+import './download.scss';
 
 type Props = {
 	pubData: any;

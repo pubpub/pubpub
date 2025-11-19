@@ -2,7 +2,7 @@ import React from 'react';
 import { NonIdealState, AnchorButton, Intent } from '@blueprintjs/core';
 import { usePageContext } from 'utils/hooks';
 
-require('./noMatch.scss');
+import './noMatch.scss';
 
 const NoMatch = () => {
 	const { locationData, loginData } = usePageContext();

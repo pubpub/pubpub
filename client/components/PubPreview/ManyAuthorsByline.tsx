@@ -5,7 +5,7 @@ import { getAllPubContributors } from 'utils/contributors';
 import { Pub } from 'types';
 import WithinCommunityByline from '../WithinCommunityByline/WithinCommunityByline';
 
-require('./manyAuthorsByline.scss');
+import './manyAuthorsByline.scss';
 
 type Props = Omit<BylineProps, 'contributors'> & {
 	pubData: Pub;

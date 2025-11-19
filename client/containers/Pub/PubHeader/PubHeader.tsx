@@ -15,7 +15,7 @@ import SmallHeaderButton from './SmallHeaderButton';
 import PubHeaderSticky from './PubHeaderSticky';
 import ReviewHeaderSticky from './ReviewHeaderSticky';
 
-require('./pubHeader.scss');
+import './pubHeader.scss';
 
 type Props = {
 	sticky?: boolean;

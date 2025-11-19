@@ -1,6 +1,8 @@
 import zoteroClient from 'zotero-api-client';
 
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { CitationStyleKind } from 'utils/citations';
 
 import { ZoteroStyleKind } from 'types';
@@ -29,7 +31,7 @@ const zoteroStyleKindMap: Record<CitationStyleKind, ZoteroStyleKind> = {
 
 // the parameters which can be passed to the get() method
 // can be found at https://www.zotero.org/support/dev/web_api/v3/basics
-app.get(
+router.get(
 	'/api/citations/zotero',
 	wrap(async (req, res) => {
 		const userId = req.user?.id;

@@ -6,7 +6,7 @@ import fuzzysearch from 'fuzzysearch';
 
 import Icon from 'components/Icon/Icon';
 
-require('./pageAutocomplete.scss');
+import './pageAutocomplete.scss';
 
 type Item = {
 	id: string;

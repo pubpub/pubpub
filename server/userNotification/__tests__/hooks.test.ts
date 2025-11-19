@@ -4,6 +4,7 @@ import { finishDeferredTasks } from 'server/utils/deferred';
 import { modelize, setup, teardown } from 'stubstub';
 
 import { DocJson } from 'types';
+import { vi } from 'vitest';
 
 const models = modelize`
     User rando {}
@@ -105,13 +106,16 @@ const models = modelize`
 `;
 
 // eslint-disable-next-line import/extensions
-const mailgunMessages = require('../hooks.ts').mg.messages;
+// const mailgunMessages = require('../hooks.ts').mg.messages;
+import { mg } from '../hooks';
+
+const mailgunMessages = mg.messages;
 
 setup(beforeAll, async () => {
 	await models.resolve();
 
 	// mock mailgun messages so we can listen for them
-	jest.spyOn(mailgunMessages, 'create').mockImplementation(
+	vi.spyOn(mailgunMessages, 'create').mockImplementation(
 		() =>
 			Promise.resolve({
 				json: () => Promise.resolve({ status: 'ok', id: 'id' }),
@@ -120,11 +124,11 @@ setup(beforeAll, async () => {
 });
 
 afterEach(() => {
-	jest.clearAllMocks();
+	vi.clearAllMocks();
 });
 
 teardown(afterAll, () => {
-	jest.restoreAllMocks();
+	vi.restoreAllMocks();
 });
 
 describe('UserNotifications created when ActivityItems are created', () => {

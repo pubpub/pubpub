@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-require('./pubEdge.scss');
+import './pubEdge.scss';
 
 export type PubEdgeLayoutProps = {
 	bylineElement: React.ReactNode;

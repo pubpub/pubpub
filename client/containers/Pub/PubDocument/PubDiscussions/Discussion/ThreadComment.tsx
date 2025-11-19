@@ -11,7 +11,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { Callback } from 'types';
 import { getPartsOfFullName } from 'utils/names';
 
-require('./threadComment.scss');
+import './threadComment.scss';
 
 type Props = {
 	discussionData: any;

@@ -56,8 +56,8 @@ export const resourceSchema = partialResourceSchema.extend({
 	contributions: z.array(
 		z.object({
 			isAttribution: z.boolean(),
-			contributor: z.object({ name: z.string(), orcid: z.string().optional() }),
-			contributorAffiliation: z.string().optional(),
+			contributor: z.object({ name: z.string(), orcid: z.string().nullish() }),
+			contributorAffiliation: z.string().nullish(),
 			contributorRole: z.enum(resourceContributorRoles),
 		}),
 	),

@@ -12,7 +12,7 @@ import {
 
 import { Maybe } from 'types';
 
-require('./dragDropListing.scss');
+import './dragDropListing.scss';
 
 export type MinimalItem = {
 	id: string;

@@ -4,7 +4,7 @@ import { RenderedActivityItem } from 'client/utils/activity/types';
 
 import ActivityItemRow from './ActivityItemRow';
 
-require('./activityItemGroup.scss');
+import './activityItemGroup.scss';
 
 type Props = {
 	items: RenderedActivityItem[];

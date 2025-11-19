@@ -4,7 +4,7 @@ import { Classes, Position } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 
-require('./collectionMultiSelect.scss');
+import './collectionMultiSelect.scss';
 
 const propTypes = {
 	allCollections: PropTypes.array.isRequired,

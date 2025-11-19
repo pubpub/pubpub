@@ -5,7 +5,8 @@ import juice from 'juice';
 import { minify } from 'html-minifier';
 
 import { isProd } from 'utils/environment';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { handleErrors } from 'server/utils/errors';
 import { hostIsValid } from 'server/utils/routes';
 import { getDigestData } from 'server/utils/email/digest';
@@ -55,7 +56,7 @@ const templates = {
 	},
 };
 
-app.get('/email/:templateSlug', async (req, res, next) => {
+router.get('/email/:templateSlug', async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req, { isDashboard: true });
 		const {

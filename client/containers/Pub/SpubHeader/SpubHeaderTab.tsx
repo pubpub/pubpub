@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { GridWrapper } from 'components';
 import { useViewport } from 'client/utils/useViewport';
 
-require('./spubHeaderTab.scss');
+import './spubHeaderTab.scss';
 
 type Props = {
 	children: React.ReactNode;

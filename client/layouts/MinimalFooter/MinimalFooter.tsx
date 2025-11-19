@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Icon, IconName } from 'components';
 
-require('./minimalFooter.scss');
+import './minimalFooter.scss';
 
 type MinimalFooterLink = {
 	label: string;

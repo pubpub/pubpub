@@ -20,7 +20,7 @@ import {
 } from './types';
 import FacetPropEditorSkeleton from './FacetPropEditorSkeleton';
 
-require('./facetEditor.scss');
+import './facetEditor.scss';
 
 function getPropSourceInfo<Prop extends FacetProp>(
 	prop: Prop,

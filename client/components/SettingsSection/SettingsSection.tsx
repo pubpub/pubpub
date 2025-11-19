@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { slugifyString } from 'utils/strings';
 
-require('./settingsSection.scss');
+import './settingsSection.scss';
 
 type Props = {
 	className?: string;

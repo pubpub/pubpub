@@ -1,6 +1,7 @@
 import { setup, teardown, login, modelize, expectCreatedActivityItem, stub } from 'stubstub';
 import { Submission, SubmissionWorkflow } from 'server/models';
 import { finishDeferredTasks } from 'server/utils/deferred';
+import { vi } from 'vitest';
 
 const models = modelize`
 	Community community {
@@ -51,21 +52,24 @@ const models = modelize`
 setup(beforeAll, async () => {
 	await models.resolve();
 });
+const { sendSubmissionEmail } = vi.hoisted(() => {
+	return {
+		sendSubmissionEmail: vi.fn(),
+	};
+});
 
-let sendEmailMock: jest.Mock = null as any;
 beforeAll(async () => {
-	sendEmailMock = jest.fn();
-	stub('server/submission/emails', {
-		sendSubmissionEmail: sendEmailMock,
-	});
+	vi.mock('server/submission/emails', () => ({
+		sendSubmissionEmail,
+	}));
 
-	stub('server/submission/abstract', {
+	vi.mock('server/submission/abstract', () => ({
 		appendAbstractToPubDraft: async () => {},
-	});
+	}));
 });
 
 beforeEach(() => {
-	sendEmailMock.mockClear();
+	sendSubmissionEmail.mockClear();
 });
 
 describe('/api/submissions', () => {
@@ -138,7 +142,8 @@ describe('/api/submissions', () => {
 			Number.isNaN((sub?.submittedAt ? new Date(sub?.submittedAt) : new Date()).getTime()),
 		).toEqual(false);
 		await finishDeferredTasks();
-		expect(sendEmailMock).toHaveBeenCalled();
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		expect(sendSubmissionEmail).toHaveBeenCalled();
 	});
 
 	it('forbids admins from updating status out of one of [received, accepted, declined]', async () => {
@@ -182,7 +187,7 @@ describe('/api/submissions', () => {
 		const sub = await Submission.findOne({ where: { id: submission.id } });
 		expect(sub?.status).toEqual('accepted');
 		await finishDeferredTasks();
-		expect(sendEmailMock).toHaveBeenCalled();
+		expect(sendSubmissionEmail).toHaveBeenCalled();
 	});
 
 	it('allows collection managers to update pub status to declined', async () => {
@@ -215,7 +220,7 @@ describe('/api/submissions', () => {
 		const sub = await Submission.findOne({ where: { id: submission.id } });
 		expect(sub?.status).toEqual('declined');
 		await finishDeferredTasks();
-		expect(sendEmailMock).toHaveBeenCalledTimes(0);
+		expect(sendSubmissionEmail).toHaveBeenCalledTimes(0);
 	});
 
 	it('allows admin to delete a submission', async () => {

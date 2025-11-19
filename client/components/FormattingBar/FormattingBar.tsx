@@ -15,7 +15,7 @@ import { getButtonPopoverComponent } from './utils';
 import { usePendingAttrs } from './hooks/usePendingAttrs';
 import { useControlsState, ButtonState } from './hooks/useControlsState';
 
-require('./formattingBar.scss');
+import './formattingBar.scss';
 
 type Props = {
 	editorChangeObject: EditorChangeObject;

@@ -7,7 +7,7 @@ import { GridWrapper, InputField, ImageUpload, Icon } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 import { gdprCookiePersistsSignup, getGdprConsentElection } from 'client/utils/legal/gdprConsent';
 
-require('./userCreate.scss');
+import './userCreate.scss';
 
 type Props = {
 	signupData: any;

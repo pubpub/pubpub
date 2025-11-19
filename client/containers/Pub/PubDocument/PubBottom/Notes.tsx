@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Icon, PubNoteContent } from 'components';
 import { RenderedNote } from 'utils/notes';
 
-require('./notes.scss');
+import './notes.scss';
 
 const scrollToNode = (node) => {
 	if (node) {

@@ -6,7 +6,7 @@ import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
 import { Pub, DefinitelyHas, Reviewer } from 'types';
 
-require('./dashboardReviews.scss');
+import './dashboardReviews.scss';
 
 type Props = {
 	pubsWithReviews: DefinitelyHas<Pub, 'reviews'>[];

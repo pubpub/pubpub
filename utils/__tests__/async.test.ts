@@ -1,8 +1,9 @@
 import { asyncForEach, asyncMap } from 'utils/async';
+import { vi } from 'vitest';
 
 describe('async utils', () => {
-	beforeAll(() => jest.useFakeTimers());
-	afterAll(() => jest.useRealTimers());
+	beforeAll(() => vi.useFakeTimers());
+	afterAll(() => vi.useRealTimers());
 	describe('asyncForEach', () => {
 		it('sequentially executes a callback for each promise with the resolved value, current index, and array length', async () => {
 			const promises = [
@@ -11,7 +12,7 @@ describe('async utils', () => {
 				Promise.resolve(3),
 				Promise.resolve(4),
 			];
-			jest.runAllTimers();
+			vi.runAllTimers();
 			const done: boolean[] = [];
 			const results: number[] = [];
 			let i = 0;
@@ -24,13 +25,13 @@ describe('async utils', () => {
 				done[index] = true;
 				results.push(value);
 			});
-			jest.runAllTimers();
+			vi.runAllTimers();
 			expect(results).toEqual([1, 2, 3, 4]);
 		});
 		it('awaits a list of promises', async () => {
 			const promises = Promise.resolve([Promise.resolve(1), Promise.resolve(2)]);
 			const results: number[] = [];
-			jest.runAllTimers();
+			vi.runAllTimers();
 			await asyncForEach(promises, (value) => results.push(value));
 			expect(results).toEqual([1, 2]);
 		});
@@ -42,7 +43,7 @@ describe('async utils', () => {
 				Promise.resolve(3),
 			]);
 			const results: number[] = [];
-			jest.runAllTimers();
+			vi.runAllTimers();
 			await expect(asyncForEach(promises, (value) => results.push(value))).rejects.toEqual(
 				error,
 			);

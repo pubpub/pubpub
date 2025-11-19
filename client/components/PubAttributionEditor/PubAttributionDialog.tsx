@@ -5,7 +5,7 @@ import { Callback } from 'types';
 
 import PubAttributionEditor, { Props as PubAttributionEditorProps } from './PubAttributionEditor';
 
-require('./pubAttributionDialog.scss');
+import './pubAttributionDialog.scss';
 
 type Props = {
 	isOpen: boolean;

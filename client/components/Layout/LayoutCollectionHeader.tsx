@@ -15,7 +15,7 @@ import {
 } from 'utils/collections/getMetadata';
 import WithinCommunityByline from '../WithinCommunityByline/WithinCommunityByline';
 
-require('./layoutCollectionHeader.scss');
+import './layoutCollectionHeader.scss';
 
 type Props = {
 	collection: Collection;

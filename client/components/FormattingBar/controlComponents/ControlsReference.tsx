@@ -12,7 +12,7 @@ import { usePubContext } from 'containers/Pub/pubHooks';
 import { getDashUrl } from 'utils/dashboard';
 import { EditorChangeObjectWithNode } from '../types';
 
-require('./controlsReference.scss');
+import './controlsReference.scss';
 
 export type ControlsReferenceProps = {
 	editorChangeObject: EditorChangeObjectWithNode;

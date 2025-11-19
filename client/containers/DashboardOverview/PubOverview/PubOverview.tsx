@@ -14,7 +14,7 @@ import { usePageContext } from 'utils/hooks';
 
 import PubTimeline from './PubTimeline';
 
-require('./pubOverview.scss');
+import './pubOverview.scss';
 
 type Props = {
 	pubData: SanitizedPubData;

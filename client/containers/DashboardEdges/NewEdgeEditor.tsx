@@ -12,7 +12,7 @@ import { MenuButton, MenuItem } from 'components/Menu';
 
 import NewEdgeInput from './NewEdgeInput';
 
-require('./newEdgeEditor.scss');
+import './newEdgeEditor.scss';
 
 type Props = {
 	onCancel: () => unknown;

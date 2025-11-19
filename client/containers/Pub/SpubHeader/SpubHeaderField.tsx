@@ -4,7 +4,7 @@ import { Tooltip } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
-require('./spubHeaderField.scss');
+import './spubHeaderField.scss';
 
 type Props = {
 	asLabel?: boolean;

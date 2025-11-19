@@ -11,7 +11,7 @@ import { acceptSuggestedEdits } from 'components/Editor/plugins/suggestedEdits/r
 
 import { usePubContext } from '../pubHooks';
 
-require('./pubInlineMenu.scss');
+import './pubInlineMenu.scss';
 
 const shouldOpenBelowSelection = () => {
 	return ['Android', 'iPad', 'iPhone'].some((device) =>

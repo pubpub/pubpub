@@ -5,7 +5,7 @@ import debounce from 'debounce';
 import { Avatar } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./userAutocomplete.scss');
+import './userAutocomplete.scss';
 
 type OwnProps = {
 	allowCustomUser?: boolean;

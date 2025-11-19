@@ -5,7 +5,7 @@ import { AttributionWithUser } from 'types';
 import ContributorsList from '../ContributorsList/ContributorsList';
 import Avatars from '../Avatars/Avatars';
 
-require('./contributorAvatars.scss');
+import './contributorAvatars.scss';
 
 type Props = {
 	attributions: AttributionWithUser[];

@@ -6,7 +6,7 @@ import { LandingPageFeatureKind, LandingPageFeatureOfKind } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { findRankInRankedList } from 'utils/rank';
 
-require('./landingPageFeatureManager.scss');
+import './landingPageFeatureManager.scss';
 
 export type RenderFeatureProps<Kind extends LandingPageFeatureKind> = {
 	feature: LandingPageFeatureOfKind<Kind>;

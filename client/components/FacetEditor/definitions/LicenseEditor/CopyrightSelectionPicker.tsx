@@ -4,7 +4,7 @@ import { NumericInput, Radio, RadioGroup } from '@blueprintjs/core';
 import { License } from 'facets';
 import { FacetPropEditorProps } from '../../types';
 
-require('./copyrightSelectionPicker.scss');
+import './copyrightSelectionPicker.scss';
 
 type Props = FacetPropEditorProps<typeof License, 'copyrightSelection', false>;
 

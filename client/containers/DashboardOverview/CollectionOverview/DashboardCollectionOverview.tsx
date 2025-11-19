@@ -35,7 +35,7 @@ import { useCollectionPubs, useCollectionState } from './collectionState';
 import CollectionControls from './CollectionControls';
 import PubMenu from './PubMenu';
 
-require('./dashboardCollectionOverview.scss');
+import './dashboardCollectionOverview.scss';
 
 type Props = {
 	overviewData: {

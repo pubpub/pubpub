@@ -2,7 +2,8 @@
 // You can add this to your server/routes/ or wherever you define routes
 
 import { Request, Response } from 'express';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { poolOptions, sequelize } from '../sequelize'; // adjust path as needed
 
 export const poolStatsHandler = (req: Request, res: Response) => {
@@ -36,4 +37,4 @@ export const poolStatsHandler = (req: Request, res: Response) => {
 	}
 };
 
-app.get('/api/debug/pool-stats', poolStatsHandler);
+router.get('/api/debug/pool-stats', poolStatsHandler);

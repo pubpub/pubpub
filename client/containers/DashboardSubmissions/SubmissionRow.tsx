@@ -7,7 +7,7 @@ import { PubOverviewRow } from '../DashboardOverview/overviewRows';
 import { PubWithSubmission } from './types';
 import ArbitrationMenu from './ArbitrationMenu';
 
-require('./submissionRow.scss');
+import './submissionRow.scss';
 
 type Props = {
 	pub: PubWithSubmission;

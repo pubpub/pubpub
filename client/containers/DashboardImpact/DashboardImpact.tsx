@@ -5,7 +5,7 @@ import IframeResizer from 'iframe-resizer-react';
 
 import { DashboardFrame } from 'components';
 
-require('./dashboardImpact.scss');
+import './dashboardImpact.scss';
 
 type Props = {
 	impactData: {

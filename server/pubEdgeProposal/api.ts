@@ -1,4 +1,6 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { parseUrl } from 'utils/urls';
 import { isDoi, extractDoiFromOrgUrl } from 'utils/crossref/parseDoi';
 
@@ -8,7 +10,7 @@ import {
 	getPubDataFromUrl,
 } from './queries';
 
-app.get(
+router.get(
 	'/api/pubEdgeProposal',
 	wrap(async (req, res) => {
 		const { object } = req.query;

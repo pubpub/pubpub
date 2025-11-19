@@ -4,7 +4,7 @@ import { Icon, IconName } from 'components';
 import { UserScopeVisit, Pub, Collection } from 'types';
 import { getDashUrl } from 'utils/dashboard';
 
-require('./recentVisitList.scss');
+import './recentVisitList.scss';
 
 type Props = {
 	userScopeVisits: UserScopeVisit[];

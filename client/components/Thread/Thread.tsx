@@ -2,7 +2,7 @@ import React from 'react';
 import ThreadComment from './ThreadComment';
 import ThreadEvent from './ThreadEvent';
 
-require('./thread.scss');
+import './thread.scss';
 
 type Props = {
 	threadData: any;

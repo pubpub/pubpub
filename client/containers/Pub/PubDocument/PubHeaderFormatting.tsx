@@ -11,7 +11,7 @@ import PubHeaderCollaborators from './PubHeaderCollaborators';
 import PubConnectionStatusIndicator from './PubConnectionStatusIndicator';
 import PubWordCountButton from './PubWordCountButton';
 
-require('./pubHeaderFormatting.scss');
+import './pubHeaderFormatting.scss';
 
 type Props = {
 	disabled: boolean;

@@ -15,7 +15,7 @@ import MediaSoundcloud from './MediaSoundcloud';
 import MediaGithub from './MediaGithub';
 import MediaTwitter from './MediaTwitter';
 
-require('./media.scss');
+import './media.scss';
 
 type Props = {
 	onInsert: (type: string, attrs: Record<string, any>) => unknown;

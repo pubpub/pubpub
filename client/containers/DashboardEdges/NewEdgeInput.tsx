@@ -10,7 +10,7 @@ import { useThrottled } from 'utils/hooks';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { ExternalPublication, Pub } from 'types';
 
-require('./newEdgeInput.scss');
+import './newEdgeInput.scss';
 
 type Props = {
 	onSelectItem: (...args: any[]) => any;

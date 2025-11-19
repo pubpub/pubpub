@@ -6,7 +6,7 @@ import { getSuperAdminTabUrl, SuperAdminTabKind } from 'utils/superAdmin';
 
 import { superAdminTabs } from './tabs';
 
-require('./superAdminDashboard.scss');
+import './superAdminDashboard.scss';
 
 type Props = {
 	tabKind: SuperAdminTabKind;

@@ -6,7 +6,7 @@ import { FileUploadButton } from 'components';
 import { getFormattedDownload } from 'containers/Pub/PubHeader/headerUtils';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./downloadChooser.scss');
+import './downloadChooser.scss';
 
 type Props = {
 	pubData: {

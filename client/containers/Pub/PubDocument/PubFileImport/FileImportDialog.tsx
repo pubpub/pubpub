@@ -27,7 +27,7 @@ import { extensionFor } from './formats';
 import FileImportEntry from './FileImportEntry';
 import MetadataEditor from './MetadataEditor';
 
-require('./fileImportDialog.scss');
+import './fileImportDialog.scss';
 
 type Props = {
 	updatePubData: (...args: any[]) => any;

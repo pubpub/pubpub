@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Icon, IconName } from 'components';
 import { PubPubIconName } from 'client/utils/icons';
 
-require('./iconBullet.scss');
+import './iconBullet.scss';
 
 type Props = {
 	selected?: boolean;

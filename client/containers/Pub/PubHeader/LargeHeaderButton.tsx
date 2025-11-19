@@ -4,7 +4,7 @@ import { Button } from 'reakit';
 
 import { Icon, IconName } from 'components';
 
-require('./largeHeaderButton.scss');
+import './largeHeaderButton.scss';
 
 type Props = {
 	active?: boolean;

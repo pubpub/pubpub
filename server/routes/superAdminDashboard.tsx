@@ -2,7 +2,8 @@ import React from 'react';
 
 import * as types from 'types';
 import Html from 'server/Html';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import {
 	superAdminTabKinds,
 	SuperAdminTabKind,
@@ -35,12 +36,12 @@ const getTabProps = async (tabKind: SuperAdminTabKind, locationData: types.Locat
 	return {};
 };
 
-app.get('/superadmin', async (_, res) => {
+router.get('/superadmin', async (_, res) => {
 	const [firstTab] = superAdminTabKinds;
 	return res.redirect(getSuperAdminTabUrl(firstTab));
 });
 
-app.get('/superadmin/:tabKind', async (req, res, next) => {
+router.get('/superadmin/:tabKind', async (req, res, next) => {
 	try {
 		const { tabKind } = req.params;
 		if (!isSuperAdminTabKind(tabKind)) {

@@ -21,7 +21,7 @@ import { useInitialValues } from './hooks/useInitialValues';
 import { useEditorView } from './hooks/useEditorView';
 import ReferenceFinder from './ReferenceFinder';
 
-require('./styles/base.scss');
+import './styles/base.scss';
 
 type Props = {
 	noteManager?: NoteManager;

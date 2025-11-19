@@ -12,7 +12,7 @@ import DashboardEdgesListing from './DashboardEdgesListing';
 import NewEdgeEditor from './NewEdgeEditor';
 import { useDashboardEdges } from './useDashboardEdges';
 
-require('./dashboardEdges.scss');
+import './dashboardEdges.scss';
 
 type Props = {
 	pubData: Pub & { outboundEdges: OutboundEdge[]; inboundEdges: InboundEdge[] };

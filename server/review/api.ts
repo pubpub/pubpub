@@ -1,4 +1,5 @@
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { expect } from 'utils/assert';
 
 import { getPermissions } from './permissions';
@@ -15,7 +16,7 @@ const getRequestIds = (req) => {
 	};
 };
 
-app.post('/api/reviews', (req, res) => {
+router.post('/api/reviews', (req, res) => {
 	const requestIds = getRequestIds(req);
 	getPermissions(requestIds)
 		.then((permissions) => {
@@ -45,7 +46,7 @@ app.post('/api/reviews', (req, res) => {
 		});
 });
 
-app.post('/api/reviews/release', (req, res) => {
+router.post('/api/reviews/release', (req, res) => {
 	const requestIds = getRequestIds(req);
 	getPermissions(requestIds)
 		.then((permissions) => {
@@ -63,7 +64,7 @@ app.post('/api/reviews/release', (req, res) => {
 		});
 });
 
-app.put('/api/reviews', (req, res) => {
+router.put('/api/reviews', (req, res) => {
 	const requestIds = getRequestIds(req);
 	getPermissions(requestIds)
 		.then((permissions) => {
@@ -81,7 +82,7 @@ app.put('/api/reviews', (req, res) => {
 		});
 });
 
-app.delete('/api/reviews', (req, res) => {
+router.delete('/api/reviews', (req, res) => {
 	getPermissions(getRequestIds(req))
 		.then((permissions) => {
 			if (!permissions.destroy) {

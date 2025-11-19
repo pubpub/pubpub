@@ -4,7 +4,7 @@ import CommunitySettings from './CommunitySettings/CommunitySettings';
 import CollectionSettings from './CollectionSettings';
 import PubSettings from './PubSettings';
 
-require('./dashboardSettings.scss');
+import './dashboardSettings.scss';
 
 const settingsComponents = {
 	community: CommunitySettings,

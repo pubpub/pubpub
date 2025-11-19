@@ -7,7 +7,7 @@ import { usePageContext } from 'utils/hooks';
 
 import DiscussionBubble from './DiscussionBubble';
 
-require('./discussionNav.scss');
+import './discussionNav.scss';
 
 type OwnProps = {
 	discussions: any[];

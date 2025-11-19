@@ -4,7 +4,7 @@ import { Button } from 'reakit';
 
 import { Icon, IconName } from 'components';
 
-require('./collectionsBarButton.scss');
+import './collectionsBarButton.scss';
 
 type Props = {
 	children: React.ReactNode;

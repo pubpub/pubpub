@@ -10,7 +10,7 @@ import PubEdgeLayout from './PubEdgeLayout';
 import PubEdgeDescriptionButton from './PubEdgeDescriptionButton';
 import WithinCommunityByline from '../WithinCommunityByline/WithinCommunityByline';
 
-require('./pubEdge.scss');
+import './pubEdge.scss';
 
 export type PubEdgeProps = {
 	accentColor?: string;

@@ -7,7 +7,7 @@ import { Callback } from 'types';
 import { capitalize } from 'utils/strings';
 import { FacetPropSourceInfo, FacetEditorDisplayStyle } from './types';
 
-require('./facetPropEditorSkeleton.scss');
+import './facetPropEditorSkeleton.scss';
 
 type Props = {
 	children: React.ReactNode;

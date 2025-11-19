@@ -7,7 +7,7 @@ import { usePageContext } from 'utils/hooks';
 
 import { getDefaultOverviewSearchFilters, OverviewSearchFilter } from './filters';
 
-require('./overviewSearchGroup.scss');
+import './overviewSearchGroup.scss';
 
 type SearchTermCallback = (q: string) => unknown;
 

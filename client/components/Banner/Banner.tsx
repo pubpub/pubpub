@@ -7,7 +7,7 @@ type Props = {
 	right?: React.ReactNode;
 };
 
-require('./banner.scss');
+import './banner.scss';
 
 const Banner = (props: Props) => {
 	const { bannerText, accentColor, right } = props;

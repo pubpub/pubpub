@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-require('./overviewRows.scss');
+import './overviewRows.scss';
 
 type Props = {
 	children: React.ReactNodeArray;

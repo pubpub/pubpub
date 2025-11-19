@@ -8,7 +8,7 @@ import SearchableNoteSection from './SearchableNoteSection';
 import DiscussionsSection from './Discussions/DiscussionsSection';
 import ReadNextSection from './ReadNextSection';
 
-require('./pubBottom.scss');
+import './pubBottom.scss';
 
 type Props = {
 	pubData: PubPageData;

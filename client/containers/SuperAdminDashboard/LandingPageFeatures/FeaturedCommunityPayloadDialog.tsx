@@ -5,7 +5,7 @@ import { LandingPageCommunityFeature } from 'types';
 import { InputField, MinimalEditor, ColorInput, ImageUpload } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./featuredCommunityPayloadDialog.scss');
+import './featuredCommunityPayloadDialog.scss';
 
 type Props = {
 	isOpen: boolean;

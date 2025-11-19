@@ -1,6 +1,8 @@
 import stripIndent from 'strip-indent';
 
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { communityUrl } from 'utils/canonicalUrls';
@@ -27,7 +29,7 @@ const buildRobotsFile = (community) => {
 	`).trim();
 };
 
-app.get(
+router.get(
 	'/robots.txt',
 	wrap(async (req, res) => {
 		let communityData;

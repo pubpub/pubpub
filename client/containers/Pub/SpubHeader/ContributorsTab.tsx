@@ -8,7 +8,7 @@ import { expect } from 'utils/assert';
 import SpubHeaderField from './SpubHeaderField';
 import SpubHeaderTab from './SpubHeaderTab';
 
-require('./contributorsTab.scss');
+import './contributorsTab.scss';
 
 type Props = {
 	pubData: Pub;

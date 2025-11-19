@@ -8,7 +8,7 @@ import { pubUrl } from 'utils/canonicalUrls';
 
 import Discussion from '../../PubDiscussions/Discussion';
 
-require('./discussionsReleaseDialog.scss');
+import './discussionsReleaseDialog.scss';
 
 type Props = {
 	pubData: PubPageData;

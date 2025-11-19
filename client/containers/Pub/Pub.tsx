@@ -9,7 +9,7 @@ import { usePubContext } from './pubHooks';
 import { PubContextProvider } from './PubContextProvider';
 import { PubSuspendWhileTypingProvider } from './PubSuspendWhileTyping';
 
-require('./pub.scss');
+import './pub.scss';
 
 type Props = {
 	pubData: PubPageData;

@@ -8,7 +8,7 @@ import { usePageContext } from 'utils/hooks';
 import { FacetPropEditorProps } from '../../types';
 import BackgroundColorChoice from './BackgroundColorChoice';
 
-require('./backgroundColorPicker.scss');
+import './backgroundColorPicker.scss';
 
 type Props = FacetPropEditorProps<Facet<'PubHeaderTheme'>, 'backgroundColor'>;
 

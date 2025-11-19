@@ -6,7 +6,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 import ServiceOption from './ServiceOption';
 
-require('./communityServices.scss');
+import './communityServices.scss';
 
 const CommunityServices = () => {
 	const services = [

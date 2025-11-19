@@ -1,7 +1,9 @@
 import passport from 'passport';
 import { z } from 'zod';
 
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { BadRequestError, NotFoundError } from 'server/utils/errors';
 
 import { isProd, isDuqDuq } from 'utils/environment';
@@ -19,7 +21,7 @@ const getRequestIds = (req) => {
 	};
 };
 
-app.post('/api/users', (req, res) => {
+router.post('/api/users', (req, res) => {
 	const requestIds = getRequestIds(req);
 	getPermissions(requestIds)
 		.then((permissions) => {
@@ -50,7 +52,7 @@ app.post('/api/users', (req, res) => {
 
 const uuidParser = z.string().uuid();
 
-app.get(
+router.get(
 	'/api/users/:id',
 	wrap(async (req, res) => {
 		const { id } = req.params;
@@ -67,7 +69,7 @@ app.get(
 	}),
 );
 
-app.put('/api/users', (req, res) => {
+router.put('/api/users', (req, res) => {
 	getPermissions(getRequestIds(req))
 		.then((permissions) => {
 			if (!permissions.update) {

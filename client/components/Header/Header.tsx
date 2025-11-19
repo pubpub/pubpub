@@ -7,7 +7,7 @@ import { GridWrapper, GlobalControls } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getResizedUrl } from 'utils/images';
 
-require('./header.scss');
+import './header.scss';
 
 type OwnProps = {
 	previewContext?: any;

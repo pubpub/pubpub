@@ -7,7 +7,7 @@ import { communityData } from 'utils/storybook/data';
 
 import { reviewData } from './data';
 
-require('containers/DashboardReview/dashboardReview.scss');
+import 'containers/DashboardReview/dashboardReview.scss';
 
 storiesOf('containers/DashboardReview', module).add('default', () => (
 	<div id="dashboard-container">

@@ -5,7 +5,9 @@ import { createGzip } from 'zlib';
 
 import { isProd } from 'utils/environment';
 import { Page, Pub, Release } from 'server/models';
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { communityUrl, pubUrl, pageUrl } from 'utils/canonicalUrls';
@@ -121,7 +123,7 @@ const getSitemapIndex = async (community, targetFilename) => {
 	return s3.downloadFile(sitemapKey);
 };
 
-app.get(
+router.get(
 	'/sitemap.xml',
 	wrap(async (req, res, next) => {
 		if (!hostIsValid(req, 'community')) {
@@ -138,7 +140,7 @@ app.get(
 	}),
 );
 
-app.get(
+router.get(
 	'/sitemap*',
 	wrap(async (req, res, next) => {
 		if (!hostIsValid(req, 'community')) {

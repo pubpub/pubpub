@@ -19,7 +19,7 @@ import { enumerateMetadataFields, normalizeMetadataToKind } from 'utils/collecti
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./collectionMetadataEditor.scss');
+import './collectionMetadataEditor.scss';
 
 type Props = {
 	allowUpdateDoi?: boolean;

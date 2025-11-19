@@ -10,7 +10,7 @@ import { Review } from 'types';
 import { getEmptyDoc } from 'client/components/Editor';
 import { expect } from 'utils/assert';
 
-require('./dashboardReview.scss');
+import './dashboardReview.scss';
 
 type Props = {
 	reviewData: Review;

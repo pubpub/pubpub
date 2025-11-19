@@ -3,7 +3,7 @@ import { Checkbox } from 'reakit/Checkbox';
 
 import { Icon, IconName } from 'components';
 
-require('./kindToggle.scss');
+import './kindToggle.scss';
 
 type Props = {
 	selected: boolean;

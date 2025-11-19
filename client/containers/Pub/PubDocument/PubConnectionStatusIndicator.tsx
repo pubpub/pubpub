@@ -3,7 +3,7 @@ import { usePrevious } from 'react-use';
 
 import { usePubContext } from '../pubHooks';
 
-require('./pubConnectionStatusIndicator.scss');
+import './pubConnectionStatusIndicator.scss';
 
 const PubConnectionStatusIndicator = () => {
 	const {

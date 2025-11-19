@@ -11,7 +11,7 @@ import { capitalize } from 'utils/strings';
 import SubmitDialog from './SubmitDialog';
 import { SpubHeaderTab } from '../SpubHeader';
 
-require('./spubHeaderToolbar.scss');
+import './spubHeaderToolbar.scss';
 
 const renderTabTitle = (icon: IconName, title: string) => (
 	<>

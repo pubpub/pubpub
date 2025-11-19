@@ -23,7 +23,7 @@ import { usePersistableState } from 'client/utils/usePersistableState';
 
 import PageDelete from './PageDelete';
 
-require('./dashboardPage.scss');
+import './dashboardPage.scss';
 
 type Props = {
 	pageData: Page & { layoutPubsByBlock: LayoutPubsByBlock<Pub> };

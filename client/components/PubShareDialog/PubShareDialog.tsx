@@ -15,7 +15,7 @@ import { pubUrl } from 'utils/canonicalUrls';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { PubPageData } from 'types';
 
-require('./pubShareDialog.scss');
+import './pubShareDialog.scss';
 
 type SharedProps = {
 	pubData: PubPageData;

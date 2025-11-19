@@ -13,7 +13,7 @@ import { Collection, Pub } from 'types';
 import { usePubContext } from '../../pubHooks';
 import CollectionsBarButton from './CollectionsBarButton';
 
-require('./collectionBrowser.scss');
+import './collectionBrowser.scss';
 
 type Props = {
 	collection: Collection;

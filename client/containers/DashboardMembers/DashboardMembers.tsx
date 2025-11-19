@@ -11,7 +11,7 @@ import {
 import { usePageContext } from 'utils/hooks';
 import { useMembersState } from 'client/utils/members/useMembers';
 
-require('./dashboardMembers.scss');
+import './dashboardMembers.scss';
 
 type Props = {
 	membersData: any;

@@ -5,7 +5,7 @@ import { Icon, IconName } from 'components';
 
 import { iconSize } from './constants';
 
-require('./overviewRowSkeleton.scss');
+import './overviewRowSkeleton.scss';
 
 type Props = {
 	className?: string;

@@ -9,7 +9,7 @@ import { useNotificationsState } from './useNotificationsState';
 import { UserNotificationsContext } from './userNotificationsContext';
 import { NotificationsState } from './types';
 
-require('./userNotifications.scss');
+import './userNotifications.scss';
 
 type ButtonRenderOptions = { hasUnreadNotifications: boolean };
 

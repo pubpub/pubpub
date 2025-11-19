@@ -8,7 +8,7 @@ import { generatePageBackground } from 'utils/pages';
 import { generatePubBackground } from 'utils/pubs';
 import { usePageContext, useThrottled } from 'utils/hooks';
 
-require('./search.scss');
+import './search.scss';
 
 type Props = {
 	searchData: any;

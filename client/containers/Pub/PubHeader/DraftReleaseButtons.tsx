@@ -12,7 +12,7 @@ import { expect } from 'utils/assert';
 import { usePubContext } from '../pubHooks';
 import ResponsiveHeaderButton from './ResponsiveHeaderButton';
 
-require('./draftReleaseButtons.scss');
+import './draftReleaseButtons.scss';
 
 export type DraftReleaseButtonsProps = {
 	pubData: PubPageData;

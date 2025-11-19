@@ -3,7 +3,7 @@ import { Classes } from '@blueprintjs/core';
 
 import { GridWrapper } from 'components';
 
-require('./pricing.scss');
+import './pricing.scss';
 
 const Pricing = () => {
 	return (

@@ -1,8 +1,9 @@
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 
 import { DuplicateEmailError, createSignup } from './queries';
 
-app.post('/api/signup', (req, res) => {
+router.post('/api/signup', (req, res) => {
 	return createSignup(req.body, req.hostname)
 		.then(() => {
 			return res.status(201).json(true);

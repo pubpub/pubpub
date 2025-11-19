@@ -8,7 +8,7 @@ import { getDashUrl } from 'utils/dashboard';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getSlugError } from 'client/utils/slug';
 
-require('./createPageDialog.scss');
+import './createPageDialog.scss';
 
 type Props = {
 	communityData: any;

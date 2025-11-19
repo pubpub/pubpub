@@ -7,7 +7,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { CitationStyleKind } from 'utils/citations';
 import { ZoteroCSLJSON } from 'types';
 
-require('./citationBuilder.scss');
+import './citationBuilder.scss';
 
 type Props = {
 	citationStyle: CitationStyleKind;

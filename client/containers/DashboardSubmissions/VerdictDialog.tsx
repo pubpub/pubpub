@@ -7,7 +7,7 @@ import { getEmptyDoc } from 'client/components/Editor/utils/doc';
 
 import WorkflowTextEditor from '../DashboardSubmissionWorkflow/WorkflowTextEditor';
 
-require('./verdictDialog.scss');
+import './verdictDialog.scss';
 
 type Props = {
 	isOpen: boolean;

@@ -13,7 +13,7 @@ import Discussion from './Discussion';
 import DiscussionInput from './Discussion/DiscussionInput';
 import { groupDiscussionsByLine } from './discussionUtils';
 
-require('./pubDiscussions.scss');
+import './pubDiscussions.scss';
 
 type Props = {
 	filterDiscussions?: (...args: any[]) => any;

@@ -15,7 +15,7 @@ import LoginButton from './LoginButton';
 import CreatePubButton from './CreatePubButton';
 import GlobalControlsButton from './GlobalControlsButton';
 
-require('./globalControls.scss');
+import './globalControls.scss';
 
 type Props = {
 	loggedIn: boolean;

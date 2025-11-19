@@ -3,7 +3,7 @@ import { Tooltip } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
-require('./labelWithInfo.scss');
+import './labelWithInfo.scss';
 
 type Props = {
 	label: React.ReactNode;

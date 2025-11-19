@@ -16,7 +16,7 @@ import { EditorChangeObject } from 'components/Editor';
 import CommandMenu, { CommandMenuDisclosureProps } from './CommandMenu';
 import { CommandDefinition } from '../Editor/commands/types';
 
-require('./blockTypeSelector.scss');
+import './blockTypeSelector.scss';
 
 type Props = {
 	isSmall: boolean;

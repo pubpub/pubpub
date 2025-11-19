@@ -10,7 +10,7 @@ import { CommunityWithSpam } from './types';
 import { useSpamCommunities } from './useSpamCommunities';
 import CommunitySpamEntry from './CommunitySpamEntry';
 
-require('./communitySpam.scss');
+import './communitySpam.scss';
 
 type Props = {
 	communities: CommunityWithSpam[];

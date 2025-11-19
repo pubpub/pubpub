@@ -2,7 +2,8 @@ import React from 'react';
 
 import Html from 'server/Html';
 import { getManyPubs } from 'server/pub/queryMany';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { NotFoundError, handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
@@ -29,7 +30,7 @@ const getPubsWithReviews = async (initialData: InitialData) => {
 	return pubs.sanitize(initialData);
 };
 
-app.get(
+router.get(
 	['/dash/reviews', '/dash/collection/:collectionSlug/reviews', '/dash/pub/:pubSlug/reviews'],
 	async (req, res, next) => {
 		try {

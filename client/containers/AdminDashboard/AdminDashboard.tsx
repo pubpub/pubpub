@@ -1,7 +1,7 @@
 import React from 'react';
 import IframeResizer from 'iframe-resizer-react';
 
-require('./adminDashboard.scss');
+import './adminDashboard.scss';
 
 type Props = {
 	impactData: any;

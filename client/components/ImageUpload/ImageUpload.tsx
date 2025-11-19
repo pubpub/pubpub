@@ -6,7 +6,7 @@ import ImageCropper from 'components/ImageCropper/ImageCropper';
 import Icon from 'components/Icon/Icon';
 import { s3Upload } from 'client/utils/upload';
 
-require('./imageUpload.scss');
+import './imageUpload.scss';
 
 const noopImageHandler = (s: any) => {
 	void s;

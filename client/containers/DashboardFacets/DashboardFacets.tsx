@@ -4,7 +4,7 @@ import { Button } from '@blueprintjs/core';
 import { DashboardFrame, FacetEditor } from 'components';
 import { useFacetsState } from 'client/utils/useFacets';
 
-require('./dashboardFacets.scss');
+import './dashboardFacets.scss';
 
 const DashboardFacets = () => {
 	const {

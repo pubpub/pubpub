@@ -11,7 +11,7 @@ import NavBuilderList from './NavBuilderList';
 import NavBuilderRow from './NavBuilderRow';
 import { NavBuilderContext } from './navBuilderContext';
 
-require('./navBuilder.scss');
+import './navBuilder.scss';
 
 type Props = {
 	initialNav: CommunityNavigationEntry[];

@@ -4,7 +4,7 @@ import { Classes } from '@blueprintjs/core';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-require('./inputField.scss');
+import './inputField.scss';
 
 const propTypes = {
 	autocomplete: PropTypes.string,

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import { Button, Icon } from '@blueprintjs/core';
 
-require('./pubBottomSection.scss');
+import './pubBottomSection.scss';
 
 type AccentedIconButtonProps = {
 	accentColor: string;

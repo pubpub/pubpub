@@ -6,7 +6,7 @@ import { Editor } from 'components';
 
 import SpubHeaderTab from './SpubHeaderTab';
 
-require('./instructionsTab.scss');
+import './instructionsTab.scss';
 
 type Props = {
 	onBeginSubmission: () => void;

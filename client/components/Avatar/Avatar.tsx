@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getResizedUrl } from 'utils/images';
 import { usePageContext } from 'utils/hooks';
 
-require('./avatar.scss');
+import './avatar.scss';
 
 type Props = {
 	width: number;

@@ -1,10 +1,12 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { User } from 'types';
 
 import { sleep } from 'utils/promises';
 import { createPasswordReset, updatePasswordReset } from './queries';
 
-app.post(
+router.post(
 	'/api/password-reset',
 	wrap(async (req, res) => {
 		const user = req.user || {};
@@ -24,7 +26,7 @@ app.post(
 	}),
 );
 
-app.put(
+router.put(
 	'/api/password-reset',
 	wrap(async (req, res) => {
 		const user = req.user || {};

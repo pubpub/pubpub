@@ -3,7 +3,7 @@ import { Classes, Menu, MenuItem } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
-require('./sortList.scss');
+import './sortList.scss';
 
 type Props = {
 	selected: string;

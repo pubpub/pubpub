@@ -1,8 +1,10 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 
 import { destroyIntegrationDataOAuth1 } from './queries';
 
-app.delete(
+router.delete(
 	'/api/integrationDataOAuth1',
 	wrap((req, res) =>
 		destroyIntegrationDataOAuth1(req.body.id, req.user.id).then(() =>

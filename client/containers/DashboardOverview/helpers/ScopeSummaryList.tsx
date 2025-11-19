@@ -7,7 +7,7 @@ import { getSchemaForKind } from 'utils/collections/schemas';
 import { enIndefiniteArticle, capitalize } from 'utils/strings';
 import { MinimalScopeSummary } from 'utils/scopeSummaries';
 
-require('./scopeSummaryList.scss');
+import './scopeSummaryList.scss';
 
 type Props = {
 	scope: Omit<Community | Collection, 'scopeSummary'> & { scopeSummary: MinimalScopeSummary };

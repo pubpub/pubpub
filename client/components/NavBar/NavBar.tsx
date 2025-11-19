@@ -13,7 +13,7 @@ import { usePageContext } from 'utils/hooks';
 import { GridWrapper, Icon } from 'components';
 import { Menu, MenuItem } from 'components/Menu';
 
-require('./navBar.scss');
+import './navBar.scss';
 
 const propTypes = {
 	previewContext: PropTypes.object,

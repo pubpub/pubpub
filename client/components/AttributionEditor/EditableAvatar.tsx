@@ -5,7 +5,7 @@ import { Button as RKButton } from 'reakit/Button';
 
 import { Avatar, ImageUpload, Icon } from 'components';
 
-require('./editableAvatar.scss');
+import './editableAvatar.scss';
 
 type Props = {
 	attribution: {

@@ -1,11 +1,13 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { ForbiddenError } from 'server/utils/errors';
 import { getPub } from 'server/utils/queryHelpers';
 
 import { canCreateSubmission, canUpdateSubmission, canDeleteSubmission } from './permissions';
 import { createSubmission, updateSubmission, destroySubmission } from './queries';
 
-app.post(
+router.post(
 	'/api/submissions',
 	wrap(async (req, res) => {
 		const { submissionWorkflowId } = req.body;
@@ -23,7 +25,7 @@ app.post(
 	}),
 );
 
-app.put(
+router.put(
 	'/api/submissions',
 	wrap(async (req, res) => {
 		const { status, id } = req.body;
@@ -41,7 +43,7 @@ app.put(
 	}),
 );
 
-app.delete(
+router.delete(
 	'/api/submissions',
 	wrap(async (req, res) => {
 		const { id } = req.body;

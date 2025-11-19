@@ -26,7 +26,7 @@ import {
 } from 'components/Editor/plugins/suggestedEdits/resolve';
 import { hasSuggestions } from 'components/Editor/plugins/suggestedEdits/operations';
 
-require('./pubReleaseDialog.scss');
+import './pubReleaseDialog.scss';
 
 type Props = {
 	historyKey?: number;

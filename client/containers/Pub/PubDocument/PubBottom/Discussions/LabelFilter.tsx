@@ -14,7 +14,7 @@ import uuidv4 from 'uuid/v4';
 import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./labelFilter.scss');
+import './labelFilter.scss';
 
 type OwnProps = {
 	pubData: any;

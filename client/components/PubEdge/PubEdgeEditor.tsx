@@ -9,7 +9,7 @@ import { ExternalPublication } from 'types';
 import PubEdgeLayout from './PubEdgeLayout';
 import PubEdgeDescriptionButton from './PubEdgeDescriptionButton';
 
-require('./pubEdge.scss');
+import './pubEdge.scss';
 
 export type PubEdgeEditorProps = {
 	externalPublication: ExternalPublication;

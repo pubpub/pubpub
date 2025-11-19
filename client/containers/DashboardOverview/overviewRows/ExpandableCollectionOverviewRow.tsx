@@ -13,7 +13,7 @@ import PubOverviewRow from './PubOverviewRow';
 import LoadMorePubsRow from './LoadMorePubsRow';
 import SpecialRow from './SpecialRow';
 
-require('./expandableCollectionOverviewRow.scss');
+import './expandableCollectionOverviewRow.scss';
 
 type Props = {
 	collection: Collection;

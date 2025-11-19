@@ -6,7 +6,7 @@ import { DocJson } from 'types';
 import Editor, { getTextFromDoc, EditorChangeObject, OnEditFn } from 'components/Editor';
 import { FormattingBarButtonData } from '../FormattingBar/types';
 
-require('./minimalEditor.scss');
+import './minimalEditor.scss';
 
 type Props = {
 	constrainHeight?: boolean;

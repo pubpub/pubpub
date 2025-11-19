@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Html from 'server/Html';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import type { Request, Response } from 'express';
 import { getUser } from 'server/utils/queryHelpers';
 import { handleErrors } from 'server/utils/errors';
@@ -50,7 +51,7 @@ const setSurrogateKeys = (
 	res.setHeader('Surrogate-Key', surrogateKeys);
 };
 
-app.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
+router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req);
 		const customScripts = !initialData.locationData.isBasePubPub

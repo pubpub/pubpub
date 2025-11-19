@@ -20,7 +20,7 @@ import {
 	SocialItem,
 } from 'client/utils/navigation';
 
-require('./footer.scss');
+import './footer.scss';
 
 type OwnProps = {
 	previewContext?: any;

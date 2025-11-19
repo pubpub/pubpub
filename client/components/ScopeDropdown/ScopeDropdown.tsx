@@ -11,7 +11,7 @@ import { pubPubIcons } from 'client/utils/icons';
 import { Tooltip } from '@blueprintjs/core';
 import { expect } from 'utils/assert';
 
-require('./scopeDropdown.scss');
+import './scopeDropdown.scss';
 
 type Scope = {
 	type: string;

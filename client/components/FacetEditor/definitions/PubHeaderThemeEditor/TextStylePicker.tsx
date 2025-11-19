@@ -6,7 +6,7 @@ import { usePageContext } from 'utils/hooks';
 import { FacetPropEditorProps } from '../../types';
 import TextStyleChoice from './TextStyleChoice';
 
-require('./textStylePicker.scss');
+import './textStylePicker.scss';
 
 type Props = FacetPropEditorProps<typeof PubHeaderTheme, 'textStyle'>;
 

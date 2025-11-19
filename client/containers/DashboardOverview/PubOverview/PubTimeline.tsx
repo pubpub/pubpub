@@ -8,7 +8,7 @@ import { formatDate } from 'utils/dates';
 import { pubUrl } from 'utils/canonicalUrls';
 import { SanitizedPubData } from 'types';
 
-require('./pubTimeline.scss');
+import './pubTimeline.scss';
 
 type Props = {
 	pubData: SanitizedPubData;

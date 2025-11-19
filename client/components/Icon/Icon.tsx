@@ -11,7 +11,7 @@ import { PubPubIconName, pubPubIcons } from '../../utils/icons';
 
 import customIcons from './customIcons';
 
-require('./icon.scss');
+import './icon.scss';
 
 type CustomIconName = keyof typeof customIcons;
 export type IconName = BlueprintIconName | CustomIconName;

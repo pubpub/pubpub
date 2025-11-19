@@ -13,7 +13,7 @@ import {
 	isStandaloneComponentDeposit,
 } from 'utils/crossref/parseDeposit';
 
-require('./assignDoiPreview.scss');
+import './assignDoiPreview.scss';
 
 type OwnProps = {
 	crossrefDepositRecord: any;

@@ -26,7 +26,7 @@ extendZodWithOpenApi(z);
 
 const c = initContract();
 
-const router = {
+export const router = {
 	/** Methods for dealing with authentication */
 	auth: authRouter as AuthRouter,
 	/** @internal */

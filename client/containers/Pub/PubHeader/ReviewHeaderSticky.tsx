@@ -13,7 +13,7 @@ import { usePubContext } from '../pubHooks';
 import Review from './Review/Review';
 import ReviewerDialog from './Review/ReviewerDialog';
 
-require('./reviewHeaderSticky.scss');
+import './reviewHeaderSticky.scss';
 
 const ReviewHeaderSticky = () => {
 	const { pubData, updatePubData } = usePubContext();

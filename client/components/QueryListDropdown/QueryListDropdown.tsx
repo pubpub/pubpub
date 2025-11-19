@@ -7,7 +7,7 @@ import {
 	IQueryListProps,
 } from '@blueprintjs/select';
 
-require('./queryListDropdown.scss');
+import './queryListDropdown.scss';
 
 type SharedQueryListProps<Item> = Pick<
 	IQueryListProps<Item>,

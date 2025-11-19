@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Avatar } from 'components';
 
-require('./contributorCondensed.scss');
+import './contributorCondensed.scss';
 
 const propTypes = {
 	attribution: PropTypes.object.isRequired,

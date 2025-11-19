@@ -5,7 +5,7 @@ import { Checkbox } from 'reakit/Checkbox';
 import { ActivityFilter, ScopeId } from 'types';
 import { Icon, IconName } from 'components';
 
-require('./activityFilters.scss');
+import './activityFilters.scss';
 
 type Props = {
 	activeFilters: ActivityFilter[];

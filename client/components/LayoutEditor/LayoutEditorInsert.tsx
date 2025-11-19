@@ -13,7 +13,7 @@ import { Page } from 'types';
 import { LayoutBlock, PubSortOrder } from 'types/layout';
 import { Icon } from 'components';
 
-require('./layoutEditorInsert.scss');
+import './layoutEditorInsert.scss';
 
 type Props = {
 	communityData: {

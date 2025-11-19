@@ -40,8 +40,8 @@ import SpamBanner from './SpamBanner';
 import getPaths from './paths';
 import { usePageState } from './usePageState';
 
-require('../../styles/base.scss');
-require('./app.scss');
+import '../../styles/base.scss';
+import './app.scss';
 
 type Props = {
 	chunkName: string;

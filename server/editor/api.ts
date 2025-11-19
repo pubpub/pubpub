@@ -1,17 +1,18 @@
 import request from 'request-promise';
 
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { getStructuredCitations } from 'server/utils/citations';
 import { renderToKatexString } from 'utils/katex';
 
-app.post('/api/editor/citation-format', (req, res) => {
+router.post('/api/editor/citation-format', (req, res) => {
 	const { structuredValues, citationStyleKind, inlineStyleKind } = req.body;
 	return getStructuredCitations(structuredValues, citationStyleKind, inlineStyleKind)
 		.then((output) => res.status(200).json(output))
 		.catch((err) => res.status(500).json(err));
 });
 
-app.post('/api/editor/latex-render', (req, res) => {
+router.post('/api/editor/latex-render', (req, res) => {
 	try {
 		const renderedHTML = renderToKatexString(req.body.value, {
 			displayMode: req.body.isBlock,
@@ -23,7 +24,7 @@ app.post('/api/editor/latex-render', (req, res) => {
 	}
 });
 
-app.get('/api/editor/embed', (req, res) => {
+router.get('/api/editor/embed', (req, res) => {
 	const type = req.query.type;
 	const input = req.query.input;
 	const oembedUrls = {

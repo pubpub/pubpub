@@ -8,7 +8,7 @@ import { expect } from 'utils/assert';
 import LandingPageFeatureManager, { RenderFeatureProps } from './LandingPageFeatureManager';
 import FeaturedCommunityItem from './FeaturedCommunityItem';
 
-require('./landingPageFeatures.scss');
+import './landingPageFeatures.scss';
 
 type Props = {
 	landingPageFeatures: LandingPageFeaturesType<false>;

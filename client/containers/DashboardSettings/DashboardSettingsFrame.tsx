@@ -16,7 +16,7 @@ import { useViewport } from 'client/utils/useViewport';
 import AutosaveIndicator from './AutosaveIndicator';
 import IconBullet from './IconBullet';
 
-require('./dashboardSettingsFrame.scss');
+import './dashboardSettingsFrame.scss';
 
 type Section = React.ReactNode | (() => React.ReactNode);
 

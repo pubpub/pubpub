@@ -1,4 +1,6 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { UserSubscriptionStatus } from 'types';
 
 import { setUserSubscriptionStatus } from '../shared/queries';
@@ -11,7 +13,7 @@ const unwrapRequest = (req: any) => {
 	};
 };
 
-app.put(
+router.put(
 	'/api/pubs/subscriptions',
 	wrap(async (req, res) => {
 		const { pubId, userId, status } = unwrapRequest(req);

@@ -15,7 +15,7 @@ import { fuzzyMatchCollection } from 'utils/fuzzyMatch';
 import * as api from 'client/utils/collections/api';
 import { getDashUrl } from 'utils/dashboard';
 
-require('./pubCollectionsListing.scss');
+import './pubCollectionsListing.scss';
 
 type CollectionPub = BareCollectionPub & { collection: Collection };
 type Props = {

@@ -3,7 +3,7 @@ import { Button } from '@blueprintjs/core';
 import { Icon, IconName } from 'components';
 import { s3Upload } from 'client/utils/upload';
 
-require('./fileUploadButton.scss');
+import './fileUploadButton.scss';
 
 type OwnProps = {
 	onUploadFinish: (...args: any[]) => any;

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Classes } from '@blueprintjs/core';
 
-require('./sharingCard.scss');
+import './sharingCard.scss';
 
 const propTypes = {
 	content: PropTypes.node.isRequired,

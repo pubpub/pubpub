@@ -6,7 +6,7 @@ import { usePageContext } from 'utils/hooks';
 
 import ScopePicker from './ScopePicker';
 
-require('./sideMenu.scss');
+import './sideMenu.scss';
 
 type Props = {
 	className?: string;

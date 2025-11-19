@@ -13,7 +13,7 @@ import { getBoundaryGroupsForSortedActivityItems } from './boundaries';
 import ActivityFilters from './ActivityFilters';
 import ActivityItemGroup from './ActivityItemGroup';
 
-require('./dashboardActivity.scss');
+import './dashboardActivity.scss';
 
 type Props = {
 	activityData: any;

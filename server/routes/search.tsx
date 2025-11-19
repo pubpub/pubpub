@@ -2,7 +2,8 @@ import React from 'react';
 import algoliasearch from 'algoliasearch';
 
 import Html from 'server/Html';
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
@@ -52,7 +53,7 @@ const createFilter = (
 	return maybeLimitedToCommunity;
 };
 
-app.get('/search', async (req, res, next) => {
+router.get('/search', async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req);
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);

@@ -11,7 +11,7 @@ import { PubPageData } from 'types';
 import { ClickToCopyButton } from 'components';
 import { expect } from 'utils/assert';
 
-require('./pubHistoricalNotice.scss');
+import './pubHistoricalNotice.scss';
 
 type Props = {
 	pubData: PubPageData;

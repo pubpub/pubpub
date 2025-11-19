@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { IconName, Icon } from 'components';
 
-require('./overviewSection.scss');
+import './overviewSection.scss';
 
 type Props = {
 	children: React.ReactNode;

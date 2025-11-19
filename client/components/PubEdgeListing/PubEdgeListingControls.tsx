@@ -5,7 +5,7 @@ import { toTitleCase, joinOxford } from 'utils/strings';
 
 import { Mode, allFilters, filterToPlural } from './constants';
 
-require('./pubEdgeListingControls.scss');
+import './pubEdgeListingControls.scss';
 
 type OwnProps = {
 	accentColor: string;

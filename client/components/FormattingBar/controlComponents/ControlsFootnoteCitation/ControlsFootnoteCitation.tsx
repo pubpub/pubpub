@@ -10,7 +10,7 @@ import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 import CitationBuilder from './CitationBuilder';
 import InlineLabelEditor from './InlineLabelEditor';
 
-require('../controls.scss');
+import '../controls.scss';
 
 type Props = {
 	onClose: (...args: any[]) => any;

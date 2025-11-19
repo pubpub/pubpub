@@ -1,4 +1,6 @@
-import app, { wrap } from 'server/server';
+import { wrap } from 'server/wrap';
+import { Router } from 'express';
+export const router = Router();
 import { canUserSeeThread } from 'server/thread/queries';
 import { ForbiddenError } from 'server/utils/errors';
 import { UserSubscriptionStatus } from 'types';
@@ -13,7 +15,7 @@ const unwrapRequest = (req: any) => {
 	};
 };
 
-app.put(
+router.put(
 	'/api/threads/subscriptions',
 	wrap(async (req, res) => {
 		const { threadId, userId, status } = unwrapRequest(req);

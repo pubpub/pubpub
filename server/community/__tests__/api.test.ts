@@ -1,14 +1,9 @@
-import sinon from 'sinon';
 import uuid from 'uuid';
 
-import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
+import { expectCreatedActivityItem, login, modelize, setup, teardown } from 'stubstub';
 
 import { Community } from 'server/models';
-import * as mailchimp from 'server/utils/mailchimp';
-import * as slack from 'server/utils/slack';
-
-let mailchimpStub;
-let slackStub;
+import { vi } from 'vitest';
 
 const models = modelize`
 	Community existingCommunity {
@@ -30,9 +25,21 @@ const models = modelize`
 	}
 `;
 
+const { subscribeUser, postToSlackAboutNewCommunity } = vi.hoisted(() => {
+	return {
+		subscribeUser: vi.fn(),
+		postToSlackAboutNewCommunity: vi.fn(),
+	};
+});
+
 setup(beforeAll, async () => {
-	mailchimpStub = sinon.stub(mailchimp, 'subscribeUser');
-	slackStub = sinon.stub(slack, 'postToSlackAboutNewCommunity');
+	vi.mock('server/utils/mailchimp', () => ({
+		subscribeUser,
+	}));
+	vi.mock('server/utils/slack', () => ({
+		postToSlackAboutNewCommunity,
+	}));
+
 	await models.resolve();
 });
 
@@ -155,6 +162,6 @@ describe('/api/communities', () => {
 });
 
 teardown(afterAll, () => {
-	mailchimpStub.restore();
-	slackStub.restore();
+	vi.clearAllMocks();
+	vi.resetAllMocks();
 });

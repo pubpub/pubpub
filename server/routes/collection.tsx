@@ -1,7 +1,8 @@
 import React from 'react';
 import { Op } from 'sequelize';
 
-import app from 'server/server';
+import { Router } from 'express';
+export const router = Router();
 import Html from 'server/Html';
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
@@ -63,7 +64,7 @@ const getLayoutWithSubmissionWorkflowBlock = async (collection: types.Collection
 	return layout;
 };
 
-app.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, next) => {
+router.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
 	}

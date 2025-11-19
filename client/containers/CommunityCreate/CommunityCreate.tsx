@@ -6,7 +6,7 @@ import { slugifyString } from 'utils/strings';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
-require('./communityCreate.scss');
+import './communityCreate.scss';
 
 const CommunityCreate = () => {
 	const { loginData } = usePageContext();

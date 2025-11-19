@@ -5,7 +5,7 @@ import { FormattingBar, FormattingBarButtonData } from 'components/FormattingBar
 import { mathToggleKind, mathToggleLabel } from 'components/Editor/commands';
 import { EditorChangeObjectWithNode } from '../types';
 
-require('./controls.scss');
+import './controls.scss';
 
 type Props = {
 	editorChangeObject: EditorChangeObjectWithNode;

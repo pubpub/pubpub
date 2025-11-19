@@ -22,7 +22,7 @@ import { Pub, PubHistoryState } from 'types';
 import { renderTimeLabelForDate } from './utils';
 import RestoreHistoryDialog from './RestoreHistoryDialog';
 
-require('./pubHistoryViewer.scss');
+import './pubHistoryViewer.scss';
 
 type Props = {
 	pubData: Pub;

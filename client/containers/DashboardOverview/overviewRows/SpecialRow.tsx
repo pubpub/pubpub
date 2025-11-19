@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { usePageContext } from 'utils/hooks';
 
-require('./specialRow.scss');
+import './specialRow.scss';
 
 type Props = {
 	isDark?: boolean;
