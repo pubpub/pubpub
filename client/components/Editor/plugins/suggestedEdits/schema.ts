@@ -1,4 +1,4 @@
-import { MarkSpec, NodeSpec, TagParseRule } from 'prosemirror-model';
+import { MarkSpec, Node, NodeSpec, TagParseRule } from 'prosemirror-model';
 
 import { arraysHaveSameElements } from 'utils/arrays';
 import { assert } from 'utils/assert';

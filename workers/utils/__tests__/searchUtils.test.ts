@@ -68,6 +68,8 @@ const models = modelize`
     }
 `;
 
+// this needs to be hoisted, you cannot mocke that imagedoc thing otherwise
+// @ts-expect-error - this is  fine, vitest can deal with it
 const { getPubDraftDoc } = await vi.hoisted(async () => {
 	const imageDoc = await import('utils/storybook/data').then((module) => module.imageDoc);
 	return {
