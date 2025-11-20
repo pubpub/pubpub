@@ -2,7 +2,7 @@
 	"$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
 	"files": {
 		"ignoreUnknown": true,
-		"includes": ["**", "!!**/*.js", "!!.vscode"]
+		"includes": ["**", "!!**/*.js", "!!.vscode", "!!.apt", "!!.heroku"]
 	},
 	"formatter": {
 		"enabled": true,
