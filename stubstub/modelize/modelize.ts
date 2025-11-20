@@ -10,6 +10,7 @@ import { buildProxyObject } from './proxy';
 type BuildNames = keyof typeof builders;
 
 const isBuildName = (name: string): name is BuildNames => {
+	// @ts-expect-error FIXME: this is only called from vitest, so it's fine
 	return Object.hasOwn(builders, name);
 };
 

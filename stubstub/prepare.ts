@@ -24,7 +24,7 @@ export const setup = (
 };
 
 export const teardown = (
-	afterFn: typeof afterAll,
+	afterFn: typeof beforeAll,
 	actionsFn?: (() => any) | (() => Promise<any>),
 ) => {
 	if (afterFn.toString().startsWith('before')) {
