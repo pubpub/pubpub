@@ -1,12 +1,12 @@
+import type { PubPageData } from 'types';
+
 import React from 'react';
 
-import { PubPageData } from 'types';
 import { usePubNotes } from '../../usePubNotes';
-
-import LicenseSection from './LicenseSection';
-import SearchableNoteSection from './SearchableNoteSection';
 import DiscussionsSection from './Discussions/DiscussionsSection';
+import LicenseSection from './LicenseSection';
 import ReadNextSection from './ReadNextSection';
+import SearchableNoteSection from './SearchableNoteSection';
 
 import './pubBottom.scss';
 

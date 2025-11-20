@@ -1,15 +1,17 @@
+import type { CommunityNavigationEntry } from 'types';
+
 import React, { useState } from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
+
 import { Button } from '@blueprintjs/core';
+import { DragDropContext } from 'react-beautiful-dnd';
 
-import { generateHash } from 'utils/hashes';
 import { isCommunityNavigationMenu } from 'client/utils/navigation';
-import { CommunityNavigationEntry } from 'types';
+import { generateHash } from 'utils/hashes';
 
-import PageCollectionAutocomplete from './PageCollectionAutocomplete';
 import NavBuilderList from './NavBuilderList';
 import NavBuilderRow from './NavBuilderRow';
 import { NavBuilderContext } from './navBuilderContext';
+import PageCollectionAutocomplete from './PageCollectionAutocomplete';
 
 import './navBuilder.scss';
 

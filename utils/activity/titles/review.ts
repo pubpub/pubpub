@@ -1,11 +1,13 @@
-import {
+import type {
 	PubReviewCommentAddedActivityItem,
 	PubReviewCreatedActivityItem,
 	PubReviewUpdatedActivityItem,
 } from 'types';
+
+import type { TitleRenderer } from '../../../client/utils/activity/types';
+
 import { getDashUrl } from 'utils/dashboard';
 
-import { TitleRenderer } from '../../../client/utils/activity/types';
 import { getPubFromContext, getReviewFromContext } from './util';
 
 type AcceptedItem =

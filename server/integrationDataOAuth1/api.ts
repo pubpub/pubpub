@@ -1,5 +1,6 @@
-import { wrap } from 'server/wrap';
 import { Router } from 'express';
+
+import { wrap } from 'server/wrap';
 
 import { destroyIntegrationDataOAuth1 } from './queries';
 

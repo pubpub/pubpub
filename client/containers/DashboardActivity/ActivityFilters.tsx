@@ -1,9 +1,11 @@
+import type { ActivityFilter, ScopeId } from 'types';
+
 import React from 'react';
+
 import classNames from 'classnames';
 import { Checkbox } from 'reakit/Checkbox';
 
-import { ActivityFilter, ScopeId } from 'types';
-import { Icon, IconName } from 'components';
+import { Icon, type IconName } from 'components';
 
 import './activityFilters.scss';
 

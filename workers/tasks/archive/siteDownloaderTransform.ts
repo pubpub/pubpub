@@ -1,9 +1,11 @@
 /* global RequestInit, RequestInfo */
-import { PassThrough, Readable, Transform, TransformOptions } from 'node:stream';
-import { RewritingStream } from 'parse5-html-rewriting-stream';
-import type { StartTag } from 'parse5-sax-parser';
 
 import type * as streamWeb from 'node:stream/web';
+import type { StartTag } from 'parse5-sax-parser';
+
+import { PassThrough, Readable, Transform, type TransformOptions } from 'node:stream';
+import { RewritingStream } from 'parse5-html-rewriting-stream';
+
 import { defer } from 'server/utils/deferred';
 import { getAssetUrlFromResizedUrl } from 'utils/images';
 

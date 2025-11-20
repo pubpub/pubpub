@@ -1,7 +1,9 @@
-import { wrap } from 'server/wrap';
+import type { CustomScriptType } from 'types';
+
 import { Router } from 'express';
+
 import { ForbiddenError } from 'server/utils/errors';
-import { CustomScriptType } from 'types';
+import { wrap } from 'server/wrap';
 
 import { canSetCustomScript } from './permissions';
 import { setCustomScriptForCommunity } from './queries';

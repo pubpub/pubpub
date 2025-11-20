@@ -1,11 +1,12 @@
-import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { z } from 'zod';
+
 import {
-	resourceKinds,
-	resourceDescriptors,
-	resourceSummaryKinds,
 	resourceContributorRoles,
+	resourceDescriptors,
+	resourceKinds,
 	resourceRelations,
+	resourceSummaryKinds,
 } from 'deposit/resource';
 
 extendZodWithOpenApi(z);

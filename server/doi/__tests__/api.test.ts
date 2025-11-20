@@ -1,7 +1,7 @@
+import { vi } from 'vitest';
+
 import { CrossrefDepositRecord } from 'server/models';
 import { login, modelize, setup, teardown } from 'stubstub';
-
-import { vi } from 'vitest';
 
 const models = modelize`
 	Community community {

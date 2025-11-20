@@ -1,12 +1,13 @@
 import React from 'react';
 
-import Html from 'server/Html';
 import { Router } from 'express';
-import { ForbiddenError, NotFoundError, handleErrors } from 'server/utils/errors';
+
+import { fetchActivityItems } from 'server/activityItem/fetch';
+import Html from 'server/Html';
+import { ForbiddenError, handleErrors, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { fetchActivityItems } from 'server/activityItem/fetch';
 
 export const router = Router();
 

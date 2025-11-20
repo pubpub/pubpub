@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
+
 import { Button, ButtonGroup, Checkbox, Icon, Popover, Radio } from '@blueprintjs/core';
 
-import { toTitleCase, joinOxford } from 'utils/strings';
+import { joinOxford, toTitleCase } from 'utils/strings';
 
-import { Mode, allFilters, filterToPlural } from './constants';
+import { allFilters, filterToPlural, Mode } from './constants';
 
 import './pubEdgeListingControls.scss';
 

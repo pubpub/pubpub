@@ -1,15 +1,14 @@
+import type { ZoteroStyleKind } from 'types';
+import type { CitationStyleKind } from 'utils/citations';
+
+import { Router } from 'express';
 import zoteroClient from 'zotero-api-client';
 
+import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { wrap } from 'server/wrap';
-import { Router } from 'express';
-import { CitationStyleKind } from 'utils/citations';
-
-import { ZoteroStyleKind } from 'types';
-
 import { expect } from 'utils/assert';
-import { ForbiddenError, BadRequestError, NotFoundError } from 'server/utils/errors';
 
-import { ZoteroIntegration, IntegrationDataOAuth1 } from '../models';
+import { IntegrationDataOAuth1, ZoteroIntegration } from '../models';
 
 export const router = Router();
 
@@ -53,13 +52,13 @@ router.get(
 		});
 
 		if (!zoteroIntegration) {
-			throw new NotFoundError(Error('No zotero integration found'));
+			throw new NotFoundError(new Error('No zotero integration found'));
 		}
 
 		const { integrationDataOAuth1 } = zoteroIntegration;
 
 		if (!integrationDataOAuth1) {
-			throw new ForbiddenError(Error('Zotero not authenticated'));
+			throw new ForbiddenError(new Error('Zotero not authenticated'));
 		}
 
 		const zoteroId = parseInt(expect(zoteroIntegration.zoteroUserId), 10);

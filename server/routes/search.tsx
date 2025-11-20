@@ -1,13 +1,15 @@
-import React from 'react';
-import algoliasearch from 'algoliasearch';
+import type { InitialData } from 'types';
 
-import Html from 'server/Html';
+import React from 'react';
+
+import algoliasearch from 'algoliasearch';
 import { Router } from 'express';
+
+import { getCustomScriptsForCommunity } from 'server/customScript/queries';
+import Html from 'server/Html';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { getCustomScriptsForCommunity } from 'server/customScript/queries';
-import { InitialData } from 'types';
 
 export const router = Router();
 

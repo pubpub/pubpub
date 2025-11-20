@@ -76,7 +76,7 @@ const mend = (pubId) => {
 					// nope
 				}
 			}
-			// eslint-disable-next-line no-console
+			// biome-ignore lint/suspicious/noConsole: shhhhhh
 			console.log(successfullyInvertedDocument);
 		}
 	}

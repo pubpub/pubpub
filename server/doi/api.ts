@@ -1,9 +1,9 @@
+import { Router } from 'express';
 import xmlbuilder from 'xmlbuilder';
 
 import { Release } from 'server/models';
-import { wrap } from 'server/wrap';
-import { Router } from 'express';
 import { ForbiddenError } from 'server/utils/errors';
+import { wrap } from 'server/wrap';
 import { parentToSupplementNeedsDoiError } from 'utils/crossref/createDeposit';
 
 import { getPermissions } from './permissions';

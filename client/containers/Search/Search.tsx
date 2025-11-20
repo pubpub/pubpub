@@ -1,12 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
-import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch';
+import React, { useEffect, useRef, useState } from 'react';
+
 import { Button, Classes, InputGroup, NonIdealState, Spinner, Tab, Tabs } from '@blueprintjs/core';
+import algoliasearch, { type SearchClient, type SearchIndex } from 'algoliasearch';
 
 import { Icon } from 'components';
+import { usePageContext, useThrottled } from 'utils/hooks';
 import { getResizedUrl } from 'utils/images';
 import { generatePageBackground } from 'utils/pages';
 import { generatePubBackground } from 'utils/pubs';
-import { usePageContext, useThrottled } from 'utils/hooks';
 
 import './search.scss';
 

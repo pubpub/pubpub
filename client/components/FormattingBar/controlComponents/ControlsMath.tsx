@@ -1,9 +1,11 @@
 /* eslint-disable react/no-danger */
+
+import type { EditorChangeObjectWithNode } from '../types';
+
 import React from 'react';
 
-import { FormattingBar, FormattingBarButtonData } from 'components/FormattingBar';
 import { mathToggleKind, mathToggleLabel } from 'components/Editor/commands';
-import { EditorChangeObjectWithNode } from '../types';
+import { FormattingBar, type FormattingBarButtonData } from 'components/FormattingBar';
 
 import './controls.scss';
 

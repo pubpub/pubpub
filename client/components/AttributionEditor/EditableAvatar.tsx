@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import classNames from 'classnames';
+
 import { Button, Spinner } from '@blueprintjs/core';
+import classNames from 'classnames';
 import { Button as RKButton } from 'reakit/Button';
 
-import { Avatar, ImageUpload, Icon } from 'components';
+import { Avatar, Icon, ImageUpload } from 'components';
 
 import './editableAvatar.scss';
 

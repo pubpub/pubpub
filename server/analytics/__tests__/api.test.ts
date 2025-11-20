@@ -1,11 +1,12 @@
+import { vi } from 'vitest';
+
 import { login, setup, teardown } from 'stubstub';
 import {
+	analyticsEventSchema,
 	type basePageViewSchema,
 	type PageViewPayload,
-	sharedEventPayloadSchema,
-	analyticsEventSchema,
+	type sharedEventPayloadSchema,
 } from 'utils/api/schemas/analytics';
-import { vi } from 'vitest';
 
 const baseTestPayload = {
 	type: 'page',

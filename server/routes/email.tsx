@@ -1,17 +1,18 @@
 import React from 'react';
+
+import { Router } from 'express';
+import { minify } from 'html-minifier';
+import juice from 'juice';
 import ReactDOMServer from 'react-dom/server';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
-import juice from 'juice';
-import { minify } from 'html-minifier';
 
-import { isProd } from 'utils/environment';
-import { Router } from 'express';
-import { handleErrors } from 'server/utils/errors';
-import { hostIsValid } from 'server/utils/routes';
-import { getDigestData } from 'server/utils/email/digest';
-import { getInitialData } from 'server/utils/initData';
-import { reset, globals } from 'components/Email/styles';
 import { Digest } from 'components/Email';
+import { globals, reset } from 'components/Email/styles';
+import { getDigestData } from 'server/utils/email/digest';
+import { handleErrors } from 'server/utils/errors';
+import { getInitialData } from 'server/utils/initData';
+import { hostIsValid } from 'server/utils/routes';
+import { isProd } from 'utils/environment';
 
 export const router = Router();
 

@@ -1,8 +1,10 @@
+import type { NodeLabelMap } from './types';
+
 import React, { useMemo } from 'react';
+
 import { Classes, Menu, MenuItem } from '@blueprintjs/core';
 
-import { buildLabel, getNodeLabelText, NodeReference } from './utils';
-import { NodeLabelMap } from './types';
+import { buildLabel, getNodeLabelText, type NodeReference } from './utils';
 
 import './referenceFinder.scss';
 

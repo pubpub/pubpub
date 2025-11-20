@@ -1,6 +1,7 @@
+import type { Callback, DocJson } from 'types';
+
 import React, { useEffect, useMemo } from 'react';
 
-import { Callback, DocJson } from 'types';
 import { MinimalEditor } from 'components';
 import { getAbstractDocFromPubDoc } from 'utils/pub/abstract';
 

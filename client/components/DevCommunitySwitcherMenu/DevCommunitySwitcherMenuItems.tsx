@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
-import { MenuItem, MenuItemDivider } from 'components/Menu';
 import { apiFetch } from 'client/utils/apiFetch';
+import { MenuItem, MenuItemDivider } from 'components/Menu';
 
 import { communities } from './communities';
 

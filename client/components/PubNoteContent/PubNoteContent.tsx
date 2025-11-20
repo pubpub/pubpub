@@ -1,5 +1,7 @@
 /* eslint-disable react/no-danger */
+
 import React, { useMemo } from 'react';
+
 import linkifyHtml from 'linkify-html';
 
 import './pubNoteContent.scss';

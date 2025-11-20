@@ -1,9 +1,13 @@
-import { isProd } from 'utils/environment';
 import { Router } from 'express';
+
+import { isProd } from 'utils/environment';
+
 import { activityItemRouter } from './activityItem/api';
+import { router as apiDocsRouter } from './apiDocs/api';
 import { router as citationRouter } from './citation/api';
 import { router as communityServicesRouter } from './communityServices/api';
 import { router as customScriptRouter } from './customScript/api';
+import { router as devApiRouter } from './dev/api';
 import { router as discussionRouter } from './discussion/api';
 import { router as doiRouter } from './doi/api';
 import { router as editorRouter } from './editor/api';
@@ -20,9 +24,9 @@ import { router as rssRouter } from './rss/api';
 import { router as searchRouter } from './search/api';
 import { router as signupRouter } from './signup/api';
 import { router as spamTagRouter } from './spamTag/api';
-import { router as subscribeRouter } from './subscribe/api';
-import { router as submissionWorkflowRouter } from './submissionWorkflow/api';
 import { router as submissionRouter } from './submission/api';
+import { router as submissionWorkflowRouter } from './submissionWorkflow/api';
+import { router as subscribeRouter } from './subscribe/api';
 import { router as threadCommentRouter } from './threadComment/api';
 import { router as userRouter } from './user/api';
 import { router as userDismissableRouter } from './userDismissable/api';
@@ -30,8 +34,6 @@ import { router as userNotificationRouter } from './userNotification/api';
 import { router as userNotificationPreferencesRouter } from './userNotificationPreferences/api';
 import { userSubscriptionRouter } from './userSubscription/api';
 import { router as zoteroIntegrationRouter } from './zoteroIntegration/api';
-import { router as apiDocsRouter } from './apiDocs/api';
-import { router as devApiRouter } from './dev/api';
 
 const apiRouter = Router()
 	.use(activityItemRouter)

@@ -1,6 +1,8 @@
-import { wrap } from 'server/wrap';
+import type { UserNotificationPreferences } from 'server/models';
+
 import { Router } from 'express';
-import { UserNotificationPreferences } from 'server/models';
+
+import { wrap } from 'server/wrap';
 
 import { updateUserNotificationPreferences } from './queries';
 

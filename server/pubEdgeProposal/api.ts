@@ -1,7 +1,8 @@
-import { wrap } from 'server/wrap';
 import { Router } from 'express';
+
+import { wrap } from 'server/wrap';
+import { extractDoiFromOrgUrl, isDoi } from 'utils/crossref/parseDoi';
 import { parseUrl } from 'utils/urls';
-import { isDoi, extractDoiFromOrgUrl } from 'utils/crossref/parseDoi';
 
 import {
 	createPubEdgeProposalFromArbitraryUrl,

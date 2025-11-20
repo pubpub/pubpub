@@ -1,13 +1,15 @@
-import React, { ClipboardEvent, useCallback, useEffect, useRef, useState } from 'react';
+import React, { type ClipboardEvent, useCallback, useEffect, useRef, useState } from 'react';
+
 import classNames from 'classnames';
 import { useBeforeUnload } from 'react-use';
 
 import { ClientOnly } from 'components';
+
 import {
-	trimDocumentFragment,
+	isChildOf,
 	parseDom,
 	sanitizeDocumentFragment,
-	isChildOf,
+	trimDocumentFragment,
 } from './titleEditorFunctions';
 
 import './titleEditor.scss';
@@ -162,7 +164,7 @@ export default function TitleEditor(props: Props) {
 		serverOrReadonlyView
 	) : (
 		<ClientOnly fallback={serverOrReadonlyView}>
-			{/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+			{/* biome-ignore lint/a11y: shhhhhh */}
 			<div
 				{...sharedProps}
 				contentEditable={true}

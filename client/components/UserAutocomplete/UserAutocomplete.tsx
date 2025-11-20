@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+
 import { Classes, MenuItem, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import debounce from 'debounce';
-import { Avatar } from 'components';
+
 import { apiFetch } from 'client/utils/apiFetch';
+import { Avatar } from 'components';
 
 import './userAutocomplete.scss';
 

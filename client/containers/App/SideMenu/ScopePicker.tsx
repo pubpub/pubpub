@@ -1,6 +1,7 @@
 import React from 'react';
+
+import { Icon, type IconName, MenuButton, ScopeDropdown } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { Icon, IconName, MenuButton, ScopeDropdown } from 'components';
 
 import './scopePicker.scss';
 

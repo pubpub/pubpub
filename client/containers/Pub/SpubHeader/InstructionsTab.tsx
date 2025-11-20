@@ -1,7 +1,9 @@
+import type { SubmissionWorkflow } from 'types';
+
 import React from 'react';
+
 import { Button, Icon } from '@blueprintjs/core';
 
-import { SubmissionWorkflow } from 'types';
 import { Editor } from 'components';
 
 import SpubHeaderTab from './SpubHeaderTab';

@@ -1,6 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import PropTypes from 'prop-types';
 import { SketchPicker } from 'react-color';
 
 import { usePageContext } from 'utils/hooks';

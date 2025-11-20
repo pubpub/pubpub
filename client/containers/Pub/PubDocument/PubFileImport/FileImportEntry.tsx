@@ -1,16 +1,17 @@
+import type { BaseSourceFile } from 'utils/api/schemas/import';
+
 import React from 'react';
+
 import {
-	Icon,
-	ProgressBar,
-	Tag,
 	Button,
-	Popover,
+	Classes,
+	Icon,
 	Menu,
 	MenuItem,
-	Classes,
+	Popover,
+	ProgressBar,
+	Tag,
 } from '@blueprintjs/core';
-
-import type { BaseSourceFile } from 'utils/api/schemas/import';
 
 import { getPotentialLabelsForFile } from './formats';
 
@@ -99,7 +100,7 @@ const FileImportEntry = (props: Props) => {
 	return (
 		<div className="file-import-entry">
 			<div className="file-title" title={clientPath}>
-				<span className="start" aria-label={clientPath}>
+				<span className="start">
 					<span aria-hidden="true">{displayTitleStart}</span>
 				</span>
 				<span className="end" aria-hidden="true">

@@ -1,20 +1,22 @@
+import type { Pub } from 'types';
+
 import React from 'react';
+
 import dateFormat from 'dateformat';
 
-import { collectionUrl } from 'utils/canonicalUrls';
-import {
-	getPubPublishedDateString,
-	getPubPublishedDate,
-	getPubUpdatedDate,
-	getPubCreatedDate,
-} from 'utils/pub/pubDates';
 import { ClickToCopyButton, ContributorsList } from 'components';
+import { collectionUrl } from 'utils/canonicalUrls';
 import { getAllPubContributors } from 'utils/contributors';
 import { usePageContext } from 'utils/hooks';
+import {
+	getPubCreatedDate,
+	getPubPublishedDate,
+	getPubPublishedDateString,
+	getPubUpdatedDate,
+} from 'utils/pub/pubDates';
 
-import { Pub } from 'types';
-import SmallHeaderButton from '../SmallHeaderButton';
 import CitationsPreview from '../CitationsPreview';
+import SmallHeaderButton from '../SmallHeaderButton';
 
 import './pubDetails.scss';
 

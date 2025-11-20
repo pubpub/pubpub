@@ -1,19 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
+import type { Community, Pub } from 'types';
+
+import React, { useEffect, useRef, useState } from 'react';
+
 import classNames from 'classnames';
 
-import { Pub, Community } from 'types';
-import { getResizedUrl } from 'utils/images';
-import { getPubPublishedDateString } from 'utils/pub/pubDates';
-import { isPubPublic } from 'utils/pub/permissions';
-import { getAllPubContributors } from 'utils/contributors';
-import { communityUrl, bestPubUrl } from 'utils/canonicalUrls';
-import { usePageContext } from 'utils/hooks';
 import { Icon, PreviewImage, PubTitle } from 'components';
+import { bestPubUrl, communityUrl } from 'utils/canonicalUrls';
+import { getAllPubContributors } from 'utils/contributors';
+import { usePageContext } from 'utils/hooks';
+import { getResizedUrl } from 'utils/images';
+import { isPubPublic } from 'utils/pub/permissions';
+import { getPubPublishedDateString } from 'utils/pub/pubDates';
 
+import ContributorAvatars from '../ContributorAvatars/ContributorAvatars';
 import ExpandButton from './ExpandButton';
 import ManyAuthorsByline from './ManyAuthorsByline';
 import PubPreviewEdges from './PubPreviewEdges';
-import ContributorAvatars from '../ContributorAvatars/ContributorAvatars';
 
 import './pubPreview.scss';
 

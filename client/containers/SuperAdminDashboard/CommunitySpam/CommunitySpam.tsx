@@ -1,14 +1,16 @@
+import type { CommunityWithSpam } from './types';
+
 import React, { useState } from 'react';
+
 import { Spinner } from '@blueprintjs/core';
 import { useUpdateEffect } from 'react-use';
 
-import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import { OverviewSearchGroup } from 'client/containers/DashboardOverview/helpers';
+import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
-import { filters, filtersById } from './filters';
-import { CommunityWithSpam } from './types';
-import { useSpamCommunities } from './useSpamCommunities';
 import CommunitySpamEntry from './CommunitySpamEntry';
+import { filters, filtersById } from './filters';
+import { useSpamCommunities } from './useSpamCommunities';
 
 import './communitySpam.scss';
 

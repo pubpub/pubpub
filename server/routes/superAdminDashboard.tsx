@@ -1,20 +1,22 @@
+import type * as types from 'types';
+
 import React from 'react';
 
-import * as types from 'types';
-import Html from 'server/Html';
 import { Router } from 'express';
-import {
-	superAdminTabKinds,
-	SuperAdminTabKind,
-	getSuperAdminTabUrl,
-	isSuperAdminTabKind,
-} from 'utils/superAdmin';
+
+import { filtersById as spamFiltersById } from 'client/containers/SuperAdminDashboard/CommunitySpam/filters';
+import Html from 'server/Html';
+import { getLandingPageFeatures } from 'server/landingPageFeature/queries';
+import { queryCommunitiesForSpamManagement } from 'server/spamTag/communities';
 import { ForbiddenError, handleErrors, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { getLandingPageFeatures } from 'server/landingPageFeature/queries';
-import { queryCommunitiesForSpamManagement } from 'server/spamTag/communities';
-import { filtersById as spamFiltersById } from 'client/containers/SuperAdminDashboard/CommunitySpam/filters';
+import {
+	getSuperAdminTabUrl,
+	isSuperAdminTabKind,
+	type SuperAdminTabKind,
+	superAdminTabKinds,
+} from 'utils/superAdmin';
 
 export const router = Router();
 

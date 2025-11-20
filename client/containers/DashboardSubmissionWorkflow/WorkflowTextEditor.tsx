@@ -1,7 +1,8 @@
+import type { DocJson } from 'types';
+
 import React from 'react';
 
 import { MinimalEditor } from 'components';
-import { DocJson } from 'types';
 
 import './workflowTextEditor.scss';
 

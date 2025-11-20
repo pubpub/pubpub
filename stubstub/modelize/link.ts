@@ -1,8 +1,10 @@
 /* eslint-disable no-restricted-syntax */
-import uuid from 'uuid/v4';
-import * as graphlib from 'graphlib';
 
-import { Model, ModelCtor } from 'sequelize';
+import type { Model, ModelCtor } from 'sequelize';
+
+import * as graphlib from 'graphlib';
+import uuid from 'uuid/v4';
+
 import { sequelizeModels } from './models';
 
 const modelByName = (modelName: string) => {

@@ -1,6 +1,8 @@
 import { Router } from 'express';
-import { getInitialData } from 'server/utils/initData';
+
 import { handleErrors, NotFoundError } from 'server/utils/errors';
+import { getInitialData } from 'server/utils/initData';
+
 import { getCommunityRss } from './queries';
 
 export const router = Router();

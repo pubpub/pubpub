@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { storiesOf } from '@storybook/react';
+
 import { Avatar } from 'components';
 
 import 'components/Avatar/avatar.scss';

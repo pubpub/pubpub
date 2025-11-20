@@ -1,9 +1,12 @@
 /* eslint-disable no-multi-assign */
+
 import React from 'react';
+
 import classNames from 'classnames';
 
 import { Menu, MenuItem } from 'components/Menu';
 import { usePageContext } from 'utils/hooks';
+
 import { usePubContext } from '../pubHooks';
 
 import './pubToc.scss';

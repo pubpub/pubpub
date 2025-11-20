@@ -1,14 +1,16 @@
+import type { Collection, Pub } from 'types';
+
 import React from 'react';
+
 import { Spinner } from '@blueprintjs/core';
 
+import { createReadingParamUrl, useCollectionPubs } from 'client/utils/collections';
+import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import { PubByline, PubTitle } from 'components';
 import { Menu, MenuItem, MenuItemDivider } from 'components/Menu';
-import { usePageContext } from 'utils/hooks';
-import { createReadingParamUrl, useCollectionPubs } from 'client/utils/collections';
-import { pubUrl, collectionUrl } from 'utils/canonicalUrls';
+import { collectionUrl, pubUrl } from 'utils/canonicalUrls';
 import { getSchemaForKind } from 'utils/collections/schemas';
-import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
-import { Collection, Pub } from 'types';
+import { usePageContext } from 'utils/hooks';
 
 import { usePubContext } from '../../pubHooks';
 import CollectionsBarButton from './CollectionsBarButton';

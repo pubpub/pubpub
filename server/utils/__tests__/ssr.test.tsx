@@ -1,9 +1,12 @@
 import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
+
 import Enzyme, { shallow } from 'enzyme';
-import dataInitial from 'utils/storybook/data/dataInitial';
-import { pubData, attributionsData } from 'utils/storybook/data';
+import Adapter from 'enzyme-adapter-react-16';
 import { vi } from 'vitest';
+
+import { attributionsData, pubData } from 'utils/storybook/data';
+import dataInitial from 'utils/storybook/data/dataInitial';
+
 import { generateMetaComponents } from '../ssr';
 
 Enzyme.configure({ adapter: new Adapter() });

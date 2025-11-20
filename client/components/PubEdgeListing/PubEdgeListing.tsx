@@ -1,15 +1,17 @@
+import type { PubPageData } from 'types';
+
 import React, { useCallback, useEffect, useState } from 'react';
-import classNames from 'classnames';
+
 import { NonIdealState } from '@blueprintjs/core';
+import classNames from 'classnames';
 
 import { unique } from 'utils/arrays';
 import { getDisplayedPubForPubEdge } from 'utils/pubEdge';
-import { PubPageData } from 'types';
 
-import { Filter, Mode, allFilters } from './constants';
+import { allFilters, Filter, Mode } from './constants';
 import PubEdgeListingCard from './PubEdgeListingCard';
-import PubEdgeListingCounter from './PubEdgeListingCounter';
 import PubEdgeListingControls from './PubEdgeListingControls';
+import PubEdgeListingCounter from './PubEdgeListingCounter';
 
 import './pubEdgeListing.scss';
 

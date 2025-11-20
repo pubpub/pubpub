@@ -1,12 +1,15 @@
+import type { Callback, PageContext } from 'types';
+
 import React, { useState } from 'react';
+
+import { AnchorButton, Button } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useEffectOnce } from 'react-use';
-import { AnchorButton, Button } from '@blueprintjs/core';
 
-import { shouldShowTosUpdate, markTosUpdateSeen } from 'client/utils/legal/tosUpdate';
 import { shouldShowGdprBanner, updateGdprConsent } from 'client/utils/legal/gdprConsent';
-import { Callback, PageContext } from 'types';
+import { markTosUpdateSeen, shouldShowTosUpdate } from 'client/utils/legal/tosUpdate';
 import { usePageContext } from 'utils/hooks';
+
 import { dismissUserDismissable } from '../../utils/userDismissable';
 
 import './legalBanner.scss';
@@ -164,8 +167,7 @@ const LegalBanner = () => {
 				{allBannersToShow.map((banner, index) => {
 					return (
 						<div
-							// eslint-disable-next-line react/no-array-index-key
-							key={index}
+							key={`${banner.title}-${index}`}
 							className={classNames(
 								'step',
 								banners.indexOf(banner) === bannerIndex && 'current',

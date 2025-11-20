@@ -1,9 +1,10 @@
 /* eslint-disable no-restricted-syntax */
-import path from 'path';
-import { ensureDir } from 'fs-extra';
-import tmp from 'tmp-promise';
 
-import { SourceFile } from 'utils/api/schemas/import';
+import type { SourceFile } from 'utils/api/schemas/import';
+
+import { ensureDir } from 'fs-extra';
+import path from 'path';
+import tmp from 'tmp-promise';
 
 import { downloadFileFromAssetStore, uploadFileToAssetStore } from './assetStore';
 import { convertFileTypeIfNecessary } from './images';

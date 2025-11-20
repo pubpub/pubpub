@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { DuplicateEmailError, createSignup } from './queries';
+import { createSignup, DuplicateEmailError } from './queries';
 
 export const router = Router();
 

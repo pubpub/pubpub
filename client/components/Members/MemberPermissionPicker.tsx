@@ -1,6 +1,7 @@
 import React from 'react';
-import classNames from 'classnames';
+
 import { Classes } from '@blueprintjs/core';
+import classNames from 'classnames';
 
 import { Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -18,7 +19,7 @@ type OwnProps = {
 
 const defaultProps = {
 	onSelect: (permissions) => {
-		/* eslint-disable-next-line no-console */
+		/* biome-ignore lint/suspicious/noConsole: shhhhhh */
 		console.log(permissions);
 	},
 };

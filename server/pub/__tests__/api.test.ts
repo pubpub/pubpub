@@ -1,13 +1,14 @@
-/* eslint-disable no-restricted-syntax, no-await-in-loop */
+/* biome-ignore-all lint/performance/noAwaitInLoops: shhhhhh */
+
+import type supertest from 'supertest';
+
 import uuid from 'uuid/v4';
+import { vi } from 'vitest';
 
-import supertest from 'supertest';
-
-import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
-import { CollectionPub, Pub, Draft } from 'server/models';
+import { CollectionPub, Draft, Pub } from 'server/models';
+import { expectCreatedActivityItem, login, modelize, setup, teardown } from 'stubstub';
 import { fullImportOutput, pubSchema } from 'utils/api/schemas/pub';
 
-import { vi } from 'vitest';
 import { issueCreatePubToken } from '../tokens';
 
 const defaultCollectionId = uuid();

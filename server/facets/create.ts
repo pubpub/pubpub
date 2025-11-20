@@ -1,9 +1,15 @@
-import { Sequelize, DataTypes } from 'sequelize';
 import type { Model, ModelCtor } from 'sequelize-typescript';
-import { FacetBinding } from './models/facetBinding';
-import { createSequelizeHooksForFacetModel } from './hooks';
 
-import { ALL_FACET_DEFINITIONS, FacetName, FacetProp, FacetProps } from '../../facets';
+import { DataTypes, type Sequelize } from 'sequelize';
+
+import {
+	ALL_FACET_DEFINITIONS,
+	type FacetName,
+	type FacetProp,
+	type FacetProps,
+} from '../../facets';
+import { createSequelizeHooksForFacetModel } from './hooks';
+import { FacetBinding } from './models/facetBinding';
 
 type Column = {
 	type: (typeof DataTypes)[keyof typeof DataTypes];

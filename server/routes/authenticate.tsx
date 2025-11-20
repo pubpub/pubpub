@@ -1,7 +1,8 @@
-import passport from 'passport';
-import { wrap } from 'server/wrap';
 import { Router } from 'express';
+import passport from 'passport';
+
 import { User } from 'server/models';
+import { wrap } from 'server/wrap';
 import { isDevelopment } from 'utils/environment';
 
 export const router = Router();

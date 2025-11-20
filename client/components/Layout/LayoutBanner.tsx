@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import Color from 'color';
-import { AnchorButton, Classes, Tooltip } from '@blueprintjs/core';
 
-import { getResizedUrl } from 'utils/images';
+import { AnchorButton, Classes, Tooltip } from '@blueprintjs/core';
+import Color from 'color';
+
 import { apiFetch } from 'client/utils/apiFetch';
+import { getResizedUrl } from 'utils/images';
 
 import './layoutBanner.scss';
 

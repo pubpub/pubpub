@@ -1,4 +1,5 @@
 import { NoteManagerCore } from 'utils/notesCore';
+
 import { apiFetch } from './apiFetch';
 
 const isClient = typeof window !== 'undefined';

@@ -1,5 +1,5 @@
-import { CitationStyleKind, CitationInlineStyleKind } from 'utils/citations';
-import { StructuredValue, RenderedStructuredValue } from 'utils/notes';
+import type { CitationInlineStyleKind, CitationStyleKind } from 'utils/citations';
+import type { RenderedStructuredValue, StructuredValue } from 'utils/notes';
 
 type Notes = Record<StructuredValue, RenderedStructuredValue>;
 

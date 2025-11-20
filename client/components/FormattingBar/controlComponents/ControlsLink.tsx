@@ -1,31 +1,33 @@
-import isUrl from 'is-url';
+import type { InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
+import type { RelationTypeName } from 'utils/pubEdge/relations';
+
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import {
-	Button,
 	AnchorButton,
-	InputGroup,
-	Checkbox,
-	Icon,
-	MenuItem,
-	Collapse,
-	Spinner,
+	Button,
 	Card,
+	Checkbox,
+	Collapse,
+	Icon,
+	InputGroup,
+	MenuItem,
+	Spinner,
 } from '@blueprintjs/core';
+import isUrl from 'is-url';
 import { useUpdateEffect } from 'react-use';
 import { useDebounce } from 'use-debounce';
 
+import { MenuButton } from 'client/components/Menu';
+import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
+import { apiFetch } from 'client/utils/apiFetch';
+import { PubEdgeListingCard } from 'components';
 import { moveToEndOfSelection } from 'components/Editor';
 import { usePubContext } from 'containers/Pub/pubHooks';
+import { assert } from 'utils/assert';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
-import { InboundEdge, OutboundEdge, Pub, PubEdge } from 'types';
-import { apiFetch } from 'client/utils/apiFetch';
-import { useDashboardEdges } from 'client/containers/DashboardEdges/useDashboardEdges';
-import { assert } from 'utils/assert';
-import { relationTypeDefinitions, createCandidateEdge, stripMarkupFromString } from 'utils/pubEdge';
-import { MenuButton } from 'client/components/Menu';
-import { PubEdgeListingCard } from 'components';
-import { RelationTypeName } from 'utils/pubEdge/relations';
+import { createCandidateEdge, relationTypeDefinitions, stripMarkupFromString } from 'utils/pubEdge';
 
 import './controlsLink.scss';
 
@@ -216,7 +218,7 @@ const ControlsLink = (props: Props) => {
 					);
 				}
 				setStatus(Status.EditingEdge);
-			} catch (error) {
+			} catch (_error) {
 				setStatus(Status.EditingLinkExtra);
 			}
 		}

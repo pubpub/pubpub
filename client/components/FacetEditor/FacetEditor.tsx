@@ -1,16 +1,18 @@
+import type { Facet, FacetInstance, Facets } from 'facets';
+
+import type { FacetEditorComponent, SpecificFacetEditorProps } from './types';
+
 import React, { useCallback } from 'react';
 
-import { FacetInstance, Facet, Facets } from 'facets';
 import { useFacetsState } from 'client/utils/useFacets';
 
 import {
 	CitationStyleEditor,
+	LicenseEditor,
+	NodeLabelsEditor,
 	PubEdgeDisplayEditor,
 	PubHeaderThemeEditor,
-	NodeLabelsEditor,
-	LicenseEditor,
 } from './definitions';
-import { FacetEditorComponent, SpecificFacetEditorProps } from './types';
 
 type Props<Def extends Facet> = {
 	facetName: Def['name'];

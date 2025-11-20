@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import Color from 'color';
+
 import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
+import Color from 'color';
 
 import CollectionMultiSelect from 'components/CollectionMultiSelect/CollectionMultiSelect';
-import InputField from 'components/InputField/InputField';
-import ImageUpload from 'components/ImageUpload/ImageUpload';
 import ColorInput from 'components/ColorInput/ColorInput';
+import ImageUpload from 'components/ImageUpload/ImageUpload';
+import InputField from 'components/InputField/InputField';
 import { getResizedUrl } from 'utils/images';
+
 import { getButtonText } from '../Layout/LayoutBanner';
 
 import './layoutEditorBanner.scss';

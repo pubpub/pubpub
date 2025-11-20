@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useDebounce } from 'use-debounce';
-import { MenuItem, Spinner, AnchorButton } from '@blueprintjs/core';
+import type { ZoteroCSLJSON } from 'types';
+import type { CitationStyleKind } from 'utils/citations';
+
+import React, { useEffect, useState } from 'react';
+
+import { AnchorButton, MenuItem, Spinner } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
+import { useDebounce } from 'use-debounce';
 
 import { apiFetch } from 'client/utils/apiFetch';
-import { CitationStyleKind } from 'utils/citations';
-import { ZoteroCSLJSON } from 'types';
 
 import './citationBuilder.scss';
 

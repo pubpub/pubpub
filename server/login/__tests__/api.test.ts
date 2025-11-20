@@ -1,4 +1,4 @@
-import { setup, login, modelize } from 'stubstub';
+import { login, modelize, setup } from 'stubstub';
 
 const normalEmail = `${crypto.randomUUID()}@email.com`;
 const hyphenEmail = `${crypto.randomUUID()}@something.with-hyphen.com`;

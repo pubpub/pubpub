@@ -1,15 +1,17 @@
+import type { PubPageData } from 'types';
+
 import React, { useState } from 'react';
-import classNames from 'classnames';
+
 import { AnchorButton, Callout, Collapse, Icon } from '@blueprintjs/core';
+import classNames from 'classnames';
 import TimeAgo from 'react-timeago';
 
+import { ClickToCopyButton } from 'components';
+import { expect } from 'utils/assert';
 import { pubUrl } from 'utils/canonicalUrls';
 import { datesAreSameCalendarDate, formatDate, timeAgoBaseProps } from 'utils/dates';
 import { usePageContext } from 'utils/hooks';
 import { getPubLatestReleasedDate } from 'utils/pub/pubDates';
-import { PubPageData } from 'types';
-import { ClickToCopyButton } from 'components';
-import { expect } from 'utils/assert';
 
 import './pubHistoricalNotice.scss';
 

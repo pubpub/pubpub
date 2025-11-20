@@ -1,17 +1,19 @@
-import firebase from 'firebase';
-import { Schema } from 'prosemirror-model';
-import { Plugin, PluginKey } from 'prosemirror-state';
+import type firebase from 'firebase';
+import type { Schema } from 'prosemirror-model';
+
+import type { DefinitelyHas } from 'types';
+
+import type { PluginsOptions } from '../../types';
+
 import { receiveTransaction, sendableSteps } from 'prosemirror-collab';
-import { Step } from 'prosemirror-transform';
 import { uncompressStepJSON } from 'prosemirror-compress-pubpub';
+import { Plugin, type PluginKey } from 'prosemirror-state';
+import { Step } from 'prosemirror-transform';
 
-import { DefinitelyHas } from 'types';
-
-import { PluginsOptions } from '../../types';
 import {
-	storeCheckpoint,
 	createFirebaseChange,
 	getFirebaseConnectionMonitorRef,
+	storeCheckpoint,
 } from '../../utils';
 
 /*

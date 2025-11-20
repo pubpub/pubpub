@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+
 import { Button, Checkbox, Classes, NonIdealState } from '@blueprintjs/core';
 
-import { ColorInput, GridWrapper, InputField, ImageUpload } from 'components';
-import { slugifyString } from 'utils/strings';
-import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
+import { ColorInput, GridWrapper, ImageUpload, InputField } from 'components';
+import { usePageContext } from 'utils/hooks';
+import { slugifyString } from 'utils/strings';
 
 import './communityCreate.scss';
 

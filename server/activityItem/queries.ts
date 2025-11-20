@@ -1,11 +1,14 @@
-import * as types from 'types';
-import { createEmptyFacetInstance, FacetDefinition, parsePartialFacetInstance } from 'facets';
+import type * as types from 'types';
+
+import { createEmptyFacetInstance, type FacetDefinition, parsePartialFacetInstance } from 'facets';
+import { getScopeIdForFacetBinding } from 'server/facets';
 import {
 	Collection,
 	CollectionPub,
 	Community,
 	Discussion,
 	ExternalPublication,
+	FacetBinding,
 	Member,
 	Page,
 	Pub,
@@ -13,15 +16,13 @@ import {
 	Release,
 	ReviewNew,
 	Submission,
+	SubmissionWorkflow,
 	Thread,
 	ThreadComment,
-	SubmissionWorkflow,
-	FacetBinding,
 } from 'server/models';
-
-import { getScopeIdForFacetBinding } from 'server/facets';
 import { expect } from 'utils/assert';
-import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
+
+import { createActivityItem, getChangeFlagsForPayload, getDiffsForPayload } from './utils';
 
 const resolvePartialMemberItem = async (member: Member) => {
 	if (member.pubId) {

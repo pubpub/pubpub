@@ -1,7 +1,9 @@
+import type * as types from 'types';
+
 import { Op } from 'sequelize';
 
-import * as types from 'types';
-
+import { FacetsError } from 'facets';
+import { fetchFacetsForScope } from 'server/facets';
 import {
 	Collection,
 	CollectionPub,
@@ -14,13 +16,11 @@ import {
 	Submission,
 	SubmissionWorkflow,
 } from 'server/models';
-
 import { isUserSuperAdmin } from 'server/user/queries';
-import { FacetsError } from 'facets';
-import { fetchFacetsForScope } from 'server/facets';
 import { expect } from 'utils/assert';
-import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
+
 import { getCollection } from './collectionGet';
+import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
 
 const getScopeIdsObject = ({
 	pubId,

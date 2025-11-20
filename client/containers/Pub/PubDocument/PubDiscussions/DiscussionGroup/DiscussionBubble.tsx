@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Icon } from '@blueprintjs/core';
 
 import './discussionBubble.scss';

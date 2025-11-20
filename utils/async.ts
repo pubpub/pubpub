@@ -22,10 +22,10 @@ export async function asyncForEach<T>(
 	const resolvedList = Array.from(await iterable);
 	const resolvedLength = resolvedList.length;
 	for (let i = 0; i < resolvedList.length; i++) {
-		// eslint-disable-next-line no-await-in-loop
+		// biome-ignore lint/performance/noAwaitInLoops: shhhhhh
 		const value = await resolvedList[i];
 		results.push(value);
-		// eslint-disable-next-line no-await-in-loop
+		// biome-ignore lint/performance/noAwaitInLoops: shhhhhh
 		await iteratee(value, i, resolvedLength);
 	}
 	return results;

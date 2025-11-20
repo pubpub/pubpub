@@ -1,9 +1,8 @@
 import uuid from 'uuid';
-
-import { expectCreatedActivityItem, login, modelize, setup, teardown } from 'stubstub';
+import { vi } from 'vitest';
 
 import { Community } from 'server/models';
-import { vi } from 'vitest';
+import { expectCreatedActivityItem, login, modelize, setup, teardown } from 'stubstub';
 
 const models = modelize`
 	Community existingCommunity {
@@ -109,9 +108,7 @@ describe('/api/communities', () => {
 	});
 
 	it('does not create a community if you are logged out', async () => {
-		await (
-			await login()
-		)
+		await (await login())
 			.post('/api/communities')
 			.send({
 				subdomain: 'notloggedin',

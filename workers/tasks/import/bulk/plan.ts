@@ -307,7 +307,7 @@ export const printImportPlan = (importPlan, { verb = 'CREATE' } = {}) => {
 		log(childResults);
 		const output = lines.join('\n');
 		if (depth === 0) {
-			// eslint-disable-next-line no-console
+			// biome-ignore lint/suspicious/noConsole: shhhhhh
 			console.log(output);
 		}
 		return output;

@@ -1,16 +1,18 @@
-import React from 'react';
-import dateFormat from 'dateformat';
-import { Menu, MenuItem, Tag } from '@blueprintjs/core';
+import type { Review, SanitizedPubData } from 'types';
 
-import { Review, SanitizedPubData } from 'types';
+import React from 'react';
+
+import { Menu, MenuItem, Tag } from '@blueprintjs/core';
+import dateFormat from 'dateformat';
+
+import { useFacetsQuery } from 'client/utils/useFacets';
 import { ContributorsList, DashboardFrame, PubHeaderBackground, PubTitle } from 'components';
 import CitationsPreview from 'containers/Pub/PubHeader/CitationsPreview';
-import { useFacetsQuery } from 'client/utils/useFacets';
-import { formatDate } from 'utils/dates';
 import { getAllPubContributors } from 'utils/contributors';
 import { getDashUrl } from 'utils/dashboard';
-import { getPubPublishedDateString, getPubLatestReleaseDate } from 'utils/pub/pubDates';
+import { formatDate } from 'utils/dates';
 import { usePageContext } from 'utils/hooks';
+import { getPubLatestReleaseDate, getPubPublishedDateString } from 'utils/pub/pubDates';
 
 import PubTimeline from './PubTimeline';
 

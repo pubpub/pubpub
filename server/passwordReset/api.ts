@@ -1,8 +1,10 @@
-import { wrap } from 'server/wrap';
-import { Router } from 'express';
-import { User } from 'types';
+import type { User } from 'types';
 
+import { Router } from 'express';
+
+import { wrap } from 'server/wrap';
 import { sleep } from 'utils/promises';
+
 import { createPasswordReset, updatePasswordReset } from './queries';
 
 export const router = Router();

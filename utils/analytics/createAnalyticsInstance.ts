@@ -1,8 +1,12 @@
 // we use @analytics/core instead of analytics to avoid setting cookies
 // @ts-expect-error FIXME: types from @analytics/core are not bundled properly
-import { Analytics } from '@analytics/core';
+
 import type { AnalyticsInstance } from 'analytics';
+
 import type { AnalyticsSettings } from 'types';
+
+import { Analytics } from '@analytics/core';
+
 import { analyticsPlugin, stubPlugin } from './plugin';
 import { thirdPartyPlugins, thirdPartyPluginsThatNeedGdprConsent } from './thirdPartyPlugins';
 

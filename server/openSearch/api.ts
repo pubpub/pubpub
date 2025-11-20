@@ -1,6 +1,6 @@
+import { Router } from 'express';
 import stripIndent from 'strip-indent';
 
-import { Router } from 'express';
 import { getInitialData } from 'server/utils/initData';
 
 export const router = Router();

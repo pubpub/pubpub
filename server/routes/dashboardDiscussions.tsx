@@ -1,8 +1,9 @@
 import React from 'react';
 
-import Html from 'server/Html';
 import { Router } from 'express';
-import { NotFoundError, handleErrors } from 'server/utils/errors';
+
+import Html from 'server/Html';
+import { handleErrors, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';

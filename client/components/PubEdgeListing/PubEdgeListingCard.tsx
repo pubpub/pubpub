@@ -1,12 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+
 import { Icon } from '@blueprintjs/core';
 import classNames from 'classnames';
 
 import { PubEdge } from 'components';
-import { toTitleCase } from 'utils/strings';
-import { usePageContext } from 'utils/hooks';
-import { relationTypeDefinitions, isViewingEdgeFromTarget } from 'utils/pubEdge';
 import { pubShortUrl } from 'utils/canonicalUrls';
+import { usePageContext } from 'utils/hooks';
+import { isViewingEdgeFromTarget, relationTypeDefinitions } from 'utils/pubEdge';
+import { toTitleCase } from 'utils/strings';
 
 import './pubEdgeListingCard.scss';
 
@@ -96,6 +97,7 @@ const PubEdgeListingCard = (props: Props) => {
 	};
 
 	return (
+		// biome-ignore lint/a11y: shhhhhh
 		<div
 			className={classNames('pub-edge-listing-card-component', inPubBody && 'in-pub-body')}
 			style={style}

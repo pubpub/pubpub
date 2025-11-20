@@ -1,8 +1,10 @@
+import type { PubPubIconName } from 'client/utils/icons';
+
 import React from 'react';
+
 import classNames from 'classnames';
 
-import { Icon, IconName } from 'components';
-import { PubPubIconName } from 'client/utils/icons';
+import { Icon, type IconName } from 'components';
 
 import './iconBullet.scss';
 

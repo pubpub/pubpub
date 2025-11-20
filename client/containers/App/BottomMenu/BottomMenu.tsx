@@ -1,8 +1,10 @@
 import React from 'react';
+
 import classNames from 'classnames';
 
 import { Icon, MenuButton, MenuItem } from 'components';
 import { usePageContext } from 'utils/hooks';
+
 import ScopePicker from '../SideMenu/ScopePicker';
 
 import './bottomMenu.scss';

@@ -1,6 +1,5 @@
-import { setup, login, modelize, teardown } from 'stubstub';
-
 import { User } from 'server/models';
+import { login, modelize, setup, teardown } from 'stubstub';
 
 const tonyEmail = `${crypto.randomUUID()}@gmail.com`;
 

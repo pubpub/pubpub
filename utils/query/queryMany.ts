@@ -1,15 +1,18 @@
-import type { TsRestRequest } from '@ts-rest/express';
 import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
+import type { TsRestRequest } from '@ts-rest/express';
+import type { Request, Response } from 'express';
 import type { ModelCtor } from 'sequelize-typescript';
+
+import type { SerializedModel } from 'types/serializedModel';
+
+import type { GetManyQueryAny } from './createGetManyQuery';
+
 import { Op } from 'sequelize';
-import type { Response, Request } from 'express';
 
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
-import { SerializedModel } from 'types/serializedModel';
 
 import { buildWhereClause } from './buildWhereClause';
 import { createIncludes } from './include';
-import type { GetManyQueryAny } from './createGetManyQuery';
 
 export type CustomScopeInput = {
 	/** The associated model you want to make sure is scoped to the community. */

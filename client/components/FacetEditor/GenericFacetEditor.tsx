@@ -1,23 +1,25 @@
-import React, { useCallback } from 'react';
-import classNames from 'classnames';
-import { Spinner } from '@blueprintjs/core';
-
-import {
-	FacetDefinition,
-	FacetProp,
-	FacetPropCascadeResult,
-	FacetSourceScope,
-	mapFacet,
-	FacetCascadeNotImplError,
-} from 'facets';
-import { SettingsSection } from 'components';
-
-import {
+import type {
 	FacetPropSourceInfo,
 	GenericFacetEditorProps,
 	PropTypeEditorComponent,
 	PropTypeEditorProps,
 } from './types';
+
+import React, { useCallback } from 'react';
+
+import { Spinner } from '@blueprintjs/core';
+import classNames from 'classnames';
+
+import { SettingsSection } from 'components';
+import {
+	FacetCascadeNotImplError,
+	type FacetDefinition,
+	type FacetProp,
+	type FacetPropCascadeResult,
+	type FacetSourceScope,
+	mapFacet,
+} from 'facets';
+
 import FacetPropEditorSkeleton from './FacetPropEditorSkeleton';
 
 import './facetEditor.scss';

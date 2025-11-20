@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import classNames from 'classnames';
-import { NodeSpec } from 'prosemirror-model';
+import type { NodeSpec } from 'prosemirror-model';
 
-import { DocJson } from 'types';
-import Editor, { getTextFromDoc, EditorChangeObject, OnEditFn } from 'components/Editor';
-import { FormattingBarButtonData } from '../FormattingBar/types';
+import type { DocJson } from 'types';
+
+import type { FormattingBarButtonData } from '../FormattingBar/types';
+
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import classNames from 'classnames';
+
+import Editor, { type EditorChangeObject, getTextFromDoc, type OnEditFn } from 'components/Editor';
 
 import './minimalEditor.scss';
 
@@ -114,7 +118,7 @@ const MinimalEditor = (props: Props) => {
 					}}
 				/>
 			)}
-			{/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+			{/* biome-ignore lint/a11y: shhhhhh */}
 			<div className="editor-wrapper" onClick={handleWrapperClick}>
 				<div ref={controlsContainerRef} />
 				<Editor

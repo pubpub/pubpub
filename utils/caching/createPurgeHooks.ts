@@ -1,6 +1,8 @@
 import type { Attributes, CreateOptions, DestroyOptions, UpdateOptions } from 'sequelize';
 import type { Model, ModelCtor } from 'sequelize-typescript';
+
 import { defer } from 'server/utils/deferred';
+
 import { schedulePurge } from './schedulePurgeWithSentry';
 import { shouldntPurge } from './skipPurgeConditions';
 

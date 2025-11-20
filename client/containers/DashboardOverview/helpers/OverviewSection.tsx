@@ -1,7 +1,8 @@
 import React from 'react';
+
 import classNames from 'classnames';
 
-import { IconName, Icon } from 'components';
+import { Icon, type IconName } from 'components';
 
 import './overviewSection.scss';
 

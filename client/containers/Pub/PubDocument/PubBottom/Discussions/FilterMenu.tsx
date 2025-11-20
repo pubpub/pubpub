@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Card, Classes, Switch } from '@blueprintjs/core';
 
 import LabelFilter from './LabelFilter';

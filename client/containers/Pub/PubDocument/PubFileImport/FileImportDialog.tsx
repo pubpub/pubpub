@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import classNames from 'classnames';
-import Dropzone from 'react-dropzone';
-import { useKeyPressEvent } from 'react-use';
+
 import {
 	Button,
 	ButtonGroup,
@@ -15,17 +13,20 @@ import {
 	Spinner,
 	Tooltip,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+import Dropzone from 'react-dropzone';
+import { useKeyPressEvent } from 'react-use';
 
-import { MenuConfigProvider } from 'components/Menu';
-import { extensionToPandocFormat, bibliographyFormats } from 'utils/import/formats';
 import { apiFetch } from 'client/utils/apiFetch';
 import { pingTask } from 'client/utils/pingTask';
 import { importDocJson } from 'components/Editor';
+import { MenuConfigProvider } from 'components/Menu';
+import { bibliographyFormats, extensionToPandocFormat } from 'utils/import/formats';
 
-import { useFileManager } from './useFileManager';
-import { extensionFor } from './formats';
 import FileImportEntry from './FileImportEntry';
+import { extensionFor } from './formats';
 import MetadataEditor from './MetadataEditor';
+import { useFileManager } from './useFileManager';
 
 import './fileImportDialog.scss';
 
@@ -363,8 +364,8 @@ const FileImportDialog = ({
 				</div>
 				{currentFiles.map((file, index) => (
 					<FileImportEntry
-						// eslint-disable-next-line react/no-array-index-key
-						key={index}
+						// biome-ignore lint/suspicious/noArrayIndexKey: shhhhhh
+						key={`file-${file.id}-${index}`}
 						file={file}
 						onDelete={() => deleteFileById(file.id)}
 						onLabelFile={(label) => labelFileById(file.id, label)}

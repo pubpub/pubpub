@@ -1,4 +1,4 @@
-import { IconName } from '../Icon/Icon';
+import type { IconName } from '../Icon/Icon';
 
 type CommunityOption = {
 	title: string;

@@ -1,9 +1,11 @@
-import { wrap } from 'server/wrap';
-import { ForbiddenError } from 'server/utils/errors';
-import { getScope } from 'server/utils/queryHelpers';
-import { ActivityFilter, ScopeId } from 'types';
+import type { ActivityFilter, ScopeId } from 'types';
 
 import { Router } from 'express';
+
+import { ForbiddenError } from 'server/utils/errors';
+import { getScope } from 'server/utils/queryHelpers';
+import { wrap } from 'server/wrap';
+
 import { fetchActivityItems } from './fetch';
 
 export const router = Router();

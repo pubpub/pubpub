@@ -1,4 +1,5 @@
 import React from 'react';
+
 import classNames from 'classnames';
 
 import './pubEdge.scss';
@@ -35,7 +36,7 @@ const PubEdgeLayout = (props: PubEdgeLayoutProps) => {
 							.map(
 								(element, index) =>
 									element && (
-										// eslint-disable-next-line react/no-array-index-key
+										// biome-ignore lint/suspicious/noArrayIndexKey: shhhhhh
 										<li key={index}>{element}</li>
 									),
 							)

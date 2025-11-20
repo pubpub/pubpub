@@ -1,8 +1,10 @@
+import type { Community, DocJson } from 'types';
+
 import React, { useMemo, useState } from 'react';
+
 import { Button } from '@blueprintjs/core';
 import Color from 'color';
 
-import { DocJson, Community } from 'types';
 import { isEmptyDoc } from 'client/components/Editor';
 
 import ReviewEditor from './ReviewEditor';

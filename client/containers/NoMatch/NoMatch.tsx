@@ -1,5 +1,7 @@
 import React from 'react';
-import { NonIdealState, AnchorButton, Intent } from '@blueprintjs/core';
+
+import { AnchorButton, Intent, NonIdealState } from '@blueprintjs/core';
+
 import { usePageContext } from 'utils/hooks';
 
 import './noMatch.scss';

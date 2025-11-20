@@ -1,10 +1,13 @@
+import type { Resource } from 'deposit/resource';
+import type { Collection, Pub } from 'server/models';
+import type { DefinitelyHas } from 'types';
+
 import { renderXml } from '@pubpub/deposit-utils/datacite';
-import { Resource } from 'deposit/resource';
+
 import { getCommunityDepositTarget } from 'server/depositTarget/queries';
 import { persistCrossrefDepositRecord, persistDoiData } from 'server/doi/queries';
-import { DefinitelyHas } from 'types';
 import { expect } from 'utils/assert';
-import { Collection, Pub } from 'server/models';
+
 import {
 	createDataciteDoiWithMetadata,
 	createDeposit,
@@ -60,9 +63,9 @@ export async function submitResource(
 		scopeResource.identifiers.find((identifier) => identifier.identifierKind === 'URL'),
 	);
 	const hasExistingMetadata = await hasDataciteDoiMetadata(scopeDoi, depositTarget);
-	const depositResult = await (
-		hasExistingMetadata ? updateDataciteDoiMetadata : createDataciteDoiWithMetadata
-	)(resourceXml, resourceUrl, scopeDoi, depositTarget);
+	const depositResult = await (hasExistingMetadata
+		? updateDataciteDoiMetadata
+		: createDataciteDoiWithMetadata)(resourceXml, resourceUrl, scopeDoi, depositTarget);
 	if (depositResult.errors?.length > 0) {
 		throw new Error('An unexpected error occurred when submitting the deposit to DataCite');
 	}

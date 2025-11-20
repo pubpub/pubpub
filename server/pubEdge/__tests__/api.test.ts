@@ -1,7 +1,6 @@
-import { setup, login, modelize, expectCreatedActivityItem, teardown } from 'stubstub';
-
-import { createPubEdge } from 'server/pubEdge/queries';
 import { ExternalPublication, PubEdge } from 'server/models';
+import { createPubEdge } from 'server/pubEdge/queries';
+import { expectCreatedActivityItem, login, modelize, setup, teardown } from 'stubstub';
 
 const models = modelize`
 	Community {

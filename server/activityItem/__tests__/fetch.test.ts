@@ -1,27 +1,27 @@
+import type { ActivityAssociations, ActivityAssociationType } from 'types';
+
+import { ActivityItem } from 'server/models';
+import { finishDeferredTasks } from 'server/utils/deferred';
 import { modelize, setup, teardown } from 'stubstub';
 
-import { ActivityAssociations, ActivityAssociationType } from 'types';
-import { ActivityItem } from 'server/models';
-
-import { finishDeferredTasks } from 'server/utils/deferred';
 import { fetchActivityItems } from '../fetch';
 import {
-	createMemberCreatedActivityItem,
-	createMemberUpdatedActivityItem,
-	createMemberRemovedActivityItem,
 	createCollectionActivityItem,
 	createCollectionPubActivityItem,
 	createCollectionUpdatedActivityItem,
-	createPubReviewCreatedActivityItem,
-	createPubReviewCommentAddedActivityItem,
-	createPubReviewUpdatedActivityItem,
 	createCommunityCreatedActivityItem,
 	createCommunityUpdatedActivityItem,
+	createMemberCreatedActivityItem,
+	createMemberRemovedActivityItem,
+	createMemberUpdatedActivityItem,
 	createPubActivityItem,
-	createPubUpdatedActivityItem,
-	createPubReleasedActivityItem,
-	createPubEdgeActivityItem,
 	createPubDiscussionCommentAddedActivityItem,
+	createPubEdgeActivityItem,
+	createPubReleasedActivityItem,
+	createPubReviewCommentAddedActivityItem,
+	createPubReviewCreatedActivityItem,
+	createPubReviewUpdatedActivityItem,
+	createPubUpdatedActivityItem,
 } from '../queries';
 
 const models = modelize`

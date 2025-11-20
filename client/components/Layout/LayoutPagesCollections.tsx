@@ -1,6 +1,7 @@
+import type { LayoutBlockCollectionsPages } from 'types/layout';
+
 import React from 'react';
 
-import { LayoutBlockCollectionsPages } from 'types/layout';
 import PagePreview from 'components/PagePreview/PagePreview';
 
 export type BlockItem = {

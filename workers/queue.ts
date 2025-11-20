@@ -1,8 +1,11 @@
 /* eslint-disable no-console */
-import path from 'path';
+
+import type { TaskType } from './worker';
+
 // eslint-disable-next-line import/no-unresolved
 import * as Sentry from '@sentry/node';
 import amqplib from 'amqplib';
+import path from 'path';
 import { Worker } from 'worker_threads';
 
 import { WorkerTask } from 'server/models';
@@ -10,7 +13,6 @@ import { expect } from 'utils/assert';
 import { createCachePurgeDebouncer } from 'utils/caching/createCachePurgeDebouncer';
 import { getAppCommit, isProd } from 'utils/environment';
 import { TaskPriority, taskQueueName } from 'utils/workers';
-import type { TaskType } from './worker';
 
 const maxWorkerTimeSeconds = 120;
 const maxWorkerThreads = 5;

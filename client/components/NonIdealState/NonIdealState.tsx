@@ -1,5 +1,6 @@
 import React from 'react';
-import { Classes, Icon, IconName } from '@blueprintjs/core';
+
+import { Classes, Icon, type IconName } from '@blueprintjs/core';
 
 import './nonIdealState.scss';
 

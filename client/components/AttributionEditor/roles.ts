@@ -1,4 +1,5 @@
 import fuzzysearch from 'fuzzysearch';
+
 import { DEFAULT_ROLES } from 'types';
 
 // eslint-disable-next-line import/prefer-default-export

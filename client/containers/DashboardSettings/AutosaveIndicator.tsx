@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { useUpdateEffect } from 'react-use';
+
 import { Spinner } from '@blueprintjs/core';
+import { useUpdateEffect } from 'react-use';
 
 import { Icon } from 'components';
 

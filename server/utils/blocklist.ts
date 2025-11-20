@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 export const blocklistMiddleware: RequestHandler = async (req, res, next) => {
 	/** You are only allowed to access API */

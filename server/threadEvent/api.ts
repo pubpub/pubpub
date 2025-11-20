@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { getPermissions } from './permissions';
-import { createThreadEvent, updateThreadEvent, destroyThreadEvent } from './queries';
+import { createThreadEvent, destroyThreadEvent, updateThreadEvent } from './queries';
 
 export const router = Router();
 

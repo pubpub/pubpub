@@ -1,16 +1,18 @@
 /* eslint-disable no-console */
 /* eslint-disable react/prop-types */
-import React, { useState, useRef } from 'react';
-import ReactDOMServer from 'react-dom/server';
+
+import React, { useRef, useState } from 'react';
+
 import { storiesOf } from '@storybook/react';
 import beautify from 'js-beautify';
+import ReactDOMServer from 'react-dom/server';
 import Diff from 'react-stylable-diff';
 
 import testDocs from 'utils/storybook/initialDocs/renderTestDocs';
 
 import Editor from './Editor';
-import { buildSchema } from './utils/schema';
 import { renderStatic } from './utils/renderStatic';
+import { buildSchema } from './utils/schema';
 
 import './clientServerDiffStories.scss';
 

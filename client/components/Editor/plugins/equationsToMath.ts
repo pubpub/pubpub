@@ -1,6 +1,7 @@
-import { Node } from 'prosemirror-model';
-import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import type { Node } from 'prosemirror-model';
+import type { EditorView } from 'prosemirror-view';
+
+import { type EditorState, Plugin, PluginKey, type Transaction } from 'prosemirror-state';
 
 type Replacement = {
 	pos: number;

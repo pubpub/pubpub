@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import TimeAgo from 'react-timeago';
-import classNames from 'classnames';
-import { Button, Intent } from '@blueprintjs/core';
+import type { Callback } from 'types';
 
-import Editor, { getText, getJSON, EditorChangeObject, viewIsEmpty } from 'components/Editor';
-import { FormattingBar, buttons } from 'components/FormattingBar';
-import { Avatar, Icon } from 'components';
-import { usePageContext } from 'utils/hooks';
+import React, { useState } from 'react';
+
+import { Button, Intent } from '@blueprintjs/core';
+import classNames from 'classnames';
+import TimeAgo from 'react-timeago';
+
 import { apiFetch } from 'client/utils/apiFetch';
-import { Callback } from 'types';
+import { Avatar, Icon } from 'components';
+import Editor, { type EditorChangeObject, getJSON, getText, viewIsEmpty } from 'components/Editor';
+import { buttons, FormattingBar } from 'components/FormattingBar';
+import { usePageContext } from 'utils/hooks';
 import { getPartsOfFullName } from 'utils/names';
 
 import './threadComment.scss';

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { Button, Classes, Slider } from '@blueprintjs/core';
 import AvatarEditor from 'react-avatar-editor';
 

@@ -1,35 +1,38 @@
+import type { Request, RequestHandler, Response } from 'express';
+
+import type { CustomScripts, InitialData, PubEdge } from 'types';
+
 import React from 'react';
+
+import { Router } from 'express';
 import slowDown from 'express-slow-down';
 
-import { getPubPageContextTitle } from 'utils/pubPageTitle';
-import { getPrimaryCollection } from 'utils/collections/primary';
-import { pubUrl } from 'utils/canonicalUrls';
-import { getPdfDownloadUrl, getTextAbstract, getGoogleScholarNotes } from 'utils/pub/metadata';
 import { chooseCollectionForPub } from 'client/utils/collections';
-import Html from 'server/Html';
-import { Router } from 'express';
-import { handleErrors, NotFoundError, ForbiddenError } from 'server/utils/errors';
-import { getInitialData } from 'server/utils/initData';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
-import { hostIsValid } from 'server/utils/routes';
-import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { getPubPublishedDate } from 'utils/pub/pubDates';
+import Html from 'server/Html';
+import { createUserScopeVisit } from 'server/userScopeVisit/queries';
+import { findUserSubscription } from 'server/userSubscription/shared/queries';
+import { ForbiddenError, handleErrors, NotFoundError } from 'server/utils/errors';
+import { getInitialData } from 'server/utils/initData';
 import {
-	getPubForRequest,
 	getMembers,
+	getPub,
 	getPubCitations,
 	getPubEdges,
 	getPubFirebaseDraft,
 	getPubFirebaseToken,
+	getPubForRequest,
 	getPubRelease,
-	getPub,
 } from 'server/utils/queryHelpers';
-import { createUserScopeVisit } from 'server/userScopeVisit/queries';
-import { CustomScripts, InitialData, PubEdge } from 'types';
-import { findUserSubscription } from 'server/userSubscription/shared/queries';
-import type { RequestHandler, Response, Request } from 'express';
+import { hostIsValid } from 'server/utils/routes';
+import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getCorrectHostname } from 'utils/caching/getCorrectHostname';
+import { pubUrl } from 'utils/canonicalUrls';
 import { getNextCollectionPub } from 'utils/collections/getNextCollectionPub';
+import { getPrimaryCollection } from 'utils/collections/primary';
+import { getGoogleScholarNotes, getPdfDownloadUrl, getTextAbstract } from 'utils/pub/metadata';
+import { getPubPublishedDate } from 'utils/pub/pubDates';
+import { getPubPageContextTitle } from 'utils/pubPageTitle';
 
 export const router = Router();
 

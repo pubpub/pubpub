@@ -1,16 +1,18 @@
+import type { PubPageData } from 'types';
+
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
+
 import useWindowSize from 'react-use/lib/useWindowSize';
-import { dispatchEmptyTransaction } from 'components/Editor';
+
 import { NonIdealState } from 'components';
-
+import { dispatchEmptyTransaction } from 'components/Editor';
 import { usePageContext } from 'utils/hooks';
-import { PubPageData } from 'types';
-import { usePubContext } from '../../pubHooks';
 
-import DiscussionGroup from './DiscussionGroup';
+import { usePubContext } from '../../pubHooks';
 import Discussion from './Discussion';
 import DiscussionInput from './Discussion/DiscussionInput';
+import DiscussionGroup from './DiscussionGroup';
 import { groupDiscussionsByLine } from './discussionUtils';
 
 import './pubDiscussions.scss';

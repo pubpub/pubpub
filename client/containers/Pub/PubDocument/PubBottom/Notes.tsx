@@ -1,9 +1,11 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import type { RenderedNote } from 'utils/notes';
+
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+
 import classNames from 'classnames';
 
 import { Icon, PubNoteContent } from 'components';
-import { RenderedNote } from 'utils/notes';
 
 import './notes.scss';
 

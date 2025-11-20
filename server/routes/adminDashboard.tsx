@@ -1,13 +1,15 @@
+import type { User } from 'types';
+
 import React from 'react';
 
-import Html from 'server/Html';
 import { Router } from 'express';
+
+import Html from 'server/Html';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
+import { generateMetabaseToken } from 'server/utils/metabase';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { generateMetabaseToken } from 'server/utils/metabase';
-import { User } from 'types';
 
 export const router = Router();
 

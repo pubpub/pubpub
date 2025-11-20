@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import SuggestionManager, {
-	SuggestionManagerStateSuggesting,
+	type SuggestionManagerStateSuggesting,
 } from 'client/utils/suggestions/suggestionManager';
 
 export const useSuggestions = <T>(enabled: boolean) => {

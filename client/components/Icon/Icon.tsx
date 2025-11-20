@@ -1,14 +1,14 @@
 import React from 'react';
-import classNames from 'classnames';
+
 import {
-	Classes,
 	Icon as BlueprintIcon,
-	IconName as BlueprintIconName,
-	Intent as BlueprintIntent,
+	type IconName as BlueprintIconName,
+	type Intent as BlueprintIntent,
+	Classes,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
 
-import { PubPubIconName, pubPubIcons } from '../../utils/icons';
-
+import { type PubPubIconName, pubPubIcons } from '../../utils/icons';
 import customIcons from './customIcons';
 
 import './icon.scss';
@@ -44,6 +44,7 @@ const Icon = (props: Props) => {
 		const viewbox =
 			providedViewbox || `0 0 ${squareViewboxDimension} ${squareViewboxDimension}`;
 		return (
+			// biome-ignore lint/a11y/useAriaPropsSupportedByRole: shhhhhh
 			<span
 				className={classNames(Classes.ICON, useColor && 'color', className)}
 				data-icon={icon.toLowerCase().replace(/_/gi, '-')}

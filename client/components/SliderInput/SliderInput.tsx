@@ -1,5 +1,6 @@
 import React from 'react';
-import { NumericInput, Slider, ISliderProps } from '@blueprintjs/core';
+
+import { type ISliderProps, NumericInput, Slider } from '@blueprintjs/core';
 
 import './sliderInput.scss';
 

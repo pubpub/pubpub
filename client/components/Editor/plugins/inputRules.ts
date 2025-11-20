@@ -1,16 +1,16 @@
-import { Fragment, MarkType, NodeType } from 'prosemirror-model';
-import { EditorState, Transaction } from 'prosemirror-state';
-import {
-	inputRules,
-	wrappingInputRule,
-	textblockTypeInputRule,
-	smartQuotes,
-	emDash,
-	ellipsis,
-	InputRule,
-} from 'prosemirror-inputrules';
+import type { EditorState, Transaction } from 'prosemirror-state';
 
 import { makeBlockMathInputRule, REGEX_BLOCK_MATH_DOLLARS } from '@benrbray/prosemirror-math';
+import {
+	ellipsis,
+	emDash,
+	InputRule,
+	inputRules,
+	smartQuotes,
+	textblockTypeInputRule,
+	wrappingInputRule,
+} from 'prosemirror-inputrules';
+import { Fragment, type MarkType, type NodeType } from 'prosemirror-model';
 
 // : (NodeType) → InputRule
 // Given a blockquote node type, returns an input rule that turns `"> "`

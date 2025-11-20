@@ -1,5 +1,6 @@
+import type { Discussion, SanitizedPubData } from 'types';
+
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
-import { Discussion, SanitizedPubData } from 'types';
 
 import sanitizeDiscussions from './discussionsSanitize';
 import sanitizeReviews from './reviewsSanitize';

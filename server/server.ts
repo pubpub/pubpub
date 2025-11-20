@@ -4,7 +4,7 @@ import compression from 'compression';
 import CreateSequelizeStore from 'connect-session-sequelize';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { ErrorRequestHandler, Router } from 'express';
+import express, { type ErrorRequestHandler, Router } from 'express';
 import enforce from 'express-sslify';
 import fs from 'fs';
 import noSlash from 'no-slash';
@@ -30,7 +30,7 @@ if (isQubQub() && !process.env.HEROKU_SLUG_COMMIT) {
 	setAppCommit(process.env.HEROKU_SLUG_COMMIT);
 }
 
-import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
+import { errorMiddleware, HTTPStatusError } from 'server/utils/errors';
 
 if (process.env.NODE_ENV !== 'test') {
 	// eslint-disable-next-line global-require
@@ -41,6 +41,7 @@ import { deduplicateSlash } from './middleware/deduplicateSlash';
 import { blocklistMiddleware } from './utils/blocklist';
 
 import './hooks';
+
 import { User } from './models';
 import { sequelize } from './sequelize';
 import { zoteroAuthStrategy } from './zoteroIntegration/utils/auth';
@@ -57,13 +58,14 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 	// Log the error if we're testing. Normally this is handled in the error middleware, but
 	// that isn't active while handling individual requests in a test environment.
 	if (process.env.NODE_ENV === 'test' && !(err instanceof HTTPStatusError)) {
-		// eslint-disable-next-line no-console
+		// biome-ignore lint/suspicious/noConsole: shhhhhh
 		console.log('Got an error in an API route while testing:', err);
 	}
 	return next(err);
 };
 
-import { RequestValidationError, createExpressEndpoints } from '@ts-rest/express';
+import { createExpressEndpoints, RequestValidationError } from '@ts-rest/express';
+
 import { contract } from 'utils/api/contract';
 import { server } from 'utils/api/server';
 
@@ -99,9 +101,10 @@ appRouter.use(cookieParser());
 /* Configure app session */
 /* --------------------- */
 import session from 'express-session';
+import { fromZodError } from 'zod-validation-error';
+
 import { purgeMiddleware } from 'utils/caching/purgeMiddleware';
 import { schedulePurge } from 'utils/caching/schedulePurgeWithSentry';
-import { fromZodError } from 'zod-validation-error';
 
 import { abortStorage } from './abort';
 import { authTokenMiddleware } from './authToken/authTokenMiddleware';

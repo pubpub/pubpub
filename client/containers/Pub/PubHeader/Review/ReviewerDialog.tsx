@@ -1,6 +1,8 @@
+import type { PubPageData } from 'types';
+
 import React from 'react';
+
 import { AnchorButton, Callout, Classes, Dialog, InputGroup } from '@blueprintjs/core';
-import { PubPageData } from 'types';
 
 import './reviewerDialog.scss';
 

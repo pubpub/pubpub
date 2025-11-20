@@ -1,9 +1,12 @@
+import type { Callback } from 'types';
+
 import React from 'react';
+
 import { Classes, Dialog } from '@blueprintjs/core';
 
-import { Callback } from 'types';
-
-import PubAttributionEditor, { Props as PubAttributionEditorProps } from './PubAttributionEditor';
+import PubAttributionEditor, {
+	type Props as PubAttributionEditorProps,
+} from './PubAttributionEditor';
 
 import './pubAttributionDialog.scss';
 

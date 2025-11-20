@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+
 import { deduplicateSlash } from '../deduplicateSlash';
 
 describe('deduplicate Slash Middleware', () => {

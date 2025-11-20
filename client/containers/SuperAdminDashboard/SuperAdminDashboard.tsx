@@ -1,8 +1,9 @@
 import React from 'react';
+
 import classNames from 'classnames';
 
 import { GridWrapper } from 'components';
-import { getSuperAdminTabUrl, SuperAdminTabKind } from 'utils/superAdmin';
+import { getSuperAdminTabUrl, type SuperAdminTabKind } from 'utils/superAdmin';
 
 import { superAdminTabs } from './tabs';
 

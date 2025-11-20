@@ -1,6 +1,7 @@
+import type { Pub } from 'types';
+
 import React from 'react';
 
-import { Pub } from 'types';
 import { usePageContext } from 'utils/hooks';
 
 type Props = {

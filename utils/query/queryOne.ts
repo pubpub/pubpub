@@ -1,13 +1,15 @@
-import type { TsRestRequest } from '@ts-rest/express';
 import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
+import type { TsRestRequest } from '@ts-rest/express';
+import type { Request, Response } from 'express';
 import type { ModelCtor } from 'sequelize-typescript';
+
 import { z } from 'zod';
 
-import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 import { NotFoundError } from 'server/utils/errors';
-import type { Response, Request } from 'express';
+import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
+
 import { createIncludes } from './include';
-import { CustomScopeInput, createCustomWhereClause } from './queryMany';
+import { type CustomScopeInput, createCustomWhereClause } from './queryMany';
 
 const isUUID = (slugOrId: string) => z.string().uuid().safeParse(slugOrId).success;
 

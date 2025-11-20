@@ -1,30 +1,38 @@
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+import type {
+	AnalyticsSettings,
+	CommunityHeaderLink,
+	CommunityHeroButton,
+	CommunityNavigationEntry,
+	SerializedModel,
+} from 'types';
+
 import {
-	Model,
-	Table,
+	AllowNull,
+	BelongsTo,
 	Column,
 	DataType,
-	PrimaryKey,
 	Default,
-	AllowNull,
+	HasMany,
+	Is,
 	IsLowercase,
 	Length,
-	Is,
+	Model,
+	PrimaryKey,
+	Table,
 	Unique,
-	BelongsTo,
-	HasMany,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { AnalyticsSettings, SerializedModel } from 'types';
-import { CommunityHeaderLink, CommunityHeroButton, CommunityNavigationEntry } from 'types';
+
 import {
-	Organization,
 	Collection,
-	Pub,
-	Page,
 	DepositTarget,
+	Member,
+	Organization,
+	Page,
+	Pub,
 	ScopeSummary,
 	SpamTag,
-	Member,
 } from '../models';
 
 @Table
@@ -32,7 +40,7 @@ export class Community extends Model<
 	InferAttributes<Community>,
 	InferCreationAttributes<Community>
 > {
-	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

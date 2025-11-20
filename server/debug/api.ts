@@ -1,7 +1,8 @@
 // Add this to your Express app for pool monitoring
 // You can add this to your server/routes/ or wherever you define routes
 
-import { Request, Response, Router } from 'express';
+import { type Request, type Response, Router } from 'express';
+
 import { poolOptions, sequelize } from '../sequelize';
 
 export const router = Router(); // adjust path as needed

@@ -1,6 +1,7 @@
+import type { NodeReference } from '../Editor/utils/references';
+
 import React from 'react';
 
-import { NodeReference } from '../Editor/utils/references';
 import { MenuButton, MenuItem } from '../Menu';
 
 export type ReferencesDropdownProps = {

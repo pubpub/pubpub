@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Button, Icon, Tooltip, Divider } from '@blueprintjs/core';
+import type { Collection, CollectionPub, PubWithCollections } from 'types';
 
-import { usePageContext } from 'utils/hooks';
-import { getSchemaForKind } from 'utils/collections/schemas';
+import React, { useState } from 'react';
+
+import { Button, Divider, Icon, Tooltip } from '@blueprintjs/core';
+
 import { PopoverButton, PrimaryCollectionExplanation } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
 import { getPrimaryCollection } from 'utils/collections/primary';
-import { Collection, CollectionPub, PubWithCollections } from 'types';
+import { getSchemaForKind } from 'utils/collections/schemas';
+import { usePageContext } from 'utils/hooks';
 
 type Props = {
 	collection: Collection;

@@ -1,6 +1,8 @@
+import { vi } from 'vitest';
+
 import { determinize, modelize, setup, teardown } from 'stubstub';
 import { fullDoc, plainDoc } from 'utils/storybook/data';
-import { vi } from 'vitest';
+
 import { getPageSearchData, getPubSearchData } from '../searchUtils';
 
 const subDomain = crypto.randomUUID();

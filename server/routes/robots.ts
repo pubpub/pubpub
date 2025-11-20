@@ -1,9 +1,9 @@
+import { Router } from 'express';
 import stripIndent from 'strip-indent';
 
-import { wrap } from 'server/wrap';
-import { Router } from 'express';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
+import { wrap } from 'server/wrap';
 import { communityUrl } from 'utils/canonicalUrls';
 import { isProd } from 'utils/environment';
 

@@ -1,4 +1,4 @@
-import { modelize, teardown, setup, login } from 'stubstub';
+import { login, modelize, setup, teardown } from 'stubstub';
 
 const models = modelize`
     Community community {

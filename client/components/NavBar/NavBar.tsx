@@ -1,17 +1,17 @@
 import React from 'react';
+
+import { Icon as BlueprintIcon, Classes } from '@blueprintjs/core';
 import PropTypes from 'prop-types';
-import { Classes, Icon as BlueprintIcon } from '@blueprintjs/core';
 
 import {
-	NavbarItem,
-	getNavItemsForCommunityNavigation,
 	createSocialNavItems,
+	getNavItemsForCommunityNavigation,
 	isNavbarMenu,
+	type NavbarItem,
 } from 'client/utils/navigation';
-import { usePageContext } from 'utils/hooks';
-
 import { GridWrapper, Icon } from 'components';
 import { Menu, MenuItem } from 'components/Menu';
+import { usePageContext } from 'utils/hooks';
 
 import './navBar.scss';
 

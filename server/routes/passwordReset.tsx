@@ -1,7 +1,8 @@
 import React from 'react';
 
-import Html from 'server/Html';
 import { Router } from 'express';
+
+import Html from 'server/Html';
 import { User } from 'server/models';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';

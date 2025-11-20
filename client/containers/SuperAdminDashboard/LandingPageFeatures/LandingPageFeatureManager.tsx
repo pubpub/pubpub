@@ -1,9 +1,11 @@
+import type { LandingPageFeatureKind, LandingPageFeatureOfKind } from 'types';
+
 import React, { useCallback, useState } from 'react';
+
 import { Button, InputGroup } from '@blueprintjs/core';
 
-import { DragDropOrdering, Icon } from 'components';
-import { LandingPageFeatureKind, LandingPageFeatureOfKind } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
+import { DragDropOrdering, Icon } from 'components';
 import { findRankInRankedList } from 'utils/rank';
 
 import './landingPageFeatureManager.scss';

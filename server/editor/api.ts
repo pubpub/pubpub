@@ -1,6 +1,6 @@
+import { Router } from 'express';
 import request from 'request-promise';
 
-import { Router } from 'express';
 import { getStructuredCitations } from 'server/utils/citations';
 import { renderToKatexString } from 'utils/katex';
 
@@ -20,7 +20,7 @@ router.post('/api/editor/latex-render', (req, res) => {
 			throwOnError: false,
 		});
 		return res.status(200).json(renderedHTML);
-	} catch (err) {
+	} catch (_err) {
 		return res.status(201).json('<div class="pub-latex-error">Error rendering equation</div>');
 	}
 });

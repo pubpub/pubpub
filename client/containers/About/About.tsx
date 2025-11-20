@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { GridWrapper } from 'components';
 
 import './about.scss';

@@ -1,9 +1,11 @@
 /* eslint-disable no-undef */
 // @ts-check
 /* global beforeAll, afterAll */
-import sinon, { SinonStub } from 'sinon';
+
+import sinon, { type SinonStub } from 'sinon';
 
 import { getEmptyDoc } from 'components/Editor';
+
 import * as firebaseAdmin from '../server/utils/firebaseAdmin';
 
 const stubManyFunctions = <T extends Record<string, any>>(

@@ -1,10 +1,11 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
+
 import { useBeforeUnload } from 'react-use';
 import { useDebounce } from 'use-debounce';
 
 import { ClientOnlyContext } from 'components';
 
-import { getCommunityLocalStorage, LocalStorable } from './localStorage';
+import { getCommunityLocalStorage, type LocalStorable } from './localStorage';
 
 type Options<T extends LocalStorable> = {
 	communityId: string;

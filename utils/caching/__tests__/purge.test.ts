@@ -1,8 +1,10 @@
+import { vi } from 'vitest';
+
 import { createPubEdge } from 'server/pubEdge/queries';
 import { finishDeferredTasks } from 'server/utils/deferred';
 import { login, modelize, setup, teardown } from 'stubstub';
 import { setEnvironment } from 'utils/environment';
-import { vi } from 'vitest';
+
 import { getCorrectHostname } from '../getCorrectHostname';
 import { getPPLic } from '../getHashedUserId';
 

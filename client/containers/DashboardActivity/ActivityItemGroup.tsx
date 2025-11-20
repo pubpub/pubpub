@@ -1,6 +1,6 @@
-import React from 'react';
+import type { RenderedActivityItem } from 'client/utils/activity/types';
 
-import { RenderedActivityItem } from 'client/utils/activity/types';
+import React from 'react';
 
 import ActivityItemRow from './ActivityItemRow';
 

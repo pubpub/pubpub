@@ -41,7 +41,7 @@ const communityMaintenance = async (subdomain) => {
 			{ concurrency },
 		);
 	} else {
-		// eslint-disable-next-line no-console
+		// biome-ignore lint/suspicious/noConsole: shhhhhh
 		console.log(`Could not find Community by subdomain {communitySubdomain}`);
 	}
 };

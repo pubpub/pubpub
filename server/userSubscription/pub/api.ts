@@ -1,6 +1,8 @@
-import { wrap } from 'server/wrap';
+import type { UserSubscriptionStatus } from 'types';
+
 import { Router } from 'express';
-import { UserSubscriptionStatus } from 'types';
+
+import { wrap } from 'server/wrap';
 
 import { setUserSubscriptionStatus } from '../shared/queries';
 

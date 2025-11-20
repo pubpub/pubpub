@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button } from 'reakit/Button';
+
 import { Spinner } from '@blueprintjs/core';
+import { Button } from 'reakit/Button';
 
 import { Icon } from 'components';
 

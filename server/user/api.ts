@@ -1,14 +1,14 @@
+import { Router } from 'express';
 import passport from 'passport';
 import { z } from 'zod';
 
-import { wrap } from 'server/wrap';
-import { Router } from 'express';
 import { BadRequestError, NotFoundError } from 'server/utils/errors';
-
-import { isProd, isDuqDuq } from 'utils/environment';
+import { wrap } from 'server/wrap';
 import { getHashedUserId } from 'utils/caching/getHashedUserId';
+import { isDuqDuq, isProd } from 'utils/environment';
+
 import { getPermissions } from './permissions';
-import { createUser, updateUser, getSuggestedEditsUserInfo } from './queries';
+import { createUser, getSuggestedEditsUserInfo, updateUser } from './queries';
 
 export const router = Router();
 

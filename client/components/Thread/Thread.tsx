@@ -1,4 +1,5 @@
 import React from 'react';
+
 import ThreadComment from './ThreadComment';
 import ThreadEvent from './ThreadEvent';
 

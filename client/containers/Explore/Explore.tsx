@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { CommunityPreview } from 'components';
 
 import './explore.scss';

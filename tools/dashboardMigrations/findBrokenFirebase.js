@@ -117,7 +117,7 @@ export default async () => {
 		const changesRef = database.ref(
 			`pub-${publicBranches[i].pubId}/branch-${publicBranches[i].id}/changes`,
 		);
-		/* eslint-disable-next-line no-await-in-loop */
+		/* biome-ignore lint/performance/noAwaitInLoops: shhhhhh */
 		const data = await changesRef.once('value');
 		const val = data.val();
 		if (val) {

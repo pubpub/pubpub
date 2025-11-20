@@ -1,6 +1,6 @@
-import { setup, teardown, login, modelize } from 'stubstub';
-
 import { vi } from 'vitest';
+
+import { login, modelize, setup, teardown } from 'stubstub';
 
 const models = modelize`
     Community community {

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Popover, Position, Tooltip, Menu, MenuItem } from '@blueprintjs/core';
+
+import { Button, Menu, MenuItem, Popover, Position, Tooltip } from '@blueprintjs/core';
+
 import { Icon } from 'components';
 
 import './labelSelect.scss';

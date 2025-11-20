@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import type { ExternalPublication, Pub } from 'types';
+
+import React, { useEffect, useState } from 'react';
+
 import { MenuItem, Position, Spinner } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import isUrl from 'is-url';
 
-import { PubMenuItem, PubTitle } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
+import { useManyPubs } from 'client/utils/useManyPubs';
+import { PubMenuItem, PubTitle } from 'components';
 import { isDoi } from 'utils/crossref/parseDoi';
 import { useThrottled } from 'utils/hooks';
-import { useManyPubs } from 'client/utils/useManyPubs';
-import { ExternalPublication, Pub } from 'types';
 
 import './newEdgeInput.scss';
 

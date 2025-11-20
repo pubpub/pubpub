@@ -1,10 +1,12 @@
-import React from 'react';
-import classNames from 'classnames';
-import { Classes, FormGroup, Switch, Button } from '@blueprintjs/core';
+import type * as types from 'types';
+import type { UserNotificationMarkReadTrigger } from 'types';
 
-import * as types from 'types';
+import React from 'react';
+
+import { Button, Classes, FormGroup, Switch } from '@blueprintjs/core';
+import classNames from 'classnames';
+
 import { MenuSelect } from 'components';
-import { UserNotificationMarkReadTrigger } from 'types';
 
 import './userNotificationPreferences.scss';
 

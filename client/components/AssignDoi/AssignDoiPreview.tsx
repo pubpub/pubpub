@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
+
 import { Tab, Tabs } from '@blueprintjs/core';
 
-import { formatDate } from 'utils/dates';
 import {
 	getDepositBody,
 	getDepositRecordContentVersion,
-	isPreprintDeposit,
 	isBookDeposit,
-	isJournalDeposit,
 	isConferenceDeposit,
+	isJournalDeposit,
 	isPeerReviewDeposit,
+	isPreprintDeposit,
 	isStandaloneComponentDeposit,
 } from 'utils/crossref/parseDeposit';
+import { formatDate } from 'utils/dates';
 
 import './assignDoiPreview.scss';
 

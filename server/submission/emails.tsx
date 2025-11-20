@@ -1,12 +1,14 @@
+import type * as types from 'types';
+
 import React from 'react';
+
 import ReactDOMServer from 'react-dom/server';
 
-import * as types from 'types';
-import { SubmissionEmail, Editor } from 'components';
+import { Editor, SubmissionEmail } from 'components';
 import { Collection, Community, SubmissionWorkflow, User } from 'server/models';
 import { sendEmail } from 'server/utils/email';
-import { pubUrl } from 'utils/canonicalUrls';
 import { expect } from 'utils/assert';
+import { pubUrl } from 'utils/canonicalUrls';
 
 type SendEmailOptions = {
 	previousStatus: types.SubmissionStatus;

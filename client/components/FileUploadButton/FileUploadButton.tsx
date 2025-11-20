@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+
 import { Button } from '@blueprintjs/core';
-import { Icon, IconName } from 'components';
+
 import { s3Upload } from 'client/utils/upload';
+import { Icon, type IconName } from 'components';
 
 import './fileUploadButton.scss';
 

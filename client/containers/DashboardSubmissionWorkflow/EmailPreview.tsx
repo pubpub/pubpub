@@ -1,7 +1,8 @@
+import type { Community } from 'types';
+
 import React from 'react';
 
 import { SubmissionEmail } from 'components';
-import { Community } from 'types';
 
 import './emailPreview.scss';
 

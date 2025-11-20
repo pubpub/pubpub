@@ -1,7 +1,7 @@
+import type { Callback, PatchFn, PatchFnArg } from 'types';
+
 import { useCallback, useMemo, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-
-import { Callback, PatchFn, PatchFnArg } from 'types';
 
 type InitialValue<T> = T | (() => T);
 

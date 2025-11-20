@@ -1,13 +1,14 @@
 import React from 'react';
 
+import { Router } from 'express';
+
 import { Legal } from 'containers';
 import Html from 'server/Html';
-import { Router } from 'express';
+import { getOrCreateUserNotificationPreferences } from 'server/userNotificationPreferences/queries';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
-import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getIntegrations } from 'server/utils/queryHelpers';
-import { getOrCreateUserNotificationPreferences } from 'server/userNotificationPreferences/queries';
+import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 
 export const router = Router();
 

@@ -1,8 +1,10 @@
-import React from 'react';
-import { NumericInput, Radio, RadioGroup } from '@blueprintjs/core';
+import type { License } from 'facets';
 
-import { License } from 'facets';
-import { FacetPropEditorProps } from '../../types';
+import type { FacetPropEditorProps } from '../../types';
+
+import React from 'react';
+
+import { NumericInput, Radio, RadioGroup } from '@blueprintjs/core';
 
 import './copyrightSelectionPicker.scss';
 

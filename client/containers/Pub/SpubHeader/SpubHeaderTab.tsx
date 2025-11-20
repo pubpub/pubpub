@@ -1,8 +1,9 @@
-import React, { useRef, useState, useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
+
 import classNames from 'classnames';
 
-import { GridWrapper } from 'components';
 import { useViewport } from 'client/utils/useViewport';
+import { GridWrapper } from 'components';
 
 import './spubHeaderTab.scss';
 

@@ -1,15 +1,17 @@
+import type { InitialData } from 'types';
+
 import React from 'react';
 
-import Html from 'server/Html';
 import { Router } from 'express';
-import { handleErrors, ForbiddenError, NotFoundError } from 'server/utils/errors';
+
+import { getCommunityArchives } from 'server/community/queries';
+import { getCommunityDepositTarget } from 'server/depositTarget/queries';
+import Html from 'server/Html';
+import { ForbiddenError, handleErrors, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
+import { getPubForRequest } from 'server/utils/queryHelpers';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { getPubForRequest } from 'server/utils/queryHelpers';
-import { getCommunityDepositTarget } from 'server/depositTarget/queries';
-import { InitialData } from 'types';
-import { getCommunityArchives } from 'server/community/queries';
 
 export const router = Router();
 

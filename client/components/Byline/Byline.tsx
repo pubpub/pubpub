@@ -1,8 +1,9 @@
+import type { MinimalUser, User } from 'types';
+
 import React from 'react';
 
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { joinOxford, naivePluralize } from 'utils/strings';
-import { MinimalUser, User } from 'types';
 
 import './byline.scss';
 

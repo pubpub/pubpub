@@ -1,10 +1,10 @@
+import type { Pub } from 'server/models';
+import type * as types from 'types';
+import type { getProposedMetadata } from 'workers/tasks/import/metadata';
+
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import * as types from 'types';
 import { z } from 'zod';
 
-import { Pub } from 'server/models';
-
-import { getProposedMetadata } from 'workers/tasks/import/metadata';
 import { baseSchema } from '../utils/baseSchema';
 import { collectionSchema } from './collection';
 import { collectionAttributionSchema } from './collectionAttribution';

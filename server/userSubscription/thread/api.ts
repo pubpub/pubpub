@@ -1,8 +1,10 @@
-import { wrap } from 'server/wrap';
+import type { UserSubscriptionStatus } from 'types';
+
 import { Router } from 'express';
+
 import { canUserSeeThread } from 'server/thread/queries';
 import { ForbiddenError } from 'server/utils/errors';
-import { UserSubscriptionStatus } from 'types';
+import { wrap } from 'server/wrap';
 
 import { setUserSubscriptionStatus } from '../shared/queries';
 

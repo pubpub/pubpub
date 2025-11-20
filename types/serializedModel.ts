@@ -1,5 +1,5 @@
-import { Attributes, CreationAttributes } from 'sequelize';
-import { Model } from 'sequelize-typescript';
+import type { Attributes, CreationAttributes } from 'sequelize';
+import type { Model } from 'sequelize-typescript';
 
 export type SerializedModel<
 	T extends Model,

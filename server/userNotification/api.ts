@@ -1,6 +1,7 @@
-import { wrap } from 'server/wrap';
 import { Router } from 'express';
+
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
+import { wrap } from 'server/wrap';
 
 import {
 	deleteUserNotifications,

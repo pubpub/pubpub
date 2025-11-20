@@ -1,5 +1,6 @@
-import { Divider } from '@blueprintjs/core';
 import React from 'react';
+
+import { Divider } from '@blueprintjs/core';
 import classNames from 'classnames';
 
 import { useSticky } from 'client/utils/useSticky';
@@ -7,8 +8,8 @@ import { buttons, FormattingBar } from 'components/FormattingBar';
 import { usePageContext } from 'utils/hooks';
 
 import { usePubContext } from '../pubHooks';
-import PubHeaderCollaborators from './PubHeaderCollaborators';
 import PubConnectionStatusIndicator from './PubConnectionStatusIndicator';
+import PubHeaderCollaborators from './PubHeaderCollaborators';
 import PubWordCountButton from './PubWordCountButton';
 
 import './pubHeaderFormatting.scss';

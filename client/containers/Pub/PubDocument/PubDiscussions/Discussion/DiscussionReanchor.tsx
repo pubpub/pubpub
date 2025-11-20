@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+
 import { Button, ButtonGroup, Card, Icon } from '@blueprintjs/core';
 
 import { reanchorDiscussion } from 'components/Editor';

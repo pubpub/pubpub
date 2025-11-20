@@ -1,8 +1,9 @@
 import { Op } from 'sequelize';
 
 import { ActivityItem } from 'server/models';
-import { setup, login, modelize, teardown } from 'stubstub';
 import { finishDeferredTasks } from 'server/utils/deferred';
+import { login, modelize, setup, teardown } from 'stubstub';
+
 import { fetchFacetsForScope } from '..';
 
 const models = modelize`

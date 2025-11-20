@@ -1,8 +1,11 @@
-import path from 'path';
+import type { CustomScripts, InitialData } from 'types';
+
 import React from 'react';
+
 import classNames from 'classnames';
+import path from 'path';
+
 import App from 'containers/App/App';
-import { CustomScripts, InitialData } from 'types';
 
 const manifest = require(
 	path.join(

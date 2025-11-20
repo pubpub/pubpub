@@ -1,13 +1,15 @@
+import type { AttributionWithUser } from 'types';
+
 import React, { Component } from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
+
 import { NonIdealState } from '@blueprintjs/core';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 import { apiFetch } from 'client/utils/apiFetch';
-import { AttributionWithUser } from 'types';
 import { UserAutocomplete } from 'components';
 
-import AttributionRow from './AttributionRow';
 import DragDropListing from '../DragDropListing/DragDropListing';
+import AttributionRow from './AttributionRow';
 
 import './attributionEditor.scss';
 

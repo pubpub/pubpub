@@ -1,7 +1,8 @@
 import React from 'react';
+
 import { Checkbox } from 'reakit/Checkbox';
 
-import { Icon, IconName } from 'components';
+import { Icon, type IconName } from 'components';
 
 import './kindToggle.scss';
 

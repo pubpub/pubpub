@@ -1,5 +1,6 @@
-import { Classes, IconName, ITreeNode, Tree, Tooltip } from '@blueprintjs/core';
-import React, { MouseEvent, useCallback, useLayoutEffect, useMemo, useReducer } from 'react';
+import React, { type MouseEvent, useCallback, useLayoutEffect, useMemo, useReducer } from 'react';
+
+import { Classes, type IconName, type ITreeNode, Tooltip, Tree } from '@blueprintjs/core';
 
 import { expect } from 'utils/assert';
 

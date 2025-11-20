@@ -1,11 +1,12 @@
 import React from 'react';
 
-import Html from 'server/Html';
 import { Router } from 'express';
-import { getInitialData } from 'server/utils/initData';
-import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { getLayoutPubsByBlock } from 'server/utils/layouts';
+
+import Html from 'server/Html';
 import { handleErrors, NotFoundError } from 'server/utils/errors';
+import { getInitialData } from 'server/utils/initData';
+import { getLayoutPubsByBlock } from 'server/utils/layouts';
+import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 
 export const router = Router();
 

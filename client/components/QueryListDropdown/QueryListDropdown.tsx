@@ -1,10 +1,11 @@
 import React from 'react';
-import { Popover, InputGroup, PopoverPosition } from '@blueprintjs/core';
+
+import { InputGroup, Popover, type PopoverPosition } from '@blueprintjs/core';
 import {
-	IQueryListRendererProps,
-	ItemRenderer,
+	type IQueryListProps,
+	type IQueryListRendererProps,
+	type ItemRenderer,
 	QueryList,
-	IQueryListProps,
 } from '@blueprintjs/select';
 
 import './queryListDropdown.scss';
@@ -51,7 +52,7 @@ const QueryListDropdown = <Item extends {}>(props: Props<Item>) => {
 		// eslint-disable-next-line no-shadow
 		const { handleKeyDown, handleKeyUp, handleQueryChange, itemList } = qlProps;
 		return (
-			// eslint-disable-next-line jsx-a11y/no-static-element-interactions
+			// biome-ignore lint/a11y: shhhhhh
 			<div className="search-wrapper" onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
 				<InputGroup
 					inputRef={(input) => input && setTimeout(() => input.focus(), 0)}

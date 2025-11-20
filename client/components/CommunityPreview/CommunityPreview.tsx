@@ -1,5 +1,7 @@
 import React from 'react';
+
 import PropTypes from 'prop-types';
+
 import { getResizedUrl } from 'utils/images';
 
 import './communityPreview.scss';

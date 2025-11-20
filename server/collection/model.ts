@@ -1,31 +1,33 @@
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+import type { CollectionKind, ReadNextPreviewSize, SerializedModel } from 'types';
+import type { CollectionLayout } from 'utils/layout';
+
 import {
-	Model,
-	Table,
+	AllowNull,
+	BelongsTo,
 	Column,
 	DataType,
-	PrimaryKey,
 	Default,
-	AllowNull,
-	IsLowercase,
-	Length,
-	Is,
 	HasMany,
 	HasOne,
-	BelongsTo,
+	Is,
+	IsLowercase,
+	Length,
+	Model,
+	PrimaryKey,
+	Table,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
-import { CollectionKind, ReadNextPreviewSize } from 'types';
-import { CollectionLayout } from 'utils/layout';
+
 import {
 	CollectionAttribution,
-	SubmissionWorkflow,
 	CollectionPub,
+	Community,
+	CrossrefDepositRecord,
 	Member,
 	Page,
-	CrossrefDepositRecord,
 	ScopeSummary,
-	Community,
+	SubmissionWorkflow,
 } from '../models';
 
 @Table
@@ -33,7 +35,7 @@ export class Collection extends Model<
 	InferAttributes<Collection>,
 	InferCreationAttributes<Collection>
 > {
-	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

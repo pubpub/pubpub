@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Button } from '@blueprintjs/core';
-import { Avatar } from 'components';
 
-import { usePageContext } from 'utils/hooks';
+import { Button } from '@blueprintjs/core';
+
+import { Avatar } from 'components';
 import { getDashUrl } from 'utils/dashboard';
+import { usePageContext } from 'utils/hooks';
 
 import MemberRow from './MemberRow';
 

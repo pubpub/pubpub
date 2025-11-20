@@ -1,12 +1,13 @@
-import { wrap } from 'server/wrap';
 import { Router } from 'express';
+
 import { ForbiddenError } from 'server/utils/errors';
+import { wrap } from 'server/wrap';
 
 import { canManageSubmissionWorkflow } from './permissions';
 import {
 	createSubmissionWorkflow,
-	updateSubmissionWorkflow,
 	destroySubmissionWorkFlow,
+	updateSubmissionWorkflow,
 } from './queries';
 
 export const router = Router();

@@ -1,6 +1,8 @@
+import type { Node } from 'prosemirror-model';
+
 import React, { useMemo, useState } from 'react';
+
 import { Button, Classes, Icon, Popover } from '@blueprintjs/core';
-import { Node } from 'prosemirror-model';
 
 import { getWordAndCharacterCountsFromDoc } from 'utils/pub/metadata';
 

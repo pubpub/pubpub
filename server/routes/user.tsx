@@ -1,14 +1,16 @@
+import type { Request, Response } from 'express';
+
 import React from 'react';
 
-import Html from 'server/Html';
 import { Router } from 'express';
-import type { Request, Response } from 'express';
-import { getUser } from 'server/utils/queryHelpers';
+
+import { isUserAffiliatedWithCommunity } from 'server/community/queries';
+import { getCustomScriptsForCommunity } from 'server/customScript/queries';
+import Html from 'server/Html';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
+import { getUser } from 'server/utils/queryHelpers';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { getCustomScriptsForCommunity } from 'server/customScript/queries';
-import { isUserAffiliatedWithCommunity } from 'server/community/queries';
 import { expect } from 'utils/assert';
 import { getCorrectHostname } from 'utils/caching/getCorrectHostname';
 

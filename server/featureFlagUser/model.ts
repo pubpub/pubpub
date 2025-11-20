@@ -1,22 +1,25 @@
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+import type { SerializedModel } from 'types';
+
 import {
-	Model,
-	Table,
+	BelongsTo,
 	Column,
 	DataType,
-	PrimaryKey,
 	Default,
-	BelongsTo,
+	Model,
+	PrimaryKey,
+	Table,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
-import { User, FeatureFlag } from '../models';
+
+import { FeatureFlag, User } from '../models';
 
 @Table
 export class FeatureFlagUser extends Model<
 	InferAttributes<FeatureFlagUser>,
 	InferCreationAttributes<FeatureFlagUser>
 > {
-	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

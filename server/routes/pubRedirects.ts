@@ -1,11 +1,12 @@
-import queryString, { ParsedQuery } from 'query-string';
+import type { DefinitelyHas } from 'types';
 
-import { isDuqDuq } from 'utils/environment';
 import { Router } from 'express';
+import queryString, { type ParsedQuery } from 'query-string';
+
 import { Community, Pub, Release } from 'server/models';
 import { handleErrors } from 'server/utils/errors';
 import { hostIsValid } from 'server/utils/routes';
-import { DefinitelyHas } from 'types';
+import { isDuqDuq } from 'utils/environment';
 
 export const router = Router();
 

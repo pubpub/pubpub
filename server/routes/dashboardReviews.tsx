@@ -1,13 +1,15 @@
+import type { InitialData } from 'types';
+
 import React from 'react';
+
+import { Router } from 'express';
 
 import Html from 'server/Html';
 import { getManyPubs } from 'server/pub/queryMany';
-import { Router } from 'express';
-import { NotFoundError, handleErrors } from 'server/utils/errors';
+import { handleErrors, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { InitialData } from 'types';
 
 export const router = Router();
 

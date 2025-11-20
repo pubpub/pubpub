@@ -1,25 +1,27 @@
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+import type { DefinitelyHas, SerializedModel } from 'types';
+
 import {
-	Model,
-	Table,
-	Column,
-	DataType,
-	PrimaryKey,
-	Default,
-	Index,
 	AllowNull,
 	BelongsTo,
+	Column,
+	DataType,
+	Default,
+	Index,
+	Model,
+	PrimaryKey,
+	Table,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
-import { DefinitelyHas } from 'types';
-import { Pub, Community } from '../models';
+
+import { Community, Pub } from '../models';
 
 @Table
 export class LandingPageFeature extends Model<
 	InferAttributes<LandingPageFeature>,
 	InferCreationAttributes<LandingPageFeature>
 > {
-	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

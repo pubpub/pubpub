@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+
 import Color from 'color';
 
 import './banner.scss';

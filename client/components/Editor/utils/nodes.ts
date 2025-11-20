@@ -1,6 +1,6 @@
-import { Node } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
-import { Selection } from 'prosemirror-state';
+import type { Node } from 'prosemirror-model';
+import type { Selection } from 'prosemirror-state';
+import type { EditorView } from 'prosemirror-view';
 
 export const updateNodeAttrsById = (editorView: EditorView, id: string, attrs: Node['attrs']) => {
 	const {

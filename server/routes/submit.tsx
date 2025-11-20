@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { hostIsValid } from 'server/utils/routes';
-import { ForbiddenError, handleErrors } from 'server/utils/errors';
+
 import { canCreateSubmission } from 'server/submission/permissions';
 import { createSubmission } from 'server/submission/queries';
+import { ForbiddenError, handleErrors } from 'server/utils/errors';
 import { getPub } from 'server/utils/queryHelpers';
+import { hostIsValid } from 'server/utils/routes';
 
 export const router = Router();
 
@@ -24,7 +25,7 @@ router.get(['/submit/:submissionWorkflowId'], async (req, res, next) => {
 		}
 		const params = new URLSearchParams({ redirect: req.url }).toString();
 		return res.redirect(`/login?${params}`);
-	} catch (err) {
+	} catch (_err) {
 		return handleErrors(req, res, next);
 	}
 });

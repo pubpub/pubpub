@@ -1,10 +1,11 @@
 import React from 'react';
+
 import { Button } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
-import PubToc from './PubToc';
 import { usePubContext } from '../pubHooks';
+import PubToc from './PubToc';
 
 import './pubHeaderSticky.scss';
 

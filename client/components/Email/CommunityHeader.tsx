@@ -1,9 +1,11 @@
+import type { Community } from 'types';
+
 import React from 'react';
+
 import styled from 'styled-components';
 
-import { Community } from 'types';
-import { getResizedUrl } from 'utils/images';
 import { formatDate } from 'utils/dates';
+import { getResizedUrl } from 'utils/images';
 
 import { Section } from './Section';
 import { BaseTableStyle } from './shared';

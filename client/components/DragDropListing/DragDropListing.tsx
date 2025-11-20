@@ -1,16 +1,18 @@
 /** Manages a drag-and-droppable listing of pubs using react-beautiful-dnd. */
+
+import type { Maybe } from 'types';
+
 import React from 'react';
+
 import classNames from 'classnames';
 import {
 	Draggable,
+	type DraggableProvided,
+	type DraggableProvidedDragHandleProps,
+	type DraggableRubric,
+	type DraggableStateSnapshot,
 	Droppable,
-	DraggableProvidedDragHandleProps,
-	DraggableProvided,
-	DraggableStateSnapshot,
-	DraggableRubric,
 } from 'react-beautiful-dnd';
-
-import { Maybe } from 'types';
 
 import './dragDropListing.scss';
 

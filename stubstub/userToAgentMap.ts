@@ -1,7 +1,9 @@
-import supertest from 'supertest';
-import { UserWithPrivateFieldsAndHashedPassword } from 'types';
-
 import type { Server } from 'http';
+
+import type { UserWithPrivateFieldsAndHashedPassword } from 'types';
+
+import supertest from 'supertest';
+
 import { __appImmutableListenOnly } from '../server/server';
 
 const userToAgentMap = new Map();

@@ -1,7 +1,7 @@
 /* eslint-disable-line */
-import { Model } from 'sequelize';
+import type { Model } from 'sequelize';
 // eslint-disable-next-line import/no-unresolved
-import { Fn, Col, Literal } from 'sequelize/types/utils';
+import type { Col, Fn, Literal } from 'sequelize/types/utils';
 
 /**
  * Retrieve what the `update` method of a Sequelize model expects as its first argument, but then

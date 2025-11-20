@@ -1,11 +1,12 @@
+import type { InitialCommunityData, Pub, PubEdge } from 'types';
+
 import React from 'react';
 
-import { Icon, Byline, PubByline } from 'components';
-import { InitialCommunityData, Pub, PubEdge } from 'types';
-import { pubShortUrl, pubUrl } from 'utils/canonicalUrls';
+import { Byline, Icon, PubByline } from 'components';
 import { intersperse } from 'utils/arrays';
-import { getRelationTypeName } from 'utils/pubEdge/relations';
+import { pubShortUrl, pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
+import { getRelationTypeName } from 'utils/pubEdge/relations';
 
 import './pubPreviewEdges.scss';
 

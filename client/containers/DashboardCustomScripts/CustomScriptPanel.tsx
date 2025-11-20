@@ -1,12 +1,14 @@
+import type { CustomScriptType } from 'types';
+
+import type { EditorComponentType } from './types';
+
 import React, { useState } from 'react';
-import { useBeforeUnload } from 'react-use';
+
 import { Button } from '@blueprintjs/core';
+import { useBeforeUnload } from 'react-use';
 
 import { apiFetch } from 'client/utils/apiFetch';
-import { CustomScriptType } from 'types';
 import { usePageContext } from 'utils/hooks';
-
-import { EditorComponentType } from './types';
 
 import './customScriptPanel.scss';
 

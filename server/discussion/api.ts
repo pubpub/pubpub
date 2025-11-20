@@ -1,8 +1,9 @@
-import { wrap } from 'server/wrap';
 import { Router } from 'express';
-import { ForbiddenError } from 'server/utils/errors';
 
-import { getCreatePermission, getUpdatePermissions, canReleaseDiscussions } from './permissions';
+import { ForbiddenError } from 'server/utils/errors';
+import { wrap } from 'server/wrap';
+
+import { canReleaseDiscussions, getCreatePermission, getUpdatePermissions } from './permissions';
 import { createDiscussion, updateDiscussion, updateVisibilityForDiscussions } from './queries';
 import { createDiscussionAnchorsForLatestRelease } from './utils';
 

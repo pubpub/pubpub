@@ -1,11 +1,13 @@
 import React from 'react';
+
 import { Classes, NonIdealState } from '@blueprintjs/core';
 
 import { GridWrapper, PubPreview } from 'components';
 import { usePageContext } from 'utils/hooks';
+
+import UserEdit from './UserEdit';
 import UserHeader from './UserHeader';
 import UserNav from './UserNav';
-import UserEdit from './UserEdit';
 
 import './user.scss';
 

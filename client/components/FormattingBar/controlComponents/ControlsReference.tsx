@@ -1,16 +1,17 @@
-import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import type { EditorChangeObjectWithNode } from '../types';
+
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import classNames from 'classnames';
 
 import { ReferencesDropdown } from 'components';
 import {
 	getCurrentNodeLabels,
 	getReferenceableNodes,
-	NodeReference,
+	type NodeReference,
 } from 'components/Editor/utils/references';
 import { usePubContext } from 'containers/Pub/pubHooks';
-
 import { getDashUrl } from 'utils/dashboard';
-import { EditorChangeObjectWithNode } from '../types';
 
 import './controlsReference.scss';
 

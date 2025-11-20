@@ -1,8 +1,9 @@
 import { Router } from 'express';
+
 import { expect } from 'utils/assert';
 
 import { getPermissions } from './permissions';
-import { createReview, createReviewRelease, updateReview, destroyReview } from './queries';
+import { createReview, createReviewRelease, destroyReview, updateReview } from './queries';
 
 export const router = Router();
 

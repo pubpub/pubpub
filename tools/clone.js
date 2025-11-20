@@ -123,7 +123,7 @@ const clonePub = async ({ pubId, newCommunityId, collectionIdMap }) => {
 		draftId: draft.id,
 	});
 	await cloneScopeSummary(existingPub, newPub);
-	// eslint-disable-next-line no-console
+	// biome-ignore lint/suspicious/noConsole: shhhhhh
 	console.log('Cloning', newPub.title);
 	const discussionIdMap = await cloneManyModels(
 		Discussion,

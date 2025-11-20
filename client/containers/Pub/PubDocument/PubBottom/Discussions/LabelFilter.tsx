@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import {
 	Icon as BlueprintIcon,
 	Button,
@@ -11,8 +12,8 @@ import {
 } from '@blueprintjs/core';
 import uuidv4 from 'uuid/v4';
 
-import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'client/utils/apiFetch';
+import Icon from 'components/Icon/Icon';
 
 import './labelFilter.scss';
 

@@ -1,5 +1,6 @@
-import { asyncForEach, asyncMap } from 'utils/async';
 import { vi } from 'vitest';
+
+import { asyncForEach, asyncMap } from 'utils/async';
 
 describe('async utils', () => {
 	beforeAll(() => vi.useFakeTimers());

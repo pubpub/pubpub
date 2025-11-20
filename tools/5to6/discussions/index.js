@@ -18,7 +18,7 @@ const firebaseApp =
 					databaseURL: process.env.V6_FIREBASE_URL,
 				},
 				'firebase-pub-new',
-		  );
+			);
 const database = firebaseApp.database();
 
 const main = async () => {

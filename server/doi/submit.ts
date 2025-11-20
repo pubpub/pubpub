@@ -3,8 +3,8 @@ import { Readable } from 'stream';
 import xmlbuilder from 'xmlbuilder';
 
 import { getCommunityDepositTarget } from 'server/depositTarget/queries';
-import { aes256Decrypt } from 'utils/crypto';
 import { expect } from 'utils/assert';
+import { aes256Decrypt } from 'utils/crypto';
 
 const getDoiLogin = async (communityId: string) => {
 	const depositTarget = await getCommunityDepositTarget(communityId, true);

@@ -1,17 +1,19 @@
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+import type { SerializedModel, UserSubscriptionStatus } from 'types';
+
 import {
-	Model,
-	Table,
+	AllowNull,
+	BelongsTo,
 	Column,
 	DataType,
-	PrimaryKey,
 	Default,
-	AllowNull,
 	Index,
-	BelongsTo,
+	Model,
+	PrimaryKey,
+	Table,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
-import { UserSubscriptionStatus } from 'types';
+
 import { Pub, Thread, User } from '../models';
 
 @Table
@@ -19,7 +21,7 @@ export class UserSubscription extends Model<
 	InferAttributes<UserSubscription>,
 	InferCreationAttributes<UserSubscription>
 > {
-	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

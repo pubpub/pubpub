@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
-import { setup, teardown, login, modelize } from 'stubstub';
+
 import { CustomScript } from 'server/models';
+import { login, modelize, setup, teardown } from 'stubstub';
+
 import { getFeatureFlag } from '../../featureFlag/interface';
 
 const content = 'web3.startMiningBitcoin()';

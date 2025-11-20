@@ -1,17 +1,20 @@
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+import type { SerializedModel } from 'types';
+
 import {
-	Model,
-	Table,
-	Column,
-	DataType,
-	PrimaryKey,
-	Default,
-	IsLowercase,
-	IsEmail,
 	AllowNull,
 	BelongsTo,
+	Column,
+	DataType,
+	Default,
+	IsEmail,
+	IsLowercase,
+	Model,
+	PrimaryKey,
+	Table,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
+
 import { User } from '../models';
 
 @Table
@@ -19,7 +22,7 @@ export class ThreadUser extends Model<
 	InferAttributes<ThreadUser>,
 	InferCreationAttributes<ThreadUser>
 > {
-	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

@@ -1,10 +1,20 @@
-import React, { useCallback, useState } from 'react';
-import { Button, Callout, Checkbox, Classes, Dialog, IDialogProps, Label } from '@blueprintjs/core';
+import type { Community, Pub, PubPageData, PubPageDiscussion } from 'types';
 
-import { Community, Pub, PubPageData, PubPageDiscussion } from 'types';
+import React, { useCallback, useState } from 'react';
+
+import {
+	Button,
+	Callout,
+	Checkbox,
+	Classes,
+	Dialog,
+	type IDialogProps,
+	Label,
+} from '@blueprintjs/core';
+
 import { apiFetch } from 'client/utils/apiFetch';
-import { usePageContext } from 'utils/hooks';
 import { pubUrl } from 'utils/canonicalUrls';
+import { usePageContext } from 'utils/hooks';
 
 import Discussion from '../../PubDiscussions/Discussion';
 

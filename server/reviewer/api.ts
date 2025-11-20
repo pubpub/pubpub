@@ -1,7 +1,9 @@
-import { wrap } from 'server/wrap';
 import { Router } from 'express';
-import { createReviewer } from './queries';
+
+import { wrap } from 'server/wrap';
+
 import { getPermissions } from './permissions';
+import { createReviewer } from './queries';
 
 export const router = Router();
 

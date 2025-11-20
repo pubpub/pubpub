@@ -1,7 +1,8 @@
+import type { SlugStatus } from 'types';
+
 import { Op } from 'sequelize';
 
-import { Page, Collection } from 'server/models';
-import { SlugStatus } from 'types';
+import { Collection, Page } from 'server/models';
 
 export const definitelyForbiddenSlugs = [
 	'dash',

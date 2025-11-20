@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Icon, IconName } from 'components';
+import { Icon, type IconName } from 'components';
 
 import './quickActions.scss';
 

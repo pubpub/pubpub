@@ -1,12 +1,13 @@
-import { queryPubIds, getPubsById } from 'server/pub/queryMany';
+import type { InitialData, Maybe, PubsQueryOrdering, SanitizedPubData } from 'types';
+
+import { getPubsById, queryPubIds } from 'server/pub/queryMany';
 import {
-	LayoutBlockPubs,
-	LayoutBlock,
-	LayoutPubsByBlock,
-	PubSortOrder,
+	type LayoutBlock,
+	type LayoutBlockPubs,
+	type LayoutPubsByBlock,
 	maxPubsPerBlock,
+	type PubSortOrder,
 } from 'utils/layout';
-import { InitialData, Maybe, PubsQueryOrdering, SanitizedPubData } from 'types';
 
 type BlockContent = LayoutBlockPubs['content'];
 
@@ -81,7 +82,7 @@ export const getPubIdsForLayout = async ({
 	const seenPubIds = new Set<string>();
 	// eslint-disable-next-line no-restricted-syntax
 	for (const block of pubBlocks) {
-		// eslint-disable-next-line no-await-in-loop
+		// biome-ignore lint/performance/noAwaitInLoops: shhhhhh
 		const pubIdsForBlock = await getPubIdsForLayoutBlock(
 			block.content,
 			communityId,

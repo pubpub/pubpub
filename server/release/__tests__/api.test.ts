@@ -1,17 +1,17 @@
+import type { DocJson } from 'types';
+
+import { createDiscussion } from 'server/discussion/queries';
+import { DiscussionAnchor, Doc, Export, Release } from 'server/models';
 import {
-	setup,
-	teardown,
-	login,
-	modelize,
 	determinize,
 	editPub,
 	expectCreatedActivityItem,
+	login,
+	modelize,
+	setup,
+	teardown,
 } from 'stubstub';
-
-import { DiscussionAnchor, Doc, Export, Release } from 'server/models';
 import { getExportFormats } from 'utils/export/formats';
-import { createDiscussion } from 'server/discussion/queries';
-import { DocJson } from 'types';
 
 const models = modelize`
 	Community community {

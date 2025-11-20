@@ -1,26 +1,28 @@
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+import type { DocJson, SerializedModel } from 'types';
+
 import {
-	Model,
-	Table,
+	AllowNull,
+	BelongsTo,
 	Column,
 	DataType,
-	PrimaryKey,
 	Default,
-	AllowNull,
-	Index,
-	BelongsTo,
 	HasMany,
+	Index,
+	Model,
+	PrimaryKey,
+	Table,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
-import { DocJson } from 'types';
-import { Thread, Visibility, User, Pub, Reviewer } from '../models';
+
+import { Pub, Reviewer, Thread, User, Visibility } from '../models';
 
 @Table
 export class ReviewNew extends Model<
 	InferAttributes<ReviewNew>,
 	InferCreationAttributes<ReviewNew>
 > {
-	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

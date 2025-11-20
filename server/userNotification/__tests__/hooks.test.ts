@@ -1,10 +1,11 @@
+import type { DocJson } from 'types';
+
+import { vi } from 'vitest';
+
 import { ActivityItem, UserNotification } from 'server/models';
 import { createThreadComment } from 'server/threadComment/queries';
 import { finishDeferredTasks } from 'server/utils/deferred';
 import { modelize, setup, teardown } from 'stubstub';
-
-import { DocJson } from 'types';
-import { vi } from 'vitest';
 
 // eslint-disable-next-line import/extensions
 // const mailgunMessages = require('../hooks.ts').mg.messages;

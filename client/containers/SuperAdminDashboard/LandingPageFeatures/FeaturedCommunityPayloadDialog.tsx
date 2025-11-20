@@ -1,9 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import { Classes, Button, Dialog, Radio, RadioGroup } from '@blueprintjs/core';
+import type { LandingPageCommunityFeature } from 'types';
 
-import { LandingPageCommunityFeature } from 'types';
-import { InputField, MinimalEditor, ColorInput, ImageUpload } from 'components';
+import React, { useCallback, useState } from 'react';
+
+import { Button, Classes, Dialog, Radio, RadioGroup } from '@blueprintjs/core';
+
 import { apiFetch } from 'client/utils/apiFetch';
+import { ColorInput, ImageUpload, InputField, MinimalEditor } from 'components';
 
 import './featuredCommunityPayloadDialog.scss';
 

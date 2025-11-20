@@ -1,23 +1,25 @@
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+import type { SerializedModel, VisibilityAccess } from 'types';
+
 import {
-	Model,
-	Table,
+	BelongsToMany,
 	Column,
 	DataType,
-	PrimaryKey,
 	Default,
-	BelongsToMany,
+	Model,
+	PrimaryKey,
+	Table,
 } from 'sequelize-typescript';
-import type { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import type { SerializedModel } from 'types';
-import { VisibilityAccess } from 'types';
-import { VisibilityUser, User } from '../models';
+
+import { User, VisibilityUser } from '../models';
 
 @Table
 export class Visibility extends Model<
 	InferAttributes<Visibility>,
 	InferCreationAttributes<Visibility>
 > {
-	declare public toJSON: <M extends Model>(this: M) => SerializedModel<M>;
+	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
 	@Default(DataType.UUIDV4)
 	@PrimaryKey

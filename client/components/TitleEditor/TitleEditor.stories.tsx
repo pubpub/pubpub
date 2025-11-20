@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
+
 import React, { useState } from 'react';
+
 import { storiesOf } from '@storybook/react';
 
 import TitleEditor from './TitleEditor';

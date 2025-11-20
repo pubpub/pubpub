@@ -1,6 +1,7 @@
-import { wrap } from 'server/wrap';
 import { Router } from 'express';
+
 import { ForbiddenError } from 'server/utils/errors';
+import { wrap } from 'server/wrap';
 
 import { getPermissions } from './permissions';
 import { createThreadComment, updateThreadComment } from './queries';

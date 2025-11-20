@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import type { Pub } from 'types';
+
+import React, { useRef, useState } from 'react';
+
 import { Button, ButtonGroup } from '@blueprintjs/core';
 
-import { Pub } from 'types';
 import { ClickToCopyButton } from 'components';
 
 import CitationsModal from './CitationsModal';

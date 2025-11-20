@@ -1,8 +1,7 @@
+import { FeatureFlag, FeatureFlagCommunity, FeatureFlagUser } from 'server/models';
 import { modelize, setup, teardown } from 'stubstub';
 
-import { FeatureFlag, FeatureFlagCommunity, FeatureFlagUser } from 'server/models';
-
-import { createFeatureFlag, getFeatureFlag, destroyFeatureFlag } from '../interface';
+import { createFeatureFlag, destroyFeatureFlag, getFeatureFlag } from '../interface';
 
 const fleetsName = `fleets-${crypto.randomUUID().split('-').pop()}`;
 

@@ -1,7 +1,8 @@
-import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
+import { vi } from 'vitest';
+
 import { Submission, SubmissionWorkflow } from 'server/models';
 import { finishDeferredTasks } from 'server/utils/deferred';
-import { vi } from 'vitest';
+import { expectCreatedActivityItem, login, modelize, setup, teardown } from 'stubstub';
 
 const models = modelize`
 	Community community {

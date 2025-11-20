@@ -1,8 +1,9 @@
 import React from 'react';
+
 import { storiesOf } from '@storybook/react';
 
-import DashboardReview from 'containers/DashboardReview/DashboardReview';
 import { AccentStyle } from 'components';
+import DashboardReview from 'containers/DashboardReview/DashboardReview';
 import { communityData } from 'utils/storybook/data';
 
 import { reviewData } from './data';

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Classes, Menu, MenuItem } from '@blueprintjs/core';
 
 import { Icon } from 'components';

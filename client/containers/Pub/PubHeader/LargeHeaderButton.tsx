@@ -1,8 +1,9 @@
 import React from 'react';
+
 import classNames from 'classnames';
 import { Button } from 'reakit';
 
-import { Icon, IconName } from 'components';
+import { Icon, type IconName } from 'components';
 
 import './largeHeaderButton.scss';
 

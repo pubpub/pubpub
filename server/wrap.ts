@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 type Wrap = <
 	P = any,
@@ -16,7 +16,7 @@ export const wrap: Wrap =
 	(routeHandlerFn) =>
 	async (...args) => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const [req, res, next] = args;
+		const [_req, _res, next] = args;
 		try {
 			return await routeHandlerFn(...args);
 		} catch (err) {
