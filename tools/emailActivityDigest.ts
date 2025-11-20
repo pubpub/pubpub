@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import type * as types from 'types';
 
 import * as Sentry from '@sentry/node';

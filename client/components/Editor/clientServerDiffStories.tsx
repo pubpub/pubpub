@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable react/prop-types */
-
 import React, { useRef, useState } from 'react';
 
 import { storiesOf } from '@storybook/react';
@@ -28,7 +25,7 @@ const ServerEditor = (props) => {
 		rendered.current = true;
 		props.onChange(serverHtml);
 	}
-	/* eslint-disable-next-line react/no-danger */
+
 	return <div className="editor ProseMirror" dangerouslySetInnerHTML={{ __html: serverHtml }} />;
 };
 

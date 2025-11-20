@@ -130,7 +130,6 @@ export const useEditorView = (options: EditorViewOptions) => {
 		if (viewRef.current === null) {
 			viewRef.current = createEditorView(options);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

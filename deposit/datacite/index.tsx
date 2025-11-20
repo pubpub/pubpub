@@ -1,6 +1,5 @@
 /** @jsx x */
 /** @jsxFrag null */
-/* eslint-disable react/no-unknown-property */
 
 import type { DepositTarget } from 'types';
 

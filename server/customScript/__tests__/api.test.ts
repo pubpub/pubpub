@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax, no-await-in-loop */
-
 import { CustomScript } from 'server/models';
 import { login, modelize, setup, teardown } from 'stubstub';
 

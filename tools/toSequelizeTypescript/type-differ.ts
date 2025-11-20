@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-continue */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-bitwise */
-/* eslint-disable no-restricted-syntax */
 // ./type-printer.ts
 
 import { diffLines, diffWordsWithSpace } from 'diff';
@@ -113,7 +108,6 @@ const diffs = [typeBSignature, typeBSignature].map((sig, idx) =>
 						.map((pair) => pair.trim()) ?? [],
 			) ?? [];
 
-		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		return { name: s.name, type: generateDiff(s1, s2, !!idx) };
 	}),
 );

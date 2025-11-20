@@ -6,7 +6,6 @@ import { formatDate } from 'utils/dates';
 
 import DatePicker from './DatePicker';
 
-// eslint-disable-next-line react/prop-types
 const StatefulDatePicker = ({ initialDate }) => {
 	const [date, setDate] = useState(initialDate);
 	return (

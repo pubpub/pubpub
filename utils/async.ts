@@ -66,21 +66,15 @@ export async function asyncMap<T, R>(
 						.then((value) => {
 							return iteratee(value, index, resolvedLength);
 						})
-						.then(
-							// eslint-disable-next-line no-loop-func
-							(value) => {
-								pending--;
-								results[index] = value;
-								enqueueNextPromises();
-							},
-						)
-						.catch(
-							// eslint-disable-next-line no-loop-func
-							(err) => {
-								pending--;
-								reject(err);
-							},
-						);
+						.then((value) => {
+							pending--;
+							results[index] = value;
+							enqueueNextPromises();
+						})
+						.catch((err) => {
+							pending--;
+							reject(err);
+						});
 				}
 			}
 		}

@@ -59,7 +59,6 @@ const MinimalEditor = (props: Props) => {
 		if (focusOnLoad && changeObject?.view) {
 			changeObject.view.focus();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -68,7 +67,6 @@ const MinimalEditor = (props: Props) => {
 				<FormattingBarComponent {...innerProps} buttons={getButtons(buttons as any)} />
 			));
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleWrapperClick = () => {

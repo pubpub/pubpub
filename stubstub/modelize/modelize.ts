@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import type { Graph } from 'graphlib';
 import type { Model } from 'sequelize';
 
@@ -11,7 +10,6 @@ import { buildProxyObject } from './proxy';
 type BuildNames = keyof typeof builders;
 
 const isBuildName = (name: string): name is BuildNames => {
-	// eslint-disable-next-line no-prototype-builtins
 	return Object.hasOwn(builders, name);
 };
 

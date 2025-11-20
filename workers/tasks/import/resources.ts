@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import path from 'path';
 
 import { generateAssetKeyForFile, getUrlForAssetKey, uploadFileToAssetStore } from './assetStore';

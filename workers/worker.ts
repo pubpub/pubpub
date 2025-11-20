@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
-
 import type { ChildProcessWithoutNullStreams } from 'child_process';
 
 import type { Prettify } from 'types';

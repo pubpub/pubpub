@@ -49,7 +49,6 @@ const QueryListDropdown = <Item extends {}>(props: Props<Item>) => {
 	} = props;
 
 	const renderPopoverContent = (qlProps: IQueryListRendererProps<Item>) => {
-		// eslint-disable-next-line no-shadow
 		const { handleKeyDown, handleKeyUp, handleQueryChange, itemList } = qlProps;
 		return (
 			// biome-ignore lint/a11y: shhhhhh

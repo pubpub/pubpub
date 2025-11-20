@@ -1,5 +1,3 @@
-/* eslint-disable react/button-has-type */
-
 import React, { useState } from 'react';
 
 import { storiesOf } from '@storybook/react';

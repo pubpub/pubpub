@@ -1,6 +1,4 @@
-/* eslint-disable-line */
 import type { Model } from 'sequelize';
-// eslint-disable-next-line import/no-unresolved
 import type { Col, Fn, Literal } from 'sequelize/types/utils';
 
 /**

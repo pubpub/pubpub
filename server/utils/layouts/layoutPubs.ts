@@ -80,7 +80,7 @@ export const getPubIdsForLayout = async ({
 	const pubBlocks = blocks.filter((block): block is LayoutBlockPubs => block.type === 'pubs');
 	const pubIdsByBlockId: Record<string, string[]> = {};
 	const seenPubIds = new Set<string>();
-	// eslint-disable-next-line no-restricted-syntax
+
 	for (const block of pubBlocks) {
 		// biome-ignore lint/performance/noAwaitInLoops: shhhhhh
 		const pubIdsForBlock = await getPubIdsForLayoutBlock(

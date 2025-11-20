@@ -1,4 +1,3 @@
-/* eslint-disable import/first, import/order */
 import * as Sentry from '@sentry/node';
 import compression from 'compression';
 import CreateSequelizeStore from 'connect-session-sequelize';
@@ -33,7 +32,6 @@ if (isQubQub() && !process.env.HEROKU_SLUG_COMMIT) {
 import { errorMiddleware, HTTPStatusError } from 'server/utils/errors';
 
 if (process.env.NODE_ENV !== 'test') {
-	// eslint-disable-next-line global-require
 	require('server/utils/serverModuleOverwrite');
 }
 
@@ -248,7 +246,7 @@ const { customScript: _, ...contractWithoutCustomScript } = contract;
 /* ------------------------- */
 createExpressEndpoints(contractWithoutCustomScript, server, appRouter, {
 	logInitialization: false,
-	// eslint-disable-next-line consistent-return
+
 	requestValidationErrorHandler: (err, req, res, next) => {
 		if (!(err instanceof RequestValidationError)) {
 			next(err);

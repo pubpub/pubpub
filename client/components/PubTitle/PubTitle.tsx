@@ -18,7 +18,6 @@ const PubTitle = (props: Props) => {
 	const shouldUseHtmlTitle = providedShouldUseHtmlTitle || featureFlags.htmlPubHeaderValues;
 
 	if (shouldUseHtmlTitle && htmlTitle) {
-		// eslint-disable-next-line react/no-danger
 		return <span dangerouslySetInnerHTML={{ __html: htmlTitle }} />;
 	}
 

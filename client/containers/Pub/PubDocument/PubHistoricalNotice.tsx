@@ -99,7 +99,6 @@ const PubHistoricalNotice = (props: Props) => {
 								/>
 								<div
 									className={classNames('note', !noteText && 'empty')}
-									// eslint-disable-next-line react/no-danger
 									dangerouslySetInnerHTML={{
 										__html: noteText || 'No Release Note',
 									}}

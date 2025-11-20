@@ -1,8 +1,5 @@
-/* eslint-disable no-console */
-
 import type { TaskType } from './worker';
 
-// eslint-disable-next-line import/no-unresolved
 import * as Sentry from '@sentry/node';
 import amqplib from 'amqplib';
 import path from 'path';

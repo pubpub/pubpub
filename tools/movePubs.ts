@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import type * as types from 'types';
 
 import chalk from 'chalk';

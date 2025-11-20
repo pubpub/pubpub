@@ -167,7 +167,7 @@ class ImageUpload extends Component<
 		return (
 			<div className={`image-upload-component ${Classes.FORM_GROUP}`}>
 				{/* This label's target is properly nested, but rendered by renderInput() */}
-				{/* eslint-disable-next-line jsx-a11y/label-has-for */}
+
 				<label htmlFor={`input-${this.props.htmlFor}`}>
 					{this.props.label}
 					{this.props.isRequired && (

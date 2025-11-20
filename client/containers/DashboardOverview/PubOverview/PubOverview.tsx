@@ -138,7 +138,6 @@ const PubOverview = (props: Props) => {
 						<div className="description">
 							{featureFlags.htmlPubHeaderValues ? (
 								<span
-									// eslint-disable-next-line react/no-danger
 									dangerouslySetInnerHTML={{
 										__html: htmlDescription ?? description ?? '',
 									}}

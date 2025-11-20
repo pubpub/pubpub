@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle, react/no-array-index-key, react/prop-types, global-require */
-
 import type { DocJson } from 'types';
 
 import type { NotesData, PubMetadata } from './types';
@@ -318,9 +316,9 @@ export const renderStaticHtml = async (options: RenderStaticHtmlOptions) => {
 			<head>
 				<title>{title}</title>
 				<meta charSet="utf-8" />
-				{/* eslint-disable-next-line react/no-danger */}
+
 				<style type="text/css" dangerouslySetInnerHTML={{ __html: staticCss }} />
-				{/* eslint-disable-next-line react/no-danger */}
+
 				<script dangerouslySetInnerHTML={{ __html: loadCjkFontsScript }} />
 			</head>
 			<body>

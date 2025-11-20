@@ -64,7 +64,7 @@ const renderBody = (context) => {
 const removeEmptyKeys = (obj) => {
 	Object.keys(obj).forEach((key) => {
 		if (obj[key] && typeof obj[key] === 'object') removeEmptyKeys(obj[key]);
-		// eslint-disable-next-line no-param-reassign
+		
 		else if (obj[key] === undefined) delete obj[key];
 	});
 	return obj;

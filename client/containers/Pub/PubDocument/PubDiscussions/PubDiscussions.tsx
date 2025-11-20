@@ -54,7 +54,6 @@ const PubDiscussions = (props: Props) => {
 		if (collabData.editorChangeObject!.view) {
 			dispatchEmptyTransaction(collabData.editorChangeObject!.view);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [windowWidth]);
 
 	const renderSideDiscussions = () => {

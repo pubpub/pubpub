@@ -275,7 +275,7 @@ export class SiteDownloaderTransform extends Transform {
 	}
 
 	// eslint doesn't recognize BufferEncoding
-	// eslint-disable-next-line no-undef
+
 	async _transform(url: string, _: BufferEncoding, callback: (error?: Error | null) => void) {
 		try {
 			// need to get primary urls running at / instead of /blah_blah_org

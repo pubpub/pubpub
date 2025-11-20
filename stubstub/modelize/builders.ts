@@ -114,7 +114,7 @@ export const builders = {
 					if (err || !user) {
 						return reject(err);
 					}
-					// eslint-disable-next-line no-param-reassign
+
 					user.sha3hashedPassword = sha3hashedPassword;
 					return resolve(user);
 				},

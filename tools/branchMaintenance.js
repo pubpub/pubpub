@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+
 import { asyncMap } from 'utils/async';
 import { Community, Pub } from 'server/models';
 

@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import type { DocJson, VisibilityAccess } from 'types';
 
 import { createDiscussionAnchor } from 'server/discussionAnchor/queries';

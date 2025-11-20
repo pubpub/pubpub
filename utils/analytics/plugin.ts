@@ -1,4 +1,3 @@
-/* eslint-disable no-undef, import/no-unresolved */
 import type { AnalyticsInstance, AnalyticsPlugin } from 'use-analytics';
 
 import type { AnalyticsEvent } from 'utils/api/schemas/analytics';

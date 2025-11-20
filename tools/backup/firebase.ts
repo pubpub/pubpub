@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-
 import type { BackupFile } from './types';
 
 import { type Bucket, type File, Storage } from '@google-cloud/storage';

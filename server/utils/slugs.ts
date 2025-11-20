@@ -78,7 +78,7 @@ export const findAcceptableSlug = async (desiredSlug: string, communityId: strin
 	];
 	if (allSlugs.includes(desiredSlug)) {
 		let suffix = 2;
-		// eslint-disable-next-line no-constant-condition
+
 		while (true) {
 			const proposedSlug = `${desiredSlug}-${suffix}`;
 			if (!allSlugs.includes(proposedSlug)) {

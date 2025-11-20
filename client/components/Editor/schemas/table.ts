@@ -19,7 +19,6 @@ const pmTableNodes = tableNodes({
 			},
 			setDOMAttr: (value /* , attrs */) => {
 				if (value) {
-					/* eslint-disable-next-line no-param-reassign */
 					// TODO(ian): figure out what we want to do here
 					// attrs.style = `background-color: ${value}; ${attrs.style || ''}`;
 				}

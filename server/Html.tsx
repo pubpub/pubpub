@@ -95,7 +95,6 @@ const Html = (props: Props) => {
 				{customScripts?.css && (
 					<style
 						type="text/css"
-						// eslint-disable-next-line react/no-danger
 						dangerouslySetInnerHTML={{ __html: customScripts.css }}
 					/>
 				)}
@@ -146,7 +145,6 @@ const Html = (props: Props) => {
 				{customScripts?.js && (
 					<script
 						type="text/javascript"
-						// eslint-disable-next-line react/no-danger
 						dangerouslySetInnerHTML={{ __html: customScripts.js }}
 					/>
 				)}

@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-
 import { format, parse } from 'url';
 
 import { expect } from 'utils/assert';

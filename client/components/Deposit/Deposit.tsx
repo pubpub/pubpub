@@ -137,13 +137,9 @@ export default function Deposit(props: Props) {
 		setJustSetDoi(true);
 	};
 
-	useEffect(
-		() => {
-			fetchResource();
-		},
-		/* eslint-disable-next-line react-hooks/exhaustive-deps */
-		[],
-	);
+	useEffect(() => {
+		fetchResource();
+	}, []);
 
 	const firstIntraWorkRelationship = resource && getFirstIntraWorkRelationship(resource);
 	const disabledDueToNoReleases = 'pub' in props && props.pub.releases?.length === 0;

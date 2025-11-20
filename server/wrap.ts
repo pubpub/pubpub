@@ -15,7 +15,6 @@ type Wrap = <
 export const wrap: Wrap =
 	(routeHandlerFn) =>
 	async (...args) => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const [_req, _res, next] = args;
 		try {
 			return await routeHandlerFn(...args);

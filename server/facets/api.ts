@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-
 import { initServer } from '@ts-rest/express';
 
 import { getScopeId } from 'facets';

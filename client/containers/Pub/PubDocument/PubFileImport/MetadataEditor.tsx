@@ -196,7 +196,6 @@ const MetadataEditor = (props: MetadataEditorProps) => {
 		onSetMetadataUpdater(
 			() => () => Promise.all([persistUpdatedPubData(), persistPubAttributions()]),
 		);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ignoredFields, metadata]);
 
 	const handleUpdateAttribution = (attrIndex, nextValue) => {

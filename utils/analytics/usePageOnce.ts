@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import type { AnalyticsInstance } from 'analytics';
 
 import type { InitialData, Page, PubPageData } from 'types';
@@ -224,6 +223,5 @@ export const usePageOnce = (
 		 * The only change we need to track is whether the custom analytics get loaded afterwards or
 		 * not
 		 */
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [pluginLength]);
 };

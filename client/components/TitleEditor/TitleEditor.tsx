@@ -155,7 +155,6 @@ export default function TitleEditor(props: Props) {
 			// We need to set contentEditable={true} during SSR, otherwise
 			// the hydrated editor will be unedtiable.
 			contentEditable={!isReadOnly}
-			// eslint-disable-next-line react/no-danger
 			dangerouslySetInnerHTML={{ __html: initialValue ?? '' }}
 		/>
 	);

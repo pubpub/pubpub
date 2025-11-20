@@ -46,7 +46,6 @@ const DiscussionsSection = (props: Props) => {
 
 	const renderCenterItems = () => <SectionBullets>{nonClosedDiscussions.length}</SectionBullets>;
 
-	// eslint-disable-next-line react/prop-types
 	const renderIconItems = ({ isExpanded, iconColor }) => {
 		if (isExpanded) {
 			return (

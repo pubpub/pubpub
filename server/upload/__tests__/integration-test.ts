@@ -18,7 +18,7 @@ const models = modelize`
     }`;
 
 // we require config.js here in order to get proper AWS_ACCESS_ID env vars
-// eslint-disable-next-line global-require, import/extensions
+
 require('../../../config');
 
 setup(beforeAll, async () => {

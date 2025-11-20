@@ -16,7 +16,6 @@ export const blocklistMiddleware: RequestHandler = async (req, res, next) => {
 		return next();
 	}
 
-	// eslint-disable-next-line no-restricted-syntax
 	for (const blocklistIp of maybeBlockList) {
 		if (ip.startsWith(blocklistIp)) {
 			console.warn('Blocking IP', {

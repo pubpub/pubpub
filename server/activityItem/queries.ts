@@ -632,7 +632,6 @@ export const createSubmissionUpdatedActivityItem = async (
 		return;
 	}
 
-	// eslint-disable-next-line consistent-return
 	return createActivityItem({
 		actorId,
 		communityId: submission.pub.communityId,

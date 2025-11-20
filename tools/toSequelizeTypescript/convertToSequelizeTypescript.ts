@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 /** biome-ignore-all lint/performance/noAwaitInLoops: shhhhhh */
 import { lstat, readdir, readFile, writeFile } from 'fs/promises';
 import * as path from 'path';

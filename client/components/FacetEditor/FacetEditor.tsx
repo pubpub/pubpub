@@ -41,7 +41,7 @@ function FacetEditor<Def extends Facet>(props: Props<Def>) {
 				persistFacets();
 			}
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+
 		[name, updateFacet, persistFacets, selfContained],
 	);
 

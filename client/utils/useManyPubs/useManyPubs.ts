@@ -146,7 +146,6 @@ export const useManyPubs = <P extends Pub = Pub>(
 		if (isEager && queryState.offset === 0) {
 			loadMorePubs();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isEager, queryKey]);
 
 	const currentQueryState = getCurrentQueryState();

@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 const firebaseAdmin = require('firebase-admin');
 const { buildSchema, restoreDiscussionMaps } = require('components/Editor');
 const { Pub, Branch, BranchPermission, Discussion } = require('../../../server/models');

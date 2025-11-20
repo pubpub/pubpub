@@ -66,7 +66,7 @@ const Search = (props: Props) => {
 			input.value = '';
 			input.value = oldValue;
 		}
-	}, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+	}, []);
 
 	// Update search client when mode changes
 	useEffect(() => {
@@ -82,7 +82,6 @@ const Search = (props: Props) => {
 			clientRef.current = algoliasearch(searchData.searchId, key);
 			indexRef.current = clientRef.current.initIndex(mode);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mode]);
 
 	useEffect(() => {

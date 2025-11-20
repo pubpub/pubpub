@@ -1,5 +1,3 @@
-/* eslint-disable pubpub-rules/no-user-model */
-
 import { QueryTypes } from 'sequelize';
 
 import { sequelize } from 'server/models';

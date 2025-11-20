@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import type { BaseSourceFile, ImporterFlags, SourceFile } from 'utils/api/schemas/import';
 
 import { fromPandoc, parsePandocJson, setPandocApiVersion } from '@pubpub/prosemirror-pandoc';

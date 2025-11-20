@@ -254,7 +254,6 @@ export const buildImportPlan = (rootDirectory) => {
 };
 
 export const printImportPlan = (importPlan, { verb = 'CREATE' } = {}) => {
-	// eslint-disable-next-line no-param-reassign
 	verb = verb.toUpperCase();
 	const printInner = (plan, depth) => {
 		const { directives, children } = plan;

@@ -41,7 +41,7 @@ export const useLocalStorage = <T extends LocalStorable>(options: Options<T>) =>
 				(parent, entry) => parent.getChild(entry),
 				getCommunityLocalStorage(communityId, featureName),
 			),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+
 		[communityId, featureName, ...path],
 	);
 

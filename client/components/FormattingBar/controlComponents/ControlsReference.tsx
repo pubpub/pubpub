@@ -34,7 +34,7 @@ const ControlsReference = (props: ControlsReferenceProps) => {
 	const nodeLabels = getCurrentNodeLabels(view.state);
 	const nodeReferences = useMemo(
 		() => (nodeLabels ? getReferenceableNodes(view.state, nodeLabels) : []),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+
 		[view.state, nodeLabels],
 	);
 

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import type { AnalyticsPlugin } from 'analytics';
 
 import type { AnalyticsSettings, AnalyticsType } from 'types/analyticsSettings';

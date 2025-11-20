@@ -103,7 +103,7 @@ export default (
 						storeCheckpoint(ref, newState.doc, snapshot.key);
 					}
 				}
-				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+
 				processStoredKeyables();
 			})
 			.catch((err) => {

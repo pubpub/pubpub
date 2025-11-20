@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-await-in-loop */
-
 import type { CascadedFacetsForScopes } from 'facets';
 import type { DocJson } from 'types';
 
@@ -304,7 +301,6 @@ const createPubStream = async (pubs: Pub[], batchSize = 100) => {
 
 			console.log(`Has more: ${hasMore}. Offset: ${offset}. Limit: ${pubs.length}`);
 
-			// eslint-disable-next-line no-restricted-syntax
 			for (const pub of pubsWithDraftsAndFacets) {
 				this.push(pub);
 			}
@@ -333,7 +329,7 @@ const createDevTools = () => {
 
 	return {
 		getMemoryStats,
-		// eslint-disable-next-line no-undef
+
 		createMemoryTracker: (stream: NodeJS.ReadableStream, batchSize = 100) => {
 			let maxHeapUsed = 0;
 			let dataCount = 0;
@@ -636,7 +632,7 @@ export const archiveTask = async ({
 	devTools.getMemoryStats();
 
 	// get community data + all pubs first
-	// eslint-disable-next-line prefer-const
+
 	let [communityData, pubs] = await Promise.all([
 		getCommunityData(communityId),
 		getPubs(communityId),

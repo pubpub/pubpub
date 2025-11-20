@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import React, { useState } from 'react';
 
 import { storiesOf } from '@storybook/react';
@@ -15,10 +13,7 @@ storiesOf('components/TitleEditor', module).add('default', () => {
 				onChange={setRendered}
 			/>
 			<strong>Rendered:</strong>
-			<div
-				// eslint-disable-next-line react/no-danger
-				dangerouslySetInnerHTML={{ __html: rendered }}
-			/>
+			<div dangerouslySetInnerHTML={{ __html: rendered }} />
 		</>
 	);
 });

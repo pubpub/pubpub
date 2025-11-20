@@ -55,7 +55,6 @@ const CollectionBrowser = (props: Props) => {
 	const { bpDisplayIcon } = getSchemaForKind(collection.kind)!;
 	const readingPubUrl = (pub) => createReadingParamUrl(pubUrl(communityData, pub), collection.id);
 
-	// eslint-disable-next-line react/prop-types
 	const renderDisclosure = ({ ref, ...disclosureProps }) => {
 		return (
 			<CollectionsBarButton

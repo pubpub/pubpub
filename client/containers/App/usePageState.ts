@@ -34,7 +34,6 @@ export const usePageState = (initialData: InitialData, viewData: PossibleViewDat
 
 	const updateCommunity = (next) => {
 		if (typeof next === 'function') {
-			// eslint-disable-next-line no-param-reassign
 			next = next(communityData);
 		}
 		setCommunityData((current) => ({ ...current, ...next }));
@@ -44,7 +43,6 @@ export const usePageState = (initialData: InitialData, viewData: PossibleViewDat
 		const { activeCollection } = scopeData.elements;
 		if (activeCollection) {
 			if (typeof next === 'function') {
-				// eslint-disable-next-line no-param-reassign
 				next = next(activeCollection);
 			}
 			const nextCollection = {

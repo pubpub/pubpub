@@ -28,7 +28,6 @@ const AdminDashboard = (props: Props) => {
 					title="Analytics"
 					frameBorder="0"
 					onResized={({ iframe, height, width }) => {
-						/* eslint-disable-next-line no-param-reassign */
 						iframe.style.height = `${height - getOffset(width)}px`;
 					}}
 				/>

@@ -53,7 +53,6 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 			});
 		});
 		// Wants type Kind as a dep
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleRemoveFeature = useCallback(
@@ -95,7 +94,7 @@ const LandingPageFeatureManager = <Kind extends LandingPageFeatureKind>(props: P
 			}
 		},
 		// Wants type Kind as a dep
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+
 		[features],
 	);
 

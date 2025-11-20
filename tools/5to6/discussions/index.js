@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+
 const firebaseAdmin = require('firebase-admin');
 const { buildSchema, restoreDiscussionMaps } = require('components/Editor');
 const discussionSchema = require('./simpleDiscussionSchema').default;

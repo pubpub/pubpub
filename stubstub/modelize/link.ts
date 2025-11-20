@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import type { Model, ModelCtor } from 'sequelize';
 
 import * as graphlib from 'graphlib';

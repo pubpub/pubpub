@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* biome-ignore-all lint/suspicious/noConsole: fine in stories */
 
 import React, { useState } from 'react';
@@ -177,7 +176,6 @@ storiesOf('Editor', module)
 	})
 	.add('collaborative2', () => {
 		const Thing = () => {
-			/* eslint-disable-next-line */
 			const [changeObject, _updatechangeObject] = useState({});
 			return (
 				<div style={editorWrapperStyle}>

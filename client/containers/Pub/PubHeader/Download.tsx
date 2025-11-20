@@ -63,7 +63,7 @@ const Download = (props: Props) => {
 			pubData.exports.find((ex) => ex.format === format && ex.historyKey >= latestKey),
 		[pubData.exports, latestKey],
 	);
-	// eslint-disable-next-line consistent-return
+
 	const handleStartDownload = (type) => {
 		track('download', {
 			communityId: communityData.id,
@@ -203,7 +203,6 @@ const Download = (props: Props) => {
 					const shouldRenderButton = downloadUrl && selectedType?.format === type.format;
 					return (
 						<MenuItem
-							// eslint-disable-next-line react/no-array-index-key
 							key={`${i}-${type.format}`}
 							dismissOnClick={false}
 							disabled={isLoading && selectedType?.format !== type.format}

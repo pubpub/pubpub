@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-
 import React from 'react';
 
 import { Classes, Dialog } from '@blueprintjs/core';

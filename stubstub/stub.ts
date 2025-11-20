@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 // @ts-check
 /* global beforeAll, afterAll */
 
@@ -44,7 +43,7 @@ export const stubModule = <T extends Record<string, any> | string>(
 ) => {
 	if (typeof module === 'string') {
 		// lol,
-		// eslint-disable-next-line
+
 		module = require(module);
 	}
 	const stubEntries = getStubEntries(functions);

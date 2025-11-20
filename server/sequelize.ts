@@ -1,5 +1,3 @@
-/* eslint-disable */ // necessary otherwise i can't ignore the subpath error triggered by sequelize/types/...
-
 import type {
 	Connection,
 	ConnectionManager,

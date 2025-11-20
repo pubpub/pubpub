@@ -8,7 +8,7 @@ export const updateNodeAttrsById = (editorView: EditorView, id: string, attrs: N
 	} = editorView;
 	let foundNode: Node | null = null;
 	let foundNodePos: number | null = null;
-	// eslint-disable-next-line consistent-return
+
 	doc.descendants((node: Node, pos: number) => {
 		if (node.attrs.id === id) {
 			foundNodePos = pos;

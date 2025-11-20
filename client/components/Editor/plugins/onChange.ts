@@ -54,7 +54,6 @@ const getActiveLink = (editorView) => {
 		return open.marksAcross(close) || [];
 	};
 
-	/* eslint-disable-next-line no-nested-ternary */
 	const foundMarks = empty
 		? getMarks($from, $to).length
 			? getMarks($from, $to)

@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import type { ExternalPublication } from 'types';
 
 import React, { useState } from 'react';

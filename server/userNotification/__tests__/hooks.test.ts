@@ -7,7 +7,6 @@ import { createThreadComment } from 'server/threadComment/queries';
 import { finishDeferredTasks } from 'server/utils/deferred';
 import { modelize, setup, teardown } from 'stubstub';
 
-// eslint-disable-next-line import/extensions
 // const mailgunMessages = require('../hooks.ts').mg.messages;
 import { mg } from '../hooks';
 

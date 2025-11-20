@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import filesize from 'filesize';
 import fs from 'fs-extra';
 import { JSONPath } from 'jsonpath-plus';

@@ -42,7 +42,6 @@ const defaultIdGetter = (item: MinimalItem) => item.id;
 const getRenderItem =
 	<Item extends MinimalItem>(props: Props<Item>) =>
 	(provided: DraggableProvided, snapshot: DraggableStateSnapshot, rubric: DraggableRubric) => {
-		// eslint-disable-next-line react/prop-types
 		const { items, withDragHandles, renderItem } = props;
 		const item = items[rubric.source.index];
 		const { innerRef, draggableProps, dragHandleProps: providedDragHandleProps } = provided;

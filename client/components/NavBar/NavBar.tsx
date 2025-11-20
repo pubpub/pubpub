@@ -37,7 +37,6 @@ const NavBar = function (props) {
 		if (!isNavbarMenu(subitem)) {
 			return (
 				<MenuItem
-					// eslint-disable-next-line react/no-array-index-key
 					key={index}
 					href={subitem.href}
 					icon={

@@ -15,7 +15,6 @@ const items = (
 			<MenuItem text="what's in here">
 				<MenuItem
 					text="i wonder if you can click me"
-					// eslint-disable-next-line no-alert
 					onClick={() => alert('You found it!')}
 				/>
 			</MenuItem>

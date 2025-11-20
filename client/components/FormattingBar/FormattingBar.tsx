@@ -86,7 +86,6 @@ const FormattingBar = (props: Props) => {
 				buttonElement.parentNode.scrollLeft = buttonElement.offsetLeft - paddingPx;
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [openedButton]);
 
 	const renderButtonState = (buttonState: ButtonState) => {

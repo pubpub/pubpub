@@ -35,7 +35,6 @@ const EmailPreview = (props: { text: string }) => {
 				opacity: 0,
 				overflow: 'hidden',
 			}}
-			// eslint-disable-next-line react/no-danger
 			dangerouslySetInnerHTML={{ __html: text }}
 		/>
 	);

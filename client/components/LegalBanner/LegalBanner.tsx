@@ -34,7 +34,7 @@ const banners: Banner[] = [
 				</p>
 			);
 		},
-		// eslint-disable-next-line react/prop-types
+
 		buttons: (props, next) => {
 			return (
 				<>
@@ -76,7 +76,7 @@ const banners: Banner[] = [
 				</p>
 			);
 		},
-		// eslint-disable-next-line react/prop-types
+
 		buttons: ({ loginData, setGdprConsent }, next) => {
 			const closeWithConsent = (doesConsent) => {
 				updateGdprConsent(loginData, doesConsent, setGdprConsent);

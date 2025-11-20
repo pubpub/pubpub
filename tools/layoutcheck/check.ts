@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import type { Community, InitialData } from 'types';
 
 import { diffArrays } from 'diff';

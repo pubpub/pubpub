@@ -1,5 +1,3 @@
-/* eslint-disable no-console, global-require */
-
 import type { ChildProcessWithoutNullStreams } from 'child_process';
 
 import { initTestDatabase, setupTestDatabase, startTestDatabaseServer } from '../testDatabase';

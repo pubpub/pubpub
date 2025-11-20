@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import Cite from 'citation-js';
 
 import * as types from 'types';

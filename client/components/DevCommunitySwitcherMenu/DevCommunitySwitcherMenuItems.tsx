@@ -12,7 +12,6 @@ const setDevSubdomain = async (subdomain: null | string) => {
 
 const DevCommunitySwitcherMenuItems = () => {
 	const selectDevSubdomain = useCallback(() => {
-		// eslint-disable-next-line no-alert
 		const subdomain = prompt('Enter a Community subdomain');
 		setDevSubdomain(subdomain);
 	}, []);

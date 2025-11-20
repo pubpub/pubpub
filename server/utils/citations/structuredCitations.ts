@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import type { CitationStyle, FacetValue } from 'facets';
 import type { DocJson } from 'types';
 import type { RenderedStructuredValue, StructuredValue } from 'utils/notes';

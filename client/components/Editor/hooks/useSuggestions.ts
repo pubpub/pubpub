@@ -6,7 +6,7 @@ import SuggestionManager, {
 
 export const useSuggestions = <T>(enabled: boolean) => {
 	// This lint rule thinks T is a _value_ that's a dependency of the useEffect hook...
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+
 	const suggestionManager = useMemo(() => new SuggestionManager<T>(), []);
 	const [suggesting, setSuggesting] = useState<null | SuggestionManagerStateSuggesting<T>>(null);
 

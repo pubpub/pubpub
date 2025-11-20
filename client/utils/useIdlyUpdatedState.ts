@@ -91,7 +91,7 @@ export const useIdlyUpdatedState = <T>(initialValue: InitialValue<T>) => {
 			return Object.assign(stateUpdater, { immediately });
 		},
 		// React Hook useMemo has a missing dependency: 'T'
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+
 		[commitStateChanges],
 	);
 

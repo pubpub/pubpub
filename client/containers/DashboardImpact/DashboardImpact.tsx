@@ -83,7 +83,6 @@ const DashboardImpact = (props: Props) => {
 									title="New Analytics"
 									frameBorder="0"
 									onResized={({ iframe, height, width }) => {
-										/* eslint-disable-next-line no-param-reassign */
 										iframe.style.height = `${height - getOffset(width)}px`;
 									}}
 								/>
@@ -156,7 +155,6 @@ const DashboardImpact = (props: Props) => {
 									title="Analytics"
 									frameBorder="0"
 									onResized={({ iframe, height, width }) => {
-										/* eslint-disable-next-line no-param-reassign */
 										iframe.style.height = `${height - getOffset(width)}px`;
 									}}
 								/>
@@ -203,7 +201,6 @@ const DashboardImpact = (props: Props) => {
 											title="Benchmark"
 											frameBorder="0"
 											onResized={({ iframe, height, width }) => {
-												/* eslint-disable-next-line no-param-reassign */
 												iframe.style.height = `${
 													height - getOffset(width)
 												}px`;

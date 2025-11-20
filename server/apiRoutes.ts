@@ -69,7 +69,6 @@ const apiRouter = Router()
 	.use(apiDocsRouter);
 
 if (!isProd() && process.env.NODE_ENV !== 'test') {
-	// eslint-disable-next-line global-require
 	apiRouter.use(devApiRouter);
 }
 

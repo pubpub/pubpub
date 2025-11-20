@@ -144,7 +144,6 @@ export const getInitialData = async (
 		throw new Error(`UseCustomDomain:${communityData.domain}`);
 	}
 	if (req.headers.localhost) {
-		/* eslint-disable-next-line no-param-reassign */
 		communityData.domain = req.headers.localhost;
 	}
 

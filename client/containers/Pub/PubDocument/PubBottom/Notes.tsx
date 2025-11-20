@@ -20,7 +20,7 @@ const scrollToNode = (node) => {
 
 const findLastElementChild = (node) => {
 	let child = node;
-	// eslint-disable-next-line no-constant-condition
+
 	while (true) {
 		const { lastElementChild, lastChild } = child;
 		if (lastElementChild && lastElementChild === lastChild) {

@@ -53,7 +53,6 @@ export const useCommandStates = (options: Options) => {
 			return getStateGetters(commands, view);
 		}
 		return {};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [view]);
 
 	const commandStates = useMemo(

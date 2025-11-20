@@ -37,7 +37,6 @@ const EditableAvatar = (props: Props) => {
 		onUpdateAvatar(image);
 	};
 
-	// eslint-disable-next-line react/prop-types
 	const renderControls = ({ selectImage, clearImage }) => {
 		return (
 			<>

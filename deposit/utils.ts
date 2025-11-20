@@ -38,7 +38,7 @@ export function getPrimaryParentPubEdge(pub: Pub) {
 
 export function sanitizePubEdges<T extends Pub>(pub: T, includeRelationships: boolean): T {
 	// @ts-ignore
-	// eslint-disable-next-line no-undef
+
 	pub = structuredClone(pub);
 	if (pub.inboundEdges && pub.outboundEdges) {
 		// Remove unapproved PubEdges for RelationTypes that require bidirectional

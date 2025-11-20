@@ -136,7 +136,6 @@ export const useControlsState = (options: Options) => {
 			(button) => button.controls && button.controls.trigger(editorChangeObject),
 		);
 		setOpenedButton(openableIndicatedButton || null);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [effectKey, indicatedButtonsString]);
 
 	useEffect(() => {

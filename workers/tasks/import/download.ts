@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import type { SourceFile } from 'utils/api/schemas/import';
 
 import { ensureDir } from 'fs-extra';

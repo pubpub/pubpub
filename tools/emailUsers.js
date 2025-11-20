@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+
 import stripIndent from 'strip-indent';
 import mailgun from 'mailgun.js';
 

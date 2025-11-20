@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-
 import type { SanitizedPubData } from 'types';
 
 import React from 'react';

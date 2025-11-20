@@ -41,7 +41,7 @@ export const submitDoiData = async (
 	const { login, password } = await getDoiLogin(communityId);
 	const xmlObject = xmlbuilder.create(json, { headless: true }).end({ pretty: true });
 	const readStream = new Readable();
-	// eslint-disable-next-line no-underscore-dangle
+
 	readStream._read = function noop() {};
 	readStream.push(xmlObject);
 	readStream.push(null);
