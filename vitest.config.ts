@@ -1,13 +1,13 @@
 import path from 'path';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
 	plugins: [tsconfigPaths()],
 	test: {
 		globals: true,
 		globalSetup: path.resolve(__dirname, 'stubstub/global/setup.ts'),
-		setupFiles: [path.resolve(__dirname, '.jest/setup-env.js')],
+		setupFiles: [path.resolve(__dirname, '.test/setup-env.js')],
 		testTimeout: 10000,
 		environment: 'node',
 		reporters: 'verbose',
@@ -15,7 +15,6 @@ export default defineConfig({
 		clearMocks: true,
 		retry: 3,
 		include: ['./**/__tests__/**/*.test.[jt]s?(x)'],
-		exclude: ['./node_modules/**/*'],
 	},
 	resolve: {
 		alias: [

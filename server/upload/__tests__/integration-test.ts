@@ -1,5 +1,3 @@
-// this file is not under tsconfig.test.json, so it doesn't get the types, so we import them manually
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals';
 import fs from 'fs/promises';
 import path from 'path';
 

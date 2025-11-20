@@ -1,4 +1,4 @@
-import type { Global } from '@jest/types';
+import type { beforeAll } from 'vitest';
 
 import { vi } from 'vitest';
 
@@ -6,7 +6,7 @@ import { sequelize } from '../server/sequelize';
 import { clearUserToAgentMap } from './userToAgentMap';
 
 export const setup = (
-	beforeFn: Global.HookBase,
+	beforeFn: typeof beforeAll,
 	actionsFn?: (() => any) | (() => Promise<any>),
 ) => {
 	if (beforeFn.toString().startsWith('after')) {
@@ -24,7 +24,7 @@ export const setup = (
 };
 
 export const teardown = (
-	afterFn: Global.HookBase,
+	afterFn: typeof afterAll,
 	actionsFn?: (() => any) | (() => Promise<any>),
 ) => {
 	if (afterFn.toString().startsWith('before')) {
