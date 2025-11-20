@@ -503,6 +503,8 @@ describe('fetchActivityItems', () => {
 			releaseRequestComment,
 			releaseDenialComment,
 		} = models;
+
+		const t = new Date();
 		await createPubReviewCreatedActivityItem(review.id);
 		await createPubReviewCommentAddedActivityItem(review.id, releaseDenialComment.id);
 		await createPubReviewUpdatedActivityItem(actor.id, review.id, {
@@ -511,6 +513,7 @@ describe('fetchActivityItems', () => {
 		});
 		const { activityItems, associations } = await fetchActivityItems({
 			scope: { communityId: community.id, pubId: pub.id },
+			since: t.toISOString(),
 		});
 
 		const [commentAddedItem, createdItem, updatedItem] = activityItems.sort((a, b) =>
