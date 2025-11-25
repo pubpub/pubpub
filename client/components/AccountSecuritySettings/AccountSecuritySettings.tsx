@@ -7,7 +7,7 @@ import SHA3 from 'crypto-js/sha3';
 import { apiFetch } from 'client/utils/apiFetch';
 import { InputField } from 'components';
 
-require('./accountSecuritySettings.scss');
+import './accountSecuritySettings.scss';
 
 const stripHTTPError = (error: string) => {
 	return error.replace(/^HTTP Error \d+: /, '');

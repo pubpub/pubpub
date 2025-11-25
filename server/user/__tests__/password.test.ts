@@ -4,9 +4,11 @@ import SHA3 from 'crypto-js/sha3';
 import { User } from 'server/models';
 import { login, modelize, setup, teardown } from 'stubstub';
 
+const email = `${crypto.randomUUID()}@example.com`;
+
 const models = modelize`
     User user {
-        email: "password-test-user@example.com"
+        email: ${email}
         password: "password"
     }
 `;

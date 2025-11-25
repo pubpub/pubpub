@@ -5,7 +5,7 @@ import { AnchorButton, Spinner } from '@blueprintjs/core';
 import { apiFetch } from 'client/utils/apiFetch';
 import { GridWrapper } from 'components';
 
-require('./emailChange.scss');
+import './emailChange.scss';
 
 type Props = {
 	emailChangeData: {

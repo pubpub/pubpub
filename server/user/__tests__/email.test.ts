@@ -3,21 +3,25 @@ import SHA3 from 'crypto-js/sha3';
 import { vi } from 'vitest';
 
 import { EmailChangeToken, User } from 'server/models';
+import { mg } from 'server/utils/email/reset';
 import { login, modelize, setup, teardown } from 'stubstub';
+
+const uuid = crypto.randomUUID();
+const email1 = `${uuid}@example.com`;
+const email2 = `${uuid}2@example.com`;
 
 const models = modelize`
     User user {
-        email: "user@example.com"
+        email: ${email1}
         password: "password"
     }
     User otherUser {
-        email: "other@example.com"
+        email: ${email2}
         password: "password"
     }
 `;
 
-// eslint-disable-next-line import/extensions
-const mailgunMessages = require('server/utils/email/reset.ts').mg.messages;
+const mailgunMessages = mg.messages;
 
 setup(beforeAll, async () => {
 	await models.resolve();
@@ -166,7 +170,11 @@ describe('/api/account/email', () => {
 				usedAt: null,
 			});
 
-			await agent.put('/api/account/email').send({ token: expiredToken.token }).expect(400);
+			await agent
+				.put('/api/account/email')
+				.send({ token: expiredToken.token })
+				.expect((res) => res.body.message === 'Email change link has expired')
+				.expect(400);
 		});
 
 		it('rejects changing to an email that another user already has', async () => {
@@ -188,7 +196,8 @@ describe('/api/account/email', () => {
 		it('allows completing email change with valid token', async () => {
 			const { user } = models;
 			const agent = await login(user);
-			const newEmail = 'completed@example.com';
+
+			const newEmail = `${crypto.randomUUID()}-completed@example.com`;
 
 			await agent
 				.post('/api/account/email')
@@ -224,17 +233,12 @@ describe('/api/account/email', () => {
 		it('rejects already-used token', async () => {
 			const { otherUser } = models;
 			const agent = await login(otherUser);
-			const newEmail = 'usedtoken@example.com';
+			const newEmail = `${crypto.randomUUID()}-usedtoken@example.com`;
 
-			const initiateResponse = await agent
+			await agent
 				.post('/api/account/email')
-				.send({
-					newEmail,
-					password: SHA3('password').toString(encHex),
-				})
+				.send({ newEmail, password: SHA3('password').toString(encHex) })
 				.expect(200);
-
-			expect(initiateResponse.status).toBe(200);
 
 			const token = await EmailChangeToken.findOne({
 				where: { userId: otherUser.id },
