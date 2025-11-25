@@ -1,12 +1,12 @@
-import { promisify } from 'util';
 import { initServer } from '@ts-rest/express';
+import { promisify } from 'util';
 
-import { User, EmailChangeToken } from 'server/models';
-import { generateHash } from 'utils/hashes';
-import { sendEmailChangeEmail } from 'server/utils/email';
-import { contract } from 'utils/api/contract';
+import { EmailChangeToken, User } from 'server/models';
 import { authenticate } from 'server/utils/authenticate';
+import { sendEmailChangeEmail } from 'server/utils/email';
 import { logout } from 'server/utils/logout';
+import { contract } from 'utils/api/contract';
+import { generateHash } from 'utils/hashes';
 
 const s = initServer();
 
@@ -34,7 +34,7 @@ export const accountServer = s.router(contract.account, {
 
 		try {
 			await authenticate(userData, body.currentPassword);
-		} catch (error) {
+		} catch (_error) {
 			return { status: 403, body: { message: 'Current password is incorrect' } };
 		}
 
@@ -55,7 +55,7 @@ export const accountServer = s.router(contract.account, {
 			logout(req, res);
 
 			return { status: 200, body: { success: true } };
-		} catch (error) {
+		} catch (_error) {
 			return { status: 403, body: { message: 'Failed to change password' } };
 		}
 	},
@@ -91,7 +91,7 @@ export const accountServer = s.router(contract.account, {
 
 		try {
 			await authenticate(userData, body.password);
-		} catch (error) {
+		} catch (_error) {
 			return { status: 403, body: { message: 'Password is incorrect' } };
 		}
 
@@ -125,7 +125,7 @@ export const accountServer = s.router(contract.account, {
 			});
 
 			return { status: 200, body: { success: true } };
-		} catch (error) {
+		} catch (_error) {
 			return { status: 400, body: { message: 'Failed to initiate email change' } };
 		}
 	},

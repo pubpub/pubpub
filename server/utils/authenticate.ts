@@ -1,5 +1,6 @@
-import { User } from 'server/models';
 import { promisify } from 'util';
+
+import { User } from 'server/models';
 
 export class AuthenticateError extends Error {
 	constructor(message: string) {
@@ -27,7 +28,7 @@ export async function authenticate(userDataOrEmail: User | string, password: str
 		if (!authResult) {
 			throw new AuthenticateError('Invalid password');
 		}
-	} catch (error) {
+	} catch (_error) {
 		throw new AuthenticateError('Invalid password');
 	}
 }

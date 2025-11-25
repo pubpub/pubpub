@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+
 import { AnchorButton, Spinner } from '@blueprintjs/core';
 
-import { GridWrapper } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
+import { GridWrapper } from 'components';
 
 require('./emailChange.scss');
 

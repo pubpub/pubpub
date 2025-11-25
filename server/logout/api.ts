@@ -1,5 +1,7 @@
-import { AppRouteImplementation } from '@ts-rest/express';
-import { contract } from 'utils/api/contract';
+import type { AppRouteImplementation } from '@ts-rest/express';
+
+import type { contract } from 'utils/api/contract';
+
 import { logout } from 'server/utils/logout';
 
 export const logoutRouteImplementation: AppRouteImplementation<

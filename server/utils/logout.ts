@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
+
 import { isDuqDuq, isProd } from 'utils/environment';
 
 export const logout = (req: Request, res: Response) => {
@@ -9,5 +10,3 @@ export const logout = (req: Request, res: Response) => {
 	});
 	req.logout();
 };
-
-

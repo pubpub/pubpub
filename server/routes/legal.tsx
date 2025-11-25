@@ -1,19 +1,16 @@
 import React from 'react';
 
+import { Router } from 'express';
+
 import { Legal } from 'containers';
 import Html from 'server/Html';
-import app from 'server/server';
+import { getOrCreateUserNotificationPreferences } from 'server/userNotificationPreferences/queries';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
-import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getIntegrations } from 'server/utils/queryHelpers';
-import { getOrCreateUserNotificationPreferences } from 'server/userNotificationPreferences/queries';
+import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 
-app.get('/privacy', (_, res) => res.redirect('/legal/privacy'));
-app.get('/privacy/policy', (_, res) => res.redirect('/legal/privacy'));
-app.get('/privacy/settings', (_, res) => res.redirect('/legal/settings'));
-app.get('/tos', (_, res) => res.redirect('/legal/terms'));
-app.get('/legal', (_, res) => res.redirect('/legal/terms'));
+export const router = Router();
 
 const tabToTitle = {
 	terms: 'Terms of Service',
@@ -22,7 +19,13 @@ const tabToTitle = {
 	settings: 'Privacy & Account',
 };
 
-app.get('/legal/:tab', async (req, res, next) => {
+router.get('/privacy', (_, res) => res.redirect('/legal/privacy'));
+router.get('/privacy/policy', (_, res) => res.redirect('/legal/privacy'));
+router.get('/privacy/settings', (_, res) => res.redirect('/legal/settings'));
+router.get('/tos', (_, res) => res.redirect('/legal/terms'));
+router.get('/legal', (_, res) => res.redirect('/legal/terms'));
+
+router.get('/legal/:tab', async (req, res, next) => {
 	if (!['terms', 'privacy', 'aup', 'settings'].includes(req.params.tab)) {
 		return next();
 	}

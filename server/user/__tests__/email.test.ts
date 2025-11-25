@@ -1,8 +1,9 @@
-import { setup, login, modelize, teardown } from 'stubstub';
-import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
+import SHA3 from 'crypto-js/sha3';
+import { vi } from 'vitest';
 
-import { User, EmailChangeToken } from 'server/models';
+import { EmailChangeToken, User } from 'server/models';
+import { login, modelize, setup, teardown } from 'stubstub';
 
 const models = modelize`
     User user {
@@ -22,7 +23,7 @@ setup(beforeAll, async () => {
 	await models.resolve();
 
 	// mock mailgun messages so we don't actually send emails in tests
-	jest.spyOn(mailgunMessages, 'create').mockImplementation(
+	vi.spyOn(mailgunMessages, 'create').mockImplementation(
 		() =>
 			Promise.resolve({
 				json: () => Promise.resolve({ status: 'ok', id: 'id' }),
@@ -36,7 +37,7 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-	jest.clearAllMocks();
+	vi.clearAllMocks();
 });
 
 teardown(afterAll);
@@ -240,16 +241,10 @@ describe('/api/account/email', () => {
 				order: [['createdAt', 'DESC']],
 			});
 
-			await agent
-				.put('/api/account/email')
-				.send({ token: token?.token })
-				.expect(200);
+			await agent.put('/api/account/email').send({ token: token?.token }).expect(200);
 
 			// try to use same token again
-			await agent
-				.put('/api/account/email')
-				.send({ token: token?.token })
-				.expect(400);
+			await agent.put('/api/account/email').send({ token: token?.token }).expect(400);
 		});
 	});
 });

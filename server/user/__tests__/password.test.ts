@@ -1,8 +1,8 @@
-import { setup, login, modelize, teardown } from 'stubstub';
-import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
+import SHA3 from 'crypto-js/sha3';
 
 import { User } from 'server/models';
+import { login, modelize, setup, teardown } from 'stubstub';
 
 const models = modelize`
     User user {

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import SHA3 from 'crypto-js/sha3';
-import encHex from 'crypto-js/enc-hex';
-import { Button, Card, Callout } from '@blueprintjs/core';
 
-import { InputField } from 'components';
+import { Button, Callout, Card } from '@blueprintjs/core';
+import encHex from 'crypto-js/enc-hex';
+import SHA3 from 'crypto-js/sha3';
+
 import { apiFetch } from 'client/utils/apiFetch';
+import { InputField } from 'components';
 
 require('./accountSecuritySettings.scss');
 
