@@ -1,7 +1,6 @@
 import type { PageContext } from 'types';
 
 import { isProd } from 'utils/environment';
-import { generateHash } from 'utils/hashes';
 
 declare global {
 	interface Window {
@@ -21,7 +20,7 @@ const getUploadContext = () => {
 
 	const communityId = ctx.communityData?.id ?? 'unknown';
 	const userId = ctx.loginData?.id ?? 'anonymous';
-	const pubId = ctx.scopeData?.elements?.activeIds?.pubId ?? 'none';
+	const pubId = ctx.scopeData?.elements?.activeIds?.pubId ?? undefined;
 
 	return { communityId, userId, pubId };
 };
@@ -50,13 +49,16 @@ const checkForAsset = (url): Promise<void> => {
 };
 
 const getFileNameForUpload = (file: File) => {
-	const folderName = isProd() ? generateHash(8) : '_testing';
+	const testPrefix = isProd() ? '' : '_testing/';
+
 	const { communityId, userId, pubId } = getUploadContext();
-	const [fileName = 'unknown', fileExtension = 'jpg'] =
+	const [rawFileName = 'unknown', fileExtension = 'jpg'] =
 		file.name?.split(/(.*)\.(.*)/).filter(Boolean) ?? [];
+	const fileName = rawFileName.replace(/\s+/g, '_');
 	const random = Math.floor(Math.random() * 8);
 	const now = new Date().getTime();
-	return `/c-${communityId}/u-${userId}/ps${pubId}/${folderName}/${fileName}-${random}${now}.${fileExtension}`;
+	const pubSegment = pubId ? `/p${pubId}` : '';
+	return `${testPrefix}c${communityId}${pubSegment}/u${userId}/${fileName}-${random}${now}.${fileExtension}`;
 };
 
 const getBaseUrlForBucket = (bucket) => `https://s3-external-1.amazonaws.com/${bucket}`;
