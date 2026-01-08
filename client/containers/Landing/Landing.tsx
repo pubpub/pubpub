@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Classes } from '@blueprintjs/core';
 
 import { Icon } from 'components';
@@ -180,7 +181,7 @@ const Landing = () => {
 								knowledge communities.
 							</p>
 							<h2>Create knowledge. Share it with audiences who care.</h2>
-							<div className="buttons">
+							{/* <div className="buttons">
 								<a href="/community/create" className="custom-button black">
 									Create your community
 								</a>
@@ -189,7 +190,7 @@ const Landing = () => {
 								<a href="/pricing" className="custom-button">
 									Support PubPub
 								</a>
-							</div>
+							</div> */}
 						</div>
 					</div>
 				</div>
@@ -344,7 +345,7 @@ const Landing = () => {
 				</div>
 				{/* END Communities Block */}
 				{/* BEGIN Create Block */}
-				<div id="create">
+				{/* <div id="create">
 					<div className="container restricted-width">
 						<div>
 							<h3>Create</h3>
@@ -362,7 +363,7 @@ const Landing = () => {
 							</p>
 						</div>
 					</div>
-				</div>
+				</div> */}
 				{/* END Create Block */}
 				{/* BEGIN Pitch Block */}
 				<div id="pitch">
