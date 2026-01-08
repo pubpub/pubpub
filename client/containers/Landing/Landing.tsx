@@ -4,7 +4,7 @@ import { Classes } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
-require('./landing.scss');
+import './landing.scss';
 
 const features = [
 	{
