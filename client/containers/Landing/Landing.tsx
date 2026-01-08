@@ -155,7 +155,14 @@ const Landing = () => {
 					<a href={community.link}>{community.name}</a>
 				</h4>
 				<a href={community.link}>
-					<img className="logo" src={community.logo} alt={`Logo of ${community.name}`} />
+					<img
+						className="logo"
+						// width={145}
+						width="240"
+						height="48"
+						src={community.logo}
+						alt={`Logo of ${community.name}`}
+					/>
 				</a>
 				<p className="description">{community.description}</p>
 			</div>
@@ -205,9 +212,9 @@ const Landing = () => {
 							<h3>Mission</h3>
 						</div>
 						<div>
-							As a product of the{' '}
+							As a product of{' '}
 							<a href="https://www.knowledgefutures.org">
-								<strong>Knowledge Futures Group</strong>
+								<strong>Knowledge Futures</strong>
 							</a>
 							, PubPub is open and accessible to all. That means a free, robust
 							version of PubPub will always be available, operating under a
@@ -220,9 +227,9 @@ const Landing = () => {
 							<a className="git" href="https://github.com/pubpub/pubpub">
 								<Icon icon="git-repo" /> code
 							</a>
-							<a className="git" href="https://github.com/orgs/pubpub/projects/9">
+							{/* <a className="git" href="https://github.com/orgs/pubpub/projects/9">
 								<Icon icon="map" /> roadmap
-							</a>
+							</a> */}
 							<a className="git" href="https://github.com/pubpub/pubpub/discussions">
 								<Icon icon="comment" /> forum
 							</a>
@@ -243,6 +250,7 @@ const Landing = () => {
 							<img
 								src="/static/landing/authoring.png"
 								alt="Screenshot of a PubPub editor interface with multiple users editing at the same time."
+								height="250"
 							/>
 						</div>
 						<div>
@@ -258,6 +266,7 @@ const Landing = () => {
 							<img
 								src="/static/landing/importing.png"
 								alt="Screenshot of the PubPub import interface uploading a complex LaTeX document."
+								height="283"
 							/>
 						</div>
 						<div>
@@ -273,6 +282,7 @@ const Landing = () => {
 							<img
 								src="/static/landing/multimedia.png"
 								alt="Examples of rich content embedded in Pubs, including an equation, a stem and tree chart, and an interactive song picker."
+								height="245"
 							/>
 						</div>
 						<div>
@@ -291,34 +301,14 @@ const Landing = () => {
 				</div>
 				{/* END Features Block */}
 				{/* BEGIN Case Study Block */}
-				<div id="case-study">
-					<div className="container">
-						<div>
-							<h3>Community Services</h3>
-						</div>
+				<div id="pitch">
+					<div className="container restricted-width reverse">
 						<div>
 							<p>
-								For groups that want personalized support we offer production,
-								training, and strategy services for building high quality, effective
-								publishing communities.
+								PubPub empowers knowledge communities to define their own community
+								engagement models and manage their publishing workflows. Use PubPub
+								to more closely align knowledge sharing with community building.
 							</p>
-							<blockquote>
-								"The team’s innovation and experience made for an incredible
-								collaboration."
-								<br />
-								<span className="attribution">
-									- Jeremy Bailenson, Author, “
-									<a href="https://doi.org/10.1037/tmb0000030">
-										A Theoretical Argument for the Causes of Zoom Fatigue
-									</a>
-									”
-								</span>
-							</blockquote>
-							<div className="buttons">
-								<a href="/community-services" className="custom-button light">
-									Learn more
-								</a>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -369,11 +359,11 @@ const Landing = () => {
 				<div id="pitch">
 					<div className="container restricted-width reverse">
 						<div>
-							<p>
+							{/* <p>
 								PubPub empowers knowledge communities to define their own community
 								engagement models and manage their publishing workflows. Use PubPub
 								to more closely align knowledge sharing with community building.
-							</p>
+							</p> */}
 						</div>
 					</div>
 				</div>
