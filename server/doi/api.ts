@@ -79,7 +79,6 @@ router.post(
 			// validate relationships before depositing to prevent cascading failures
 			if (pubId) {
 				const issues = await validatePubRelationshipsForDeposit(pubId);
-				console.log('issues', issues);
 				// all issue types are blocking for deposits
 				if (issues.length > 0) {
 					const errorMessages = issues.map((issue) => {
