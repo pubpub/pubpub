@@ -434,7 +434,7 @@ function AssignDoi(props: Props) {
 				<AssignDoiPreview crossrefDepositRecord={crossrefDepositRecord} />
 			)}
 			<SubmitDepositButton
-				// disabled={status === SubmitDepositStatus.Previewed ? disabled : false}
+				disabled={status === SubmitDepositStatus.Previewed ? disabled : false}
 				onClick={handleButtonClick}
 				status={status}
 				depositRecord={pubData.crossrefDepositRecord}
