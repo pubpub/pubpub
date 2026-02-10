@@ -13,6 +13,8 @@ import {
 } from 'utils/ensureUserIsCommunityAdmin';
 import { createGetRequestIds } from 'utils/getRequestIds';
 
+import { updateDiscussionCreationAccess } from 'server/publicPermissions/queries';
+
 import { getPermissions } from './permissions';
 import {
 	CommunityURLAlreadyExistsError,
@@ -164,6 +166,16 @@ export const communityServer = s.router(contract.community, {
 			throw new ForbiddenError();
 		}
 		const updatedValues = await updateCommunity(req.body, permissions.update, req.user.id);
+		if (
+			body.discussionCreationAccess !== undefined &&
+			requestIds.communityId &&
+			permissions.update
+		) {
+			await updateDiscussionCreationAccess({
+				communityId: requestIds.communityId,
+				discussionCreationAccess: body.discussionCreationAccess,
+			});
+		}
 		return {
 			body: updatedValues,
 			status: 200,

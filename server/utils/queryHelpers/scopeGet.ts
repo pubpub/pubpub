@@ -6,10 +6,12 @@ import { FacetsError } from 'facets';
 import { fetchFacetsForScope } from 'server/facets';
 import {
 	Collection,
+	CollectionAttribution,
 	CollectionPub,
 	Community,
 	Member,
 	Pub,
+	PubAttribution,
 	PublicPermissions,
 	Release,
 	ReviewNew,
@@ -184,6 +186,11 @@ const getScopeElements = async (scopeInputs: {
 			}),
 			include: [
 				{
+					model: PubAttribution,
+					as: 'attributions',
+					attributes: ['userId'],
+				},
+				{
 					model: CollectionPub,
 					as: 'collectionPubs',
 					attributes: ['id', 'pubId', 'collectionId', 'pubRank'],
@@ -215,6 +222,13 @@ const getScopeElements = async (scopeInputs: {
 			where: {
 				id: { [Op.in]: (activePub.collectionPubs || []).map((cp) => cp.collectionId) },
 			},
+			include: [
+				{
+					model: CollectionAttribution,
+					as: 'attributions',
+					attributes: ['userId'],
+				},
+			],
 		});
 		inactiveCollections = collections.filter((collection) => {
 			const isActive = collection.slug === collectionSlug;
@@ -322,7 +336,7 @@ const getActivePermissions = async (
 ) => {
 	const { activePub, activeCollection, activeCommunity, inactiveCollections } = scopeElements;
 	const isSuperAdmin = await isUserSuperAdmin({ userId: scopeInputs.loginId });
-	const permissionLevels: types.MemberPermission[] = ['view', 'edit', 'manage', 'admin'];
+	const permissionLevels = ['view', 'edit', 'manage', 'admin'] as const;
 	let defaultPermissionIndex = -1;
 	[activePub, activeCollection, activeCommunity, ...inactiveCollections]
 		.filter((elem): elem is NonNullable<typeof elem> => !!elem)
@@ -381,6 +395,7 @@ const getActivePermissions = async (
 		isSuperAdmin,
 		canCreateReviews: false,
 		canCreateDiscussions: true,
+		discussionCreationAccess: 'public',
 		canViewDraft: false,
 		canEditDraft: false,
 	};
@@ -390,6 +405,7 @@ const getActivePermissions = async (
 		boolean | null
 	> & {
 		isSuperAdmin: boolean;
+		discussionCreationAccess: types.DiscussionCreationAccess;
 	} extends infer T
 		? {
 				[P in keyof T]: P extends keyof typeof initialOptions
@@ -421,6 +437,10 @@ const getActivePermissions = async (
 		.reduce((prev, curr) => {
 			const next = { ...prev };
 			Object.keys(prev).forEach((key) => {
+				if (key === 'discussionCreationAccess') {
+					next[key] = curr[key];
+					return;
+				}
 				next[key] = booleanOr(prev[key], curr[key]);
 			});
 
@@ -435,6 +455,23 @@ const getActivePermissions = async (
 	const canEdit = permissionLevelIndex > 0;
 	const canCreateReviews = Boolean(canEdit || activePublicPermissions.canCreateReviews);
 
+	const isContributor =
+		activePub?.attributions?.some(
+			(attribution) => attribution.userId === scopeInputs.loginId,
+		) ||
+		activeCollection?.attributions?.some(
+			(attribution) => attribution.userId === scopeInputs.loginId,
+		);
+	const canCreateDiscussions =
+		isSuperAdmin ||
+		activePublicPermissions.discussionCreationAccess === 'public' ||
+		(activePublicPermissions.discussionCreationAccess === 'contributors' &&
+			(permissionLevelIndex > -1 || isContributor)) ||
+		(activePublicPermissions.discussionCreationAccess === 'members' &&
+			permissionLevelIndex > -1) ||
+		(activePublicPermissions.discussionCreationAccess === 'disabled' &&
+			permissionLevelIndex === 3);
+
 	return {
 		activePermission: permissionLevelIndex > -1 ? permissionLevels[permissionLevelIndex] : null,
 		canView: permissionLevelIndex > -1,
@@ -447,6 +484,7 @@ const getActivePermissions = async (
 		canEditCommunity,
 		...activePublicPermissions,
 		canCreateReviews,
+		canCreateDiscussions,
 	};
 };
 

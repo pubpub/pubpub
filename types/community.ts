@@ -10,3 +10,5 @@ export type CommunityHeroButton = {
 export type CommunityHeaderLink = { title: string; url: string; external?: boolean };
 
 export type Community = SerializedModel<CommunityModel>;
+
+export type DiscussionCreationAccess = 'public' | 'contributors' | 'members' | 'disabled';
