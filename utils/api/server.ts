@@ -14,6 +14,7 @@ import { pageServer } from 'server/page/api';
 import { pubServer } from 'server/pub/api';
 import { pubAttributionServer } from 'server/pubAttribution/api';
 import { pubEdgeServer } from 'server/pubEdge/api';
+import { publicPermissionsServer } from 'server/publicPermissions/api';
 import { releaseServer } from 'server/release/api';
 import { uploadRouteImplementation } from 'server/upload/api';
 import { uploadPolicyRouteImplementation } from 'server/uploadPolicy/api';
@@ -44,6 +45,7 @@ export const server = s.router(contractWithScriptsAndCommunity, {
 	page: pageServer,
 	pub: pubServer,
 	pubAttribution: pubAttributionServer,
+	publicPermissions: publicPermissionsServer,
 	pubEdge: pubEdgeServer,
 	release: releaseServer,
 	upload: {
