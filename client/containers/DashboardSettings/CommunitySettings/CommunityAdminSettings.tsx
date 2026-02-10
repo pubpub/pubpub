@@ -1,6 +1,5 @@
 import type { WorkerTask } from 'server/models';
-import type { Community } from 'types';
-import type { DiscussionCreationAccess } from 'types';
+import type { Community, DiscussionCreationAccess } from 'types';
 
 import React, { useMemo, useState } from 'react';
 

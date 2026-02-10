@@ -2,6 +2,7 @@ import { initServer } from '@ts-rest/express';
 import { Op } from 'sequelize';
 
 import { WorkerTask } from 'server/models';
+import { updateDiscussionCreationAccess } from 'server/publicPermissions/queries';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { addWorkerTask } from 'server/utils/workers';
 import { getWorkerTask } from 'server/workerTask/queries';
@@ -12,8 +13,6 @@ import {
 	findCommunityByHostname,
 } from 'utils/ensureUserIsCommunityAdmin';
 import { createGetRequestIds } from 'utils/getRequestIds';
-
-import { updateDiscussionCreationAccess } from 'server/publicPermissions/queries';
 
 import { getPermissions } from './permissions';
 import {
