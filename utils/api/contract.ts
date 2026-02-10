@@ -1,32 +1,43 @@
-import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { type AppRouter, initContract } from '@ts-rest/core';
-import { z } from 'zod';
+import { extendZodWithOpenApi } from "@anatine/zod-openapi";
+import { type AppRouter, initContract } from "@ts-rest/core";
+import { z } from "zod";
 
-import { type AccountRouter, accountRouter } from './contracts/account';
-import { type AnalyticsRouter, analyticsRouter } from './contracts/analytics';
-import { type AuthRouter, authRouter } from './contracts/auth';
-import { type AuthTokenRouter, authTokenRouter } from './contracts/authToken';
-import { type CollectionRouter, collectionRouter } from './contracts/collection';
+import { type AccountRouter, accountRouter } from "./contracts/account";
+import { type AnalyticsRouter, analyticsRouter } from "./contracts/analytics";
+import { type AuthRouter, authRouter } from "./contracts/auth";
+import { type AuthTokenRouter, authTokenRouter } from "./contracts/authToken";
+import {
+	type CollectionRouter,
+	collectionRouter,
+} from "./contracts/collection";
 import {
 	type CollectionAttributionRouter,
 	collectionAttributionRouter,
-} from './contracts/collectionAttribution';
-import { type CollectionPubRouter, collectionPubRouter } from './contracts/collectionPub';
-import { type CommunityRouter, communityRouter } from './contracts/community';
-import { type CustomScriptRouter, customScriptRouter } from './contracts/customScript';
-import { type FacetsRouter, facetsRouter } from './contracts/facets';
-import { type MemberRouter, memberRouter } from './contracts/member';
-import { type PageRouter, pageRouter } from './contracts/page';
-import { type PubRouter, pubRouter } from './contracts/pub';
-import { type PubAttributionRouter, pubAttributionRouter } from './contracts/pubAttribution';
-import { type PubEdgeRouter, pubEdgeRouter } from './contracts/pubEdge';
+} from "./contracts/collectionAttribution";
 import {
-	type PublicPermissionsRouter,
-	publicPermissionsRouter,
-} from './contracts/publicPermissions';
-import { type ReleaseRouter, releaseRouter } from './contracts/release';
-import { type UploadRouter, uploadRouter } from './contracts/upload';
-import { type WorkerTaskRouter, workerTaskRouter } from './contracts/workerTask';
+	type CollectionPubRouter,
+	collectionPubRouter,
+} from "./contracts/collectionPub";
+import { type CommunityRouter, communityRouter } from "./contracts/community";
+import {
+	type CustomScriptRouter,
+	customScriptRouter,
+} from "./contracts/customScript";
+import { type FacetsRouter, facetsRouter } from "./contracts/facets";
+import { type MemberRouter, memberRouter } from "./contracts/member";
+import { type PageRouter, pageRouter } from "./contracts/page";
+import { type PubRouter, pubRouter } from "./contracts/pub";
+import {
+	type PubAttributionRouter,
+	pubAttributionRouter,
+} from "./contracts/pubAttribution";
+import { type PubEdgeRouter, pubEdgeRouter } from "./contracts/pubEdge";
+import { type ReleaseRouter, releaseRouter } from "./contracts/release";
+import { type UploadRouter, uploadRouter } from "./contracts/upload";
+import {
+	type WorkerTaskRouter,
+	workerTaskRouter,
+} from "./contracts/workerTask";
 
 extendZodWithOpenApi(z);
 
@@ -42,7 +53,8 @@ export const router = {
 	/** @internal */
 	analytics: analyticsRouter as AnalyticsRouter,
 	collection: collectionRouter as CollectionRouter,
-	collectionAttribution: collectionAttributionRouter as CollectionAttributionRouter,
+	collectionAttribution:
+		collectionAttributionRouter as CollectionAttributionRouter,
 	collectionPub: collectionPubRouter as CollectionPubRouter,
 	community: communityRouter as CommunityRouter,
 	customScript: customScriptRouter as CustomScriptRouter,
@@ -52,14 +64,17 @@ export const router = {
 	pub: pubRouter as PubRouter,
 	pubAttribution: pubAttributionRouter as PubAttributionRouter,
 	pubEdge: pubEdgeRouter as PubEdgeRouter,
-	publicPermissions: publicPermissionsRouter as PublicPermissionsRouter,
 	release: releaseRouter as ReleaseRouter,
 	/** Methods for dealing with worker tasks, i.e. imports and exports */
 	workerTask: workerTaskRouter as WorkerTaskRouter,
 	upload: uploadRouter as UploadRouter,
 } as const satisfies AppRouter;
 
-export const contract = c.router<typeof router, '', { strictStatusCodes: true }>(router, {
+export const contract = c.router<
+	typeof router,
+	"",
+	{ strictStatusCodes: true }
+>(router, {
 	strictStatusCodes: true,
 });
 

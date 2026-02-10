@@ -4,13 +4,7 @@ import { sendEmail } from './reset';
 
 const CC_DEV = ['dev@pubpub.org'];
 
-export const sendSpamBanEmail = ({
-	toEmail,
-	userName,
-}: {
-	toEmail: string;
-	userName: string;
-}) => {
+export const sendSpamBanEmail = ({ toEmail, userName }: { toEmail: string; userName: string }) => {
 	return sendEmail({
 		to: [toEmail],
 		cc: CC_DEV,

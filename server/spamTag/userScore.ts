@@ -1,4 +1,4 @@
-import type { User, SpamTag } from 'server/models';
+import type { SpamTag, User } from 'server/models';
 import type * as types from 'types';
 
 import { communitySpamPhrases } from './phrases';
@@ -66,9 +66,7 @@ const getUserSpamScoreReport = (user: User) => {
 	);
 };
 
-export const getSuspectedUserSpamVerdict = (
-	user: User,
-): types.SpamVerdict<SpamTag> => {
+export const getSuspectedUserSpamVerdict = (user: User): types.SpamVerdict<SpamTag> => {
 	const { score, fields } = getUserSpamScoreReport(user);
 	return {
 		fields,

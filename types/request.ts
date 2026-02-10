@@ -1,16 +1,15 @@
-import type { CascadedFacetsByKind } from 'facets';
+import type { CascadedFacetsByKind } from "facets";
 import type {
 	Collection,
 	Community,
 	DefinitelyHas,
-	DiscussionCreationAccess,
 	Integration,
 	Member,
 	MemberPermission,
 	Pub,
 	ScopeId,
-} from 'types';
-import type { UserDismissableKey } from 'utils/userDismissable';
+} from "types";
+import type { UserDismissableKey } from "utils/userDismissable";
 
 export type LoginData = {
 	id: string | null;
@@ -57,11 +56,6 @@ export type ScopeData = {
 		canView: boolean;
 		canViewDraft: boolean;
 		isSuperAdmin: boolean;
-		/**
-		 * Hacky: this is the value for the current scope's discussion creation access, not the
-		 * user's. Refer to canCreateDiscussions for the user's access.
-		 */
-		discussionCreationAccess: DiscussionCreationAccess;
 	};
 	elements: {
 		activeIds: {
@@ -70,7 +64,7 @@ export type ScopeData = {
 			pubId: string | null;
 		};
 		activeTarget: Community | Collection | Pub | null;
-		activeTargetType: 'community' | 'collection' | 'pub';
+		activeTargetType: "community" | "collection" | "pub";
 		activeTargetName: string;
 		activeCommunity: Community;
 		activeCollection: Collection | null;
@@ -88,7 +82,7 @@ export type ScopeData = {
 
 export type InitialCommunityData = DefinitelyHas<
 	Community,
-	'collections' | 'pages' | 'scopeSummary'
+	"collections" | "pages" | "scopeSummary"
 >;
 
 export type InitialNotificationsData = {

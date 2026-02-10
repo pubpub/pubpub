@@ -5,8 +5,8 @@ import React, { useCallback, useState } from 'react';
 import { Button, InputGroup, Spinner } from '@blueprintjs/core';
 import { useUpdateEffect } from 'react-use';
 
-import { apiFetch } from 'client/utils/apiFetch';
 import { OverviewSearchGroup } from 'client/containers/DashboardOverview/helpers';
+import { apiFetch } from 'client/utils/apiFetch';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
 import { filters, filtersById } from './filters';

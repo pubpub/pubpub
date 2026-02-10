@@ -3,9 +3,7 @@ import type { SpamUserQuery } from 'types';
 
 import { indexById } from 'utils/arrays';
 
-export type SpamUsersFilter = OverviewSearchFilter<
-	Pick<SpamUserQuery, 'status' | 'ordering'>
->;
+export type SpamUsersFilter = OverviewSearchFilter<Pick<SpamUserQuery, 'status' | 'ordering'>>;
 
 export const filters: SpamUsersFilter[] = [
 	{
