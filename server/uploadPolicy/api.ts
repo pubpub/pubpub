@@ -16,7 +16,6 @@ export const uploadPolicyRouteImplementation: AppRouteImplementation<
 	if (user && (query.filename || query.key)) {
 		const keyOrName = query.key ?? query.filename ?? '';
 		if (isSuspiciousUploadKey(keyOrName)) {
-			console.log('SUS', keyOrName);
 			await addSpamTagToUser(user.id, {
 				suspiciousFiles: [`https://assets.pubpub.org/${keyOrName}`],
 			})
