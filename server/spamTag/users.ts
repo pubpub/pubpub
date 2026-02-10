@@ -39,7 +39,9 @@ const getQueryOrdering = (ordering: types.SpamUserQueryOrdering) => {
 	return [[...orderableFields[field], direction]] as [OrderFields[number], 'ASC' | 'DESC'][];
 };
 
-export type UserSpamManagementRow = types.DefinitelyHas<User, 'spamTag'> | (types.User & { spamTag: null });
+export type UserSpamManagementRow =
+	| types.DefinitelyHas<User, 'spamTag'>
+	| (types.User & { spamTag: null });
 
 type SerializedSpamUserRow = Record<string, unknown> & {
 	id: string;

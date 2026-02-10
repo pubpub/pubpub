@@ -10,7 +10,12 @@ import { expect } from 'utils/assert';
 import { queryCommunitiesForSpamManagement } from './communities';
 import { canManipulateSpamTags } from './permissions';
 import { updateSpamTagForCommunity } from './queries';
-import { addSpamTagToUser, getSpamTagForUser, removeSpamTagFromUser, updateSpamTagForUser } from './userQueries';
+import {
+	addSpamTagToUser,
+	getSpamTagForUser,
+	removeSpamTagFromUser,
+	updateSpamTagForUser,
+} from './userQueries';
 import { queryUsersForSpamManagement } from './users';
 
 export const router = Router();

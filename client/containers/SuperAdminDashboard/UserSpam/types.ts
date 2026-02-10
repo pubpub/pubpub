@@ -1,5 +1,4 @@
-import type { SpamTag } from 'types';
-import type { UserWithPrivateFields } from 'types';
+import type { SpamTag, UserWithPrivateFields } from 'types';
 
 export type SpamUser = UserWithPrivateFields & {
 	spamTag: SpamTag | null;

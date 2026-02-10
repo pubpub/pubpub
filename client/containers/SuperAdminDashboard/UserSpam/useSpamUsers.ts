@@ -48,9 +48,7 @@ export const useSpamUsers = (options: UseSpamUsersOptions) => {
 	}, [setOffset, loadMoreUsers, filter]);
 
 	const updateUser = useCallback((userId: string, patch: Partial<SpamUser>) => {
-		setUsers((current) =>
-			current.map((u) => (u.id === userId ? { ...u, ...patch } : u)),
-		);
+		setUsers((current) => current.map((u) => (u.id === userId ? { ...u, ...patch } : u)));
 	}, []);
 
 	return { users, isLoading, loadMoreUsers, mayLoadMoreUsers, updateUser };
