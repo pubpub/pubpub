@@ -409,15 +409,13 @@ class Doi extends Component<Props, State> {
 										{issue.targetTitle}
 									</a>
 								</strong>{' '}
-								has DOI {issue.targetDoi} assigned but it does not exist in Crossref.
-								Deposit{' '}
+								has DOI {issue.targetDoi} assigned but it does not exist in
+								Crossref. Deposit{' '}
 								<a href={pubUrl} target="_blank" rel="noopener noreferrer">
 									{issue.targetTitle}
 								</a>{' '}
 								first, or disconnect it and deposit this Pub first.
-								<WhyAmISeeingThis>
-									{issue.message}
-								</WhyAmISeeingThis>
+								<WhyAmISeeingThis>{issue.message}</WhyAmISeeingThis>
 							</Callout>
 						);
 					}
@@ -428,8 +426,8 @@ class Doi extends Component<Props, State> {
 								{issue.message}
 								<WhyAmISeeingThis>
 									Peer reviews deposited to Crossref must link to Crossref DOIs.
-									Mark the Connection as something other than &quot;isReviewOf&quot;
-									to deposit this Pub.
+									Mark the Connection as something other than
+									&quot;isReviewOf&quot; to deposit this Pub.
 								</WhyAmISeeingThis>
 							</Callout>
 						);
