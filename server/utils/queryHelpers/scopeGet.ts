@@ -101,7 +101,12 @@ const getActiveReviewsCount = ({
 	return ReviewNew.count({
 		where: { status: 'open' },
 		include: [
-			{ model: Pub, as: 'pub', required: true, where: { communityId: activeCommunity.id } },
+			{
+				model: Pub,
+				as: 'pub',
+				required: true,
+				where: { communityId: activeCommunity.id },
+			},
 		],
 	});
 };
@@ -127,7 +132,10 @@ const getFacets = async (includeFacets: boolean, scopeElements: types.ScopeData[
 		if (activeTargetType === 'organization') {
 			throw new FacetsError('No such thing as an organization');
 		}
-		const facets = await fetchFacetsForScope({ kind: activeTargetType, id: activeTarget.id });
+		const facets = await fetchFacetsForScope({
+			kind: activeTargetType,
+			id: activeTarget.id,
+		});
 		return { facets };
 	}
 	return null;
@@ -220,7 +228,9 @@ const getScopeElements = async (scopeInputs: {
 		}
 		const collections = await Collection.findAll({
 			where: {
-				id: { [Op.in]: (activePub.collectionPubs || []).map((cp) => cp.collectionId) },
+				id: {
+					[Op.in]: (activePub.collectionPubs || []).map((cp) => cp.collectionId),
+				},
 			},
 			include: [
 				{
@@ -386,7 +396,7 @@ const getActivePermissions = async (
 	const canEditCommunity = canManageCommunity || memberHasCommunityPermissions('edit');
 	const canViewCommunity = canEditCommunity || memberHasCommunityPermissions('view');
 
-	const booleanOr = <P extends unknown, V extends unknown>(precedent: P, value: V) => {
+	const booleanOr = <P, V>(precedent: P, value: V) => {
 		/* Don't inherit value from null */
 		return typeof value === 'boolean' ? value : precedent;
 	};
@@ -465,10 +475,8 @@ const getActivePermissions = async (
 	const canCreateDiscussions =
 		isSuperAdmin ||
 		activePublicPermissions.discussionCreationAccess === 'public' ||
-		(activePublicPermissions.discussionCreationAccess === 'contributors' &&
+		(activePublicPermissions.discussionCreationAccess === 'contributors-members' &&
 			(permissionLevelIndex > -1 || isContributor)) ||
-		(activePublicPermissions.discussionCreationAccess === 'members' &&
-			permissionLevelIndex > -1) ||
 		(activePublicPermissions.discussionCreationAccess === 'disabled' &&
 			permissionLevelIndex === 3);
 

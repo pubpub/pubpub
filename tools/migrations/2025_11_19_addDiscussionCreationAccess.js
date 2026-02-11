@@ -10,7 +10,7 @@ const { Sequelize } = require('sequelize');
 export const up = async ({ sequelize }) => {
 	await sequelize.getQueryInterface().addColumn('PublicPermissions', 'discussionCreationAccess', {
 		// @ts-expect-error
-		type: Sequelize.ENUM('public', 'contributors', 'members', 'disabled'),
+		type: Sequelize.ENUM('public', 'contributors-members', 'disabled'),
 		defaultValue: 'public',
 		allowNull: false,
 	});

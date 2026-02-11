@@ -47,11 +47,10 @@ export default function DiscussionsSection(props: Props) {
 				}}
 			>
 				<Radio value="public">Anyone</Radio>
-				<Radio value="contributors">
-					Members of the Community, Pub, or Collection & Contributors to the Pub or
-					Collection
+				<Radio value="contributors-members">
+					Members of the Community, Collection the Pub is in, or the Pub itself &
+					Contributors to the Collection the Pub is in, or the Pub itself
 				</Radio>
-				<Radio value="members">Members of the Community, Collection, or Pub</Radio>
 				<Radio value="disabled">Disabled (except for Admins of your Community)</Radio>
 			</RadioGroup>
 

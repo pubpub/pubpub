@@ -131,7 +131,5 @@ export const communityUpdateSchema = communitySchema
 	})
 	.extend({
 		communityId: communitySchema.shape.id,
-		discussionCreationAccess: z
-			.enum(['public', 'contributors', 'members', 'disabled'])
-			.optional(),
+		discussionCreationAccess: z.enum(['public', 'contributors-members', 'disabled']).optional(),
 	});
