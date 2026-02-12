@@ -139,7 +139,7 @@ export const communityServer = s.router(contract.community, {
 		};
 	},
 	create: async ({ req }) => {
-		if (!req.user) {
+		if (!req.user || !req.user.isSuperAdmin) {
 			throw new ForbiddenError();
 		}
 		if (isHoneypotFilled(req.body._honeypot)) {
@@ -154,8 +154,7 @@ export const communityServer = s.router(contract.community, {
 				status: 201,
 			};
 		}
-		const altchaPayload = req.body.altcha;
-		if (!altchaPayload || !(await verifyCaptchaPayload(altchaPayload))) {
+		if (!(await verifyCaptchaPayload(req.body.altcha))) {
 			throw new BadRequestError(new Error('Please complete the verification and try again.'));
 		}
 		const body = { ...req.body };

@@ -116,8 +116,7 @@ export const pubServer = s.router(contract.pub, {
 				await handleHoneypotTriggered(req.user.id, 'create-pub', body._honeypot as string);
 			throw new BadRequestError(new Error('Invalid submission.'));
 		}
-		const altchaPayload = body.altcha;
-		if (!altchaPayload || !(await verifyCaptchaPayload(altchaPayload))) {
+		if (!(await verifyCaptchaPayload(body.altcha))) {
 			throw new BadRequestError(new Error('Please complete the verification and try again.'));
 		}
 		const { altcha: _altcha, _honeypot, ...bodyStripped } = body;
