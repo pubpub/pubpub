@@ -1,4 +1,5 @@
 import type { Express, Request } from 'express';
+import type { IncludeOptions } from 'sequelize';
 
 import type * as types from 'types';
 
@@ -92,21 +93,30 @@ const getRequestIds = createGetRequestIds<{
 
 const s = initServer();
 
-export const pubServer = s.router(contract.pub, {
-	get: queryOne(Pub, { allowSlug: true }),
-	getMany: queryMany(Pub, {
-		associationMapsOverrides: {
-			CollectionPub: {
-				model: CollectionPub,
-				as: 'collectionPubs',
-				include: [
-					{
-						model: Collection,
-						as: 'collection',
-					},
-				],
+const pubIncludes = {
+	CollectionPub: {
+		model: CollectionPub,
+		as: 'collectionPubs',
+		include: [
+			{
+				model: Collection,
+
+				as: 'collection',
+				attributes: {
+					exclude: ['layout'],
+				},
 			},
-		},
+		],
+	},
+} satisfies Record<string, IncludeOptions>;
+
+export const pubServer = s.router(contract.pub, {
+	get: queryOne(Pub, {
+		allowSlug: true,
+		associationMapsOverrides: pubIncludes,
+	}),
+	getMany: queryMany(Pub, {
+		associationMapsOverrides: pubIncludes,
 	}),
 
 	create: async ({ body, req }) => {

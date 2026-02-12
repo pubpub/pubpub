@@ -54,8 +54,8 @@ export const createIncludes = <M extends ModelCtor, Includes extends string[]>(
 
 		const modelName = targetModel.name;
 
-		if (associationMapsOverrides?.[include]) {
-			return associationMapsOverrides[include];
+		if (associationMapsOverrides?.[modelName]) {
+			return associationMapsOverrides[modelName];
 		}
 
 		if (modelName in globalAssociationsMap) {
