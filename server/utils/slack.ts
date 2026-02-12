@@ -105,6 +105,64 @@ const buildNewCommunityBlocks = (
 	return blocks;
 };
 
+type CommunityStatusSlackOptions = {
+	title: string;
+	subdomain: string;
+	status: 'confirmed-not-spam' | 'confirmed-spam';
+};
+
+export const postToSlackAboutCommunityStatusChange = async (opts: CommunityStatusSlackOptions) => {
+	if (process.env.NODE_ENV === 'test') {
+		return;
+	}
+
+	const { title, subdomain, status } = opts;
+	const baseUrl = isProd() ? 'pubpub.org' : 'duqduq.org';
+	const url = `https://${subdomain}.${baseUrl}`;
+	const spamDashUrl = `https://${baseUrl}${getSuperAdminTabUrl('spam')}?q=${subdomain}`;
+
+	const isApproved = status === 'confirmed-not-spam';
+	const emoji = isApproved ? ':white_check_mark:' : ':no_entry:';
+	const verb = isApproved ? 'approved' : 'rejected';
+	const color = isApproved ? '#5cb85c' : '#d9534f';
+	const notificationText = `Community ${verb}: ${title}`;
+
+	await postToSlack({
+		icon_emoji: emoji,
+		text: notificationText,
+		attachments: [
+			{
+				color,
+				fallback: notificationText,
+				blocks: [
+					{
+						type: 'section',
+						text: {
+							type: 'mrkdwn',
+							text: `*<${url}|${title}>* has been *${verb}*`,
+						},
+					},
+					{
+						type: 'actions',
+						elements: [
+							{
+								type: 'button',
+								text: { type: 'plain_text', text: 'Spam Dashboard' },
+								url: spamDashUrl,
+							},
+							{
+								type: 'button',
+								text: { type: 'plain_text', text: 'Visit Community' },
+								url,
+							},
+						],
+					},
+				],
+			},
+		],
+	});
+};
+
 export const postToSlackAboutNewCommunity = async (opts: NewCommunitySlackOptions) => {
 	if (process.env.NODE_ENV === 'test') {
 		return;

@@ -18,6 +18,7 @@ import {
 } from 'server/models';
 import { getSpamTagForCommunity } from 'server/spamTag/queries';
 import { defer } from 'server/utils/deferred';
+import { sendCommunityAwaitingApprovalEmail } from 'server/utils/email/communitySpam';
 import { subscribeUser } from 'server/utils/mailchimp';
 import { updateCommunityData } from 'server/utils/search';
 import { postToSlackAboutNewCommunity } from 'server/utils/slack';
@@ -129,6 +130,16 @@ export const createCommunity = async (
 		},
 		{ hooks: false },
 	);
+	if (alertAndSubscribe) {
+		const communityUrl = `https://${subdomain}.pubpub.org`;
+		defer(async () => {
+			await sendCommunityAwaitingApprovalEmail({
+				communityId: newCommunityId,
+				communityTitle: inputValues.title,
+				communityUrl,
+			});
+		});
+	}
 	return { subdomain };
 };
 
