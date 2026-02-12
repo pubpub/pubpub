@@ -2,12 +2,12 @@ import stripIndent from 'strip-indent';
 
 import { sendEmail } from './reset';
 
-const CC_DEV = ['dev@pubpub.org'];
+// const CC_DEV = ['dev@pubpub.org'];
 
 export const sendSpamBanEmail = ({ toEmail, userName }: { toEmail: string; userName: string }) => {
 	return sendEmail({
 		to: [toEmail],
-		cc: CC_DEV,
+		// cc: CC_DEV,
 		subject: 'PubPub account restriction',
 		text: stripIndent(`
 			Hello${userName ? ` ${userName}` : ''},
@@ -31,7 +31,7 @@ export const sendSpamLiftedEmail = ({
 }) => {
 	return sendEmail({
 		to: [toEmail],
-		cc: CC_DEV,
+		// cc: CC_DEV,
 		subject: 'PubPub account restriction lifted',
 		text: stripIndent(`
 			Hello${userName ? ` ${userName}` : ''},

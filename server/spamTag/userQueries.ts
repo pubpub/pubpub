@@ -6,6 +6,7 @@ import mergeWith from 'lodash.mergewith';
 import { SpamTag, User } from 'server/models';
 import { sendSpamBanEmail, sendSpamLiftedEmail } from 'server/utils/email';
 import { deleteSessionsForUser } from 'server/utils/session';
+import { postToSlackAboutUserBan, postToSlackAboutUserLifted } from 'server/utils/slack';
 import { expect } from 'utils/assert';
 
 import { getSuspectedUserSpamVerdict } from './userScore';
@@ -84,10 +85,10 @@ export const updateSpamTagForUser = async (options: UpdateSpamTagForUserOptions)
 		throw new Error('User is missing a SpamTag');
 	}
 	await spamTag.update({ status, statusUpdatedAt: new Date() });
-	await applySpamStatusSideEffects(userId, status);
+	await applySpamStatusSideEffects(userId, status, spamTag);
 };
 
-const applySpamStatusSideEffects = async (userId: string, status: SpamStatus) => {
+const applySpamStatusSideEffects = async (userId: string, status: SpamStatus, spamTag: SpamTag) => {
 	const user = await User.findOne({
 		where: { id: userId },
 		attributes: ['email', 'fullName'],
@@ -101,8 +102,15 @@ const applySpamStatusSideEffects = async (userId: string, status: SpamStatus) =>
 				console.error('Failed to delete sessions for banned user', userId, err);
 			}
 			await sendSpamBanEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+			await postToSlackAboutUserBan(
+				userId,
+				user.email,
+				user.fullName ?? '',
+				spamTag.fields as UserSpamTagFields,
+			);
 		} else if (status === 'confirmed-not-spam') {
 			await sendSpamLiftedEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+			await postToSlackAboutUserLifted(userId, user.email, user.fullName ?? '');
 		}
 	} catch (err) {
 		console.error('Failed to send spam status email', err);
