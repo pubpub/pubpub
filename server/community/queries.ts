@@ -105,15 +105,17 @@ export const createCommunity = async (
 	await Page.create(newpage);
 	if (alertAndSubscribe) {
 		defer(async () => {
-			// subscribeUser(userData.email, 'be26e45660', ['Community Admins']);
 			const spamTag = await getSpamTagForCommunity(newCommunityId);
-			await postToSlackAboutNewCommunity(
-				inputValues.title,
+			await postToSlackAboutNewCommunity({
+				title: inputValues.title,
 				subdomain,
-				userData.fullName,
-				userData.email,
-				spamTag?.spamScore,
-			);
+				adminName: userData.fullName,
+				adminEmail: userData.email,
+				spamScore: spamTag?.spamScore,
+				description,
+				heroLogo: inputValues.heroLogo,
+				accentColorDark: inputValues.accentColorDark,
+			});
 		});
 	}
 	await Member.create(
