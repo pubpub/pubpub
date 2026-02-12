@@ -4,8 +4,8 @@ import { isProd } from 'utils/environment';
 
 import { activityItemRouter } from './activityItem/api';
 import { router as apiDocsRouter } from './apiDocs/api';
-import { router as citationRouter } from './citation/api';
 import { router as captchaRouter } from './captcha/api';
+import { router as citationRouter } from './citation/api';
 import { router as communityServicesRouter } from './communityServices/api';
 import { router as customScriptRouter } from './customScript/api';
 import { router as devApiRouter } from './dev/api';

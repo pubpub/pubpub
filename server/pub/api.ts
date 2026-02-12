@@ -11,10 +11,10 @@ import { transformPubToResource } from 'deposit/transform/pub';
 import { assertValidResource } from 'deposit/validate';
 import { generateDoi } from 'server/doi/queries';
 import { verifyCaptchaPayload } from 'server/utils/captcha';
-import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
 import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
+import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
 import { getInitialData } from 'server/utils/initData';
 import { contract } from 'utils/api/contract';
 import { indexByProperty } from 'utils/arrays';
@@ -112,7 +112,8 @@ export const pubServer = s.router(contract.pub, {
 	},
 	createFromForm: async ({ body, req }) => {
 		if (isHoneypotFilled(body._honeypot)) {
-			if (req.user?.id) await handleHoneypotTriggered(req.user.id, 'create-pub', body._honeypot as string);
+			if (req.user?.id)
+				await handleHoneypotTriggered(req.user.id, 'create-pub', body._honeypot as string);
 			throw new BadRequestError(new Error('Invalid submission.'));
 		}
 		const altchaPayload = body.altcha;

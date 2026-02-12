@@ -1,5 +1,5 @@
 export { default as AccentStyle } from './AccentStyle/AccentStyle';
-export { default as Altcha, type AltchaRef } from './Altcha';
+export { type AltchaRef, default as Altcha } from './Altcha';
 export { default as AssignDoi } from './AssignDoi/AssignDoi';
 export { default as AttributionEditor } from './AttributionEditor/AttributionEditor';
 export { default as Avatar } from './Avatar/Avatar';

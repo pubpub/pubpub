@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
 import { verifyCaptchaPayload } from 'server/utils/captcha';
-import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
 import { BadRequestError, ForbiddenError } from 'server/utils/errors';
+import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
 import { wrap } from 'server/wrap';
 
 import { getPermissions } from './permissions';
@@ -48,7 +48,12 @@ router.post(
 			throw new ForbiddenError();
 		}
 		if (isHoneypotFilled(req.body._honeypot)) {
-			if (req.user?.id) await handleHoneypotTriggered(req.user.id, 'create-thread-comment', req.body._honeypot);
+			if (req.user?.id)
+				await handleHoneypotTriggered(
+					req.user.id,
+					'create-thread-comment',
+					req.body._honeypot,
+				);
 			throw new BadRequestError(new Error('Invalid submission.'));
 		}
 		const ok = await verifyCaptchaPayload(req.body.altcha);

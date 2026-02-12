@@ -31,7 +31,9 @@ const UserSpamEntry = (props: Props) => {
 	const initialStatus = hasTag ? spamTag.status : null;
 	const [status, setUpdatedStatus] = useState<null | SpamStatus>(initialStatus);
 
-	const fields = hasTag ? ((spamTag.fields ?? {}) as UserSpamTagFields) : ({} as UserSpamTagFields);
+	const fields = hasTag
+		? ((spamTag.fields ?? {}) as UserSpamTagFields)
+		: ({} as UserSpamTagFields);
 	const fieldsJsonString = useMemo(() => JSON.stringify(fields, null, 2), [fields]);
 
 	const renderFieldsReport = () => {

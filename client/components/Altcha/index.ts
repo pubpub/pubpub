@@ -1,1 +1,1 @@
-export { default, type AltchaRef } from './Altcha';
+export { type AltchaRef, default } from './Altcha';

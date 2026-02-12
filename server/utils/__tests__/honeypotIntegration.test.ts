@@ -1,6 +1,5 @@
-import { modelize, setup, teardown } from 'stubstub';
-
 import { getSpamTagForUser } from 'server/spamTag/userQueries';
+import { modelize, setup, teardown } from 'stubstub';
 
 import { handleHoneypotTriggered, isHoneypotFilled } from '../honeypot';
 

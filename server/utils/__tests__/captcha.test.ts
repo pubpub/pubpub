@@ -5,7 +5,12 @@ import { getAltchaHmacKey, verifyCaptchaPayload } from '../captcha';
 const createValidPayload = async (): Promise<string> => {
 	const hmacKey = getAltchaHmacKey();
 	const challenge = await createChallenge({ hmacKey, maxNumber: 1000 });
-	const { promise } = solveChallenge(challenge.challenge, challenge.salt, challenge.algorithm, challenge.maxnumber);
+	const { promise } = solveChallenge(
+		challenge.challenge,
+		challenge.salt,
+		challenge.algorithm,
+		challenge.maxnumber,
+	);
 	const solution = await promise;
 	if (!solution) throw new Error('failed to solve challenge');
 	return btoa(
