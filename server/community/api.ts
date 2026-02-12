@@ -3,7 +3,9 @@ import { Op } from 'sequelize';
 
 import { WorkerTask } from 'server/models';
 import { updateDiscussionCreationAccess } from 'server/publicPermissions/queries';
-import { ForbiddenError, NotFoundError } from 'server/utils/errors';
+import { verifyCaptchaPayload } from 'server/utils/captcha';
+import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
+import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
 import { addWorkerTask } from 'server/utils/workers';
 import { getWorkerTask } from 'server/workerTask/queries';
 import { contract } from 'utils/api/contract';
@@ -137,11 +139,29 @@ export const communityServer = s.router(contract.community, {
 		};
 	},
 	create: async ({ req }) => {
-		if (!req.user || !req.user?.dataValues.isSuperAdmin) {
+		if (!req.user || !req.user.isSuperAdmin) {
 			throw new ForbiddenError();
 		}
+		if (isHoneypotFilled(req.body._honeypot)) {
+			await handleHoneypotTriggered(
+				expect(req.user).id,
+				'create-community',
+				String(req.body._honeypot),
+			);
+			const subdomain = req.body.subdomain ?? 'community';
+			return {
+				body: `https://${subdomain}.pubpub.org`,
+				status: 201,
+			};
+		}
+		if (!(await verifyCaptchaPayload(req.body.altcha))) {
+			throw new BadRequestError(new Error('Please complete the verification and try again.'));
+		}
+		const body = { ...req.body };
+		delete body.altcha;
+		delete body._honeypot;
 		try {
-			const newCommunity = await createCommunity(req.body, req.user);
+			const newCommunity = await createCommunity(body, req.user);
 			return {
 				body: `https://${newCommunity.subdomain}.pubpub.org`,
 				status: 201,
@@ -154,7 +174,6 @@ export const communityServer = s.router(contract.community, {
 				};
 			}
 			console.error(e);
-
 			throw new Error('Failed to create community');
 		}
 	},

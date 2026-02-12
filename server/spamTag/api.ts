@@ -1,9 +1,6 @@
 import { Router } from 'express';
 
-import { SpamTag, User } from 'server/models';
-import { sendSpamBanEmail, sendSpamLiftedEmail } from 'server/utils/email';
 import { ForbiddenError } from 'server/utils/errors';
-import { deleteSessionsForUser } from 'server/utils/session';
 import { wrap } from 'server/wrap';
 import { expect } from 'utils/assert';
 
@@ -46,34 +43,6 @@ router.put(
 			await addSpamTagToUser(userId);
 		}
 		await updateSpamTagForUser({ userId, status });
-		const user = await User.findOne({
-			where: { id: userId },
-			attributes: ['email', 'fullName'],
-		});
-
-		if (user?.email) {
-			try {
-				if (status === 'confirmed-spam') {
-					try {
-						await deleteSessionsForUser(user?.email ?? '');
-					} catch (err) {
-						console.error('Failed to delete sessions for banned user', userId, err);
-					}
-
-					await sendSpamBanEmail({
-						toEmail: user.email,
-						userName: user.fullName ?? '',
-					});
-				} else if (status === 'confirmed-not-spam') {
-					await sendSpamLiftedEmail({
-						toEmail: user.email,
-						userName: user.fullName ?? '',
-					});
-				}
-			} catch (err) {
-				console.error('Failed to send spam status email', err);
-			}
-		}
 		return res.status(200).send({});
 	}),
 );
