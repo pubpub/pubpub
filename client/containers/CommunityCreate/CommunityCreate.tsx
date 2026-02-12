@@ -39,13 +39,11 @@ const CommunityCreatedView = ({ subdomain }: { subdomain: string }) => {
 			<div className="community-created-text">
 				<h1>Community Created!</h1>
 				<p>
-					Your community has been successfully created and is now awaiting
-					approval for compliance with our{' '}
-					<a href="/legal/terms">Terms of Service</a> and{' '}
-					<a href="/legal/aup">Acceptable Use Policy</a>. We strive to review
-					all new communities within five business days. During this time, all
-					features remain available, but only logged-in Members will be able to
-					view the community.
+					Your community has been successfully created and is now awaiting approval for
+					compliance with our <a href="/legal/terms">Terms of Service</a> and{' '}
+					<a href="/legal/aup">Acceptable Use Policy</a>. We strive to review all new
+					communities within five business days. During this time, all features remain
+					available, but only logged-in Members will be able to view the community.
 				</p>
 				<p>
 					PubPub is stewarded by a nonprofit organization,{' '}
@@ -56,9 +54,9 @@ const CommunityCreatedView = ({ subdomain }: { subdomain: string }) => {
 					>
 						Knowledge Futures
 					</a>
-					, and kept free and open through support from communities like yours.
-					If this platform helps your work, please consider making a donation to
-					help sustain and improve it for everyone.
+					, and kept free and open through support from communities like yours. If this
+					platform helps your work, please consider making a donation to help sustain and
+					improve it for everyone.
 				</p>
 				<a
 					href={communityUrl}
@@ -142,9 +140,7 @@ const CommunityCreate = () => {
 						}
 					/>
 				)}
-				{loginData.id && isCreated && (
-					<CommunityCreatedView subdomain={subdomain} />
-				)}
+				{loginData.id && isCreated && <CommunityCreatedView subdomain={subdomain} />}
 				{loginData.id && !isCreated && (
 					<div>
 						<h1>Create Community</h1>
