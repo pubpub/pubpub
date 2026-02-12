@@ -31,34 +31,46 @@ export const postToSlackAboutNewCommunity = async (
 	adminEmail: string,
 	spamScore: undefined | null | number,
 ) => {
-	if (isProd()) {
-		const url = `https://${subdomain}.pubpub.org`;
-		const spamDashUrl = `https://pubpub.org${getSuperAdminTabUrl('spam')}?q=${url}`;
-		const spamScorePart = typeof spamScore === 'number' ? `\nSpam score: ${spamScore}` : '';
-		await postToSlack({
-			icon_emoji: ':bowtie:',
-			attachments: [
-				{
-					fallback: `*${title}*\n<${url}>\n_${adminName} (${adminEmail})_`,
-					pretext: 'New Community created!',
-					color: 'good',
-					fields: [
-						{
-							title: `${title}`,
-							value: `${url}\n_${adminName} (${adminEmail})_${spamScorePart}`,
-						},
-					],
-					actions: [
-						{
-							type: 'button',
-							text: 'Manage in Spam Dashboard',
-							style:
-								spamScore && isDangerousSpamScore(spamScore) ? 'danger' : 'default',
-							url: spamDashUrl,
-						},
-					],
-				},
-			],
-		});
+	// if (isProd()) {
+	if (process.env.NODE_ENV === 'test') {
+		return;
 	}
+
+	const message = isProd()
+		? `New Community created!`
+		: `New Community created! (in development, ignore)`;
+
+	const baseUrl = isProd() ? 'pubpub.org' : 'duqduq.org';
+
+	const url = `https://${subdomain}.${baseUrl}`;
+	const spamDashUrl = `https://${baseUrl}${getSuperAdminTabUrl('spam')}?q=${subdomain}`;
+	const spamScorePart = typeof spamScore === 'number' ? `\nSpam score: ${spamScore}` : '';
+	await postToSlack({
+		icon_emoji: ':bowtie:',
+		attachments: [
+			{
+				fallback: `*${title}*\n<${url}>\n_${adminName} (${adminEmail})_`,
+				pretext: message,
+				color: 'good',
+				fields: [
+					{
+						title: `${title}`,
+						value: `${url}\n_${adminName} (${adminEmail})_${spamScorePart}`,
+					},
+				],
+				actions: [
+					{
+						type: 'button',
+						text:
+							spamScore && isDangerousSpamScore(spamScore)
+								? 'See Community'
+								: 'Approve Community',
+						style: spamScore && isDangerousSpamScore(spamScore) ? 'danger' : 'default',
+						url: spamDashUrl,
+					},
+				],
+			},
+		],
+	});
+	// }
 };

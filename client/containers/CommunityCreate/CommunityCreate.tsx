@@ -83,18 +83,13 @@ const CommunityCreate = () => {
 					<div>
 						<h1>Create Community</h1>
 						<p>
-							PubPub is evolving, and we are currently only allowing new community
-							creation for existing users with an explicit short-term need. Learn more
-							by reading our announcement. If you are an existing user who needs to
-							create a community, please{' '}
-							<a
-								href="mailto:partnerships@knowledgefutures.org?mailto=PubPub%20Legacy%20Community"
-								target="_blank"
-								rel="noreferrer"
-							>
-								get in touch
-							</a>
-							.
+							New communities are currently subject to approval for compliance with
+							our{' '}
+							<a href="/legal/terms">Terms of Service</a> and{' '}
+							<a href="/legal/aup">Acceptable Use Policy</a>. We strive to moderate
+							all new communities within five business days. During this time, all
+							features and functionality are available, but only logged in Members
+							will be able to view the community.
 						</p>
 						<form onSubmit={onCreateSubmit}>
 							<InputField
