@@ -10,16 +10,22 @@ import { expect } from 'utils/assert';
 import { queryCommunitiesForSpamManagement } from './communities';
 import { canManipulateSpamTags } from './permissions';
 import { updateSpamTagForCommunity } from './queries';
+
 <<<<<<< HEAD
+
 import {
 	addSpamTagToUser,
 	getSpamTagForUser,
 	removeSpamTagFromUser,
 	updateSpamTagForUser,
 } from './userQueries';
+
 =======
+
 import { addSpamTagToUser, getSpamTagForUser, updateSpamTagForUser } from './userQueries';
+
 >>>>>>> master
+
 import { queryUsersForSpamManagement } from './users';
 
 export const router = Router();
@@ -172,10 +178,10 @@ router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
 		throw new ForbiddenError();
 	}
 <<<<<<< HEAD
-	const includeAll = !status || (Array.isArray(status) && status.length === 0);
+	const _includeAll = !status || (Array.isArray(status) && status.length === 0);
 =======
 >>>>>>> master
-	const queryResult = await queryUsersForSpamManagement({
+	const _queryResult = await queryUsersForSpamManagement({
 		offset: offset && parseInt(offset, 10),
 		limit: limit && parseInt(limit, 10),
 		ordering,

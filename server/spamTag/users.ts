@@ -3,9 +3,13 @@ import type * as types from 'types';
 import { Op } from 'sequelize';
 
 <<<<<<< HEAD
+
 import { Community, Discussion, Member, Pub, PubAttribution, SpamTag, User } from 'server/models';
+
 =======
+
 import { SpamTag, User } from 'server/models';
+
 >>>>>>> master
 
 const orderableFields = {
@@ -35,7 +39,7 @@ const getUserWhereQuery = (searchTerm?: string | null) => {
 };
 
 <<<<<<< HEAD
-const getSpamTagStatusWhereQuery = (status: undefined | types.SpamStatus[] | null) => {
+const _getSpamTagStatusWhereQuery = (status: undefined | types.SpamStatus[] | null) => {
 	if (status && status.length > 0) {
 =======
 const getSpamTagStatusWhereQuery = (status: undefined | types.SpamStatus[]) => {
@@ -47,7 +51,7 @@ const getSpamTagStatusWhereQuery = (status: undefined | types.SpamStatus[]) => {
 };
 
 type OrderFields = (typeof orderableFields)[keyof typeof orderableFields];
-const getQueryOrdering = (ordering: types.SpamUserQueryOrdering) => {
+const _getQueryOrdering = (ordering: types.SpamUserQueryOrdering) => {
 	const { field, direction } = ordering;
 	return [[...orderableFields[field], direction]] as [OrderFields[number], 'ASC' | 'DESC'][];
 };
@@ -62,7 +66,7 @@ type SerializedSpamUserRow = Record<string, unknown> & {
 	affiliation?: types.SpamUserAffiliation;
 };
 
-export const queryUsersForSpamManagement = async (
+export const _queryUsersForSpamManagement = async (
 	query: types.SpamUserQuery,
 ): Promise<SerializedSpamUserRow[]> => {
 	const { limit, offset, ordering, status, searchTerm, includeAffiliation } = query;
@@ -77,7 +81,7 @@ export const queryUsersForSpamManagement = async (
 	];
 	const rows = (await User.findAll({
 =======
-export const queryUsersForSpamManagement = (query: types.SpamUserQuery) => {
+export const _queryUsersForSpamManagement = (query: types.SpamUserQuery) => {
 	const { limit, offset, ordering, status, searchTerm } = query;
 	return User.findAll({
 >>>>>>> master
@@ -173,12 +177,10 @@ const getAffiliationForUserIds = async (
 	return map;
 =======
 		include: [
-			{
 				model: SpamTag,
 				as: 'spamTag',
 				required: true,
-				...getSpamTagStatusWhereQuery(status),
-			},
+				...getSpamTagStatusWhereQuery(status),,
 		],
 	}) as Promise<types.DefinitelyHas<User, 'spamTag'>[]>;
 >>>>>>> master
