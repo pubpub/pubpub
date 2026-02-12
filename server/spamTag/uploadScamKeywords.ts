@@ -13,7 +13,6 @@ export const uploadScamKeywords = [
 ] as const;
 
 export const isSuspiciousUploadKey = (keyOrFilename: string): boolean => {
-	console.log('keyOrFilename', keyOrFilename);
 	const lower = keyOrFilename.toLowerCase();
 	return uploadScamKeywords.some((kw) => lower.includes(kw));
 };
