@@ -1,3 +1,4 @@
+import type { IncludeOptions } from 'sequelize';
 import type { ModelCtor } from 'sequelize-typescript';
 
 import {
@@ -36,11 +37,12 @@ export const globalAssociationsMap = {
 		include: [includeUserModel({ as: 'user', required: false })],
 	},
 	User: includeUserModel({ as: 'user', required: false }),
-} as const;
+} as const satisfies Record<string, IncludeOptions>;
 
 export const createIncludes = <M extends ModelCtor, Includes extends string[]>(
 	model: M,
 	includes: Includes,
+	associationMapsOverrides?: Record<string, IncludeOptions> | undefined,
 ) => {
 	const associations = model.associations;
 	return includes.map((include) => {
@@ -51,6 +53,11 @@ export const createIncludes = <M extends ModelCtor, Includes extends string[]>(
 		}
 
 		const modelName = targetModel.name;
+
+		if (associationMapsOverrides?.[include]) {
+			return associationMapsOverrides[include];
+		}
+
 		if (modelName in globalAssociationsMap) {
 			return globalAssociationsMap[modelName];
 		}

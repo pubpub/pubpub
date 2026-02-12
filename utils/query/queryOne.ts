@@ -1,6 +1,7 @@
 import type { AppRouteQuery, ServerInferRequest } from '@ts-rest/core';
 import type { TsRestRequest } from '@ts-rest/express';
 import type { Request, Response } from 'express';
+import type { IncludeOptions } from 'sequelize';
 import type { ModelCtor } from 'sequelize-typescript';
 
 import { z } from 'zod';
@@ -19,6 +20,7 @@ export const queryOne =
 		options?: {
 			allowSlug?: boolean;
 			customScope?: CustomScopeInput[];
+			associationMapsOverrides?: Record<string, IncludeOptions>;
 		},
 	) =>
 	async <T extends AppRouteQuery>(
@@ -55,7 +57,11 @@ export const queryOne =
 				)
 			: include;
 
-		const defaultIncludes = createIncludes(model, filteredInclude);
+		const defaultIncludes = createIncludes(
+			model,
+			filteredInclude,
+			options?.associationMapsOverrides,
+		);
 
 		const result = (await model.findOne({
 			where: {

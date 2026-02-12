@@ -7,7 +7,7 @@ import type { SerializedModel } from 'types/serializedModel';
 
 import type { GetManyQueryAny } from './createGetManyQuery';
 
-import { Op } from 'sequelize';
+import { type IncludeOptions, Op } from 'sequelize';
 
 import { ensureUserIsCommunityAdmin } from 'utils/ensureUserIsCommunityAdmin';
 
@@ -77,6 +77,8 @@ export const queryMany =
 		options?: {
 			/** If provided, this will create additional where clauses to make sure that the */
 			customScope?: CustomScopeInput[];
+			/** If provided, this will map the include names to the actual include objects  */
+			associationMapsOverrides?: Record<string, IncludeOptions>;
 		},
 	) =>
 	async <T extends AppRouteQuery>(
@@ -132,7 +134,11 @@ export const queryMany =
 				)
 			: include;
 
-		const defaultIncludes = createIncludes(model, filteredInclude);
+		const defaultIncludes = createIncludes(
+			model,
+			filteredInclude,
+			options?.associationMapsOverrides,
+		);
 
 		const result = (await model.findAll({
 			where: {

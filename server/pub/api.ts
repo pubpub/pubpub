@@ -10,6 +10,7 @@ import { prepareResource, submitResource } from 'deposit/datacite/deposit';
 import { transformPubToResource } from 'deposit/transform/pub';
 import { assertValidResource } from 'deposit/validate';
 import { generateDoi } from 'server/doi/queries';
+import { Collection, CollectionPub } from 'server/models';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { writeDocumentToPubDraft } from 'server/utils/firebaseTools';
@@ -93,7 +94,20 @@ const s = initServer();
 
 export const pubServer = s.router(contract.pub, {
 	get: queryOne(Pub, { allowSlug: true }),
-	getMany: queryMany(Pub),
+	getMany: queryMany(Pub, {
+		associationMapsOverrides: {
+			CollectionPub: {
+				model: CollectionPub,
+				as: 'collectionPubs',
+				include: [
+					{
+						model: Collection,
+						as: 'collection',
+					},
+				],
+			},
+		},
+	}),
 
 	create: async ({ body, req }) => {
 		const ids = getRequestIds(body, req.user);

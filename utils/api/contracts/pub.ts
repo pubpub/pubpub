@@ -245,7 +245,7 @@ export const pubRouter = {
 					'inboundEdges',
 					'outboundEdges',
 				],
-				defaults: ['attributions', 'draft'],
+				defaults: ['attributions', 'draft', 'collectionPubs'],
 			},
 		}),
 		responses: {
