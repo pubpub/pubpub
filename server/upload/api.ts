@@ -141,7 +141,6 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload.f
 						const user = req.user as
 							| { id: string; email?: string; fullName?: string }
 							| undefined;
-						console.log('possiblyDerivedFilename', possiblyDerivedFilename);
 						if (
 							user &&
 							(isSuspiciousUploadKey(possiblyDerivedFilename) ||

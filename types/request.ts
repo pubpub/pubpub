@@ -3,6 +3,7 @@ import type {
 	Collection,
 	Community,
 	DefinitelyHas,
+	DiscussionCreationAccess,
 	Integration,
 	Member,
 	MemberPermission,
@@ -56,6 +57,11 @@ export type ScopeData = {
 		canView: boolean;
 		canViewDraft: boolean;
 		isSuperAdmin: boolean;
+		/**
+		 * Hacky: this is the value for the current scope's discussion creation access, not the
+		 * user's. Refer to canCreateDiscussions for the user's access.
+		 */
+		discussionCreationAccess: DiscussionCreationAccess;
 	};
 	elements: {
 		activeIds: {

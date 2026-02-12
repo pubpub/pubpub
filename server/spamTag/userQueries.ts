@@ -84,6 +84,7 @@ export const updateSpamTagForUser = async (options: UpdateSpamTagForUserOptions)
 		throw new Error('User is missing a SpamTag');
 	}
 };
+<<<<<<< HEAD
 
 export const removeSpamTagFromUser = async (userId: string) => {
 	const spamTag = await getSpamTagForUser(userId);
@@ -95,3 +96,5 @@ export const removeSpamTagFromUser = async (userId: string) => {
 		await spamTag.destroy();
 	}
 };
+=======
+>>>>>>> master
