@@ -84,8 +84,7 @@ const CommunityCreate = () => {
 						<h1>Create Community</h1>
 						<p>
 							New communities are currently subject to approval for compliance with
-							our{' '}
-							<a href="/legal/terms">Terms of Service</a> and{' '}
+							our <a href="/legal/terms">Terms of Service</a> and{' '}
 							<a href="/legal/aup">Acceptable Use Policy</a>. We strive to moderate
 							all new communities within five business days. During this time, all
 							features and functionality are available, but only logged in Members

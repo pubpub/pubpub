@@ -35,8 +35,11 @@ type NewCommunitySlackOptions = {
 	accentColorDark?: string | null;
 };
 
-const buildNewCommunityBlocks = (opts: NewCommunitySlackOptions & { url: string; spamDashUrl: string }) => {
-	const { title, url, adminName, adminEmail, spamScore, description, heroLogo, spamDashUrl } = opts;
+const buildNewCommunityBlocks = (
+	opts: NewCommunitySlackOptions & { url: string; spamDashUrl: string },
+) => {
+	const { title, url, adminName, adminEmail, spamScore, description, heroLogo, spamDashUrl } =
+		opts;
 	const isDangerous = typeof spamScore === 'number' && isDangerousSpamScore(spamScore);
 
 	const blocks: Record<string, any>[] = [];
@@ -84,7 +87,10 @@ const buildNewCommunityBlocks = (opts: NewCommunitySlackOptions & { url: string;
 		elements: [
 			{
 				type: 'button',
-				text: { type: 'plain_text', text: isDangerous ? 'Review Community' : 'Approve Community' },
+				text: {
+					type: 'plain_text',
+					text: isDangerous ? 'Review Community' : 'Approve Community',
+				},
 				url: spamDashUrl,
 				...(isDangerous ? { style: 'danger' } : {}),
 			},
@@ -114,7 +120,7 @@ export const postToSlackAboutNewCommunity = async (opts: NewCommunitySlackOption
 	// top-level text is what shows in phone/desktop notifications
 	const notificationText = `New Community: ${title} by ${adminName} (${adminEmail})${envSuffix}`;
 
-	const sidebarColor = isDangerous ? '#d9534f' : (accentColorDark || '#2D2E2F');
+	const sidebarColor = isDangerous ? '#d9534f' : accentColorDark || '#2D2E2F';
 
 	await postToSlack({
 		icon_emoji: ':bowtie:',

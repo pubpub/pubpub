@@ -105,6 +105,9 @@ export const createCommunity = async (
 	await Page.create(newpage);
 	if (alertAndSubscribe) {
 		defer(async () => {
+			if (isProd()) {
+				subscribeUser(userData.email, 'be26e45660', ['Community Admins']);
+			}
 			const spamTag = await getSpamTagForCommunity(newCommunityId);
 			await postToSlackAboutNewCommunity({
 				title: inputValues.title,

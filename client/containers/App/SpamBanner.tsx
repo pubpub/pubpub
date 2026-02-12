@@ -1,6 +1,6 @@
-import React from 'react';
-
 import type { SpamStatus } from 'types/spam';
+
+import React from 'react';
 
 import { Icon } from 'components';
 
@@ -22,8 +22,8 @@ const SpamBanner = (props: Props) => {
 					<a href="/legal/terms">Terms of Service</a> and{' '}
 					<a href="/legal/aup">Acceptable Use Policy</a>. We strive to moderate all new
 					communities within five business days. During this time, all features and
-					functionality are available, but only logged in Members will be able to view
-					the community.
+					functionality are available, but only logged in Members will be able to view the
+					community.
 				</div>
 			</div>
 		);
