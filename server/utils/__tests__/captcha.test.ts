@@ -24,12 +24,18 @@ const createValidPayload = async (): Promise<string> => {
 	);
 };
 
+beforeAll(() => {
+	process.env.BYPASS_CAPTCHA = undefined;
+});
+
+afterAll(() => {
+	process.env.BYPASS_CAPTCHA = 'true';
+});
+
 describe('verifyCaptchaPayload', () => {
 	it('returns false for empty or missing payload', async () => {
 		expect(await verifyCaptchaPayload('')).toBe(false);
-		// @ts-expect-error testing invalid input
 		expect(await verifyCaptchaPayload(null)).toBe(false);
-		// @ts-expect-error testing invalid input
 		expect(await verifyCaptchaPayload(undefined)).toBe(false);
 	});
 
