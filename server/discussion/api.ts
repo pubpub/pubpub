@@ -1,6 +1,8 @@
 import { Router } from 'express';
 
-import { ForbiddenError } from 'server/utils/errors';
+import { verifyCaptchaPayload } from 'server/utils/captcha';
+import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
+import { BadRequestError, ForbiddenError } from 'server/utils/errors';
 import { wrap } from 'server/wrap';
 
 import { canReleaseDiscussions, getCreatePermission, getUpdatePermissions } from './permissions';
@@ -21,6 +23,7 @@ const getRequestIds = (req) => {
 		commentAccessHash: req.body.commentAccessHash,
 	};
 };
+
 router.post(
 	'/api/discussions',
 	wrap(async (req, res) => {
@@ -31,6 +34,30 @@ router.post(
 		}
 		const userId = (req.user?.id as string) || null;
 		const options = { ...req.body, userId };
+		const newDiscussion = await createDiscussion(options);
+		return res.status(201).json(newDiscussion);
+	}),
+);
+
+router.post(
+	'/api/discussions/fromForm',
+	wrap(async (req, res) => {
+		const requestIds = getRequestIds(req);
+		const canCreate = await getCreatePermission(requestIds);
+		if (!canCreate) {
+			throw new ForbiddenError();
+		}
+		if (isHoneypotFilled(req.body._honeypot)) {
+			if (req.user?.id) await handleHoneypotTriggered(req.user.id, 'create-discussion', req.body._honeypot);
+			throw new BadRequestError(new Error('Invalid submission.'));
+		}
+		const ok = await verifyCaptchaPayload(req.body.altcha);
+		if (!ok) {
+			throw new BadRequestError(new Error('Please complete the verification and try again.'));
+		}
+		const userId = (req.user?.id as string) || null;
+		const { altcha: _altcha, _honeypot, ...rest } = req.body;
+		const options = { ...rest, userId };
 		const newDiscussion = await createDiscussion(options);
 		return res.status(201).json(newDiscussion);
 	}),

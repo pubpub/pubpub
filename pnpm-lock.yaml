@@ -200,6 +200,12 @@ importers:
       algoliasearch:
         specifier: ^4.2.0
         version: 4.25.3
+      altcha:
+        specifier: ^2.3.0
+        version: 2.3.0
+      altcha-lib:
+        specifier: ^1.4.0
+        version: 1.4.1
       amqplib:
         specifier: ^0.10.9
         version: 0.10.9
@@ -932,6 +938,9 @@ packages:
 
   '@algolia/transporter@4.25.3':
     resolution: {integrity: sha512-2yji+TKjC1uOxhJ9pCdw7lQm6GSiQ+fMvNH4es6oz82DrBpkVHkeU49HmpyTqz8Ai9e+nW/UBz8T9+UyBul3dA==}
+
+  '@altcha/crypto@0.0.1':
+    resolution: {integrity: sha512-qZMdnoD3lAyvfSUMNtC2adRi666Pxdcw9zqfMU5qBOaJWqpN9K+eqQGWqeiKDMqL0SF+EytNG4kR/Pr/99GJ6g==}
 
   '@analytics/core@0.12.17':
     resolution: {integrity: sha512-GMxRm5Dp3Wam/w5NNvqNKMO6zWecozbVv21Kn4WhftCx6OjJI7zMlVtiLpjGjxa0RRZfVG80YhupF0Qh9XL2gw==}
@@ -2883,6 +2892,11 @@ packages:
     cpu: [s390x]
     os: [linux]
 
+  '@rollup/rollup-linux-x64-gnu@4.18.0':
+    resolution: {integrity: sha512-xuglR2rBVHA5UsI8h8UbX4VJ470PtGCf5Vpswh7p2ukaqBGFTnsfzxUBetoWBWymHMxbIG0Cmx7Y9qDZzr648w==}
+    cpu: [x64]
+    os: [linux]
+
   '@rollup/rollup-linux-x64-gnu@4.53.3':
     resolution: {integrity: sha512-3EhFi1FU6YL8HTUJZ51imGJWEX//ajQPfqWLI3BQq4TlvHy4X0MOr5q3D2Zof/ka0d5FNdPwZXm3Yyib/UEd+w==}
     cpu: [x64]
@@ -4306,6 +4320,12 @@ packages:
 
   algoliasearch@4.25.3:
     resolution: {integrity: sha512-kgeIixgDiB+FbH1cHDFUtTNkxdJadHryF8lSPIHHQkEeUrzZA1Hi3PLL+EgNubO0dch4ALNb5G4rw+FDCv3Vbw==}
+
+  altcha-lib@1.4.1:
+    resolution: {integrity: sha512-MAXP9tkQOA2SE9Gwoe3LAcZbcDpp3XzYc5GDVej/y3eMNaFG/eVnRY1/7SGFW0RPsViEjPf+hi5eANjuZrH1xA==}
+
+  altcha@2.3.0:
+    resolution: {integrity: sha512-vl8I0dQvSQB7/Mx09XuWZ1+LdSP7vEda6OLbg9kUQ2ZO2LT7MzgUyLK7Iips+GAV6c0ntVcS1XWOqhEPpwbDhQ==}
 
   amqplib@0.10.9:
     resolution: {integrity: sha512-jwSftI4QjS3mizvnSnOrPGYiUnm1vI2OP1iXeOUz5pb74Ua0nbf6nPyyTzuiCLEE3fMpaJORXh2K/TQ08H5xGA==}
@@ -11810,6 +11830,8 @@ snapshots:
       '@algolia/logger-common': 4.25.3
       '@algolia/requester-common': 4.25.3
 
+  '@altcha/crypto@0.0.1': {}
+
   '@analytics/core@0.12.17(@types/dlv@1.1.5)':
     dependencies:
       '@analytics/global-storage-utils': 0.1.9
@@ -14563,6 +14585,9 @@ snapshots:
   '@rollup/rollup-linux-s390x-gnu@4.53.3':
     optional: true
 
+  '@rollup/rollup-linux-x64-gnu@4.18.0':
+    optional: true
+
   '@rollup/rollup-linux-x64-gnu@4.53.3':
     optional: true
 
@@ -16692,6 +16717,14 @@ snapshots:
       '@algolia/requester-common': 4.25.3
       '@algolia/requester-node-http': 4.25.3
       '@algolia/transporter': 4.25.3
+
+  altcha-lib@1.4.1: {}
+
+  altcha@2.3.0:
+    dependencies:
+      '@altcha/crypto': 0.0.1
+    optionalDependencies:
+      '@rollup/rollup-linux-x64-gnu': 4.18.0
 
   amqplib@0.10.9:
     dependencies:

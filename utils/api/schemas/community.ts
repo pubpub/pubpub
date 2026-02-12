@@ -120,6 +120,10 @@ export const communityCreateSchema = communitySchema
 		description: true,
 		accentColorLight: true,
 		accentColorDark: true,
+	})
+	.extend({
+		altcha: z.string().optional(),
+		_honeypot: z.string().optional(),
 	});
 
 export const communityUpdateSchema = communitySchema

@@ -1,4 +1,4 @@
-import type { SpamStatus } from 'types';
+import type { SpamStatus, UserSpamTagFields } from 'types';
 
 import React, { useCallback, useMemo, useState } from 'react';
 
@@ -31,7 +31,7 @@ const UserSpamEntry = (props: Props) => {
 	const initialStatus = hasTag ? spamTag.status : null;
 	const [status, setUpdatedStatus] = useState<null | SpamStatus>(initialStatus);
 
-	const fields = hasTag ? (spamTag.fields ?? {}) : {};
+	const fields = hasTag ? ((spamTag.fields ?? {}) as UserSpamTagFields) : ({} as UserSpamTagFields);
 	const fieldsJsonString = useMemo(() => JSON.stringify(fields, null, 2), [fields]);
 
 	const renderFieldsReport = () => {
@@ -196,6 +196,27 @@ const UserSpamEntry = (props: Props) => {
 		);
 	};
 
+	const renderHoneypotTriggers = () => {
+		const triggers = fields?.honeypotTriggers;
+		if (!triggers?.length) return null;
+		return (
+			<div className="honeypot-triggers">
+				<h3>Honeypot triggers</h3>
+				<ul>
+					{triggers.map((trigger, index) => (
+						// biome-ignore lint/suspicious/noArrayIndexKey: stable list
+						<li key={index}>
+							<Tag intent="danger" minimal>
+								{trigger.honeypot}
+							</Tag>{' '}
+							<code>{trigger.value}</code>
+						</li>
+					))}
+				</ul>
+			</div>
+		);
+	};
+
 	const renderAffiliation = () => {
 		if (!affiliation) return null;
 		const { communitySubdomains, pubCount, discussionCount } = affiliation;
@@ -251,6 +272,7 @@ const UserSpamEntry = (props: Props) => {
 			{renderFieldsReport()}
 			{renderSuspiciousFiles()}
 			{renderSuspiciousComments()}
+			{renderHoneypotTriggers()}
 			<div className="details">
 				<div className="tags">
 					{renderStatusTag()}

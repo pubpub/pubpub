@@ -1,19 +1,19 @@
 import type * as types from 'types';
-import type { SpamStatus } from 'types';
+import type { SpamStatus, UserSpamTagFields } from 'types';
 
 import mergeWith from 'lodash.mergewith';
 
 import { SpamTag, User } from 'server/models';
+import { sendSpamBanEmail, sendSpamLiftedEmail } from 'server/utils/email';
+import { deleteSessionsForUser } from 'server/utils/session';
 import { expect } from 'utils/assert';
 
 import { getSuspectedUserSpamVerdict } from './userScore';
 
-type SpamTagFields = {
-	suspiciousFiles?: string[];
-	suspiciousComments?: string[];
-};
-
-const mergeSpamTagFields = (spamTag: Pick<SpamTag, 'fields'>, fields?: SpamTagFields) => {
+const mergeSpamTagFields = (
+	spamTag: Pick<SpamTag, 'fields'> | { fields: UserSpamTagFields },
+	fields?: UserSpamTagFields,
+) => {
 	if (!fields) {
 		return spamTag;
 	}
@@ -32,7 +32,7 @@ const mergeSpamTagFields = (spamTag: Pick<SpamTag, 'fields'>, fields?: SpamTagFi
 	};
 };
 
-export const addSpamTagToUser = async (userId: string, fields?: SpamTagFields) => {
+export const addSpamTagToUser = async (userId: string, fields?: UserSpamTagFields) => {
 	const user = expect(
 		await User.findOne({
 			where: { id: userId },
@@ -42,9 +42,11 @@ export const addSpamTagToUser = async (userId: string, fields?: SpamTagFields) =
 	const verdict = getSuspectedUserSpamVerdict(user);
 	const { spamTag } = user;
 	if (spamTag) {
-		const mergedSpamTag = mergeSpamTagFields(verdict, fields);
+		// preserve existing fields, then layer on the new ones
+		const withExisting = mergeSpamTagFields(verdict, spamTag.fields as UserSpamTagFields);
+		const merged = mergeSpamTagFields(withExisting, fields);
 
-		await spamTag.update(mergedSpamTag as types.SpamVerdict<SpamTag>);
+		await spamTag.update(merged as types.SpamVerdict<SpamTag>);
 		return spamTag;
 	}
 	const newMergedSpamTag = mergeSpamTagFields(verdict, fields);
@@ -78,10 +80,32 @@ export const getSpamTagForUser = async (userId: string) => {
 export const updateSpamTagForUser = async (options: UpdateSpamTagForUserOptions) => {
 	const { userId, status } = options;
 	const spamTag = await getSpamTagForUser(userId);
-	if (spamTag) {
-		await spamTag.update({ status, statusUpdatedAt: new Date() });
-	} else {
+	if (!spamTag) {
 		throw new Error('User is missing a SpamTag');
+	}
+	await spamTag.update({ status, statusUpdatedAt: new Date() });
+	await applySpamStatusSideEffects(userId, status);
+};
+
+const applySpamStatusSideEffects = async (userId: string, status: SpamStatus) => {
+	const user = await User.findOne({
+		where: { id: userId },
+		attributes: ['email', 'fullName'],
+	});
+	if (!user?.email) return;
+	try {
+		if (status === 'confirmed-spam') {
+			try {
+				await deleteSessionsForUser(user.email);
+			} catch (err) {
+				console.error('Failed to delete sessions for banned user', userId, err);
+			}
+			await sendSpamBanEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+		} else if (status === 'confirmed-not-spam') {
+			await sendSpamLiftedEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+		}
+	} catch (err) {
+		console.error('Failed to send spam status email', err);
 	}
 };
 

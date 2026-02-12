@@ -1,4 +1,5 @@
 export { default as AccentStyle } from './AccentStyle/AccentStyle';
+export { default as Altcha, type AltchaRef } from './Altcha';
 export { default as AssignDoi } from './AssignDoi/AssignDoi';
 export { default as AttributionEditor } from './AttributionEditor/AttributionEditor';
 export { default as Avatar } from './Avatar/Avatar';
@@ -43,6 +44,7 @@ export { default as FormattingBar } from './FormattingBar/FormattingBar';
 export { default as GlobalControls } from './GlobalControls';
 export { default as GridWrapper } from './GridWrapper/GridWrapper';
 export { default as Header } from './Header/Header';
+export { default as Honeypot } from './Honeypot';
 export { default as Icon, type IconName } from './Icon/Icon';
 export { default as ImageCropper } from './ImageCropper/ImageCropper';
 export { default as ImageUpload } from './ImageUpload/ImageUpload';

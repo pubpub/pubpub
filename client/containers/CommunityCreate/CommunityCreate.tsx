@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { Button, Checkbox, Classes, NonIdealState } from '@blueprintjs/core';
 
 import { apiFetch } from 'client/utils/apiFetch';
-import { ColorInput, GridWrapper, ImageUpload, InputField } from 'components';
+import { Altcha, ColorInput, GridWrapper, Honeypot, ImageUpload, InputField } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { slugifyString } from 'utils/strings';
 
@@ -11,6 +11,7 @@ import './communityCreate.scss';
 
 const CommunityCreate = () => {
 	const { loginData } = usePageContext();
+	const altchaRef = useRef<import('components').AltchaRef>(null);
 	const [subdomain, setSubdomain] = useState('');
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
@@ -21,32 +22,39 @@ const CommunityCreate = () => {
 	const [createIsLoading, setCreateIsLoading] = useState(false);
 	const [createError, setCreateError] = useState<string | undefined>(undefined);
 
-	const onCreateSubmit = (evt) => {
+	const onCreateSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
 		evt.preventDefault();
 		setCreateIsLoading(true);
 		if (!acceptTerms) return false;
-		return apiFetch('/api/communities', {
-			method: 'POST',
-			body: JSON.stringify({
-				subdomain,
-				title,
-				description,
-				headerLogo: heroLogo,
-				heroLogo,
-				accentColorLight,
-				accentColorDark,
-			}),
-		})
-			.then(() => {
-				setCreateIsLoading(false);
-				setCreateError(undefined);
-
-				window.location.href = `https://${subdomain}.pubpub.org`;
-			})
-			.catch((err) => {
-				setCreateIsLoading(false);
-				setCreateError(err);
+		const formData = new FormData(evt.currentTarget);
+		const honeypot = (formData.get('website') as string) ?? '';
+		const payload = {
+			subdomain,
+			title,
+			description,
+			headerLogo: heroLogo,
+			heroLogo,
+			accentColorLight,
+			accentColorDark,
+			_honeypot: honeypot,
+		};
+		const altchaPayload = await altchaRef.current?.verify();
+		if (!altchaPayload) {
+			setCreateIsLoading(false);
+			return;
+		}
+		try {
+			const newCommunity = await apiFetch.post<string>('/api/communities', {
+				...payload,
+				altcha: altchaPayload,
 			});
+			window.location.href = newCommunity;
+			setCreateIsLoading(false);
+		} catch (error) {
+			setCreateIsLoading(false);
+			setCreateError((error as Error).message);
+			return;
+		}
 	};
 	const onSubdomainChange = (evt) => {
 		setSubdomain(slugifyString(evt.target.value));
@@ -97,6 +105,8 @@ const CommunityCreate = () => {
 							.
 						</p>
 						<form onSubmit={onCreateSubmit}>
+							<Altcha ref={altchaRef} auto="onload" />
+							<Honeypot name="website" />
 							<InputField
 								label="URL"
 								isRequired={true}
@@ -173,7 +183,6 @@ const CommunityCreate = () => {
 									name="create"
 									type="submit"
 									className={`${Classes.BUTTON} ${Classes.INTENT_PRIMARY} create-account-button`}
-									onClick={onCreateSubmit}
 									text="Create Community"
 									disabled={!subdomain || !title || !acceptTerms}
 									loading={createIsLoading}
