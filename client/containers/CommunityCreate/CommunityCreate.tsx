@@ -105,7 +105,6 @@ const CommunityCreate = () => {
 							.
 						</p>
 						<form onSubmit={onCreateSubmit}>
-							<Altcha ref={altchaRef} auto="onload" />
 							<Honeypot name="website" />
 							<InputField
 								label="URL"
@@ -170,6 +169,7 @@ const CommunityCreate = () => {
 									.
 								</Checkbox>
 							</InputField>
+							<Altcha ref={altchaRef} auto="onload" />
 							<InputField
 								error={
 									createError

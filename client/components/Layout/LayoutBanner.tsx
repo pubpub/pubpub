@@ -104,7 +104,10 @@ class LayoutBanner extends Component<Props, State> {
 
 		if (isLoggedIn && buttonType === 'create-pub') {
 			button = (
-				<form onSubmit={this.createPub}>
+				<form
+					onSubmit={this.createPub}
+					style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+				>
 					<Altcha ref={this.altchaRef} />
 					<Honeypot name="description" />
 					<Button

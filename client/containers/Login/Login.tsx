@@ -1,3 +1,5 @@
+import type { AltchaRef } from 'components';
+
 import React, { useRef, useState } from 'react';
 
 import { AnchorButton, Button, Classes, NonIdealState } from '@blueprintjs/core';
@@ -5,7 +7,6 @@ import encHex from 'crypto-js/enc-hex';
 import SHA3 from 'crypto-js/sha3';
 
 import { apiFetch } from 'client/utils/apiFetch';
-import type { AltchaRef } from 'components';
 import { Altcha, Avatar, GridWrapper, InputField } from 'components';
 import { usePageContext } from 'utils/hooks';
 
@@ -90,7 +91,6 @@ const Login = () => {
 							</p>
 						)}
 						<form onSubmit={onLoginSubmit}>
-							<Altcha ref={altchaRef} auto="onload" />
 							<InputField
 								label="Email"
 								placeholder="example@email.com"
@@ -104,15 +104,16 @@ const Login = () => {
 								helperText={<a href="/password-reset">Forgot Password</a>}
 								inputRef={passwordRef}
 							/>
-						<InputField error={loginError}>
-							<Button
-								name="login"
-								type="submit"
-								className={`${Classes.BUTTON} ${Classes.INTENT_PRIMARY}`}
-								text="Login"
-								loading={loginLoading}
-							/>
-						</InputField>
+							<Altcha ref={altchaRef} auto="onload" />
+							<InputField error={loginError}>
+								<Button
+									name="login"
+									type="submit"
+									className={`${Classes.BUTTON} ${Classes.INTENT_PRIMARY}`}
+									text="Login"
+									loading={loginLoading}
+								/>
+							</InputField>
 						</form>
 
 						<a href="/signup" className="switch-message">

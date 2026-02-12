@@ -53,7 +53,6 @@ const DiscussionInput = (props: Props) => {
 	const [didFocus, setDidFocus] = useState(false);
 	const [editorKey, setEditorKey] = useState(Date.now());
 	const [commenterName, setCommenterName] = useState('');
-	// const [authorUrl, _setAuthorUrl] = useState('');
 	const altchaRef = useRef<AltchaRef>(null);
 	const isNewThread = !discussionData.number;
 	const inputView = changeObject?.view;
@@ -96,7 +95,7 @@ const DiscussionInput = (props: Props) => {
 	const handlePostThreadComment = async (evt: React.FormEvent<HTMLFormElement>) => {
 		evt.preventDefault();
 		const formData = new FormData(evt.currentTarget);
-		const honeypot = (formData.get('authorUrl') as string) ?? '';
+		const honeypot = (formData.get('title') as string) ?? '';
 		setIsLoading(true);
 		try {
 			const altchaPayload = await altchaRef.current?.verify();
@@ -123,23 +122,25 @@ const DiscussionInput = (props: Props) => {
 				}),
 			});
 		} finally {
-			if (isPubBottomInput) {
-				setIsLoading(false);
-				setEditorKey(Date.now());
-			}
+			setIsLoading(false);
+			if (isPubBottomInput) setEditorKey(Date.now());
 		}
 	};
 
 	const handlePostDiscussion = async (evt: React.FormEvent<HTMLFormElement>) => {
 		evt.preventDefault();
 		const formData = new FormData(evt.currentTarget);
-		const honeypot = (formData.get('authorUrl') as string) ?? '';
+		const honeypot = (formData.get('title') as string) ?? '';
 		setIsLoading(true);
 		try {
 			const altchaPayload = await altchaRef.current?.verify();
 			const outputData = await apiFetch('/api/discussions/fromForm', {
 				method: 'POST',
-				body: JSON.stringify({ ...postDiscussionBody(), _honeypot: honeypot, altcha: altchaPayload }),
+				body: JSON.stringify({
+					...postDiscussionBody(),
+					_honeypot: honeypot,
+					altcha: altchaPayload,
+				}),
 			});
 			updateLocalData('pub', {
 				discussions: [...pubData.discussions, outputData],
@@ -226,8 +227,7 @@ const DiscussionInput = (props: Props) => {
 					onSubmit={isNewThread ? handlePostDiscussion : handlePostThreadComment}
 					className="content-wrapper"
 				>
-					<Altcha ref={altchaRef} />
-					<Honeypot name="authorUrl" />
+					<Honeypot name="title" />
 					<div className="discussion-body-wrapper editable">
 						<FormattingBar
 							editorChangeObject={changeObject}
@@ -243,18 +243,20 @@ const DiscussionInput = (props: Props) => {
 						/>
 						{renderUserNameInput()}
 					</div>
-				<Button
-					className="discussion-primary-button"
-					intent={Intent.PRIMARY}
-					type="submit"
-					text={isNewThread ? 'Post Discussion' : 'Post Reply'}
-					loading={isLoading}
-					disabled={
-						!getText(changeObject?.view) &&
-						!getTopLevelImages(changeObject?.view).length
-					}
-					small={true}
-				/>
+
+					<Altcha ref={altchaRef} />
+					<Button
+						className="discussion-primary-button"
+						intent={Intent.PRIMARY}
+						type="submit"
+						text={isNewThread ? 'Post Discussion' : 'Post Reply'}
+						loading={isLoading}
+						disabled={
+							!getText(changeObject?.view) &&
+							!getTopLevelImages(changeObject?.view).length
+						}
+						small={true}
+					/>
 					{isNewThread && !isPubBottomInput && (
 						<Button
 							className="discussion-cancel-button"

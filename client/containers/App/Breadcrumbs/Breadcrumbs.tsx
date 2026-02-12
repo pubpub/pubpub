@@ -210,7 +210,15 @@ const Breadcrumbs = (props: Props) => {
 							if (action.text === 'Create Pub') {
 								const { onClick: _, ...buttonProps } = buttonsProps;
 								return (
-									<form key={action.text} onSubmit={handleCreatePub}>
+									<form
+										key={action.text}
+										onSubmit={handleCreatePub}
+										style={{
+											display: 'flex',
+											alignItems: 'center',
+											gap: '10px',
+										}}
+									>
 										<Altcha ref={createPubAltchaRef} />
 										<Honeypot name="description" />
 										<Button {...buttonProps} type="submit" />

@@ -15,25 +15,27 @@ const Honeypot = (props: HoneypotProps) => {
 
 	if (devMode) {
 		return (
-			<div
-				className="honeypot-dev"
+			<label
 				style={{
-					border: '2px dashed orange',
-					padding: 8,
-					margin: '8px 0',
-					borderRadius: 4,
+					display: 'inline-flex',
+					alignItems: 'center',
+					gap: 4,
+					fontSize: 11,
+					color: 'orange',
+					fontWeight: 600,
+					padding: '2px 6px',
+					border: '1px dashed orange',
+					borderRadius: 3,
 				}}
 			>
-				<label style={{ fontSize: 11, color: 'orange', fontWeight: 600 }}>
-					Honeypot ({name}) - visible in dev only
-					<input
-						type="text"
-						name={name}
-						autoComplete="off"
-						style={{ display: 'block', marginTop: 4, width: '100%' }}
-					/>
-				</label>
-			</div>
+				Honeypot
+				<input
+					type="text"
+					name={name}
+					autoComplete="off"
+					style={{ width: 80, fontSize: 11, padding: '1px 4px' }}
+				/>
+			</label>
 		);
 	}
 

@@ -229,7 +229,6 @@ const UserCreate = (props: Props) => {
 				<GridWrapper containerClassName="small">
 					<h1>Create Account</h1>
 					<form onSubmit={onCreateSubmit}>
-						<Altcha ref={altchaRef} auto="onload" />
 						<InputField label="Email" isDisabled={true} value={signupData.email} />
 						<InputField
 							label="First Name"
@@ -343,6 +342,7 @@ const UserCreate = (props: Props) => {
 								.
 							</Checkbox>
 						</InputField>
+						<Altcha ref={altchaRef} auto="onload" />
 						<InputField error={postUserError && 'Error Creating User'}>
 							<Button
 								name="create"

@@ -27,8 +27,6 @@ const Signup = () => {
 		setPostSignupError(undefined);
 		try {
 			const altchaPayload = await altchaRef.current?.verify();
-			console.log('altchaPayload', altchaPayload);
-			console.log('confirmEmail', confirmEmail);
 			if (!altchaPayload) {
 				throw new Error('Verification failed. Please try again.');
 			}
@@ -60,7 +58,7 @@ const Signup = () => {
 				body: JSON.stringify({
 					email: email.toLowerCase(),
 					communityId: communityData.id,
-					confirmEmail: '',
+					_honeypot: '',
 					altcha: '',
 				}),
 			});
@@ -89,7 +87,6 @@ const Signup = () => {
 							</p>
 						)}
 						<form onSubmit={onSignupSubmit}>
-							<Altcha ref={altchaRef} auto="onload" />
 							<InputField
 								label="Email"
 								placeholder="example@email.com"
@@ -98,6 +95,7 @@ const Signup = () => {
 								error={postSignupError}
 							/>
 							<Honeypot name="confirmEmail" />
+							<Altcha ref={altchaRef} auto="onload" />
 							<Button
 								name="signup"
 								type="submit"
@@ -128,7 +126,6 @@ const Signup = () => {
 						visual="tick-circle"
 						action={
 							<form onSubmit={handleResendEmail}>
-								<Altcha ref={altchaRef} auto="onload" />
 								<Button
 									name="resendEmail"
 									disabled={!altchaRef.current?.value}
@@ -137,6 +134,7 @@ const Signup = () => {
 									text="Resend Email"
 									loading={!altchaRef.current?.value || postSignupIsLoading}
 								/>
+								<Altcha ref={altchaRef} auto="onload" />
 							</form>
 						}
 					/>
