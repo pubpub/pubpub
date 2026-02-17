@@ -45,6 +45,7 @@ const CommunityCreatedView = ({ subdomain }: { subdomain: string }) => {
 					communities within five business days. During this time, all features remain
 					available, but only logged-in Members will be able to view the community.
 				</p>
+				<h2>Your Support Keeps PubPub Free and Open</h2>
 				<p>
 					PubPub is stewarded by a nonprofit organization,{' '}
 					<a
