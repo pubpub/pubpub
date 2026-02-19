@@ -3,11 +3,14 @@
 /* This is additionally helpful because it allows heroku one-off */
 /* dynos to be run: `heroku run --size=performance-l "npm run tools <command>"` */
 
+const { config } = require('dotenv');
+
 
 if (process.env.NODE_ENV !== 'production') {
 	// FIXME: Weird eslint issue where either with or without the extension is an error
 	
-	require('../config.js');
+	// require('../config.js');
+	config({ path: '.env.dev' });
 } else {
 	const Sentry = require('@sentry/node');
 	Sentry.init({

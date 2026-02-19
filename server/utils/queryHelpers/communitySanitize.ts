@@ -2,7 +2,7 @@ export default (communityData, locationData, loginData, scopeData) => {
 	const cleanedData = { ...communityData };
 	const { canManageCommunity, canViewCommunity } = scopeData.activePermissions;
 	const availablePages = {};
-
+	// console.log('!!', cleanedData)
 	cleanedData.collections = cleanedData.collections
 		.filter((item) => {
 			/* Collection access is granted when */

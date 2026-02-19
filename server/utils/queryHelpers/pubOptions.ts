@@ -30,20 +30,23 @@ import {
 import { getPubEdgeIncludes } from './pubEdgeOptions';
 import { baseAuthor, baseThread, baseVisibility } from './util';
 
-export default ({
-	isAuth,
-	isPreview,
-	getCollections,
-	getMembers,
-	getCommunity,
-	getEdges = 'approved-only',
-	getEdgesOptions,
-	getExports,
-	getDraft,
-	getDiscussions,
-	getSubmissions,
-	getFullReleases,
-}: PubGetOptions) => {
+export default (options: PubGetOptions) => {
+	// console.log("OPTIONS", options)
+	const {
+		isAuth,
+		isPreview,
+		getCollections,
+		getMembers,
+		getCommunity,
+		getEdges = 'approved-only',
+		getEdgesOptions,
+		getExports,
+		getDraft,
+		getDiscussions,
+		getSubmissions,
+		getFullReleases,
+	} = options;
+
 	const allowUnapprovedEdges = getEdges === 'all';
 	/* Initialize values assuming all inputs are false. */
 	/* Then, iterate over each input and adjust */
@@ -219,7 +222,7 @@ export default ({
 		];
 	}
 	const visibility = baseVisibility;
-	return {
+	const result = {
 		attributes: pubAttributes,
 		include: [
 			...pubAttributions,
@@ -275,4 +278,9 @@ export default ({
 			...community,
 		].filter((x) => x),
 	};
+
+	// console.log("-------------------------------")
+	// console.dir(result, {depth: 3})
+	// console.log("-------------------------------")
+	return result;
 };

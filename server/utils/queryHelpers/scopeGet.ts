@@ -20,6 +20,7 @@ import { isUserSuperAdmin } from 'server/user/queries';
 import { expect } from 'utils/assert';
 
 import { getCollection } from './collectionGet';
+import { createLogger } from './communityGet';
 import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
 
 const getScopeIdsObject = ({
@@ -171,6 +172,8 @@ const getScopeElements = async (scopeInputs: {
 		activeCommunity = expect(
 			await Community.findOne({
 				where: { id: communityId },
+				attributes: ['id'],
+				raw: true,
 			}),
 		);
 	}
@@ -187,6 +190,7 @@ const getScopeElements = async (scopeInputs: {
 					model: CollectionPub,
 					as: 'collectionPubs',
 					attributes: ['id', 'pubId', 'collectionId', 'pubRank'],
+					separate: true,
 					include: [
 						{
 							model: Collection,
@@ -215,6 +219,7 @@ const getScopeElements = async (scopeInputs: {
 			where: {
 				id: { [Op.in]: (activePub.collectionPubs || []).map((cp) => cp.collectionId) },
 			},
+			raw: true,
 		});
 		inactiveCollections = collections.filter((collection) => {
 			const isActive = collection.slug === collectionSlug;
@@ -467,21 +472,22 @@ type ScopeInputs = {
 /* it is likely that collectionSlug and pubSlug will be used. */
 /* When called from an API endpoint, it is likely that collectionId and pubId will be used. */
 const scopeGet = async (scopeInputs: ScopeInputs): Promise<types.ScopeData> => {
-	const scopeElements = await getScopeElements(scopeInputs);
+	const { log, end } = createLogger('scopeGet');
+
+	const scopeElements = await log('getScopeElements', getScopeElements(scopeInputs));
 
 	const [facets, publicPermissionsData, scopeMemberData, activeCounts] = await Promise.all([
-		getFacets(!!scopeInputs.includeFacets, scopeElements),
-		getPublicPermissionsData(scopeElements),
-		getScopeMemberData(scopeInputs, scopeElements),
-		getActiveCounts(!!scopeInputs.isDashboard, scopeElements),
+		log('getFacets', getFacets(!!scopeInputs.includeFacets, scopeElements)),
+		log('getPublicPermissionsData', getPublicPermissionsData(scopeElements)),
+		log('getScopeMemberData', getScopeMemberData(scopeInputs, scopeElements)),
+		log('getActiveCounts', getActiveCounts(!!scopeInputs.isDashboard, scopeElements)),
 	]);
 
-	const activePermissions = await getActivePermissions(
-		scopeInputs,
-		scopeElements,
-		publicPermissionsData,
-		scopeMemberData,
+	const activePermissions = await log(
+		'activePermissions',
+		getActivePermissions(scopeInputs, scopeElements, publicPermissionsData, scopeMemberData),
 	);
+	end();
 
 	return {
 		elements: scopeElements,

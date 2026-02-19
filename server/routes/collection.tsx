@@ -15,6 +15,7 @@ import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { enrichCollectionWithPubTokens, getLayoutPubsByBlock } from 'server/utils/layouts';
+import { yolo } from 'server/utils/queryHelpers/communityGet';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { withValue } from 'utils/fp';
@@ -68,13 +69,20 @@ const getLayoutWithSubmissionWorkflowBlock = async (collection: types.Collection
 };
 
 router.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, next) => {
+	const acc = {};
+	const startHostCheck = Date.now();
 	if (!hostIsValid(req, 'community')) {
+		const durationHostCheck = Date.now() - startHostCheck;
+		console.log(`hostIsValid check took ${durationHostCheck}ms`);
 		return next();
 	}
 
 	try {
 		const { collectionSlug } = req.params;
-		const initialData = await getInitialData(req);
+
+		const initialData = await yolo('collectionRoute:getInitData', acc, getInitialData(req));
+		(req as any).initialData = initialData;
+
 		const {
 			communityData,
 			communityData: { id: communityId },
@@ -84,23 +92,34 @@ router.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res,
 			},
 		} = initialData;
 
+		const startCollectionAccessCheck = Date.now();
 		const isCollectionAccessible = communityData.collections.find(
 			(c) => c.slug === collectionSlug,
 		);
+		const durationCollectionAccessCheck = Date.now() - startCollectionAccessCheck;
+		console.log(`Collection access check took ${durationCollectionAccessCheck}ms`);
 
+		const startCollectionEnrich = Date.now();
 		const collection = withValue(
 			activeCollection,
 			(c) => c && enrichCollectionWithPubTokens(c, initialData),
 		);
+		const durationCollectionEnrich = Date.now() - startCollectionEnrich;
+		console.log(`Collection enrich took ${durationCollectionEnrich}ms`);
 
+		const startCollectionHandling = Date.now();
 		if (collection && isCollectionAccessible) {
 			const { pageId, id: collectionId } = collection;
-
 			await enrichCollectionWithAttributions(collection);
 
 			if (pageId) {
+				console.log('here 3');
 				const page = await Page.findOne({ where: { id: pageId } });
 				if (page) {
+					const durationCollectionHandling = Date.now() - startCollectionHandling;
+					console.log(
+						`Collection handling (redirect to page) took ${durationCollectionHandling}ms`,
+					);
 					return res.redirect(`/${page.slug}`);
 				}
 			}
@@ -116,7 +135,8 @@ router.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res,
 
 				const customScripts = await getCustomScriptsForCommunity(communityData.id);
 				createUserScopeVisit({ userId, communityId, collectionId });
-				return renderToNodeStream(
+
+				const out = renderToNodeStream(
 					res,
 					<Html
 						chunkName="Collection"
@@ -134,22 +154,35 @@ router.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res,
 						bodyClassPrefix="layout"
 					/>,
 				);
+				const durationCollectionHandling = Date.now() - startCollectionHandling;
+				console.log(
+					`Collection handling (render layout) took ${durationCollectionHandling}ms`,
+				);
+				return out;
 			}
 
+			const durationCollectionHandling = Date.now() - startCollectionHandling;
+			console.log(
+				`Collection handling (redirect to search) took ${durationCollectionHandling}ms`,
+			);
 			return res.redirect(`/search?q=${collection.title}`);
 		}
 
 		// Some Crossref deposits have occured with this scheme so we must continue
 		// to support it. This only applies to URLs that match the /collection/:slug
 		// pattern.
+		const startPartialIdCheck = Date.now();
 		if (/^\/collection/.test(req.path)) {
 			const collectionByPartialId = await findCollectionByPartialId(collectionSlug);
+
+			const durationPartialIdCheck = Date.now() - startPartialIdCheck;
+			console.log(`findCollectionByPartialId took ${durationPartialIdCheck}ms`);
 
 			if (collectionByPartialId) {
 				return res.redirect(`/${collectionByPartialId.slug}`);
 			}
 		}
-
+		console.log(acc);
 		return next();
 	} catch (err) {
 		return handleErrors(req, res, next)(err);

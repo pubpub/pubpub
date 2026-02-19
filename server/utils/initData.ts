@@ -1,5 +1,6 @@
 import type * as types from 'types';
 
+import { performance } from 'node:perf_hooks';
 import queryString from 'query-string';
 
 import { getFeatureFlagsForUserAndCommunity } from 'server/featureFlag/queries';
@@ -36,7 +37,29 @@ export const getInitialData = async (
 	req,
 	options: GetInitialDataOptions = {},
 ): Promise<types.InitialData> => {
-	const hostname = req.hostname;
+	if (req.initialData) {
+		return req.initialData;
+	}
+	let hostname = req.hostname;
+	if (hostname === 'localhost') {
+		hostname = 'demo.duqduq.org';
+	}
+	if (hostname === 'v6b.underlay.org' || hostname === 'v6bb.underlay.org') {
+		hostname = 'cursor.pubpub.org';
+	}
+	if (hostname === 'v6b.pubpub.org' || hostname === 'v6bb.pubpub.org') {
+		hostname = 'mit-serc.pubpub.org';
+	}
+	if (hostname === 'v6b.priorartarchive.org') {
+		hostname = 'stanford-jblp.pubpub.org';
+	}
+	if (hostname === 'cftest.trialanderror.org') {
+		hostname = 'jrn.pubpub.org';
+	}
+	if (hostname === 'cftest.priorartarchive.org') {
+		hostname = 'revisions.pubpub.org';
+	}
+
 	const { isDashboard = false, includeFacets = isDashboard } = options;
 	/* Gather user data */
 	const user = req.user || {};
@@ -149,7 +172,7 @@ export const getInitialData = async (
 
 	const [scopeData, featureFlags, initialNotificationsData, dismissedUserDismissables] =
 		await Promise.all([
-			getScope({
+			await getScope({
 				communityId: communityData.id,
 				pubSlug: locationData.params.pubSlug,
 				collectionSlug:
@@ -159,9 +182,9 @@ export const getInitialData = async (
 				isDashboard,
 				includeFacets,
 			}),
-			getFeatureFlagsForUserAndCommunity(loginData.id, communityData.id),
-			getNotificationData(user.id),
-			getDismissedUserDismissables(user.id),
+			await getFeatureFlagsForUserAndCommunity(loginData.id, communityData.id),
+			await getNotificationData(user.id),
+			await getDismissedUserDismissables(user.id),
 		]);
 
 	const cleanedCommunityData = sanitizeCommunity(
@@ -171,7 +194,7 @@ export const getInitialData = async (
 		scopeData,
 	);
 
-	return {
+	const result = {
 		communityData: cleanedCommunityData,
 		loginData,
 		locationData,
@@ -180,4 +203,6 @@ export const getInitialData = async (
 		initialNotificationsData,
 		dismissedUserDismissables,
 	};
+
+	return result;
 };

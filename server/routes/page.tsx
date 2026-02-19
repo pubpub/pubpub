@@ -20,7 +20,10 @@ router.get(['/', '/:slug'], async (req, res, next) => {
 	}
 
 	try {
+		const start = Date.now();
 		const initialData = await getInitialData(req);
+		const duration = Date.now() - start;
+		console.log(`getInitialDataPage took ${duration}ms`);
 		const pageId = initialData.communityData.pages.reduce(
 			(bestId: string | undefined, nextPage: Page) => {
 				if (nextPage.slug === '' && req.params.slug === undefined) {
@@ -46,7 +49,9 @@ router.get(['/', '/:slug'], async (req, res, next) => {
 		const pageTitle = !pageData.slug
 			? initialData.communityData.title
 			: `${pageData.title} · ${initialData.communityData.title}`;
-
+		const fullDuration = Date.now() - start;
+		console.log(`full minus render took ${fullDuration}ms`);
+		// return res.status(200).json({});
 		return renderToNodeStream(
 			res,
 			<Html

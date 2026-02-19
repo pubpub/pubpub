@@ -1,14 +1,15 @@
-
 const {
 	argv: { watch },
 } = require('yargs');
 const path = require('path');
+const { config } = require('dotenv');
 
 const watchables = watch && (Array.isArray(watch) ? watch : [watch]).filter((x) => x);
 
 const main = async () => {
 	if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
-		require(path.join(process.cwd(), 'config.js'));
+		// config({ path: '.env.dev' });
+		// require(path.join(process.cwd(), 'config.js'));
 		const { setupLocalDatabase } = require('./localDatabase');
 		await setupLocalDatabase();
 	}
