@@ -6,8 +6,6 @@ type MutatingMethod = (typeof MUTATING_METHODS)[number];
 /** routes that use mutating methods but don't actually write to our database */
 const allowedMutatingRoutes: Record<string, MutatingMethod[]> = {
 	'/api/login': ['POST'],
-	'/api/register': ['POST'],
-	'/api/signup': ['POST'],
 	'/api/pubs/many': ['POST'],
 	'/api/activityItems': ['POST'],
 	'/api/analytics/track': ['POST'],
