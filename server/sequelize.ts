@@ -1,20 +1,16 @@
-import { knex } from "knex";
-import {
-	ConnectionError,
-	type ConnectionOptions,
-	DataTypes,
-	type PoolOptions,
-} from "sequelize";
 import type {
 	Connection,
 	ConnectionManager,
-} from "sequelize/types/dialects/abstract/connection-manager";
-import type { Pool } from "sequelize-pool";
-import { Sequelize } from "sequelize-typescript";
+} from 'sequelize/types/dialects/abstract/connection-manager';
+import type { Pool } from 'sequelize-pool';
+
+import { knex } from 'knex';
+import { ConnectionError, type ConnectionOptions, DataTypes, type PoolOptions } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 
 /* eslint-enable */
-import { abortStorage } from "./abort";
-import { DatabaseRequestAbortedError } from "./utils/errors";
+import { abortStorage } from './abort';
+import { DatabaseRequestAbortedError } from './utils/errors';
 
 const database_url = process.env.DATABASE_URL;
 
@@ -32,11 +28,11 @@ class SequelizeWithId extends Sequelize {
 }
 
 if (!database_url) {
-	console.log("Process.env:", process.env);
-	throw new Error("DATABASE_URL environment variable not set");
+	console.log('Process.env:', process.env);
+	throw new Error('DATABASE_URL environment variable not set');
 }
 
-const useSSL = database_url.includes(".");
+const useSSL = database_url.includes('.');
 
 export const poolOptions = {
 	max: process.env.SEQUELIZE_MAX_CONNECTIONS
@@ -71,7 +67,7 @@ export const sequelize = new SequelizeWithId(database_url, {
 	logging: false,
 
 	dialectOptions: { ssl: useSSL ? { rejectUnauthorized: false } : false },
-	dialect: "postgres",
+	dialect: 'postgres',
 	pool: poolOptions,
 	hooks: {
 		// IMPORTANT: This is necessary to abort requests that time out, or are prematurely closed by the client
@@ -90,10 +86,10 @@ export const sequelize = new SequelizeWithId(database_url, {
 	},
 });
 
-export const knexInstance = knex({ client: "pg" });
+export const knexInstance = knex({ client: 'pg' });
 
 /* Change to true to update the model in the database. */
 /* NOTE: This being set to true will erase your data. */
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== 'test') {
 	sequelize.sync({ force: false });
 }

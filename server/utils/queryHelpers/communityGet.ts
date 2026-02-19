@@ -1,11 +1,4 @@
-import {
-	Collection,
-	Community,
-	Member,
-	Page,
-	ScopeSummary,
-	SpamTag,
-} from "server/models";
+import { Collection, Community, Member, Page, ScopeSummary, SpamTag } from 'server/models';
 
 export async function logg<T>(
 	out: Record<string, number>,
@@ -37,54 +30,51 @@ export function createLogger(initialId: string) {
 			const end = process.hrtime.bigint();
 
 			const total = Number(end - now) / 1_000_000;
-			const totalSum = Object.entries(acc ?? {}).reduce(
-				(acc, [k, v]) => (acc += v),
-				0,
-			);
+			const totalSum = Object.entries(acc ?? {}).reduce((acc, [k, v]) => (acc += v), 0);
 
 			console.log(`Total for ${initialId}:`);
 			console.log(`- Start => End: ${total} ms`);
 			console.log(`- Sum of all:   ${totalSum} ms`);
-			console.log("--------------------");
+			console.log('--------------------');
 			Object.entries(acc ?? {}).forEach(([k, v]) => {
 				console.log(`- ${k}: ${v}ms`);
 			});
-			console.log("--------------------\n\n");
+			console.log('--------------------\n\n');
 			acc = null;
 		},
 	};
 }
 
 export default async function communityGet(locationData, whereQuery) {
-	const { end, log } = createLogger("communityGet");
+	const { end, log } = createLogger('communityGet');
 	// Community lookup
 	const community = await log(
-		"community",
+		'community',
 		Community.findOne({
 			where: whereQuery,
 			raw: true,
 			nest: true,
 			include: [
-				{ model: ScopeSummary, as: "scopeSummary" },
-				{ model: SpamTag, as: "spamTag" },
+				{ model: ScopeSummary, as: 'scopeSummary' },
+				{ model: SpamTag, as: 'spamTag' },
 			],
 			// logging: (sql, ms) => console.log(`[communityGet SQL ${ms}ms] ${sql}`),
 		}),
 	);
 	if (!community) {
-		throw new Error("Community Not Found");
+		throw new Error('Community Not Found');
 	}
 
 	const [pages, collections] = await Promise.all([
 		Page.findAll({
 			where: { communityId: community.id },
 			raw: true,
-			attributes: { exclude: ["updatedAt", "communityId", "layout"] },
+			attributes: { exclude: ['updatedAt', 'communityId', 'layout'] },
 		}),
 		Collection.findAll({
 			where: { communityId: community.id },
 			raw: true,
-			attributes: { exclude: ["layout"] },
+			attributes: { exclude: ['layout'] },
 		}),
 	]);
 
@@ -95,7 +85,7 @@ export default async function communityGet(locationData, whereQuery) {
 
 	// members (single query; no huge join)
 	const members = await log(
-		"members",
+		'members',
 		Member.findAll({
 			where: { collectionId: collectionIds },
 			raw: true,
@@ -104,7 +94,7 @@ export default async function communityGet(locationData, whereQuery) {
 	// attach members to collections
 	const byCollectionId = new Map();
 	await log(
-		"compile",
+		'compile',
 		new Promise<void>((resolve) => {
 			for (const m of members) {
 				const k = m.collectionId;

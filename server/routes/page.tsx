@@ -1,19 +1,21 @@
-import { Router } from "express";
+import type { Page } from 'types';
 
-import React from "react";
-import { getCustomScriptsForCommunity } from "server/customScript/queries";
-import Html from "server/Html";
-import { handleErrors } from "server/utils/errors";
-import { getInitialData } from "server/utils/initData";
-import { getPage } from "server/utils/queryHelpers";
-import { hostIsValid } from "server/utils/routes";
-import { generateMetaComponents, renderToNodeStream } from "server/utils/ssr";
-import type { Page } from "types";
+import React from 'react';
+
+import { Router } from 'express';
+
+import { getCustomScriptsForCommunity } from 'server/customScript/queries';
+import Html from 'server/Html';
+import { handleErrors } from 'server/utils/errors';
+import { getInitialData } from 'server/utils/initData';
+import { getPage } from 'server/utils/queryHelpers';
+import { hostIsValid } from 'server/utils/routes';
+import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 
 export const router = Router();
 
-router.get(["/", "/:slug"], async (req, res, next) => {
-	if (!hostIsValid(req, "community")) {
+router.get(['/', '/:slug'], async (req, res, next) => {
+	if (!hostIsValid(req, 'community')) {
 		return next();
 	}
 
@@ -21,7 +23,7 @@ router.get(["/", "/:slug"], async (req, res, next) => {
 		const initialData = await getInitialData(req);
 		const pageId = initialData.communityData.pages.reduce(
 			(bestId: string | undefined, nextPage: Page) => {
-				if (nextPage.slug === "" && req.params.slug === undefined) {
+				if (nextPage.slug === '' && req.params.slug === undefined) {
 					return nextPage.id;
 				}
 				if (nextPage.slug === req.params.slug) {

@@ -25,7 +25,7 @@ export default (communityData, locationData, loginData, scopeData) => {
 
 	cleanedData.pages = cleanedData.pages.filter((item) => {
 		const pageCollection = cleanedData.collections.find(
-			({ pageId }) => typeof pageId === "string" && pageId === item.id,
+			({ pageId }) => typeof pageId === 'string' && pageId === item.id,
 		);
 
 		// If the page has a collection, check if the user has explicit permission

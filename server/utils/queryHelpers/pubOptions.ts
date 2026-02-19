@@ -1,4 +1,7 @@
-import type { IncludeOptions } from "sequelize";
+import type { IncludeOptions } from 'sequelize';
+
+import type { PubGetOptions } from 'types';
+
 import {
 	Collection,
 	CollectionAttribution,
@@ -22,11 +25,10 @@ import {
 	ScopeSummary,
 	Submission,
 	SubmissionWorkflow,
-} from "server/models";
-import type { PubGetOptions } from "types";
+} from 'server/models';
 
-import { getPubEdgeIncludes } from "./pubEdgeOptions";
-import { baseAuthor, baseThread, baseVisibility } from "./util";
+import { getPubEdgeIncludes } from './pubEdgeOptions';
+import { baseAuthor, baseThread, baseVisibility } from './util';
 
 export default (options: PubGetOptions) => {
 	const {
@@ -35,7 +37,7 @@ export default (options: PubGetOptions) => {
 		getCollections,
 		getMembers,
 		getCommunity,
-		getEdges = "approved-only",
+		getEdges = 'approved-only',
 		getEdgesOptions,
 		getExports,
 		getDraft,
@@ -44,7 +46,7 @@ export default (options: PubGetOptions) => {
 		getFullReleases,
 	} = options;
 
-	const allowUnapprovedEdges = getEdges === "all";
+	const allowUnapprovedEdges = getEdges === 'all';
 	/* Initialize values assuming all inputs are false. */
 	/* Then, iterate over each input and adjust */
 	/* variables as needed */
@@ -52,9 +54,9 @@ export default (options: PubGetOptions) => {
 	let pubAttributions = [
 		{
 			model: PubAttribution,
-			as: "attributions",
+			as: 'attributions',
 			separate: true,
-			include: [includeUserModel({ as: "user" })],
+			include: [includeUserModel({ as: 'user' })],
 		},
 	];
 	let pubMembers: any = [];
@@ -62,38 +64,38 @@ export default (options: PubGetOptions) => {
 	let pubReleases = [
 		{
 			model: Release,
-			as: "releases",
+			as: 'releases',
 			separate: true,
-			order: [["createdAt", "ASC"]],
+			order: [['createdAt', 'ASC']],
 		},
 	] as IncludeOptions[];
 	let collectionPubs: any = [];
 	let community: any = [];
-	let anchors = [{ model: DiscussionAnchor, as: "anchors" }];
+	let anchors = [{ model: DiscussionAnchor, as: 'anchors' }];
 	let author = baseAuthor;
 	let thread = baseThread;
 	if (isPreview) {
 		pubAttributes = [
-			"id",
-			"slug",
-			"title",
-			"htmlTitle",
-			"description",
-			"htmlDescription",
-			"labels",
-			"avatar",
-			"doi",
-			"communityId",
-			"customPublishedAt",
-			"createdAt",
-			"updatedAt",
+			'id',
+			'slug',
+			'title',
+			'htmlTitle',
+			'description',
+			'htmlDescription',
+			'labels',
+			'avatar',
+			'doi',
+			'communityId',
+			'customPublishedAt',
+			'createdAt',
+			'updatedAt',
 		];
 		author = [];
 		thread = [];
 		anchors = [];
 	}
 	if (isAuth) {
-		pubAttributes = ["id"];
+		pubAttributes = ['id'];
 		pubReleases = [];
 		pubAttributions = [];
 		author = [];
@@ -101,27 +103,27 @@ export default (options: PubGetOptions) => {
 		anchors = [];
 	}
 	if (getMembers) {
-		pubMembers = [{ model: Member, as: "members" }];
+		pubMembers = [{ model: Member, as: 'members' }];
 	}
 	if (getEdges) {
 		pubEdges = [
 			{
 				model: PubEdge,
-				as: "outboundEdges",
+				as: 'outboundEdges',
 				separate: true,
 				include: getPubEdgeIncludes({
 					...getEdgesOptions,
 					includeTargetPub: true,
 				}),
-				order: [["rank", "ASC"]],
+				order: [['rank', 'ASC']],
 			},
 			{
 				model: PubEdge,
-				as: "inboundEdges",
+				as: 'inboundEdges',
 				separate: true,
 				include: getPubEdgeIncludes({ ...getEdgesOptions, includePub: true }),
 				where: !allowUnapprovedEdges && { approvedByTarget: true },
-				order: [["rank", "ASC"]],
+				order: [['rank', 'ASC']],
 			},
 		];
 	}
@@ -130,12 +132,12 @@ export default (options: PubGetOptions) => {
 		pubReleases = [
 			{
 				model: Release,
-				as: "releases",
+				as: 'releases',
 				separate: true,
 				include: [
 					{
 						model: Doc,
-						as: "doc",
+						as: 'doc',
 					},
 				],
 			},
@@ -143,13 +145,12 @@ export default (options: PubGetOptions) => {
 	}
 
 	if (getCollections) {
-		const shouldFetchCollection =
-			getCollections === true || getCollections.collection;
-		const isNested = typeof getCollections === "object";
+		const shouldFetchCollection = getCollections === true || getCollections.collection;
+		const isNested = typeof getCollections === 'object';
 
 		const { page, members, attributions } = shouldFetchCollection
 			? isNested
-				? typeof getCollections.collection === "object"
+				? typeof getCollections.collection === 'object'
 					? getCollections.collection
 					: {
 							page: false,
@@ -170,28 +171,28 @@ export default (options: PubGetOptions) => {
 		collectionPubs = [
 			{
 				model: CollectionPub,
-				as: "collectionPubs",
+				as: 'collectionPubs',
 				separate: true,
-				order: [["pubRank", "ASC"]],
+				order: [['pubRank', 'ASC']],
 				...(shouldFetchCollection && {
 					include: [
 						{
 							model: Collection,
-							as: "collection",
+							as: 'collection',
 							include: [
 								page && {
 									model: Page,
-									as: "page",
-									attributes: ["id", "title", "slug"],
+									as: 'page',
+									attributes: ['id', 'title', 'slug'],
 								},
 								members && {
 									model: Member,
-									as: "members",
+									as: 'members',
 								},
 								attributions && {
 									model: CollectionAttribution,
-									as: "attributions",
-									include: [includeUserModel({ as: "user" })],
+									as: 'attributions',
+									include: [includeUserModel({ as: 'user' })],
 								},
 							].filter(Boolean),
 						},
@@ -204,17 +205,17 @@ export default (options: PubGetOptions) => {
 		community = [
 			{
 				model: Community,
-				as: "community",
+				as: 'community',
 				attributes: [
-					"id",
-					"subdomain",
-					"domain",
-					"title",
-					"accentColorLight",
-					"accentColorDark",
-					"headerLogo",
-					"headerColorType",
-					"publishAs",
+					'id',
+					'subdomain',
+					'domain',
+					'title',
+					'accentColorLight',
+					'accentColorDark',
+					'headerLogo',
+					'headerColorType',
+					'publishAs',
 				],
 			},
 		];
@@ -229,48 +230,48 @@ export default (options: PubGetOptions) => {
 			...pubEdges,
 			getExports && {
 				model: Export,
-				as: "exports",
+				as: 'exports',
 				separate: true,
 			},
 			getDraft && {
 				model: Draft,
-				as: "draft",
+				as: 'draft',
 			},
 			getSubmissions && {
 				model: Submission,
-				as: "submission",
-				include: [{ model: SubmissionWorkflow, as: "submissionWorkflow" }],
+				as: 'submission',
+				include: [{ model: SubmissionWorkflow, as: 'submissionWorkflow' }],
 			},
 			getDiscussions && {
 				separate: true,
 				model: Discussion,
-				as: "discussions",
+				as: 'discussions',
 				include: [
 					...author,
 					...anchors,
 					...visibility,
 					...thread,
-					{ model: Commenter, as: "commenter" },
+					{ model: Commenter, as: 'commenter' },
 				],
 			},
 			{
 				separate: true,
 				model: ReviewNew,
-				as: "reviews",
+				as: 'reviews',
 				include: [
 					...author,
 					...visibility,
 					...thread,
-					{ model: Reviewer, as: "reviewers" },
+					{ model: Reviewer, as: 'reviewers' },
 				],
 			},
 			{
 				model: CrossrefDepositRecord,
-				as: "crossrefDepositRecord",
+				as: 'crossrefDepositRecord',
 			},
 			{
 				model: ScopeSummary,
-				as: "scopeSummary",
+				as: 'scopeSummary',
 			},
 			...collectionPubs,
 			...community,

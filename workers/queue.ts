@@ -1,13 +1,15 @@
-import * as Sentry from "@sentry/node";
-import amqplib from "amqplib";
-import path from "path";
-import { WorkerTask } from "server/models";
-import { expect } from "utils/assert";
-import { createCachePurgeDebouncer } from "utils/caching/createCachePurgeDebouncer";
-import { getAppCommit, isProd } from "utils/environment";
-import { TaskPriority, taskQueueName } from "utils/workers";
-import { Worker } from "worker_threads";
-import type { TaskType } from "./worker";
+import type { TaskType } from './worker';
+
+import * as Sentry from '@sentry/node';
+import amqplib from 'amqplib';
+import path from 'path';
+import { Worker } from 'worker_threads';
+
+import { WorkerTask } from 'server/models';
+import { expect } from 'utils/assert';
+import { createCachePurgeDebouncer } from 'utils/caching/createCachePurgeDebouncer';
+import { getAppCommit, isProd } from 'utils/environment';
+import { TaskPriority, taskQueueName } from 'utils/workers';
 
 const maxWorkerTimeSeconds = 120;
 const maxWorkerThreads = 5;
@@ -18,10 +20,10 @@ const customTimeouts = {
 	archive: 14_400, // 4 hours
 } satisfies Partial<Record<TaskType, number>>;
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === 'production') {
 	Sentry.init({
-		dsn: "https://abe1c84bbb3045bd982f9fea7407efaa@sentry.io/1505439",
-		environment: isProd() ? "prod" : "dev",
+		dsn: 'https://abe1c84bbb3045bd982f9fea7407efaa@sentry.io/1505439',
+		environment: isProd() ? 'prod' : 'dev',
 		release: getAppCommit(),
 		tracesSampleRate: 1,
 		integrations: [new Sentry.Integrations.Postgres()],
@@ -29,8 +31,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const { schedulePurge: schedulePurgeWorker } = createCachePurgeDebouncer({
-	errorHandler:
-		process.env.NODE_ENV === "production" ? Sentry.captureException : undefined,
+	errorHandler: process.env.NODE_ENV === 'production' ? Sentry.captureException : undefined,
 	debounceTime: 5000,
 	throttleTime: 1000,
 });
@@ -42,19 +43,11 @@ const incrementAttemptCount = async (taskId, maxAttemptCount = 2) => {
 	const workerTaskData = expect(
 		await WorkerTask.findOne({ where: { id: taskId }, useMaster: true }),
 	);
-	if (
-		workerTaskData.attemptCount &&
-		workerTaskData.attemptCount >= maxAttemptCount
-	) {
-		throw new Error("Too many attempts");
+	if (workerTaskData.attemptCount && workerTaskData.attemptCount >= maxAttemptCount) {
+		throw new Error('Too many attempts');
 	}
-	const newAttemptCount = workerTaskData.attemptCount
-		? workerTaskData.attemptCount + 1
-		: 1;
-	await WorkerTask.update(
-		{ attemptCount: newAttemptCount },
-		{ where: { id: taskId } },
-	);
+	const newAttemptCount = workerTaskData.attemptCount ? workerTaskData.attemptCount + 1 : 1;
+	await WorkerTask.update({ attemptCount: newAttemptCount }, { where: { id: taskId } });
 };
 
 const processTask = (channel) => async (message) => {
@@ -63,11 +56,9 @@ const processTask = (channel) => async (message) => {
 	let hasFinished = false;
 	let taskTimeout;
 	const startTime = Date.now();
-	console.log(
-		`Beginning ${taskData.id} (load ${currentWorkerThreads}/${maxWorkerThreads})`,
-	);
+	console.log(`Beginning ${taskData.id} (load ${currentWorkerThreads}/${maxWorkerThreads})`);
 
-	const worker = new Worker(path.join(__dirname, "initWorker.js"), {
+	const worker = new Worker(path.join(__dirname, 'initWorker.js'), {
 		workerData: taskData,
 	});
 
@@ -104,8 +95,8 @@ const processTask = (channel) => async (message) => {
 	};
 
 	const onWorkerError = async (error) => {
-		console.error("In task:", error);
-		if (process.env.NODE_ENV === "production") {
+		console.error('In task:', error);
+		if (process.env.NODE_ENV === 'production') {
 			Sentry.captureException(error);
 		}
 		await onWorkerFinished({
@@ -134,14 +125,14 @@ const processTask = (channel) => async (message) => {
 		return;
 	}
 
-	worker.on("error", onWorkerError);
-	worker.on("message", onWorkerMessage);
+	worker.on('error', onWorkerError);
+	worker.on('message', onWorkerMessage);
 
 	const maxWorkerTime = customTimeouts[taskData.type] ?? maxWorkerTimeSeconds;
 
 	taskTimeout = setTimeout(() => {
 		// Ask the worker nicely to kill its subprocesses
-		worker.postMessage("yield");
+		worker.postMessage('yield');
 		setTimeout(() => {
 			// Well, you had your chance
 			worker.terminate();
@@ -152,23 +143,23 @@ const processTask = (channel) => async (message) => {
 
 const cloudAmqpUrl = process.env.CLOUDAMQP_URL;
 if (!cloudAmqpUrl) {
-	throw new Error("CLOUDAMQP_URL environment variable not set");
+	throw new Error('CLOUDAMQP_URL environment variable not set');
 }
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const isRetryableAmqpError = (err: any) => {
-	const msg = String(err?.message || "");
+	const msg = String(err?.message || '');
 	const code = err?.code;
 	return (
-		code === "ECONNREFUSED" ||
-		code === "ENOTFOUND" ||
-		code === "EAI_AGAIN" ||
-		code === "ETIMEDOUT" ||
-		msg.includes("ECONNREFUSED") ||
-		msg.includes("getaddrinfo") ||
-		msg.includes("Socket closed") ||
-		msg.includes("Handshake terminated") ||
-		msg.includes("Connection closing")
+		code === 'ECONNREFUSED' ||
+		code === 'ENOTFOUND' ||
+		code === 'EAI_AGAIN' ||
+		code === 'ETIMEDOUT' ||
+		msg.includes('ECONNREFUSED') ||
+		msg.includes('getaddrinfo') ||
+		msg.includes('Socket closed') ||
+		msg.includes('Handshake terminated') ||
+		msg.includes('Connection closing')
 	);
 };
 
@@ -186,7 +177,7 @@ async function connectAndConsumeWithRetry({
 	let conn: amqplib.Connection | null = null;
 
 	// Register SIGINT handler once
-	process.once("SIGINT", () => {
+	process.once('SIGINT', () => {
 		try {
 			conn?.close();
 		} catch {}
@@ -199,11 +190,11 @@ async function connectAndConsumeWithRetry({
 			// biome-ignore lint/performance/noAwaitInLoops: we need to
 			conn = await amqplib.connect(cloudAmqpUrl);
 
-			conn.on("error", (err) => {
-				console.error("RabbitMQ connection error:", err);
+			conn.on('error', (err) => {
+				console.error('RabbitMQ connection error:', err);
 			});
-			conn.on("close", () => {
-				console.error("RabbitMQ connection closed");
+			conn.on('close', () => {
+				console.error('RabbitMQ connection closed');
 			});
 
 			const ch = await conn.createConfirmChannel();
@@ -226,9 +217,7 @@ async function connectAndConsumeWithRetry({
 							: 5
 				}`,
 			);
-			console.log(
-				` [*] Waiting for messages on ${taskQueueName}. To exit press CTRL+C`,
-			);
+			console.log(` [*] Waiting for messages on ${taskQueueName}. To exit press CTRL+C`);
 
 			return; // success; leave the retry loop
 		} catch (err: any) {

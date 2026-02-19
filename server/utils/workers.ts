@@ -1,7 +1,7 @@
-import amqplib from "amqplib";
+import amqplib from 'amqplib';
 
-import { createWorkerTask } from "server/workerTask/queries";
-import { TaskPriority, taskQueueName } from "utils/workers";
+import { createWorkerTask } from 'server/workerTask/queries';
+import { TaskPriority, taskQueueName } from 'utils/workers';
 
 let openChannelPromise;
 
@@ -9,25 +9,22 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const isRetryableAmqpError = (err) => {
 	// Connection refused / DNS not ready / broker not up yet
-	const msg = String(err?.message || "");
+	const msg = String(err?.message || '');
 	const code = err?.code;
 	return (
-		code === "ECONNREFUSED" ||
-		code === "ENOTFOUND" ||
-		code === "EAI_AGAIN" ||
-		code === "ETIMEDOUT" ||
-		msg.includes("connect ECONNREFUSED") ||
-		msg.includes("getaddrinfo") ||
-		msg.includes("Socket closed") ||
-		msg.includes("Handshake terminated") ||
-		msg.includes("Connection closing")
+		code === 'ECONNREFUSED' ||
+		code === 'ENOTFOUND' ||
+		code === 'EAI_AGAIN' ||
+		code === 'ETIMEDOUT' ||
+		msg.includes('connect ECONNREFUSED') ||
+		msg.includes('getaddrinfo') ||
+		msg.includes('Socket closed') ||
+		msg.includes('Handshake terminated') ||
+		msg.includes('Connection closing')
 	);
 };
 
-async function withRetry(
-	fn,
-	{ deadlineMs = 30_000, baseDelayMs = 250, maxDelayMs = 2_000 } = {},
-) {
+async function withRetry(fn, { deadlineMs = 30_000, baseDelayMs = 250, maxDelayMs = 2_000 } = {}) {
 	const start = Date.now();
 	let attempt = 0;
 	let lastErr;
@@ -42,10 +39,7 @@ async function withRetry(
 			if (!isRetryableAmqpError(err)) throw err;
 
 			// simple exponential backoff with jitter
-			const exp = Math.min(
-				maxDelayMs,
-				baseDelayMs * 2 ** Math.min(attempt - 1, 6),
-			);
+			const exp = Math.min(maxDelayMs, baseDelayMs * 2 ** Math.min(attempt - 1, 6));
 			const jitter = Math.floor(Math.random() * 150);
 			const delay = exp + jitter;
 
@@ -66,18 +60,18 @@ async function withRetry(
 
 const createChannel = async () => {
 	const amqpUrl = process.env.CLOUDAMQP_URL;
-	if (!amqpUrl) throw new Error("CLOUDAMQP_URL environment variable not set");
+	if (!amqpUrl) throw new Error('CLOUDAMQP_URL environment variable not set');
 
 	return withRetry(
 		async () => {
 			const connection = await amqplib.connect(amqpUrl);
 
 			// Optional: handle connection-level issues too
-			connection.on("error", (err) => {
-				console.error("RabbitMQ connection error:", err);
+			connection.on('error', (err) => {
+				console.error('RabbitMQ connection error:', err);
 			});
-			connection.on("close", () => {
-				console.error("RabbitMQ connection closed");
+			connection.on('close', () => {
+				console.error('RabbitMQ connection closed');
 				openChannelPromise = null;
 			});
 
@@ -87,8 +81,8 @@ const createChannel = async () => {
 				maxPriority: TaskPriority.Highest,
 			});
 
-			channel.on("close", (err) => {
-				console.error("Worker channel closed:", err);
+			channel.on('close', (err) => {
+				console.error('Worker channel closed:', err);
 				openChannelPromise = null;
 				try {
 					connection.close();
@@ -110,7 +104,7 @@ const getDefaultTaskPriority = () => {
 };
 
 const getOrCreateOpenChannel = async () => {
-	if (process.env.NODE_ENV === "test") {
+	if (process.env.NODE_ENV === 'test') {
 		return {
 			sendToQueue: () => {},
 			waitForConfirms: () => {},
@@ -124,10 +118,7 @@ const getOrCreateOpenChannel = async () => {
 
 getOrCreateOpenChannel();
 
-export const sendMessageToOpenChannel = async (
-	message: Buffer,
-	priority: number,
-) => {
+export const sendMessageToOpenChannel = async (message: Buffer, priority: number) => {
 	const openChannel = await getOrCreateOpenChannel();
 	openChannel.sendToQueue(taskQueueName, message, {
 		deliveryMode: true,
@@ -141,14 +132,12 @@ export const addWorkerTask = async ({
 	input,
 	priority = getDefaultTaskPriority(),
 }: {
-	type: "import" | "export" | "archive";
+	type: 'import' | 'export' | 'archive';
 	input;
 	priority?: number;
 }) => {
 	const workerTask = await createWorkerTask({ type, input, priority });
-	const message = Buffer.from(
-		JSON.stringify({ id: workerTask.id, type, input }),
-	);
+	const message = Buffer.from(JSON.stringify({ id: workerTask.id, type, input }));
 	await sendMessageToOpenChannel(message, priority);
 	return workerTask;
 };
