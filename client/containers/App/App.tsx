@@ -27,6 +27,7 @@ import {
 	NavBar,
 	SkipLink,
 } from 'components';
+import { ReadOnlyNotice } from 'client/components/ReadOnlyNotice';
 import { canUseCustomAnalyticsProvider } from 'utils/analytics/featureFlags';
 import { useLazyLoadedAnalyticsInstance } from 'utils/analytics/useLazyLoadedAnalyticsInstance';
 import { usePageOnce } from 'utils/analytics/usePageOnce';
@@ -162,6 +163,7 @@ const App = (props: Props) => {
 							{showFooter && footer}
 						</div>
 					</RKProvider>
+					<ReadOnlyNotice />
 				</FacetsStateProvider>
 			</AnalyticsProvider>
 		</PageContext.Provider>
