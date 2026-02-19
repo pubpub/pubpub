@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Provider as RKProvider } from 'reakit';
 import { AnalyticsProvider } from 'use-analytics';
 
+import { ReadOnlyNotice } from 'client/components/ReadOnlyNotice';
 import {
 	CollapsibleHeader,
 	CollapsibleHeaderBPC,
@@ -27,7 +28,6 @@ import {
 	NavBar,
 	SkipLink,
 } from 'components';
-import { ReadOnlyNotice } from 'client/components/ReadOnlyNotice';
 import { canUseCustomAnalyticsProvider } from 'utils/analytics/featureFlags';
 import { useLazyLoadedAnalyticsInstance } from 'utils/analytics/useLazyLoadedAnalyticsInstance';
 import { usePageOnce } from 'utils/analytics/usePageOnce';
