@@ -263,10 +263,13 @@ function AssignDoi(props: Props) {
 					payload: preview,
 				});
 			} catch (err) {
-				if (err instanceof Error) {
-					dispatch({ type: AssignDoiActionType.Error, payload: err.message });
-					onError(err);
-				}
+				const errorMessage =
+					err instanceof Error
+						? err.message
+						: ((err as { error?: string })?.error ??
+							'There was an error generating the preview.');
+				dispatch({ type: AssignDoiActionType.Error, payload: errorMessage });
+				onError(err instanceof Error ? err : new Error(errorMessage));
 			}
 		},
 		[requestBody, onPreview, onError],
@@ -288,10 +291,13 @@ function AssignDoi(props: Props) {
 
 			onDeposit(response.dois[target]);
 		} catch (err) {
-			if (err instanceof Error) {
-				dispatch({ type: AssignDoiActionType.Error, payload: err.message });
-				onError(err);
-			}
+			const errorMessage =
+				err instanceof Error
+					? err.message
+					: ((err as { error?: string })?.error ??
+						'There was an error depositing the work.');
+			dispatch({ type: AssignDoiActionType.Error, payload: errorMessage });
+			onError(err instanceof Error ? err : new Error(errorMessage));
 		}
 	};
 
@@ -350,6 +356,8 @@ function AssignDoi(props: Props) {
 		}
 		priorPubDoi.current = pubData.doi;
 	}, [pubData.doi, status, fetchPreview]);
+
+	console.log('status', status, disabled, handleButtonClick);
 
 	return (
 		<div className="assign-doi-component">
@@ -426,7 +434,7 @@ function AssignDoi(props: Props) {
 				<AssignDoiPreview crossrefDepositRecord={crossrefDepositRecord} />
 			)}
 			<SubmitDepositButton
-				disabled={disabled}
+				disabled={status === SubmitDepositStatus.Previewed ? disabled : false}
 				onClick={handleButtonClick}
 				status={status}
 				depositRecord={pubData.crossrefDepositRecord}

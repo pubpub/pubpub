@@ -76,7 +76,6 @@ const App = (props: Props) => {
 
 	// Our debugging lifeline
 	if (typeof window !== 'undefined') {
-		// @ts-expect-error ts-migrate(2339) FIXME: Property '__pubpub_pageContextProps__' does not ex... Remove this comment to see the full error message
 		window.__pubpub_pageContextProps__ = pageContextProps;
 	}
 
@@ -132,7 +131,10 @@ const App = (props: Props) => {
 				>
 					<RKProvider>
 						<div id="app" className={classNames({ dashboard: isDashboard })}>
-							{communityData.spamTag?.status === 'confirmed-spam' && <SpamBanner />}
+							{communityData.spamTag &&
+								communityData.spamTag.status !== 'confirmed-not-spam' && (
+									<SpamBanner status={communityData.spamTag.status} />
+								)}
 							<AccentStyle communityData={communityData} isNavHidden={!showNav} />
 							{(locationData.isDuqDuq || locationData.isQubQub) && (
 								<div className="duqduq-warning">Development Environment</div>

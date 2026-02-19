@@ -118,8 +118,6 @@ export const communityCreateSchema = communitySchema
 		heroLogo: true,
 		heroTitle: true,
 		description: true,
-		accentColorLight: true,
-		accentColorDark: true,
 	});
 
 export const communityUpdateSchema = communitySchema
@@ -131,4 +129,5 @@ export const communityUpdateSchema = communitySchema
 	})
 	.extend({
 		communityId: communitySchema.shape.id,
+		discussionCreationAccess: z.enum(['public', 'contributors-members', 'disabled']).optional(),
 	});

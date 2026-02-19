@@ -12,6 +12,13 @@ export const isArchiving = () =>
 	// @ts-expect-error - window.__pubpub_pageContextProps__ is not typed
 	window.__pubpub_pageContextProps__.locationData.queryString.includes('pubpubArchiveBot');
 
+/**
+ * Returns the canonical URL for a community.
+ * @param {Object} community - The community to get the URL for.
+ * @param {string} community.subdomain - The subdomain of the community.
+ * @param {string | null | undefined} [community.domain] - The domain of the community.
+ * @returns The canonical URL for the community.
+ */
 export const communityUrl = (community) => {
 	if (isArchiving()) {
 		return '/';

@@ -493,6 +493,7 @@ describe('fetchActivityItems', () => {
 		});
 	});
 	// this test is horribly flaky, evil evil
+	// Unbelievably flaky
 	it.skip('fetches items for pub-review-created, pub-review-comment-added, and pub-review-updated', async () => {
 		const {
 			actor,
