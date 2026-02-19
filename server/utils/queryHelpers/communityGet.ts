@@ -1,20 +1,13 @@
-import type { Community as CommunityType, DefinitelyHas } from 'types';
+import {
+	Collection,
+	Community,
+	Member,
+	Page,
+	ScopeSummary,
+	SpamTag,
+} from "server/models";
 
-import { Collection, Community, Member, Page, ScopeSummary, SpamTag } from 'server/models';
-
-export async function yolo<T>(
-	id: string,
-	out: Record<string, number>,
-	query: Promise<T>,
-): Promise<T> {
-	const now = process.hrtime.bigint();
-	const result = await query;
-	const end = process.hrtime.bigint();
-	out[id] = Number(end - now) / 1_000_000;
-	return result;
-}
-
-export async function yolo2<T>(
+export async function logg<T>(
 	out: Record<string, number>,
 	id: string,
 	query: Promise<T>,
@@ -30,7 +23,7 @@ export function createLogger(initialId: string) {
 	let acc = {} as Record<string, number> | null;
 
 	// @ts-ignore
-	const logger = yolo2.bind(this as any, acc);
+	const logger = logg.bind(this as any, acc);
 
 	const log = <T>(id: string, q: Promise<T>) => {
 		return logger(`${initialId}:${id}`, q) as unknown as Promise<T>;
@@ -44,51 +37,54 @@ export function createLogger(initialId: string) {
 			const end = process.hrtime.bigint();
 
 			const total = Number(end - now) / 1_000_000;
-			const totalSum = Object.entries(acc ?? {}).reduce((acc, [k, v]) => (acc += v), 0);
+			const totalSum = Object.entries(acc ?? {}).reduce(
+				(acc, [k, v]) => (acc += v),
+				0,
+			);
 
 			console.log(`Total for ${initialId}:`);
 			console.log(`- Start => End: ${total} ms`);
 			console.log(`- Sum of all:   ${totalSum} ms`);
-			console.log('--------------------');
+			console.log("--------------------");
 			Object.entries(acc ?? {}).forEach(([k, v]) => {
 				console.log(`- ${k}: ${v}ms`);
 			});
-			console.log('--------------------\n\n');
+			console.log("--------------------\n\n");
 			acc = null;
 		},
 	};
 }
 
 export default async function communityGet(locationData, whereQuery) {
-	const { end, log } = createLogger('communityGet');
+	const { end, log } = createLogger("communityGet");
 	// Community lookup
 	const community = await log(
-		'community',
+		"community",
 		Community.findOne({
 			where: whereQuery,
 			raw: true,
 			nest: true,
 			include: [
-				{ model: ScopeSummary, as: 'scopeSummary' },
-				{ model: SpamTag, as: 'spamTag' },
+				{ model: ScopeSummary, as: "scopeSummary" },
+				{ model: SpamTag, as: "spamTag" },
 			],
 			// logging: (sql, ms) => console.log(`[communityGet SQL ${ms}ms] ${sql}`),
 		}),
 	);
 	if (!community) {
-		throw new Error('Community Not Found');
+		throw new Error("Community Not Found");
 	}
 
 	const [pages, collections] = await Promise.all([
 		Page.findAll({
 			where: { communityId: community.id },
 			raw: true,
-			attributes: { exclude: ['updatedAt', 'communityId', 'layout'] },
+			attributes: { exclude: ["updatedAt", "communityId", "layout"] },
 		}),
 		Collection.findAll({
 			where: { communityId: community.id },
 			raw: true,
-			attributes: { exclude: ['layout'] },
+			attributes: { exclude: ["layout"] },
 		}),
 	]);
 
@@ -99,7 +95,7 @@ export default async function communityGet(locationData, whereQuery) {
 
 	// members (single query; no huge join)
 	const members = await log(
-		'members',
+		"members",
 		Member.findAll({
 			where: { collectionId: collectionIds },
 			raw: true,
@@ -108,7 +104,7 @@ export default async function communityGet(locationData, whereQuery) {
 	// attach members to collections
 	const byCollectionId = new Map();
 	await log(
-		'compile',
+		"compile",
 		new Promise<void>((resolve) => {
 			for (const m of members) {
 				const k = m.collectionId;
@@ -131,66 +127,3 @@ export default async function communityGet(locationData, whereQuery) {
 
 	return community;
 }
-// const community = await yolo(
-// 	'getCommunity:old',
-// 	acc,
-// 	Community.findOne({
-// 		where: whereQuery,
-// 		include: [
-// 			{
-// 				model: Page,
-// 				as: 'pages',
-// 				separate: true,
-// 				// raw: true,
-// 				attributes: {
-// 					exclude: ['updatedAt', 'communityId', 'layout'],
-// 				},
-// 			},
-// 			{
-// 				model: Collection,
-// 				as: 'collections',
-// 				separate: true,
-// 				// raw: true,
-// 				attributes: {
-// 					exclude: ['layout'],
-// 				},
-// 				include: [
-// 					{
-// 						model: Member,
-// 						as: 'members',
-// 						separate: true,
-// 					},
-// 				],
-// 			},
-// 			{
-// 				model: ScopeSummary,
-// 				as: 'scopeSummary',
-// 			},
-// 			{
-// 				model: SpamTag,
-// 				as: 'spamTag',
-// 			},
-// 		],
-
-// 		// nest: true,
-// 		// logging: (sql, ms) => console.log(`[communityGet SQL ${ms}ms] ${sql}`),
-// 	}).then((communityResult) => {
-// 		if (!communityResult) {
-// 			throw new Error('Community Not Found');
-// 		}
-
-// 		// const start = Date.now();
-// 		// const jsonValue = communityResul.toJSON();
-// 		const jsonValue = communityResult.toJSON() as DefinitelyHas<
-// 			CommunityType,
-// 			'pages' | 'collections' | 'spamTag' | 'scopeSummary'
-// 		>;
-// 		// const end = Date.now();
-// 		// console.log(`communityResult.toJSON() took ${end - start}ms`);
-// 		return jsonValue;
-// 	})
-// );
-
-// 	console.log(acc)
-// 	return community;
-// }

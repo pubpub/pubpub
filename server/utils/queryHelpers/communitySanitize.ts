@@ -2,7 +2,6 @@ export default (communityData, locationData, loginData, scopeData) => {
 	const cleanedData = { ...communityData };
 	const { canManageCommunity, canViewCommunity } = scopeData.activePermissions;
 	const availablePages = {};
-	// console.log('!!', cleanedData)
 	cleanedData.collections = cleanedData.collections
 		.filter((item) => {
 			/* Collection access is granted when */
@@ -26,7 +25,7 @@ export default (communityData, locationData, loginData, scopeData) => {
 
 	cleanedData.pages = cleanedData.pages.filter((item) => {
 		const pageCollection = cleanedData.collections.find(
-			({ pageId }) => typeof pageId === 'string' && pageId === item.id,
+			({ pageId }) => typeof pageId === "string" && pageId === item.id,
 		);
 
 		// If the page has a collection, check if the user has explicit permission

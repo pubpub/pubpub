@@ -1,29 +1,35 @@
-import type * as types from 'types';
+import queryString from "query-string";
+import { getFeatureFlagsForUserAndCommunity } from "server/featureFlag/queries";
+import { isUserMemberOfScope } from "server/member/queries";
+import { UserNotification } from "server/models";
+import { isUserSuperAdmin } from "server/user/queries";
+import { getDismissedUserDismissables } from "server/userDismissable/queries";
+import type * as types from "types";
+import {
+	getAppCommit,
+	isDuqDuq,
+	isProd,
+	isQubQub,
+	shouldForceBasePubPub,
+} from "utils/environment";
 
-import { performance } from 'node:perf_hooks';
-import queryString from 'query-string';
-
-import { getFeatureFlagsForUserAndCommunity } from 'server/featureFlag/queries';
-import { isUserMemberOfScope } from 'server/member/queries';
-import { UserNotification } from 'server/models';
-import { isUserSuperAdmin } from 'server/user/queries';
-import { getDismissedUserDismissables } from 'server/userDismissable/queries';
-import { getAppCommit, isDuqDuq, isProd, isQubQub, shouldForceBasePubPub } from 'utils/environment';
-
-import { PubPubError } from './errors';
-import { getCommunity, getScope, sanitizeCommunity } from './queryHelpers';
+import { PubPubError } from "./errors";
+import { getCommunity, getScope, sanitizeCommunity } from "./queryHelpers";
 
 const getNotificationData = async (
 	userId: null | string,
 ): Promise<types.InitialNotificationsData> => {
 	if (userId) {
-		const userNotifications: Pick<types.UserNotification, 'id' | 'isRead'>[] =
+		const userNotifications: Pick<types.UserNotification, "id" | "isRead">[] =
 			await UserNotification.findAll({
 				where: { userId },
-				attributes: ['id', 'isRead'],
+				attributes: ["id", "isRead"],
 			});
 		const hasUnreadNotifications = userNotifications.some((n) => !n.isRead);
-		return { hasNotifications: userNotifications.length > 0, hasUnreadNotifications };
+		return {
+			hasNotifications: userNotifications.length > 0,
+			hasUnreadNotifications,
+		};
 	}
 	return { hasNotifications: false, hasUnreadNotifications: false };
 };
@@ -41,23 +47,23 @@ export const getInitialData = async (
 		return req.initialData;
 	}
 	let hostname = req.hostname;
-	if (hostname === 'localhost') {
-		hostname = 'demo.duqduq.org';
+	if (hostname === "localhost") {
+		hostname = "demo.duqduq.org";
 	}
-	if (hostname === 'v6b.underlay.org' || hostname === 'v6bb.underlay.org') {
-		hostname = 'cursor.pubpub.org';
+	if (hostname === "v6b.underlay.org" || hostname === "v6bb.underlay.org") {
+		hostname = "cursor.pubpub.org";
 	}
-	if (hostname === 'v6b.pubpub.org' || hostname === 'v6bb.pubpub.org') {
-		hostname = 'mit-serc.pubpub.org';
+	if (hostname === "v6b.pubpub.org" || hostname === "v6bb.pubpub.org") {
+		hostname = "mit-serc.pubpub.org";
 	}
-	if (hostname === 'v6b.priorartarchive.org') {
-		hostname = 'stanford-jblp.pubpub.org';
+	if (hostname === "v6b.priorartarchive.org") {
+		hostname = "stanford-jblp.pubpub.org";
 	}
-	if (hostname === 'cftest.trialanderror.org') {
-		hostname = 'jrn.pubpub.org';
+	if (hostname === "cftest.trialanderror.org") {
+		hostname = "jrn.pubpub.org";
 	}
-	if (hostname === 'cftest.priorartarchive.org') {
-		hostname = 'revisions.pubpub.org';
+	if (hostname === "cftest.priorartarchive.org") {
+		hostname = "revisions.pubpub.org";
 	}
 
 	const { isDashboard = false, includeFacets = isDashboard } = options;
@@ -82,9 +88,9 @@ export const getInitialData = async (
 		path: req.path,
 		params: req.params,
 		query: req.query,
-		queryString: req.query ? `?${queryString.stringify(req.query)}` : '',
+		queryString: req.query ? `?${queryString.stringify(req.query)}` : "",
 		isDashboard,
-		isBasePubPub: shouldForceBasePubPub() || hostname === 'www.pubpub.org',
+		isBasePubPub: shouldForceBasePubPub() || hostname === "www.pubpub.org",
 		isProd: isProd(),
 		isDuqDuq: isDuqDuq(),
 		isQubQub: isQubQub(),
@@ -102,26 +108,28 @@ export const getInitialData = async (
 
 		return {
 			communityData: {
-				title: 'PubPub',
-				description: 'Collaborative Community Publishing',
+				title: "PubPub",
+				description: "Collaborative Community Publishing",
 				favicon: `https://${locationData.hostname}/favicon.png`,
 				avatar: `https://${locationData.hostname}/static/logo.png`,
 				headerLogo:
-					locationData.path === '/' ? '/static/logo.png' : '/static/logoBlack.svg',
+					locationData.path === "/"
+						? "/static/logo.png"
+						: "/static/logoBlack.svg",
 				hideHero: true,
-				accentColorLight: '#ffffff',
-				accentColorDark: '#112233',
-				headerColorType: 'light',
+				accentColorLight: "#ffffff",
+				accentColorDark: "#112233",
+				headerColorType: "light",
 				hideCreatePubButton: true,
 				headerLinks: [
-					{ title: 'About', url: '/about' },
-					{ title: 'Pricing', url: '/pricing' },
-					{ title: 'Search', url: '/search' },
-					{ title: 'Contact', url: 'mailto:hello@pubpub.org', external: true },
+					{ title: "About", url: "/about" },
+					{ title: "Pricing", url: "/pricing" },
+					{ title: "Search", url: "/search" },
+					{ title: "Contact", url: "mailto:hello@pubpub.org", external: true },
 				],
 				collections: [],
 				analyticsSettings: {
-					type: 'default',
+					type: "default",
 					credentials: null,
 				},
 			} as any,
@@ -136,12 +144,15 @@ export const getInitialData = async (
 
 	/* If we have a community to find, search, and then return */
 	const whereQuery =
-		hostname.indexOf('.pubpub.org') > -1
-			? { subdomain: hostname.replace('.pubpub.org', '') }
+		hostname.indexOf(".pubpub.org") > -1
+			? { subdomain: hostname.replace(".pubpub.org", "") }
 			: { domain: hostname };
 	const communityData = await getCommunity(locationData, whereQuery);
 
-	if (communityData.spamTag && communityData.spamTag.status !== 'confirmed-not-spam') {
+	if (
+		communityData.spamTag &&
+		communityData.spamTag.status !== "confirmed-not-spam"
+	) {
 		const [isMemberOfCommunity, isSuperadmin] = await Promise.all([
 			isUserMemberOfScope({
 				userId: loginData.id,
@@ -157,10 +168,10 @@ export const getInitialData = async (
 	if (
 		(communityData.domain &&
 			whereQuery.subdomain &&
-			process.env.NODE_ENV === 'production' &&
+			process.env.NODE_ENV === "production" &&
 			isProd()) ||
 		(communityData.domain &&
-			communityData.domain === 'duqduqdomaintest.underlay.org' &&
+			communityData.domain === "duqduqdomaintest.underlay.org" &&
 			whereQuery.subdomain &&
 			isDuqDuq())
 	) {
@@ -170,22 +181,26 @@ export const getInitialData = async (
 		communityData.domain = req.headers.localhost;
 	}
 
-	const [scopeData, featureFlags, initialNotificationsData, dismissedUserDismissables] =
-		await Promise.all([
-			await getScope({
-				communityId: communityData.id,
-				pubSlug: locationData.params.pubSlug,
-				collectionSlug:
-					locationData.params.collectionSlug || locationData.query.collectionSlug,
-				accessHash: locationData.query.access,
-				loginId: loginData.id,
-				isDashboard,
-				includeFacets,
-			}),
-			await getFeatureFlagsForUserAndCommunity(loginData.id, communityData.id),
-			await getNotificationData(user.id),
-			await getDismissedUserDismissables(user.id),
-		]);
+	const [
+		scopeData,
+		featureFlags,
+		initialNotificationsData,
+		dismissedUserDismissables,
+	] = await Promise.all([
+		await getScope({
+			communityId: communityData.id,
+			pubSlug: locationData.params.pubSlug,
+			collectionSlug:
+				locationData.params.collectionSlug || locationData.query.collectionSlug,
+			accessHash: locationData.query.access,
+			loginId: loginData.id,
+			isDashboard,
+			includeFacets,
+		}),
+		await getFeatureFlagsForUserAndCommunity(loginData.id, communityData.id),
+		await getNotificationData(user.id),
+		await getDismissedUserDismissables(user.id),
+	]);
 
 	const cleanedCommunityData = sanitizeCommunity(
 		communityData,
