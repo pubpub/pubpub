@@ -181,11 +181,13 @@ jobs:
 
             # wait until rollout is complete and then clear cache
             wait_rollout() {
+              echo "Beginning wait for rollout..."
               svc="$1"
               timeout="${2:-600}"
               end=$((SECONDS+timeout))
 
               while (( SECONDS < end )); do
+                echo "Waiting for rollout of $svc: desired=$desired running=$running state=$state"
                 desired="$(sudo docker service inspect "$svc" --format '{{.Spec.Mode.Replicated.Replicas}}')"
                 running="$(sudo docker service ps "$svc" --filter desired-state=running --format '{{.CurrentState}}' | grep -c '^Running' || true)"
                 state="$(sudo docker service inspect "$svc" --format '{{if .UpdateStatus}}{{.UpdateStatus.State}}{{end}}')"
