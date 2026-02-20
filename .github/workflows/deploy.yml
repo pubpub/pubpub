@@ -208,6 +208,7 @@ jobs:
 
             if [[ -n "${CACHE_CLEAR_WEBHOOK_URL:-}" ]]; then  
               curl -fsS -X POST "$CACHE_CLEAR_WEBHOOK_URL"
+              echo "Sent POST to CACHE_CLEAR_WEBHOOK_URL"
             fi
 
           EOS
