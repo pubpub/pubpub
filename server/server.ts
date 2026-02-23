@@ -269,7 +269,7 @@ appRouter.use((req, res, next) => {
 		const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress ?? 'unknown';
 
 		console.log(
-			`${req.method} ${res.statusCode} ${req.path} ${durationMs}ms | host=${host} | user=${userId} | ip=${ip} | size=${contentLength} | ua=${userAgent} | origin=${req.origin}`,
+			`${req.method} ${res.statusCode} ${req.path} ${durationMs}ms | host=${host} | user=${userId} | ip=${ip} | size=${contentLength} | ua=${userAgent} | origin=${req.headers.origin}`,
 		);
 		isLogged = true;
 	}
