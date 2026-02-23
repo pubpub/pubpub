@@ -14,7 +14,7 @@
 		"dev": "./infra/dev.sh",
 		"dev:prod": "./infra/dev.sh prod",
 		"docker:build": "docker build -t pubpub:test-build .",
-		"api-dev": "concurrently \"pnpm run watch-server\" \"NODE_PATH=./dist/server/client:./dist/server:./dist node --enable-source-maps init.js --watch ./dist/server --watch ./node_modules/@pubpub\"",
+		"api-dev": "concurrently \"pnpm run watch-server\" \"NODE_PATH=./dist/server/client:./dist/server:./dist node --env-file=.env.development --enable-source-maps init.js --watch ./dist/server --watch ./node_modules/@pubpub\"",
 		"api-prod": "NODE_PATH=./dist/server/client:./dist/server:./dist node --enable-source-maps init.js",
 		"build-client-dev": "webpack --config ./client/webpack/webpackConfig.dev.js",
 		"build-dev": "webpack --config ./client/webpack/webpackConfig.dev.js --watch",
