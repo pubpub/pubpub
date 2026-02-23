@@ -28,7 +28,7 @@ importers:
         version: 3.994.0(@aws-sdk/client-s3@3.994.0)
       '@benrbray/prosemirror-math':
         specifier: git+https://github.com/pubpub/prosemirror-math#9e6722987690bfad58444d8edbd73294e255de17
-        version: https://codeload.github.com/pubpub/prosemirror-math/tar.gz/9e6722987690bfad58444d8edbd73294e255de17(katex@0.13.24)(prosemirror-commands@1.7.1)(prosemirror-gapcursor@1.4.0)(prosemirror-history@1.5.0)(prosemirror-inputrules@1.5.1)(prosemirror-keymap@1.2.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-transform@1.11.0)(prosemirror-view@1.41.6)
+        version: https://codeload.github.com/pubpub/prosemirror-math/tar.gz/9e6722987690bfad58444d8edbd73294e255de17(katex@0.16.21)(prosemirror-commands@1.7.1)(prosemirror-gapcursor@1.4.0)(prosemirror-history@1.5.0)(prosemirror-inputrules@1.5.1)(prosemirror-keymap@1.2.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-transform@1.11.0)(prosemirror-view@1.41.6)
       '@blueprintjs/core':
         specifier: 3.26.0
         version: 3.26.0(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
@@ -354,8 +354,8 @@ importers:
         specifier: ^8.0.0
         version: 8.1.0
       katex:
-        specifier: ^0.13.18
-        version: 0.13.24
+        specifier: ^0.16.21
+        version: 0.16.21
       keyboardjs:
         specifier: ^2.5.1
         version: 2.7.0
@@ -7681,7 +7681,6 @@ packages:
     resolution: {integrity: sha512-t0etAxTUk1w5MYdNOkZBZ8rvYYN5iL+2dHCCx/DpkFm/bW28M6y5nUS83D4XdZiHy35Fpaw6LBb+F88fHZnVCw==}
     engines: {node: '>=8.17.0'}
     hasBin: true
-    bundledDependencies: []
 
   jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
@@ -7745,8 +7744,8 @@ packages:
     resolution: {integrity: sha512-40aUybvhH9t2h71ncA1/1SbtTNCVZHgsTsTgqPUxGWDmUDrXyDf2wMNQKEbdBjbf4AI+fQhbECNTV6lWxQKUzg==}
     engines: {node: '>= 0.4.0'}
 
-  katex@0.13.24:
-    resolution: {integrity: sha512-jZxYuKCma3VS5UuxOx/rFV1QyGSl3Uy/i0kTJF3HgQ5xMinCQVF8Zd4bMY/9aI9b9A2pjIBOsjSSm68ykTAr8w==}
+  katex@0.16.21:
+    resolution: {integrity: sha512-XvqR7FgOHtWupfMiigNzmh+MgUVmDGU2kXZm899ZkPfcuoPuFxyHmXsgATDpFZDAXCI8tvinaVcDo8PIIJSo4A==}
     hasBin: true
 
   keyboardjs@2.7.0:
@@ -13226,9 +13225,9 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@benrbray/prosemirror-math@https://codeload.github.com/pubpub/prosemirror-math/tar.gz/9e6722987690bfad58444d8edbd73294e255de17(katex@0.13.24)(prosemirror-commands@1.7.1)(prosemirror-gapcursor@1.4.0)(prosemirror-history@1.5.0)(prosemirror-inputrules@1.5.1)(prosemirror-keymap@1.2.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-transform@1.11.0)(prosemirror-view@1.41.6)':
+  '@benrbray/prosemirror-math@https://codeload.github.com/pubpub/prosemirror-math/tar.gz/9e6722987690bfad58444d8edbd73294e255de17(katex@0.16.21)(prosemirror-commands@1.7.1)(prosemirror-gapcursor@1.4.0)(prosemirror-history@1.5.0)(prosemirror-inputrules@1.5.1)(prosemirror-keymap@1.2.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-transform@1.11.0)(prosemirror-view@1.41.6)':
     dependencies:
-      katex: 0.13.24
+      katex: 0.16.21
       prosemirror-commands: 1.7.1
       prosemirror-gapcursor: 1.4.0
       prosemirror-history: 1.5.0
@@ -20883,7 +20882,7 @@ snapshots:
 
   jwt-simple@0.5.6: {}
 
-  katex@0.13.24:
+  katex@0.16.21:
     dependencies:
       commander: 8.3.0
 
