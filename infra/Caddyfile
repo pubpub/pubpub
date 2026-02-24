@@ -12,7 +12,11 @@
         on_demand
     }
     encode gzip
-    reverse_proxy cloudbeaver:8978
+    reverse_proxy pgadmin:5050 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Host {host}
+        header_up X-Scheme https
+    }
 }
 
 :443 {
