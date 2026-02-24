@@ -10,6 +10,10 @@ WORKDIR /app
 # Install system packages listed in Aptfile (ignore comments/blank lines)
 COPY Aptfile /tmp/Aptfile
 RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl ca-certificates gnupg \
+ && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/pgdg.gpg \
+ && echo "deb http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+ && apt-get update \
  && awk '!/^\s*#/ && !/^\s*$/' /tmp/Aptfile \
       | xargs -r apt-get install -y --no-install-recommends \
  # Install curl + certs for downloading pandoc

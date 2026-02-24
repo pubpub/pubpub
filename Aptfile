@@ -20,4 +20,4 @@ libxml2
 libxml2-utils
 
 # postgresql-client for pg-dump
-postgresql-client
+postgresql-client-16
