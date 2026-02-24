@@ -83,6 +83,7 @@ async function main() {
 		} catch {
 			// ignore if already cleaned up
 		}
+		s3.destroy();
 	}
 }
 
