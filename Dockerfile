@@ -71,6 +71,7 @@ COPY --from=builder /app/init.js /app/init.js
 COPY --from=builder /app/client/components/Editor/styles /app/client/components/Editor/styles
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/static /app/static
+COPY --from=builder /app/tools /app/tools
 COPY --from=builder /app/package.json /app/package.json
 COPY --from=builder /app/pnpm-lock.yaml /app/pnpm-lock.yaml
 

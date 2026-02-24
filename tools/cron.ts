@@ -14,7 +14,7 @@ function run(name: string, script: string) {
 }
 
 // Every 6 hours
-cron.schedule('0 */6 * * *', () => run('backup-db', 'backup-db'));
+cron.schedule('0 */6 * * *', () => run('backup-db', 'tools backupDb'));
 
 cron.schedule('0 5 * * *', () => run('email-activity-digest', 'tools emailActivityDigest'));
 
