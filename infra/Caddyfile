@@ -12,5 +12,13 @@
 		on_demand
 	}
 	encode zstd gzip
-	reverse_proxy pubpub_app:3000
+	
+	@pgadmin host {$PGADMIN_HOST}
+    handle @pgadmin {
+        reverse_proxy pgadmin:5050
+    }
+
+    handle {
+        reverse_proxy pubpub_app:3000
+    }
 }

@@ -1,6 +1,7 @@
 services:
     proxy:
         image: caddy:latest
+        env_file: [.env]
         ports:
             - target: 80
               published: 80
@@ -124,6 +125,18 @@ services:
             replicas: 1
             restart_policy:
                 condition: any
+    pgadmin:
+        image: dpage/pgadmin4:latest
+        env_file: [.env]
+        environment:
+            PGADMIN_LISTEN_PORT: 5050
+        volumes:
+            - pgadmin_data:/var/lib/pgadmin
+        networks: [appnet]
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: any
 networks:
     appnet:
         driver: overlay
@@ -133,3 +146,4 @@ volumes:
     rabbitmqdata:
     caddy_data:
     caddy_config:
+    pgadmin_data:
