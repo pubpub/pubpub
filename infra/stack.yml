@@ -136,6 +136,8 @@ services:
             PGADMIN_CONFIG_SESSION_COOKIE_SAMESITE: "'Lax'"
             PGADMIN_CONFIG_WTF_CSRF_SSL_STRICT: "False"
             PGADMIN_CONFIG_WTF_CSRF_ENABLED: "False"
+            PGADMIN_CONFIG_SESSION_COOKIE_HTTPONLY: "True"
+            PGADMIN_CONFIG_SERVER_MODE: "False"
         volumes:
             - pgadmin_data:/var/lib/pgadmin
         networks: [appnet]
