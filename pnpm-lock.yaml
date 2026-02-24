@@ -407,6 +407,9 @@ importers:
       no-slash:
         specifier: ^1.2.15
         version: 1.2.15
+      node-cron:
+        specifier: ^4.2.1
+        version: 4.2.1
       node-fetch:
         specifier: ^2.6.7
         version: 2.7.0
@@ -8444,6 +8447,10 @@ packages:
   no-slash@1.2.15:
     resolution: {integrity: sha512-R8cjEILpXhwyEtQjWhUyEyPT5UPhcE/RiSrhSgwAp7R8IRD6n3iL7M4g8U+7Uc5QCc3oExyJ0EmxHlMHxpQXEA==}
     engines: {node: '>=6'}
+
+  node-cron@4.2.1:
+    resolution: {integrity: sha512-lgimEHPE/QDgFlywTd8yTR61ptugX3Qer29efeyWw2rv259HtGBNn1vZVmp8lB9uo9wC0t/AT4iGqXxia+CJFg==}
+    engines: {node: '>=6.0.0'}
 
   node-dir@0.1.17:
     resolution: {integrity: sha512-tmPX422rYgofd4epzrNoOXiE8XFZYOcCq1vD7MAXCDO+O+zndlA2ztdKKMa+EeuBG5tHETpr4ml4RGgpqDCCAg==}
@@ -21645,6 +21652,8 @@ snapshots:
   no-slash@1.2.15:
     dependencies:
       url: 0.11.4
+
+  node-cron@4.2.1: {}
 
   node-dir@0.1.17:
     dependencies:
