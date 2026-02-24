@@ -1,6 +1,6 @@
 services:
     proxy:
-        image: caddy:latest
+        image: caddy:2.11
         env_file: [.env]
         ports:
             - target: 80
@@ -135,7 +135,7 @@ services:
             PGADMIN_CONFIG_PROXY_X_PROTO_COUNT: "1"
             PGADMIN_CONFIG_PROXY_X_HOST_COUNT: "1"
             PGADMIN_CONFIG_PROXY_X_PORT_COUNT: "1"
-            # Disable IP-based cookie protection (the root cause)
+            # Disable IP-based cookie protection (breaks behind cloudflare)
             PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
             # Disable CSRF checks that break behind CF
             PGADMIN_CONFIG_WTF_CSRF_ENABLED: "False"
@@ -153,6 +153,20 @@ services:
                 memory: 128M
             restart_policy:
                 condition: any
+    cloudbeaver:
+        image: dbeaver/cloudbeaver:25.3
+        volumes:
+          - cloudbeaver_data:/opt/cloudbeaver/workspace
+        networks: [appnet]
+        deploy:
+          replicas: 1
+          resources:
+            limits:
+              memory: 512M
+            reservations:
+              memory: 128M
+          restart_policy:
+            condition: any
 networks:
     appnet:
         driver: overlay
@@ -163,3 +177,4 @@ volumes:
     caddy_data:
     caddy_config:
     pgadmin_data:
+    cloudbeaver_data:
