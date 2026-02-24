@@ -123,7 +123,7 @@ services:
         deploy:
             replicas: 1
             restart_policy:
-                condition: on-failure
+                condition: any
 networks:
     appnet:
         driver: overlay

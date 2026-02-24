@@ -16,8 +16,6 @@ RUN apt-get update \
  && apt-get update \
  && awk '!/^\s*#/ && !/^\s*$/' /tmp/Aptfile \
       | xargs -r apt-get install -y --no-install-recommends \
- # Install curl + certs for downloading pandoc
- && apt-get install -y --no-install-recommends curl ca-certificates \
  # Pick correct pandoc .deb for current architecture (amd64 / arm64)
  && ARCH="$(dpkg --print-architecture)" \
  && if [ "$ARCH" = "amd64" ]; then \

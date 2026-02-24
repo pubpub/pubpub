@@ -18,7 +18,7 @@ const KEY_PREFIX = process.env.S3_BACKUP_KEY_PREFIX ?? 'pg-backups';
 -------------------------
 
 export AWS_ACCESS_KEY_ID=<key>
-export AWS_SECRET_ACCESS_KEY=<key>>
+export AWS_SECRET_ACCESS_KEY=<key>
 
 aws s3api put-bucket-lifecycle-configuration \
   --bucket pubpub-prod \
