@@ -33,7 +33,6 @@ aws s3api put-bucket-lifecycle-configuration \
   }'
 */
 
-
 async function main() {
 	const s3 = new S3Client({
 		region: 'eu-central',
