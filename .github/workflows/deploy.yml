@@ -28,6 +28,11 @@ on:
         required: false
         default: false
         type: boolean
+      no_cache:
+        description: Build without Docker cache
+        required: false
+        default: false
+        type: boolean
   release:
     types: [published]
 
@@ -91,6 +96,9 @@ jobs:
           push: true
           provenance: false
           sbom: false
+          no-cache: ${{ inputs.no_cache || false }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             ghcr.io/${{ github.repository }}:${{ steps.vars.outputs.image_tag }}
             ${{ steps.meta.outputs.tags }}
