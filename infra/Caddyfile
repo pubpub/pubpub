@@ -7,18 +7,18 @@
 	respond "OK" 200
 }
 
-:443 {
-	tls internal {
-		on_demand
-	}
-	encode zstd gzip
-	
-	@pgadmin host {$PGADMIN_HOST}
-    handle @pgadmin {
-        reverse_proxy pgadmin:5050
+{$PGADMIN_HOST} {
+    tls internal {
+        on_demand
     }
+    encode zstd gzip
+    reverse_proxy pgadmin:5050
+}
 
-    handle {
-        reverse_proxy pubpub_app:3000
+:443 {
+    tls internal {
+        on_demand
     }
+    encode zstd gzip
+    reverse_proxy pubpub_app:3000
 }

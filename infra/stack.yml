@@ -126,7 +126,7 @@ services:
             restart_policy:
                 condition: any
     pgadmin:
-        image: dpage/pgadmin4:latest
+        image: dpage/pgadmin4:9.12
         env_file: [.env]
         environment:
             PGADMIN_LISTEN_PORT: 5050
@@ -135,6 +135,11 @@ services:
         networks: [appnet]
         deploy:
             replicas: 1
+            resources:
+            limits:
+              memory: 512M
+            reservations:
+              memory: 128M
             restart_policy:
                 condition: any
 networks:
