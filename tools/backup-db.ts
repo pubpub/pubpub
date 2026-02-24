@@ -87,7 +87,9 @@ async function main() {
 	}
 }
 
-main().catch((err) => {
+main().then(() => {
+	process.exit(0);
+}).catch((err) => {
 	log(`FATAL: ${err.message}`);
 	process.exit(1);
 });
