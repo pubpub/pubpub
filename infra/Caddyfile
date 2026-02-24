@@ -11,7 +11,7 @@
     tls internal {
         on_demand
     }
-    encode zstd gzip
+    encode gzip
     reverse_proxy pgadmin:5050
 }
 
