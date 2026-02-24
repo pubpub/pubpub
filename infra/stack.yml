@@ -132,6 +132,10 @@ services:
             PGADMIN_LISTEN_PORT: 5050
             PGADMIN_CONFIG_PROXY_X_FOR_COUNT: "1"
             PGADMIN_CONFIG_PROXY_X_PROTO_COUNT: "1"
+            PGADMIN_CONFIG_SESSION_COOKIE_SECURE: "True"
+            PGADMIN_CONFIG_SESSION_COOKIE_SAMESITE: "'Lax'"
+            PGADMIN_CONFIG_WTF_CSRF_SSL_STRICT: "False"
+            PGADMIN_CONFIG_WTF_CSRF_ENABLED: "False"
         volumes:
             - pgadmin_data:/var/lib/pgadmin
         networks: [appnet]

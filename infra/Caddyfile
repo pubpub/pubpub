@@ -15,7 +15,6 @@
     reverse_proxy pgadmin:5050 {
         header_up X-Forwarded-Proto https
         header_up X-Forwarded-Host {host}
-        header_down Content-Security-Policy "default-src 'self' https: http: ws: wss: data: blob: 'unsafe-inline' 'unsafe-eval'"
     }
 }
 
