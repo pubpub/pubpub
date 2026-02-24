@@ -1,8 +1,27 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import * as Sentry from '@sentry/node';
 import { execSync } from 'child_process';
 import { createReadStream, statSync, unlinkSync } from 'fs';
 
+import { postToSlack } from 'server/utils/slack';
+
 const log = (msg: string) => console.log(`[backup] ${new Date().toISOString()} ${msg}`);
+
+const postToSlackAboutSuccess = async (filename: string, sizeMB: string) => {
+	const text = `DB backup completed: \`${filename}\` _(${sizeMB} MB)_`;
+	await postToSlack({ text, icon_emoji: ':floppy_disk:' });
+};
+
+const pickRandomErrorEmoji = () => {
+	const errorEmojis = ['larry', 'this-is-fine', 'facepalm', 'scream2'];
+	const index = Math.floor(Math.random() * errorEmojis.length);
+	return `:${errorEmojis[index]}:`;
+};
+
+const postToSlackAboutError = async (error: Error) => {
+	const text = 'There was a problem creating the DB backup:\n```\n' + error.stack! + '\n```';
+	await postToSlack({ text, icon_emoji: pickRandomErrorEmoji() });
+};
 
 const required = (name: string): string => {
 	const val = process.env[name];
@@ -76,7 +95,8 @@ async function main() {
 		// 3. Retention is handled by S3 lifecycle rule on the bucket.
 		//    Set an expiration rule for 14 days on the postgres/ prefix.
 
-		log('Backup complete ✓');
+		await postToSlackAboutSuccess(filename, sizeMB);
+		log('Backup complete');
 	} finally {
 		try {
 			unlinkSync(localPath);
@@ -91,7 +111,12 @@ main()
 	.then(() => {
 		process.exit(0);
 	})
-	.catch((err) => {
+	.catch(async (err) => {
 		log(`FATAL: ${err.message}`);
+		if (err instanceof Error) {
+			Sentry.captureException(err);
+			await postToSlackAboutError(err);
+			await Sentry.flush(5000);
+		}
 		process.exit(1);
 	});
