@@ -12,13 +12,17 @@
         on_demand
     }
     encode gzip
-    reverse_proxy pgadmin:5050
+    reverse_proxy pgadmin:5050 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Host {host}
+        header_down Content-Security-Policy "default-src 'self' https: http: ws: wss: data: blob: 'unsafe-inline' 'unsafe-eval'"
+    }
 }
 
 :443 {
     tls internal {
         on_demand
     }
-    encode zstd gzip
+    encode gzip
     reverse_proxy pubpub_app:3000
 }

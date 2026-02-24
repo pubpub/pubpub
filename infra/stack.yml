@@ -130,6 +130,8 @@ services:
         env_file: [.env]
         environment:
             PGADMIN_LISTEN_PORT: 5050
+            PGADMIN_CONFIG_PROXY_X_FOR_COUNT: "1"
+            PGADMIN_CONFIG_PROXY_X_PROTO_COUNT: "1"
         volumes:
             - pgadmin_data:/var/lib/pgadmin
         networks: [appnet]
