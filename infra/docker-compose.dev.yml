@@ -74,20 +74,7 @@ services:
         ports:
             - "${DB_PORT:-5439}:5432"
         networks: [appnet]
-    cron:
-        build:
-            context: ..
-            dockerfile: Dockerfile
-            target: dev
-        env_file:
-            - .env.dev
-        command: ["pnpm", "run", "cron"]
-        depends_on:
-            - db
-        networks: [appnet]
-        volumes:
-            - ..:/app
-            - /app/node_modules
+
 networks:
     appnet:
         driver: bridge
