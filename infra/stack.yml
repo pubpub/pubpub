@@ -138,6 +138,7 @@ services:
             PGADMIN_CONFIG_WTF_CSRF_ENABLED: "False"
             PGADMIN_CONFIG_SESSION_COOKIE_HTTPONLY: "True"
             PGADMIN_CONFIG_SERVER_MODE: "False"
+            PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
         volumes:
             - pgadmin_data:/var/lib/pgadmin
         networks: [appnet]
