@@ -4,9 +4,13 @@ import type { SpamStatus, UserSpamTagFields } from 'types';
 import mergeWith from 'lodash.mergewith';
 
 import { SpamTag, User } from 'server/models';
-import { sendSpamBanEmail, sendSpamLiftedEmail } from 'server/utils/email';
+import { sendNewSpamTagDevEmail, sendSpamBanEmail, sendSpamLiftedEmail } from 'server/utils/email';
 import { deleteSessionsForUser } from 'server/utils/session';
-import { postToSlackAboutUserBan, postToSlackAboutUserLifted } from 'server/utils/slack';
+import {
+	postToSlackAboutNewUserSpamTag,
+	postToSlackAboutUserBan,
+	postToSlackAboutUserLifted,
+} from 'server/utils/slack';
 import { expect } from 'utils/assert';
 
 import { getSuspectedUserSpamVerdict } from './userScore';
@@ -60,7 +64,18 @@ export const addSpamTagToUser = async (userId: string, fields?: UserSpamTagField
 			individualHooks: false,
 		},
 	);
+	notifyNewSpamTag(userId, user, newSpamTag).catch((err) =>
+		console.error('Failed to send new spam tag notifications', err),
+	);
 	return newSpamTag;
+};
+
+const notifyNewSpamTag = async (userId: string, user: User, spamTag: SpamTag) => {
+	const email = user.email ?? '';
+	const name = user.fullName ?? '';
+	if (!email) return;
+	await postToSlackAboutNewUserSpamTag(userId, email, name, spamTag.spamScore);
+	await sendNewSpamTagDevEmail({ userEmail: email, userName: name });
 };
 
 type UpdateSpamTagForUserOptions = {
@@ -101,7 +116,10 @@ const applySpamStatusSideEffects = async (userId: string, status: SpamStatus, sp
 			} catch (err) {
 				console.error('Failed to delete sessions for banned user', userId, err);
 			}
-			await sendSpamBanEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+			// uncomment to test the email
+			if (process.env.NODE_ENV === 'production') {
+				await sendSpamBanEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+			}
 			await postToSlackAboutUserBan(
 				userId,
 				user.email,
@@ -109,7 +127,10 @@ const applySpamStatusSideEffects = async (userId: string, status: SpamStatus, sp
 				spamTag.fields as UserSpamTagFields,
 			);
 		} else if (status === 'confirmed-not-spam') {
-			await sendSpamLiftedEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+			// uncomment to test the email
+			if (process.env.NODE_ENV === 'production') {
+				await sendSpamLiftedEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+			}
 			await postToSlackAboutUserLifted(userId, user.email, user.fullName ?? '');
 		}
 	} catch (err) {

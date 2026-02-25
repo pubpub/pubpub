@@ -284,3 +284,38 @@ export const postToSlackAboutUserLifted = async (
 		],
 	});
 };
+
+export const postToSlackAboutNewUserSpamTag = async (
+	userId: string,
+	userEmail: string,
+	userName: string,
+	spamScore: number | null,
+) => {
+	if (process.env.NODE_ENV === 'test') {
+		return;
+	}
+	const spamUsersUrl = `https://pubpub.org${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userEmail)}`;
+	const scorePart = spamScore != null ? ` (score: ${spamScore})` : '';
+	const notificationText = `New user spam tag: ${userName} (${userEmail})${scorePart}`;
+	await postToSlack({
+		icon_emoji: ':mag:',
+		attachments: [
+			{
+				fallback: notificationText,
+				pretext: notificationText,
+				color: 'warning',
+				fields: [
+					{ title: 'User', value: `${userName} (${userEmail})` },
+					...(spamScore != null ? [{ title: 'Spam score', value: `${spamScore}` }] : []),
+				],
+				actions: [
+					{
+						type: 'button',
+						text: 'Review in Spam Dashboard',
+						url: spamUsersUrl,
+					},
+				],
+			},
+		],
+	});
+};

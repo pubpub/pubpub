@@ -221,7 +221,10 @@ const Discussion = (props: Props) => {
 				/>
 			)}
 			<LabelList pubData={pubData} discussionData={discussionData} />
-			{!isPreview && isAuthorSpam && (
+			{isAuthorSpam && isPreview && (
+				<span className="spam-badge">Spam</span>
+			)}
+			{isAuthorSpam && !isPreview && (
 				<div className="discussion-spam-banner">
 					This user has been banned. Only you and other admins of this community can see
 					this discussion. You can safely remove it.

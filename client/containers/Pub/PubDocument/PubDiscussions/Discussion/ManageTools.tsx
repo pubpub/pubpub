@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Button } from '@blueprintjs/core';
 
-import { ConfirmDialog, Icon } from 'components';
+import { ConfirmDialog, Icon, SpamStatusMenu } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
 import { usePageContext } from 'utils/hooks';
 
@@ -107,6 +107,9 @@ const ManageTools = (props: Props) => {
 			{renderArchiveButton()}
 			{renderSortMenu()}
 			{isSuperAdmin && <DiscussionReanchor discussionData={discussionData} />}
+			{isSuperAdmin && discussionData.userId && (
+				<SpamStatusMenu userId={discussionData.userId} />
+			)}
 		</div>
 	);
 };
