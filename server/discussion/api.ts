@@ -49,7 +49,19 @@ router.post(
 		}
 		if (isHoneypotFilled(req.body._honeypot)) {
 			if (req.user?.id)
-				await handleHoneypotTriggered(req.user.id, 'create-discussion', req.body._honeypot);
+				await handleHoneypotTriggered(
+					req.user.id,
+					'create-discussion',
+					req.body._honeypot,
+					{
+						communityId: req.body.communityId,
+						pubId: req.body.pubId,
+						content:
+							typeof req.body.text === 'string'
+								? req.body.text.slice(0, 500)
+								: undefined,
+					},
+				);
 			throw new BadRequestError(new Error('Invalid submission.'));
 		}
 		const ok = await verifyCaptchaPayload(req.body.altcha);

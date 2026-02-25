@@ -20,9 +20,7 @@ const CreatePubButton = () => {
 			const honeypot = (formData.get('description') as string) ?? '';
 			setIsLoading(true);
 			try {
-				console.log('trying to verify');
 				const altchaPayload = await altchaRef.current?.verify();
-				console.log('altchaPayload', altchaPayload);
 				if (!altchaPayload) return;
 				const newPub = await apiFetch.post<types.Pub>('/api/pubs/fromForm', {
 					communityId: communityData.id,
@@ -30,6 +28,8 @@ const CreatePubButton = () => {
 					_honeypot: honeypot,
 				});
 				window.location.href = `/pub/${newPub.slug}`;
+			} catch (error) {
+				console.error('Error in handleCreatePub', error);
 			} finally {
 				setIsLoading(false);
 			}
@@ -37,9 +37,12 @@ const CreatePubButton = () => {
 		[communityData.id],
 	);
 
+	const formRef = useRef<HTMLFormElement>(null);
+
 	return (
 		<form
 			onSubmit={handleCreatePub}
+			ref={formRef}
 			// only relevant in dev
 			style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
 		>
@@ -48,6 +51,10 @@ const CreatePubButton = () => {
 				onStateChange={(state) => {
 					if (!isLoading) {
 						setIsLoading(true);
+					}
+					// 	@ts-ignore
+					if (state.detail.state === 'verified') {
+						setIsLoading(false);
 					}
 				}}
 			/>

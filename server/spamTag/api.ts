@@ -4,16 +4,16 @@ import { ForbiddenError } from 'server/utils/errors';
 import { wrap } from 'server/wrap';
 import { expect } from 'utils/assert';
 
-import { queryCommunitiesForSpamManagement } from './communities';
+import { queryCommunitiesForSpamManagement } from './communityDashboard';
+import { updateSpamTagForCommunity } from './communityQueries';
 import { canManipulateSpamTags } from './permissions';
-import { updateSpamTagForCommunity } from './queries';
+import { queryUsersForSpamManagement } from './userDashboard';
 import {
 	addSpamTagToUser,
 	getSpamTagForUser,
 	removeSpamTagFromUser,
 	updateSpamTagForUser,
 } from './userQueries';
-import { queryUsersForSpamManagement } from './users';
 
 export const router = Router();
 
@@ -38,11 +38,24 @@ router.put(
 		if (!canUpdate) {
 			throw new ForbiddenError();
 		}
+		const actorId = req.user?.id;
+		const actorName = (req.user as any)?.fullName ?? 'Unknown';
 		const existingTag = await getSpamTagForUser(userId);
 		if (!existingTag) {
 			await addSpamTagToUser(userId);
 		}
-		await updateSpamTagForUser({ userId, status });
+		if (status === 'confirmed-spam' && actorId) {
+			await addSpamTagToUser(userId, {
+				manuallyMarkedBy: [
+					{
+						userId: actorId,
+						userName: actorName,
+						at: new Date().toISOString(),
+					},
+				],
+			});
+		}
+		await updateSpamTagForUser({ userId, status, actorId, actorName });
 		return res.status(200).send({});
 	}),
 );

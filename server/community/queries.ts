@@ -16,7 +16,7 @@ import {
 	type User,
 	WorkerTask,
 } from 'server/models';
-import { getSpamTagForCommunity } from 'server/spamTag/queries';
+import { getSpamTagForCommunity } from 'server/spamTag/communityQueries';
 import { defer } from 'server/utils/deferred';
 import { sendCommunityAwaitingApprovalEmail } from 'server/utils/email/communitySpam';
 import { subscribeUser } from 'server/utils/mailchimp';

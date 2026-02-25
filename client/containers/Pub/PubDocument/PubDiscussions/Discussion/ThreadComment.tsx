@@ -1,6 +1,6 @@
-import type { Callback } from 'types';
+import type { Callback, SpamStatus } from 'types';
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { Button, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
@@ -71,6 +71,31 @@ const ThreadComment = (props: Props) => {
 		});
 	};
 
+	const handleSpamStatusChanged = useCallback(
+		(status: SpamStatus | null) => {
+			const isNowSpam = status === 'confirmed-spam';
+			const targetUserId = threadCommentData.userId;
+			updateLocalData('pub', {
+				discussions: pubData.discussions.map((discussion) => ({
+					...discussion,
+					...(discussion.userId === targetUserId && {
+						isAuthorSpam: isNowSpam || undefined,
+					}),
+					thread: {
+						...discussion.thread,
+						comments: discussion.thread.comments.map((comment) => {
+							if (comment.userId === targetUserId) {
+								return { ...comment, isAuthorSpam: isNowSpam || undefined };
+							}
+							return comment;
+						}),
+					},
+				})),
+			});
+		},
+		[threadCommentData.userId, pubData.discussions, updateLocalData],
+	);
+
 	const isAuthor = loginData.id === threadCommentData.userId;
 	const renderText = (
 		key: string,
@@ -115,9 +140,7 @@ const ThreadComment = (props: Props) => {
 						{threadCommentData.author
 							? threadCommentData.author.fullName
 							: (commenterName ?? 'anonymous')}
-						{isAuthorSpam && isPreview && (
-							<span className="spam-badge">Spam</span>
-						)}
+						{isAuthorSpam && isPreview && <span className="spam-badge">Spam</span>}
 						{isPreview ? ': ' : ''}
 					</span>
 
@@ -160,7 +183,10 @@ const ThreadComment = (props: Props) => {
 							/>
 						)}
 						{!isPreview && isSuperAdmin && threadCommentData.userId && (
-							<SpamStatusMenu userId={threadCommentData.userId} />
+							<SpamStatusMenu
+								userId={threadCommentData.userId}
+								onStatusChanged={handleSpamStatusChanged}
+							/>
 						)}
 					</span>
 				</div>

@@ -150,6 +150,11 @@ export const communityServer = s.router(contract.community, {
 				expect(req.user).id,
 				'create-community',
 				String(req.body._honeypot),
+				{
+					content: req.body.title
+						? `title: ${req.body.title}, subdomain: ${req.body.subdomain}`
+						: undefined,
+				},
 			);
 			const subdomain = req.body.subdomain ?? 'community';
 			return {

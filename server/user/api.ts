@@ -40,7 +40,9 @@ router.post('/api/users', async (req, res) => {
 		delete body._honeypot;
 		const newUser = await createUser(body);
 		if (isHoneypotFilled(req.body._honeypot)) {
-			await handleHoneypotTriggered(newUser.id, 'create-user', req.body._honeypot);
+			await handleHoneypotTriggered(newUser.id, 'create-user', req.body._honeypot, {
+				content: req.body.fullName ? `name: ${req.body.fullName}` : undefined,
+			});
 		}
 		passport.authenticate('local')(req, res, () => {
 			const hashedUserId = getHashedUserId(newUser);
@@ -101,7 +103,9 @@ router.put('/api/users/fromForm', async (req, res) => {
 		}
 		if (isHoneypotFilled(req.body._honeypot)) {
 			if (req.user?.id)
-				await handleHoneypotTriggered(req.user.id, 'edit-user', req.body._honeypot);
+				await handleHoneypotTriggered(req.user.id, 'edit-user', req.body._honeypot, {
+					content: req.body.fullName ? `name: ${req.body.fullName}` : undefined,
+				});
 		}
 		const body = { ...req.body };
 		delete body._honeypot;

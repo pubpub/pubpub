@@ -1,5 +1,6 @@
-import type { HoneypotTrigger } from 'types';
+import type { HoneypotContext, HoneypotTrigger } from 'types';
 
+import { Community, Pub } from 'server/models';
 import { addSpamTagToUser, updateSpamTagForUser } from 'server/spamTag/userQueries';
 
 export const isHoneypotFilled = (value: unknown): boolean => {
@@ -8,12 +9,36 @@ export const isHoneypotFilled = (value: unknown): boolean => {
 	return true;
 };
 
+const resolveHoneypotContext = async (
+	ctx?: HoneypotContext,
+): Promise<HoneypotContext | undefined> => {
+	if (!ctx) return undefined;
+	const resolved = { ...ctx };
+	if (ctx.communityId && !ctx.communitySubdomain) {
+		const community = await Community.findByPk(ctx.communityId, { attributes: ['subdomain'] });
+		if (community) resolved.communitySubdomain = community.subdomain;
+	}
+	if (ctx.pubId && !ctx.pubSlug) {
+		const pub = await Pub.findByPk(ctx.pubId, { attributes: ['slug'] });
+		if (pub) resolved.pubSlug = pub.slug;
+	}
+	delete resolved.communityId;
+	delete resolved.pubId;
+	return resolved;
+};
+
 export const handleHoneypotTriggered = async (
 	userId: string | null,
 	honeypot: HoneypotTrigger,
 	value: string,
+	context?: HoneypotContext,
 ): Promise<void> => {
 	if (!userId) return;
-	await addSpamTagToUser(userId, { honeypotTriggers: [{ honeypot, value }] });
+	const resolved = await resolveHoneypotContext(context);
+	await addSpamTagToUser(userId, {
+		honeypotTriggers: [
+			{ honeypot, value, context: resolved, triggeredAt: new Date().toISOString() },
+		],
+	});
 	await updateSpamTagForUser({ userId, status: 'confirmed-spam' });
 };

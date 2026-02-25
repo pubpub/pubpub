@@ -73,14 +73,22 @@ export const addSpamTagToUser = async (userId: string, fields?: UserSpamTagField
 const notifyNewSpamTag = async (userId: string, user: User, spamTag: SpamTag) => {
 	const email = user.email ?? '';
 	const name = user.fullName ?? '';
+	const slug = user.slug ?? '';
 	if (!email) return;
-	await postToSlackAboutNewUserSpamTag(userId, email, name, spamTag.spamScore);
+	await postToSlackAboutNewUserSpamTag({
+		userId,
+		userName: name,
+		userSlug: slug,
+		spamScore: spamTag.spamScore,
+	});
 	await sendNewSpamTagDevEmail({ userEmail: email, userName: name });
 };
 
 type UpdateSpamTagForUserOptions = {
 	userId: string;
 	status: SpamStatus;
+	actorId?: string;
+	actorName?: string;
 };
 
 export const getSpamTagForUser = async (userId: string) => {
@@ -94,21 +102,28 @@ export const getSpamTagForUser = async (userId: string) => {
 };
 
 export const updateSpamTagForUser = async (options: UpdateSpamTagForUserOptions) => {
-	const { userId, status } = options;
+	const { userId, status, actorId, actorName } = options;
 	const spamTag = await getSpamTagForUser(userId);
 	if (!spamTag) {
 		throw new Error('User is missing a SpamTag');
 	}
 	await spamTag.update({ status, statusUpdatedAt: new Date() });
-	await applySpamStatusSideEffects(userId, status, spamTag);
+	await applySpamStatusSideEffects(userId, status, spamTag, actorId, actorName);
 };
 
-const applySpamStatusSideEffects = async (userId: string, status: SpamStatus, spamTag: SpamTag) => {
+const applySpamStatusSideEffects = async (
+	userId: string,
+	status: SpamStatus,
+	spamTag: SpamTag,
+	actorId?: string,
+	actorName?: string,
+) => {
 	const user = await User.findOne({
 		where: { id: userId },
-		attributes: ['email', 'fullName'],
+		attributes: ['email', 'fullName', 'slug', 'avatar'],
 	});
 	if (!user?.email) return;
+	const userName = user.fullName ?? '';
 	try {
 		if (status === 'confirmed-spam') {
 			try {
@@ -116,22 +131,27 @@ const applySpamStatusSideEffects = async (userId: string, status: SpamStatus, sp
 			} catch (err) {
 				console.error('Failed to delete sessions for banned user', userId, err);
 			}
-			// uncomment to test the email
 			if (process.env.NODE_ENV === 'production') {
-				await sendSpamBanEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+				await sendSpamBanEmail({ toEmail: user.email, userName });
 			}
-			await postToSlackAboutUserBan(
+			await postToSlackAboutUserBan({
 				userId,
-				user.email,
-				user.fullName ?? '',
-				spamTag.fields as UserSpamTagFields,
-			);
+				userName,
+				userSlug: user.slug,
+				userAvatar: user.avatar,
+				reason: spamTag.fields as UserSpamTagFields,
+				actorName,
+			});
 		} else if (status === 'confirmed-not-spam') {
-			// uncomment to test the email
 			if (process.env.NODE_ENV === 'production') {
-				await sendSpamLiftedEmail({ toEmail: user.email, userName: user.fullName ?? '' });
+				await sendSpamLiftedEmail({ toEmail: user.email, userName });
 			}
-			await postToSlackAboutUserLifted(userId, user.email, user.fullName ?? '');
+			await postToSlackAboutUserLifted({
+				userId,
+				userName,
+				userSlug: user.slug,
+				actorName,
+			});
 		}
 	} catch (err) {
 		console.error('Failed to send spam status email', err);

@@ -1,5 +1,5 @@
-import type { SpamStatus } from 'types';
 import type { SocialItem } from 'client/utils/navigation';
+import type { SpamStatus } from 'types';
 
 import React, { useCallback, useState } from 'react';
 
@@ -22,7 +22,10 @@ const defaultProps = {
 	isUser: false,
 };
 
-const spamStatusDisplay: Record<SpamStatus, { label: string; intent: 'danger' | 'warning' | 'success' }> = {
+const spamStatusDisplay: Record<
+	SpamStatus,
+	{ label: string; intent: 'danger' | 'warning' | 'success' }
+> = {
 	'confirmed-spam': { label: 'Confirmed spam', intent: 'danger' },
 	unreviewed: { label: 'Unreviewed', intent: 'warning' },
 	'confirmed-not-spam': { label: 'Not spam', intent: 'success' },
@@ -136,7 +139,8 @@ const UserHeader = function (props) {
 					>
 						<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
 							<span style={{ fontWeight: 500 }}>
-								Spam status: {spamStatus ? spamStatusDisplay[spamStatus].label : 'None'}
+								Spam status:{' '}
+								{spamStatus ? spamStatusDisplay[spamStatus].label : 'None'}
 							</span>
 							<SpamStatusMenu
 								userId={props.userData.id}

@@ -31,9 +31,7 @@ export default async (slug, initialData) => {
 					},
 				],
 			},
-			...(isSuperAdmin
-				? [{ model: SpamTag, as: 'spamTag', required: false }]
-				: []),
+			...(isSuperAdmin ? [{ model: SpamTag, as: 'spamTag', required: false }] : []),
 		],
 	});
 

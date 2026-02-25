@@ -29,10 +29,18 @@ type Props = {
 	setSortType: (s: SortType) => any;
 	sortType: SortType;
 	onUpdateDiscussion: (...args: any[]) => any;
+	onSpamStatusChanged?: (status: import('types').SpamStatus | null) => void;
 };
 
 const ManageTools = (props: Props) => {
-	const { pubData, discussionData, onUpdateDiscussion, sortType, setSortType } = props;
+	const {
+		pubData,
+		discussionData,
+		onUpdateDiscussion,
+		sortType,
+		setSortType,
+		onSpamStatusChanged,
+	} = props;
 	const { scopeData } = usePageContext();
 	const { canAdmin, isSuperAdmin } = scopeData.activePermissions;
 	const { isClosed } = discussionData;
@@ -108,7 +116,10 @@ const ManageTools = (props: Props) => {
 			{renderSortMenu()}
 			{isSuperAdmin && <DiscussionReanchor discussionData={discussionData} />}
 			{isSuperAdmin && discussionData.userId && (
-				<SpamStatusMenu userId={discussionData.userId} />
+				<SpamStatusMenu
+					userId={discussionData.userId}
+					onStatusChanged={onSpamStatusChanged}
+				/>
 			)}
 		</div>
 	);

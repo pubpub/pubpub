@@ -113,7 +113,9 @@ export const pubServer = s.router(contract.pub, {
 	createFromForm: async ({ body, req }) => {
 		if (isHoneypotFilled(body._honeypot)) {
 			if (req.user?.id)
-				await handleHoneypotTriggered(req.user.id, 'create-pub', body._honeypot as string);
+				await handleHoneypotTriggered(req.user.id, 'create-pub', body._honeypot as string, {
+					communityId: body.communityId as string | undefined,
+				});
 			throw new BadRequestError(new Error('Invalid submission.'));
 		}
 		if (!(await verifyCaptchaPayload(body.altcha))) {

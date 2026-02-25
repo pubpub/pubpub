@@ -53,6 +53,14 @@ router.post(
 					req.user.id,
 					'create-thread-comment',
 					req.body._honeypot,
+					{
+						communityId: req.body.communityId,
+						pubId: req.body.pubId,
+						content:
+							typeof req.body.text === 'string'
+								? req.body.text.slice(0, 500)
+								: undefined,
+					},
 				);
 			throw new BadRequestError(new Error('Invalid submission.'));
 		}
