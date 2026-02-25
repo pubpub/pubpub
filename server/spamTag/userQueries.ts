@@ -127,14 +127,3 @@ export const removeSpamTagFromUser = async (userId: string) => {
 		await spamTag.destroy();
 	}
 };
-
-export const removeSpamTagFromUser = async (userId: string) => {
-	const spamTag = await getSpamTagForUser(userId);
-	if (spamTag) {
-		await User.update(
-			{ spamTagId: null },
-			{ where: { id: userId }, limit: 1, individualHooks: false },
-		);
-		await spamTag.destroy();
-	}
-};
