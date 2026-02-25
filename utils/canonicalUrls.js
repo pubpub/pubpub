@@ -1,3 +1,5 @@
+// @ts-check
+
 /** Utilities for providing canonical URLs for different entities */
 import queryString from 'query-string';
 
@@ -7,8 +9,16 @@ export const profileUrl = (userSlug) => `/user/${userSlug}`;
 
 export const isArchiving = () =>
 	'window' in globalThis &&
+	// @ts-expect-error - window.__pubpub_pageContextProps__ is not typed
 	window.__pubpub_pageContextProps__.locationData.queryString.includes('pubpubArchiveBot');
 
+/**
+ * Returns the canonical URL for a community.
+ * @param {Object} community - The community to get the URL for.
+ * @param {string} community.subdomain - The subdomain of the community.
+ * @param {string | null | undefined} [community.domain] - The domain of the community.
+ * @returns The canonical URL for the community.
+ */
 export const communityUrl = (community) => {
 	if (isArchiving()) {
 		return '/';
@@ -32,10 +42,25 @@ export const collectionUrl = (community, collection) => {
 	return `${communityUrl(community)}/${collection.slug}`;
 };
 
+/**
+ * @typedef {Pick<import('types').Pub, 'slug'>} PubForUrl
+ */
+
+
+
+/**
+ * @param {PubForUrl} pub
+ */
 export const pubShortUrl = (pub) => {
 	return isArchiving() ? `/pub/{pub.slug}` : `https://pubpub.org/pub/${pub.slug}`;
 };
 
+/**
+ * @param {import('types').Community | import('server/models').Community | null} community
+ * @param {PubForUrl} pub
+ * @param options
+ * @returns {string}
+ */
 export const pubUrl = (community, pub, options = {}) => {
 	const {
 		isDraft,
@@ -52,7 +77,8 @@ export const pubUrl = (community, pub, options = {}) => {
 
 	// Include the community in the URL if the absolute flag is set to true.
 	const skipCommunity = isArchiving() || (absolute ? false : community === null || isQubQub());
-	const baseCommunityUrl = skipCommunity ? '' : communityUrl(community);
+	
+	const baseCommunityUrl = skipCommunity || !community ? '' : communityUrl(community);
 
 	let baseUrl = `${baseCommunityUrl}/pub/${pub.slug}`;
 
@@ -79,6 +105,13 @@ export const pubUrl = (community, pub, options = {}) => {
 	return url;
 };
 
+/**
+ * @param {Object} data
+ * @param {PubForUrl} data.pubData
+ * @param {import('types').Community} data.communityData
+ * @param options
+ * @returns {string}
+ */
 export const bestPubUrl = ({ pubData, communityData }, options = {}) => {
 	if (communityData) {
 		return pubUrl(communityData, pubData, options);

@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node';
-import compression from 'compression';
+// import compression from 'compression';
 import CreateSequelizeStore from 'connect-session-sequelize';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -86,11 +86,13 @@ if (process.env.NODE_ENV === 'production') {
 	// The Sentry request handler must be the first middleware on the app
 	appRouter.use(Sentry.Handlers.requestHandler({ user: ['id', 'slug'] }));
 	appRouter.use(Sentry.Handlers.tracingHandler());
-	appRouter.use(enforce.HTTPS({ trustProtoHeader: true }));
+	if (process.env.DISABLE_SSL_REDIRECT !== 'true') {
+		appRouter.use(enforce.HTTPS({ trustProtoHeader: true }));
+	}
 }
 appRouter.use(deduplicateSlash());
 appRouter.use(noSlash());
-appRouter.use(compression());
+// appRouter.use(compression());
 appRouter.use(express.json({ limit: '50mb' }));
 appRouter.use(express.urlencoded({ limit: '50mb', extended: true }));
 appRouter.use(cookieParser());
@@ -102,6 +104,7 @@ import session from 'express-session';
 import { fromZodError } from 'zod-validation-error';
 
 import { purgeMiddleware } from 'utils/caching/purgeMiddleware';
+import { readOnlyMiddleware } from 'utils/caching/readOnlyMiddleware';
 import { schedulePurge } from 'utils/caching/schedulePurgeWithSentry';
 
 import { abortStorage } from './abort';
@@ -109,6 +112,10 @@ import { authTokenMiddleware } from './authToken/authTokenMiddleware';
 import { bearerStrategy } from './authToken/strategy';
 
 const SequelizeStore = CreateSequelizeStore(session.Store);
+
+appRouter.use('/api/health', (req, res) => {
+	res.status(200).json({ status: 'ok' });
+});
 
 appRouter.use(
 	session({
@@ -242,8 +249,36 @@ appRouter.use(authTokenMiddleware);
 /** Set up purge middleware before api routes are initialized and after hostname is set */
 appRouter.use(purgeMiddleware(schedulePurge));
 
+appRouter.use(readOnlyMiddleware());
+
 const { customScript: _, ...contractWithoutCustomScript } = contract;
 
+appRouter.use((req, res, next) => {
+	const now = process.hrtime.bigint();
+
+	let isLogged = false;
+	function logger() {
+		if (isLogged) {
+			return;
+		}
+		const durationMs = Number((process.hrtime.bigint() - now) / BigInt(1_000_000));
+		const host = req.headers.host ?? 'unknown';
+		const userAgent = req.headers['user-agent'] ?? 'unknown';
+		const contentLength = res.get('content-length') ?? '-';
+		const userId = req.user?.id ?? 'anon';
+		const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress ?? 'unknown';
+
+		console.log(
+			`${req.method} ${res.statusCode} ${req.path} ${durationMs}ms | host=${host} | user=${userId} | ip=${ip} | size=${contentLength} | ua=${userAgent} | origin=${req.headers.origin}`,
+		);
+		isLogged = true;
+	}
+
+	res.on('finish', logger);
+	res.on('close', logger);
+	res.on('error', logger);
+	next();
+});
 /* ------------------------- */
 /* Create ts-rest api routes */
 /* ------------------------- */
@@ -281,6 +316,7 @@ import { rootRouter } from './routes';
 
 appRouter.use(apiRouter);
 appRouter.use(rootRouter);
+
 /* ------------- */
 /* Error Handlers */
 /* ------------- */

@@ -22,7 +22,10 @@ const getNotificationData = async (
 				attributes: ['id', 'isRead'],
 			});
 		const hasUnreadNotifications = userNotifications.some((n) => !n.isRead);
-		return { hasNotifications: userNotifications.length > 0, hasUnreadNotifications };
+		return {
+			hasNotifications: userNotifications.length > 0,
+			hasUnreadNotifications,
+		};
 	}
 	return { hasNotifications: false, hasUnreadNotifications: false };
 };
@@ -36,7 +39,14 @@ export const getInitialData = async (
 	req,
 	options: GetInitialDataOptions = {},
 ): Promise<types.InitialData> => {
-	const hostname = req.hostname;
+	if (req.initialData) {
+		return req.initialData;
+	}
+	let hostname = req.hostname;
+	if (hostname === 'localhost') {
+		hostname = 'demo.duqduq.org';
+	}
+
 	const { isDashboard = false, includeFacets = isDashboard } = options;
 	/* Gather user data */
 	const user = req.user || {};
@@ -118,7 +128,7 @@ export const getInitialData = async (
 			: { domain: hostname };
 	const communityData = await getCommunity(locationData, whereQuery);
 
-	if (communityData.spamTag?.status === 'confirmed-spam') {
+	if (communityData.spamTag && communityData.spamTag.status !== 'confirmed-not-spam') {
 		const [isMemberOfCommunity, isSuperadmin] = await Promise.all([
 			isUserMemberOfScope({
 				userId: loginData.id,
@@ -149,7 +159,7 @@ export const getInitialData = async (
 
 	const [scopeData, featureFlags, initialNotificationsData, dismissedUserDismissables] =
 		await Promise.all([
-			getScope({
+			await getScope({
 				communityId: communityData.id,
 				pubSlug: locationData.params.pubSlug,
 				collectionSlug:
@@ -159,9 +169,9 @@ export const getInitialData = async (
 				isDashboard,
 				includeFacets,
 			}),
-			getFeatureFlagsForUserAndCommunity(loginData.id, communityData.id),
-			getNotificationData(user.id),
-			getDismissedUserDismissables(user.id),
+			await getFeatureFlagsForUserAndCommunity(loginData.id, communityData.id),
+			await getNotificationData(user.id),
+			await getDismissedUserDismissables(user.id),
 		]);
 
 	const cleanedCommunityData = sanitizeCommunity(
@@ -171,7 +181,7 @@ export const getInitialData = async (
 		scopeData,
 	);
 
-	return {
+	const result = {
 		communityData: cleanedCommunityData,
 		loginData,
 		locationData,
@@ -180,4 +190,6 @@ export const getInitialData = async (
 		initialNotificationsData,
 		dismissedUserDismissables,
 	};
+
+	return result;
 };

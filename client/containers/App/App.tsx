@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Provider as RKProvider } from 'reakit';
 import { AnalyticsProvider } from 'use-analytics';
 
+import { ReadOnlyNotice } from 'client/components/ReadOnlyNotice';
 import {
 	CollapsibleHeader,
 	CollapsibleHeaderBPC,
@@ -131,7 +132,10 @@ const App = (props: Props) => {
 				>
 					<RKProvider>
 						<div id="app" className={classNames({ dashboard: isDashboard })}>
-							{communityData.spamTag?.status === 'confirmed-spam' && <SpamBanner />}
+							{communityData.spamTag &&
+								communityData.spamTag.status !== 'confirmed-not-spam' && (
+									<SpamBanner status={communityData.spamTag.status} />
+								)}
 							<AccentStyle communityData={communityData} isNavHidden={!showNav} />
 							{(locationData.isDuqDuq || locationData.isQubQub) && (
 								<div className="duqduq-warning">Development Environment</div>
@@ -159,6 +163,7 @@ const App = (props: Props) => {
 							{showFooter && footer}
 						</div>
 					</RKProvider>
+					<ReadOnlyNotice />
 				</FacetsStateProvider>
 			</AnalyticsProvider>
 		</PageContext.Provider>
