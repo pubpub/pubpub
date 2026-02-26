@@ -93,6 +93,34 @@ const getShallowKeys = async (path: string): Promise<string[]> => {
 };
 
 /**
+ * Recursively delete a Firebase path, handling WRITE_TOO_BIG errors by
+ * deleting children first. This is necessary for large subtrees.
+ */
+const deleteFirebasePath = async (path: string, depth = 0): Promise<void> => {
+	const indent = '  '.repeat(depth);
+	try {
+		await getDatabaseRef(path).remove();
+		verbose(`${indent}Deleted: ${path}`);
+	} catch (error: any) {
+		const errorCode = error?.code || error?.message || String(error);
+		if (errorCode.includes('WRITE_TOO_BIG') || errorCode.includes('write_too_big')) {
+			verbose(`${indent}Path too large for single delete, deleting children first: ${path}`);
+			// Get children and delete them recursively
+			const childKeys = await getShallowKeys(path);
+			for (const childKey of childKeys) {
+				// biome-ignore lint/performance/noAwaitInLoops: sequential to avoid overwhelming Firebase
+				await deleteFirebasePath(`${path}/${childKey}`, depth + 1);
+			}
+			// Now delete the (empty) parent
+			await getDatabaseRef(path).remove();
+			verbose(`${indent}Deleted (after children): ${path}`);
+		} else {
+			throw error;
+		}
+	}
+};
+
+/**
  * Run async tasks with limited concurrency (worker pool pattern)
  */
 const runWithConcurrency = async <T>(
@@ -524,9 +552,8 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 			log(`  Found orphaned Firebase path: ${firebasePath}`);
 			if (!isDryRun) {
 				// biome-ignore lint/performance/noAwaitInLoops: sequential deletes to avoid overwhelming Firebase
-				await getDatabaseRef(firebasePath).remove();
+				await deleteFirebasePath(firebasePath);
 				stats.orphanedFirebasePathsDeleted++;
-				verbose(`  Deleted orphaned path: ${firebasePath}`);
 			}
 		}
 	}
@@ -552,9 +579,8 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 				log(`  Found orphaned Firebase path: ${firebasePath}`);
 				if (!isDryRun) {
 					// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
-					await getDatabaseRef(firebasePath).remove();
+					await deleteFirebasePath(firebasePath);
 					stats.orphanedFirebasePathsDeleted++;
-					verbose(`  Deleted orphaned path: ${firebasePath}`);
 				}
 			}
 		}
@@ -563,12 +589,11 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 		if (!hasValidBranch) {
 			log(`  Deleting entire orphaned pub path: ${pubKey}`);
 			if (!isDryRun) {
-				await getDatabaseRef(pubKey).remove();
+				await deleteFirebasePath(pubKey);
 				// Count metadata deletion if it existed
 				if (childKeys.includes('metadata')) {
 					stats.metadataDeleted++;
 				}
-				verbose(`  Deleted orphaned pub: ${pubKey}`);
 			}
 		}
 	}
@@ -600,9 +625,8 @@ const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string):
 			log(`  Found orphaned branch: ${orphanedPath}`);
 			if (!isDryRun) {
 				// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
-				await getDatabaseRef(orphanedPath).remove();
+				await deleteFirebasePath(orphanedPath);
 				stats.orphanedFirebasePathsDeleted++;
-				verbose(`  Deleted orphaned branch: ${orphanedPath}`);
 			}
 		}
 	}
