@@ -250,6 +250,30 @@ const getLatestReleaseHistoryKey = async (pubId: string): Promise<number | null>
 };
 
 /**
+ * Batch fetch latest release history keys for multiple pubs
+ * More efficient than individual queries
+ */
+const batchGetLatestReleaseKeys = async (pubIds: string[]): Promise<Map<string, number>> => {
+	if (pubIds.length === 0) return new Map();
+
+	const releases = await Release.findAll({
+		where: { pubId: pubIds },
+		attributes: ['pubId', 'historyKey'],
+		order: [['historyKey', 'DESC']],
+	});
+
+	// Group by pubId and take the max historyKey for each
+	const result = new Map<string, number>();
+	for (const release of releases) {
+		const existing = result.get(release.pubId);
+		if (existing === undefined || release.historyKey > existing) {
+			result.set(release.pubId, release.historyKey);
+		}
+	}
+	return result;
+};
+
+/**
  * Get discussions from Firebase and uncompress them
  */
 const getFirebaseDiscussions = async (
@@ -375,8 +399,15 @@ const pruneKeysBefore = async (
 
 /**
  * Prune old data from a single draft
+ * @param firebasePath - Firebase path to the draft
+ * @param pubId - Optional pub ID for release key lookup
+ * @param preloadedReleaseKey - Pre-fetched release key (for batch processing efficiency)
  */
-const pruneDraft = async (firebasePath: string, pubId: string | null = null): Promise<void> => {
+const pruneDraft = async (
+	firebasePath: string,
+	pubId: string | null = null,
+	preloadedReleaseKey: number | null = null,
+): Promise<void> => {
 	const draftRef = getDatabaseRef(firebasePath);
 
 	const latestCheckpointKey = await getLatestCheckpointKey(draftRef);
@@ -393,14 +424,15 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 	// - We need changes from latestCheckpointKey onwards to reconstruct the doc
 	// - We need changes from latestReleaseKey onwards to migrate discussions during release
 	let pruneThreshold = latestCheckpointKey;
-	if (pubId) {
-		const latestReleaseKey = await getLatestReleaseHistoryKey(pubId);
-		if (latestReleaseKey !== null && latestReleaseKey < pruneThreshold) {
-			verbose(
-				`  Using release history key ${latestReleaseKey} (lower than checkpoint ${latestCheckpointKey})`,
-			);
-			pruneThreshold = latestReleaseKey;
-		}
+
+	// Use preloaded release key if available, otherwise fetch it
+	const latestReleaseKey =
+		preloadedReleaseKey ?? (pubId ? await getLatestReleaseHistoryKey(pubId) : null);
+	if (latestReleaseKey !== null && latestReleaseKey < pruneThreshold) {
+		verbose(
+			`  Using release history key ${latestReleaseKey} (lower than checkpoint ${latestCheckpointKey})`,
+		);
+		pruneThreshold = latestReleaseKey;
 	}
 
 	verbose(`  Safe prune threshold: ${pruneThreshold}`);
@@ -829,22 +861,31 @@ const processAllDrafts = async (): Promise<void> => {
 
 		log(`Processing batch of ${pubs.length} pubs (offset: ${offset})`);
 
-		for (const pub of pubs) {
-			if (!pub.draft) {
-				verbose(`  Pub ${pub.id} has no draft, skipping`);
-				continue;
-			}
-			try {
-				verbose(`Processing pub ${pub.slug || pub.id}`);
-				// biome-ignore lint/performance/noAwaitInLoops: intentionally sequential
-				await pruneDraft(pub.draft.firebasePath, pub.id);
-				await cleanupOrphanedBranchesForPub(pub.id, pub.draft.firebasePath);
-				stats.draftsProcessed++;
-			} catch (err) {
-				log(`  Error processing pub ${pub.id}: ${(err as Error).message}`);
-				stats.errorsEncountered++;
-			}
-		}
+		// Batch fetch release keys for all pubs in this batch
+		const pubIds = pubs.filter((p) => p.draft).map((p) => p.id);
+		const releaseKeyMap = await batchGetLatestReleaseKeys(pubIds);
+
+		// Process pubs in parallel with limited concurrency
+		const pubsWithDrafts = pubs.filter((pub) => pub.draft);
+		await runWithConcurrency(
+			pubsWithDrafts.map((pub) => async () => {
+				try {
+					verbose(`Processing pub ${pub.slug || pub.id}`);
+					const releaseKey = releaseKeyMap.get(pub.id) ?? null;
+					await pruneDraft(pub.draft!.firebasePath, pub.id, releaseKey);
+					await cleanupOrphanedBranchesForPub(pub.id, pub.draft!.firebasePath);
+					stats.draftsProcessed++;
+				} catch (err) {
+					log(`  Error processing pub ${pub.id}: ${(err as Error).message}`);
+					stats.errorsEncountered++;
+				}
+			}),
+			10, // Process 10 pubs in parallel
+		);
+
+		log(
+			`  Processed ${stats.draftsProcessed} drafts so far (${stats.changesDeleted} changes deleted)`,
+		);
 
 		offset += batchSize;
 		hasMore = pubs.length === batchSize;

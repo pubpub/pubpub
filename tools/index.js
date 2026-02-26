@@ -51,6 +51,7 @@ const commandFiles = {
 	layoutcheck: "./layoutcheck/check",
 	migrate: "./migrate",
 	migrateDash: "./dashboardMigrations/runMigrations",
+	migrateFirebasePaths: "./migrateFirebasePaths",
 	migration2020_05_06: "./migration2020_05_06",
 	migration2020_06_24: "./migration2020_06_24",
 	migrationsDeprecated: "./migrationsDeprecated",
