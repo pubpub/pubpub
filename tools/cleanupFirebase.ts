@@ -74,22 +74,38 @@ const getAccessToken = async (): Promise<string> => {
 	return cachedAccessToken.token;
 };
 
-const getShallowKeys = async (path: string): Promise<string[]> => {
+const getShallowKeys = async (path: string, retries = 3): Promise<string[]> => {
 	const databaseURL = getFirebaseConfig().databaseURL;
 	const accessToken = await getAccessToken();
 
 	const url = `${databaseURL}/${path}.json?shallow=true&access_token=${accessToken}`;
-	const response = await fetch(url);
 
-	if (!response.ok) {
-		throw new Error(`Firebase REST API error: ${response.status} ${response.statusText}`);
-	}
+	for (let attempt = 1; attempt <= retries; attempt++) {
+		try {
+			// biome-ignore lint/performance/noAwaitInLoops: intentionally sequential
+			const response = await fetch(url);
 
-	const data = await response.json();
-	if (!data || typeof data !== 'object') {
-		return [];
+			if (!response.ok) {
+				throw new Error(
+					`Firebase REST API error: ${response.status} ${response.statusText}`,
+				);
+			}
+
+			const data = await response.json();
+			if (!data || typeof data !== 'object') {
+				return [];
+			}
+			return Object.keys(data);
+		} catch (error: any) {
+			if (attempt === retries) {
+				throw error;
+			}
+			const delay = Math.min(1000 * 2 ** attempt, 10000);
+			verbose(`  Retry ${attempt}/${retries} for ${path} after ${delay}ms: ${error.message}`);
+			await new Promise((r) => setTimeout(r, delay));
+		}
 	}
-	return Object.keys(data);
+	return []; // unreachable
 };
 
 /**
@@ -111,7 +127,7 @@ const deleteFirebasePath = async (path: string, depth = 0): Promise<void> => {
 				childKeys.map(
 					(childKey) => () => deleteFirebasePath(`${path}/${childKey}`, depth + 1),
 				),
-				50,
+				30,
 			);
 			// Now delete the (empty) parent
 			await getDatabaseRef(path).remove();
@@ -565,7 +581,7 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 					log(`  Deleted ${deleted}/${orphanedDraftKeys.length} orphaned drafts...`);
 				}
 			}),
-			50,
+			30,
 		);
 		stats.orphanedFirebasePathsDeleted += orphanedDraftKeys.length;
 		log(`  Deleted ${orphanedDraftKeys.length} orphaned draft paths`);
@@ -574,7 +590,7 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 	// Check for orphaned 'pub-*' paths (legacy format) using shallow key listing
 	const rootKeys = await getShallowKeys('');
 	const legacyPubKeys = rootKeys.filter((key) => key.startsWith('pub-'));
-	verbose(`  Found ${legacyPubKeys.length} legacy pub-* paths at root`);
+	log(`  Found ${legacyPubKeys.length} legacy pub-* paths at root`);
 
 	// Process legacy pubs in batches with concurrency for getShallowKeys
 	interface LegacyPubInfo {
@@ -584,7 +600,8 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 		hasValidBranch: boolean;
 	}
 
-	// Fetch all child keys in parallel
+	// Fetch all child keys with limited concurrency and progress logging
+	let fetched = 0;
 	const legacyPubInfos: LegacyPubInfo[] = await runWithConcurrency(
 		legacyPubKeys.map((pubKey) => async () => {
 			const childKeys = await getShallowKeys(pubKey);
@@ -601,9 +618,14 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 				}
 			}
 
+			fetched++;
+			if (fetched % 500 === 0) {
+				log(`  Scanned ${fetched}/${legacyPubKeys.length} legacy pubs...`);
+			}
+
 			return { pubKey, childKeys, orphanedBranches, hasValidBranch };
 		}),
-		50,
+		20,
 	);
 
 	// Collect all paths to delete
@@ -639,7 +661,7 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 					log(`  Deleted ${deleted}/${pathsToDelete.length} legacy paths...`);
 				}
 			}),
-			50,
+			30,
 		);
 		stats.orphanedFirebasePathsDeleted += pathsToDelete.length;
 		stats.metadataDeleted += metadataCount;
@@ -678,7 +700,7 @@ const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string):
 				orphanedBranches.map((branchKey) => async () => {
 					await deleteFirebasePath(`${pubKey}/${branchKey}`);
 				}),
-				20,
+				30,
 			);
 			stats.orphanedFirebasePathsDeleted += orphanedBranches.length;
 		}
