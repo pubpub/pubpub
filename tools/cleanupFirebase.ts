@@ -424,16 +424,6 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 			await draftRef.child('checkpoint').remove();
 		}
 	}
-
-	// Remove legacy metadata field (no longer used in v6, title/description are in Postgres)
-	const metadataSnapshot = await draftRef.child('metadata').once('value');
-	if (metadataSnapshot.exists()) {
-		verbose(`  Removing legacy metadata field`);
-		if (!isDryRun) {
-			await draftRef.child('metadata').remove();
-			stats.metadataDeleted++;
-		}
-	}
 };
 
 /**
@@ -520,20 +510,36 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 	for (const pubKey of legacyPubKeys) {
 		// Get branch keys under this pub using shallow listing
 		// biome-ignore lint/performance/noAwaitInLoops: sequential processing for rate limiting
-		const branchKeys = await getShallowKeys(pubKey);
+		const childKeys = await getShallowKeys(pubKey);
+		const branchKeys = childKeys.filter((k) => k.startsWith('branch-'));
+		let hasValidBranch = false;
+
 		for (const branchKey of branchKeys) {
-			if (branchKey.startsWith('branch-')) {
-				const firebasePath = `${pubKey}/${branchKey}`;
-				if (!validPaths.has(firebasePath)) {
-					stats.orphanedFirebasePathsFound++;
-					log(`  Found orphaned Firebase path: ${firebasePath}`);
-					if (!isDryRun) {
-						// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
-						await getDatabaseRef(firebasePath).remove();
-						stats.orphanedFirebasePathsDeleted++;
-						verbose(`  Deleted orphaned path: ${firebasePath}`);
-					}
+			const firebasePath = `${pubKey}/${branchKey}`;
+			if (validPaths.has(firebasePath)) {
+				hasValidBranch = true;
+			} else {
+				stats.orphanedFirebasePathsFound++;
+				log(`  Found orphaned Firebase path: ${firebasePath}`);
+				if (!isDryRun) {
+					// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
+					await getDatabaseRef(firebasePath).remove();
+					stats.orphanedFirebasePathsDeleted++;
+					verbose(`  Deleted orphaned path: ${firebasePath}`);
 				}
+			}
+		}
+
+		// If no valid branches remain, delete the entire pub-* entry
+		if (!hasValidBranch) {
+			log(`  Deleting entire orphaned pub path: ${pubKey}`);
+			if (!isDryRun) {
+				await getDatabaseRef(pubKey).remove();
+				// Count metadata deletion if it existed
+				if (childKeys.includes('metadata')) {
+					stats.metadataDeleted++;
+				}
+				verbose(`  Deleted orphaned pub: ${pubKey}`);
 			}
 		}
 	}
@@ -542,8 +548,9 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 };
 
 /**
- * Clean up orphaned branches for a specific pub (legacy format only)
+ * Clean up orphaned branches and legacy metadata for a specific pub (legacy format only)
  * If the draft uses pub-{pubId}/branch-{branchId} format, delete any other branches
+ * and the legacy metadata field at pub-{pubId}/metadata
  */
 const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string): Promise<void> => {
 	// Check if this is a legacy format path
@@ -568,6 +575,17 @@ const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string):
 				stats.orphanedFirebasePathsDeleted++;
 				verbose(`  Deleted orphaned branch: ${orphanedPath}`);
 			}
+		}
+	}
+
+	// Delete legacy metadata field at pub-{pubId}/metadata (no longer used in v6)
+	const pubRef = getDatabaseRef(pubKey);
+	const metadataSnapshot = await pubRef.child('metadata').once('value');
+	if (metadataSnapshot.exists()) {
+		verbose(`  Removing legacy metadata field at ${pubKey}/metadata`);
+		if (!isDryRun) {
+			await pubRef.child('metadata').remove();
+			stats.metadataDeleted++;
 		}
 	}
 };
@@ -692,6 +710,7 @@ const processAllDrafts = async (): Promise<void> => {
 				verbose(`Processing pub ${pub.slug || pub.id}`);
 				// biome-ignore lint/performance/noAwaitInLoops: intentionally sequential
 				await pruneDraft(pub.draft.firebasePath, pub.id);
+				await cleanupOrphanedBranchesForPub(pub.id, pub.draft.firebasePath);
 				stats.draftsProcessed++;
 			} catch (err) {
 				log(`  Error processing pub ${pub.id}: ${(err as Error).message}`);
