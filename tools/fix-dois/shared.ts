@@ -113,7 +113,11 @@ export async function checkDoiResolves(doi: string): Promise<boolean> {
 // polls doi.org until the doi resolves or we hit the timeout
 export async function waitForDoiResolution(
 	doi: string,
-	{ timeoutMs = 60_000, intervalMs = 5_000, logger }: {
+	{
+		timeoutMs = 60_000,
+		intervalMs = 5_000,
+		logger,
+	}: {
 		timeoutMs?: number;
 		intervalMs?: number;
 		logger?: ReturnType<typeof createLogger>;
@@ -126,7 +130,9 @@ export async function waitForDoiResolution(
 		if (resolves) {
 			return true;
 		}
-		logger?.log(`  waiting for ${doi} to resolve (${Math.round((Date.now() - start) / 1000)}s elapsed)...`);
+		logger?.log(
+			`  waiting for ${doi} to resolve (${Math.round((Date.now() - start) / 1000)}s elapsed)...`,
+		);
 		await sleep(intervalMs);
 	}
 	return false;
@@ -176,7 +182,14 @@ export async function checkDoisInCrossref<T>(
 	getDoi: (item: T) => string | null,
 	onBatchDone?: (checked: number, total: number) => void,
 ): Promise<Map<T, CheckResult>> {
-	return batchCheck(items, getDoi, singleCrossrefCheck, CROSSREF_CONCURRENCY, CROSSREF_BATCH_DELAY_MS, onBatchDone);
+	return batchCheck(
+		items,
+		getDoi,
+		singleCrossrefCheck,
+		CROSSREF_CONCURRENCY,
+		CROSSREF_BATCH_DELAY_MS,
+		onBatchDone,
+	);
 }
 
 export async function checkDoisResolve<T>(
@@ -184,5 +197,12 @@ export async function checkDoisResolve<T>(
 	getDoi: (item: T) => string | null,
 	onBatchDone?: (checked: number, total: number) => void,
 ): Promise<Map<T, CheckResult>> {
-	return batchCheck(items, getDoi, singleDoiResolveCheck, DOI_CONCURRENCY, DOI_BATCH_DELAY_MS, onBatchDone);
+	return batchCheck(
+		items,
+		getDoi,
+		singleDoiResolveCheck,
+		DOI_CONCURRENCY,
+		DOI_BATCH_DELAY_MS,
+		onBatchDone,
+	);
 }

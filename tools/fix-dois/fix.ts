@@ -243,23 +243,20 @@ async function depositPub(
 	}
 }
 
-async function destroyEdgesInTransaction(
-	edgeIds: string[],
-	txn: any,
-): Promise<void> {
+async function destroyEdgesInTransaction(edgeIds: string[], txn: any): Promise<void> {
 	for (const edgeId of edgeIds) {
 		// biome-ignore lint/performance/noAwaitInLoops: sequential to avoid race conditions
 		await PubEdge.destroy({ where: { id: edgeId }, individualHooks: true, transaction: txn });
 	}
 }
 
-async function recreateEdgesInTransaction(
-	savedEdges: SavedEdge[],
-	txn: any,
-): Promise<void> {
+async function recreateEdgesInTransaction(savedEdges: SavedEdge[], txn: any): Promise<void> {
 	for (const edge of savedEdges) {
 		// biome-ignore lint/performance/noAwaitInLoops: sequential to maintain edge ordering
-		const otherEdges = await PubEdge.findAll({ where: { pubId: edge.pubId }, transaction: txn });
+		const otherEdges = await PubEdge.findAll({
+			where: { pubId: edge.pubId },
+			transaction: txn,
+		});
 		const rank = findRankInRankedList(otherEdges, otherEdges.length);
 		await PubEdge.create(
 			{
@@ -368,17 +365,21 @@ async function processCluster(cluster: Cluster): Promise<ResultEntry[]> {
 				child.reviewType,
 				`child "${child.title}" (${child.doi})`,
 			);
-			results.push(makeResult(child, 'child', childOk, childOk ? undefined : 'deposit failed'));
+			results.push(
+				makeResult(child, 'child', childOk, childOk ? undefined : 'deposit failed'),
+			);
 			if (!childOk) {
-				warn(`  failed to deposit child "${child.title}", continuing with remaining children`);
+				warn(
+					`  failed to deposit child "${child.title}", continuing with remaining children`,
+				);
 			}
 		}
 
 		// wait for all successfully deposited children's dois to resolve before
 		// reconnecting and depositing the parent
-		const depositedChildren = children.filter((c) => c.doi && results.find(
-			(r) => r.id === c.id && r.success,
-		));
+		const depositedChildren = children.filter(
+			(c) => c.doi && results.find((r) => r.id === c.id && r.success),
+		);
 		if (depositedChildren.length > 0) {
 			log(`  waiting for ${depositedChildren.length} child DOIs to resolve...`);
 			for (const child of depositedChildren) {
@@ -389,7 +390,9 @@ async function processCluster(cluster: Cluster): Promise<ResultEntry[]> {
 					logger,
 				});
 				if (!resolved) {
-					warn(`  child DOI ${child.doi} did not resolve within timeout, proceeding anyway`);
+					warn(
+						`  child DOI ${child.doi} did not resolve within timeout, proceeding anyway`,
+					);
 				}
 			}
 		}
