@@ -145,9 +145,7 @@ const stats: CleanupStats = {
 /**
  * Get all checkpoint keys for a draft
  */
-const getCheckpointKeys = async (
-	draftRef: firebase.database.Reference,
-): Promise<number[]> => {
+const getCheckpointKeys = async (draftRef: firebase.database.Reference): Promise<number[]> => {
 	const checkpointMapSnapshot = await draftRef.child('checkpointMap').once('value');
 	const checkpointMap = checkpointMapSnapshot.val();
 
@@ -697,7 +695,7 @@ const printSummary = () => {
 	log(`Errors encountered: ${stats.errorsEncountered}`);
 };
 
-const postSummaryToSlack = async () => {
+const _postSummaryToSlack = async () => {
 	if (isDryRun) return;
 
 	const text = [
