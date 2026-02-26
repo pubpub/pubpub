@@ -273,7 +273,9 @@ async function handleDoiResolutionFailure(doi: string, childTitle: string): Prom
 		return 'continue';
 	}
 	warn(`  child DOI ${doi} ("${childTitle}") did not resolve within timeout.`);
-	log(`  you can fix the issue externally and then retry, skip this cluster, or continue anyway.`);
+	log(
+		`  you can fix the issue externally and then retry, skip this cluster, or continue anyway.`,
+	);
 	return promptChoice('  action?', ['retry', 'skip', 'continue']);
 }
 
@@ -399,9 +401,7 @@ async function processCluster(cluster: Cluster): Promise<ResultEntry[]> {
 						continue;
 					}
 					if (action === 'skip') {
-						throw new Error(
-							`skipped by user: child DOI ${child.doi} did not resolve`,
-						);
+						throw new Error(`skipped by user: child DOI ${child.doi} did not resolve`);
 					}
 					// 'continue' -- just move on
 					warn(
@@ -468,7 +468,9 @@ async function main() {
 	const pubIds = applyRange(failures.map((f) => f.id));
 
 	log(`loaded ${failures.length} entries from ${inputPath}`);
-	log(`processing ${pubIds.length} pubs (indices ${rangeOffset}-${rangeOffset + pubIds.length - 1})`);
+	log(
+		`processing ${pubIds.length} pubs (indices ${rangeOffset}-${rangeOffset + pubIds.length - 1})`,
+	);
 	if (dryRun) {
 		log('DRY-RUN mode -- no changes will be made');
 	}
@@ -552,7 +554,9 @@ async function main() {
 	const succeeded = results.filter((r) => r.success).length;
 	const failed = results.filter((r) => !r.success).length;
 	log(`\ndone. ${succeeded} succeeded, ${failed} failed.`);
-	log(`last completed index: ${lastCompletedIndex} (resume with --range ${lastCompletedIndex + 1}-${rangeOffset + pubIds.length})`);
+	log(
+		`last completed index: ${lastCompletedIndex} (resume with --range ${lastCompletedIndex + 1}-${rangeOffset + pubIds.length})`,
+	);
 
 	const outputPath = writeResults('results', results);
 	log(`results written to ${outputPath}`);
@@ -570,7 +574,9 @@ main().catch((e) => {
 	console.error(e);
 	const range = getRange();
 	const rangeOffset = range ? range[0] : 0;
-	logErr(`script crashed. you were at range offset ${rangeOffset}. check results output for progress.`);
+	logErr(
+		`script crashed. you were at range offset ${rangeOffset}. check results output for progress.`,
+	);
 	rl?.close();
 	process.exit(1);
 });
