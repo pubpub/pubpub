@@ -819,9 +819,6 @@ const processDraftById = async (draftId: string): Promise<void> => {
  * Process all drafts in batches
  */
 const processAllDrafts = async (): Promise<void> => {
-	let offset = 0;
-	let hasMore = true;
-
 	// First, handle orphaned drafts in Postgres
 	log('Looking for orphaned drafts in Postgres...');
 	const orphanedDrafts = await findOrphanedDrafts();
@@ -850,54 +847,108 @@ const processAllDrafts = async (): Promise<void> => {
 	// Then, prune old data from active drafts
 	log('Pruning old data from active drafts...');
 
-	// Get all pubs with their drafts for efficient processing
-	while (hasMore) {
-		// biome-ignore lint/performance/noAwaitInLoops: batched processing requires sequential fetches
-		const pubs = await Pub.findAll({
-			attributes: ['id', 'slug'],
-			include: [{ model: Draft, as: 'draft', attributes: ['id', 'firebasePath'] }],
-			limit: batchSize,
-			offset,
-			order: [['id', 'ASC']],
-		});
+	// Get total count for progress
+	const totalPubs = await Pub.count();
+	log(`Found ${totalPubs} total pubs to process`);
 
-		if (pubs.length === 0) {
-			hasMore = false;
-			break;
+	// Use a streaming worker pool approach: workers pull work as they finish
+	// rather than waiting for entire batches to complete
+	const WORKER_COUNT = 50;
+	let nextOffset = 0;
+	let allFetched = false;
+	const pubQueue: Pub[] = [];
+	const releaseKeyCache = new Map<string, number>();
+	let activeFetches = 0;
+	const PREFETCH_THRESHOLD = WORKER_COUNT * 2; // Keep queue filled
+
+	// Function to prefetch more pubs if queue is running low
+	const prefetchPubs = async () => {
+		if (allFetched || activeFetches > 0 || pubQueue.length > PREFETCH_THRESHOLD) {
+			return;
 		}
+		activeFetches++;
+		try {
+			const pubs = await Pub.findAll({
+				attributes: ['id', 'slug'],
+				include: [{ model: Draft, as: 'draft', attributes: ['id', 'firebasePath'] }],
+				limit: batchSize,
+				offset: nextOffset,
+				order: [['id', 'ASC']],
+			});
 
-		log(`Processing batch of ${pubs.length} pubs (offset: ${offset})`);
-
-		// Batch fetch release keys for all pubs in this batch
-		const pubIds = pubs.filter((p) => p.draft).map((p) => p.id);
-		const releaseKeyMap = await batchGetLatestReleaseKeys(pubIds);
-
-		// Process pubs in parallel with limited concurrency
-		const pubsWithDrafts = pubs.filter((pub) => pub.draft);
-		await runWithConcurrency(
-			pubsWithDrafts.map((pub) => async () => {
-				try {
-					const pubLabel = pub.slug || pub.id.slice(0, 8);
-					verbose(`[${pubLabel}] Processing...`);
-					const releaseKey = releaseKeyMap.get(pub.id) ?? null;
-					await pruneDraft(pub.draft!.firebasePath, pub.id, releaseKey, pubLabel);
-					await cleanupOrphanedBranchesForPub(pub.id, pub.draft!.firebasePath);
-					stats.draftsProcessed++;
-				} catch (err) {
-					log(`  Error processing pub ${pub.id}: ${(err as Error).message}`);
-					stats.errorsEncountered++;
+			if (pubs.length === 0) {
+				allFetched = true;
+			} else {
+				// Prefetch release keys for this batch
+				const pubIds = pubs.filter((p) => p.draft).map((p) => p.id);
+				const releaseKeys = await batchGetLatestReleaseKeys(pubIds);
+				for (const [pubId, key] of releaseKeys) {
+					releaseKeyCache.set(pubId, key);
 				}
-			}),
-			50, // Process 50 pubs in parallel
-		);
 
-		log(
-			`  Processed ${stats.draftsProcessed} drafts so far (${stats.changesDeleted} changes deleted)`,
-		);
+				for (const pub of pubs) {
+					if (pub.draft) {
+						pubQueue.push(pub);
+					}
+				}
+				nextOffset += pubs.length;
 
-		offset += batchSize;
-		hasMore = pubs.length === batchSize;
-	}
+				if (pubs.length < batchSize) {
+					allFetched = true;
+				}
+			}
+		} finally {
+			activeFetches--;
+		}
+	};
+
+	// Initial prefetch
+	await prefetchPubs();
+
+	// Worker function that continuously processes pubs
+	const worker = async (workerId: number) => {
+		while (true) {
+			// Get next pub from queue
+			const pub = pubQueue.shift();
+			if (!pub) {
+				if (allFetched) {
+					return; // No more work
+				}
+				// Wait for more pubs to be fetched
+				// biome-ignore lint/performance/noAwaitInLoops: intentional sleep while queue is empty
+				await new Promise((r) => setTimeout(r, 50));
+				continue;
+			}
+
+			// Trigger prefetch if queue is getting low
+			if (pubQueue.length < PREFETCH_THRESHOLD && !allFetched) {
+				prefetchPubs(); // Fire and forget
+			}
+
+			try {
+				const pubLabel = pub.slug || pub.id.slice(0, 8);
+				verbose(`[W${workerId}:${pubLabel}] Processing...`);
+				const releaseKey = releaseKeyCache.get(pub.id) ?? null;
+				await pruneDraft(pub.draft!.firebasePath, pub.id, releaseKey, pubLabel);
+				await cleanupOrphanedBranchesForPub(pub.id, pub.draft!.firebasePath);
+				stats.draftsProcessed++;
+
+				// Log progress every 100 processed
+				if (stats.draftsProcessed % 100 === 0) {
+					log(`  Processed ${stats.draftsProcessed}/${totalPubs} drafts (${stats.changesDeleted} changes deleted)`);
+				}
+			} catch (err) {
+				log(`  Error processing pub ${pub.id}: ${(err as Error).message}`);
+				stats.errorsEncountered++;
+			}
+		}
+	};
+
+	// Start workers
+	const workers = Array.from({ length: WORKER_COUNT }, (_, i) => worker(i));
+	await Promise.all(workers);
+
+	log(`  Processed ${stats.draftsProcessed} drafts total (${stats.changesDeleted} changes deleted)`);
 };
 
 const printSummary = () => {
