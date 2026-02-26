@@ -935,7 +935,9 @@ const processAllDrafts = async (): Promise<void> => {
 
 				// Log progress every 100 processed
 				if (stats.draftsProcessed % 100 === 0) {
-					log(`  Processed ${stats.draftsProcessed}/${totalPubs} drafts (${stats.changesDeleted} changes deleted)`);
+					log(
+						`  Processed ${stats.draftsProcessed}/${totalPubs} drafts (${stats.changesDeleted} changes deleted)`,
+					);
 				}
 			} catch (err) {
 				log(`  Error processing pub ${pub.id}: ${(err as Error).message}`);
@@ -948,7 +950,9 @@ const processAllDrafts = async (): Promise<void> => {
 	const workers = Array.from({ length: WORKER_COUNT }, (_, i) => worker(i));
 	await Promise.all(workers);
 
-	log(`  Processed ${stats.draftsProcessed} drafts total (${stats.changesDeleted} changes deleted)`);
+	log(
+		`  Processed ${stats.draftsProcessed} drafts total (${stats.changesDeleted} changes deleted)`,
+	);
 };
 
 const printSummary = () => {
