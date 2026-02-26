@@ -396,7 +396,9 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 				);
 			} catch (err) {
 				const error = err as Error & { code?: string };
-				log(`  Error during checkpoint creation: ${error.code || 'unknown'} - ${error.message}`);
+				log(
+					`  Error during checkpoint creation: ${error.code || 'unknown'} - ${error.message}`,
+				);
 				if (error.code === 'WRITE_TOO_BIG') {
 					// Doc is too large to write as a single checkpoint.
 					// We can't safely prune without a checkpoint at the threshold,
