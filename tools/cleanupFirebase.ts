@@ -25,7 +25,6 @@ import type { DiscussionInfo } from 'components/Editor/plugins/discussions/types
 import firebaseAdmin from 'firebase-admin';
 import { compressSelectionJSON, uncompressSelectionJSON } from 'prosemirror-compress-pubpub';
 import { QueryTypes } from 'sequelize';
-import yargs from 'yargs';
 
 import { editorSchema, getFirebaseDoc } from 'components/Editor';
 import { createFastForwarder } from 'components/Editor/plugins/discussions/fastForward';
@@ -35,39 +34,12 @@ import { getDatabaseRef } from 'server/utils/firebaseAdmin';
 import { postToSlack } from 'server/utils/slack';
 import { getFirebaseConfig } from 'utils/editor/firebaseConfig';
 
-const argv = yargs
-	.option('execute', {
-		type: 'boolean',
-		default: false,
-		description: 'Actually delete data (default is dry-run)',
-	})
-	.option('pubId', {
-		type: 'string',
-		description: 'Process a single pub by ID',
-	})
-	.option('draftId', {
-		type: 'string',
-		description: 'Process a single draft by ID',
-	})
-	.option('batchSize', {
-		type: 'number',
-		default: 100,
-		description: 'Number of drafts to process in each batch',
-	})
-	.option('verbose', {
-		type: 'boolean',
-		default: false,
-		description: 'Show detailed logging',
-	})
-	.option('scanFirebase', {
-		type: 'boolean',
-		default: true,
-		description: 'Scan Firebase for orphaned top-level paths',
-	})
-	.parseSync();
+const {
+	argv: { execute, pubId, draftId, batchSize = 100, verbose: verboseFlag, scanFirebase = true },
+} = require('yargs');
 
-const isDryRun = !argv.execute;
-const isVerbose = argv.verbose;
+const isDryRun = !execute;
+const isVerbose = verboseFlag;
 
 // biome-ignore lint/suspicious/noConsole: CLI tool output
 const log = (msg: string) => console.log(`[cleanup] ${new Date().toISOString()} ${msg}`);
@@ -551,7 +523,6 @@ const processDraftById = async (draftId: string): Promise<void> => {
  * Process all drafts in batches
  */
 const processAllDrafts = async (): Promise<void> => {
-	const { batchSize } = argv;
 	let offset = 0;
 	let hasMore = true;
 
@@ -576,7 +547,7 @@ const processAllDrafts = async (): Promise<void> => {
 	}
 
 	// Scan Firebase for orphaned paths
-	if (argv.scanFirebase) {
+	if (scanFirebase) {
 		await cleanupOrphanedFirebasePaths();
 	}
 
@@ -677,10 +648,10 @@ const main = async () => {
 	log(`Mode: ${isDryRun ? 'DRY RUN' : 'EXECUTE'}`);
 
 	try {
-		if (argv.pubId) {
-			await processPubDraft(argv.pubId);
-		} else if (argv.draftId) {
-			await processDraftById(argv.draftId);
+		if (pubId) {
+			await processPubDraft(pubId);
+		} else if (draftId) {
+			await processDraftById(draftId);
 		} else {
 			await processAllDrafts();
 		}
