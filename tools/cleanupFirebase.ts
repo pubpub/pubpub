@@ -86,7 +86,9 @@ const getAccessToken = async (): Promise<string> => {
 	}
 
 	const credential = firebaseAdmin.credential.cert(
-		JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 as string, 'base64').toString())
+		JSON.parse(
+			Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 as string, 'base64').toString(),
+		),
 	);
 	const tokenResult = await credential.getAccessToken();
 	cachedAccessToken = {
