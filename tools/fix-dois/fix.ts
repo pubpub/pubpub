@@ -1,13 +1,20 @@
 import fs from 'fs';
-import path from 'path';
 
 import { findPub, setDoiData } from 'server/doi/queries';
-import { CrossrefDepositRecord, PubEdge } from 'server/models';
-import { createPubEdge, destroyPubEdge } from 'server/pubEdge/queries';
+import { CrossrefDepositRecord, PubEdge, sequelize } from 'server/models';
 import { getDepositRecordReviewType } from 'utils/crossref/parseDeposit';
 import { findParentEdgeByRelationTypes, RelationType } from 'utils/pubEdge/relations';
+import { findRankInRankedList } from 'utils/rank';
 
-import { applyRange, checkDoiInCrossref, createLogger, getInputPath, writeResults } from './shared';
+import {
+	applyRange,
+	checkDoiInCrossref,
+	createLogger,
+	getInputPath,
+	sleep,
+	waitForDoiResolution,
+	writeResults,
+} from './shared';
 
 type FailureEntry = {
 	working: boolean;
@@ -55,7 +62,8 @@ type ResultEntry = {
 };
 
 const dryRun = process.argv.includes('--dry-run');
-const { log, warn, error: logErr } = createLogger('fix-dois');
+const logger = createLogger('fix-dois');
+const { log, warn, error: logErr } = logger;
 
 const extractReviewType = async (pub: any): Promise<string | null> => {
 	if (!pub.crossrefDepositRecordId) {
@@ -235,6 +243,39 @@ async function depositPub(
 	}
 }
 
+async function destroyEdgesInTransaction(
+	edgeIds: string[],
+	txn: any,
+): Promise<void> {
+	for (const edgeId of edgeIds) {
+		// biome-ignore lint/performance/noAwaitInLoops: sequential to avoid race conditions
+		await PubEdge.destroy({ where: { id: edgeId }, individualHooks: true, transaction: txn });
+	}
+}
+
+async function recreateEdgesInTransaction(
+	savedEdges: SavedEdge[],
+	txn: any,
+): Promise<void> {
+	for (const edge of savedEdges) {
+		// biome-ignore lint/performance/noAwaitInLoops: sequential to maintain edge ordering
+		const otherEdges = await PubEdge.findAll({ where: { pubId: edge.pubId }, transaction: txn });
+		const rank = findRankInRankedList(otherEdges, otherEdges.length);
+		await PubEdge.create(
+			{
+				pubId: edge.pubId,
+				rank,
+				relationType: edge.relationType as any,
+				pubIsParent: edge.pubIsParent,
+				targetPubId: edge.targetPubId,
+				approvedByTarget: edge.approvedByTarget,
+				externalPublicationId: null,
+			},
+			{ transaction: txn },
+		);
+	}
+}
+
 async function processCluster(cluster: Cluster): Promise<ResultEntry[]> {
 	const { parent, children, edges } = cluster;
 	const results: ResultEntry[] = [];
@@ -284,7 +325,7 @@ async function processCluster(cluster: Cluster): Promise<ResultEntry[]> {
 		warn(`  parent "${parent.title}" has no review target DOI, proceeding anyway`);
 	}
 
-	// disconnect children
+	// find all supplement edges between parent and children
 	const edgeQueries = children.flatMap((child) => [
 		PubEdge.findAll({
 			where: { pubId: child.id, targetPubId: parent.id, relationType: 'supplement' },
@@ -297,49 +338,75 @@ async function processCluster(cluster: Cluster): Promise<ResultEntry[]> {
 	const edgeIdsToDestroy = edgeResults.flat().map((e) => e.id);
 
 	log(`  disconnecting ${edgeIdsToDestroy.length} supplement edges`);
-	if (!dryRun) {
-		for (const edgeId of edgeIdsToDestroy) {
-			// biome-ignore lint/performance/noAwaitInLoops: sequential to avoid race conditions
-			await destroyPubEdge(edgeId);
-		}
-	} else {
+
+	// the entire disconnect -> deposit -> reconnect flow is wrapped so that
+	// if anything fails after edges are destroyed, we always put them back.
+	// we can't use a single db transaction for this because setDoiData uses
+	// its own connections and needs to see the committed edge state.
+	if (dryRun) {
 		log(`  [dry-run] would destroy edges: ${edgeIdsToDestroy.join(', ')}`);
-	}
 
-	// deposit each child individually (standalone, no supplement edge)
-	for (const child of children) {
-		// biome-ignore lint/performance/noAwaitInLoops: sequential deposits to respect crossref rate limits
-		const childOk = await depositPub(
-			child.id,
-			child.communityId,
-			child.reviewType,
-			`child "${child.title}" (${child.doi})`,
-		);
-		results.push(makeResult(child, 'child', childOk, childOk ? undefined : 'deposit failed'));
-		if (!childOk) {
-			warn(`  failed to deposit child "${child.title}", continuing with remaining children`);
+		for (const child of children) {
+			results.push(makeResult(child, 'child', true));
 		}
-	}
-
-	// reconnect children
-	log(`  reconnecting ${edges.length} supplement edges`);
-	if (!dryRun) {
-		for (const savedEdge of edges) {
-			// biome-ignore lint/performance/noAwaitInLoops: sequential to maintain edge ordering
-			await createPubEdge({
-				pubId: savedEdge.pubId,
-				targetPubId: savedEdge.targetPubId,
-				relationType: savedEdge.relationType as any,
-				pubIsParent: savedEdge.pubIsParent,
-				approvedByTarget: savedEdge.approvedByTarget,
-				moveToTop: false,
-			});
-		}
-	} else {
 		log(`  [dry-run] would recreate edges`);
+		results.push(makeResult(parent, 'parent', true));
+		return results;
 	}
 
-	// deposit parent (now with supplement relationships in place)
+	await sequelize.transaction(async (txn) => {
+		await destroyEdgesInTransaction(edgeIdsToDestroy, txn);
+	});
+
+	try {
+		// deposit each child individually (standalone, no supplement edge)
+		for (const child of children) {
+			// biome-ignore lint/performance/noAwaitInLoops: sequential deposits to respect crossref rate limits
+			const childOk = await depositPub(
+				child.id,
+				child.communityId,
+				child.reviewType,
+				`child "${child.title}" (${child.doi})`,
+			);
+			results.push(makeResult(child, 'child', childOk, childOk ? undefined : 'deposit failed'));
+			if (!childOk) {
+				warn(`  failed to deposit child "${child.title}", continuing with remaining children`);
+			}
+		}
+
+		// wait for all successfully deposited children's dois to resolve before
+		// reconnecting and depositing the parent
+		const depositedChildren = children.filter((c) => c.doi && results.find(
+			(r) => r.id === c.id && r.success,
+		));
+		if (depositedChildren.length > 0) {
+			log(`  waiting for ${depositedChildren.length} child DOIs to resolve...`);
+			for (const child of depositedChildren) {
+				// biome-ignore lint/performance/noAwaitInLoops: sequential polling per doi
+				const resolved = await waitForDoiResolution(child.doi!, {
+					timeoutMs: 120_000,
+					intervalMs: 5_000,
+					logger,
+				});
+				if (!resolved) {
+					warn(`  child DOI ${child.doi} did not resolve within timeout, proceeding anyway`);
+				}
+			}
+		}
+	} finally {
+		// always reconnect edges, whether deposits succeeded or failed
+		log(`  reconnecting ${edges.length} supplement edges`);
+		try {
+			await sequelize.transaction(async (txn) => {
+				await recreateEdgesInTransaction(edges, txn);
+			});
+		} catch (reconnectErr: any) {
+			logErr(`  CRITICAL: failed to reconnect edges: ${reconnectErr.message}`);
+			logErr(`  edges that need manual restoration: ${JSON.stringify(edges)}`);
+		}
+	}
+
+	// deposit parent (now with supplement relationships in place again)
 	const parentOk = await depositPub(
 		parent.id,
 		parent.communityId,
