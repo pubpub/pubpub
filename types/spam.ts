@@ -53,3 +53,35 @@ export type SpamUserQuery = {
 	ordering: SpamUserQueryOrdering;
 	includeAffiliation?: boolean;
 };
+
+export type HoneypotTrigger =
+	| 'create-community'
+	| 'create-pub'
+	| 'create-user'
+	| 'edit-user'
+	| 'create-discussion'
+	| 'create-thread-comment';
+
+export type HoneypotContext = {
+	communityId?: string;
+	communitySubdomain?: string;
+	pubId?: string;
+	pubSlug?: string;
+	content?: string;
+};
+
+export type UserSpamTagFields = {
+	suspiciousFiles?: string[];
+	suspiciousComments?: string[];
+	honeypotTriggers?: {
+		honeypot: HoneypotTrigger;
+		value: string;
+		context?: HoneypotContext;
+		triggeredAt?: string;
+	}[];
+	manuallyMarkedBy?: {
+		userId: string;
+		userName: string;
+		at: string;
+	}[];
+};

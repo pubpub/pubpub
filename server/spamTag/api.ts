@@ -1,22 +1,19 @@
 import { Router } from 'express';
 
-import { SpamTag, User } from 'server/models';
-import { sendSpamBanEmail, sendSpamLiftedEmail } from 'server/utils/email';
 import { ForbiddenError } from 'server/utils/errors';
-import { deleteSessionsForUser } from 'server/utils/session';
 import { wrap } from 'server/wrap';
 import { expect } from 'utils/assert';
 
-import { queryCommunitiesForSpamManagement } from './communities';
+import { queryCommunitiesForSpamManagement } from './communityDashboard';
+import { updateSpamTagForCommunity } from './communityQueries';
 import { canManipulateSpamTags } from './permissions';
-import { updateSpamTagForCommunity } from './queries';
+import { queryUsersForSpamManagement } from './userDashboard';
 import {
 	addSpamTagToUser,
 	getSpamTagForUser,
 	removeSpamTagFromUser,
 	updateSpamTagForUser,
 } from './userQueries';
-import { queryUsersForSpamManagement } from './users';
 
 export const router = Router();
 
@@ -41,39 +38,24 @@ router.put(
 		if (!canUpdate) {
 			throw new ForbiddenError();
 		}
+		const actorId = req.user?.id;
+		const actorName = (req.user as any)?.fullName ?? 'Unknown';
 		const existingTag = await getSpamTagForUser(userId);
 		if (!existingTag) {
 			await addSpamTagToUser(userId);
 		}
-		await updateSpamTagForUser({ userId, status });
-		const user = await User.findOne({
-			where: { id: userId },
-			attributes: ['email', 'fullName'],
-		});
-
-		if (user?.email) {
-			try {
-				if (status === 'confirmed-spam') {
-					try {
-						await deleteSessionsForUser(user?.email ?? '');
-					} catch (err) {
-						console.error('Failed to delete sessions for banned user', userId, err);
-					}
-
-					await sendSpamBanEmail({
-						toEmail: user.email,
-						userName: user.fullName ?? '',
-					});
-				} else if (status === 'confirmed-not-spam') {
-					await sendSpamLiftedEmail({
-						toEmail: user.email,
-						userName: user.fullName ?? '',
-					});
-				}
-			} catch (err) {
-				console.error('Failed to send spam status email', err);
-			}
+		if (status === 'confirmed-spam' && actorId) {
+			await addSpamTagToUser(userId, {
+				manuallyMarkedBy: [
+					{
+						userId: actorId,
+						userName: actorName,
+						at: new Date().toISOString(),
+					},
+				],
+			});
 		}
+		await updateSpamTagForUser({ userId, status, actorId, actorName });
 		return res.status(200).send({});
 	}),
 );
