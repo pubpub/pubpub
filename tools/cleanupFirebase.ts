@@ -28,6 +28,7 @@ import { QueryTypes } from 'sequelize';
 
 import { editorSchema, getFirebaseDoc } from 'components/Editor';
 import { createFastForwarder } from 'components/Editor/plugins/discussions/fastForward';
+import { storeCheckpoint } from 'components/Editor/utils';
 import { Draft, Pub, Release } from 'server/models';
 import { sequelize } from 'server/sequelize';
 import { getDatabaseRef } from 'server/utils/firebaseAdmin';
@@ -122,6 +123,7 @@ interface CleanupStats {
 	changesDeleted: number;
 	mergesDeleted: number;
 	checkpointsDeleted: number;
+	checkpointsCreated: number;
 	errorsEncountered: number;
 }
 
@@ -136,15 +138,16 @@ const stats: CleanupStats = {
 	changesDeleted: 0,
 	mergesDeleted: 0,
 	checkpointsDeleted: 0,
+	checkpointsCreated: 0,
 	errorsEncountered: 0,
 };
 
 /**
- * Get the highest checkpoint key for a draft
+ * Get all checkpoint keys for a draft
  */
-const getLatestCheckpointKey = async (
+const getCheckpointKeys = async (
 	draftRef: firebase.database.Reference,
-): Promise<number | null> => {
+): Promise<number[]> => {
 	const checkpointMapSnapshot = await draftRef.child('checkpointMap').once('value');
 	const checkpointMap = checkpointMapSnapshot.val();
 
@@ -153,15 +156,36 @@ const getLatestCheckpointKey = async (
 		const checkpointSnapshot = await draftRef.child('checkpoint').once('value');
 		const checkpoint = checkpointSnapshot.val();
 		if (checkpoint?.k) {
-			return parseInt(checkpoint.k, 10);
+			return [parseInt(checkpoint.k, 10)];
 		}
-		return null;
+		return [];
 	}
 
-	const keys = Object.keys(checkpointMap).map((k) => parseInt(k, 10));
-	if (keys.length === 0) return null;
+	return Object.keys(checkpointMap).map((k) => parseInt(k, 10));
+};
 
+/**
+ * Get the highest checkpoint key for a draft
+ */
+const getLatestCheckpointKey = async (
+	draftRef: firebase.database.Reference,
+): Promise<number | null> => {
+	const keys = await getCheckpointKeys(draftRef);
+	if (keys.length === 0) return null;
 	return Math.max(...keys);
+};
+
+/**
+ * Get the highest checkpoint key at or before a threshold
+ */
+const getCheckpointKeyAtOrBefore = async (
+	draftRef: firebase.database.Reference,
+	threshold: number,
+): Promise<number | null> => {
+	const keys = await getCheckpointKeys(draftRef);
+	const validKeys = keys.filter((k) => k <= threshold);
+	if (validKeys.length === 0) return null;
+	return Math.max(...validKeys);
 };
 
 /**
@@ -332,6 +356,21 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 
 	verbose(`  Safe prune threshold: ${pruneThreshold}`);
 
+	// Ensure there's a checkpoint at or before the prune threshold so we can reconstruct
+	// all retained history. If not, create one at the prune threshold.
+	const checkpointAtOrBefore = await getCheckpointKeyAtOrBefore(draftRef, pruneThreshold);
+	if (checkpointAtOrBefore === null) {
+		verbose(`  No checkpoint at or before ${pruneThreshold}, creating one...`);
+		if (!isDryRun) {
+			const { doc } = await getFirebaseDoc(draftRef, editorSchema, pruneThreshold);
+			await storeCheckpoint(draftRef, doc, pruneThreshold);
+			stats.checkpointsCreated++;
+			verbose(`  Created checkpoint at key ${pruneThreshold}`);
+		} else {
+			verbose(`  Would create checkpoint at key ${pruneThreshold}`);
+		}
+	}
+
 	// First, fast-forward any outdated discussions to the prune threshold
 	const discussionsUpdated = await fastForwardDiscussions(draftRef, pruneThreshold);
 	stats.discussionsUpdated += discussionsUpdated;
@@ -342,15 +381,15 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 	// Prune merges before the safe threshold (legacy data)
 	stats.mergesDeleted += await pruneKeysBefore(draftRef, 'merges', pruneThreshold);
 
-	// Prune older checkpoints (keep only the latest)
-	stats.checkpointsDeleted += await pruneKeysBefore(draftRef, 'checkpoints', latestCheckpointKey);
+	// Prune checkpoints before the prune threshold (keep threshold checkpoint and any after)
+	stats.checkpointsDeleted += await pruneKeysBefore(draftRef, 'checkpoints', pruneThreshold);
 
 	// Clean up checkpointMap entries for deleted checkpoints
 	const checkpointMapSnapshot = await draftRef.child('checkpointMap').once('value');
 	const checkpointMap = checkpointMapSnapshot.val();
 	if (checkpointMap) {
 		const oldMapKeys = Object.keys(checkpointMap).filter(
-			(k) => parseInt(k, 10) < latestCheckpointKey,
+			(k) => parseInt(k, 10) < pruneThreshold,
 		);
 		if (oldMapKeys.length > 0 && !isDryRun) {
 			const mapDeletions = oldMapKeys.map((key) =>
@@ -653,6 +692,7 @@ const printSummary = () => {
 	log(`Discussions fast-forwarded: ${stats.discussionsUpdated}`);
 	log(`Changes deleted: ${stats.changesDeleted}`);
 	log(`Merges deleted: ${stats.mergesDeleted}`);
+	log(`Checkpoints created: ${stats.checkpointsCreated}`);
 	log(`Checkpoints deleted: ${stats.checkpointsDeleted}`);
 	log(`Errors encountered: ${stats.errorsEncountered}`);
 };
@@ -668,6 +708,7 @@ const postSummaryToSlack = async () => {
 		`• Discussions fast-forwarded: ${stats.discussionsUpdated}`,
 		`• Changes pruned: ${stats.changesDeleted}`,
 		`• Merges pruned: ${stats.mergesDeleted}`,
+		`• Checkpoints created: ${stats.checkpointsCreated}`,
 		`• Checkpoints pruned: ${stats.checkpointsDeleted}`,
 		stats.errorsEncountered > 0 ? `• ⚠️ Errors: ${stats.errorsEncountered}` : '',
 	]
@@ -695,7 +736,7 @@ const main = async () => {
 		}
 
 		printSummary();
-		await postSummaryToSlack();
+		// await postSummaryToSlack();
 	} catch (err) {
 		log(`Fatal error: ${(err as Error).message}`);
 		console.error(err);
