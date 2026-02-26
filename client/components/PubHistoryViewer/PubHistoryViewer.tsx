@@ -356,11 +356,11 @@ const PubHistoryViewer = (props: Props) => {
 			{hasMeaningfulHistory && (
 				<>
 					<Slider
-						min={firstKey}
+						min={firstKey + 1}
 						max={latestKey + 1}
 						stepSize={1}
 						labelRenderer={renderSliderLabel}
-						labelStepSize={latestKey + 1 - firstKey}
+						labelStepSize={latestKey - firstKey}
 						value={sliderValue}
 						onChange={setSliderValue}
 						onRelease={(value) => onSetCurrentHistoryKey(value - 1)}

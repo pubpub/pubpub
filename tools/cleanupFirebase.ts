@@ -88,6 +88,29 @@ const getShallowKeys = async (path: string): Promise<string[]> => {
 	return Object.keys(data);
 };
 
+/**
+ * Run async tasks with limited concurrency (worker pool pattern)
+ */
+const runWithConcurrency = async <T>(
+	tasks: (() => Promise<T>)[],
+	concurrency: number,
+): Promise<T[]> => {
+	const results: T[] = [];
+	let index = 0;
+
+	const worker = async (): Promise<void> => {
+		while (index < tasks.length) {
+			const currentIndex = index++;
+			// biome-ignore lint/performance/noAwaitInLoops: worker pool pattern requires sequential processing
+			results[currentIndex] = await tasks[currentIndex]();
+		}
+	};
+
+	const workers = Array.from({ length: Math.min(concurrency, tasks.length) }, () => worker());
+	await Promise.all(workers);
+	return results;
+};
+
 interface CleanupStats {
 	draftsProcessed: number;
 	draftsSkipped: number;
@@ -100,7 +123,6 @@ interface CleanupStats {
 	mergesDeleted: number;
 	checkpointsDeleted: number;
 	errorsEncountered: number;
-	bytesFreedEstimate: number;
 }
 
 const stats: CleanupStats = {
@@ -115,7 +137,6 @@ const stats: CleanupStats = {
 	mergesDeleted: 0,
 	checkpointsDeleted: 0,
 	errorsEncountered: 0,
-	bytesFreedEstimate: 0,
 };
 
 /**
@@ -243,41 +264,40 @@ const fastForwardDiscussions = async (
 };
 
 /**
- * Count and optionally delete keys before a threshold in a Firebase child
+ * Count and optionally delete keys before a threshold in a Firebase child.
+ * Uses shallow key listing to avoid loading content into memory.
  */
 const pruneKeysBefore = async (
 	parentRef: firebase.database.Reference,
 	childName: string,
 	thresholdKey: number,
-): Promise<{ count: number; estimatedBytes: number }> => {
-	const childRef = parentRef.child(childName);
-	const snapshot = await childRef
-		.orderByKey()
-		.endAt(String(thresholdKey - 1))
-		.once('value');
-	const data = snapshot.val();
+): Promise<number> => {
+	// Get parent path and use shallow key listing
+	const parentPath = parentRef.toString().replace(/^https:\/\/[^/]+\//, '');
+	const childPath = parentPath ? `${parentPath}/${childName}` : childName;
 
-	if (!data) {
-		return { count: 0, estimatedBytes: 0 };
+	const allKeys = await getShallowKeys(childPath);
+	const keysToDelete = allKeys
+		.map((k) => parseInt(k, 10))
+		.filter((k) => !Number.isNaN(k) && k < thresholdKey)
+		.map((k) => String(k));
+
+	if (keysToDelete.length === 0) {
+		return 0;
 	}
 
-	const keys = Object.keys(data);
-	const estimatedBytes = JSON.stringify(data).length;
-
-	if (keys.length === 0) {
-		return { count: 0, estimatedBytes: 0 };
-	}
-
-	verbose(`  Found ${keys.length} ${childName} entries before key ${thresholdKey}`);
+	verbose(`  Found ${keysToDelete.length} ${childName} entries before key ${thresholdKey}`);
 
 	if (!isDryRun) {
-		// Delete each key individually to avoid transaction size limits
-		const deletions = keys.map((key) => childRef.child(key).remove());
-		await Promise.all(deletions);
-		verbose(`  Deleted ${keys.length} ${childName} entries`);
+		const childRef = parentRef.child(childName);
+		// Delete with limited concurrency to avoid overwhelming Firebase
+		const CONCURRENCY = 10;
+		const deleteTasks = keysToDelete.map((key) => () => childRef.child(key).remove());
+		await runWithConcurrency(deleteTasks, CONCURRENCY);
+		verbose(`  Deleted ${keysToDelete.length} ${childName} entries`);
 	}
 
-	return { count: keys.length, estimatedBytes };
+	return keysToDelete.length;
 };
 
 /**
@@ -317,19 +337,13 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 	stats.discussionsUpdated += discussionsUpdated;
 
 	// Prune changes before the safe threshold
-	const changesResult = await pruneKeysBefore(draftRef, 'changes', pruneThreshold);
-	stats.changesDeleted += changesResult.count;
-	stats.bytesFreedEstimate += changesResult.estimatedBytes;
+	stats.changesDeleted += await pruneKeysBefore(draftRef, 'changes', pruneThreshold);
 
 	// Prune merges before the safe threshold (legacy data)
-	const mergesResult = await pruneKeysBefore(draftRef, 'merges', pruneThreshold);
-	stats.mergesDeleted += mergesResult.count;
-	stats.bytesFreedEstimate += mergesResult.estimatedBytes;
+	stats.mergesDeleted += await pruneKeysBefore(draftRef, 'merges', pruneThreshold);
 
 	// Prune older checkpoints (keep only the latest)
-	const checkpointsResult = await pruneKeysBefore(draftRef, 'checkpoints', latestCheckpointKey);
-	stats.checkpointsDeleted += checkpointsResult.count;
-	stats.bytesFreedEstimate += checkpointsResult.estimatedBytes;
+	stats.checkpointsDeleted += await pruneKeysBefore(draftRef, 'checkpoints', latestCheckpointKey);
 
 	// Clean up checkpointMap entries for deleted checkpoints
 	const checkpointMapSnapshot = await draftRef.child('checkpointMap').once('value');
@@ -371,9 +385,10 @@ const deleteOrphanedDraft = async (draft: Draft): Promise<void> => {
 
 		// Then delete from Postgres
 		await draft.destroy();
+		stats.orphanedDraftsDeleted++;
 	}
 
-	stats.orphanedDraftsDeleted++;
+	
 };
 
 /**
@@ -596,13 +611,6 @@ const processAllDrafts = async (): Promise<void> => {
 	}
 };
 
-const formatBytes = (bytes: number): string => {
-	if (bytes < 1024) return `${bytes} B`;
-	if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
-	if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-	return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
-};
-
 const printSummary = () => {
 	log('=== Cleanup Summary ===');
 	log(`Mode: ${isDryRun ? 'DRY RUN (no data deleted)' : 'EXECUTE'}`);
@@ -617,7 +625,6 @@ const printSummary = () => {
 	log(`Merges deleted: ${stats.mergesDeleted}`);
 	log(`Checkpoints deleted: ${stats.checkpointsDeleted}`);
 	log(`Errors encountered: ${stats.errorsEncountered}`);
-	log(`Estimated data freed: ${formatBytes(stats.bytesFreedEstimate)}`);
 };
 
 const postSummaryToSlack = async () => {
@@ -630,7 +637,8 @@ const postSummaryToSlack = async () => {
 		`• Orphaned Firebase paths deleted: ${stats.orphanedFirebasePathsDeleted}`,
 		`• Discussions fast-forwarded: ${stats.discussionsUpdated}`,
 		`• Changes pruned: ${stats.changesDeleted}`,
-		`• Estimated space freed: ${formatBytes(stats.bytesFreedEstimate)}`,
+		`• Merges pruned: ${stats.mergesDeleted}`,
+		`• Checkpoints pruned: ${stats.checkpointsDeleted}`,
 		stats.errorsEncountered > 0 ? `• ⚠️ Errors: ${stats.errorsEncountered}` : '',
 	]
 		.filter(Boolean)
