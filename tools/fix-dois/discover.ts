@@ -3,8 +3,8 @@ import { Op } from 'sequelize';
 import { Community, Pub } from 'server/models';
 
 import {
-	type CrossrefCheckResult,
 	applyRange,
+	type CrossrefCheckResult,
 	checkDoisInCrossref,
 	createLogger,
 	getArgValue,

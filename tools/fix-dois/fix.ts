@@ -7,13 +7,7 @@ import { createPubEdge, destroyPubEdge } from 'server/pubEdge/queries';
 import { getDepositRecordReviewType } from 'utils/crossref/parseDeposit';
 import { findParentEdgeByRelationTypes, RelationType } from 'utils/pubEdge/relations';
 
-import {
-	applyRange,
-	checkDoiInCrossref,
-	createLogger,
-	getInputPath,
-	writeResults,
-} from './shared';
+import { applyRange, checkDoiInCrossref, createLogger, getInputPath, writeResults } from './shared';
 
 type FailureEntry = {
 	working: boolean;

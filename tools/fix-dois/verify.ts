@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 
 import {
-	type CrossrefCheckResult,
 	applyRange,
+	type CrossrefCheckResult,
 	checkDoisInCrossref,
 	createLogger,
 	getInputPath,
@@ -110,10 +110,7 @@ async function main() {
 		}
 	}
 
-	const outputPath = writeResults(
-		`verify-${path.basename(inputPath, '.json')}`,
-		results,
-	);
+	const outputPath = writeResults(`verify-${path.basename(inputPath, '.json')}`, results);
 	log(`\nfull results written to ${outputPath}`);
 
 	if (notFound > 0) {
