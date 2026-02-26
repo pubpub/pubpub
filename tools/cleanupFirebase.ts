@@ -479,10 +479,7 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
  * Clean up orphaned branches for a specific pub (legacy format only)
  * If the draft uses pub-{pubId}/branch-{branchId} format, delete any other branches
  */
-const cleanupOrphanedBranchesForPub = async (
-	pubId: string,
-	activePath: string,
-): Promise<void> => {
+const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string): Promise<void> => {
 	// Check if this is a legacy format path
 	const legacyMatch = activePath.match(/^(pub-[^/]+)\/(branch-[^/]+)$/);
 	if (!legacyMatch) {
