@@ -402,23 +402,26 @@ const pruneKeysBefore = async (
  * @param firebasePath - Firebase path to the draft
  * @param pubId - Optional pub ID for release key lookup
  * @param preloadedReleaseKey - Pre-fetched release key (for batch processing efficiency)
+ * @param label - Label for verbose logging (helps track logs during concurrent processing)
  */
 const pruneDraft = async (
 	firebasePath: string,
 	pubId: string | null = null,
 	preloadedReleaseKey: number | null = null,
+	label: string = '',
 ): Promise<void> => {
+	const prefix = label ? `[${label}] ` : '  ';
 	const draftRef = getDatabaseRef(firebasePath);
 
 	const latestCheckpointKey = await getLatestCheckpointKey(draftRef);
 
 	if (latestCheckpointKey === null) {
-		verbose(`  No checkpoint found for ${firebasePath}, skipping pruning`);
+		verbose(`${prefix}No checkpoint found, skipping pruning`);
 		stats.draftsSkipped++;
 		return;
 	}
 
-	verbose(`  Latest checkpoint key: ${latestCheckpointKey}`);
+	verbose(`${prefix}Latest checkpoint key: ${latestCheckpointKey}`);
 
 	// Determine safe prune threshold: min(latestCheckpointKey, latestReleaseHistoryKey)
 	// - We need changes from latestCheckpointKey onwards to reconstruct the doc
@@ -430,22 +433,22 @@ const pruneDraft = async (
 		preloadedReleaseKey ?? (pubId ? await getLatestReleaseHistoryKey(pubId) : null);
 	if (latestReleaseKey !== null && latestReleaseKey < pruneThreshold) {
 		verbose(
-			`  Using release history key ${latestReleaseKey} (lower than checkpoint ${latestCheckpointKey})`,
+			`${prefix}Using release history key ${latestReleaseKey} (lower than checkpoint ${latestCheckpointKey})`,
 		);
 		pruneThreshold = latestReleaseKey;
 	}
 
-	verbose(`  Safe prune threshold: ${pruneThreshold}`);
+	verbose(`${prefix}Safe prune threshold: ${pruneThreshold}`);
 
 	// Ensure there's a checkpoint at or before the prune threshold so we can reconstruct
 	// all retained history. If not, create one at the prune threshold.
 	const checkpointAtOrBefore = await getCheckpointKeyAtOrBefore(draftRef, pruneThreshold);
 	if (checkpointAtOrBefore === null) {
-		verbose(`  No checkpoint at or before ${pruneThreshold}, creating one...`);
+		verbose(`${prefix}No checkpoint at or before ${pruneThreshold}, creating one...`);
 		if (!isDryRun) {
 			try {
 				const { doc } = await getFirebaseDoc(draftRef, editorSchema, pruneThreshold);
-				verbose(`  Doc size at key ${pruneThreshold}: ${doc.content.size} nodes`);
+				verbose(`${prefix}Doc size at key ${pruneThreshold}: ${doc.content.size} nodes`);
 				// Get the timestamp from the change at this key
 				const changeSnapshot = await draftRef
 					.child(`changes/${pruneThreshold}`)
@@ -455,22 +458,24 @@ const pruneDraft = async (
 				// Store checkpoint with the original change's timestamp
 				const compressedDoc = compressStateJSON({ doc: doc.toJSON() }).d;
 				const checkpointSize = JSON.stringify(compressedDoc).length;
-				verbose(`  Compressed checkpoint size: ${(checkpointSize / 1024).toFixed(1)} KB`);
+				verbose(
+					`${prefix}Compressed checkpoint size: ${(checkpointSize / 1024).toFixed(1)} KB`,
+				);
 				const checkpoint = {
 					d: compressedDoc,
 					k: pruneThreshold,
 					t: timestamp,
 				};
 				// Write checkpoint parts individually to identify failures
-				verbose(`  Writing checkpoints/${pruneThreshold}...`);
+				verbose(`${prefix}Writing checkpoints/${pruneThreshold}...`);
 				await draftRef.child(`checkpoints/${pruneThreshold}`).set(checkpoint);
-				verbose(`  Writing checkpoint...`);
+				verbose(`${prefix}Writing checkpoint...`);
 				await draftRef.child('checkpoint').set(checkpoint);
-				verbose(`  Writing checkpointMap/${pruneThreshold}...`);
+				verbose(`${prefix}Writing checkpointMap/${pruneThreshold}...`);
 				await draftRef.child(`checkpointMap/${pruneThreshold}`).set(timestamp);
 				stats.checkpointsCreated++;
 				verbose(
-					`  Created checkpoint at key ${pruneThreshold} with timestamp ${timestamp}`,
+					`${prefix}Created checkpoint at key ${pruneThreshold} with timestamp ${timestamp}`,
 				);
 			} catch (err) {
 				const error = err as Error & { code?: string };
@@ -491,7 +496,7 @@ const pruneDraft = async (
 				}
 			}
 		} else {
-			verbose(`  Would create checkpoint at key ${pruneThreshold}`);
+			verbose(`${prefix}Would create checkpoint at key ${pruneThreshold}`);
 		}
 	}
 
@@ -520,7 +525,7 @@ const pruneDraft = async (
 				draftRef.child('checkpointMap').child(key).remove(),
 			);
 			await Promise.all(mapDeletions);
-			verbose(`  Cleaned up ${oldMapKeys.length} checkpointMap entries`);
+			verbose(`${prefix}Cleaned up ${oldMapKeys.length} checkpointMap entries`);
 		}
 	}
 
@@ -770,10 +775,11 @@ const processPubDraft = async (pubId: string): Promise<void> => {
 	}
 
 	log(`Processing pub ${pub.slug || pub.id}`);
-	verbose(`  Draft path: ${pub.draft.firebasePath}`);
+	const pubLabel = pub.slug || pub.id.slice(0, 8);
+	verbose(`[${pubLabel}] Draft path: ${pub.draft.firebasePath}`);
 
 	try {
-		await pruneDraft(pub.draft.firebasePath, pubId);
+		await pruneDraft(pub.draft.firebasePath, pubId, null, pubLabel);
 		await cleanupOrphanedBranchesForPub(pubId, pub.draft.firebasePath);
 		stats.draftsProcessed++;
 	} catch (err) {
@@ -797,10 +803,11 @@ const processDraftById = async (draftId: string): Promise<void> => {
 	const pub = await Pub.findOne({ where: { draftId } });
 
 	log(`Processing draft ${draftId}`);
-	verbose(`  Draft path: ${draft.firebasePath}`);
+	const draftLabel = draftId.slice(0, 8);
+	verbose(`[${draftLabel}] Draft path: ${draft.firebasePath}`);
 
 	try {
-		await pruneDraft(draft.firebasePath, pub?.id ?? null);
+		await pruneDraft(draft.firebasePath, pub?.id ?? null, null, draftLabel);
 		stats.draftsProcessed++;
 	} catch (err) {
 		log(`  Error processing draft: ${(err as Error).message}`);
@@ -870,9 +877,10 @@ const processAllDrafts = async (): Promise<void> => {
 		await runWithConcurrency(
 			pubsWithDrafts.map((pub) => async () => {
 				try {
-					verbose(`Processing pub ${pub.slug || pub.id}`);
+					const pubLabel = pub.slug || pub.id.slice(0, 8);
+					verbose(`[${pubLabel}] Processing...`);
 					const releaseKey = releaseKeyMap.get(pub.id) ?? null;
-					await pruneDraft(pub.draft!.firebasePath, pub.id, releaseKey);
+					await pruneDraft(pub.draft!.firebasePath, pub.id, releaseKey, pubLabel);
 					await cleanupOrphanedBranchesForPub(pub.id, pub.draft!.firebasePath);
 					stats.draftsProcessed++;
 				} catch (err) {
@@ -880,7 +888,7 @@ const processAllDrafts = async (): Promise<void> => {
 					stats.errorsEncountered++;
 				}
 			}),
-			10, // Process 10 pubs in parallel
+			50, // Process 50 pubs in parallel
 		);
 
 		log(
@@ -889,9 +897,6 @@ const processAllDrafts = async (): Promise<void> => {
 
 		offset += batchSize;
 		hasMore = pubs.length === batchSize;
-
-		// Brief pause to avoid overwhelming Firebase
-		await new Promise((resolve) => setTimeout(resolve, 100));
 	}
 };
 
