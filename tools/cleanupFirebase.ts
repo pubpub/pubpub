@@ -486,10 +486,9 @@ const pruneDraft = async (
 				);
 			} catch (err) {
 				const error = err as Error & { code?: string };
-				log(
-					`  Error during checkpoint creation: ${error.code || 'unknown'} - ${error.message}`,
-				);
-				if (error.code === 'WRITE_TOO_BIG') {
+				const errorStr = `${error.code || ''} ${error.message || ''}`;
+				log(`  Error during checkpoint creation: ${errorStr}`);
+				if (errorStr.includes('WRITE_TOO_BIG') || errorStr.includes('write_too_big')) {
 					// Doc is too large to write as a single checkpoint.
 					// We can't safely prune without a checkpoint at the threshold,
 					// so skip pruning this draft entirely.
