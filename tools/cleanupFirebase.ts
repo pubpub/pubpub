@@ -387,8 +387,6 @@ const deleteOrphanedDraft = async (draft: Draft): Promise<void> => {
 		await draft.destroy();
 		stats.orphanedDraftsDeleted++;
 	}
-
-	
 };
 
 /**
@@ -478,6 +476,40 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 };
 
 /**
+ * Clean up orphaned branches for a specific pub (legacy format only)
+ * If the draft uses pub-{pubId}/branch-{branchId} format, delete any other branches
+ */
+const cleanupOrphanedBranchesForPub = async (
+	pubId: string,
+	activePath: string,
+): Promise<void> => {
+	// Check if this is a legacy format path
+	const legacyMatch = activePath.match(/^(pub-[^/]+)\/(branch-[^/]+)$/);
+	if (!legacyMatch) {
+		// New format (drafts/draft-xxx), no sibling branches to clean
+		return;
+	}
+
+	const [, pubKey, activeBranchKey] = legacyMatch;
+	verbose(`  Checking for orphaned branches under ${pubKey}`);
+
+	const branchKeys = await getShallowKeys(pubKey);
+	for (const branchKey of branchKeys) {
+		if (branchKey.startsWith('branch-') && branchKey !== activeBranchKey) {
+			const orphanedPath = `${pubKey}/${branchKey}`;
+			stats.orphanedFirebasePathsFound++;
+			log(`  Found orphaned branch: ${orphanedPath}`);
+			if (!isDryRun) {
+				// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
+				await getDatabaseRef(orphanedPath).remove();
+				stats.orphanedFirebasePathsDeleted++;
+				verbose(`  Deleted orphaned branch: ${orphanedPath}`);
+			}
+		}
+	}
+};
+
+/**
  * Process a single pub's draft
  */
 const processPubDraft = async (pubId: string): Promise<void> => {
@@ -501,6 +533,7 @@ const processPubDraft = async (pubId: string): Promise<void> => {
 
 	try {
 		await pruneDraft(pub.draft.firebasePath, pubId);
+		await cleanupOrphanedBranchesForPub(pubId, pub.draft.firebasePath);
 		stats.draftsProcessed++;
 	} catch (err) {
 		log(`  Error processing draft: ${(err as Error).message}`);
