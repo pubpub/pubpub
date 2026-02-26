@@ -363,6 +363,7 @@ const fastForwardDiscussions = async (
 /**
  * Count and optionally delete keys before a threshold in a Firebase child.
  * Uses shallow key listing to avoid loading content into memory.
+ * Uses batch multi-path updates for much faster deletion.
  */
 const pruneKeysBefore = async (
 	parentRef: firebase.database.Reference,
@@ -386,11 +387,20 @@ const pruneKeysBefore = async (
 	verbose(`  Found ${keysToDelete.length} ${childName} entries before key ${thresholdKey}`);
 
 	if (!isDryRun) {
+		// Use batch multi-path updates for much faster deletion
+		// Firebase limits multi-path updates to ~1000 paths or 16MB payload
+		const BATCH_SIZE = 500;
 		const childRef = parentRef.child(childName);
-		// Delete with limited concurrency to avoid overwhelming Firebase
-		const CONCURRENCY = 100;
-		const deleteTasks = keysToDelete.map((key) => () => childRef.child(key).remove());
-		await runWithConcurrency(deleteTasks, CONCURRENCY);
+
+		for (let i = 0; i < keysToDelete.length; i += BATCH_SIZE) {
+			const batch = keysToDelete.slice(i, i + BATCH_SIZE);
+			const updates: Record<string, null> = {};
+			for (const key of batch) {
+				updates[key] = null;
+			}
+			// biome-ignore lint/performance/noAwaitInLoops: batched processing requires sequential batches
+			await childRef.update(updates);
+		}
 		verbose(`  Deleted ${keysToDelete.length} ${childName} entries`);
 	}
 
@@ -403,12 +413,14 @@ const pruneKeysBefore = async (
  * @param pubId - Optional pub ID for release key lookup
  * @param preloadedReleaseKey - Pre-fetched release key (for batch processing efficiency)
  * @param label - Label for verbose logging (helps track logs during concurrent processing)
+ * @param localStats - Optional local stats object to update (for thread-safe concurrent processing)
  */
 const pruneDraft = async (
 	firebasePath: string,
 	pubId: string | null = null,
 	preloadedReleaseKey: number | null = null,
 	label: string = '',
+	localStats: CleanupStats = stats,
 ): Promise<void> => {
 	const prefix = label ? `[${label}] ` : '  ';
 	const draftRef = getDatabaseRef(firebasePath);
@@ -417,7 +429,7 @@ const pruneDraft = async (
 
 	if (latestCheckpointKey === null) {
 		verbose(`${prefix}No checkpoint found, skipping pruning`);
-		stats.draftsSkipped++;
+		localStats.draftsSkipped++;
 		return;
 	}
 
@@ -473,7 +485,7 @@ const pruneDraft = async (
 				await draftRef.child('checkpoint').set(checkpoint);
 				verbose(`${prefix}Writing checkpointMap/${pruneThreshold}...`);
 				await draftRef.child(`checkpointMap/${pruneThreshold}`).set(timestamp);
-				stats.checkpointsCreated++;
+				localStats.checkpointsCreated++;
 				verbose(
 					`${prefix}Created checkpoint at key ${pruneThreshold} with timestamp ${timestamp}`,
 				);
@@ -489,7 +501,7 @@ const pruneDraft = async (
 					log(
 						`  Warning: Doc too large to create checkpoint at ${pruneThreshold}, skipping prune for this draft`,
 					);
-					stats.draftsSkipped++;
+					localStats.draftsSkipped++;
 					return;
 				} else {
 					throw err;
@@ -502,16 +514,16 @@ const pruneDraft = async (
 
 	// First, fast-forward any outdated discussions to the prune threshold
 	const discussionsUpdated = await fastForwardDiscussions(draftRef, pruneThreshold);
-	stats.discussionsUpdated += discussionsUpdated;
+	localStats.discussionsUpdated += discussionsUpdated;
 
 	// Prune changes before the safe threshold
-	stats.changesDeleted += await pruneKeysBefore(draftRef, 'changes', pruneThreshold);
+	localStats.changesDeleted += await pruneKeysBefore(draftRef, 'changes', pruneThreshold);
 
 	// Prune merges before the safe threshold (legacy data)
-	stats.mergesDeleted += await pruneKeysBefore(draftRef, 'merges', pruneThreshold);
+	localStats.mergesDeleted += await pruneKeysBefore(draftRef, 'merges', pruneThreshold);
 
 	// Prune checkpoints before the prune threshold (keep threshold checkpoint and any after)
-	stats.checkpointsDeleted += await pruneKeysBefore(draftRef, 'checkpoints', pruneThreshold);
+	localStats.checkpointsDeleted += await pruneKeysBefore(draftRef, 'checkpoints', pruneThreshold);
 
 	// Clean up checkpointMap entries for deleted checkpoints
 	const checkpointMapSnapshot = await draftRef.child('checkpointMap').once('value');
@@ -521,10 +533,12 @@ const pruneDraft = async (
 			(k) => parseInt(k, 10) < pruneThreshold,
 		);
 		if (oldMapKeys.length > 0 && !isDryRun) {
-			const mapDeletions = oldMapKeys.map((key) =>
-				draftRef.child('checkpointMap').child(key).remove(),
-			);
-			await Promise.all(mapDeletions);
+			// Use batch update for faster deletion
+			const updates: Record<string, null> = {};
+			for (const key of oldMapKeys) {
+				updates[key] = null;
+			}
+			await draftRef.child('checkpointMap').update(updates);
 			verbose(`${prefix}Cleaned up ${oldMapKeys.length} checkpointMap entries`);
 		}
 	}
@@ -712,8 +726,13 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
  * Clean up orphaned branches and legacy metadata for a specific pub (legacy format only)
  * If the draft uses pub-{pubId}/branch-{branchId} format, delete any other branches
  * and the legacy metadata field at pub-{pubId}/metadata
+ * @param localStats - Optional local stats object to update (for thread-safe concurrent processing)
  */
-const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string): Promise<void> => {
+const cleanupOrphanedBranchesForPub = async (
+	pubId: string,
+	activePath: string,
+	localStats: CleanupStats = stats,
+): Promise<void> => {
 	// Check if this is a legacy format path
 	const legacyMatch = activePath.match(/^(pub-[^/]+)\/(branch-[^/]+)$/);
 	if (!legacyMatch) {
@@ -730,7 +749,7 @@ const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string):
 	);
 
 	if (orphanedBranches.length > 0) {
-		stats.orphanedFirebasePathsFound += orphanedBranches.length;
+		localStats.orphanedFirebasePathsFound += orphanedBranches.length;
 		log(`  Found ${orphanedBranches.length} orphaned branches under ${pubKey}`);
 		if (!isDryRun) {
 			await runWithConcurrency(
@@ -739,7 +758,7 @@ const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string):
 				}),
 				30,
 			);
-			stats.orphanedFirebasePathsDeleted += orphanedBranches.length;
+			localStats.orphanedFirebasePathsDeleted += orphanedBranches.length;
 		}
 	}
 
@@ -750,7 +769,7 @@ const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string):
 		verbose(`  Removing legacy metadata field at ${pubKey}/metadata`);
 		if (!isDryRun) {
 			await pubRef.child('metadata').remove();
-			stats.metadataDeleted++;
+			localStats.metadataDeleted++;
 		}
 	}
 };
@@ -905,8 +924,11 @@ const processAllDrafts = async (): Promise<void> => {
 	// Initial prefetch
 	await prefetchPubs();
 
+	// Track total processed across all workers for progress logging
+	let totalProcessed = 0;
+
 	// Worker function that continuously processes pubs
-	const worker = async (workerId: number) => {
+	const workerWithStats = async (workerId: number, localStats: CleanupStats) => {
 		while (true) {
 			// Get next pub from queue
 			const pub = pubQueue.shift();
@@ -929,26 +951,63 @@ const processAllDrafts = async (): Promise<void> => {
 				const pubLabel = pub.slug || pub.id.slice(0, 8);
 				verbose(`[W${workerId}:${pubLabel}] Processing...`);
 				const releaseKey = releaseKeyCache.get(pub.id) ?? null;
-				await pruneDraft(pub.draft!.firebasePath, pub.id, releaseKey, pubLabel);
-				await cleanupOrphanedBranchesForPub(pub.id, pub.draft!.firebasePath);
-				stats.draftsProcessed++;
+				await pruneDraft(pub.draft!.firebasePath, pub.id, releaseKey, pubLabel, localStats);
+				await cleanupOrphanedBranchesForPub(pub.id, pub.draft!.firebasePath, localStats);
+				localStats.draftsProcessed++;
+				totalProcessed++;
 
-				// Log progress every 100 processed
-				if (stats.draftsProcessed % 100 === 0) {
-					log(
-						`  Processed ${stats.draftsProcessed}/${totalPubs} drafts (${stats.changesDeleted} changes deleted)`,
-					);
+				// Log progress every 500 processed (approximate due to concurrency)
+				if (totalProcessed % 500 === 0) {
+					log(`  Processed ~${totalProcessed}/${totalPubs} drafts...`);
 				}
 			} catch (err) {
 				log(`  Error processing pub ${pub.id}: ${(err as Error).message}`);
-				stats.errorsEncountered++;
+				localStats.errorsEncountered++;
 			}
 		}
 	};
 
-	// Start workers
-	const workers = Array.from({ length: WORKER_COUNT }, (_, i) => worker(i));
+	// Create per-worker stats to avoid race conditions
+	const createLocalStats = (): CleanupStats => ({
+		draftsProcessed: 0,
+		draftsSkipped: 0,
+		orphanedDraftsFound: 0,
+		orphanedDraftsDeleted: 0,
+		orphanedFirebasePathsFound: 0,
+		orphanedFirebasePathsDeleted: 0,
+		discussionsUpdated: 0,
+		changesDeleted: 0,
+		mergesDeleted: 0,
+		checkpointsDeleted: 0,
+		checkpointsCreated: 0,
+		metadataDeleted: 0,
+		errorsEncountered: 0,
+	});
+
+	const workerStats: CleanupStats[] = [];
+
+	// Start workers with local stats
+	const workers = Array.from({ length: WORKER_COUNT }, (_, i) => {
+		const localStats = createLocalStats();
+		workerStats.push(localStats);
+		return workerWithStats(i, localStats);
+	});
 	await Promise.all(workers);
+
+	// Aggregate worker stats into global stats
+	for (const ws of workerStats) {
+		stats.draftsProcessed += ws.draftsProcessed;
+		stats.draftsSkipped += ws.draftsSkipped;
+		stats.discussionsUpdated += ws.discussionsUpdated;
+		stats.changesDeleted += ws.changesDeleted;
+		stats.mergesDeleted += ws.mergesDeleted;
+		stats.checkpointsDeleted += ws.checkpointsDeleted;
+		stats.checkpointsCreated += ws.checkpointsCreated;
+		stats.errorsEncountered += ws.errorsEncountered;
+		stats.orphanedFirebasePathsFound += ws.orphanedFirebasePathsFound;
+		stats.orphanedFirebasePathsDeleted += ws.orphanedFirebasePathsDeleted;
+		stats.metadataDeleted += ws.metadataDeleted;
+	}
 
 	log(
 		`  Processed ${stats.draftsProcessed} drafts total (${stats.changesDeleted} changes deleted)`,
