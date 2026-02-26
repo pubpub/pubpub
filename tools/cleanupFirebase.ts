@@ -23,12 +23,15 @@ import type firebase from 'firebase';
 import type { DiscussionInfo } from 'components/Editor/plugins/discussions/types';
 
 import firebaseAdmin from 'firebase-admin';
-import { compressSelectionJSON, uncompressSelectionJSON } from 'prosemirror-compress-pubpub';
+import {
+	compressSelectionJSON,
+	compressStateJSON,
+	uncompressSelectionJSON,
+} from 'prosemirror-compress-pubpub';
 import { QueryTypes } from 'sequelize';
 
 import { editorSchema, getFirebaseDoc } from 'components/Editor';
 import { createFastForwarder } from 'components/Editor/plugins/discussions/fastForward';
-import { storeCheckpoint } from 'components/Editor/utils';
 import { Draft, Pub, Release } from 'server/models';
 import { sequelize } from 'server/sequelize';
 import { getDatabaseRef } from 'server/utils/firebaseAdmin';
@@ -361,9 +364,23 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 		verbose(`  No checkpoint at or before ${pruneThreshold}, creating one...`);
 		if (!isDryRun) {
 			const { doc } = await getFirebaseDoc(draftRef, editorSchema, pruneThreshold);
-			await storeCheckpoint(draftRef, doc, pruneThreshold);
+			// Get the timestamp from the change at this key
+			const changeSnapshot = await draftRef.child(`changes/${pruneThreshold}`).once('value');
+			const change = changeSnapshot.val();
+			const timestamp = change?.t ?? Date.now();
+			// Store checkpoint with the original change's timestamp
+			const checkpoint = {
+				d: compressStateJSON({ doc: doc.toJSON() }).d,
+				k: pruneThreshold,
+				t: timestamp,
+			};
+			await Promise.all([
+				draftRef.child(`checkpoints/${pruneThreshold}`).set(checkpoint),
+				draftRef.child('checkpoint').set(checkpoint),
+				draftRef.child(`checkpointMap/${pruneThreshold}`).set(timestamp),
+			]);
 			stats.checkpointsCreated++;
-			verbose(`  Created checkpoint at key ${pruneThreshold}`);
+			verbose(`  Created checkpoint at key ${pruneThreshold} with timestamp ${timestamp}`);
 		} else {
 			verbose(`  Would create checkpoint at key ${pruneThreshold}`);
 		}
