@@ -28,9 +28,9 @@ if (process.env.PUBPUB_PRODUCTION === 'true') {
 	cron.schedule('0 5 * * *', () => run('Email Digest', 'tools-prod emailActivityDigest'), {
 		timezone: 'UTC',
 	});
-	cron.schedule('0 3 * * 0', () => run('Firebase Cleanup', 'tools-prod cleanupFirebase --execute'), {
-		timezone: 'UTC',
-	}); // Weekly on Sunday at 3 AM UTC
+	// cron.schedule('0 3 * * 0', () => run('Firebase Cleanup', 'tools-prod cleanupFirebase --execute'), {
+	// 	timezone: 'UTC',
+	// }); // Weekly on Sunday at 3 AM UTC
 } else {
 	const logNotSet = () => {
 		log(

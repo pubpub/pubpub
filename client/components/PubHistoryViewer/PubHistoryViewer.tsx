@@ -113,8 +113,9 @@ const getDateForHistoryKey = (historyKey, timestamps) => {
 
 const PubHistoryViewer = (props: Props) => {
 	const { historyData, pubData, onSetCurrentHistoryKey, onClose } = props;
-	const { timestamps, latestKey, currentKey, outstandingRequests, loadedIntoHistory } =
+	const { timestamps, latestKey, currentKey, firstKey, outstandingRequests, loadedIntoHistory } =
 		historyData;
+	const historyHasBeenPruned = firstKey > 0;
 	const { releases } = pubData;
 	const {
 		communityData,
@@ -176,7 +177,7 @@ const PubHistoryViewer = (props: Props) => {
 
 	const canChangeCurrentKeyBy = (step) => {
 		const proposedKey = currentKey + step;
-		return proposedKey >= 0 && proposedKey <= latestKey;
+		return proposedKey >= firstKey && proposedKey <= latestKey;
 	};
 
 	const changeCurrentKeyBy = (step) => {
@@ -353,16 +354,23 @@ const PubHistoryViewer = (props: Props) => {
 				</ButtonGroup>
 			)}
 			{hasMeaningfulHistory && (
-				<Slider
-					min={0}
-					max={latestKey + 1}
-					stepSize={1}
-					labelRenderer={renderSliderLabel}
-					labelStepSize={latestKey + 1}
-					value={sliderValue}
-					onChange={setSliderValue}
-					onRelease={(value) => onSetCurrentHistoryKey(value - 1)}
-				/>
+				<>
+					<Slider
+						min={firstKey}
+						max={latestKey + 1}
+						stepSize={1}
+						labelRenderer={renderSliderLabel}
+						labelStepSize={latestKey + 1 - firstKey}
+						value={sliderValue}
+						onChange={setSliderValue}
+						onRelease={(value) => onSetCurrentHistoryKey(value - 1)}
+					/>
+					{historyHasBeenPruned && (
+						<div className="pruned-history-notice">
+							Older history has been archived
+						</div>
+					)}
+				</>
 			)}
 			<Menu>
 				{bucketByDate(entries).map(([dateString, dateEntries]) =>
