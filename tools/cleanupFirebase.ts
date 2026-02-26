@@ -105,12 +105,14 @@ const deleteFirebasePath = async (path: string, depth = 0): Promise<void> => {
 		const errorCode = error?.code || error?.message || String(error);
 		if (errorCode.includes('WRITE_TOO_BIG') || errorCode.includes('write_too_big')) {
 			verbose(`${indent}Path too large for single delete, deleting children first: ${path}`);
-			// Get children and delete them recursively
+			// Get children and delete them with concurrency
 			const childKeys = await getShallowKeys(path);
-			for (const childKey of childKeys) {
-				// biome-ignore lint/performance/noAwaitInLoops: sequential to avoid overwhelming Firebase
-				await deleteFirebasePath(`${path}/${childKey}`, depth + 1);
-			}
+			await runWithConcurrency(
+				childKeys.map(
+					(childKey) => () => deleteFirebasePath(`${path}/${childKey}`, depth + 1),
+				),
+				50,
+			);
 			// Now delete the (empty) parent
 			await getDatabaseRef(path).remove();
 			verbose(`${indent}Deleted (after children): ${path}`);
@@ -545,17 +547,28 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 	const draftKeys = await getShallowKeys('drafts');
 	verbose(`  Found ${draftKeys.length} keys under drafts/`);
 
-	for (const draftKey of draftKeys) {
-		const firebasePath = `drafts/${draftKey}`;
-		if (!validPaths.has(firebasePath)) {
-			stats.orphanedFirebasePathsFound++;
-			log(`  Found orphaned Firebase path: ${firebasePath}`);
-			if (!isDryRun) {
-				// biome-ignore lint/performance/noAwaitInLoops: sequential deletes to avoid overwhelming Firebase
-				await deleteFirebasePath(firebasePath);
-				stats.orphanedFirebasePathsDeleted++;
-			}
-		}
+	// Identify orphaned drafts
+	const orphanedDraftKeys = draftKeys.filter((key) => !validPaths.has(`drafts/${key}`));
+	stats.orphanedFirebasePathsFound += orphanedDraftKeys.length;
+	if (orphanedDraftKeys.length > 0) {
+		log(`  Found ${orphanedDraftKeys.length} orphaned draft paths`);
+	}
+
+	// Delete orphaned drafts with concurrency
+	if (!isDryRun && orphanedDraftKeys.length > 0) {
+		let deleted = 0;
+		await runWithConcurrency(
+			orphanedDraftKeys.map((draftKey) => async () => {
+				await deleteFirebasePath(`drafts/${draftKey}`);
+				deleted++;
+				if (deleted % 100 === 0) {
+					log(`  Deleted ${deleted}/${orphanedDraftKeys.length} orphaned drafts...`);
+				}
+			}),
+			50,
+		);
+		stats.orphanedFirebasePathsDeleted += orphanedDraftKeys.length;
+		log(`  Deleted ${orphanedDraftKeys.length} orphaned draft paths`);
 	}
 
 	// Check for orphaned 'pub-*' paths (legacy format) using shallow key listing
@@ -563,39 +576,74 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 	const legacyPubKeys = rootKeys.filter((key) => key.startsWith('pub-'));
 	verbose(`  Found ${legacyPubKeys.length} legacy pub-* paths at root`);
 
-	for (const pubKey of legacyPubKeys) {
-		// Get branch keys under this pub using shallow listing
-		// biome-ignore lint/performance/noAwaitInLoops: sequential processing for rate limiting
-		const childKeys = await getShallowKeys(pubKey);
-		const branchKeys = childKeys.filter((k) => k.startsWith('branch-'));
-		let hasValidBranch = false;
+	// Process legacy pubs in batches with concurrency for getShallowKeys
+	interface LegacyPubInfo {
+		pubKey: string;
+		childKeys: string[];
+		orphanedBranches: string[];
+		hasValidBranch: boolean;
+	}
 
-		for (const branchKey of branchKeys) {
-			const firebasePath = `${pubKey}/${branchKey}`;
-			if (validPaths.has(firebasePath)) {
-				hasValidBranch = true;
-			} else {
-				stats.orphanedFirebasePathsFound++;
-				log(`  Found orphaned Firebase path: ${firebasePath}`);
-				if (!isDryRun) {
-					// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
-					await deleteFirebasePath(firebasePath);
-					stats.orphanedFirebasePathsDeleted++;
+	// Fetch all child keys in parallel
+	const legacyPubInfos: LegacyPubInfo[] = await runWithConcurrency(
+		legacyPubKeys.map((pubKey) => async () => {
+			const childKeys = await getShallowKeys(pubKey);
+			const branchKeys = childKeys.filter((k) => k.startsWith('branch-'));
+			const orphanedBranches: string[] = [];
+			let hasValidBranch = false;
+
+			for (const branchKey of branchKeys) {
+				const firebasePath = `${pubKey}/${branchKey}`;
+				if (validPaths.has(firebasePath)) {
+					hasValidBranch = true;
+				} else {
+					orphanedBranches.push(firebasePath);
 				}
 			}
-		}
 
-		// If no valid branches remain, delete the entire pub-* entry
-		if (!hasValidBranch) {
-			log(`  Deleting entire orphaned pub path: ${pubKey}`);
-			if (!isDryRun) {
-				await deleteFirebasePath(pubKey);
-				// Count metadata deletion if it existed
-				if (childKeys.includes('metadata')) {
-					stats.metadataDeleted++;
-				}
+			return { pubKey, childKeys, orphanedBranches, hasValidBranch };
+		}),
+		50,
+	);
+
+	// Collect all paths to delete
+	const pathsToDelete: string[] = [];
+	let metadataCount = 0;
+
+	for (const info of legacyPubInfos) {
+		if (!info.hasValidBranch) {
+			// Delete entire pub
+			pathsToDelete.push(info.pubKey);
+			if (info.childKeys.includes('metadata')) {
+				metadataCount++;
 			}
+		} else {
+			// Delete only orphaned branches
+			pathsToDelete.push(...info.orphanedBranches);
 		}
+	}
+
+	stats.orphanedFirebasePathsFound += pathsToDelete.length;
+	if (pathsToDelete.length > 0) {
+		log(`  Found ${pathsToDelete.length} orphaned legacy paths to delete`);
+	}
+
+	// Delete all orphaned paths with concurrency
+	if (!isDryRun && pathsToDelete.length > 0) {
+		let deleted = 0;
+		await runWithConcurrency(
+			pathsToDelete.map((path) => async () => {
+				await deleteFirebasePath(path);
+				deleted++;
+				if (deleted % 100 === 0) {
+					log(`  Deleted ${deleted}/${pathsToDelete.length} legacy paths...`);
+				}
+			}),
+			50,
+		);
+		stats.orphanedFirebasePathsDeleted += pathsToDelete.length;
+		stats.metadataDeleted += metadataCount;
+		log(`  Deleted ${pathsToDelete.length} orphaned legacy paths`);
 	}
 
 	log(`Found ${stats.orphanedFirebasePathsFound} orphaned Firebase paths`);
@@ -618,16 +666,21 @@ const cleanupOrphanedBranchesForPub = async (pubId: string, activePath: string):
 	verbose(`  Checking for orphaned branches under ${pubKey}`);
 
 	const branchKeys = await getShallowKeys(pubKey);
-	for (const branchKey of branchKeys) {
-		if (branchKey.startsWith('branch-') && branchKey !== activeBranchKey) {
-			const orphanedPath = `${pubKey}/${branchKey}`;
-			stats.orphanedFirebasePathsFound++;
-			log(`  Found orphaned branch: ${orphanedPath}`);
-			if (!isDryRun) {
-				// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
-				await deleteFirebasePath(orphanedPath);
-				stats.orphanedFirebasePathsDeleted++;
-			}
+	const orphanedBranches = branchKeys.filter(
+		(key) => key.startsWith('branch-') && key !== activeBranchKey,
+	);
+
+	if (orphanedBranches.length > 0) {
+		stats.orphanedFirebasePathsFound += orphanedBranches.length;
+		log(`  Found ${orphanedBranches.length} orphaned branches under ${pubKey}`);
+		if (!isDryRun) {
+			await runWithConcurrency(
+				orphanedBranches.map((branchKey) => async () => {
+					await deleteFirebasePath(`${pubKey}/${branchKey}`);
+				}),
+				20,
+			);
+			stats.orphanedFirebasePathsDeleted += orphanedBranches.length;
 		}
 	}
 
