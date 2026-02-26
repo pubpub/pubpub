@@ -2,11 +2,14 @@
  * Firebase Cleanup Tool
  *
  * Reduces Firebase storage costs by:
- * 1. Fast-forwarding outdated discussions to the latest checkpoint key
+ * 1. Fast-forwarding outdated discussions to the safe prune threshold
  * 2. Pruning changes/merges/checkpoints before the safe prune threshold
- *    (max of latestCheckpointKey and latestReleaseHistoryKey)
  * 3. Removing orphaned drafts (drafts without an associated Pub)
  * 4. Removing orphaned Firebase paths (paths not referenced in Postgres)
+ *
+ * IMPORTANT: The safe prune threshold is min(latestCheckpointKey, latestReleaseKey).
+ * - We must preserve changes from latestCheckpointKey onwards to reconstruct the doc
+ * - We must preserve changes from latestReleaseKey onwards for discussion migration during release
  *
  * Usage:
  *   pnpm run tools cleanupFirebase                    # Dry run, all drafts
@@ -19,6 +22,7 @@ import type firebase from 'firebase';
 
 import type { DiscussionInfo } from 'components/Editor/plugins/discussions/types';
 
+import firebaseAdmin from 'firebase-admin';
 import { compressSelectionJSON, uncompressSelectionJSON } from 'prosemirror-compress-pubpub';
 import { QueryTypes } from 'sequelize';
 import yargs from 'yargs';
@@ -29,6 +33,7 @@ import { Draft, Pub, Release } from 'server/models';
 import { sequelize } from 'server/sequelize';
 import { getDatabaseRef } from 'server/utils/firebaseAdmin';
 import { postToSlack } from 'server/utils/slack';
+import { getFirebaseConfig } from 'utils/editor/firebaseConfig';
 
 const argv = yargs
 	.option('execute', {
@@ -67,6 +72,47 @@ const isVerbose = argv.verbose;
 // biome-ignore lint/suspicious/noConsole: CLI tool output
 const log = (msg: string) => console.log(`[cleanup] ${new Date().toISOString()} ${msg}`);
 const verbose = (msg: string) => isVerbose && log(msg);
+
+/**
+ * Fetch only the keys at a Firebase path using REST API with shallow=true
+ * This avoids loading potentially huge amounts of data
+ */
+let cachedAccessToken: { token: string; expiresAt: number } | null = null;
+
+const getAccessToken = async (): Promise<string> => {
+	const now = Date.now();
+	if (cachedAccessToken && cachedAccessToken.expiresAt > now + 60000) {
+		return cachedAccessToken.token;
+	}
+
+	const credential = firebaseAdmin.credential.cert(
+		JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 as string, 'base64').toString())
+	);
+	const tokenResult = await credential.getAccessToken();
+	cachedAccessToken = {
+		token: tokenResult.access_token,
+		expiresAt: now + (tokenResult.expires_in ?? 3600) * 1000,
+	};
+	return cachedAccessToken.token;
+};
+
+const getShallowKeys = async (path: string): Promise<string[]> => {
+	const databaseURL = getFirebaseConfig().databaseURL;
+	const accessToken = await getAccessToken();
+
+	const url = `${databaseURL}/${path}.json?shallow=true&access_token=${accessToken}`;
+	const response = await fetch(url);
+
+	if (!response.ok) {
+		throw new Error(`Firebase REST API error: ${response.status} ${response.statusText}`);
+	}
+
+	const data = await response.json();
+	if (!data || typeof data !== 'object') {
+		return [];
+	}
+	return Object.keys(data);
+};
 
 interface CleanupStats {
 	draftsProcessed: number;
@@ -274,31 +320,35 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 		return;
 	}
 
-	// Determine safe prune threshold: max(latestCheckpointKey, latestReleaseHistoryKey)
-	let safePruneThreshold = latestCheckpointKey;
+	verbose(`  Latest checkpoint key: ${latestCheckpointKey}`);
+
+	// Determine safe prune threshold: min(latestCheckpointKey, latestReleaseHistoryKey)
+	// - We need changes from latestCheckpointKey onwards to reconstruct the doc
+	// - We need changes from latestReleaseKey onwards to migrate discussions during release
+	let pruneThreshold = latestCheckpointKey;
 	if (pubId) {
 		const latestReleaseKey = await getLatestReleaseHistoryKey(pubId);
-		if (latestReleaseKey !== null && latestReleaseKey > safePruneThreshold) {
+		if (latestReleaseKey !== null && latestReleaseKey < pruneThreshold) {
 			verbose(
-				`  Using release history key ${latestReleaseKey} instead of checkpoint key ${latestCheckpointKey}`,
+				`  Using release history key ${latestReleaseKey} (lower than checkpoint ${latestCheckpointKey})`,
 			);
-			safePruneThreshold = latestReleaseKey;
+			pruneThreshold = latestReleaseKey;
 		}
 	}
 
-	verbose(`  Safe prune threshold: ${safePruneThreshold}`);
+	verbose(`  Safe prune threshold: ${pruneThreshold}`);
 
-	// First, fast-forward any outdated discussions to the safe prune threshold
-	const discussionsUpdated = await fastForwardDiscussions(draftRef, safePruneThreshold);
+	// First, fast-forward any outdated discussions to the prune threshold
+	const discussionsUpdated = await fastForwardDiscussions(draftRef, pruneThreshold);
 	stats.discussionsUpdated += discussionsUpdated;
 
-	// Prune changes before safe threshold
-	const changesResult = await pruneKeysBefore(draftRef, 'changes', safePruneThreshold);
+	// Prune changes before the safe threshold
+	const changesResult = await pruneKeysBefore(draftRef, 'changes', pruneThreshold);
 	stats.changesDeleted += changesResult.count;
 	stats.bytesFreedEstimate += changesResult.estimatedBytes;
 
-	// Prune merges before safe threshold (legacy data)
-	const mergesResult = await pruneKeysBefore(draftRef, 'merges', safePruneThreshold);
+	// Prune merges before the safe threshold (legacy data)
+	const mergesResult = await pruneKeysBefore(draftRef, 'merges', pruneThreshold);
 	stats.mergesDeleted += mergesResult.count;
 	stats.bytesFreedEstimate += mergesResult.estimatedBytes;
 
@@ -391,53 +441,44 @@ const cleanupOrphanedFirebasePaths = async (): Promise<void> => {
 	const validPaths = await getValidFirebasePaths();
 	verbose(`  Found ${validPaths.size} valid paths in database`);
 
-	// Check for orphaned paths under 'drafts/' prefix
-	const draftsRef = getDatabaseRef('drafts');
-	const draftsSnapshot = await draftsRef.once('value');
-	const draftsData = draftsSnapshot.val();
+	// Check for orphaned paths under 'drafts/' prefix using shallow key listing
+	const draftKeys = await getShallowKeys('drafts');
+	verbose(`  Found ${draftKeys.length} keys under drafts/`);
 
-	if (draftsData) {
-		for (const draftKey of Object.keys(draftsData)) {
-			const firebasePath = `drafts/${draftKey}`;
-			if (!validPaths.has(firebasePath)) {
-				stats.orphanedFirebasePathsFound++;
-				log(`  Found orphaned Firebase path: ${firebasePath}`);
-				if (!isDryRun) {
-					// biome-ignore lint/performance/noAwaitInLoops: sequential deletes to avoid overwhelming Firebase
-					await getDatabaseRef(firebasePath).remove();
-					stats.orphanedFirebasePathsDeleted++;
-					verbose(`  Deleted orphaned path: ${firebasePath}`);
-				}
+	for (const draftKey of draftKeys) {
+		const firebasePath = `drafts/${draftKey}`;
+		if (!validPaths.has(firebasePath)) {
+			stats.orphanedFirebasePathsFound++;
+			log(`  Found orphaned Firebase path: ${firebasePath}`);
+			if (!isDryRun) {
+				// biome-ignore lint/performance/noAwaitInLoops: sequential deletes to avoid overwhelming Firebase
+				await getDatabaseRef(firebasePath).remove();
+				stats.orphanedFirebasePathsDeleted++;
+				verbose(`  Deleted orphaned path: ${firebasePath}`);
 			}
 		}
 	}
 
-	// Check for orphaned 'pub-*' paths (legacy format)
-	// These are top-level, so we need to get root children
-	const rootRef = getDatabaseRef('');
-	const rootSnapshot = await rootRef.once('value');
-	const rootData = rootSnapshot.val();
+	// Check for orphaned 'pub-*' paths (legacy format) using shallow key listing
+	const rootKeys = await getShallowKeys('');
+	const legacyPubKeys = rootKeys.filter((key) => key.startsWith('pub-'));
+	verbose(`  Found ${legacyPubKeys.length} legacy pub-* paths at root`);
 
-	if (rootData) {
-		for (const key of Object.keys(rootData)) {
-			if (key.startsWith('pub-')) {
-				// This is a legacy pub path, check each branch underneath
-				const pubData = rootData[key];
-				if (pubData && typeof pubData === 'object') {
-					for (const branchKey of Object.keys(pubData)) {
-						if (branchKey.startsWith('branch-')) {
-							const firebasePath = `${key}/${branchKey}`;
-							if (!validPaths.has(firebasePath)) {
-								stats.orphanedFirebasePathsFound++;
-								log(`  Found orphaned Firebase path: ${firebasePath}`);
-								if (!isDryRun) {
-									// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
-									await getDatabaseRef(firebasePath).remove();
-									stats.orphanedFirebasePathsDeleted++;
-									verbose(`  Deleted orphaned path: ${firebasePath}`);
-								}
-							}
-						}
+	for (const pubKey of legacyPubKeys) {
+		// Get branch keys under this pub using shallow listing
+		// biome-ignore lint/performance/noAwaitInLoops: sequential processing for rate limiting
+		const branchKeys = await getShallowKeys(pubKey);
+		for (const branchKey of branchKeys) {
+			if (branchKey.startsWith('branch-')) {
+				const firebasePath = `${pubKey}/${branchKey}`;
+				if (!validPaths.has(firebasePath)) {
+					stats.orphanedFirebasePathsFound++;
+					log(`  Found orphaned Firebase path: ${firebasePath}`);
+					if (!isDryRun) {
+						// biome-ignore lint/performance/noAwaitInLoops: sequential deletes
+						await getDatabaseRef(firebasePath).remove();
+						stats.orphanedFirebasePathsDeleted++;
+						verbose(`  Deleted orphaned path: ${firebasePath}`);
 					}
 				}
 			}
@@ -489,7 +530,7 @@ const processDraftById = async (draftId: string): Promise<void> => {
 		return;
 	}
 
-	// Try to find associated pub
+	// Try to find associated pub for release key lookup
 	const pub = await Pub.findOne({ where: { draftId } });
 
 	log(`Processing draft ${draftId}`);
