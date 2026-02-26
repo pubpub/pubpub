@@ -223,7 +223,7 @@ const PubHistoryViewer = (props: Props) => {
 			);
 		}
 		if (entry.type === 'release') {
-			const { releaseNumber, historyKey } = entry;
+			const { releaseNumber } = entry;
 			const dateString = formatDate(date, {
 				includeTime: true,
 				includeDate: false,
@@ -236,19 +236,8 @@ const PubHistoryViewer = (props: Props) => {
 					intent="success"
 					icon="document-share"
 					key={key}
-					onClick={() => onSetCurrentHistoryKey(historyKey)}
-					labelElement={
-						<Tooltip content="Visit this Release" position="top">
-							<AnchorButton
-								small
-								minimal
-								icon="circle-arrow-right"
-								className="visit-release-button"
-								href={pubUrl(communityData, pubData, { releaseNumber })}
-								target="_blank"
-							/>
-						</Tooltip>
-					}
+					href={pubUrl(communityData, pubData, { releaseNumber })}
+					target="_blank"
 				/>
 			);
 		}
