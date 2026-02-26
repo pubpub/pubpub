@@ -318,7 +318,7 @@ const pruneKeysBefore = async (
 	if (!isDryRun) {
 		const childRef = parentRef.child(childName);
 		// Delete with limited concurrency to avoid overwhelming Firebase
-		const CONCURRENCY = 10;
+		const CONCURRENCY = 100;
 		const deleteTasks = keysToDelete.map((key) => () => childRef.child(key).remove());
 		await runWithConcurrency(deleteTasks, CONCURRENCY);
 		verbose(`  Deleted ${keysToDelete.length} ${childName} entries`);
@@ -365,24 +365,51 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 	if (checkpointAtOrBefore === null) {
 		verbose(`  No checkpoint at or before ${pruneThreshold}, creating one...`);
 		if (!isDryRun) {
-			const { doc } = await getFirebaseDoc(draftRef, editorSchema, pruneThreshold);
-			// Get the timestamp from the change at this key
-			const changeSnapshot = await draftRef.child(`changes/${pruneThreshold}`).once('value');
-			const change = changeSnapshot.val();
-			const timestamp = change?.t ?? Date.now();
-			// Store checkpoint with the original change's timestamp
-			const checkpoint = {
-				d: compressStateJSON({ doc: doc.toJSON() }).d,
-				k: pruneThreshold,
-				t: timestamp,
-			};
-			await Promise.all([
-				draftRef.child(`checkpoints/${pruneThreshold}`).set(checkpoint),
-				draftRef.child('checkpoint').set(checkpoint),
-				draftRef.child(`checkpointMap/${pruneThreshold}`).set(timestamp),
-			]);
-			stats.checkpointsCreated++;
-			verbose(`  Created checkpoint at key ${pruneThreshold} with timestamp ${timestamp}`);
+			try {
+				const { doc } = await getFirebaseDoc(draftRef, editorSchema, pruneThreshold);
+				verbose(`  Doc size at key ${pruneThreshold}: ${doc.content.size} nodes`);
+				// Get the timestamp from the change at this key
+				const changeSnapshot = await draftRef
+					.child(`changes/${pruneThreshold}`)
+					.once('value');
+				const change = changeSnapshot.val();
+				const timestamp = change?.t ?? Date.now();
+				// Store checkpoint with the original change's timestamp
+				const compressedDoc = compressStateJSON({ doc: doc.toJSON() }).d;
+				const checkpointSize = JSON.stringify(compressedDoc).length;
+				verbose(`  Compressed checkpoint size: ${(checkpointSize / 1024).toFixed(1)} KB`);
+				const checkpoint = {
+					d: compressedDoc,
+					k: pruneThreshold,
+					t: timestamp,
+				};
+				// Write checkpoint parts individually to identify failures
+				verbose(`  Writing checkpoints/${pruneThreshold}...`);
+				await draftRef.child(`checkpoints/${pruneThreshold}`).set(checkpoint);
+				verbose(`  Writing checkpoint...`);
+				await draftRef.child('checkpoint').set(checkpoint);
+				verbose(`  Writing checkpointMap/${pruneThreshold}...`);
+				await draftRef.child(`checkpointMap/${pruneThreshold}`).set(timestamp);
+				stats.checkpointsCreated++;
+				verbose(
+					`  Created checkpoint at key ${pruneThreshold} with timestamp ${timestamp}`,
+				);
+			} catch (err) {
+				const error = err as Error & { code?: string };
+				log(`  Error during checkpoint creation: ${error.code || 'unknown'} - ${error.message}`);
+				if (error.code === 'WRITE_TOO_BIG') {
+					// Doc is too large to write as a single checkpoint.
+					// We can't safely prune without a checkpoint at the threshold,
+					// so skip pruning this draft entirely.
+					log(
+						`  Warning: Doc too large to create checkpoint at ${pruneThreshold}, skipping prune for this draft`,
+					);
+					stats.draftsSkipped++;
+					return;
+				} else {
+					throw err;
+				}
+			}
 		} else {
 			verbose(`  Would create checkpoint at key ${pruneThreshold}`);
 		}
