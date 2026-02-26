@@ -37,6 +37,7 @@ const commandFiles = {
 	branchMaintenance: "./branchMaintenance",
 	bulkimport: "../workers/tasks/import/bulk/cli",
 	checkpointBackfill: "./dashboardMigrations/backfillCheckpoints",
+	cleanupFirebase: "./cleanupFirebase",
 	clone: "./clone",
 	devshell: "./devshell",
 	depositCollectionPubs: "./depositCollectionPubs",
