@@ -17,13 +17,14 @@
 
 import type firebase from 'firebase';
 
+import type { DiscussionInfo } from 'components/Editor/plugins/discussions/types';
+
 import { compressSelectionJSON, uncompressSelectionJSON } from 'prosemirror-compress-pubpub';
 import { QueryTypes } from 'sequelize';
 import yargs from 'yargs';
 
 import { editorSchema, getFirebaseDoc } from 'components/Editor';
 import { createFastForwarder } from 'components/Editor/plugins/discussions/fastForward';
-import type { DiscussionInfo } from 'components/Editor/plugins/discussions/types';
 import { Draft, Pub, Release } from 'server/models';
 import { sequelize } from 'server/sequelize';
 import { getDatabaseRef } from 'server/utils/firebaseAdmin';
@@ -149,7 +150,9 @@ const getFirebaseDiscussions = async (
 
 	const discussions: Record<string, DiscussionInfo> = {};
 	for (const [id, compressed] of Object.entries(discussionsData as Record<string, any>)) {
-		const selection = compressed.selection ? uncompressSelectionJSON(compressed.selection) : null;
+		const selection = compressed.selection
+			? uncompressSelectionJSON(compressed.selection)
+			: null;
 		discussions[id] = {
 			...compressed,
 			selection,
@@ -205,7 +208,9 @@ const fastForwardDiscussions = async (
 	let updatedCount = 0;
 	for (const [id, updatedDiscussion] of Object.entries(fastForwardedDiscussions)) {
 		if (updatedDiscussion) {
-			verbose(`  Fast-forwarding discussion ${id} from ${discussions[id].currentKey} to ${targetKey}`);
+			verbose(
+				`  Fast-forwarding discussion ${id} from ${discussions[id].currentKey} to ${targetKey}`,
+			);
 			if (!isDryRun) {
 				// biome-ignore lint/performance/noAwaitInLoops: sequential updates to Firebase
 				await updateFirebaseDiscussion(draftRef, id, updatedDiscussion);
@@ -226,7 +231,10 @@ const pruneKeysBefore = async (
 	thresholdKey: number,
 ): Promise<{ count: number; estimatedBytes: number }> => {
 	const childRef = parentRef.child(childName);
-	const snapshot = await childRef.orderByKey().endAt(String(thresholdKey - 1)).once('value');
+	const snapshot = await childRef
+		.orderByKey()
+		.endAt(String(thresholdKey - 1))
+		.once('value');
 	const data = snapshot.val();
 
 	if (!data) {
@@ -255,10 +263,7 @@ const pruneKeysBefore = async (
 /**
  * Prune old data from a single draft
  */
-const pruneDraft = async (
-	firebasePath: string,
-	pubId: string | null = null,
-): Promise<void> => {
+const pruneDraft = async (firebasePath: string, pubId: string | null = null): Promise<void> => {
 	const draftRef = getDatabaseRef(firebasePath);
 
 	const latestCheckpointKey = await getLatestCheckpointKey(draftRef);
@@ -274,7 +279,9 @@ const pruneDraft = async (
 	if (pubId) {
 		const latestReleaseKey = await getLatestReleaseHistoryKey(pubId);
 		if (latestReleaseKey !== null && latestReleaseKey > safePruneThreshold) {
-			verbose(`  Using release history key ${latestReleaseKey} instead of checkpoint key ${latestCheckpointKey}`);
+			verbose(
+				`  Using release history key ${latestReleaseKey} instead of checkpoint key ${latestCheckpointKey}`,
+			);
 			safePruneThreshold = latestReleaseKey;
 		}
 	}

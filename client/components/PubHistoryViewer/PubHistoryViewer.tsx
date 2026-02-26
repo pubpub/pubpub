@@ -366,9 +366,7 @@ const PubHistoryViewer = (props: Props) => {
 						onRelease={(value) => onSetCurrentHistoryKey(value - 1)}
 					/>
 					{historyHasBeenPruned && (
-						<div className="pruned-history-notice">
-							Older history has been archived
-						</div>
+						<div className="pruned-history-notice">Older history has been archived</div>
 					)}
 				</>
 			)}
