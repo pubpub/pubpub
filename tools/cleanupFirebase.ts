@@ -127,6 +127,7 @@ interface CleanupStats {
 	mergesDeleted: number;
 	checkpointsDeleted: number;
 	checkpointsCreated: number;
+	metadataDeleted: number;
 	errorsEncountered: number;
 }
 
@@ -142,6 +143,7 @@ const stats: CleanupStats = {
 	mergesDeleted: 0,
 	checkpointsDeleted: 0,
 	checkpointsCreated: 0,
+	metadataDeleted: 0,
 	errorsEncountered: 0,
 };
 
@@ -420,6 +422,16 @@ const pruneDraft = async (firebasePath: string, pubId: string | null = null): Pr
 		const hasCheckpoints = (await draftRef.child('checkpoints').once('value')).exists();
 		if (hasCheckpoints) {
 			await draftRef.child('checkpoint').remove();
+		}
+	}
+
+	// Remove legacy metadata field (no longer used in v6, title/description are in Postgres)
+	const metadataSnapshot = await draftRef.child('metadata').once('value');
+	if (metadataSnapshot.exists()) {
+		verbose(`  Removing legacy metadata field`);
+		if (!isDryRun) {
+			await draftRef.child('metadata').remove();
+			stats.metadataDeleted++;
 		}
 	}
 };
@@ -709,6 +721,7 @@ const printSummary = () => {
 	log(`Merges deleted: ${stats.mergesDeleted}`);
 	log(`Checkpoints created: ${stats.checkpointsCreated}`);
 	log(`Checkpoints deleted: ${stats.checkpointsDeleted}`);
+	log(`Metadata fields deleted: ${stats.metadataDeleted}`);
 	log(`Errors encountered: ${stats.errorsEncountered}`);
 };
 
@@ -725,6 +738,7 @@ const _postSummaryToSlack = async () => {
 		`• Merges pruned: ${stats.mergesDeleted}`,
 		`• Checkpoints created: ${stats.checkpointsCreated}`,
 		`• Checkpoints pruned: ${stats.checkpointsDeleted}`,
+		`• Metadata fields deleted: ${stats.metadataDeleted}`,
 		stats.errorsEncountered > 0 ? `• ⚠️ Errors: ${stats.errorsEncountered}` : '',
 	]
 		.filter(Boolean)
