@@ -300,21 +300,6 @@ const getFirebaseDiscussions = async (
 };
 
 /**
- * Update a discussion in Firebase with a new currentKey
- */
-const updateFirebaseDiscussion = async (
-	draftRef: firebase.database.Reference,
-	discussionId: string,
-	discussion: DiscussionInfo,
-): Promise<void> => {
-	const compressed = {
-		...discussion,
-		selection: discussion.selection ? compressSelectionJSON(discussion.selection) : null,
-	};
-	await draftRef.child('discussions').child(discussionId).set(compressed);
-};
-
-/**
  * Fast-forward all outdated discussions to the target key
  */
 const fastForwardDiscussions = async (
@@ -343,18 +328,28 @@ const fastForwardDiscussions = async (
 
 	const fastForwardedDiscussions = await fastForward(discussionsById, doc, targetKey);
 
+	// Collect all updates for batch write
+	const updates: Record<string, any> = {};
 	let updatedCount = 0;
 	for (const [id, updatedDiscussion] of Object.entries(fastForwardedDiscussions)) {
 		if (updatedDiscussion) {
 			verbose(
 				`  Fast-forwarding discussion ${id} from ${discussions[id].currentKey} to ${targetKey}`,
 			);
-			if (!isDryRun) {
-				// biome-ignore lint/performance/noAwaitInLoops: sequential updates to Firebase
-				await updateFirebaseDiscussion(draftRef, id, updatedDiscussion);
-			}
+			const compressed = {
+				...updatedDiscussion,
+				selection: updatedDiscussion.selection
+					? compressSelectionJSON(updatedDiscussion.selection)
+					: null,
+			};
+			updates[id] = compressed;
 			updatedCount++;
 		}
+	}
+
+	// Write all discussion updates in a single batch
+	if (!isDryRun && updatedCount > 0) {
+		await draftRef.child('discussions').update(updates);
 	}
 
 	return updatedCount;
@@ -478,13 +473,13 @@ const pruneDraft = async (
 					k: pruneThreshold,
 					t: timestamp,
 				};
-				// Write checkpoint parts individually to identify failures
-				verbose(`${prefix}Writing checkpoints/${pruneThreshold}...`);
-				await draftRef.child(`checkpoints/${pruneThreshold}`).set(checkpoint);
-				verbose(`${prefix}Writing checkpoint...`);
-				await draftRef.child('checkpoint').set(checkpoint);
-				verbose(`${prefix}Writing checkpointMap/${pruneThreshold}...`);
-				await draftRef.child(`checkpointMap/${pruneThreshold}`).set(timestamp);
+				// Write all checkpoint data in a single multi-path update
+				verbose(`${prefix}Writing checkpoint at key ${pruneThreshold}...`);
+				await draftRef.update({
+					[`checkpoints/${pruneThreshold}`]: checkpoint,
+					checkpoint,
+					[`checkpointMap/${pruneThreshold}`]: timestamp,
+				});
 				localStats.checkpointsCreated++;
 				verbose(
 					`${prefix}Created checkpoint at key ${pruneThreshold} with timestamp ${timestamp}`,
