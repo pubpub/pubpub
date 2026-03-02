@@ -73,7 +73,7 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 			);
 
 			// useful for superadmins to see global profiles
-			if (!isThisUserAPartOfThisCommunity && !req.user.isSuperAdmin) {
+			if (!isThisUserAPartOfThisCommunity && !initialData.loginData?.isSuperAdmin) {
 				throw new NotFoundError(new Error('User not found'));
 			}
 		} else {
@@ -81,7 +81,7 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 				userData.id,
 			);
 			// useful for superadmins to see global profiles
-			if (!userAffiliatedWithAnyCommunity && !req.user.isSuperAdmin) {
+			if (!userAffiliatedWithAnyCommunity && !initialData.loginData?.isSuperAdmin) {
 				throw new NotFoundError(new Error('User not found'));
 			}
 		}
@@ -100,7 +100,7 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 					title: `${userData.fullName} · PubPub`,
 					description: userData.bio,
 					image: userData.avatar,
-					canonicalUrl: `${initialData.locationData.hostname}/user/${userData.slug}`,
+					canonicalUrl: `https://pubpub.org/user/${userData.slug}`,
 					unlisted: isNewishUser,
 				})}
 			/>,
