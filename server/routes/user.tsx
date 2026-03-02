@@ -4,10 +4,13 @@ import React from 'react';
 
 import { Router } from 'express';
 
-import { isUserAffiliatedWithCommunity } from 'server/community/queries';
+import {
+	isUserAffiliatedWithAnyCommunity,
+	isUserAffiliatedWithCommunity,
+} from 'server/community/queries';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
 import Html from 'server/Html';
-import { handleErrors } from 'server/utils/errors';
+import { handleErrors, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { getUser } from 'server/utils/queryHelpers';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
@@ -63,17 +66,24 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 		const userData = expect(await getUser(req.params.slug, initialData));
 		const isNewishUser = Date.now() - Number(userData.createdAt.valueOf()) < 1000 * 86400 * 30;
 
-		if (initialData.locationData.isBasePubPub) {
-			// 404
-			return res.status(404).send('Not Found');
-		}
+		if (!initialData.locationData.isBasePubPub) {
+			const isThisUserAPartOfThisCommunity = await isUserAffiliatedWithCommunity(
+				userData.id,
+				initialData.communityData.id,
+			);
 
-		const isThisUserAPartOfThisCommunity = await isUserAffiliatedWithCommunity(
-			userData.id,
-			initialData.communityData.id,
-		);
-		if (!isThisUserAPartOfThisCommunity) {
-			return res.status(404).send('Not Found');
+			// useful for superadmins to see global profiles
+			if (!isThisUserAPartOfThisCommunity && !req.user.isSuperAdmin) {
+				throw new NotFoundError(new Error('User not found'));
+			}
+		} else {
+			const userAffiliatedWithAnyCommunity = await isUserAffiliatedWithAnyCommunity(
+				userData.id,
+			);
+			// useful for superadmins to see global profiles
+			if (!userAffiliatedWithAnyCommunity && !req.user.isSuperAdmin) {
+				throw new NotFoundError(new Error('User not found'));
+			}
 		}
 
 		setSurrogateKeys(req, res, userData);
