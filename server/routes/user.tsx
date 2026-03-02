@@ -63,14 +63,17 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 		const userData = expect(await getUser(req.params.slug, initialData));
 		const isNewishUser = Date.now() - Number(userData.createdAt.valueOf()) < 1000 * 86400 * 30;
 
-		if (!initialData.locationData.isBasePubPub) {
-			const isThisUserAPartOfThisCommunity = await isUserAffiliatedWithCommunity(
-				userData.id,
-				initialData.communityData.id,
-			);
-			if (!isThisUserAPartOfThisCommunity) {
-				return res.redirect(`https://www.pubpub.org/user/${userData.slug}`);
-			}
+		if (initialData.locationData.isBasePubPub) {
+			// 404
+			return res.status(404).send('Not Found');
+		}
+
+		const isThisUserAPartOfThisCommunity = await isUserAffiliatedWithCommunity(
+			userData.id,
+			initialData.communityData.id,
+		);
+		if (!isThisUserAPartOfThisCommunity) {
+			return res.status(404).send('Not Found');
 		}
 
 		setSurrogateKeys(req, res, userData);
@@ -87,7 +90,7 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 					title: `${userData.fullName} · PubPub`,
 					description: userData.bio,
 					image: userData.avatar,
-					canonicalUrl: `https://www.pubpub.org/user/${userData.slug}`,
+					canonicalUrl: `${initialData.locationData.hostname}/user/${userData.slug}`,
 					unlisted: isNewishUser,
 				})}
 			/>,
