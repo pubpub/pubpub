@@ -54,7 +54,7 @@ ENV PORT=3000
 
 EXPOSE 3000
 
-CMD [ "pnpm", "start"]
+CMD ["pnpm", "start"]
 
 # ---- Production runtime stage ----
 FROM base AS runner
