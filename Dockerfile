@@ -52,14 +52,9 @@ FROM base AS dev
 ENV NODE_ENV=development
 ENV PORT=3000
 
-COPY package.json pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-
-COPY . .
-
 EXPOSE 3000
 
-CMD ["pnpm", "start"]
+CMD [ "pnpm", "start"]
 
 # ---- Production runtime stage ----
 FROM base AS runner
