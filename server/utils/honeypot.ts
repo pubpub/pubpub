@@ -3,7 +3,8 @@ import type { HoneypotContext, HoneypotTrigger } from 'types';
 import { Community, Pub } from 'server/models';
 import { addSpamTagToUser, updateSpamTagForUser } from 'server/spamTag/userQueries';
 
-export const isHoneypotFilled = (value: unknown): boolean => {
+export const isHoneypotFilled = (input: Record<string, unknown>): boolean => {
+	const value = input._honeypot;
 	if (value == null) return false;
 	if (typeof value === 'string') return value.trim().length > 0;
 	return true;

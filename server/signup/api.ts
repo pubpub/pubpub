@@ -8,7 +8,7 @@ import { createSignup, DuplicateEmailError } from './queries';
 export const router = Router();
 
 router.post('/api/signup', async (req, res) => {
-	if (isHoneypotFilled(req.body._honeypot)) {
+	if (isHoneypotFilled(req.body)) {
 		return res.status(201).json(true);
 	}
 	const ok = await verifyCaptchaPayload(req.body.altcha);

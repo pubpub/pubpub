@@ -145,7 +145,7 @@ export const communityServer = s.router(contract.community, {
 		if (!req.user) {
 			throw new ForbiddenError();
 		}
-		if (isHoneypotFilled(req.body._honeypot)) {
+		if (isHoneypotFilled(req.body)) {
 			await handleHoneypotTriggered(
 				expect(req.user).id,
 				'create-community',

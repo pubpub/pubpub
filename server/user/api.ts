@@ -39,7 +39,7 @@ router.post('/api/users', async (req, res) => {
 		delete body.altcha;
 		delete body._honeypot;
 		const newUser = await createUser(body);
-		if (isHoneypotFilled(req.body._honeypot)) {
+		if (isHoneypotFilled(req.body)) {
 			await handleHoneypotTriggered(newUser.id, 'create-user', req.body._honeypot, {
 				content: req.body.fullName ? `name: ${req.body.fullName}` : undefined,
 			});
@@ -101,7 +101,7 @@ router.put('/api/users/fromForm', async (req, res) => {
 		if (!permissions.update) {
 			throw new Error('Not Authorized');
 		}
-		if (isHoneypotFilled(req.body._honeypot)) {
+		if (isHoneypotFilled(req.body)) {
 			if (req.user?.id)
 				await handleHoneypotTriggered(req.user.id, 'edit-user', req.body._honeypot, {
 					content: req.body.fullName ? `name: ${req.body.fullName}` : undefined,

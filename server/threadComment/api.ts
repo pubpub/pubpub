@@ -47,7 +47,7 @@ router.post(
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
-		if (isHoneypotFilled(req.body._honeypot)) {
+		if (isHoneypotFilled(req.body)) {
 			if (req.user?.id)
 				await handleHoneypotTriggered(
 					req.user.id,

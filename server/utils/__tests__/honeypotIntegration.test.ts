@@ -46,7 +46,7 @@ describe('isHoneypotFilled + handleHoneypotTriggered integration', () => {
 	it('correctly identifies a filled honeypot and marks the user', async () => {
 		const { userB } = models;
 		const honeypotValue = 'i-am-a-bot';
-		if (isHoneypotFilled(honeypotValue)) {
+		if (isHoneypotFilled({ _honeypot: honeypotValue })) {
 			await handleHoneypotTriggered(userB.id, 'edit-user', honeypotValue);
 		}
 		const tag = await getSpamTagForUser(userB.id);

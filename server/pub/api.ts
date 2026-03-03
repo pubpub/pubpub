@@ -111,7 +111,7 @@ export const pubServer = s.router(contract.pub, {
 		return { status: 201, body: newPub.toJSON() };
 	},
 	createFromForm: async ({ body, req }) => {
-		if (isHoneypotFilled(body._honeypot)) {
+		if (isHoneypotFilled(body)) {
 			if (req.user?.id)
 				await handleHoneypotTriggered(req.user.id, 'create-pub', body._honeypot as string, {
 					communityId: body.communityId as string | undefined,
