@@ -4,11 +4,14 @@ import React from 'react';
 
 import { Router } from 'express';
 
-import { isUserAffiliatedWithCommunity } from 'server/community/queries';
+import {
+	isUserAffiliatedWithAnyCommunity,
+	isUserAffiliatedWithCommunity,
+} from 'server/community/queries';
 import { getCustomScriptsForCommunity } from 'server/customScript/queries';
 import Html from 'server/Html';
 import { getSpamTagForUser } from 'server/spamTag/userQueries';
-import { handleErrors } from 'server/utils/errors';
+import { handleErrors, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { getUser } from 'server/utils/queryHelpers';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
@@ -78,8 +81,18 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 				userData.id,
 				initialData.communityData.id,
 			);
-			if (!isThisUserAPartOfThisCommunity) {
-				return res.redirect(`https://www.pubpub.org/user/${userData.slug}`);
+
+			// useful for superadmins to see global profiles
+			if (!isThisUserAPartOfThisCommunity && !initialData.loginData?.isSuperAdmin) {
+				throw new NotFoundError(new Error('User not found'));
+			}
+		} else {
+			const userAffiliatedWithAnyCommunity = await isUserAffiliatedWithAnyCommunity(
+				userData.id,
+			);
+			// useful for superadmins to see global profiles
+			if (!userAffiliatedWithAnyCommunity && !initialData.loginData?.isSuperAdmin) {
+				throw new NotFoundError(new Error('User not found'));
 			}
 		}
 
@@ -97,7 +110,7 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 					title: `${userData.fullName} · PubPub`,
 					description: userData.bio,
 					image: userData.avatar,
-					canonicalUrl: `https://www.pubpub.org/user/${userData.slug}`,
+					canonicalUrl: `https://pubpub.org/user/${userData.slug}`,
 					unlisted: isNewishUser,
 				})}
 			/>,
