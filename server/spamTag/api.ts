@@ -7,7 +7,7 @@ import { expect } from 'utils/assert';
 import { queryCommunitiesForSpamManagement } from './communityDashboard';
 import { updateSpamTagForCommunity } from './communityQueries';
 import { canManipulateSpamTags } from './permissions';
-import { queryUsersForSpamManagement } from './userDashboard';
+import { getRecentDiscussionsForUser, queryUsersForSpamManagement } from './userDashboard';
 import {
 	addSpamTagToUser,
 	getSpamTagForUser,
@@ -95,21 +95,39 @@ router.delete(
 );
 
 router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
-	const { offset, limit, searchTerm, status, ordering } = req.body;
+	const { offset, limit, searchTerm, status, ordering, spamTagPresence, communitySubdomain } =
+		req.body;
 	const canQuery = await canManipulateSpamTags({
 		userId: expect(req.user).id,
 	});
 	if (!canQuery) {
 		throw new ForbiddenError();
 	}
-	const includeAll = !status || (Array.isArray(status) && status.length === 0);
 	const queryResult = await queryUsersForSpamManagement({
 		offset: offset && parseInt(offset, 10),
 		limit: limit && parseInt(limit, 10),
 		ordering,
 		searchTerm,
 		status: status ?? null,
-		includeAffiliation: includeAll,
+		includeAffiliation: true,
+		spamTagPresence,
+		communitySubdomain,
 	});
 	return res.status(200).send(queryResult);
 });
+
+router.post(
+	'/api/spamTags/userRecentDiscussions',
+	wrap(async (req, res) => {
+		const canQuery = await canManipulateSpamTags({ userId: expect(req.user).id });
+		if (!canQuery) {
+			throw new ForbiddenError();
+		}
+		const { userId } = req.body;
+		if (!userId || typeof userId !== 'string') {
+			return res.status(400).send({ error: 'userId required' });
+		}
+		const discussions = await getRecentDiscussionsForUser(userId);
+		return res.status(200).send(discussions);
+	}),
+);

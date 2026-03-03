@@ -32,7 +32,8 @@ export type SpamCommunityQuery = {
 export type SpamUserQueryOrderingField =
 	| 'user-created-at'
 	| 'spam-score'
-	| 'spam-status-updated-at';
+	| 'spam-status-updated-at'
+	| 'discussion-count';
 
 export type SpamUserQueryOrdering = {
 	direction: 'ASC' | 'DESC';
@@ -52,6 +53,18 @@ export type SpamUserQuery = {
 	searchTerm?: string;
 	ordering: SpamUserQueryOrdering;
 	includeAffiliation?: boolean;
+	spamTagPresence?: 'any' | 'present' | 'absent';
+	communitySubdomain?: string;
+};
+
+export type RecentDiscussion = {
+	id: string;
+	title: string | null;
+	createdAt: string;
+	pubTitle: string | null;
+	pubSlug: string | null;
+	communitySubdomain: string | null;
+	firstCommentText: string | null;
 };
 
 export type HoneypotTrigger =
