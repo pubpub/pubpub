@@ -244,7 +244,11 @@ const DiscussionInput = (props: Props) => {
 						{renderUserNameInput()}
 					</div>
 
-					<Altcha ref={altchaRef} />
+					{/** we don't want to autorun the verification for new discussions, as that would always run verification on each page load
+					 * we do want to run verification on load for replies, as you need to open the specific discussion to reply to it, and otherwise
+					 * the processes doesn't work very smoothly (need to press "Post reply" twice, once to trigger verification, and once to actually submit the form)
+					 */}
+					<Altcha ref={altchaRef} auto={isNewThread ? 'onfocus' : 'onload'} />
 					<Button
 						className="discussion-primary-button"
 						intent={Intent.PRIMARY}
