@@ -1,4 +1,4 @@
-import type { UserCommunityFlagReason, UserSpamTagFields } from 'types';
+import type { UserSpamTagFields } from 'types';
 
 import {
 	sendBanDevEmail,
@@ -32,9 +32,6 @@ export type SpamNotificationContext = {
 	actorName?: string;
 	uploadKey?: string;
 	communityId?: string;
-	flaggedById?: string;
-	flagReason?: UserCommunityFlagReason;
-	flagReasonText?: string | null;
 	sourceDiscussionId?: string | null;
 };
 
