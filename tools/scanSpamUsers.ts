@@ -61,7 +61,7 @@ import { computeUserSpamReport } from 'server/spamTag/userScore';
 import { JsonArrayWriter } from 'utils/jsonArrayWriter';
 
 const BATCH_SIZE = 100;
-const DEFAULT_MIN_SCORE = 4;
+const DEFAULT_MIN_SCORE = 5;
 
 type CommentEvidence = {
 	text: string;

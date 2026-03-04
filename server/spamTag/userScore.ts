@@ -109,8 +109,6 @@ export type UserSpamReport = {
 	signals: string[];
 };
 
-// intentionally high-precision signals. each one should have a near-zero false-positive rate
-// individually, and we require a combined score >= 4 to tag a user.
 export const computeUserSpamReport = async (user: User): Promise<UserSpamReport> => {
 	const fields: Record<string, string[]> = {};
 	const signals: string[] = [];
