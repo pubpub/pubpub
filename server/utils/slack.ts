@@ -1,4 +1,4 @@
-import type { SpamStatus, UserSpamTagFields } from 'types';
+import type { SpamStatus, UserCommunityFlagReason, UserSpamTagFields } from 'types';
 
 import fetch from 'node-fetch';
 
@@ -404,6 +404,82 @@ export const postToSlackAboutNewUserSpamTag = async (opts: NewSpamTagSlackOption
 							{
 								type: 'button',
 								text: { type: 'plain_text', text: 'Review in Dashboard' },
+								url: dashUrl,
+							},
+						],
+					},
+				],
+			},
+		],
+	});
+};
+
+type CommunityFlagSlackOptions = {
+	flagId: string;
+	userId: string;
+	flaggedById: string;
+	communityId: string;
+	reason: UserCommunityFlagReason;
+	reasonText?: string | null;
+	sourceDiscussionId?: string | null;
+};
+
+export const postToSlackAboutCommunityFlag = async (opts: CommunityFlagSlackOptions) => {
+	if (process.env.NODE_ENV === 'test') return;
+	const { User, Community, Discussion, Pub } = await import('server/models');
+	const [user, flagger, community, discussion] = await Promise.all([
+		User.findByPk(opts.userId, { attributes: ['fullName', 'slug'] }),
+		User.findByPk(opts.flaggedById, { attributes: ['fullName', 'slug'] }),
+		Community.findByPk(opts.communityId, { attributes: ['subdomain'] }),
+		opts.sourceDiscussionId
+			? Discussion.findByPk(opts.sourceDiscussionId, {
+					attributes: ['id', 'title', 'pubId'],
+					include: [{ model: Pub, as: 'pub', attributes: ['slug'] }],
+				})
+			: null,
+	]);
+	const userName = user?.fullName ?? 'Unknown user';
+	const userSlug = user?.slug ?? '';
+	const flaggerName = flagger?.fullName ?? 'Unknown admin';
+	const subdomain = community?.subdomain ?? 'unknown';
+	const profileUrl = getUserProfileUrl(userSlug);
+	const dashUrl = getSpamDashUrl(userName);
+
+	const reasonLabel = opts.reason.replace(/-/g, ' ');
+	const extraReason = opts.reasonText ? `: ${opts.reasonText}` : '';
+	let discussionLink = '';
+	if (discussion) {
+		const pub = (discussion as any).pub;
+		if (pub?.slug) {
+			discussionLink = `\nDiscussion: https://${subdomain}.pubpub.org/pub/${pub.slug}`;
+		}
+	}
+
+	const headline =
+		`*<${profileUrl}|${userName}>* flagged by ${flaggerName} in *${subdomain}*` +
+		`\nReason: ${reasonLabel}${extraReason}${discussionLink}`;
+	const fallback = `${userName} flagged by ${flaggerName} in ${subdomain} for ${reasonLabel}`;
+
+	await postToSlack({
+		icon_emoji: ':triangular_flag_on_post:',
+		text: fallback,
+		attachments: [
+			{
+				fallback,
+				color: '#e67e22',
+				blocks: [
+					{ type: 'section', text: { type: 'mrkdwn', text: headline } },
+					{
+						type: 'actions',
+						elements: [
+							{
+								type: 'button',
+								text: { type: 'plain_text', text: 'User Profile' },
+								url: profileUrl,
+							},
+							{
+								type: 'button',
+								text: { type: 'plain_text', text: 'Spam Dashboard' },
 								url: dashUrl,
 							},
 						],

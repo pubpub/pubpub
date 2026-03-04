@@ -40,20 +40,27 @@ router.put(
 		}
 		const actorId = req.user?.id;
 		const actorName = (req.user as any)?.fullName ?? 'Unknown';
+		// skip the "new spam tag" notification when a status change follows immediately,
+		// since updateSpamTagForUser will send its own notification
+		const skipNotification = true;
 		const existingTag = await getSpamTagForUser(userId);
 		if (!existingTag) {
-			await addSpamTagToUser(userId);
+			await addSpamTagToUser(userId, undefined, { skipNotification });
 		}
 		if (status === 'confirmed-spam' && actorId) {
-			await addSpamTagToUser(userId, {
-				manuallyMarkedBy: [
-					{
-						userId: actorId,
-						userName: actorName,
-						at: new Date().toISOString(),
-					},
-				],
-			});
+			await addSpamTagToUser(
+				userId,
+				{
+					manuallyMarkedBy: [
+						{
+							userId: actorId,
+							userName: actorName,
+							at: new Date().toISOString(),
+						},
+					],
+				},
+				{ skipNotification },
+			);
 		}
 		await updateSpamTagForUser({ userId, status, actorId, actorName });
 		return res.status(200).send({});
@@ -95,8 +102,19 @@ router.delete(
 );
 
 router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
-	const { offset, limit, searchTerm, status, ordering, spamTagPresence, communitySubdomain } =
-		req.body;
+	const {
+		offset,
+		limit,
+		searchTerm,
+		status,
+		ordering,
+		spamTagPresence,
+		communitySubdomain,
+		createdAfter,
+		createdBefore,
+		activeAfter,
+		activeBefore,
+	} = req.body;
 	const canQuery = await canManipulateSpamTags({
 		userId: expect(req.user).id,
 	});
@@ -112,6 +130,10 @@ router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
 		includeAffiliation: true,
 		spamTagPresence,
 		communitySubdomain,
+		createdAfter,
+		createdBefore,
+		activeAfter,
+		activeBefore,
 	});
 	return res.status(200).send(queryResult);
 });

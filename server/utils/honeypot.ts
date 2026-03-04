@@ -36,10 +36,14 @@ export const handleHoneypotTriggered = async (
 ): Promise<void> => {
 	if (!userId) return;
 	const resolved = await resolveHoneypotContext(context);
-	await addSpamTagToUser(userId, {
-		honeypotTriggers: [
-			{ honeypot, value, context: resolved, triggeredAt: new Date().toISOString() },
-		],
-	});
+	await addSpamTagToUser(
+		userId,
+		{
+			honeypotTriggers: [
+				{ honeypot, value, context: resolved, triggeredAt: new Date().toISOString() },
+			],
+		},
+		{ skipNotification: true },
+	);
 	await updateSpamTagForUser({ userId, status: 'confirmed-spam' });
 };
