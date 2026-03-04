@@ -75,6 +75,9 @@ const handlers: Record<SpamEvent, Handler[]> = {
 	'spam-lifted': [
 		async (ctx) => {
 			if (!ctx.previousStatus || ctx.previousStatus === 'unreviewed') {
+				console.log(
+					'spam-lifted: not notifying manual marking of unreviewed user as not-spam',
+				);
 				return;
 			}
 			return Promise.all([
