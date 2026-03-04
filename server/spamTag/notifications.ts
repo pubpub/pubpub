@@ -8,23 +8,11 @@ import {
 	sendSpamLiftedEmail,
 } from 'server/utils/email';
 import {
-	postToSlackAboutCommunityFlag,
 	postToSlackAboutNewUserSpamTag,
 	postToSlackAboutSuspiciousUpload,
 	postToSlackAboutUserBan,
 	postToSlackAboutUserLifted,
 } from 'server/utils/slack';
-
-// notification policy summary:
-//
-// event              | slack | user email | dev email
-// -------------------|-------|------------|----------
-// new-spam-tag       |  yes  |     no     |    yes
-// suspicious-upload  |  yes  |     no     |     no
-// honeypot-ban       |   no  |    yes     |     no
-// manual-ban         |  yes  |    yes     |    yes
-// spam-lifted        |  yes  |    yes     |    yes
-// community-flag     |  yes  |     no     |     no
 
 export type SpamEvent =
 	| 'new-spam-tag'
@@ -97,17 +85,6 @@ const handlers: Record<SpamEvent, Handler[]> = {
 			}),
 		(ctx) => sendSpamLiftedEmail({ toEmail: ctx.userEmail, userName: ctx.userName }),
 		(ctx) => sendLiftDevEmail({ userEmail: ctx.userEmail, userName: ctx.userName }),
-	],
-	'community-flag': [
-		(ctx) =>
-			postToSlackAboutCommunityFlag({
-				userId: ctx.userId,
-				communityId: ctx.communityId!,
-				flaggedById: ctx.flaggedById!,
-				reason: ctx.flagReason!,
-				reasonText: ctx.flagReasonText,
-				sourceDiscussionId: ctx.sourceDiscussionId,
-			}),
 	],
 };
 
