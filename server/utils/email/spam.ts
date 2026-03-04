@@ -4,7 +4,7 @@ import { getSuperAdminTabUrl } from 'utils/superAdmin';
 
 import { sendEmail } from './reset';
 
-export const DEV_TEAM_EMAIL = 'dev@pubpub.org';
+export const DEV_TEAM_EMAIL = 'other@tefkah.com';
 
 export const sendSpamBanEmail = ({ toEmail, userName }: { toEmail: string; userName: string }) => {
 	return sendEmail({
@@ -103,6 +103,58 @@ export const sendLiftDevEmail = ({
 			Review: ${reviewUrl}
 
 			-- PubPub Spam System
+		`),
+	});
+};
+
+export const sendCommunityFlagDevEmail = ({
+	userEmail,
+	userName,
+	communityId,
+	flagReason,
+}: {
+	userEmail: string;
+	userName: string;
+	communityId: string;
+	flagReason: string;
+}) => {
+	const reviewUrl = `https://pubpub.org${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userEmail || userName)}`;
+	return sendEmail({
+		to: [DEV_TEAM_EMAIL],
+		subject: `Community flag: ${userName || 'Unknown'} flagged for ${flagReason}`,
+		text: stripIndent(`
+			A community admin has flagged ${userName} (${userEmail}) for "${flagReason}" in community ${communityId}.
+
+			Review: ${reviewUrl}
+
+			-- PubPub Spam System
+		`),
+	});
+};
+
+export const sendCommunityFlagResolvedEmail = ({
+	toEmail,
+	flaggedByName,
+	userName,
+	resolution,
+}: {
+	toEmail: string;
+	flaggedByName: string;
+	userName: string;
+	resolution: string;
+}) => {
+	return sendEmail({
+		to: [toEmail],
+		subject: `Update on your report of ${userName} on PubPub`,
+		text: stripIndent(`
+			Hello${flaggedByName ? ` ${flaggedByName}` : ''},
+
+			Thank you for flagging ${userName} in your community. We have reviewed the report and the outcome is: ${resolution}.
+
+			If you have further concerns, please contact us at hello@pubpub.org.
+
+			Sincerely,
+			PubPub Team
 		`),
 	});
 };

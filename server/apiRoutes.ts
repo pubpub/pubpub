@@ -6,6 +6,7 @@ import { activityItemRouter } from './activityItem/api';
 import { router as apiDocsRouter } from './apiDocs/api';
 import { router as captchaRouter } from './captcha/api';
 import { router as citationRouter } from './citation/api';
+import { router as communityModerationReportRouter } from './communityModerationReport/api';
 import { router as communityServicesRouter } from './communityServices/api';
 import { router as customScriptRouter } from './customScript/api';
 import { router as devApiRouter } from './dev/api';
@@ -30,7 +31,6 @@ import { router as submissionWorkflowRouter } from './submissionWorkflow/api';
 import { router as subscribeRouter } from './subscribe/api';
 import { router as threadCommentRouter } from './threadComment/api';
 import { router as userRouter } from './user/api';
-import { router as userCommunityFlagRouter } from './userCommunityFlag/api';
 import { router as userDismissableRouter } from './userDismissable/api';
 import { router as userNotificationRouter } from './userNotification/api';
 import { router as userNotificationPreferencesRouter } from './userNotificationPreferences/api';
@@ -64,7 +64,7 @@ const apiRouter = Router()
 	.use(submissionRouter)
 	.use(threadCommentRouter)
 	.use(userRouter)
-	.use(userCommunityFlagRouter)
+	.use(communityModerationReportRouter)
 	.use(userDismissableRouter)
 	.use(userNotificationRouter)
 	.use(userNotificationPreferencesRouter)

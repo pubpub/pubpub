@@ -2,7 +2,7 @@ import type { SpamStatus, UserSpamTagFields } from 'types';
 
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { Button, ButtonGroup, Collapse, type Intent, Spinner, Tag } from '@blueprintjs/core';
+import { Button, ButtonGroup, type Intent, Spinner, Tag, Tooltip } from '@blueprintjs/core';
 
 import { apiFetch } from 'client/utils/apiFetch';
 import { formatDate } from 'utils/dates';
@@ -12,6 +12,8 @@ import MarkSpamStatusButton from './MarkSpamStatusButton';
 import './userSpamEntry.scss';
 
 import type { RecentDiscussion, SpamUser } from './types';
+
+import { Popover } from 'client/components';
 
 type Props = {
 	user: SpamUser;
@@ -59,7 +61,7 @@ const DiscussionItem = ({ discussion }: { discussion: RecentDiscussion }) => {
 
 const UserSpamEntry = (props: Props) => {
 	const { user, onSpamTagRemoved, onStatusChanged: onStatusChangedProp } = props;
-	const { fullName, email, slug, createdAt, spamTag, affiliation } = user;
+	const { fullName, email, slug, createdAt, spamTag, affiliation, communityReports } = user;
 	const hasTag = spamTag != null;
 	const initialStatus = hasTag ? spamTag.status : null;
 	const [status, setUpdatedStatus] = useState<null | SpamStatus>(initialStatus);
@@ -72,7 +74,6 @@ const UserSpamEntry = (props: Props) => {
 		[user.id, onStatusChangedProp],
 	);
 
-	const [discussionsOpen, setDiscussionsOpen] = useState(false);
 	const [recentDiscussions, setRecentDiscussions] = useState<RecentDiscussion[] | null>(null);
 	const [discussionsLoading, setDiscussionsLoading] = useState(false);
 
@@ -81,12 +82,8 @@ const UserSpamEntry = (props: Props) => {
 		: ({} as UserSpamTagFields);
 	const fieldsJsonString = useMemo(() => JSON.stringify(fields, null, 2), [fields]);
 
-	const handleToggleDiscussions = useCallback(async () => {
-		if (recentDiscussions) {
-			setDiscussionsOpen((prev) => !prev);
-			return;
-		}
-		setDiscussionsOpen(true);
+	const _handleToggleDiscussions = useCallback(async () => {
+		if (recentDiscussions) return;
 		setDiscussionsLoading(true);
 		try {
 			const result = await apiFetch.post('/api/spamTags/userRecentDiscussions', {
@@ -180,15 +177,15 @@ const UserSpamEntry = (props: Props) => {
 						status="confirmed-spam"
 						onStatusChanged={handleStatusChanged}
 					/>
-					<Button
-						minimal
-						small
-						icon="remove"
-						loading={removeLoading}
-						onClick={handleRemoveTag}
-					>
-						Remove spam tag
-					</Button>
+					<Tooltip content="Remove spam tag">
+						<Button
+							minimal
+							small
+							icon="remove"
+							loading={removeLoading}
+							onClick={handleRemoveTag}
+						></Button>
+					</Tooltip>
 				</ButtonGroup>
 			);
 		}
@@ -206,15 +203,15 @@ const UserSpamEntry = (props: Props) => {
 						status="unreviewed"
 						onStatusChanged={handleStatusChanged}
 					/>
-					<Button
-						minimal
-						small
-						icon="remove"
-						loading={removeLoading}
-						onClick={handleRemoveTag}
-					>
-						Remove spam tag
-					</Button>
+					<Tooltip content="Remove spam tag">
+						<Button
+							minimal
+							small
+							icon="remove"
+							loading={removeLoading}
+							onClick={handleRemoveTag}
+						></Button>
+					</Tooltip>
 				</ButtonGroup>
 			);
 		}
@@ -231,9 +228,9 @@ const UserSpamEntry = (props: Props) => {
 					status="unreviewed"
 					onStatusChanged={handleStatusChanged}
 				/>
-				<Button minimal small icon="remove" onClick={handleRemoveTag}>
-					Remove spam tag
-				</Button>
+				<Tooltip content="Remove spam tag">
+					<Button minimal small icon="remove" onClick={handleRemoveTag}></Button>
+				</Tooltip>
 			</ButtonGroup>
 		);
 	};
@@ -293,6 +290,30 @@ const UserSpamEntry = (props: Props) => {
 		);
 	};
 
+	const popoverContent = useMemo(() => {
+		if (discussionsLoading) {
+			return (
+				<div className="discussions-popover-content">
+					<Spinner size={16} />
+				</div>
+			);
+		}
+		if (!recentDiscussions || recentDiscussions.length === 0) {
+			return (
+				<div className="discussions-popover-content">
+					<div className="no-discussions">No discussions found</div>
+				</div>
+			);
+		}
+		return (
+			<div className="discussions-popover-content">
+				{recentDiscussions.map((d) => (
+					<DiscussionItem key={d.id} discussion={d} />
+				))}
+			</div>
+		);
+	}, [recentDiscussions, discussionsLoading]);
+
 	const renderAffiliation = () => {
 		if (!affiliation) return null;
 		const { communitySubdomains, pubCount, discussionCount } = affiliation;
@@ -320,31 +341,101 @@ const UserSpamEntry = (props: Props) => {
 			);
 		}
 		if (pubCount > 0) parts.push(`${pubCount} pub(s)`);
-		if (discussionCount > 0) parts.push(`${discussionCount} discussion(s)`);
+		if (discussionCount > 0) {
+			parts.push(
+				<Popover
+					key="discussions"
+					placement="bottom-start"
+					aria-label="Recent discussions"
+					content={popoverContent}
+					unstable_fixed
+					lazy={false}
+				>
+					<Button
+						minimal
+						onClick={_handleToggleDiscussions}
+						small
+						className="inline-discussions-btn"
+					>
+						{discussionCount} discussion(s)
+					</Button>
+				</Popover>,
+			);
+		}
 		return (
 			<div className="affiliation">
-				<Tag minimal>
-					{parts.map((part, index) => (
-						// biome-ignore lint/suspicious/noArrayIndexKey: idcc
-						<span key={index}>
-							{part}
-							{index < parts.length - 1 ? ' · ' : ''}
-						</span>
-					))}
-				</Tag>
+				{parts.map((part, index) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: idcc
+					<span key={index} className="affiliation-part">
+						{part}
+						{index < parts.length - 1 ? ' \u00b7 ' : ''}
+					</span>
+				))}
 			</div>
 		);
 	};
 
-	const renderRecentDiscussions = () => {
-		if (discussionsLoading) return <Spinner size={16} />;
-		if (!recentDiscussions || recentDiscussions.length === 0) {
-			return <div className="no-discussions">No discussions found</div>;
-		}
-		return recentDiscussions.map((d) => <DiscussionItem key={d.id} discussion={d} />);
+	const renderCommunityReports = () => {
+		if (!communityReports?.length) return null;
+		return (
+			<div className="community-reports">
+				{communityReports.map((report, index) => (
+					<Popover
+						// biome-ignore lint/suspicious/noArrayIndexKey: stable list
+						key={index}
+						aria-label="Flag details"
+						placement="bottom-start"
+						content={
+							<div className="flag-detail-popover">
+								<div className="flag-detail-row">
+									<span className="flag-detail-label">Community</span>
+									<span>{report.communitySubdomain}</span>
+								</div>
+								<div className="flag-detail-row">
+									<span className="flag-detail-label">Reason</span>
+									<span>{report.reason}</span>
+								</div>
+								{report.reasonText && (
+									<div className="flag-detail-row">
+										<span className="flag-detail-label">Note</span>
+										<span className="flag-detail-note">
+											{report.reasonText}
+										</span>
+									</div>
+								)}
+								{report.flaggedByName && (
+									<div className="flag-detail-row">
+										<span className="flag-detail-label">Flagged by</span>
+										<span>{report.flaggedByName}</span>
+									</div>
+								)}
+								{report.sourceDiscussionUrl && (
+									<div className="flag-detail-row">
+										<span className="flag-detail-label">Source</span>
+										<a
+											href={report.sourceDiscussionUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											{report.sourceDiscussionTitle || 'View discussion'}
+										</a>
+									</div>
+								)}
+								<div className="flag-detail-row">
+									<span className="flag-detail-label">Date</span>
+									<span>{formatDate(report.createdAt)}</span>
+								</div>
+							</div>
+						}
+					>
+						<Tag intent="warning" minimal icon="flag" interactive>
+							{report.communitySubdomain}: {report.reason}
+						</Tag>
+					</Popover>
+				))}
+			</div>
+		);
 	};
-
-	const discussionCount = affiliation?.discussionCount ?? 0;
 
 	return (
 		<div className="user-spam-entry-component">
@@ -372,20 +463,7 @@ const UserSpamEntry = (props: Props) => {
 				</div>
 				<div className="actions">{renderActions()}</div>
 			</div>
-			<div className="discussions-section">
-				<Button
-					minimal
-					small
-					icon={discussionsOpen ? 'chevron-up' : 'chevron-down'}
-					onClick={handleToggleDiscussions}
-				>
-					{discussionsOpen ? 'Hide' : 'Show'} discussions
-					{discussionCount > 0 ? ` (${discussionCount})` : ''}
-				</Button>
-				<Collapse isOpen={discussionsOpen}>
-					<div className="discussions-list">{renderRecentDiscussions()}</div>
-				</Collapse>
-			</div>
+			{renderCommunityReports()}
 		</div>
 	);
 };

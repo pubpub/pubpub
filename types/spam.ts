@@ -48,6 +48,17 @@ export type SpamUserAffiliation = {
 	discussionCount: number;
 };
 
+export type SpamUserCommunityReport = {
+	communitySubdomain: string;
+	reason: string;
+	reasonText: string | null;
+	status: string;
+	createdAt: string;
+	flaggedByName: string | null;
+	sourceDiscussionTitle: string | null;
+	sourceDiscussionUrl: string | null;
+};
+
 export type SpamUserQuery = {
 	status?: SpamStatus[] | null;
 	offset?: number;
@@ -63,7 +74,15 @@ export type SpamUserQuery = {
 	activeBefore?: string;
 	minActivities?: number;
 	maxActivities?: number;
+	hasCommunityReport?: boolean;
+	spamFieldsFilter?: SpamFieldsFilterKey[];
 };
+
+export type SpamFieldsFilterKey =
+	| 'honeypotTriggers'
+	| 'suspiciousFiles'
+	| 'suspiciousComments'
+	| 'manuallyMarkedBy';
 
 export type RecentDiscussion = {
 	id: string;
@@ -91,30 +110,40 @@ export type HoneypotContext = {
 	content?: string;
 };
 
-export type UserCommunityFlagReason =
+export type ModerationReportReason =
 	| 'spam-content'
 	| 'hateful-language'
 	| 'harassment'
 	| 'impersonation'
 	| 'other';
 
-export type UserCommunityFlagStatus = 'active' | 'dismissed' | 'escalated';
+/** @deprecated use ModerationReportReason */
+export type UserCommunityFlagReason = ModerationReportReason;
 
-export type SerializedUserCommunityFlag = {
+export type ModerationReportStatus = 'active' | 'retracted' | 'dismissed' | 'escalated';
+
+/** @deprecated use ModerationReportStatus */
+export type UserCommunityFlagStatus = ModerationReportStatus;
+
+export type SerializedCommunityModerationReport = {
 	id: string;
 	userId: string;
 	communityId: string;
 	flaggedById: string;
-	reason: UserCommunityFlagReason;
+	reason: ModerationReportReason;
 	reasonText: string | null;
 	sourceDiscussionId: string | null;
-	status: UserCommunityFlagStatus;
+	spamTagId: string | null;
+	status: ModerationReportStatus;
 	createdAt: string;
 	updatedAt: string;
 	user?: { fullName: string; slug: string; email?: string };
 	flaggedBy?: { fullName: string; slug: string };
 	community?: { subdomain: string };
 };
+
+/** @deprecated use SerializedCommunityModerationReport */
+export type SerializedUserCommunityFlag = SerializedCommunityModerationReport;
 
 export type UserSpamTagFields = {
 	suspiciousFiles?: string[];

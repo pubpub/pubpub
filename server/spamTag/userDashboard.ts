@@ -4,6 +4,7 @@ import { literal, Op } from 'sequelize';
 
 import {
 	Community,
+	CommunityModerationReport,
 	Discussion,
 	Member,
 	Pub,
@@ -45,6 +46,8 @@ const getUserWhereQuery = (options: {
 	activeBefore?: string;
 	minActivities?: number;
 	maxActivities?: number;
+	hasCommunityReport?: boolean;
+	spamFieldsFilter?: types.SpamFieldsFilterKey[];
 }) => {
 	const conditions: any[] = [];
 
@@ -102,6 +105,43 @@ const getUserWhereQuery = (options: {
 		conditions.push(literal(`${activityCountSubquery} <= ${Number(options.maxActivities)}`));
 	}
 
+	if (options.hasCommunityReport) {
+		conditions.push({
+			id: {
+				[Op.in]: literal(`(
+					SELECT DISTINCT "userId" FROM "CommunityModerationReports"
+					WHERE "status" = 'active'
+				)`),
+			},
+		});
+	}
+
+	if (options.spamFieldsFilter?.length) {
+		const allowed = new Set<string>([
+			'honeypotTriggers',
+			'suspiciousFiles',
+			'suspiciousComments',
+			'manuallyMarkedBy',
+		]);
+		const validKeys = options.spamFieldsFilter.filter((k) => allowed.has(k));
+		if (validKeys.length > 0) {
+			// each key: fields->key exists and is a non-empty array
+			const jsonConditions = validKeys
+				.map((k) => {
+					const escaped = User.sequelize!.escape(k);
+					return `("fields"->>${escaped} IS NOT NULL AND jsonb_array_length("fields"->${escaped}) > 0)`;
+				})
+				.join(' OR ');
+			conditions.push({
+				spamTagId: {
+					[Op.in]: literal(`(
+						SELECT "id" FROM "SpamTags" WHERE ${jsonConditions}
+					)`),
+				},
+			});
+		}
+	}
+
 	if (conditions.length === 0) return {};
 	if (conditions.length === 1) return { where: conditions[0] };
 	return { where: { [Op.and]: conditions } };
@@ -142,6 +182,7 @@ export type UserSpamManagementRow =
 type SerializedSpamUserRow = Record<string, unknown> & {
 	id: string;
 	affiliation?: types.SpamUserAffiliation;
+	communityReports?: types.SpamUserCommunityReport[];
 };
 
 export const queryUsersForSpamManagement = async (
@@ -162,6 +203,8 @@ export const queryUsersForSpamManagement = async (
 		activeBefore,
 		minActivities,
 		maxActivities,
+		hasCommunityReport,
+		spamFieldsFilter,
 	} = query;
 	const hasStatusFilter = status && status.length > 0;
 	const spamTagRequired = spamTagPresence === 'present' || !!hasStatusFilter;
@@ -184,6 +227,8 @@ export const queryUsersForSpamManagement = async (
 			activeBefore,
 			minActivities,
 			maxActivities,
+			hasCommunityReport,
+			spamFieldsFilter,
 		}),
 		attributes: ['id', 'fullName', 'email', 'slug', 'createdAt'],
 		limit,
@@ -198,13 +243,70 @@ export const queryUsersForSpamManagement = async (
 	});
 	if (includeAffiliation && plain.length > 0) {
 		const userIds = plain.map((r) => r.id as string);
-		const affiliationMap = await getAffiliationForUserIds(userIds);
+		const [affiliationMap, reportsMap] = await Promise.all([
+			getAffiliationForUserIds(userIds),
+			getCommunityReportsForUserIds(userIds),
+		]);
 		return plain.map((r) => ({
 			...r,
 			affiliation: affiliationMap.get(r.id as string),
+			communityReports: reportsMap.get(r.id as string) ?? [],
 		})) as SerializedSpamUserRow[];
 	}
 	return plain as SerializedSpamUserRow[];
+};
+
+const getCommunityReportsForUserIds = async (
+	userIds: string[],
+): Promise<Map<string, types.SpamUserCommunityReport[]>> => {
+	const reports = await CommunityModerationReport.findAll({
+		raw: true,
+		where: { userId: { [Op.in]: userIds }, status: 'active' },
+		attributes: ['userId', 'reason', 'reasonText', 'status', 'createdAt'],
+		include: [
+			{ model: Community, as: 'community', attributes: ['subdomain'] },
+			{ model: User, as: 'flaggedBy', attributes: ['fullName'] },
+			{
+				model: Discussion,
+				as: 'sourceDiscussion',
+				attributes: ['title'],
+				include: [
+					{
+						model: Pub,
+						as: 'pub',
+						attributes: ['slug'],
+						include: [{ model: Community, as: 'community', attributes: ['subdomain'] }],
+					},
+				],
+			},
+		],
+	});
+	const map = new Map<string, types.SpamUserCommunityReport[]>();
+	for (const r of reports) {
+		const raw = r as any;
+		const subdomain = raw['sourceDiscussion.pub.community.subdomain'] as string | undefined;
+		const pubSlug = raw['sourceDiscussion.pub.slug'] as string | undefined;
+		const discussionTitle = raw['sourceDiscussion.title'] as string | undefined;
+		const sourceUrl =
+			subdomain && pubSlug ? `https://${subdomain}.pubpub.org/pub/${pubSlug}` : null;
+		const entry: types.SpamUserCommunityReport = {
+			communitySubdomain: raw['community.subdomain'] ?? 'unknown',
+			reason: raw.reason,
+			reasonText: raw.reasonText ?? null,
+			status: raw.status,
+			createdAt: raw.createdAt,
+			flaggedByName: raw['flaggedBy.fullName'] ?? null,
+			sourceDiscussionTitle: discussionTitle || null,
+			sourceDiscussionUrl: sourceUrl,
+		};
+		const existing = map.get(raw.userId);
+		if (existing) {
+			existing.push(entry);
+		} else {
+			map.set(raw.userId, [entry]);
+		}
+	}
+	return map;
 };
 
 const getAffiliationForUserIds = async (

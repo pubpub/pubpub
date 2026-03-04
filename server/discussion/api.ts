@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { isUserFlaggedInCommunity } from 'server/userCommunityFlag/queries';
+import { isUserReportedInCommunity } from 'server/communityModerationReport/queries';
 import { verifyCaptchaPayload } from 'server/utils/captcha';
 import { BadRequestError, ForbiddenError } from 'server/utils/errors';
 import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
@@ -35,7 +35,7 @@ router.post(
 		}
 		const userId = (req.user?.id as string) || null;
 		if (userId && req.body.communityId) {
-			const flagged = await isUserFlaggedInCommunity(userId, req.body.communityId);
+			const flagged = await isUserReportedInCommunity(userId, req.body.communityId);
 			if (flagged) {
 				throw new ForbiddenError();
 			}
@@ -56,7 +56,7 @@ router.post(
 		}
 		const formUserId = (req.user?.id as string) || null;
 		if (formUserId && req.body.communityId) {
-			const flagged = await isUserFlaggedInCommunity(formUserId, req.body.communityId);
+			const flagged = await isUserReportedInCommunity(formUserId, req.body.communityId);
 			if (flagged) {
 				throw new ForbiddenError();
 			}

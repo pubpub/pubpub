@@ -14,21 +14,21 @@ import {
 	Table,
 } from 'sequelize-typescript';
 
-import { Community, Discussion, User } from '../models';
+import { Community, Discussion, SpamTag, User } from '../models';
 
-export type UserCommunityFlagReason =
+export type ModerationReportReason =
 	| 'spam-content'
 	| 'hateful-language'
 	| 'harassment'
 	| 'impersonation'
 	| 'other';
 
-export type UserCommunityFlagStatus = 'active' | 'dismissed' | 'escalated';
+export type ModerationReportStatus = 'active' | 'retracted' | 'dismissed' | 'escalated';
 
-@Table
-export class UserCommunityFlag extends Model<
-	InferAttributes<UserCommunityFlag>,
-	InferCreationAttributes<UserCommunityFlag>
+@Table({ tableName: 'CommunityModerationReports' })
+export class CommunityModerationReport extends Model<
+	InferAttributes<CommunityModerationReport>,
+	InferCreationAttributes<CommunityModerationReport>
 > {
 	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
@@ -55,7 +55,7 @@ export class UserCommunityFlag extends Model<
 	@Column(
 		DataType.ENUM('spam-content', 'hateful-language', 'harassment', 'impersonation', 'other'),
 	)
-	declare reason: UserCommunityFlagReason;
+	declare reason: ModerationReportReason;
 
 	@Column(DataType.TEXT)
 	declare reasonText: string | null;
@@ -63,10 +63,13 @@ export class UserCommunityFlag extends Model<
 	@Column(DataType.UUID)
 	declare sourceDiscussionId: string | null;
 
+	@Column(DataType.UUID)
+	declare spamTagId: string | null;
+
 	@AllowNull(false)
 	@Default('active')
-	@Column(DataType.ENUM('active', 'dismissed', 'escalated'))
-	declare status: CreationOptional<UserCommunityFlagStatus>;
+	@Column(DataType.ENUM('active', 'retracted', 'dismissed', 'escalated'))
+	declare status: CreationOptional<ModerationReportStatus>;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	declare user?: User;
@@ -83,4 +86,7 @@ export class UserCommunityFlag extends Model<
 		foreignKey: 'sourceDiscussionId',
 	})
 	declare sourceDiscussion?: Discussion;
+
+	@BelongsTo(() => SpamTag, { onDelete: 'SET NULL', as: 'spamTag', foreignKey: 'spamTagId' })
+	declare spamTag?: SpamTag;
 }

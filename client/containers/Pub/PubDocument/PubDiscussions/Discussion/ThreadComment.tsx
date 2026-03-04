@@ -37,6 +37,8 @@ const ThreadComment = (props: Props) => {
 	const [isFlagDialogOpen, setIsFlagDialogOpen] = useState(false);
 	const [changeObject, setChangeObject] = useState<null | EditorChangeObject>(null);
 	const [isLoadingEdit, setIsLoadingEdit] = useState(false);
+	const [isRetracting, setIsRetracting] = useState(false);
+
 	const handlePutThreadComment = (threadCommentUpdates) => {
 		return apiFetch('/api/threadComment', {
 			method: 'PUT',
@@ -97,6 +99,67 @@ const ThreadComment = (props: Props) => {
 		[threadCommentData.userId, pubData.discussions, updateLocalData],
 	);
 
+	const handleFlagged = useCallback(() => {
+		const targetUserId = threadCommentData.userId;
+		updateLocalData('pub', {
+			discussions: pubData.discussions.map((discussion) => ({
+				...discussion,
+				...(discussion.userId === targetUserId && {
+					isAuthorFlagged: true,
+				}),
+				thread: {
+					...discussion.thread,
+					comments: discussion.thread.comments.map((comment) => {
+						if (comment.userId === targetUserId) {
+							return { ...comment, isAuthorFlagged: true };
+						}
+						return comment;
+					}),
+				},
+			})),
+		});
+	}, [threadCommentData.userId, pubData.discussions, updateLocalData]);
+
+	const handleRetractFlag = useCallback(async () => {
+		const reportIds: string[] | undefined = threadCommentData.moderationReportIds;
+		if (!reportIds?.length) return;
+		setIsRetracting(true);
+		try {
+			await Promise.all(
+				reportIds.map((id) =>
+					apiFetch.put(`/api/communityModerationReports/${id}`, {
+						status: 'retracted',
+					}),
+				),
+			);
+			const targetUserId = threadCommentData.userId;
+			updateLocalData('pub', {
+				discussions: pubData.discussions.map((discussion) => ({
+					...discussion,
+					...(discussion.userId === targetUserId && {
+						isAuthorFlagged: undefined,
+						moderationReportIds: undefined,
+					}),
+					thread: {
+						...discussion.thread,
+						comments: discussion.thread.comments.map((comment) => {
+							if (comment.userId === targetUserId) {
+								return {
+									...comment,
+									isAuthorFlagged: undefined,
+									moderationReportIds: undefined,
+								};
+							}
+							return comment;
+						}),
+					},
+				})),
+			});
+		} finally {
+			setIsRetracting(false);
+		}
+	}, [threadCommentData, pubData.discussions, updateLocalData]);
+
 	const isAuthor = loginData.id === threadCommentData.userId;
 	const renderText = (
 		key: string,
@@ -114,12 +177,22 @@ const ThreadComment = (props: Props) => {
 	};
 	const commenterName = discussionData.commenter?.name ?? threadCommentData.commenter?.name;
 	const isAuthorSpam = !!threadCommentData.isAuthorSpam;
+	const isAuthorFlagged = !!threadCommentData.isAuthorFlagged;
+	const showFlagButton =
+		!isPreview &&
+		canAdminCommunity &&
+		threadCommentData.userId &&
+		threadCommentData.userId !== loginData.id &&
+		!isAuthorFlagged;
+	const showUnflagButton = !isPreview && canAdminCommunity && isAuthorFlagged;
+
 	return (
 		<div
 			className={classNames(
 				'thread-comment-component',
 				isPreview && 'is-preview',
 				isAuthorSpam && 'is-spam',
+				isAuthorFlagged && !isAuthorSpam && 'is-flagged',
 			)}
 		>
 			<div className="avatar-wrapper">
@@ -142,6 +215,9 @@ const ThreadComment = (props: Props) => {
 							? threadCommentData.author.fullName
 							: (commenterName ?? 'anonymous')}
 						{isAuthorSpam && isPreview && <span className="spam-badge">Spam</span>}
+						{isAuthorFlagged && !isAuthorSpam && isPreview && (
+							<span className="flagged-badge">Flagged</span>
+						)}
 						{isPreview ? ': ' : ''}
 					</span>
 
@@ -183,17 +259,24 @@ const ThreadComment = (props: Props) => {
 								}}
 							/>
 						)}
-						{!isPreview &&
-							canAdminCommunity &&
-							threadCommentData.userId &&
-							threadCommentData.userId !== loginData.id && (
-								<Button
-									icon={<Icon icon="flag" iconSize={12} />}
-									minimal
-									small
-									onClick={() => setIsFlagDialogOpen(true)}
-								/>
-							)}
+						{showFlagButton && (
+							<Button
+								icon={<Icon icon="flag" iconSize={12} />}
+								minimal
+								small
+								onClick={() => setIsFlagDialogOpen(true)}
+							/>
+						)}
+						{showUnflagButton && (
+							<Button
+								icon={<Icon icon="flag" iconSize={12} />}
+								text="Unflag"
+								minimal
+								small
+								loading={isRetracting}
+								onClick={handleRetractFlag}
+							/>
+						)}
 						{!isPreview && isSuperAdmin && threadCommentData.userId && (
 							<SpamStatusMenu
 								userId={threadCommentData.userId}
@@ -206,6 +289,12 @@ const ThreadComment = (props: Props) => {
 					<div className="thread-comment-spam-banner">
 						This user has been banned. Only you and other admins of this community can
 						see this comment. You can safely remove it.
+					</div>
+				)}
+				{!isPreview && isAuthorFlagged && !isAuthorSpam && (
+					<div className="thread-comment-flagged-banner">
+						This user has been flagged by a community admin. Only you and other admins
+						can see this content.
 					</div>
 				)}
 				{!isPreview && (
@@ -265,9 +354,7 @@ const ThreadComment = (props: Props) => {
 					communityId={communityData.id}
 					discussionId={discussionData.id}
 					userName={threadCommentData.author?.fullName}
-					onFlagged={() => {
-						handleSpamStatusChanged('confirmed-spam');
-					}}
+					onFlagged={handleFlagged}
 				/>
 			)}
 		</div>

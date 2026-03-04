@@ -1,4 +1,4 @@
-import type { SpamStatus, UserCommunityFlagReason, UserSpamTagFields } from 'types';
+import type { ModerationReportReason, SpamStatus, UserSpamTagFields } from 'types';
 
 import fetch from 'node-fetch';
 
@@ -418,7 +418,7 @@ type CommunityFlagSlackOptions = {
 	userId: string;
 	flaggedById: string;
 	communityId: string;
-	reason: UserCommunityFlagReason;
+	reason: ModerationReportReason;
 	reasonText?: string | null;
 	sourceDiscussionId?: string | null;
 };

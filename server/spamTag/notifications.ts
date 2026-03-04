@@ -1,7 +1,9 @@
-import type { SpamStatus, UserCommunityFlagReason, UserSpamTagFields } from 'types';
+import type { ModerationReportReason, SpamStatus, UserSpamTagFields } from 'types';
 
 import {
 	sendBanDevEmail,
+	sendCommunityFlagDevEmail,
+	sendCommunityFlagResolvedEmail,
 	sendLiftDevEmail,
 	sendNewSpamTagDevEmail,
 	sendSpamBanEmail,
@@ -21,7 +23,9 @@ export type SpamEvent =
 	| 'honeypot-ban'
 	| 'manual-ban'
 	| 'spam-lifted'
-	| 'community-flag';
+	| 'community-flag'
+	| 'community-flag-retracted'
+	| 'community-flag-resolved';
 
 type SharedContext = {
 	userId: string;
@@ -57,8 +61,20 @@ type CommunityFlagContext = SharedContext & {
 	communityId: string;
 	sourceDiscussionId?: string | null;
 	flaggedById: string;
-	flagReason: UserCommunityFlagReason;
+	flagReason: ModerationReportReason;
 	flagReasonText?: string | null;
+};
+
+type CommunityFlagRetractedContext = SharedContext & {
+	communityId: string;
+	flaggedById: string;
+};
+
+type CommunityFlagResolvedContext = SharedContext & {
+	communityId: string;
+	flaggedByEmail?: string;
+	flaggedByName?: string;
+	resolution?: string;
 };
 
 export type SpamNotificationContext = {
@@ -75,8 +91,11 @@ export type SpamNotificationContext = {
 	communityId?: string;
 	sourceDiscussionId?: string | null;
 	flaggedById?: string;
-	flagReason?: UserCommunityFlagReason;
+	flagReason?: ModerationReportReason;
 	flagReasonText?: string | null;
+	flaggedByEmail?: string;
+	flaggedByName?: string;
+	resolution?: string;
 };
 
 type Handler<T extends SharedContext> = (ctx: T) => Promise<void>;
@@ -88,6 +107,8 @@ type Contexts = {
 	'manual-ban': ManualBanContext;
 	'spam-lifted': SpamLiftedContext;
 	'community-flag': CommunityFlagContext;
+	'community-flag-retracted': CommunityFlagRetractedContext;
+	'community-flag-resolved': CommunityFlagResolvedContext;
 };
 
 const handlers = {
@@ -154,6 +175,34 @@ const handlers = {
 				reasonText: ctx.flagReasonText,
 				sourceDiscussionId: ctx.sourceDiscussionId,
 			}),
+		(ctx) =>
+			sendCommunityFlagDevEmail({
+				userEmail: ctx.userEmail,
+				userName: ctx.userName,
+				communityId: ctx.communityId,
+				flagReason: ctx.flagReason,
+			}),
+	],
+	'community-flag-retracted': [
+		(ctx) =>
+			postToSlackAboutCommunityFlag({
+				userId: ctx.userId,
+				communityId: ctx.communityId,
+				flaggedById: ctx.flaggedById,
+				reason: 'other',
+				reasonText: 'Flag retracted by community admin',
+			}),
+	],
+	'community-flag-resolved': [
+		async (ctx) => {
+			if (!ctx.flaggedByEmail) return;
+			await sendCommunityFlagResolvedEmail({
+				toEmail: ctx.flaggedByEmail,
+				flaggedByName: ctx.flaggedByName ?? '',
+				userName: ctx.userName,
+				resolution: ctx.resolution ?? 'reviewed',
+			});
+		},
 	],
 } satisfies { [K in keyof Contexts]: Handler<Contexts[K]>[] };
 

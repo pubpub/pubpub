@@ -33,8 +33,11 @@ const getFilteredExports = (pubData, isRelease) => {
 	return exports.filter((exp) => releaseHistoryKeys.has(exp.historyKey));
 };
 
+type ReportedUserMapEntry = { reportIds: string[] };
+
 type SanitizeOptions = {
 	flaggedUserIds?: Set<string>;
+	reportedUserMap?: Map<string, ReportedUserMapEntry>;
 };
 
 export default (
@@ -95,7 +98,10 @@ export default (
 			filterDiscussionsByDraftOrRelease(pubData.discussions, isRelease),
 			activePermissions,
 			loginData.id,
-			{ flaggedUserIds: options?.flaggedUserIds },
+			{
+				flaggedUserIds: options?.flaggedUserIds,
+				reportedUserMap: options?.reportedUserMap,
+			},
 		);
 	const reviews =
 		pubData.reviews && sanitizeReviews(pubData.reviews, activePermissions, loginData.id);

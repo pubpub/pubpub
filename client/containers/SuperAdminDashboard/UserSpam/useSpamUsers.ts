@@ -18,6 +18,7 @@ type QueryFilters = {
 	activeBefore?: string;
 	minActivities?: number;
 	maxActivities?: number;
+	spamFieldsFilter?: string[];
 };
 
 type UseSpamUsersOptions = {
@@ -43,7 +44,7 @@ export const useSpamUsers = (options: UseSpamUsersOptions) => {
 		setIsLoading(true);
 		setMayLoadMoreUsers(false);
 		setOffset((offset) => offset + limit);
-		const { status, spamTagPresence } = filter.query!;
+		const { status, spamTagPresence, hasCommunityReport } = filter.query!;
 		const nextUsers = await apiFetch.post('/api/spamTags/queryUsersForSpam', {
 			limit,
 			searchTerm,
@@ -51,6 +52,7 @@ export const useSpamUsers = (options: UseSpamUsersOptions) => {
 			status,
 			ordering,
 			spamTagPresence,
+			hasCommunityReport,
 			communitySubdomain: communitySubdomain || undefined,
 			...queryFilters,
 		});

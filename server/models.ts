@@ -9,6 +9,12 @@ import { sequelize } from './sequelize';
 /* Import and create all models. */
 /* Also import them to make them available to other modules */
 
+/* Import and create all models. */
+/* Also import them to make them available to other modules */
+
+/* Import and create all models. */
+/* Also import them to make them available to other modules */
+
 import { ActivityItem } from './activityItem/model';
 import { AuthToken } from './authToken/model';
 import { Collection } from './collection/model';
@@ -17,6 +23,7 @@ import { CollectionPub } from './collectionPub/model';
 import { Commenter } from './commenter/model';
 import { Community } from './community/model';
 import { CommunityAdmin } from './communityAdmin/model';
+import { CommunityModerationReport } from './communityModerationReport/model';
 import { CrossrefDepositRecord } from './crossrefDepositRecord/model';
 import { CustomScript } from './customScript/model';
 import { DepositTarget } from './depositTarget/model';
@@ -56,7 +63,6 @@ import { Thread } from './thread/model';
 import { ThreadComment } from './threadComment/model';
 import { ThreadEvent } from './threadEvent/model';
 import { User } from './user/model';
-import { UserCommunityFlag } from './userCommunityFlag/model';
 import { UserDismissable } from './userDismissable/model';
 import { UserNotification } from './userNotification/model';
 import { UserNotificationPreferences } from './userNotificationPreferences/model';
@@ -116,7 +122,7 @@ sequelize.addModels([
 	ThreadComment,
 	ThreadEvent,
 	User,
-	UserCommunityFlag,
+	CommunityModerationReport,
 	UserDismissable,
 	UserNotification,
 	UserNotificationPreferences,
@@ -209,7 +215,7 @@ export {
 	ThreadComment,
 	ThreadEvent,
 	User,
-	UserCommunityFlag,
+	CommunityModerationReport,
 	UserDismissable,
 	UserNotification,
 	UserNotificationPreferences,

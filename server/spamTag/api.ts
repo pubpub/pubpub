@@ -2,6 +2,7 @@ import type { UserSpamTagFields } from 'types';
 
 import { Router } from 'express';
 
+import { CommunityModerationReport, User } from 'server/models';
 import { ForbiddenError } from 'server/utils/errors';
 import { wrap } from 'server/wrap';
 import { expect } from 'utils/assert';
@@ -12,6 +13,47 @@ import { contextFromUser, notify } from './notifications';
 import { canManipulateSpamTags } from './permissions';
 import { getRecentDiscussionsForUser, queryUsersForSpamManagement } from './userDashboard';
 import { getSpamTagForUser, removeSpamTagFromUser, upsertSpamTag } from './userQueries';
+
+const notifyReportersOfResolution = async (
+	userId: string,
+	reportedUser: {
+		id: string;
+		email?: string | null;
+		fullName?: string | null;
+		slug: string;
+		avatar?: string | null;
+	},
+	resolution: string,
+) => {
+	const reports = await CommunityModerationReport.findAll({
+		where: { userId, status: 'active' },
+		attributes: ['flaggedById', 'communityId'],
+	});
+	if (reports.length === 0) return;
+
+	const flaggedByIds = [...new Set(reports.map((r) => r.flaggedById))];
+	const reporters = await User.findAll({
+		where: { id: flaggedByIds },
+		attributes: ['id', 'email', 'fullName'],
+	});
+	const reporterMap = new Map(reporters.map((u) => [u.id, u]));
+
+	await Promise.all(
+		reports.map((report) => {
+			const reporter = reporterMap.get(report.flaggedById);
+			if (!reporter?.email) return Promise.resolve();
+			return notify(
+				'community-flag-resolved',
+				contextFromUser(reportedUser, {
+					communityId: report.communityId,
+					flaggedByEmail: reporter.email,
+					flaggedByName: reporter.fullName ?? '',
+					resolution,
+				}),
+			);
+		}),
+	);
+};
 
 export const router = Router();
 
@@ -59,6 +101,16 @@ router.put(
 				spamFields: spamTag.fields as UserSpamTagFields,
 			}),
 		);
+
+		// notify community admins who filed reports about this user
+		const resolution =
+			status === 'confirmed-spam'
+				? 'The user has been confirmed as spam and banned.'
+				: 'The user has been reviewed and confirmed as not spam.';
+		notifyReportersOfResolution(userId, user, resolution).catch((err) =>
+			console.error('Failed to notify reporters of resolution', err),
+		);
+
 		return res.status(200).send({});
 	}),
 );
@@ -112,6 +164,8 @@ router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
 		activeBefore,
 		minActivities,
 		maxActivities,
+		hasCommunityReport,
+		spamFieldsFilter,
 	} = req.body;
 	const canQuery = await canManipulateSpamTags({
 		userId: expect(req.user).id,
@@ -134,6 +188,8 @@ router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
 		activeBefore,
 		minActivities: minActivities != null ? Number(minActivities) : undefined,
 		maxActivities: maxActivities != null ? Number(maxActivities) : undefined,
+		hasCommunityReport: !!hasCommunityReport,
+		spamFieldsFilter: Array.isArray(spamFieldsFilter) ? spamFieldsFilter : undefined,
 	});
 	return res.status(200).send(queryResult);
 });

@@ -200,9 +200,7 @@ const Discussion = (props: Props) => {
 	};
 
 	const renderInput = () => {
-		if (!canReply) {
-			return null;
-		}
+		if (!canReply) return null;
 		return (
 			<DiscussionInput
 				key={discussionData.thread.comments.length}

@@ -14,8 +14,19 @@ const isHidden = (
 	flaggedUserIds?: Set<string>,
 ) => isAuthorSpam(author) || isAuthorFlagged(author, flaggedUserIds);
 
+type ReportedUserMapEntry = { reportIds: string[] };
+
 type SanitizeOptions = {
 	flaggedUserIds?: Set<string>;
+	reportedUserMap?: Map<string, ReportedUserMapEntry>;
+};
+
+const getReportIds = (
+	authorId: string | undefined,
+	reportedUserMap?: Map<string, ReportedUserMapEntry>,
+): string[] | undefined => {
+	if (!reportedUserMap || !authorId) return undefined;
+	return reportedUserMap.get(authorId)?.reportIds;
 };
 
 export default (
@@ -25,35 +36,46 @@ export default (
 	options?: SanitizeOptions,
 ) => {
 	const { canAdmin } = activePermissions;
-	const { flaggedUserIds } = options ?? {};
+	const { flaggedUserIds, reportedUserMap } = options ?? {};
 	const afterVisibility = sanitizeOnVisibility(discussions, activePermissions, loginId);
 
 	return afterVisibility
 		.filter((discussion) => {
-			if (!isHidden(discussion.author, flaggedUserIds)) {
-				return true;
-			}
+			if (!isHidden(discussion.author, flaggedUserIds)) return true;
 			return canAdmin;
 		})
 		.map((discussion) => {
-			const hidden = isHidden(discussion.author, flaggedUserIds);
+			const spam = isAuthorSpam(discussion.author);
+			const flagged = isAuthorFlagged(discussion.author, flaggedUserIds);
+			const reportIds = flagged
+				? getReportIds(discussion.author?.id, reportedUserMap)
+				: undefined;
+
 			const comments = (discussion.thread?.comments ?? [])
 				.filter((comment) => {
-					if (!isHidden(comment.author, flaggedUserIds)) {
-						return true;
-					}
+					if (!isHidden(comment.author, flaggedUserIds)) return true;
 					return canAdmin;
 				})
 				.map((comment) => {
-					if (!isHidden(comment.author, flaggedUserIds)) {
-						return comment;
-					}
-					return { ...comment, isAuthorSpam: true };
+					const commentSpam = isAuthorSpam(comment.author);
+					const commentFlagged = isAuthorFlagged(comment.author, flaggedUserIds);
+					if (!commentSpam && !commentFlagged) return comment;
+					const commentReportIds = commentFlagged
+						? getReportIds(comment.author?.id, reportedUserMap)
+						: undefined;
+					return {
+						...comment,
+						...(commentSpam && { isAuthorSpam: true }),
+						...(commentFlagged && !commentSpam && { isAuthorFlagged: true }),
+						...(commentReportIds && { moderationReportIds: commentReportIds }),
+					};
 				});
 
 			return {
 				...discussion,
-				...(hidden && { isAuthorSpam: true }),
+				...(spam && { isAuthorSpam: true }),
+				...(flagged && !spam && { isAuthorFlagged: true }),
+				...(reportIds && { moderationReportIds: reportIds }),
 				thread: {
 					...discussion.thread,
 					comments,
