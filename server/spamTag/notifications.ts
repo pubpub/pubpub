@@ -19,8 +19,7 @@ export type SpamEvent =
 	| 'suspicious-upload'
 	| 'honeypot-ban'
 	| 'manual-ban'
-	| 'spam-lifted'
-	| 'community-flag';
+	| 'spam-lifted';
 
 export type SpamNotificationContext = {
 	userId: string;
