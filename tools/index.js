@@ -62,6 +62,7 @@ const commandFiles = {
 	pubCrawl: "./pubCrawl",
 	rerankCollections: "./rerankCollections",
 	rerunExport: "./rerunExport",
+	scanSpamUsers: "./scanSpamUsers",
 	searchSync: "./searchSync",
 	switchBranchOrders: "./switchBranchOrders",
 	syncDbSchema: "./syncDbSchema",
