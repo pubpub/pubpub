@@ -20,7 +20,7 @@ type InitialValues = {
 type InitialValuesOptions = {
 	noteManager?: NoteManager;
 	customNodes: Record<string, NodeSpec>;
-	customMarks: Record<string, MarkSpec>;
+	customMarks: Record<string, MarkSpec | null>;
 	nodeLabels: NodeLabelMap;
 	initialContent: DocJson;
 	isReadOnly: boolean;

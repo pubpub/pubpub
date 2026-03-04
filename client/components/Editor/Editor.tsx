@@ -32,7 +32,7 @@ type Props = {
 	collaborativeOptions?: Maybe<CollaborativeOptions>;
 	discussionsOptions?: Maybe<DiscussionsOptions>;
 	debounceEditsMs?: number;
-	customMarks?: Record<string, MarkSpec>;
+	customMarks?: Record<string, MarkSpec | null>;
 	customNodes?: Record<string, NodeSpec>;
 	customPlugins?: Record<string, null | PluginLoader>;
 	enableSuggestions?: boolean;

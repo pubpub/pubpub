@@ -15,6 +15,9 @@ import { getPartsOfFullName } from 'utils/names';
 
 import './threadComment.scss';
 
+import DefangedLinkPopover from './DefangedLinkPopover';
+import { noLinksMarks } from './noLinks';
+
 type Props = {
 	discussionData: any;
 	threadCommentData: any;
@@ -103,12 +106,15 @@ const ThreadComment = (props: Props) => {
 		onChange?: Callback<EditorChangeObject>,
 	) => {
 		return (
-			<Editor
-				key={key}
-				isReadOnly={isReadOnly}
-				initialContent={threadCommentData.content}
-				onChange={onChange}
-			/>
+			<DefangedLinkPopover>
+				<Editor
+					key={key}
+					isReadOnly={isReadOnly}
+					customMarks={noLinksMarks}
+					initialContent={threadCommentData.content}
+					onChange={onChange}
+				/>
+			</DefangedLinkPopover>
 		);
 	};
 	const commenterName = discussionData.commenter?.name ?? threadCommentData.commenter?.name;
