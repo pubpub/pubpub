@@ -35,6 +35,7 @@ type Props = {
 	customMarks?: Record<string, MarkSpec | null>;
 	customNodes?: Record<string, NodeSpec>;
 	customPlugins?: Record<string, null | PluginLoader>;
+	disableLinkCreation?: boolean;
 	enableSuggestions?: boolean;
 	initialContent?: DocJson | null;
 	isReadOnly?: boolean;
@@ -58,6 +59,7 @@ const Editor = (props: Props) => {
 		customNodes = {},
 		customPlugins = {},
 		debounceEditsMs = 0,
+		disableLinkCreation = false,
 		discussionsOptions,
 		enableSuggestions = false,
 		initialContent: providedInitialContent,
@@ -91,6 +93,7 @@ const Editor = (props: Props) => {
 			noteManager,
 			discussionsOptions: discussionsOptions || null,
 			collaborativeOptions: collaborativeOptions || null,
+			disableLinkCreation,
 			initialDoc: initialDocNode,
 			isReadOnly,
 			nodeLabels,

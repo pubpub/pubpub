@@ -54,7 +54,7 @@ const mac = typeof navigator !== 'undefined' ? /Mac/.test(navigator.platform) : 
 // * **Mod-BracketLeft** to `lift`
 // * **Escape** to `selectParentNode`
 
-export default (schema) => {
+export default (schema, options?) => {
 	const keys = {};
 	const bind = (key, cmd) => {
 		keys[key] = cmd;
@@ -88,7 +88,7 @@ export default (schema) => {
 	if (schema.marks.code) {
 		bind('Mod-<', toggleMark(schema.marks.code));
 	}
-	if (schema.marks.link) {
+	if (schema.marks.link && !options?.disableLinkCreation) {
 		bind('Mod-k', toggleMark(schema.marks.link));
 	}
 
@@ -195,13 +195,10 @@ export default (schema) => {
 	// All but the custom block splitting command and the add link command in this chain are taken
 	// from the default chain in baseKeymap. We provide our own block splitter that preserves text
 	// align attributes between paragraphs.
-	const customEnterCommand = chainCommands(
-		addLinkCommand,
-		newlineInCode,
-		createParagraphNear,
-		liftEmptyBlock,
-		customBlockSplitter,
-	);
+	const enterCommands = options?.disableLinkCreation
+		? [newlineInCode, createParagraphNear, liftEmptyBlock, customBlockSplitter]
+		: [addLinkCommand, newlineInCode, createParagraphNear, liftEmptyBlock, customBlockSplitter];
+	const customEnterCommand = chainCommands(...enterCommands);
 
 	return [keymap(keys), keymap({ ...baseKeymap, Enter: customEnterCommand })];
 };

@@ -239,6 +239,7 @@ const DiscussionInput = (props: Props) => {
 						<Editor
 							key={editorKey}
 							customMarks={noLinksMarks}
+							disableLinkCreation
 							placeholder={getPlaceholderText(isNewThread, isPubBottomInput)}
 							onChange={(editorChangeObject) => {
 								setChangeObject(editorChangeObject);

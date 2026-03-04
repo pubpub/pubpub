@@ -68,6 +68,7 @@ export type PluginsOptions = {
 	noteManager?: NoteManager;
 	collaborativeOptions?: null | CollaborativeOptions;
 	discussionsOptions?: null | DiscussionsOptions;
+	disableLinkCreation?: boolean;
 	initialDoc: Node;
 	isReadOnly?: boolean;
 	nodeLabels: NodeLabelMap;

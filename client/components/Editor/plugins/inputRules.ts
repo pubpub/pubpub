@@ -153,9 +153,9 @@ function linkRule(markType: MarkType) {
 // : (Schema) → Plugin
 // A set of input rules for creating the basic block quotes, lists,
 // code blocks, and heading.
-export default (schema) => {
+export default (schema, options?) => {
 	const rules = smartQuotes.concat(ellipsis, emDash);
-	if (schema.marks.link) rules.unshift(linkRule(schema.marks.link));
+	if (schema.marks.link && !options?.disableLinkCreation) rules.unshift(linkRule(schema.marks.link));
 	if (schema.nodes.blockquote) rules.push(blockQuoteRule(schema.nodes.blockquote));
 	if (schema.nodes.ordered_list) rules.push(orderedListRule(schema.nodes.ordered_list));
 	if (schema.nodes.bullet_list) rules.push(bulletListRule(schema.nodes.bullet_list));

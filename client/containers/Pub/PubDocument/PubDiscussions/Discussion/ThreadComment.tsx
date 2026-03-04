@@ -111,6 +111,7 @@ const ThreadComment = (props: Props) => {
 					key={key}
 					isReadOnly={isReadOnly}
 					customMarks={noLinksMarks}
+					disableLinkCreation
 					initialContent={threadCommentData.content}
 					onChange={onChange}
 				/>
