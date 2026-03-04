@@ -3,9 +3,9 @@ import type { SpamUserQueryOrdering } from 'types';
 import type { SpamUsersFilter } from './filters';
 import type { SpamUser } from './types';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-import { HTMLSelect, Spinner } from '@blueprintjs/core';
+import { Button, ButtonGroup, HTMLSelect, Spinner } from '@blueprintjs/core';
 import { useDebounce, useUpdateEffect } from 'react-use';
 
 import { OverviewSearchGroup } from 'client/containers/DashboardOverview/helpers';
@@ -25,11 +25,35 @@ type Props = {
 const sortOptions = [
 	{ value: 'user-created-at:DESC', label: 'Newest users' },
 	{ value: 'user-created-at:ASC', label: 'Oldest users' },
+	{ value: 'last-activity:DESC', label: 'Most recently active' },
+	{ value: 'last-activity:ASC', label: 'Least recently active' },
 	{ value: 'discussion-count:DESC', label: 'Most discussions' },
 	{ value: 'discussion-count:ASC', label: 'Fewest discussions' },
 	{ value: 'spam-score:DESC', label: 'Highest spam score' },
 	{ value: 'spam-score:ASC', label: 'Lowest spam score' },
 ];
+
+type DatePreset = { label: string; days: number };
+
+const datePresets: DatePreset[] = [
+	{ label: '24h', days: 1 },
+	{ label: '7d', days: 7 },
+	{ label: '30d', days: 30 },
+	{ label: '90d', days: 90 },
+];
+
+const daysAgo = (n: number): string => {
+	const d = new Date();
+	d.setDate(d.getDate() - n);
+	return d.toISOString();
+};
+
+const toDateInputValue = (iso: string): string => iso.slice(0, 10);
+
+const fromDateInputValue = (val: string): string | undefined => {
+	if (!val) return undefined;
+	return new Date(val).toISOString();
+};
 
 const parseSort = (value: string): SpamUserQueryOrdering => {
 	const [field, direction] = value.split(':');
@@ -46,9 +70,20 @@ const UserSpam = (props: Props) => {
 	);
 	const [communityInput, setCommunityInput] = useState('');
 	const [communitySubdomain, setCommunitySubdomain] = useState('');
+	const [createdAfter, setCreatedAfter] = useState<string | undefined>();
+	const [createdBefore, setCreatedBefore] = useState<string | undefined>();
+	const [activeAfter, setActiveAfter] = useState<string | undefined>();
+	const [activeBefore, setActiveBefore] = useState<string | undefined>();
+	const [createdPreset, setCreatedPreset] = useState<number | null>(null);
+	const [activePreset, setActivePreset] = useState<number | null>(null);
 
 	useDebounce(() => setSearchTerm(inputSearchTerm), 300, [inputSearchTerm]);
 	useDebounce(() => setCommunitySubdomain(communityInput.trim()), 300, [communityInput]);
+
+	const dateFilters = useMemo(
+		() => ({ createdAfter, createdBefore, activeAfter, activeBefore }),
+		[createdAfter, createdBefore, activeAfter, activeBefore],
+	);
 
 	const { users, isLoading, loadMoreUsers, mayLoadMoreUsers, updateUser } = useSpamUsers({
 		limit: 50,
@@ -57,6 +92,7 @@ const UserSpam = (props: Props) => {
 		filter,
 		ordering,
 		communitySubdomain: communitySubdomain || undefined,
+		dateFilters,
 	});
 
 	useInfiniteScroll({
@@ -74,6 +110,15 @@ const UserSpam = (props: Props) => {
 	const handleSpamTagRemoved = useCallback(
 		(userId: string) => {
 			updateUser(userId, { spamTag: null } as unknown as Partial<SpamUser>);
+		},
+		[updateUser],
+	);
+
+	const handleStatusChanged = useCallback(
+		(userId: string, status: string) => {
+			updateUser(userId, {
+				spamTag: { status } as SpamUser['spamTag'],
+			} as Partial<SpamUser>);
 		},
 		[updateUser],
 	);
@@ -128,12 +173,123 @@ const UserSpam = (props: Props) => {
 					/>
 				</label>
 			</div>
+			<div className="date-filters-row">
+				<div className="date-filter-group">
+					<span className="date-filter-label">Created</span>
+					<ButtonGroup minimal>
+						{datePresets.map((p) => (
+							<Button
+								key={p.label}
+								small
+								active={createdPreset === p.days}
+								onClick={() => {
+									if (createdPreset === p.days) {
+										setCreatedPreset(null);
+										setCreatedAfter(undefined);
+										setCreatedBefore(undefined);
+										return;
+									}
+									setCreatedPreset(p.days);
+									setCreatedAfter(daysAgo(p.days));
+									setCreatedBefore(undefined);
+								}}
+							>
+								{p.label}
+							</Button>
+						))}
+					</ButtonGroup>
+					<input
+						type="date"
+						value={createdAfter ? toDateInputValue(createdAfter) : ''}
+						onChange={(e) => {
+							setCreatedPreset(null);
+							setCreatedAfter(fromDateInputValue(e.target.value));
+						}}
+					/>
+					<span>to</span>
+					<input
+						type="date"
+						value={createdBefore ? toDateInputValue(createdBefore) : ''}
+						onChange={(e) => {
+							setCreatedPreset(null);
+							setCreatedBefore(fromDateInputValue(e.target.value));
+						}}
+					/>
+					{(createdAfter || createdBefore) && (
+						<Button
+							small
+							minimal
+							icon="cross"
+							onClick={() => {
+								setCreatedPreset(null);
+								setCreatedAfter(undefined);
+								setCreatedBefore(undefined);
+							}}
+						/>
+					)}
+				</div>
+				<div className="date-filter-group">
+					<span className="date-filter-label">Active</span>
+					<ButtonGroup minimal>
+						{datePresets.map((p) => (
+							<Button
+								key={p.label}
+								small
+								active={activePreset === p.days}
+								onClick={() => {
+									if (activePreset === p.days) {
+										setActivePreset(null);
+										setActiveAfter(undefined);
+										setActiveBefore(undefined);
+										return;
+									}
+									setActivePreset(p.days);
+									setActiveAfter(daysAgo(p.days));
+									setActiveBefore(undefined);
+								}}
+							>
+								{p.label}
+							</Button>
+						))}
+					</ButtonGroup>
+					<input
+						type="date"
+						value={activeAfter ? toDateInputValue(activeAfter) : ''}
+						onChange={(e) => {
+							setActivePreset(null);
+							setActiveAfter(fromDateInputValue(e.target.value));
+						}}
+					/>
+					<span>to</span>
+					<input
+						type="date"
+						value={activeBefore ? toDateInputValue(activeBefore) : ''}
+						onChange={(e) => {
+							setActivePreset(null);
+							setActiveBefore(fromDateInputValue(e.target.value));
+						}}
+					/>
+					{(activeAfter || activeBefore) && (
+						<Button
+							small
+							minimal
+							icon="cross"
+							onClick={() => {
+								setActivePreset(null);
+								setActiveAfter(undefined);
+								setActiveBefore(undefined);
+							}}
+						/>
+					)}
+				</div>
+			</div>
 			<div className="users">
 				{users.map((user) => (
 					<UserSpamEntry
 						user={user}
 						key={user.id}
 						onSpamTagRemoved={handleSpamTagRemoved}
+						onStatusChanged={handleStatusChanged}
 					/>
 				))}
 				{!isLoading && users.length === 0 && (
