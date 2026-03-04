@@ -3,9 +3,7 @@ import type { DOMOutputSpec, MarkSpec } from 'prosemirror-model';
 // strip protocol, bracket dots so crawlers won't follow or index the url
 const defangUrl = (href: string): string => {
 	if (!href) return '';
-	return href
-		.replace(/^https?:\/\//, '')
-		.replace(/\./g, '[.]');
+	return href.replace(/^https?:\/\//, '').replace(/\./g, '[.]');
 };
 
 export const noLinksMarks = {
@@ -18,8 +16,7 @@ export const noLinksMarks = {
 			{
 				tag: 'span.defanged-link',
 				getAttrs: (dom) => ({
-					href: (dom.getAttribute('data-href') ?? '')
-						.replace(/\[.\]/g, '.'),
+					href: (dom.getAttribute('data-href') ?? '').replace(/\[.\]/g, '.'),
 				}),
 			},
 			{

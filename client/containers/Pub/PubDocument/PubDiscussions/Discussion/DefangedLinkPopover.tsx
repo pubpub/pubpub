@@ -28,7 +28,7 @@ const DefangedLinkPopover = ({ children }: Props) => {
 	const handleClose = useCallback(() => setClicked(null), []);
 
 	return (
-		<div onClick={handleClick}>
+		<div role="button" tabIndex={0} onClick={handleClick}>
 			{children}
 			{clicked && (
 				<Popover
