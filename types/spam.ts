@@ -91,6 +91,31 @@ export type HoneypotContext = {
 	content?: string;
 };
 
+export type UserCommunityFlagReason =
+	| 'spam-content'
+	| 'hateful-language'
+	| 'harassment'
+	| 'impersonation'
+	| 'other';
+
+export type UserCommunityFlagStatus = 'active' | 'dismissed' | 'escalated';
+
+export type SerializedUserCommunityFlag = {
+	id: string;
+	userId: string;
+	communityId: string;
+	flaggedById: string;
+	reason: UserCommunityFlagReason;
+	reasonText: string | null;
+	sourceDiscussionId: string | null;
+	status: UserCommunityFlagStatus;
+	createdAt: string;
+	updatedAt: string;
+	user?: { fullName: string; slug: string; email?: string };
+	flaggedBy?: { fullName: string; slug: string };
+	community?: { subdomain: string };
+};
+
 export type UserSpamTagFields = {
 	suspiciousFiles?: string[];
 	suspiciousComments?: string[];

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import TimeAgo from 'react-timeago';
 
 import { apiFetch } from 'client/utils/apiFetch';
-import { Avatar, Icon, SpamStatusMenu } from 'components';
+import { Avatar, FlagUserDialog, Icon, SpamStatusMenu } from 'components';
 import Editor, { type EditorChangeObject, getJSON, getText, viewIsEmpty } from 'components/Editor';
 import { buttons, FormattingBar } from 'components/FormattingBar';
 import { usePageContext } from 'utils/hooks';
@@ -32,8 +32,9 @@ const ThreadComment = (props: Props) => {
 		isPreview = false,
 	} = props;
 	const { loginData, communityData, locationData, scopeData } = usePageContext();
-	const { isSuperAdmin } = scopeData.activePermissions;
+	const { isSuperAdmin, canAdminCommunity } = scopeData.activePermissions;
 	const [isEditing, setIsEditing] = useState(false);
+	const [isFlagDialogOpen, setIsFlagDialogOpen] = useState(false);
 	const [changeObject, setChangeObject] = useState<null | EditorChangeObject>(null);
 	const [isLoadingEdit, setIsLoadingEdit] = useState(false);
 	const handlePutThreadComment = (threadCommentUpdates) => {
@@ -182,6 +183,17 @@ const ThreadComment = (props: Props) => {
 								}}
 							/>
 						)}
+						{!isPreview &&
+							canAdminCommunity &&
+							threadCommentData.userId &&
+							threadCommentData.userId !== loginData.id && (
+								<Button
+									icon={<Icon icon="flag" iconSize={12} />}
+									minimal
+									small
+									onClick={() => setIsFlagDialogOpen(true)}
+								/>
+							)}
 						{!isPreview && isSuperAdmin && threadCommentData.userId && (
 							<SpamStatusMenu
 								userId={threadCommentData.userId}
@@ -245,6 +257,19 @@ const ThreadComment = (props: Props) => {
 					/>
 				)}
 			</div>
+			{canAdminCommunity && threadCommentData.userId && (
+				<FlagUserDialog
+					isOpen={isFlagDialogOpen}
+					onClose={() => setIsFlagDialogOpen(false)}
+					userId={threadCommentData.userId}
+					communityId={communityData.id}
+					discussionId={discussionData.id}
+					userName={threadCommentData.author?.fullName}
+					onFlagged={() => {
+						handleSpamStatusChanged('confirmed-spam');
+					}}
+				/>
+			)}
 		</div>
 	);
 };

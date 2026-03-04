@@ -1,4 +1,4 @@
-import type { SpamStatus, UserSpamTagFields } from 'types';
+import type { SpamStatus, UserCommunityFlagReason, UserSpamTagFields } from 'types';
 
 import {
 	sendBanDevEmail,
@@ -8,6 +8,7 @@ import {
 	sendSpamLiftedEmail,
 } from 'server/utils/email';
 import {
+	postToSlackAboutCommunityFlag,
 	postToSlackAboutNewUserSpamTag,
 	postToSlackAboutSuspiciousUpload,
 	postToSlackAboutUserBan,
@@ -19,7 +20,46 @@ export type SpamEvent =
 	| 'suspicious-upload'
 	| 'honeypot-ban'
 	| 'manual-ban'
-	| 'spam-lifted';
+	| 'spam-lifted'
+	| 'community-flag';
+
+type SharedContext = {
+	userId: string;
+	userEmail: string;
+	userName: string;
+	userSlug: string;
+	userAvatar?: string | null;
+};
+
+type NewSpamTagContext = SharedContext & {
+	spamScore?: number | null;
+	spamFields?: UserSpamTagFields;
+};
+
+type SuspiciousUploadContext = SharedContext & {
+	uploadKey: string;
+};
+
+type HoneypotBanContext = SharedContext & {};
+
+type ManualBanContext = SharedContext & {
+	spamFields?: UserSpamTagFields;
+	previousStatus?: SpamStatus | null;
+	actorName?: string;
+};
+
+type SpamLiftedContext = SharedContext & {
+	previousStatus?: SpamStatus | null;
+	actorName?: string;
+};
+
+type CommunityFlagContext = SharedContext & {
+	communityId: string;
+	sourceDiscussionId?: string | null;
+	flaggedById: string;
+	flagReason: UserCommunityFlagReason;
+	flagReasonText?: string | null;
+};
 
 export type SpamNotificationContext = {
 	userId: string;
@@ -34,11 +74,23 @@ export type SpamNotificationContext = {
 	uploadKey?: string;
 	communityId?: string;
 	sourceDiscussionId?: string | null;
+	flaggedById?: string;
+	flagReason?: UserCommunityFlagReason;
+	flagReasonText?: string | null;
 };
 
-type Handler = (ctx: SpamNotificationContext) => Promise<void>;
+type Handler<T extends SharedContext> = (ctx: T) => Promise<void>;
 
-const handlers: Record<SpamEvent, Handler[]> = {
+type Contexts = {
+	'new-spam-tag': NewSpamTagContext;
+	'suspicious-upload': SuspiciousUploadContext;
+	'honeypot-ban': HoneypotBanContext;
+	'manual-ban': ManualBanContext;
+	'spam-lifted': SpamLiftedContext;
+	'community-flag': CommunityFlagContext;
+};
+
+const handlers = {
 	'new-spam-tag': [
 		(ctx) =>
 			postToSlackAboutNewUserSpamTag({
@@ -55,7 +107,7 @@ const handlers: Record<SpamEvent, Handler[]> = {
 				ctx.userId,
 				ctx.userEmail,
 				ctx.userName,
-				ctx.uploadKey!,
+				ctx.uploadKey,
 			),
 	],
 	'honeypot-ban': [(ctx) => sendSpamBanEmail({ toEmail: ctx.userEmail, userName: ctx.userName })],
@@ -92,7 +144,18 @@ const handlers: Record<SpamEvent, Handler[]> = {
 			]);
 		},
 	],
-};
+	'community-flag': [
+		(ctx) =>
+			postToSlackAboutCommunityFlag({
+				userId: ctx.userId,
+				communityId: ctx.communityId,
+				flaggedById: ctx.flaggedById,
+				reason: ctx.flagReason,
+				reasonText: ctx.flagReasonText,
+				sourceDiscussionId: ctx.sourceDiscussionId,
+			}),
+	],
+} satisfies { [K in keyof Contexts]: Handler<Contexts[K]>[] };
 
 export const notify = async (event: SpamEvent, ctx: SpamNotificationContext): Promise<void> => {
 	const results = await Promise.allSettled(handlers[event].map((h) => h(ctx)));

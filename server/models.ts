@@ -56,6 +56,7 @@ import { Thread } from './thread/model';
 import { ThreadComment } from './threadComment/model';
 import { ThreadEvent } from './threadEvent/model';
 import { User } from './user/model';
+import { UserCommunityFlag } from './userCommunityFlag/model';
 import { UserDismissable } from './userDismissable/model';
 import { UserNotification } from './userNotification/model';
 import { UserNotificationPreferences } from './userNotificationPreferences/model';
@@ -115,6 +116,7 @@ sequelize.addModels([
 	ThreadComment,
 	ThreadEvent,
 	User,
+	UserCommunityFlag,
 	UserDismissable,
 	UserNotification,
 	UserNotificationPreferences,
@@ -207,6 +209,7 @@ export {
 	ThreadComment,
 	ThreadEvent,
 	User,
+	UserCommunityFlag,
 	UserDismissable,
 	UserNotification,
 	UserNotificationPreferences,

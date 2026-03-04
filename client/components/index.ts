@@ -39,6 +39,7 @@ export {
 	type FacetsState,
 } from './FacetsStateProvider';
 export { default as FileUploadButton } from './FileUploadButton/FileUploadButton';
+export { default as FlagUserDialog } from './FlagUserDialog/FlagUserDialog';
 export { default as Footer } from './Footer/Footer';
 export { default as FormattingBar } from './FormattingBar/FormattingBar';
 export { default as GlobalControls } from './GlobalControls';

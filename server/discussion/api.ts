@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { isUserFlaggedInCommunity } from 'server/userCommunityFlag/queries';
 import { verifyCaptchaPayload } from 'server/utils/captcha';
 import { BadRequestError, ForbiddenError } from 'server/utils/errors';
 import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
@@ -33,6 +34,12 @@ router.post(
 			throw new ForbiddenError();
 		}
 		const userId = (req.user?.id as string) || null;
+		if (userId && req.body.communityId) {
+			const flagged = await isUserFlaggedInCommunity(userId, req.body.communityId);
+			if (flagged) {
+				throw new ForbiddenError();
+			}
+		}
 		const options = { ...req.body, userId };
 		const newDiscussion = await createDiscussion(options);
 		return res.status(201).json(newDiscussion);
@@ -46,6 +53,13 @@ router.post(
 		const canCreate = await getCreatePermission(requestIds);
 		if (!canCreate) {
 			throw new ForbiddenError();
+		}
+		const formUserId = (req.user?.id as string) || null;
+		if (formUserId && req.body.communityId) {
+			const flagged = await isUserFlaggedInCommunity(formUserId, req.body.communityId);
+			if (flagged) {
+				throw new ForbiddenError();
+			}
 		}
 		if (isHoneypotFilled(req.body)) {
 			if (req.user?.id)

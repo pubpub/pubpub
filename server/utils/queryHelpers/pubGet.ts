@@ -3,6 +3,7 @@ import type { InitialData, PubGetOptions, SanitizedPubData } from 'types';
 
 import { fetchFacetsForScope } from 'server/facets';
 import { Pub } from 'server/models';
+import { getFlaggedUserIdsForCommunity } from 'server/userCommunityFlag/queries';
 import { expect } from 'utils/assert';
 
 import { createLogger } from './communityGet';
@@ -79,12 +80,15 @@ export const getPubForRequest = async (options: GetPubForRequestOptions) => {
 	const communityId = initialData.communityData.id;
 	const { log, end } = createLogger('getPubForRequest');
 
-	const pubData = await log('getPub', getPub({ slug, communityId }, pubGetOptions));
+	const [pubData, flaggedUserIds] = await Promise.all([
+		log('getPub', getPub({ slug, communityId }, pubGetOptions)),
+		log('getFlaggedUsers', getFlaggedUserIdsForCommunity(communityId)),
+	]);
 
 	const sanitized = await log(
 		'sanitizePub',
 		new Promise<null | SanitizedPubData>((resolve) => {
-			resolve(sanitizePub(pubData, initialData, releaseNumber));
+			resolve(sanitizePub(pubData, initialData, releaseNumber, { flaggedUserIds }));
 		}),
 	);
 
