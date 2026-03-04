@@ -37,7 +37,15 @@ const mergeSpamTagFields = (
 	};
 };
 
-export const addSpamTagToUser = async (userId: string, fields?: UserSpamTagFields) => {
+type AddSpamTagToUserOptions = {
+	skipNotification?: boolean;
+};
+
+export const addSpamTagToUser = async (
+	userId: string,
+	fields?: UserSpamTagFields,
+	options?: AddSpamTagToUserOptions,
+) => {
 	const user = expect(
 		await User.findOne({
 			where: { id: userId },
@@ -64,9 +72,11 @@ export const addSpamTagToUser = async (userId: string, fields?: UserSpamTagField
 			individualHooks: false,
 		},
 	);
-	notifyNewSpamTag(userId, user, newSpamTag).catch((err) =>
-		console.error('Failed to send new spam tag notifications', err),
-	);
+	if (!options?.skipNotification) {
+		notifyNewSpamTag(userId, user, newSpamTag).catch((err) =>
+			console.error('Failed to send new spam tag notifications', err),
+		);
+	}
 	return newSpamTag;
 };
 

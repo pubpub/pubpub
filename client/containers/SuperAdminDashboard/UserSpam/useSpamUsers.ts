@@ -11,11 +11,13 @@ import useStateRef from 'react-usestateref';
 import { apiFetch } from 'client/utils/apiFetch';
 import { unique } from 'utils/arrays';
 
-type DateFilters = {
+type QueryFilters = {
 	createdAfter?: string;
 	createdBefore?: string;
 	activeAfter?: string;
 	activeBefore?: string;
+	minActivities?: number;
+	maxActivities?: number;
 };
 
 type UseSpamUsersOptions = {
@@ -25,12 +27,19 @@ type UseSpamUsersOptions = {
 	initialUsers: SpamUser[];
 	limit: number;
 	communitySubdomain?: string;
-	dateFilters?: DateFilters;
+	queryFilters?: QueryFilters;
 };
 
 export const useSpamUsers = (options: UseSpamUsersOptions) => {
-	const { searchTerm, filter, ordering, limit, initialUsers, communitySubdomain, dateFilters } =
-		options;
+	const {
+		searchTerm,
+		filter,
+		ordering,
+		limit,
+		initialUsers,
+		communitySubdomain,
+		queryFilters,
+	} = options;
 	const [_, setOffset, offsetRef] = useStateRef(initialUsers.length);
 	const [isLoading, setIsLoading] = useState(false);
 	const [mayLoadMoreUsers, setMayLoadMoreUsers] = useState(true);
@@ -50,12 +59,21 @@ export const useSpamUsers = (options: UseSpamUsersOptions) => {
 			ordering,
 			spamTagPresence,
 			communitySubdomain: communitySubdomain || undefined,
-			...dateFilters,
+			...queryFilters,
 		});
 		setIsLoading(false);
 		setTimeout(() => setMayLoadMoreUsers(nextUsers.length === limit), 0);
 		setUsers((currentUsers) => unique([...currentUsers, ...nextUsers], (u) => u.id));
-	}, [filter.query, limit, searchTerm, ordering, communitySubdomain, dateFilters, offsetRef, setOffset]);
+	}, [
+		filter.query,
+		limit,
+		searchTerm,
+		ordering,
+		communitySubdomain,
+		queryFilters,
+		offsetRef,
+		setOffset,
+	]);
 
 	useUpdateEffect(() => {
 		setOffset(0);

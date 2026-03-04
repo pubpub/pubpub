@@ -19,7 +19,8 @@
 		padding: 6px 0;
 
 		.sort-control,
-		.community-filter {
+		.community-filter,
+		.activity-count-filter {
 			display: flex;
 			align-items: center;
 			gap: 6px;
@@ -33,6 +34,20 @@
 			border-radius: 3px;
 			font-size: 13px;
 			width: 160px;
+
+			&:focus {
+				outline: none;
+				border-color: #137cbd;
+				box-shadow: 0 0 0 1px #137cbd;
+			}
+		}
+
+		.activity-count-filter input {
+			padding: 3px 8px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			font-size: 13px;
+			width: 70px;
 
 			&:focus {
 				outline: none;

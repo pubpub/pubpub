@@ -27,6 +27,8 @@ const sortOptions = [
 	{ value: 'user-created-at:ASC', label: 'Oldest users' },
 	{ value: 'last-activity:DESC', label: 'Most recently active' },
 	{ value: 'last-activity:ASC', label: 'Least recently active' },
+	{ value: 'activity-count:DESC', label: 'Most activities' },
+	{ value: 'activity-count:ASC', label: 'Fewest activities' },
 	{ value: 'discussion-count:DESC', label: 'Most discussions' },
 	{ value: 'discussion-count:ASC', label: 'Fewest discussions' },
 	{ value: 'spam-score:DESC', label: 'Highest spam score' },
@@ -76,13 +78,34 @@ const UserSpam = (props: Props) => {
 	const [activeBefore, setActiveBefore] = useState<string | undefined>();
 	const [createdPreset, setCreatedPreset] = useState<number | null>(null);
 	const [activePreset, setActivePreset] = useState<number | null>(null);
+	const [minActivitiesInput, setMinActivitiesInput] = useState('');
+	const [maxActivitiesInput, setMaxActivitiesInput] = useState('');
+	const [minActivities, setMinActivities] = useState<number | undefined>();
+	const [maxActivities, setMaxActivities] = useState<number | undefined>();
 
 	useDebounce(() => setSearchTerm(inputSearchTerm), 300, [inputSearchTerm]);
 	useDebounce(() => setCommunitySubdomain(communityInput.trim()), 300, [communityInput]);
+	useDebounce(
+		() => setMinActivities(minActivitiesInput ? Number(minActivitiesInput) : undefined),
+		300,
+		[minActivitiesInput],
+	);
+	useDebounce(
+		() => setMaxActivities(maxActivitiesInput ? Number(maxActivitiesInput) : undefined),
+		300,
+		[maxActivitiesInput],
+	);
 
-	const dateFilters = useMemo(
-		() => ({ createdAfter, createdBefore, activeAfter, activeBefore }),
-		[createdAfter, createdBefore, activeAfter, activeBefore],
+	const queryFilters = useMemo(
+		() => ({
+			createdAfter,
+			createdBefore,
+			activeAfter,
+			activeBefore,
+			minActivities,
+			maxActivities,
+		}),
+		[createdAfter, createdBefore, activeAfter, activeBefore, minActivities, maxActivities],
 	);
 
 	const { users, isLoading, loadMoreUsers, mayLoadMoreUsers, updateUser } = useSpamUsers({
@@ -92,11 +115,11 @@ const UserSpam = (props: Props) => {
 		filter,
 		ordering,
 		communitySubdomain: communitySubdomain || undefined,
-		dateFilters,
+		queryFilters,
 	});
 
 	useInfiniteScroll({
-		scrollTolerance: 100,
+		scrollTolerance: 500,
 		useDocumentElement: true,
 		onRequestMoreItems: loadMoreUsers,
 		enabled: mayLoadMoreUsers,
@@ -172,6 +195,24 @@ const UserSpam = (props: Props) => {
 						onChange={(e) => setCommunityInput(e.target.value)}
 					/>
 				</label>
+				<span className="activity-count-filter">
+					Activities
+					<input
+						type="number"
+						min="0"
+						placeholder="min"
+						value={minActivitiesInput}
+						onChange={(e) => setMinActivitiesInput(e.target.value)}
+					/>
+					<span>to</span>
+					<input
+						type="number"
+						min="0"
+						placeholder="max"
+						value={maxActivitiesInput}
+						onChange={(e) => setMaxActivitiesInput(e.target.value)}
+					/>
+				</span>
 			</div>
 			<div className="date-filters-row">
 				<div className="date-filter-group">
