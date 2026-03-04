@@ -31,15 +31,8 @@ type UseSpamUsersOptions = {
 };
 
 export const useSpamUsers = (options: UseSpamUsersOptions) => {
-	const {
-		searchTerm,
-		filter,
-		ordering,
-		limit,
-		initialUsers,
-		communitySubdomain,
-		queryFilters,
-	} = options;
+	const { searchTerm, filter, ordering, limit, initialUsers, communitySubdomain, queryFilters } =
+		options;
 	const [_, setOffset, offsetRef] = useStateRef(initialUsers.length);
 	const [isLoading, setIsLoading] = useState(false);
 	const [mayLoadMoreUsers, setMayLoadMoreUsers] = useState(true);

@@ -180,7 +180,13 @@ const UserSpamEntry = (props: Props) => {
 						status="confirmed-spam"
 						onStatusChanged={handleStatusChanged}
 					/>
-					<Button minimal small icon="remove" loading={removeLoading} onClick={handleRemoveTag}>
+					<Button
+						minimal
+						small
+						icon="remove"
+						loading={removeLoading}
+						onClick={handleRemoveTag}
+					>
 						Remove spam tag
 					</Button>
 				</ButtonGroup>
@@ -200,7 +206,13 @@ const UserSpamEntry = (props: Props) => {
 						status="unreviewed"
 						onStatusChanged={handleStatusChanged}
 					/>
-					<Button minimal small icon="remove" loading={removeLoading} onClick={handleRemoveTag}>
+					<Button
+						minimal
+						small
+						icon="remove"
+						loading={removeLoading}
+						onClick={handleRemoveTag}
+					>
 						Remove spam tag
 					</Button>
 				</ButtonGroup>
