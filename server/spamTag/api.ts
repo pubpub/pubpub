@@ -1,3 +1,5 @@
+import type { UserSpamTagFields } from 'types';
+
 import { Router } from 'express';
 
 import { ForbiddenError } from 'server/utils/errors';
@@ -6,14 +8,10 @@ import { expect } from 'utils/assert';
 
 import { queryCommunitiesForSpamManagement } from './communityDashboard';
 import { updateSpamTagForCommunity } from './communityQueries';
+import { contextFromUser, notify } from './notifications';
 import { canManipulateSpamTags } from './permissions';
 import { getRecentDiscussionsForUser, queryUsersForSpamManagement } from './userDashboard';
-import {
-	addSpamTagToUser,
-	getSpamTagForUser,
-	removeSpamTagFromUser,
-	updateSpamTagForUser,
-} from './userQueries';
+import { removeSpamTagFromUser, upsertSpamTag } from './userQueries';
 
 export const router = Router();
 
@@ -40,29 +38,23 @@ router.put(
 		}
 		const actorId = req.user?.id;
 		const actorName = (req.user as any)?.fullName ?? 'Unknown';
-		// skip the "new spam tag" notification when a status change follows immediately,
-		// since updateSpamTagForUser will send its own notification
-		const skipNotification = true;
-		const existingTag = await getSpamTagForUser(userId);
-		if (!existingTag) {
-			await addSpamTagToUser(userId, undefined, { skipNotification });
-		}
-		if (status === 'confirmed-spam' && actorId) {
-			await addSpamTagToUser(
-				userId,
-				{
-					manuallyMarkedBy: [
-						{
-							userId: actorId,
-							userName: actorName,
-							at: new Date().toISOString(),
-						},
-					],
-				},
-				{ skipNotification },
-			);
-		}
-		await updateSpamTagForUser({ userId, status, actorId, actorName });
+		const fields =
+			status === 'confirmed-spam' && actorId
+				? {
+						manuallyMarkedBy: [
+							{ userId: actorId, userName: actorName, at: new Date().toISOString() },
+						],
+					}
+				: undefined;
+		const { spamTag, user } = await upsertSpamTag({ userId, status, fields });
+		const event = status === 'confirmed-spam' ? 'manual-ban' : 'spam-lifted';
+		await notify(
+			event,
+			contextFromUser(user, {
+				actorName,
+				spamFields: spamTag.fields as UserSpamTagFields,
+			}),
+		);
 		return res.status(200).send({});
 	}),
 );
@@ -114,6 +106,8 @@ router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
 		createdBefore,
 		activeAfter,
 		activeBefore,
+		minActivities,
+		maxActivities,
 	} = req.body;
 	const canQuery = await canManipulateSpamTags({
 		userId: expect(req.user).id,
@@ -134,6 +128,8 @@ router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
 		createdBefore,
 		activeAfter,
 		activeBefore,
+		minActivities: minActivities != null ? Number(minActivities) : undefined,
+		maxActivities: maxActivities != null ? Number(maxActivities) : undefined,
 	});
 	return res.status(200).send(queryResult);
 });
