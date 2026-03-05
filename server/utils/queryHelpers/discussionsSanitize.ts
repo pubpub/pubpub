@@ -10,8 +10,7 @@ type AuthorWithModeration =
 	| null
 	| undefined;
 
-const isAuthorSpam = (author: AuthorWithModeration) =>
-	author?.spamTag?.status === 'confirmed-spam';
+const isAuthorSpam = (author: AuthorWithModeration) => author?.spamTag?.status === 'confirmed-spam';
 
 const isAuthorCleared = (author: AuthorWithModeration) =>
 	author?.spamTag?.status === 'confirmed-not-spam';
