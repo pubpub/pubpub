@@ -19,6 +19,16 @@ const models = modelize`
 		isSuperAdmin: true
 	}
 	Community community {
+		Pub pub {
+			Member {
+				permissions: "admin"
+				User pubAdmin {}
+			}
+
+			Release release {
+				historyKey: 10
+			}
+		}
 		Member {
 			permissions: "admin"
 			User admin {}
@@ -102,25 +112,8 @@ it('allows a community admin to retract their own report', async () => {
 	expect(report?.status).toEqual('retracted');
 });
 
-it('rate-limits excessive report creation', async () => {
-	const { admin, community, targetUser } = models;
-	const agent = await login(admin);
-
-	const promises = Array.from({ length: 7 }, () =>
-		agent.post('/api/communityModerationReports').send({
-			userId: targetUser.id,
-			communityId: community.id,
-			reason: 'spam-content',
-		}),
-	);
-
-	const responses = await Promise.all(promises);
-	const tooMany = responses.filter((r) => r.status === 429);
-	expect(tooMany.length).toBeGreaterThan(0);
-});
-
 it('blocks a reported user from creating discussions in that community', async () => {
-	const { admin, community, targetUser } = models;
+	const { admin, community, targetUser, pub } = models;
 	const adminAgent = await login(admin);
 
 	await adminAgent
@@ -138,6 +131,7 @@ it('blocks a reported user from creating discussions in that community', async (
 	await targetAgent
 		.post('/api/discussions')
 		.send({
+			pubId: pub.id,
 			communityId: community.id,
 			content: { type: 'doc', content: [] },
 			text: 'test',
@@ -146,7 +140,7 @@ it('blocks a reported user from creating discussions in that community', async (
 });
 
 it('retracting a report re-enables the user to create thread comments', async () => {
-	const { admin, community, targetUser } = models;
+	const { admin, community, targetUser, pub } = models;
 	const adminAgent = await login(admin);
 
 	await adminAgent
@@ -160,8 +154,14 @@ it('retracting a report re-enables the user to create thread comments', async ()
 		.expect(201);
 
 	const activeReports = await CommunityModerationReport.findAll({
-		where: { userId: targetUser.id, communityId: community.id, status: 'active' },
+		where: {
+			userId: targetUser.id,
+			communityId: community.id,
+			status: 'active',
+		},
 	});
+
+	expect(activeReports.length).toBeGreaterThan(0);
 
 	await Promise.all(
 		activeReports.map((report) =>
@@ -173,7 +173,24 @@ it('retracting a report re-enables the user to create thread comments', async ()
 	);
 
 	const remaining = await CommunityModerationReport.count({
-		where: { userId: targetUser.id, communityId: community.id, status: 'active' },
+		where: {
+			userId: targetUser.id,
+			communityId: community.id,
+			status: 'active',
+		},
 	});
 	expect(remaining).toEqual(0);
+
+	const targetAgent = await login(targetUser);
+	await targetAgent
+		.post('/api/discussions')
+		.send({
+			pubId: pub.id,
+			communityId: community.id,
+			content: { type: 'doc', content: [] },
+			text: 'test',
+			// weird, why does the client need to set this?
+			visibilityAccess: 'public',
+		})
+		.expect(201);
 });

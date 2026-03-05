@@ -29,17 +29,16 @@ router.post(
 	'/api/discussions',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
+		if (!requestIds.pubId) {
+			throw new BadRequestError(new Error('pubId is required.'));
+		}
+
 		const canCreate = await getCreatePermission(requestIds);
+		console.log('canCreate', canCreate);
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}
 		const userId = (req.user?.id as string) || null;
-		if (userId && req.body.communityId) {
-			const flagged = await isUserReportedInCommunity(userId, req.body.communityId);
-			if (flagged) {
-				throw new ForbiddenError();
-			}
-		}
 		const options = { ...req.body, userId };
 		const newDiscussion = await createDiscussion(options);
 		return res.status(201).json(newDiscussion);
@@ -53,13 +52,6 @@ router.post(
 		const canCreate = await getCreatePermission(requestIds);
 		if (!canCreate) {
 			throw new ForbiddenError();
-		}
-		const formUserId = (req.user?.id as string) || null;
-		if (formUserId && req.body.communityId) {
-			const flagged = await isUserReportedInCommunity(formUserId, req.body.communityId);
-			if (flagged) {
-				throw new ForbiddenError();
-			}
 		}
 		if (isHoneypotFilled(req.body)) {
 			if (req.user?.id)
