@@ -50,12 +50,16 @@ export type SpamUserAffiliation = {
 
 export type SpamUserCommunityReport = {
 	communitySubdomain: string;
+	communityTitle: string | null;
 	reason: string;
 	reasonText: string | null;
 	status: string;
 	createdAt: string;
 	actorName: string | null;
+	actorSlug: string | null;
 	sourceCommentText: string | null;
+	sourceCommentPubSlug: string | null;
+	sourceCommentPubTitle: string | null;
 };
 
 export type SpamUserQuery = {

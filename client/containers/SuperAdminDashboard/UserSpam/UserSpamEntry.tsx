@@ -379,56 +379,75 @@ const UserSpamEntry = (props: Props) => {
 		if (!communityReports?.length) return null;
 		return (
 			<div className="community-reports">
-				{communityReports.map((report, index) => (
-					<Popover
-						// biome-ignore lint/suspicious/noArrayIndexKey: stable list
-						key={index}
-						aria-label="Flag details"
-						placement="bottom-start"
-						content={
-							<div className="flag-detail-popover">
-								<div className="flag-detail-row">
-									<span className="flag-detail-label">Community</span>
-									<span>{report.communitySubdomain}</span>
-								</div>
-								<div className="flag-detail-row">
-									<span className="flag-detail-label">Reason</span>
-									<span>{report.reason}</span>
-								</div>
-								{report.reasonText && (
-									<div className="flag-detail-row">
-										<span className="flag-detail-label">Note</span>
-										<span className="flag-detail-note">
-											{report.reasonText}
+				{communityReports.map((report, index) => {
+					return (
+						<Popover
+							aria-label="Flag details"
+							placement="bottom"
+							content={
+								<div className="flag-detail-popover">
+									<div className="flag-detail-header">
+										<Tag intent="warning" minimal>
+											{report.reason}
+										</Tag>
+										<span className="flag-detail-meta">
+											{report.actorName && (
+												<>
+													reported by{' '}
+													<a
+														href={`/user/${report.actorSlug}`}
+														target="_blank"
+														rel="noopener noreferrer"
+													>
+														{report.actorName}
+													</a>
+												</>
+											)}{' '}
+											{formatDate(report.createdAt)}
 										</span>
 									</div>
-								)}
-								{report.actorName && (
-									<div className="flag-detail-row">
-										<span className="flag-detail-label">Flagged by</span>
-										<span>{report.actorName}</span>
-									</div>
-								)}
-								{report.sourceCommentText && (
-									<div className="flag-detail-row">
-										<span className="flag-detail-label">Source comment</span>
-										<span className="flag-detail-note">
-											{report.sourceCommentText}
-										</span>
-									</div>
-								)}
-								<div className="flag-detail-row">
-									<span className="flag-detail-label">Date</span>
-									<span>{formatDate(report.createdAt)}</span>
+									{report.reasonText && (
+										<div className="flag-detail-note">{report.reasonText}</div>
+									)}
+									{report.sourceCommentText && (
+										<div className="flag-detail-comment">
+											<span className="flag-detail-comment-label">
+												Flagged comment
+											</span>
+											<blockquote>
+												{report.sourceCommentText.length > 300
+													? `${report.sourceCommentText.slice(0, 300)}...`
+													: report.sourceCommentText}
+											</blockquote>
+											<p className="flag-detail-comment-context">
+												On{' '}
+												<a
+													href={`https://${report.communitySubdomain}.pubpub.org/pub/${report.sourceCommentPubSlug}`}
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													{report.sourceCommentPubTitle}
+												</a>{' '}
+												in{' '}
+												<a
+													href={`https://${report.communitySubdomain}`}
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													{report.communityTitle}
+												</a>
+											</p>
+										</div>
+									)}
 								</div>
-							</div>
-						}
-					>
-						<Tag intent="warning" minimal icon="flag" interactive>
-							{report.communitySubdomain}: {report.reason}
-						</Tag>
-					</Popover>
-				))}
+							}
+						>
+							<Button minimal small icon="flag" intent="warning">
+								{report.communitySubdomain}: {report.reason}
+							</Button>
+						</Popover>
+					);
+				})}
 			</div>
 		);
 	};

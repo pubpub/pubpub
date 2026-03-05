@@ -65,8 +65,8 @@ router.put(
 		// notify community admins who filed reports about this user
 		const resolution =
 			status === 'confirmed-spam'
-				? 'The user has been confirmed as spam and banned.'
-				: 'The user has been reviewed and confirmed as not spam.';
+				? 'The user has been confirmed to violate our Terms of Service and Acceptable Use Policy, and has been banned.'
+				: 'The user has been reviewed and confirmed as not violating our Terms of Service and Acceptable Use Policy. They have not been banned, and their discussions are now visible again.';
 		notifyReportersOfCommunityFlagResolution(userId, user, resolution).catch((err) =>
 			console.error('Failed to notify reporters of resolution', err),
 		);

@@ -264,7 +264,7 @@ const getCommunityReportsForUserIds = async (
 		where: { userId: { [Op.in]: userIds }, status: 'active' },
 		attributes: ['userId', 'reason', 'reasonText', 'status', 'createdAt'],
 		include: [
-			{ model: Community, as: 'community', attributes: ['subdomain'] },
+			{ model: Community, as: 'community', attributes: ['subdomain', 'title'] },
 			{
 				model: User,
 				as: 'actor',
@@ -274,6 +274,27 @@ const getCommunityReportsForUserIds = async (
 				model: ThreadComment,
 				as: 'sourceThreadComment',
 				attributes: ['id', 'text'],
+				include: [
+					{
+						model: Thread,
+						as: 'thread',
+						attributes: ['id'],
+						include: [
+							{
+								model: Discussion,
+								as: 'discussion',
+								attributes: ['id'],
+								include: [
+									{
+										model: Pub,
+										as: 'pub',
+										attributes: ['slug', 'title'],
+									},
+								],
+							},
+						],
+					},
+				],
 			},
 		],
 	});
@@ -283,13 +304,17 @@ const getCommunityReportsForUserIds = async (
 		const raw = r as any;
 		const commentText = raw['sourceThreadComment.text'] as string | undefined;
 		const entry: types.SpamUserCommunityReport = {
+			communityTitle: raw['community.title'] ?? null,
 			communitySubdomain: raw['community.subdomain'] ?? 'unknown',
 			reason: raw.reason,
 			reasonText: raw.reasonText ?? null,
 			status: raw.status,
 			createdAt: raw.createdAt,
 			actorName: raw['actor.fullName'] ?? null,
+			actorSlug: raw['actor.slug'] ?? null,
 			sourceCommentText: commentText || null,
+			sourceCommentPubSlug: raw['sourceThreadComment.thread.discussion.pub.slug'] ?? null,
+			sourceCommentPubTitle: raw['sourceThreadComment.thread.discussion.pub.title'] ?? null,
 		};
 		const existing = map.get(raw.userId);
 		if (existing) {
@@ -301,6 +326,10 @@ const getCommunityReportsForUserIds = async (
 	return map;
 };
 
+/**
+ * for searching by community in the user dashboard
+ * not really the same as what we usually call "CommunityAffiliation", which only looks at membership and pub attribution
+ */
 const getAffiliationForUserIds = async (
 	userIds: string[],
 ): Promise<Map<string, types.SpamUserAffiliation>> => {
