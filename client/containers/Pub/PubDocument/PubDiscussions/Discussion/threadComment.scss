@@ -3,6 +3,7 @@
 .thread-comment-component {
 	display: flex;
 	direction: ltr;
+	position: relative;
 
 	&:not(:last-child):not(.input) {
 		margin-bottom: 1em;
@@ -12,17 +13,38 @@
 		.discussion-body-wrapper {
 			opacity: 0.85;
 		}
-		border-left: 3px solid #d9534f;
-		padding-left: 0.5em;
+		&::before {
+			content: '';
+			display: block;
+			width: 3px;
+			height: 100%;
+			background: #d9534f;
+			position: absolute;
+			left: -8px;
+		}
 		background: rgba(217, 83, 79, 0.03);
 	}
 	&.is-flagged {
 		.discussion-body-wrapper {
 			opacity: 0.9;
 		}
-		border-left: 3px solid #e8a317;
-		padding-left: 0.5em;
+		&::before {
+			content: '';
+			display: block;
+			width: 3px;
+			height: 100%;
+			background: #e8a317;
+			position: absolute;
+			left: -8px;
+		}
 		background: rgba(232, 163, 23, 0.03);
+	}
+	.spam-button, .flag-button {
+		font-size: 13px;
+		display: inline-flex;
+		padding: 0.25em 0em;
+		align-items: center;
+		gap: 2px;
 	}
 	.spam-badge {
 		display: inline-block;

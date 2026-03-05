@@ -1,4 +1,4 @@
-import type { Discussion, SanitizedPubData } from 'types';
+import type { DefinitelyHas, Discussion, SanitizedPubData } from 'types';
 
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 
@@ -20,7 +20,8 @@ const sanitizeHashes = (pubData, activePermissions) => {
 const filterDiscussionsByDraftOrRelease = (discussions: Discussion[], isRelease: boolean) => {
 	const shownVisibilityAccess = isRelease ? 'public' : 'members';
 	return discussions.filter(
-		(discussion) => discussion.visibility?.access === shownVisibilityAccess,
+		(discussion): discussion is DefinitelyHas<Discussion, 'visibility'> =>
+			discussion.visibility?.access === shownVisibilityAccess,
 	);
 };
 
@@ -33,18 +34,10 @@ const getFilteredExports = (pubData, isRelease) => {
 	return exports.filter((exp) => releaseHistoryKeys.has(exp.historyKey));
 };
 
-type ReportedUserMapEntry = { reportIds: string[] };
-
-type SanitizeOptions = {
-	flaggedUserIds?: Set<string>;
-	reportedUserMap?: Map<string, ReportedUserMapEntry>;
-};
-
 export default (
 	pubData,
 	initialData,
 	releaseNumber: number | null = null,
-	options?: SanitizeOptions,
 ): null | SanitizedPubData => {
 	const { loginData, scopeData } = initialData;
 	const { activePermissions } = scopeData;
@@ -98,10 +91,6 @@ export default (
 			filterDiscussionsByDraftOrRelease(pubData.discussions, isRelease),
 			activePermissions,
 			loginData.id,
-			{
-				flaggedUserIds: options?.flaggedUserIds,
-				reportedUserMap: options?.reportedUserMap,
-			},
 		);
 	const reviews =
 		pubData.reviews && sanitizeReviews(pubData.reviews, activePermissions, loginData.id);

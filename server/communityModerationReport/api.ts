@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { Community, User } from 'server/models';
 import { notify } from 'server/spamTag/notifications';
 import { canManipulateSpamTags } from 'server/spamTag/permissions';
 import { upsertSpamTag } from 'server/spamTag/userQueries';
@@ -9,9 +10,9 @@ import { wrap } from 'server/wrap';
 
 import {
 	createReport,
-	getActiveReportsByFlaggedBy,
 	getAllActiveReports,
 	getReportById,
+	getReportByIdAndActor,
 	getReportsForCommunity,
 	updateReportStatus,
 } from './queries';
@@ -21,39 +22,47 @@ export const router = Router();
 router.post(
 	'/api/communityModerationReports',
 	wrap(async (req, res) => {
-		const { userId, communityId, reason, reasonText, sourceDiscussionId } = req.body;
-		const flaggedById = req.user?.id;
-		if (!flaggedById || !userId || !communityId || !reason) {
+		const { userId, communityId, reason, reasonText, sourceThreadCommentId } = req.body;
+		const actorId = req.user?.id;
+		if (!actorId || !userId || !communityId || !reason) {
 			return res.status(400).send({ error: 'Missing required fields' });
 		}
 
-		const scopeData = await getScope({ communityId, loginId: flaggedById });
+		const scopeData = await getScope({ communityId, loginId: actorId });
 		if (!scopeData.activePermissions.canAdmin) {
 			throw new ForbiddenError();
 		}
 
-		const { spamTag } = await upsertSpamTag({ userId });
+		const [flaggedUser, actor, community, { spamTag }] = await Promise.all([
+			User.findByPk(userId, { attributes: ['id', 'email', 'fullName', 'slug'] }),
+			User.findByPk(actorId, { attributes: ['id', 'email', 'fullName', 'slug'] }),
+			Community.findByPk(communityId, { attributes: ['subdomain'] }),
+			upsertSpamTag({ userId }),
+		]);
 
 		const report = await createReport({
 			userId,
 			communityId,
-			flaggedById,
+			actorId,
 			reason,
 			reasonText,
-			sourceDiscussionId,
+			sourceThreadCommentId,
 			spamTagId: spamTag.id,
 		});
 
 		notify('community-flag', {
 			userId,
-			userEmail: '',
-			userName: '',
-			userSlug: '',
+			userEmail: flaggedUser?.email ?? '',
+			userName: flaggedUser?.fullName ?? '',
+			userSlug: flaggedUser?.slug ?? '',
 			communityId,
-			flaggedById,
+			communitySubdomain: community?.subdomain ?? '',
+			actorFullName: actor?.fullName ?? '',
+			actorSlug: actor?.slug ?? '',
+			actorEmail: actor?.email ?? '',
 			flagReason: reason,
 			flagReasonText: reasonText,
-			sourceDiscussionId,
+			sourceThreadCommentId,
 		}).catch((err) => console.error('Failed to send community flag notification', err));
 
 		return res.status(201).json(report);
@@ -65,17 +74,17 @@ router.put(
 	wrap(async (req, res) => {
 		const { status } = req.body;
 		const reportId = req.params.id;
-		const userId = req.user?.id;
-		if (!userId) throw new ForbiddenError();
+		const actorId = req.user?.id;
+		if (!actorId) throw new ForbiddenError();
 
 		if (status === 'retracted') {
-			const ownReport = await getActiveReportsByFlaggedBy(reportId, userId);
+			const ownReport = await getReportByIdAndActor(reportId, actorId);
 			if (!ownReport) {
 				const existing = await getReportById(reportId);
 				if (!existing) throw new NotFoundError();
 				const scopeData = await getScope({
 					communityId: existing.communityId,
-					loginId: userId,
+					loginId: actorId,
 				});
 				if (!scopeData.activePermissions.canAdmin) {
 					throw new ForbiddenError();
@@ -86,13 +95,17 @@ router.put(
 
 			const retractedReport = await getReportById(reportId);
 			if (retractedReport) {
+				const reqUser = req.user as any;
 				notify('community-flag-retracted', {
 					userId: retractedReport.userId,
-					userEmail: '',
+					userEmail: retractedReport.user?.email ?? '',
 					userName: retractedReport.user?.fullName ?? '',
 					userSlug: retractedReport.user?.slug ?? '',
 					communityId: retractedReport.communityId,
-					flaggedById: userId,
+					communitySubdomain: retractedReport.community?.subdomain ?? '',
+					actorFullName: reqUser?.fullName ?? '',
+					actorSlug: reqUser?.slug ?? '',
+					actorEmail: reqUser?.email ?? '',
 				}).catch((err) =>
 					console.error('Failed to send flag retraction notification', err),
 				);
@@ -101,7 +114,7 @@ router.put(
 			return res.status(200).json(updated);
 		}
 
-		const isSuperAdmin = await canManipulateSpamTags({ userId });
+		const isSuperAdmin = await canManipulateSpamTags({ userId: actorId });
 		if (!isSuperAdmin) {
 			throw new ForbiddenError();
 		}

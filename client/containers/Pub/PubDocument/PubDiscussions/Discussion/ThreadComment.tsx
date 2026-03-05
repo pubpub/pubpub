@@ -1,4 +1,10 @@
-import type { Callback, SpamStatus } from 'types';
+import type {
+	Callback,
+	PubPageData,
+	PubPageDiscussion,
+	PubPageThreadComment,
+	SpamStatus,
+} from 'types';
 
 import React, { useCallback, useState } from 'react';
 
@@ -16,9 +22,9 @@ import { getPartsOfFullName } from 'utils/names';
 import './threadComment.scss';
 
 type Props = {
-	discussionData: any;
-	threadCommentData: any;
-	pubData: any;
+	discussionData: PubPageDiscussion;
+	threadCommentData: PubPageThreadComment;
+	pubData: PubPageData;
 	updateLocalData: (...args: any[]) => any;
 	isPreview?: boolean;
 };
@@ -59,7 +65,7 @@ const ThreadComment = (props: Props) => {
 							...discussion,
 							thread: {
 								...discussion.thread,
-								comments: discussion.thread.comments.map((comment) => {
+								comments: discussion.thread.comments?.map((comment) => {
 									if (comment.id === threadCommentData.id) {
 										return { ...comment, ...updatedThreadCommentData };
 									}
@@ -76,21 +82,21 @@ const ThreadComment = (props: Props) => {
 
 	const handleSpamStatusChanged = useCallback(
 		(status: SpamStatus | null) => {
-			const isNowSpam = status === 'confirmed-spam';
 			const targetUserId = threadCommentData.userId;
 			updateLocalData('pub', {
 				discussions: pubData.discussions.map((discussion) => ({
 					...discussion,
-					...(discussion.userId === targetUserId && {
-						isAuthorSpam: isNowSpam || undefined,
-					}),
 					thread: {
 						...discussion.thread,
-						comments: discussion.thread.comments.map((comment) => {
-							if (comment.userId === targetUserId) {
-								return { ...comment, isAuthorSpam: isNowSpam || undefined };
-							}
-							return comment;
+						comments: discussion.thread.comments?.map((comment) => {
+							if (comment.userId !== targetUserId) return comment;
+							return {
+								...comment,
+								author: {
+									...comment.author,
+									spamTag: status ? { ...comment.author?.spamTag, status } : null,
+								},
+							};
 						}),
 					},
 				})),
@@ -104,16 +110,20 @@ const ThreadComment = (props: Props) => {
 		updateLocalData('pub', {
 			discussions: pubData.discussions.map((discussion) => ({
 				...discussion,
-				...(discussion.userId === targetUserId && {
-					isAuthorFlagged: true,
-				}),
 				thread: {
 					...discussion.thread,
-					comments: discussion.thread.comments.map((comment) => {
-						if (comment.userId === targetUserId) {
-							return { ...comment, isAuthorFlagged: true };
-						}
-						return comment;
+					comments: discussion.thread.comments?.map((comment) => {
+						if (comment.userId !== targetUserId) return comment;
+						return {
+							...comment,
+							author: {
+								...comment.author,
+								communityModerationReports: [
+									...(comment.author?.communityModerationReports ?? []),
+									{ id: 'optimistic', status: 'active' as const },
+								],
+							},
+						};
 					}),
 				},
 			})),
@@ -121,7 +131,9 @@ const ThreadComment = (props: Props) => {
 	}, [threadCommentData.userId, pubData.discussions, updateLocalData]);
 
 	const handleRetractFlag = useCallback(async () => {
-		const reportIds: string[] | undefined = threadCommentData.moderationReportIds;
+		const reportIds = threadCommentData.author?.communityModerationReports
+			?.filter((r) => r.status === 'active')
+			?.map((r) => r.id);
 		if (!reportIds?.length) return;
 		setIsRetracting(true);
 		try {
@@ -136,21 +148,17 @@ const ThreadComment = (props: Props) => {
 			updateLocalData('pub', {
 				discussions: pubData.discussions.map((discussion) => ({
 					...discussion,
-					...(discussion.userId === targetUserId && {
-						isAuthorFlagged: undefined,
-						moderationReportIds: undefined,
-					}),
 					thread: {
 						...discussion.thread,
-						comments: discussion.thread.comments.map((comment) => {
-							if (comment.userId === targetUserId) {
-								return {
-									...comment,
-									isAuthorFlagged: undefined,
-									moderationReportIds: undefined,
-								};
-							}
-							return comment;
+						comments: discussion.thread.comments?.map((comment) => {
+							if (comment.userId !== targetUserId) return comment;
+							return {
+								...comment,
+								author: {
+									...comment.author,
+									communityModerationReports: [],
+								},
+							};
 						}),
 					},
 				})),
@@ -176,8 +184,10 @@ const ThreadComment = (props: Props) => {
 		);
 	};
 	const commenterName = discussionData.commenter?.name ?? threadCommentData.commenter?.name;
-	const isAuthorSpam = !!threadCommentData.isAuthorSpam;
-	const isAuthorFlagged = !!threadCommentData.isAuthorFlagged;
+	const isAuthorSpam = threadCommentData.author?.spamTag?.status === 'confirmed-spam';
+	const isAuthorFlagged = threadCommentData.author?.communityModerationReports?.some(
+		(report) => report.status === 'active',
+	);
 	const showFlagButton =
 		!isPreview &&
 		canAdminCommunity &&
@@ -200,7 +210,7 @@ const ThreadComment = (props: Props) => {
 					width={18}
 					initials={
 						threadCommentData.author
-							? threadCommentData.author.intials
+							? threadCommentData.author.initials
 							: commenterName
 								? getPartsOfFullName(commenterName).initials
 								: '?'
@@ -265,22 +275,28 @@ const ThreadComment = (props: Props) => {
 								minimal
 								small
 								onClick={() => setIsFlagDialogOpen(true)}
-							/>
+								className="flag-button"
+							>
+								Flag
+							</Button>
 						)}
 						{showUnflagButton && (
 							<Button
 								icon={<Icon icon="flag" iconSize={12} />}
-								text="Unflag"
 								minimal
 								small
 								loading={isRetracting}
 								onClick={handleRetractFlag}
-							/>
+								className="flag-button"
+							>
+								Unflag
+							</Button>
 						)}
 						{!isPreview && isSuperAdmin && threadCommentData.userId && (
 							<SpamStatusMenu
 								userId={threadCommentData.userId}
 								onStatusChanged={handleSpamStatusChanged}
+								currentStatus={threadCommentData.author?.spamTag?.status}
 							/>
 						)}
 					</span>
@@ -352,7 +368,7 @@ const ThreadComment = (props: Props) => {
 					onClose={() => setIsFlagDialogOpen(false)}
 					userId={threadCommentData.userId}
 					communityId={communityData.id}
-					discussionId={discussionData.id}
+					threadCommentId={threadCommentData.id}
 					userName={threadCommentData.author?.fullName}
 					onFlagged={handleFlagged}
 				/>

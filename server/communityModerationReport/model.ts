@@ -14,7 +14,7 @@ import {
 	Table,
 } from 'sequelize-typescript';
 
-import { Community, Discussion, SpamTag, User } from '../models';
+import { Community, SpamTag, ThreadComment, User } from '../models';
 
 export type ModerationReportReason =
 	| 'spam-content'
@@ -49,7 +49,7 @@ export class CommunityModerationReport extends Model<
 
 	@AllowNull(false)
 	@Column(DataType.UUID)
-	declare flaggedById: string;
+	declare actorId: string;
 
 	@AllowNull(false)
 	@Column(
@@ -61,7 +61,7 @@ export class CommunityModerationReport extends Model<
 	declare reasonText: string | null;
 
 	@Column(DataType.UUID)
-	declare sourceDiscussionId: string | null;
+	declare sourceThreadCommentId: string | null;
 
 	@Column(DataType.UUID)
 	declare spamTagId: string | null;
@@ -77,16 +77,17 @@ export class CommunityModerationReport extends Model<
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', as: 'community', foreignKey: 'communityId' })
 	declare community?: Community;
 
-	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'flaggedBy', foreignKey: 'flaggedById' })
-	declare flaggedBy?: User;
+	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'actor', foreignKey: 'actorId' })
+	declare actor?: User;
 
-	@BelongsTo(() => Discussion, {
+	@BelongsTo(() => ThreadComment, {
 		onDelete: 'SET NULL',
-		as: 'sourceDiscussion',
-		foreignKey: 'sourceDiscussionId',
+		as: 'sourceThreadComment',
+		foreignKey: 'sourceThreadCommentId',
 	})
-	declare sourceDiscussion?: Discussion;
+	declare sourceThreadComment?: ThreadComment;
 
-	@BelongsTo(() => SpamTag, { onDelete: 'SET NULL', as: 'spamTag', foreignKey: 'spamTagId' })
+	// if the spam tag is deleted, delete the report
+	@BelongsTo(() => SpamTag, { onDelete: 'CASCADE', as: 'spamTag', foreignKey: 'spamTagId' })
 	declare spamTag?: SpamTag;
 }

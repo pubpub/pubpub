@@ -54,9 +54,8 @@ export type SpamUserCommunityReport = {
 	reasonText: string | null;
 	status: string;
 	createdAt: string;
-	flaggedByName: string | null;
-	sourceDiscussionTitle: string | null;
-	sourceDiscussionUrl: string | null;
+	actorName: string | null;
+	sourceCommentText: string | null;
 };
 
 export type SpamUserQuery = {
@@ -129,16 +128,16 @@ export type SerializedCommunityModerationReport = {
 	id: string;
 	userId: string;
 	communityId: string;
-	flaggedById: string;
+	actorId: string;
 	reason: ModerationReportReason;
 	reasonText: string | null;
-	sourceDiscussionId: string | null;
+	sourceThreadCommentId: string | null;
 	spamTagId: string | null;
 	status: ModerationReportStatus;
 	createdAt: string;
 	updatedAt: string;
 	user?: { fullName: string; slug: string; email?: string };
-	flaggedBy?: { fullName: string; slug: string };
+	actor?: { fullName: string; slug: string };
 	community?: { subdomain: string };
 };
 

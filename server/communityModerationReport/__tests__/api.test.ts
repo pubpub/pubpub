@@ -3,12 +3,12 @@ import { vi } from 'vitest';
 import { CommunityModerationReport, SpamTag, User } from 'server/models';
 import { login, modelize, setup, teardown } from 'stubstub';
 
-vi.mock('server/utils/slack', () => ({
+vi.mock('server/spamTag/notifications/slack', () => ({
 	postToSlackAboutCommunityFlag: vi.fn(),
 	postToSlackAboutNewUserSpamTag: vi.fn(),
 }));
 
-vi.mock('server/utils/email', () => ({
+vi.mock('server/spamTag/notifications/email', () => ({
 	sendNewSpamTagDevEmail: vi.fn(),
 	sendCommunityFlagDevEmail: vi.fn(),
 	sendCommunityFlagResolvedEmail: vi.fn(),

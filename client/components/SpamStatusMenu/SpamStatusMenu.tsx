@@ -55,6 +55,7 @@ const SpamStatusMenu = (props: Props) => {
 				minimal: true,
 				small,
 				loading: isLoading,
+				className: 'spam-button',
 			}}
 		>
 			{(Object.keys(statusLabels) as SpamStatus[]).map((status) => (

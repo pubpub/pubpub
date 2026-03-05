@@ -403,22 +403,18 @@ const UserSpamEntry = (props: Props) => {
 										</span>
 									</div>
 								)}
-								{report.flaggedByName && (
+								{report.actorName && (
 									<div className="flag-detail-row">
 										<span className="flag-detail-label">Flagged by</span>
-										<span>{report.flaggedByName}</span>
+										<span>{report.actorName}</span>
 									</div>
 								)}
-								{report.sourceDiscussionUrl && (
+								{report.sourceCommentText && (
 									<div className="flag-detail-row">
-										<span className="flag-detail-label">Source</span>
-										<a
-											href={report.sourceDiscussionUrl}
-											target="_blank"
-											rel="noopener noreferrer"
-										>
-											{report.sourceDiscussionTitle || 'View discussion'}
-										</a>
+										<span className="flag-detail-label">Source comment</span>
+										<span className="flag-detail-note">
+											{report.sourceCommentText}
+										</span>
 									</div>
 								)}
 								<div className="flag-detail-row">

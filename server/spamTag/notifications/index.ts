@@ -8,14 +8,15 @@ import {
 	sendNewSpamTagDevEmail,
 	sendSpamBanEmail,
 	sendSpamLiftedEmail,
-} from 'server/utils/email';
+} from './email';
 import {
 	postToSlackAboutCommunityFlag,
+	postToSlackAboutCommunityFlagRetracted,
 	postToSlackAboutNewUserSpamTag,
 	postToSlackAboutSuspiciousUpload,
 	postToSlackAboutUserBan,
 	postToSlackAboutUserLifted,
-} from 'server/utils/slack';
+} from './slack';
 
 export type SpamEvent =
 	| 'new-spam-tag'
@@ -44,7 +45,7 @@ type SuspiciousUploadContext = SharedContext & {
 	uploadKey: string;
 };
 
-type HoneypotBanContext = SharedContext & {};
+type HoneypotBanContext = SharedContext;
 
 type ManualBanContext = SharedContext & {
 	spamFields?: UserSpamTagFields;
@@ -59,43 +60,29 @@ type SpamLiftedContext = SharedContext & {
 
 type CommunityFlagContext = SharedContext & {
 	communityId: string;
-	sourceDiscussionId?: string | null;
-	flaggedById: string;
+	communitySubdomain: string;
+	sourceThreadCommentId?: string | null;
+	actorFullName: string;
+	actorSlug: string;
+	actorEmail: string;
 	flagReason: ModerationReportReason;
 	flagReasonText?: string | null;
 };
 
 type CommunityFlagRetractedContext = SharedContext & {
 	communityId: string;
-	flaggedById: string;
+	communitySubdomain: string;
+	actorFullName: string;
+	actorSlug: string;
+	actorEmail: string;
 };
 
 type CommunityFlagResolvedContext = SharedContext & {
 	communityId: string;
-	flaggedByEmail?: string;
-	flaggedByName?: string;
-	resolution?: string;
-};
-
-export type SpamNotificationContext = {
-	userId: string;
-	userEmail: string;
-	userName: string;
-	userSlug: string;
-	userAvatar?: string | null;
-	spamScore?: number | null;
-	spamFields?: UserSpamTagFields;
-	previousStatus?: SpamStatus | null;
-	actorName?: string;
-	uploadKey?: string;
-	communityId?: string;
-	sourceDiscussionId?: string | null;
-	flaggedById?: string;
-	flagReason?: ModerationReportReason;
-	flagReasonText?: string | null;
-	flaggedByEmail?: string;
-	flaggedByName?: string;
-	resolution?: string;
+	actorFullName: string;
+	actorSlug: string;
+	actorEmail: string;
+	resolution: string;
 };
 
 type Handler<T extends SharedContext> = (ctx: T) => Promise<void>;
@@ -120,16 +107,19 @@ const handlers = {
 				userSlug: ctx.userSlug,
 				spamScore: ctx.spamScore ?? null,
 			}),
-		(ctx) => sendNewSpamTagDevEmail({ userEmail: ctx.userEmail, userName: ctx.userName }),
+		(ctx) =>
+			sendNewSpamTagDevEmail({
+				userEmail: ctx.userEmail,
+				userName: ctx.userName,
+				reason: ctx.spamFields,
+			}),
 	],
 	'suspicious-upload': [
 		(ctx) =>
-			postToSlackAboutSuspiciousUpload(
-				ctx.userId,
-				ctx.userEmail,
-				ctx.userName,
-				ctx.uploadKey,
-			),
+			postToSlackAboutSuspiciousUpload({
+				userName: ctx.userName,
+				uploadKey: ctx.uploadKey,
+			}),
 	],
 	'honeypot-ban': [(ctx) => sendSpamBanEmail({ toEmail: ctx.userEmail, userName: ctx.userName })],
 	'manual-ban': [
@@ -143,17 +133,18 @@ const handlers = {
 				actorName: ctx.actorName,
 			}),
 		(ctx) => sendSpamBanEmail({ toEmail: ctx.userEmail, userName: ctx.userName }),
-		(ctx) => sendBanDevEmail({ userEmail: ctx.userEmail, userName: ctx.userName }),
+		(ctx) =>
+			sendBanDevEmail({
+				userEmail: ctx.userEmail,
+				userName: ctx.userName,
+				actorName: ctx.actorName,
+				reason: ctx.spamFields,
+			}),
 	],
 	'spam-lifted': [
 		async (ctx) => {
-			if (!ctx.previousStatus || ctx.previousStatus === 'unreviewed') {
-				console.log(
-					'spam-lifted: not notifying manual marking of unreviewed user as not-spam',
-				);
-				return;
-			}
-			return Promise.all([
+			if (!ctx.previousStatus || ctx.previousStatus === 'unreviewed') return;
+			await Promise.all([
 				postToSlackAboutUserLifted({
 					userId: ctx.userId,
 					userName: ctx.userName,
@@ -168,45 +159,49 @@ const handlers = {
 	'community-flag': [
 		(ctx) =>
 			postToSlackAboutCommunityFlag({
-				userId: ctx.userId,
-				communityId: ctx.communityId,
-				flaggedById: ctx.flaggedById,
+				userName: ctx.userName,
+				userSlug: ctx.userSlug,
+				actorName: ctx.actorFullName,
+				communitySubdomain: ctx.communitySubdomain,
 				reason: ctx.flagReason,
 				reasonText: ctx.flagReasonText,
-				sourceDiscussionId: ctx.sourceDiscussionId,
 			}),
 		(ctx) =>
 			sendCommunityFlagDevEmail({
-				userEmail: ctx.userEmail,
 				userName: ctx.userName,
-				communityId: ctx.communityId,
+				userSlug: ctx.userSlug,
+				actorFullName: ctx.actorFullName,
+				actorSlug: ctx.actorSlug,
+				communitySubdomain: ctx.communitySubdomain,
 				flagReason: ctx.flagReason,
+				flagReasonText: ctx.flagReasonText,
 			}),
 	],
 	'community-flag-retracted': [
 		(ctx) =>
-			postToSlackAboutCommunityFlag({
-				userId: ctx.userId,
-				communityId: ctx.communityId,
-				flaggedById: ctx.flaggedById,
+			postToSlackAboutCommunityFlagRetracted({
+				userName: ctx.userName,
+				userSlug: ctx.userSlug,
+				actorName: ctx.actorFullName,
+				communitySubdomain: ctx.communitySubdomain,
 				reason: 'other',
-				reasonText: 'Flag retracted by community admin',
+				reasonText: `Flag retracted by ${ctx.actorFullName}`,
 			}),
 	],
 	'community-flag-resolved': [
 		async (ctx) => {
-			if (!ctx.flaggedByEmail) return;
+			if (!ctx.actorEmail) return;
 			await sendCommunityFlagResolvedEmail({
-				toEmail: ctx.flaggedByEmail,
-				flaggedByName: ctx.flaggedByName ?? '',
+				toEmail: ctx.actorEmail,
+				actorName: ctx.actorFullName,
 				userName: ctx.userName,
-				resolution: ctx.resolution ?? 'reviewed',
+				resolution: ctx.resolution,
 			});
 		},
 	],
 } satisfies { [K in keyof Contexts]: Handler<Contexts[K]>[] };
 
-export const notify = async (event: SpamEvent, ctx: SpamNotificationContext): Promise<void> => {
+export const notify = async <T extends SpamEvent>(event: T, ctx: Contexts[T]): Promise<void> => {
 	const results = await Promise.allSettled(handlers[event].map((h) => h(ctx)));
 	for (const result of results) {
 		if (result.status === 'rejected') {
@@ -215,7 +210,7 @@ export const notify = async (event: SpamEvent, ctx: SpamNotificationContext): Pr
 	}
 };
 
-export const contextFromUser = (
+export const contextFromUser = <const T extends object = {}>(
 	user: {
 		id: string;
 		email?: string | null;
@@ -223,12 +218,15 @@ export const contextFromUser = (
 		slug: string;
 		avatar?: string | null;
 	},
-	extra?: Partial<SpamNotificationContext>,
-): SpamNotificationContext => ({
-	userId: user.id,
-	userEmail: user.email ?? '',
-	userName: user.fullName ?? '',
-	userSlug: user.slug ?? '',
-	userAvatar: user.avatar,
-	...extra,
-});
+	extra?: T,
+) => {
+	const base: SharedContext = {
+		userId: user.id,
+		userEmail: user.email ?? '',
+		userName: user.fullName ?? '',
+		userSlug: user.slug ?? '',
+		userAvatar: user.avatar,
+	};
+	if (!extra) return base as SharedContext & T;
+	return { ...base, ...extra };
+};

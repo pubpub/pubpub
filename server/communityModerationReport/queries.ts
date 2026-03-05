@@ -1,27 +1,28 @@
 import type { ModerationReportReason, ModerationReportStatus } from 'types';
 
-import { Community, CommunityModerationReport, Discussion, SpamTag, User } from 'server/models';
+import { Community, CommunityModerationReport, SpamTag, ThreadComment, User } from 'server/models';
+import { contextFromUser, notify } from 'server/spamTag/notifications';
 
 type CreateReportOptions = {
 	userId: string;
 	communityId: string;
-	flaggedById: string;
+	actorId: string;
 	reason: ModerationReportReason;
 	reasonText?: string | null;
-	sourceDiscussionId?: string | null;
+	sourceThreadCommentId?: string | null;
 	spamTagId?: string | null;
 };
 
 export const createReport = async (options: CreateReportOptions) => {
-	const { userId, communityId, flaggedById, reason, reasonText, sourceDiscussionId, spamTagId } =
+	const { userId, communityId, actorId, reason, reasonText, sourceThreadCommentId, spamTagId } =
 		options;
 	const report = await CommunityModerationReport.create({
 		userId,
 		communityId,
-		flaggedById,
+		actorId,
 		reason,
 		reasonText: reasonText ?? null,
-		sourceDiscussionId: sourceDiscussionId ?? null,
+		sourceThreadCommentId: sourceThreadCommentId ?? null,
 		spamTagId: spamTagId ?? null,
 	});
 	return report.toJSON();
@@ -43,14 +44,6 @@ export const getActiveReportsForUserInCommunity = async (
 	});
 };
 
-export const getReportedUserIdsForCommunity = async (communityId: string): Promise<Set<string>> => {
-	const reports = await CommunityModerationReport.findAll({
-		where: { communityId, status: 'active' },
-		attributes: ['userId'],
-	});
-	return new Set(reports.map((r) => r.userId));
-};
-
 export const isUserReportedInCommunity = async (
 	userId: string,
 	communityId: string,
@@ -67,8 +60,8 @@ export const getReportsForCommunity = async (communityId: string) => {
 		order: [['createdAt', 'DESC']],
 		include: [
 			{ model: User, as: 'user', attributes: ['id', 'fullName', 'slug', 'email'] },
-			{ model: User, as: 'flaggedBy', attributes: ['id', 'fullName', 'slug'] },
-			{ model: Discussion, as: 'sourceDiscussion', attributes: ['id', 'title'] },
+			{ model: User, as: 'actor', attributes: ['id', 'fullName', 'slug'] },
+			{ model: ThreadComment, as: 'sourceThreadComment', attributes: ['id', 'text'] },
 			{ model: SpamTag, as: 'spamTag', attributes: ['id', 'status'] },
 		],
 	});
@@ -80,9 +73,9 @@ export const getAllActiveReports = async () => {
 		order: [['createdAt', 'DESC']],
 		include: [
 			{ model: User, as: 'user', attributes: ['id', 'fullName', 'slug', 'email'] },
-			{ model: User, as: 'flaggedBy', attributes: ['id', 'fullName', 'slug'] },
+			{ model: User, as: 'actor', attributes: ['id', 'fullName', 'slug'] },
 			{ model: Community, as: 'community', attributes: ['id', 'subdomain'] },
-			{ model: Discussion, as: 'sourceDiscussion', attributes: ['id', 'title'] },
+			{ model: ThreadComment, as: 'sourceThreadComment', attributes: ['id', 'text'] },
 			{ model: SpamTag, as: 'spamTag', attributes: ['id', 'status'] },
 		],
 	});
@@ -92,7 +85,7 @@ export const getReportById = async (reportId: string) => {
 	return CommunityModerationReport.findByPk(reportId, {
 		include: [
 			{ model: User, as: 'user', attributes: ['id', 'fullName', 'slug', 'email'] },
-			{ model: User, as: 'flaggedBy', attributes: ['id', 'fullName', 'slug'] },
+			{ model: User, as: 'actor', attributes: ['id', 'fullName', 'slug'] },
 			{ model: Community, as: 'community', attributes: ['id', 'subdomain'] },
 			{ model: SpamTag, as: 'spamTag', attributes: ['id', 'status'] },
 		],
@@ -105,12 +98,12 @@ export const getActiveReportCountForUser = async (userId: string): Promise<numbe
 	});
 };
 
-export const getActiveReportsByFlaggedBy = async (
+export const getReportByIdAndActor = async (
 	reportId: string,
-	flaggedById: string,
+	actorId: string,
 ): Promise<CommunityModerationReport | null> => {
 	return CommunityModerationReport.findOne({
-		where: { id: reportId, flaggedById },
+		where: { id: reportId, actorId },
 	});
 };
 
@@ -125,25 +118,44 @@ export const getActiveReportIdsForUserInCommunity = async (
 	return reports.map((r) => r.id);
 };
 
-type ReportedUserMapEntry = {
-	reportIds: string[];
-};
-
-export const getReportedUserMapForCommunity = async (
-	communityId: string,
-): Promise<Map<string, ReportedUserMapEntry>> => {
+export const notifyReportersOfCommunityFlagResolution = async (
+	userId: string,
+	reportedUser: {
+		id: string;
+		email?: string | null;
+		fullName?: string | null;
+		slug: string;
+		avatar?: string | null;
+	},
+	resolution: string,
+) => {
 	const reports = await CommunityModerationReport.findAll({
-		where: { communityId, status: 'active' },
-		attributes: ['id', 'userId'],
+		where: { userId, status: 'active' },
+		attributes: ['actorId', 'communityId'],
 	});
-	const map = new Map<string, ReportedUserMapEntry>();
-	for (const r of reports) {
-		const existing = map.get(r.userId);
-		if (existing) {
-			existing.reportIds.push(r.id);
-		} else {
-			map.set(r.userId, { reportIds: [r.id] });
-		}
-	}
-	return map;
+	if (reports.length === 0) return;
+
+	const actorIds = [...new Set(reports.map((r) => r.actorId))];
+	const actors = await User.findAll({
+		where: { id: actorIds },
+		attributes: ['id', 'email', 'fullName', 'slug'],
+	});
+	const actorMap = new Map(actors.map((u) => [u.id, u]));
+
+	await Promise.all(
+		reports.map((report) => {
+			const actor = actorMap.get(report.actorId);
+			if (!actor?.email) return Promise.resolve();
+			return notify(
+				'community-flag-resolved',
+				contextFromUser(reportedUser, {
+					communityId: report.communityId,
+					actorFullName: actor.fullName ?? '',
+					actorSlug: actor.slug ?? '',
+					actorEmail: actor.email,
+					resolution,
+				}),
+			);
+		}),
+	);
 };

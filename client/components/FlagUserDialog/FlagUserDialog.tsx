@@ -19,13 +19,13 @@ type Props = {
 	onClose: () => void;
 	userId: string;
 	communityId: string;
-	discussionId?: string | null;
+	threadCommentId?: string | null;
 	userName?: string;
 	onFlagged?: () => void;
 };
 
 const FlagUserDialog = (props: Props) => {
-	const { isOpen, onClose, userId, communityId, discussionId, userName, onFlagged } = props;
+	const { isOpen, onClose, userId, communityId, threadCommentId, userName, onFlagged } = props;
 	const [reason, setReason] = useState<ModerationReportReason>('spam-content');
 	const [reasonText, setReasonText] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +40,7 @@ const FlagUserDialog = (props: Props) => {
 				communityId,
 				reason,
 				reasonText: reasonText.trim() || null,
-				sourceDiscussionId: discussionId ?? null,
+				sourceThreadCommentId: threadCommentId ?? null,
 			});
 			onFlagged?.();
 			onClose();
@@ -49,7 +49,7 @@ const FlagUserDialog = (props: Props) => {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [userId, communityId, reason, reasonText, discussionId, onFlagged, onClose]);
+	}, [userId, communityId, reason, reasonText, threadCommentId, onFlagged, onClose]);
 
 	return (
 		<Dialog
@@ -61,10 +61,12 @@ const FlagUserDialog = (props: Props) => {
 			<div className={Classes.DIALOG_BODY}>
 				<Callout intent={Intent.WARNING} style={{ marginBottom: 16 }}>
 					Flagging this user will hide all of their discussions and comments in your
-					community. They will not be able to create pubs, edit, or create comments. They
-					may still be able to perform other actions if you have given them permissions
-					through memberships. We aim to evaluate flagged users and will send you a
-					follow-up via email.
+					community. They will not be able to create any new Pubs or discussions. They may
+					still be able to perform other actions if you have given them permissions
+					through memberships.
+					<br />
+					We aim to evaluate flagged users and will send you a follow-up via email to let
+					you know what actions we've taken.
 				</Callout>
 				<div style={{ marginBottom: 12 }}>
 					<label htmlFor="flag-reason" style={{ fontWeight: 500, fontSize: 14 }}>

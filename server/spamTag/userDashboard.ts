@@ -265,39 +265,31 @@ const getCommunityReportsForUserIds = async (
 		attributes: ['userId', 'reason', 'reasonText', 'status', 'createdAt'],
 		include: [
 			{ model: Community, as: 'community', attributes: ['subdomain'] },
-			{ model: User, as: 'flaggedBy', attributes: ['fullName'] },
 			{
-				model: Discussion,
-				as: 'sourceDiscussion',
-				attributes: ['title'],
-				include: [
-					{
-						model: Pub,
-						as: 'pub',
-						attributes: ['slug'],
-						include: [{ model: Community, as: 'community', attributes: ['subdomain'] }],
-					},
-				],
+				model: User,
+				as: 'actor',
+				attributes: ['id', 'fullName', 'slug'],
+			},
+			{
+				model: ThreadComment,
+				as: 'sourceThreadComment',
+				attributes: ['id', 'text'],
 			},
 		],
 	});
+
 	const map = new Map<string, types.SpamUserCommunityReport[]>();
 	for (const r of reports) {
 		const raw = r as any;
-		const subdomain = raw['sourceDiscussion.pub.community.subdomain'] as string | undefined;
-		const pubSlug = raw['sourceDiscussion.pub.slug'] as string | undefined;
-		const discussionTitle = raw['sourceDiscussion.title'] as string | undefined;
-		const sourceUrl =
-			subdomain && pubSlug ? `https://${subdomain}.pubpub.org/pub/${pubSlug}` : null;
+		const commentText = raw['sourceThreadComment.text'] as string | undefined;
 		const entry: types.SpamUserCommunityReport = {
 			communitySubdomain: raw['community.subdomain'] ?? 'unknown',
 			reason: raw.reason,
 			reasonText: raw.reasonText ?? null,
 			status: raw.status,
 			createdAt: raw.createdAt,
-			flaggedByName: raw['flaggedBy.fullName'] ?? null,
-			sourceDiscussionTitle: discussionTitle || null,
-			sourceDiscussionUrl: sourceUrl,
+			actorName: raw['actor.fullName'] ?? null,
+			sourceCommentText: commentText || null,
 		};
 		const existing = map.get(raw.userId);
 		if (existing) {
