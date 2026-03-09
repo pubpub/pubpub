@@ -43,7 +43,6 @@ const getAllPubIdsRaw = async (communityId: string): Promise<PubWithMetadata[]> 
 	const query = sql`SELECT 
 "Pub"."id", 
 "Pub"."createdAt",
-"Pub"."title",
 "Pub"."customPublishedAt",
 MIN("releases"."createdAt") AS "firstReleaseDate",
 COALESCE(
