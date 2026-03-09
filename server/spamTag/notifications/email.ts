@@ -7,7 +7,7 @@ import { getSuperAdminTabUrl } from 'utils/superAdmin';
 
 import { buildReasonText, getSpamDashUrl } from './shared';
 
-export const DEV_TEAM_EMAIL = 'other@tefkah.com';
+export const DEV_TEAM_EMAIL = 'dev@pubpub.org';
 
 export const sendSpamBanEmail = ({ toEmail, userName }: { toEmail: string; userName: string }) => {
 	return sendEmail({
