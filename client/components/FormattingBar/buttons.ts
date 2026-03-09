@@ -362,7 +362,7 @@ export const reviewButtonSet = [
 	],
 ];
 
-export const discussionButtonSet = [[strong, em, link], [rightToLeft], [simpleMedia]];
+export const discussionButtonSet = [[strong, em], [rightToLeft], [simpleMedia]];
 
 export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 

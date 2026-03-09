@@ -18,6 +18,8 @@ import { buttons, FormattingBar } from 'components/FormattingBar';
 import { usePubContext } from 'containers/Pub/pubHooks';
 import { usePageContext } from 'utils/hooks';
 
+import { noLinksMarks } from './noLinks';
+
 type OwnProps = {
 	discussionData: any;
 	isPubBottomInput?: boolean;
@@ -236,6 +238,8 @@ const DiscussionInput = (props: Props) => {
 						/>
 						<Editor
 							key={editorKey}
+							customMarks={noLinksMarks}
+							disableLinkCreation
 							placeholder={getPlaceholderText(isNewThread, isPubBottomInput)}
 							onChange={(editorChangeObject) => {
 								setChangeObject(editorChangeObject);
