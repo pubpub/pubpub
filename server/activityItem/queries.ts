@@ -100,24 +100,89 @@ const buildMemberActivityItemParams = <
 	};
 };
 
-export const createCommunityModerationReportCreatedActivityItem = async (
-	actorId: null | string,
-	communityId: string,
-	reportedUserId: string,
-) => {
-	const community = expect(
-		await Community.findOne({ where: { id: communityId }, useMaster: true }),
-	);
-	return createActivityItem({
-		actorId,
-		kind: 'community-moderation-report-created' as const,
-		communityId,
-		payload: {
-			userId: reportedUserId,
-			community: {
-				title: community.title,
+type ModerationReportActivityOptions = {
+	actorId: null | string;
+	communityId: string;
+	reportedUserId: string;
+	reason?: types.ModerationReportReason | null;
+	sourceThreadCommentId?: string | null;
+};
+
+const resolveModerationReportSource = async (sourceThreadCommentId?: string | null) => {
+	if (!sourceThreadCommentId) return {};
+	const comment = await ThreadComment.findOne({
+		where: { id: sourceThreadCommentId },
+		raw: true,
+		include: [
+			{
+				model: Thread,
+				as: 'thread',
+				attributes: ['id'],
+				include: [
+					{
+						model: Discussion,
+						as: 'discussion',
+						attributes: ['id'],
+						include: [
+							{
+								model: Pub,
+								as: 'pub',
+								attributes: ['slug', 'id', 'title'],
+							},
+						],
+					},
+				],
 			},
-		},
+		],
+		useMaster: true,
+	});
+	if (!comment) return { sourceThreadCommentId };
+
+	const pubId = comment['thread.discussion.pub.id'];
+	const pubTitle = comment['thread.discussion.pub.title'];
+
+	return {
+		sourceThreadCommentId,
+		sourcePubId: pubId,
+		sourcePubTitle: pubTitle,
+	};
+};
+
+const buildModerationPayload = async (options: ModerationReportActivityOptions) => {
+	const { communityId, reportedUserId, reason, sourceThreadCommentId } = options;
+	const [community, source] = await Promise.all([
+		Community.findOne({ where: { id: communityId }, useMaster: true }).then(expect),
+		resolveModerationReportSource(sourceThreadCommentId),
+	]);
+	return {
+		userId: reportedUserId,
+		community: { title: community.title },
+		reason: reason ?? null,
+		...source,
+	};
+};
+
+export const createCommunityModerationReportCreatedActivityItem = async (
+	options: ModerationReportActivityOptions,
+) => {
+	const payload = await buildModerationPayload(options);
+	return createActivityItem({
+		actorId: options.actorId,
+		kind: 'community-moderation-report-created' as const,
+		communityId: options.communityId,
+		payload,
+	});
+};
+
+export const createCommunityModerationReportRetractedActivityItem = async (
+	options: ModerationReportActivityOptions,
+) => {
+	const payload = await buildModerationPayload(options);
+	return createActivityItem({
+		actorId: options.actorId,
+		kind: 'community-moderation-report-retracted' as const,
+		communityId: options.communityId,
+		payload,
 	});
 };
 

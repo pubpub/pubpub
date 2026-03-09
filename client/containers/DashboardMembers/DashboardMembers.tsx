@@ -1,3 +1,5 @@
+import type { ModerationReportReason } from 'types';
+
 import React, { useCallback, useState } from 'react';
 
 import { Button, ControlGroup, Intent, Tab, Tabs } from '@blueprintjs/core';
@@ -13,6 +15,7 @@ import {
 	UserAutocomplete,
 } from 'components';
 import { usePageContext } from 'utils/hooks';
+import { getReasonLabel } from 'utils/moderationReasons';
 
 import './dashboardMembers.scss';
 
@@ -66,8 +69,10 @@ const BannedUsersTab = (props: { reports: BannedUserReport[] }) => {
 					<div className="banned-user-info">
 						<span className="banned-user-name">{report.user.fullName}</span>
 						<span className="banned-user-detail">
-							Flagged by {report.actor.fullName}
-							{report.reason ? ` (${report.reason})` : ''}
+							Banned by {report.actor.fullName}
+							{report.reason
+								? ` (${getReasonLabel(report.reason as ModerationReportReason)})`
+								: ''}
 						</span>
 					</div>
 					<Button

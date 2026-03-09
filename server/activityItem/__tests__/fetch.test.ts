@@ -160,11 +160,11 @@ describe('fetchActivityItems', () => {
 
 	it('fetches items for community-moderation-report-created', async () => {
 		const { actor, loudmouth, community } = models;
-		await createCommunityModerationReportCreatedActivityItem(
-			actor.id,
-			community.id,
-			loudmouth.id,
-		);
+		await createCommunityModerationReportCreatedActivityItem({
+			actorId: actor.id,
+			communityId: community.id,
+			reportedUserId: loudmouth.id,
+		});
 		const {
 			activityItems: [reportItem],
 			associations,

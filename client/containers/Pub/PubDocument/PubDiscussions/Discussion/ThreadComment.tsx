@@ -226,7 +226,7 @@ const ThreadComment = (props: Props) => {
 							: (commenterName ?? 'anonymous')}
 						{isAuthorSpam && isPreview && <span className="spam-badge">Spam</span>}
 						{isAuthorFlagged && !isAuthorSpam && isPreview && (
-							<span className="flagged-badge">Flagged</span>
+							<span className="flagged-badge">Banned</span>
 						)}
 						{isPreview ? ': ' : ''}
 					</span>
@@ -277,7 +277,7 @@ const ThreadComment = (props: Props) => {
 								onClick={() => setIsFlagDialogOpen(true)}
 								className="flag-button"
 							>
-								Flag
+								Ban
 							</Button>
 						)}
 						{showUnflagButton && (
@@ -289,7 +289,7 @@ const ThreadComment = (props: Props) => {
 								onClick={handleRetractFlag}
 								className="flag-button"
 							>
-								Unflag
+								Unban
 							</Button>
 						)}
 						{!isPreview && isSuperAdmin && threadCommentData.userId && (
@@ -309,8 +309,8 @@ const ThreadComment = (props: Props) => {
 				)}
 				{!isPreview && isAuthorFlagged && !isAuthorSpam && (
 					<div className="thread-comment-flagged-banner">
-						This user has been flagged by a community admin. Only you and other admins
-						can see this content.
+						This user has been banned from this community. Only you and other admins can
+						see this content.
 					</div>
 				)}
 				{!isPreview && (

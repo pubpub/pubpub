@@ -1,6 +1,7 @@
 import type {
 	CommunityCreatedActivityItem,
 	CommunityModerationReportCreatedActivityItem,
+	CommunityModerationReportRetractedActivityItem,
 	CommunityUpdatedActivityItem,
 	FacetsActivityItem,
 	MemberActivityItem,
@@ -15,6 +16,7 @@ import { getCommunityFromContext } from './util';
 type AcceptedItem =
 	| CommunityCreatedActivityItem
 	| CommunityModerationReportCreatedActivityItem
+	| CommunityModerationReportRetractedActivityItem
 	| CommunityUpdatedActivityItem
 	| MemberActivityItem
 	| FacetsActivityItem;

@@ -1,5 +1,4 @@
 import type {
-	CommunityModerationReportCreatedActivityItem,
 	MemberCreatedActivityItem,
 	MemberRemovedActivityItem,
 	MemberUpdatedActivityItem,
@@ -7,7 +6,7 @@ import type {
 
 import React from 'react';
 
-import { communityTitle, memberTitle, scopeTitle } from 'utils/activity/titles';
+import { memberTitle, scopeTitle } from 'utils/activity/titles';
 
 import { itemRenderer } from './itemRenderer';
 
@@ -66,39 +65,6 @@ export const renderMemberRemoved = itemRenderer<MemberRemovedActivityItem, Title
 		return (
 			<>
 				{actor} removed {member} as a member from {scope}
-			</>
-		);
-	},
-});
-
-const reportedUserTitle = (
-	item: CommunityModerationReportCreatedActivityItem,
-	context: Parameters<typeof memberTitle>[1],
-) => {
-	const userId = item.payload.userId;
-	if (userId) {
-		const user = context.associations.user[userId];
-		if (user) {
-			return { title: user.fullName, href: `/user/${user.slug}` };
-		}
-	}
-	return { title: 'unknown user' };
-};
-
-export const renderCommunityModerationReportCreated = itemRenderer<
-	CommunityModerationReportCreatedActivityItem,
-	'reportedUser' | 'community'
->({
-	icon: 'flag',
-	titleRenderers: {
-		reportedUser: reportedUserTitle,
-		community: communityTitle,
-	},
-	message: ({ titles }) => {
-		const { actor, reportedUser, community } = titles;
-		return (
-			<>
-				{actor} flagged {reportedUser} in {community}
 			</>
 		);
 	},

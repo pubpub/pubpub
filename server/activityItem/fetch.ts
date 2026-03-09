@@ -44,6 +44,7 @@ type FetchActivityItemsOptions = {
 	filters?: ActivityFilter[];
 	limit?: number;
 	offset?: number;
+	excludeKinds?: types.ActivityItemKind[];
 };
 
 type SequelizeFilter = Partial<Record<keyof types.ActivityItem, any>>;
@@ -63,11 +64,7 @@ const memberItemKindFilter = (subFilter: null | SequelizeFilter = null) => {
 
 const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilter[]> = {
 	community: [
-		itemKindFilter([
-			'community-created',
-			'community-updated',
-			'community-moderation-report-created',
-		]),
+		itemKindFilter(['community-created', 'community-updated']),
 		memberItemKindFilter({ pubId: null, collectionId: null }),
 	],
 	collection: {
@@ -78,6 +75,10 @@ const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilte
 		pubId: { [Op.not]: null },
 	},
 	member: memberItemKindFilter(),
+	moderation: itemKindFilter([
+		'community-moderation-report-created',
+		'community-moderation-report-retracted',
+	]),
 	review: itemKindFilter([
 		'pub-review-created',
 		'pub-review-updated',
@@ -128,8 +129,11 @@ const applyFiltersToWhereQuery = (whereQuery: any, filters: ActivityFilter[]) =>
 	return whereQuery;
 };
 
-const fetchActivityItemModels = async (options: Required<FetchActivityItemsOptions>) => {
-	const { scope, limit, offset, since } = options;
+const fetchActivityItemModels = async (
+	options: Required<Omit<FetchActivityItemsOptions, 'excludeKinds'>> &
+		Pick<FetchActivityItemsOptions, 'excludeKinds'>,
+) => {
+	const { scope, limit, offset, since, excludeKinds } = options;
 	const whereQuery = {
 		...(since && {
 			timestamp: {
@@ -138,6 +142,9 @@ const fetchActivityItemModels = async (options: Required<FetchActivityItemsOptio
 		}),
 		communityId: scope.communityId,
 		...(await getWhereQueryForChildScopes(scope)),
+		...(excludeKinds?.length && {
+			kind: { [Op.notIn]: excludeKinds },
+		}),
 	};
 	const models = await ActivityItem.findAll({
 		...(limit && { limit }),
@@ -234,8 +241,14 @@ const getActivityItemAssociationIds = (
 			item.kind === 'page-removed'
 		) {
 			page.add(item.payload.page.id);
-		} else if (item.kind === 'community-moderation-report-created') {
+		} else if (
+			item.kind === 'community-moderation-report-created' ||
+			item.kind === 'community-moderation-report-retracted'
+		) {
 			user.add(item.payload.userId);
+			if (item.payload.sourcePubId) {
+				pub.add(item.payload.sourcePubId);
+			}
 		}
 	});
 	return associationIds;
@@ -327,8 +340,15 @@ export const fetchAssociationsForActivityItems = async (
 export const fetchActivityItems = async (
 	options: FetchActivityItemsOptions,
 ): Promise<ActivityItemsFetchResult> => {
-	const { offset = 0, limit = 0, scope, filters = [], since = '' } = options;
-	const activityItems = await fetchActivityItemModels({ since, offset, limit, scope, filters });
+	const { offset = 0, limit = 0, scope, filters = [], since = '', excludeKinds } = options;
+	const activityItems = await fetchActivityItemModels({
+		since,
+		offset,
+		limit,
+		scope,
+		filters,
+		excludeKinds,
+	});
 	const associations = await fetchAssociationsForActivityItems(activityItems, options.scope);
 
 	return { activityItems, associations, fetchedAllItems: activityItems.length < limit };

@@ -45,7 +45,7 @@ export const communityModerationGuard = () => {
 		return res.status(403).json({
 			error: 'communityBanned',
 			message:
-				'You have been flagged by the administrators of this community and cannot perform this action.',
+				'You have been banned by the administrators of this community and cannot perform this action.',
 		});
 	};
 };

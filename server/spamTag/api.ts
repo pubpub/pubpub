@@ -4,6 +4,7 @@ import { Router } from 'express';
 
 import { notifyReportersOfCommunityFlagResolution } from 'server/communityModerationReport/queries';
 import { CommunityModerationReport, User } from 'server/models';
+import { isUserSuperAdmin } from 'server/user/queries';
 import { ForbiddenError } from 'server/utils/errors';
 import { wrap } from 'server/wrap';
 import { expect } from 'utils/assert';
@@ -38,6 +39,16 @@ router.put(
 		if (!canUpdate) {
 			throw new ForbiddenError();
 		}
+
+		if (status === 'confirmed-spam') {
+			const targetIsSuperAdmin = await isUserSuperAdmin({ userId });
+			if (targetIsSuperAdmin) {
+				return res
+					.status(403)
+					.json({ error: 'Cannot mark a platform administrator as spam' });
+			}
+		}
+
 		const actorId = req.user?.id;
 		const actorName = (req.user as any)?.fullName ?? 'Unknown';
 		const fields =

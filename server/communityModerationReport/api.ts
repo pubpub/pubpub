@@ -4,6 +4,7 @@ import { Community, User } from 'server/models';
 import { notify } from 'server/spamTag/notifications';
 import { canManipulateSpamTags } from 'server/spamTag/permissions';
 import { upsertSpamTag } from 'server/spamTag/userQueries';
+import { isUserSuperAdmin } from 'server/user/queries';
 import { ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getScope } from 'server/utils/queryHelpers';
 import { wrap } from 'server/wrap';
@@ -31,6 +32,11 @@ router.post(
 		const scopeData = await getScope({ communityId, loginId: actorId });
 		if (!scopeData.activePermissions.canAdmin) {
 			throw new ForbiddenError();
+		}
+
+		const targetIsSuperAdmin = await isUserSuperAdmin({ userId });
+		if (targetIsSuperAdmin) {
+			return res.status(403).json({ error: 'Cannot ban a platform administrator' });
 		}
 
 		const [flaggedUser, actor, community, { spamTag }] = await Promise.all([

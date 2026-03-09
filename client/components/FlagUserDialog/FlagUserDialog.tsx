@@ -5,14 +5,11 @@ import React, { useCallback, useState } from 'react';
 import { Button, Callout, Classes, Dialog, HTMLSelect, Intent, TextArea } from '@blueprintjs/core';
 
 import { apiFetch } from 'client/utils/apiFetch';
+import { moderationReasonLabels } from 'utils/moderationReasons';
 
-const reasons: { value: ModerationReportReason; label: string }[] = [
-	{ value: 'spam-content', label: 'Spam content' },
-	{ value: 'hateful-language', label: 'Hateful language' },
-	{ value: 'harassment', label: 'Harassment' },
-	{ value: 'impersonation', label: 'Impersonation' },
-	{ value: 'other', label: 'Other' },
-];
+const reasons = (Object.entries(moderationReasonLabels) as [ModerationReportReason, string][]).map(
+	([value, label]) => ({ value, label }),
+);
 
 type Props = {
 	isOpen: boolean;
@@ -45,7 +42,7 @@ const FlagUserDialog = (props: Props) => {
 			onFlagged?.();
 			onClose();
 		} catch (err: any) {
-			setError(err?.message ?? 'Failed to flag user');
+			setError(err?.message ?? 'Failed to ban user');
 		} finally {
 			setIsLoading(false);
 		}
@@ -55,21 +52,27 @@ const FlagUserDialog = (props: Props) => {
 		<Dialog
 			isOpen={isOpen}
 			onClose={onClose}
-			title={`Flag user${userName ? `: ${userName}` : ''}`}
-			style={{ width: 480 }}
+			title={`Ban user${userName ? `: ${userName}` : ''}`}
+			style={{ width: 520 }}
 		>
 			<div className={Classes.DIALOG_BODY}>
-				<Callout intent={Intent.WARNING} style={{ marginBottom: 16 }}>
-					Flagging this user will hide all of their discussions and comments in your
-					community. They will not be able to create any new Pubs or discussions. They may
-					still be able to perform other actions if you have given them permissions
-					through memberships.
-					<br />
-					We aim to evaluate flagged users and will send you a follow-up via email to let
-					you know what actions we've taken.
+				<Callout intent={Intent.WARNING} style={{ marginBottom: 20 }}>
+					<p style={{ margin: '0 0 8px' }}>
+						<strong>This will ban the user from your community.</strong> They will not
+						be able to perform any actions, including creating Pubs, posting
+						discussions, or editing content.
+					</p>
+					<p style={{ margin: '0 0 8px' }}>
+						All of their existing discussions and comments will be hidden from other
+						users. You can reverse this action at any time from the Members settings.
+					</p>
+					<p style={{ margin: 0, fontSize: 13, opacity: 0.85 }}>
+						The user will <strong>not</strong> be notified of this action.
+					</p>
 				</Callout>
-				<div style={{ marginBottom: 12 }}>
-					<label htmlFor="flag-reason" style={{ fontWeight: 500, fontSize: 14 }}>
+
+				<div style={{ marginBottom: 14 }}>
+					<label htmlFor="flag-reason" style={{ fontWeight: 600, fontSize: 14 }}>
 						Reason
 					</label>
 					<HTMLSelect
@@ -86,20 +89,26 @@ const FlagUserDialog = (props: Props) => {
 						))}
 					</HTMLSelect>
 				</div>
-				<div>
-					<label htmlFor="flag-reason-text" style={{ fontWeight: 500, fontSize: 14 }}>
+
+				<div style={{ marginBottom: 8 }}>
+					<label htmlFor="flag-reason-text" style={{ fontWeight: 600, fontSize: 14 }}>
 						Details (optional)
 					</label>
+					<p style={{ margin: '2px 0 6px', fontSize: 13, color: '#666' }}>
+						This message will be sent to the PubPub team and helps us identify patterns
+						of abuse across the platform.
+					</p>
 					<TextArea
 						id="flag-reason-text"
 						value={reasonText}
 						onChange={(e) => setReasonText(e.target.value)}
 						fill
 						rows={3}
-						placeholder="Provide additional context..."
-						style={{ marginTop: 4 }}
+						placeholder="Provide additional context about why this user is being banned..."
+						style={{ marginTop: 0 }}
 					/>
 				</div>
+
 				{error && (
 					<div style={{ color: 'var(--pt-intent-danger)', marginTop: 8, fontSize: 13 }}>
 						{error}
@@ -110,8 +119,8 @@ const FlagUserDialog = (props: Props) => {
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 					<Button text="Cancel" onClick={onClose} disabled={isLoading} />
 					<Button
-						text="Flag user"
-						intent={Intent.WARNING}
+						text="Ban user"
+						intent={Intent.DANGER}
 						onClick={handleSubmit}
 						loading={isLoading}
 					/>
