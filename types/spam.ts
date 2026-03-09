@@ -123,7 +123,7 @@ export type ModerationReportReason =
 /** @deprecated use ModerationReportReason */
 export type UserCommunityFlagReason = ModerationReportReason;
 
-export type ModerationReportStatus = 'active' | 'retracted' | 'dismissed' | 'escalated';
+export type ModerationReportStatus = 'active' | 'retracted';
 
 /** @deprecated use ModerationReportStatus */
 export type UserCommunityFlagStatus = ModerationReportStatus;

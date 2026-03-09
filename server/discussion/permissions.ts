@@ -1,4 +1,3 @@
-import { isUserReportedInCommunity } from 'server/communityModerationReport/queries';
 import { getFeatureFlagForUserAndCommunity } from 'server/featureFlag/queries';
 import { Discussion, Pub } from 'server/models';
 import { getScope } from 'server/utils/queryHelpers';
@@ -18,20 +17,19 @@ export const getCreatePermission = async ({
 
 	const pub = await Pub.findOne({ where: { id: pubId } });
 	const hasAccessHash = pub?.commentHash === commentAccessHash;
-	const [scopeData, flagged] = await Promise.all([
+	const [scopeData] = await Promise.all([
 		getScope({
 			communityId,
 			pubId,
 			loginId: userId,
 			accessHash,
 		}),
-		isUserReportedInCommunity(userId, communityId),
 	]);
 
 	const { canView, canCreateDiscussions } = scopeData.activePermissions;
 	const nonMembersVisibility = visibilityAccess && visibilityAccess !== 'members';
 
-	return !flagged && (canView || (canCreateDiscussions && nonMembersVisibility) || hasAccessHash);
+	return canView || (canCreateDiscussions && nonMembersVisibility) || hasAccessHash;
 };
 
 export const getUpdatePermissions = async ({ discussionId, userId, pubId, communityId }) => {

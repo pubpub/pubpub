@@ -139,6 +139,35 @@ it('blocks a reported user from creating discussions in that community', async (
 		.expect(403);
 });
 
+it('rejects status updates other than retracted', async () => {
+	const { admin, community, targetUser } = models;
+	const agent = await login(admin);
+
+	const createRes = await agent
+		.post('/api/communityModerationReports')
+		.send({
+			userId: targetUser.id,
+			communityId: community.id,
+			reason: 'other',
+		})
+		.expect(201);
+
+	await agent
+		.put(`/api/communityModerationReports/${createRes.body.id}`)
+		.send({ status: 'dismissed' })
+		.expect(400);
+
+	await agent
+		.put(`/api/communityModerationReports/${createRes.body.id}`)
+		.send({ status: 'escalated' })
+		.expect(400);
+
+	await agent
+		.put(`/api/communityModerationReports/${createRes.body.id}`)
+		.send({ status: 'retracted' })
+		.expect(200);
+});
+
 it('retracting a report re-enables the user to create thread comments', async () => {
 	const { admin, community, targetUser, pub } = models;
 	const adminAgent = await login(admin);

@@ -23,7 +23,7 @@ export type ModerationReportReason =
 	| 'impersonation'
 	| 'other';
 
-export type ModerationReportStatus = 'active' | 'retracted' | 'dismissed' | 'escalated';
+export type ModerationReportStatus = 'active' | 'retracted';
 
 @Table({ tableName: 'CommunityModerationReports' })
 export class CommunityModerationReport extends Model<
@@ -68,7 +68,7 @@ export class CommunityModerationReport extends Model<
 
 	@AllowNull(false)
 	@Default('active')
-	@Column(DataType.ENUM('active', 'retracted', 'dismissed', 'escalated'))
+	@Column(DataType.ENUM('active', 'retracted'))
 	declare status: CreationOptional<ModerationReportStatus>;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })

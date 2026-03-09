@@ -2,6 +2,7 @@ import './activityItem/hooks';
 import './collection/hooks';
 import './collectionPub/hooks';
 import './community/hooks';
+import './communityModerationReport/hooks';
 import './member/hooks';
 import './page/hooks';
 import './pub/hooks';

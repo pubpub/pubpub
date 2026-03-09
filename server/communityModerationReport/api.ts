@@ -76,50 +76,41 @@ router.put(
 		const reportId = req.params.id;
 		const actorId = req.user?.id;
 		if (!actorId) throw new ForbiddenError();
-
-		if (status === 'retracted') {
-			const ownReport = await getReportByIdAndActor(reportId, actorId);
-			if (!ownReport) {
-				const existing = await getReportById(reportId);
-				if (!existing) throw new NotFoundError();
-				const scopeData = await getScope({
-					communityId: existing.communityId,
-					loginId: actorId,
-				});
-				if (!scopeData.activePermissions.canAdmin) {
-					throw new ForbiddenError();
-				}
-			}
-			const updated = await updateReportStatus(reportId, 'retracted');
-			if (!updated) throw new NotFoundError();
-
-			const retractedReport = await getReportById(reportId);
-			if (retractedReport) {
-				const reqUser = req.user as any;
-				notify('community-flag-retracted', {
-					userId: retractedReport.userId,
-					userEmail: retractedReport.user?.email ?? '',
-					userName: retractedReport.user?.fullName ?? '',
-					userSlug: retractedReport.user?.slug ?? '',
-					communityId: retractedReport.communityId,
-					communitySubdomain: retractedReport.community?.subdomain ?? '',
-					actorFullName: reqUser?.fullName ?? '',
-					actorSlug: reqUser?.slug ?? '',
-					actorEmail: reqUser?.email ?? '',
-				}).catch((err) =>
-					console.error('Failed to send flag retraction notification', err),
-				);
-			}
-
-			return res.status(200).json(updated);
+		if (status !== 'retracted') {
+			return res.status(400).json({ error: 'Only "retracted" is a valid status update' });
 		}
 
-		const isSuperAdmin = await canManipulateSpamTags({ userId: actorId });
-		if (!isSuperAdmin) {
-			throw new ForbiddenError();
+		const ownReport = await getReportByIdAndActor(reportId, actorId);
+		if (!ownReport) {
+			const existing = await getReportById(reportId);
+			if (!existing) throw new NotFoundError();
+			const scopeData = await getScope({
+				communityId: existing.communityId,
+				loginId: actorId,
+			});
+			if (!scopeData.activePermissions.canAdmin) {
+				throw new ForbiddenError();
+			}
 		}
-		const updated = await updateReportStatus(reportId, status);
+		const updated = await updateReportStatus(reportId, 'retracted');
 		if (!updated) throw new NotFoundError();
+
+		const retractedReport = await getReportById(reportId);
+		if (retractedReport) {
+			const reqUser = req.user as any;
+			notify('community-flag-retracted', {
+				userId: retractedReport.userId,
+				userEmail: retractedReport.user?.email ?? '',
+				userName: retractedReport.user?.fullName ?? '',
+				userSlug: retractedReport.user?.slug ?? '',
+				communityId: retractedReport.communityId,
+				communitySubdomain: retractedReport.community?.subdomain ?? '',
+				actorFullName: reqUser?.fullName ?? '',
+				actorSlug: reqUser?.slug ?? '',
+				actorEmail: reqUser?.email ?? '',
+			}).catch((err) => console.error('Failed to send flag retraction notification', err));
+		}
+
 		return res.status(200).json(updated);
 	}),
 );

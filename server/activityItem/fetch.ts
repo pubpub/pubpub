@@ -63,7 +63,11 @@ const memberItemKindFilter = (subFilter: null | SequelizeFilter = null) => {
 
 const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilter[]> = {
 	community: [
-		itemKindFilter(['community-created', 'community-updated']),
+		itemKindFilter([
+			'community-created',
+			'community-updated',
+			'community-moderation-report-created',
+		]),
 		memberItemKindFilter({ pubId: null, collectionId: null }),
 	],
 	collection: {
@@ -230,6 +234,8 @@ const getActivityItemAssociationIds = (
 			item.kind === 'page-removed'
 		) {
 			page.add(item.payload.page.id);
+		} else if (item.kind === 'community-moderation-report-created') {
+			user.add(item.payload.userId);
 		}
 	});
 	return associationIds;

@@ -10,6 +10,7 @@ import {
 	createCollectionPubActivityItem,
 	createCollectionUpdatedActivityItem,
 	createCommunityCreatedActivityItem,
+	createCommunityModerationReportCreatedActivityItem,
 	createCommunityUpdatedActivityItem,
 	createMemberCreatedActivityItem,
 	createMemberRemovedActivityItem,
@@ -155,6 +156,34 @@ describe('fetchActivityItems', () => {
 			},
 		});
 		expectAssociationIds(associations, { community: [community.id], user: [actor.id] });
+	});
+
+	it('fetches items for community-moderation-report-created', async () => {
+		const { actor, loudmouth, community } = models;
+		await createCommunityModerationReportCreatedActivityItem(
+			actor.id,
+			community.id,
+			loudmouth.id,
+		);
+		const {
+			activityItems: [reportItem],
+			associations,
+		} = await fetchActivityItems({
+			scope: { communityId: community.id },
+		});
+		expect(reportItem).toMatchObject({
+			kind: 'community-moderation-report-created',
+			actorId: actor.id,
+			communityId: community.id,
+			payload: {
+				userId: loudmouth.id,
+				community: { title: community.title },
+			},
+		});
+		expectAssociationIds(associations, {
+			community: [community.id],
+			user: [actor.id, loudmouth.id],
+		});
 	});
 
 	it('fetches items for member-created, member-updated, and member-removed across pub, collection, and community membership', async () => {

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 
-import { isUserReportedInCommunity } from 'server/communityModerationReport/queries';
 import { verifyCaptchaPayload } from 'server/utils/captcha';
 import { BadRequestError, ForbiddenError } from 'server/utils/errors';
 import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
@@ -34,7 +33,6 @@ router.post(
 		}
 
 		const canCreate = await getCreatePermission(requestIds);
-		console.log('canCreate', canCreate);
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}

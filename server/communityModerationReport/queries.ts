@@ -67,6 +67,21 @@ export const getReportsForCommunity = async (communityId: string) => {
 	});
 };
 
+export const getActiveBannedUsersForCommunity = async (communityId: string) => {
+	return CommunityModerationReport.findAll({
+		where: { communityId, status: 'active' },
+		order: [['createdAt', 'DESC']],
+		include: [
+			{
+				model: User,
+				as: 'user',
+				attributes: ['id', 'fullName', 'slug', 'avatar', 'initials'],
+			},
+			{ model: User, as: 'actor', attributes: ['id', 'fullName', 'slug'] },
+		],
+	});
+};
+
 export const getAllActiveReports = async () => {
 	return CommunityModerationReport.findAll({
 		where: { status: 'active' },

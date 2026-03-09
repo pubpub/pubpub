@@ -100,6 +100,27 @@ const buildMemberActivityItemParams = <
 	};
 };
 
+export const createCommunityModerationReportCreatedActivityItem = async (
+	actorId: null | string,
+	communityId: string,
+	reportedUserId: string,
+) => {
+	const community = expect(
+		await Community.findOne({ where: { id: communityId }, useMaster: true }),
+	);
+	return createActivityItem({
+		actorId,
+		kind: 'community-moderation-report-created' as const,
+		communityId,
+		payload: {
+			userId: reportedUserId,
+			community: {
+				title: community.title,
+			},
+		},
+	});
+};
+
 export const createCommunityCreatedActivityItem = async (
 	actorId: null | string,
 	communityId: string,

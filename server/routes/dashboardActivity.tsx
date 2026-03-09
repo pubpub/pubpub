@@ -37,6 +37,8 @@ router.get(
 
 			const activityData = await fetchActivityItems({ scope, limit: 50 });
 
+			console.log('activityData', activityData);
+
 			return renderToNodeStream(
 				res,
 				<Html

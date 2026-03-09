@@ -12,15 +12,10 @@ type AuthorWithModeration =
 
 const isAuthorSpam = (author: AuthorWithModeration) => author?.spamTag?.status === 'confirmed-spam';
 
-const isAuthorCleared = (author: AuthorWithModeration) =>
-	author?.spamTag?.status === 'confirmed-not-spam';
-
 const isAuthorFlagged = (author: AuthorWithModeration) =>
 	(author?.communityModerationReports?.length ?? 0) > 0;
 
-// cleared users should remain visible even if they have active community reports
-const isHidden = (author: AuthorWithModeration) =>
-	isAuthorSpam(author) || (isAuthorFlagged(author) && !isAuthorCleared(author));
+const isHidden = (author: AuthorWithModeration) => isAuthorSpam(author) || isAuthorFlagged(author);
 
 export default (
 	discussions: DefinitelyHas<Discussion, 'visibility'>[],

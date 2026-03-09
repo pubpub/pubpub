@@ -185,12 +185,9 @@ const ThreadComment = (props: Props) => {
 	};
 	const commenterName = discussionData.commenter?.name ?? threadCommentData.commenter?.name;
 	const isAuthorSpam = threadCommentData.author?.spamTag?.status === 'confirmed-spam';
-	const isAuthorCleared = threadCommentData.author?.spamTag?.status === 'confirmed-not-spam';
-	const isAuthorFlagged =
-		!isAuthorCleared &&
-		threadCommentData.author?.communityModerationReports?.some(
-			(report) => report.status === 'active',
-		);
+	const isAuthorFlagged = threadCommentData.author?.communityModerationReports?.some(
+		(report) => report.status === 'active',
+	);
 	const showFlagButton =
 		!isPreview &&
 		canAdminCommunity &&
