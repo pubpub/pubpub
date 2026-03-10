@@ -28,10 +28,14 @@ export const createBan = async (options: CreateBanOptions) => {
 	return ban.toJSON();
 };
 
-export const updateBanStatus = async (banId: string, status: BanStatus) => {
+export const updateBanStatus = async (banId: string, status: BanStatus, actorId?: string) => {
 	const ban = await CommunityBan.findByPk(banId);
 	if (!ban) return null;
-	await ban.update({ status });
+	await ban.update({
+		status,
+		// set the retractor to the actor who is retracting the ban
+		...(actorId ? { actorId } : {}),
+	});
 	return ban.toJSON();
 };
 

@@ -98,7 +98,7 @@ router.put(
 				throw new ForbiddenError();
 			}
 		}
-		const updated = await updateBanStatus(banId, 'retracted');
+		const updated = await updateBanStatus(banId, 'retracted', actorId);
 		if (!updated) throw new NotFoundError();
 
 		const retractedBan = await getBanById(banId);
