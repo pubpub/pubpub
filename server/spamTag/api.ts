@@ -77,14 +77,16 @@ router.put(
 			}),
 		);
 
-		// notify community admins who filed bans about this user
-		const resolution =
-			status === 'confirmed-spam'
-				? 'The user has been confirmed to violate our Terms of Service and Acceptable Use Policy, and has been banned.'
-				: 'The user has been reviewed and confirmed as not violating our Terms of Service and Acceptable Use Policy. They remain banned in your community, but no further action is taken.';
-		notifyBannersOfCommunityBanResolution(userId, user, resolution).catch((err) =>
-			console.error('Failed to notify banners of resolution', err),
-		);
+		if (status === 'confirmed-spam' || status === 'confirmed-not-spam') {
+			// notify community admins who filed bans about this user
+			const resolution =
+				status === 'confirmed-spam'
+					? 'The user has been confirmed to violate our Terms of Service and Acceptable Use Policy, and has been banned.'
+					: 'The user has been reviewed and confirmed as not violating our Terms of Service and Acceptable Use Policy. They remain banned in your community, but no further action is taken.';
+			notifyBannersOfCommunityBanResolution(userId, user, resolution).catch((err) =>
+				console.error('Failed to notify banners of resolution', err),
+			);
+		}
 
 		// should schedule purges for all communities the user has commented on, ugh
 		const communities = await getAffiliationForUserIds([userId]);
