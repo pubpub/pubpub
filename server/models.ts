@@ -1,20 +1,7 @@
 import passportLocalSequelize from 'passport-local-sequelize';
 
-import { createSequelizeModelsFromFacetDefinitions } from './facets/create';
-import { sequelize } from './sequelize';
-
 /* Import and create all models. */
 /* Also import them to make them available to other modules */
-
-/* Import and create all models. */
-/* Also import them to make them available to other modules */
-
-/* Import and create all models. */
-/* Also import them to make them available to other modules */
-
-/* Import and create all models. */
-/* Also import them to make them available to other modules */
-
 import { ActivityItem } from './activityItem/model';
 import { AuthToken } from './authToken/model';
 import { Collection } from './collection/model';
@@ -34,6 +21,7 @@ import { Draft } from './draft/model';
 import { EmailChangeToken } from './emailChangeToken/model';
 import { Export } from './export/model';
 import { ExternalPublication } from './externalPublication/model';
+import { createSequelizeModelsFromFacetDefinitions } from './facets/create';
 import { FacetBinding as FacetBindingModel } from './facets/models/facetBinding';
 import { FeatureFlag } from './featureFlag/model';
 import { FeatureFlagCommunity } from './featureFlagCommunity/model';
@@ -55,6 +43,7 @@ import { ReviewNew } from './review/model';
 import { ReviewEvent } from './reviewEvent/model';
 import { Reviewer } from './reviewer/model';
 import { ScopeSummary } from './scopeSummary/model';
+import { sequelize } from './sequelize';
 import { Signup } from './signup/model';
 import { SpamTag } from './spamTag/model';
 import { Submission } from './submission/model';
