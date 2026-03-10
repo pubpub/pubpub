@@ -7,12 +7,17 @@ import { isUserSuperAdmin } from 'server/user/queries';
 import { ForbiddenError } from 'server/utils/errors';
 import { wrap } from 'server/wrap';
 import { expect } from 'utils/assert';
+import { schedulePurge } from 'utils/caching/schedulePurgeWithSentry';
 
 import { queryCommunitiesForSpamManagement } from './communityDashboard';
 import { updateSpamTagForCommunity } from './communityQueries';
 import { contextFromUser, notify } from './notifications';
 import { canManipulateSpamTags } from './permissions';
-import { getRecentDiscussionsForUser, queryUsersForSpamManagement } from './userDashboard';
+import {
+	getAffiliationForUserIds,
+	getRecentDiscussionsForUser,
+	queryUsersForSpamManagement,
+} from './userDashboard';
 import { getSpamTagForUser, removeSpamTagFromUser, upsertSpamTag } from './userQueries';
 
 export const router = Router();
@@ -80,6 +85,15 @@ router.put(
 		notifyBannersOfCommunityBanResolution(userId, user, resolution).catch((err) =>
 			console.error('Failed to notify banners of resolution', err),
 		);
+
+		// should schedule purges for all communities the user has commented on, ugh
+		const communities = await getAffiliationForUserIds([userId]);
+		const communitySubdomains = communities.get(userId)?.communitySubdomains;
+		if (communitySubdomains) {
+			for (const communitySubdomain of communitySubdomains) {
+				schedulePurge(`${communitySubdomain}.pubpub.org`);
+			}
+		}
 
 		return res.status(200).send({});
 	}),
