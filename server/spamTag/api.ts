@@ -76,7 +76,7 @@ router.put(
 		const resolution =
 			status === 'confirmed-spam'
 				? 'The user has been confirmed to violate our Terms of Service and Acceptable Use Policy, and has been banned.'
-				: 'The user has been reviewed and confirmed as not violating our Terms of Service and Acceptable Use Policy. They have not been banned, and their discussions are now visible again.';
+				: 'The user has been reviewed and confirmed as not violating our Terms of Service and Acceptable Use Policy. They remain banned in your community, but no further action is taken.';
 		notifyBannersOfCommunityBanResolution(userId, user, resolution).catch((err) =>
 			console.error('Failed to notify banners of resolution', err),
 		);
