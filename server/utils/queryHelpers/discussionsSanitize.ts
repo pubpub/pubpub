@@ -5,17 +5,16 @@ import { sanitizeOnVisibility } from './util';
 type AuthorWithModeration =
 	| {
 			spamTag?: { status?: string } | null;
-			communityModerationReports?: { status?: string }[];
+			communityBans?: { status?: string }[];
 	  }
 	| null
 	| undefined;
 
 const isAuthorSpam = (author: AuthorWithModeration) => author?.spamTag?.status === 'confirmed-spam';
 
-const isAuthorFlagged = (author: AuthorWithModeration) =>
-	(author?.communityModerationReports?.length ?? 0) > 0;
+const isAuthorBanned = (author: AuthorWithModeration) => (author?.communityBans?.length ?? 0) > 0;
 
-const isHidden = (author: AuthorWithModeration) => isAuthorSpam(author) || isAuthorFlagged(author);
+const isHidden = (author: AuthorWithModeration) => isAuthorSpam(author) || isAuthorBanned(author);
 
 export default (
 	discussions: DefinitelyHas<Discussion, 'visibility'>[],

@@ -1,4 +1,4 @@
-import type { ModerationReportReason } from 'types';
+import type { BanReason } from 'types';
 
 import React, { useCallback, useState } from 'react';
 
@@ -33,54 +33,48 @@ type Props = {
 	bannedUsersData: BannedUserReport[];
 };
 
-const BannedUsersTab = (props: { reports: BannedUserReport[] }) => {
-	const [reports, setReports] = useState(props.reports);
+const BannedUsersTab = (props: { bans: BannedUserReport[] }) => {
+	const [bans, setBans] = useState(props.bans);
 	const [retractingIds, setRetractingIds] = useState<Set<string>>(new Set());
 
-	const handleUnban = useCallback(async (reportId: string) => {
-		setRetractingIds((prev) => new Set(prev).add(reportId));
+	const handleUnban = useCallback(async (banId: string) => {
+		setRetractingIds((prev) => new Set(prev).add(banId));
 		try {
-			await apiFetch.put(`/api/communityModerationReports/${reportId}`, {
+			await apiFetch.put(`/api/communityBans/${banId}`, {
 				status: 'retracted',
 			});
-			setReports((prev) => prev.filter((r) => r.id !== reportId));
+			setBans((prev) => prev.filter((r) => r.id !== banId));
 		} finally {
 			setRetractingIds((prev) => {
 				const next = new Set(prev);
-				next.delete(reportId);
+				next.delete(banId);
 				return next;
 			});
 		}
 	}, []);
 
-	if (!reports.length) {
+	if (!bans.length) {
 		return <i>No banned users.</i>;
 	}
 
 	return (
 		<div className="banned-users-list">
-			{reports.map((report) => (
-				<div key={report.id} className="banned-user-row">
-					<Avatar
-						width={30}
-						initials={report.user.initials}
-						avatar={report.user.avatar}
-					/>
+			{bans.map((ban) => (
+				<div key={ban.id} className="banned-user-row">
+					<Avatar width={30} initials={ban.user.initials} avatar={ban.user.avatar} />
 					<div className="banned-user-info">
-						<span className="banned-user-name">{report.user.fullName}</span>
+						<span className="banned-user-name">{ban.user.fullName}</span>
 						<span className="banned-user-detail">
-							Banned by {report.actor.fullName}
-							{report.reason
-								? ` (${getReasonLabel(report.reason as ModerationReportReason)})`
-								: ''}
+							Banned by {ban.actor.fullName}
+							{ban.reason ? ` (${getReasonLabel(ban.reason as BanReason)})` : ''}
 						</span>
 					</div>
 					<Button
 						small
 						intent={Intent.WARNING}
 						text="Unban"
-						loading={retractingIds.has(report.id)}
-						onClick={() => handleUnban(report.id)}
+						loading={retractingIds.has(ban.id)}
+						onClick={() => handleUnban(ban.id)}
 					/>
 				</div>
 			))}
@@ -198,7 +192,7 @@ const DashboardMembers = (props: Props) => {
 					<Tab
 						id="banned"
 						title={`Banned Users (${bannedUsersData.length})`}
-						panel={<BannedUsersTab reports={bannedUsersData} />}
+						panel={<BannedUsersTab bans={bannedUsersData} />}
 					/>
 				</Tabs>
 			) : (

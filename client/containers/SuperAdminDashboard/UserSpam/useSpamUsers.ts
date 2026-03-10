@@ -44,7 +44,7 @@ export const useSpamUsers = (options: UseSpamUsersOptions) => {
 		setIsLoading(true);
 		setMayLoadMoreUsers(false);
 		setOffset((offset) => offset + limit);
-		const { status, spamTagPresence, hasCommunityReport } = filter.query!;
+		const { status, spamTagPresence, hasCommunityBan } = filter.query!;
 		const nextUsers = await apiFetch.post('/api/spamTags/queryUsersForSpam', {
 			limit,
 			searchTerm,
@@ -52,7 +52,7 @@ export const useSpamUsers = (options: UseSpamUsersOptions) => {
 			status,
 			ordering,
 			spamTagPresence,
-			hasCommunityReport,
+			hasCommunityBan,
 			communitySubdomain: communitySubdomain || undefined,
 			...queryFilters,
 		});

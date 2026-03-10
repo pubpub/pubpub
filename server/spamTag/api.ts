@@ -2,8 +2,7 @@ import type { UserSpamTagFields } from 'types';
 
 import { Router } from 'express';
 
-import { notifyReportersOfCommunityFlagResolution } from 'server/communityModerationReport/queries';
-import { CommunityModerationReport, User } from 'server/models';
+import { notifyBannersOfCommunityBanResolution } from 'server/communityBan/queries';
 import { isUserSuperAdmin } from 'server/user/queries';
 import { ForbiddenError } from 'server/utils/errors';
 import { wrap } from 'server/wrap';
@@ -73,13 +72,13 @@ router.put(
 			}),
 		);
 
-		// notify community admins who filed reports about this user
+		// notify community admins who filed bans about this user
 		const resolution =
 			status === 'confirmed-spam'
 				? 'The user has been confirmed to violate our Terms of Service and Acceptable Use Policy, and has been banned.'
 				: 'The user has been reviewed and confirmed as not violating our Terms of Service and Acceptable Use Policy. They have not been banned, and their discussions are now visible again.';
-		notifyReportersOfCommunityFlagResolution(userId, user, resolution).catch((err) =>
-			console.error('Failed to notify reporters of resolution', err),
+		notifyBannersOfCommunityBanResolution(userId, user, resolution).catch((err) =>
+			console.error('Failed to notify banners of resolution', err),
 		);
 
 		return res.status(200).send({});
@@ -135,7 +134,7 @@ router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
 		activeBefore,
 		minActivities,
 		maxActivities,
-		hasCommunityReport,
+		hasCommunityBan,
 		spamFieldsFilter,
 	} = req.body;
 	const canQuery = await canManipulateSpamTags({
@@ -159,7 +158,7 @@ router.post('/api/spamTags/queryUsersForSpam', async (req, res) => {
 		activeBefore,
 		minActivities: minActivities != null ? Number(minActivities) : undefined,
 		maxActivities: maxActivities != null ? Number(maxActivities) : undefined,
-		hasCommunityReport: !!hasCommunityReport,
+		hasCommunityBan: !!hasCommunityBan,
 		spamFieldsFilter: Array.isArray(spamFieldsFilter) ? spamFieldsFilter : undefined,
 	});
 	return res.status(200).send(queryResult);

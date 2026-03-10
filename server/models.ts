@@ -10,7 +10,7 @@ import { CollectionPub } from './collectionPub/model';
 import { Commenter } from './commenter/model';
 import { Community } from './community/model';
 import { CommunityAdmin } from './communityAdmin/model';
-import { CommunityModerationReport } from './communityModerationReport/model';
+import { CommunityBan } from './communityBan/model';
 import { CrossrefDepositRecord } from './crossrefDepositRecord/model';
 import { CustomScript } from './customScript/model';
 import { DepositTarget } from './depositTarget/model';
@@ -111,7 +111,7 @@ sequelize.addModels([
 	ThreadComment,
 	ThreadEvent,
 	User,
-	CommunityModerationReport,
+	CommunityBan,
 	UserDismissable,
 	UserNotification,
 	UserNotificationPreferences,
@@ -204,7 +204,7 @@ export {
 	ThreadComment,
 	ThreadEvent,
 	User,
-	CommunityModerationReport,
+	CommunityBan,
 	UserDismissable,
 	UserNotification,
 	UserNotificationPreferences,

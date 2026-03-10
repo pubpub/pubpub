@@ -2,7 +2,7 @@ import type { IncludeOptions } from 'sequelize';
 
 import {
 	Commenter,
-	CommunityModerationReport,
+	CommunityBan,
 	includeUserModel,
 	SpamTag,
 	Thread,
@@ -67,8 +67,8 @@ const authorWithModeration = (communityId?: string) => ({
 		...(communityId
 			? [
 					{
-						model: CommunityModerationReport,
-						as: 'communityModerationReports',
+						model: CommunityBan,
+						as: 'communityBans',
 						where: { communityId, status: 'active' },
 						duplicating: false,
 						required: false,

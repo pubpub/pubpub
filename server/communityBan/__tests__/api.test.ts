@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 
-import { CommunityModerationReport, SpamTag, User } from 'server/models';
+import { CommunityBan, SpamTag, User } from 'server/models';
 import { login, modelize, setup, teardown } from 'stubstub';
 
 vi.mock('server/spamTag/notifications/slack', () => ({
@@ -47,12 +47,12 @@ setup(beforeAll, async () => {
 
 teardown(afterAll);
 
-it('allows a community admin to create a moderation report and auto-creates a spam tag', async () => {
+it('allows a community admin to create a moderation ban and auto-creates a spam tag', async () => {
 	const { admin, community, targetUser } = models;
 	const agent = await login(admin);
 
 	const res = await agent
-		.post('/api/communityModerationReports')
+		.post('/api/communityBans')
 		.send({
 			userId: targetUser.id,
 			communityId: community.id,
@@ -74,12 +74,12 @@ it('allows a community admin to create a moderation report and auto-creates a sp
 	expect(tag?.status).toEqual('unreviewed');
 });
 
-it('forbids non-admins from creating a moderation report', async () => {
+it('forbids non-admins from creating a moderation ban', async () => {
 	const { viewer, community, targetUser } = models;
 	const agent = await login(viewer);
 
 	await agent
-		.post('/api/communityModerationReports')
+		.post('/api/communityBans')
 		.send({
 			userId: targetUser.id,
 			communityId: community.id,
@@ -88,12 +88,12 @@ it('forbids non-admins from creating a moderation report', async () => {
 		.expect(403);
 });
 
-it('allows a community admin to retract their own report', async () => {
+it('allows a community admin to retract their own ban', async () => {
 	const { admin, community, targetUser } = models;
 	const agent = await login(admin);
 
 	const createRes = await agent
-		.post('/api/communityModerationReports')
+		.post('/api/communityBans')
 		.send({
 			userId: targetUser.id,
 			communityId: community.id,
@@ -101,23 +101,20 @@ it('allows a community admin to retract their own report', async () => {
 		})
 		.expect(201);
 
-	const reportId = createRes.body.id;
+	const banId = createRes.body.id;
 
-	await agent
-		.put(`/api/communityModerationReports/${reportId}`)
-		.send({ status: 'retracted' })
-		.expect(200);
+	await agent.put(`/api/communityBans/${banId}`).send({ status: 'retracted' }).expect(200);
 
-	const report = await CommunityModerationReport.findByPk(reportId);
-	expect(report?.status).toEqual('retracted');
+	const ban = await CommunityBan.findByPk(banId);
+	expect(ban?.status).toEqual('retracted');
 });
 
-it('blocks a reported user from creating discussions in that community', async () => {
+it('blocks a banned user from creating discussions in that community', async () => {
 	const { admin, community, targetUser, pub } = models;
 	const adminAgent = await login(admin);
 
 	await adminAgent
-		.post('/api/communityModerationReports')
+		.post('/api/communityBans')
 		.send({
 			userId: targetUser.id,
 			communityId: community.id,
@@ -144,7 +141,7 @@ it('rejects status updates other than retracted', async () => {
 	const agent = await login(admin);
 
 	const createRes = await agent
-		.post('/api/communityModerationReports')
+		.post('/api/communityBans')
 		.send({
 			userId: targetUser.id,
 			communityId: community.id,
@@ -153,27 +150,27 @@ it('rejects status updates other than retracted', async () => {
 		.expect(201);
 
 	await agent
-		.put(`/api/communityModerationReports/${createRes.body.id}`)
+		.put(`/api/communityBans/${createRes.body.id}`)
 		.send({ status: 'dismissed' })
 		.expect(400);
 
 	await agent
-		.put(`/api/communityModerationReports/${createRes.body.id}`)
+		.put(`/api/communityBans/${createRes.body.id}`)
 		.send({ status: 'escalated' })
 		.expect(400);
 
 	await agent
-		.put(`/api/communityModerationReports/${createRes.body.id}`)
+		.put(`/api/communityBans/${createRes.body.id}`)
 		.send({ status: 'retracted' })
 		.expect(200);
 });
 
-it('retracting a report re-enables the user to create thread comments', async () => {
+it('retracting a ban re-enables the user to create thread comments', async () => {
 	const { admin, community, targetUser, pub } = models;
 	const adminAgent = await login(admin);
 
 	await adminAgent
-		.post('/api/communityModerationReports')
+		.post('/api/communityBans')
 		.send({
 			userId: targetUser.id,
 			communityId: community.id,
@@ -182,7 +179,7 @@ it('retracting a report re-enables the user to create thread comments', async ()
 		})
 		.expect(201);
 
-	const activeReports = await CommunityModerationReport.findAll({
+	const activeBans = await CommunityBan.findAll({
 		where: {
 			userId: targetUser.id,
 			communityId: community.id,
@@ -190,18 +187,18 @@ it('retracting a report re-enables the user to create thread comments', async ()
 		},
 	});
 
-	expect(activeReports.length).toBeGreaterThan(0);
+	expect(activeBans.length).toBeGreaterThan(0);
 
 	await Promise.all(
-		activeReports.map((report) =>
+		activeBans.map((ban) =>
 			adminAgent
-				.put(`/api/communityModerationReports/${report.id}`)
+				.put(`/api/communityBans/${ban.id}`)
 				.send({ status: 'retracted' })
 				.expect(200),
 		),
 	);
 
-	const remaining = await CommunityModerationReport.count({
+	const remaining = await CommunityBan.count({
 		where: {
 			userId: targetUser.id,
 			communityId: community.id,

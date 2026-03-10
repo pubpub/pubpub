@@ -4,7 +4,7 @@ import { literal, Op } from 'sequelize';
 
 import {
 	Community,
-	CommunityModerationReport,
+	CommunityBan,
 	Discussion,
 	Member,
 	Pub,
@@ -46,7 +46,7 @@ const getUserWhereQuery = (options: {
 	activeBefore?: string;
 	minActivities?: number;
 	maxActivities?: number;
-	hasCommunityReport?: boolean;
+	hasCommunityBan?: boolean;
 	spamFieldsFilter?: types.SpamFieldsFilterKey[];
 }) => {
 	const conditions: any[] = [];
@@ -105,11 +105,11 @@ const getUserWhereQuery = (options: {
 		conditions.push(literal(`${activityCountSubquery} <= ${Number(options.maxActivities)}`));
 	}
 
-	if (options.hasCommunityReport) {
+	if (options.hasCommunityBan) {
 		conditions.push({
 			id: {
 				[Op.in]: literal(`(
-					SELECT DISTINCT "userId" FROM "CommunityModerationReports"
+					SELECT DISTINCT "userId" FROM "CommunityBans"
 					WHERE "status" = 'active'
 				)`),
 			},
@@ -182,7 +182,7 @@ export type UserSpamManagementRow =
 type SerializedSpamUserRow = Record<string, unknown> & {
 	id: string;
 	affiliation?: types.SpamUserAffiliation;
-	communityReports?: types.SpamUserCommunityReport[];
+	communityBans?: types.SpamUserCommunityBan[];
 };
 
 export const queryUsersForSpamManagement = async (
@@ -203,7 +203,7 @@ export const queryUsersForSpamManagement = async (
 		activeBefore,
 		minActivities,
 		maxActivities,
-		hasCommunityReport,
+		hasCommunityBan,
 		spamFieldsFilter,
 	} = query;
 	const hasStatusFilter = status && status.length > 0;
@@ -227,7 +227,7 @@ export const queryUsersForSpamManagement = async (
 			activeBefore,
 			minActivities,
 			maxActivities,
-			hasCommunityReport,
+			hasCommunityBan,
 			spamFieldsFilter,
 		}),
 		attributes: ['id', 'fullName', 'email', 'slug', 'createdAt'],
@@ -243,23 +243,23 @@ export const queryUsersForSpamManagement = async (
 	});
 	if (includeAffiliation && plain.length > 0) {
 		const userIds = plain.map((r) => r.id as string);
-		const [affiliationMap, reportsMap] = await Promise.all([
+		const [affiliationMap, bansMap] = await Promise.all([
 			getAffiliationForUserIds(userIds),
-			getCommunityReportsForUserIds(userIds),
+			getCommunityBansForUserIds(userIds),
 		]);
 		return plain.map((r) => ({
 			...r,
 			affiliation: affiliationMap.get(r.id as string),
-			communityReports: reportsMap.get(r.id as string) ?? [],
+			communityBans: bansMap.get(r.id as string) ?? [],
 		})) as SerializedSpamUserRow[];
 	}
 	return plain as SerializedSpamUserRow[];
 };
 
-const getCommunityReportsForUserIds = async (
+const getCommunityBansForUserIds = async (
 	userIds: string[],
-): Promise<Map<string, types.SpamUserCommunityReport[]>> => {
-	const reports = await CommunityModerationReport.findAll({
+): Promise<Map<string, types.SpamUserCommunityBan[]>> => {
+	const bans = await CommunityBan.findAll({
 		raw: true,
 		where: { userId: { [Op.in]: userIds }, status: 'active' },
 		attributes: ['id', 'userId', 'reason', 'reasonText', 'status', 'createdAt'],
@@ -300,12 +300,12 @@ const getCommunityReportsForUserIds = async (
 		],
 	});
 
-	const map = new Map<string, types.SpamUserCommunityReport[]>();
-	for (const r of reports) {
+	const map = new Map<string, types.SpamUserCommunityBan[]>();
+	for (const r of bans) {
 		const raw = r as any;
 		// this raw stuff is a bit rough, but it's much more performant with these deeply nested includes
 		const commentText = raw['sourceThreadComment.text'] as string | undefined;
-		const entry: types.SpamUserCommunityReport = {
+		const entry: types.SpamUserCommunityBan = {
 			id: raw.id,
 			communityTitle: raw['community.title'] ?? null,
 			communitySubdomain: raw['community.subdomain'] ?? 'unknown',

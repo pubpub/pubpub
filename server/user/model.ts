@@ -28,7 +28,7 @@ import {
 } from 'sequelize-typescript';
 
 import {
-	CommunityModerationReport,
+	CommunityBan,
 	Discussion,
 	PubAttribution,
 	SpamTag,
@@ -255,11 +255,11 @@ export class User extends ModelWithPassport<InferAttributes<User>, InferCreation
 	@HasMany(() => Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: 'userId' })
 	declare discussions?: Discussion[];
 
-	@HasMany(() => CommunityModerationReport, {
-		as: 'communityModerationReports',
+	@HasMany(() => CommunityBan, {
+		as: 'communityBans',
 		foreignKey: 'userId',
 	})
-	declare communityModerationReports?: CommunityModerationReport[];
+	declare communityBans?: CommunityBan[];
 
 	@HasOne(() => UserNotificationPreferences, {
 		onDelete: 'CASCADE',

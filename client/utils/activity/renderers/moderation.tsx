@@ -1,7 +1,7 @@
 import type {
-	CommunityModerationReportCreatedActivityItem,
-	CommunityModerationReportRetractedActivityItem,
-	ModerationReportReason,
+	BanReason,
+	CommunityBanCreatedActivityItem,
+	CommunityBanRetractedActivityItem,
 } from 'types';
 
 import type { ActivityRenderContext } from '../types';
@@ -15,11 +15,9 @@ import { getReasonLabel } from 'utils/moderationReasons';
 
 import { itemRenderer } from './itemRenderer';
 
-type ModerationReportItem =
-	| CommunityModerationReportCreatedActivityItem
-	| CommunityModerationReportRetractedActivityItem;
+type BanItem = CommunityBanCreatedActivityItem | CommunityBanRetractedActivityItem;
 
-const reportedUserTitle = (item: ModerationReportItem, context: ActivityRenderContext) => {
+const bannedUserTitle = (item: BanItem, context: ActivityRenderContext) => {
 	const userId = item.payload.userId;
 	if (!userId) return { title: 'unknown user' };
 	const user = context.associations.user[userId];
@@ -27,7 +25,7 @@ const reportedUserTitle = (item: ModerationReportItem, context: ActivityRenderCo
 	return { title: user.fullName, href: `/user/${user.slug}` };
 };
 
-const buildExcerpt = (options: { item: ModerationReportItem; context: ActivityRenderContext }) => {
+const buildExcerpt = (options: { item: BanItem; context: ActivityRenderContext }) => {
 	const { item } = options;
 	const { reason, sourcePubId } = item.payload;
 	const parts: React.ReactNode[] = [];
@@ -35,7 +33,7 @@ const buildExcerpt = (options: { item: ModerationReportItem; context: ActivityRe
 	if (reason) {
 		parts.push(
 			<span key="reason">
-				Reason: <strong>{getReasonLabel(reason as ModerationReportReason)}</strong>
+				Reason: <strong>{getReasonLabel(reason as BanReason)}</strong>
 			</span>,
 		);
 	}
@@ -59,40 +57,40 @@ const buildExcerpt = (options: { item: ModerationReportItem; context: ActivityRe
 	return <span>{parts}</span>;
 };
 
-export const renderCommunityModerationReportCreated = itemRenderer<
-	CommunityModerationReportCreatedActivityItem,
-	'reportedUser' | 'community'
+export const renderCommunityBanCreated = itemRenderer<
+	CommunityBanCreatedActivityItem,
+	'bannedUser' | 'community'
 >({
 	icon: 'flag',
 	titleRenderers: {
-		reportedUser: reportedUserTitle,
+		bannedUser: bannedUserTitle,
 		community: communityTitle,
 	},
 	message: ({ titles }) => {
-		const { actor, reportedUser, community } = titles;
+		const { actor, bannedUser, community } = titles;
 		return (
 			<>
-				{actor} banned {reportedUser} from {community}
+				{actor} banned {bannedUser} from {community}
 			</>
 		);
 	},
 	excerpt: buildExcerpt,
 });
 
-export const renderCommunityModerationReportRetracted = itemRenderer<
-	CommunityModerationReportRetractedActivityItem,
-	'reportedUser' | 'community'
+export const renderCommunityBanRetracted = itemRenderer<
+	CommunityBanRetractedActivityItem,
+	'bannedUser' | 'community'
 >({
 	icon: 'flag',
 	titleRenderers: {
-		reportedUser: reportedUserTitle,
+		bannedUser: bannedUserTitle,
 		community: communityTitle,
 	},
 	message: ({ titles }) => {
-		const { actor, reportedUser, community } = titles;
+		const { actor, bannedUser, community } = titles;
 		return (
 			<>
-				{actor} unbanned {reportedUser} from {community}
+				{actor} unbanned {bannedUser} from {community}
 			</>
 		);
 	},

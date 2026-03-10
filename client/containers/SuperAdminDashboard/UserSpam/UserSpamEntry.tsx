@@ -62,7 +62,7 @@ const DiscussionItem = ({ discussion }: { discussion: RecentDiscussion }) => {
 
 const UserSpamEntry = (props: Props) => {
 	const { user, onStatusChanged: onStatusChangedProp } = props;
-	const { fullName, email, slug, createdAt, spamTag, affiliation, communityReports } = user;
+	const { fullName, email, slug, createdAt, spamTag, affiliation, communityBans } = user;
 	const hasTag = spamTag != null;
 	const initialStatus = hasTag ? spamTag.status : null;
 	const [status, setUpdatedStatus] = useState<null | SpamStatus>(initialStatus);
@@ -96,10 +96,10 @@ const UserSpamEntry = (props: Props) => {
 		}
 	}, [user.id, recentDiscussions]);
 
-	const renderFieldsReport = () => {
+	const renderFieldsBan = () => {
 		if (Object.keys(fields).length === 0) return null;
 		return (
-			<div className="fields-report">
+			<div className="fields-ban">
 				<details>
 					<summary>Matched fields</summary>
 					<code>
@@ -273,67 +273,67 @@ const UserSpamEntry = (props: Props) => {
 		);
 	};
 
-	const renderCommunityReports = () => {
-		if (!communityReports?.length) return null;
+	const renderCommunityBans = () => {
+		if (!communityBans?.length) return null;
 		return (
-			<div className="community-reports">
-				{communityReports.map((report, index) => {
+			<div className="community-bans">
+				{communityBans.map((ban, index) => {
 					return (
 						<Popover
 							aria-label="Flag details"
-							key={`${report.id}-${index}`}
+							key={`${ban.id}-${index}`}
 							placement="bottom"
 							content={
 								<div className="flag-detail-popover">
 									<div className="flag-detail-header">
 										<Tag intent="warning" minimal>
-											{report.reason}
+											{ban.reason}
 										</Tag>
 										<span className="flag-detail-meta">
-											{report.actorName && (
+											{ban.actorName && (
 												<>
-													reported by{' '}
+													banned by{' '}
 													<a
-														href={`/user/${report.actorSlug}`}
+														href={`/user/${ban.actorSlug}`}
 														target="_blank"
 														rel="noopener noreferrer"
 													>
-														{report.actorName}
+														{ban.actorName}
 													</a>
 												</>
 											)}{' '}
-											{formatDate(report.createdAt)}
+											{formatDate(ban.createdAt)}
 										</span>
 									</div>
-									{report.reasonText && (
-										<div className="flag-detail-note">{report.reasonText}</div>
+									{ban.reasonText && (
+										<div className="flag-detail-note">{ban.reasonText}</div>
 									)}
-									{report.sourceCommentText && (
+									{ban.sourceCommentText && (
 										<div className="flag-detail-comment">
 											<span className="flag-detail-comment-label">
-												Flagged comment
+												Banned comment
 											</span>
 											<blockquote>
-												{report.sourceCommentText.length > 300
-													? `${report.sourceCommentText.slice(0, 300)}...`
-													: report.sourceCommentText}
+												{ban.sourceCommentText.length > 300
+													? `${ban.sourceCommentText.slice(0, 300)}...`
+													: ban.sourceCommentText}
 											</blockquote>
 											<p className="flag-detail-comment-context">
 												On{' '}
 												<a
-													href={`https://${report.communitySubdomain}.pubpub.org/pub/${report.sourceCommentPubSlug}`}
+													href={`https://${ban.communitySubdomain}.pubpub.org/pub/${ban.sourceCommentPubSlug}`}
 													target="_blank"
 													rel="noopener noreferrer"
 												>
-													{report.sourceCommentPubTitle}
+													{ban.sourceCommentPubTitle}
 												</a>{' '}
 												in{' '}
 												<a
-													href={`https://${report.communitySubdomain}.pubpub.org`}
+													href={`https://${ban.communitySubdomain}.pubpub.org`}
 													target="_blank"
 													rel="noopener noreferrer"
 												>
-													{report.communityTitle}
+													{ban.communityTitle}
 												</a>
 											</p>
 										</div>
@@ -342,7 +342,7 @@ const UserSpamEntry = (props: Props) => {
 							}
 						>
 							<Button minimal small icon="flag" intent="warning">
-								{report.communitySubdomain}: {report.reason}
+								{ban.communitySubdomain}: {ban.reason}
 							</Button>
 						</Popover>
 					);
@@ -360,7 +360,7 @@ const UserSpamEntry = (props: Props) => {
 				{email && <span className="email">{email}</span>}
 				{slug && <span className="slug">@{slug}</span>}
 			</div>
-			{renderFieldsReport()}
+			{renderFieldsBan()}
 			{renderSuspiciousFiles()}
 			{renderSuspiciousComments()}
 			{renderHoneypotTriggers()}
@@ -383,7 +383,7 @@ const UserSpamEntry = (props: Props) => {
 					/>
 				</div>
 			</div>
-			{renderCommunityReports()}
+			{renderCommunityBans()}
 		</div>
 	);
 };

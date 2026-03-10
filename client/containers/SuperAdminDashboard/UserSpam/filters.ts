@@ -4,7 +4,7 @@ import type { SpamUserQuery } from 'types';
 import { indexById } from 'utils/arrays';
 
 export type SpamUsersFilter = OverviewSearchFilter<
-	Pick<SpamUserQuery, 'status' | 'ordering' | 'spamTagPresence' | 'hasCommunityReport'>
+	Pick<SpamUserQuery, 'status' | 'ordering' | 'spamTagPresence' | 'hasCommunityBan'>
 >;
 
 export const filters: SpamUsersFilter[] = [
@@ -17,12 +17,12 @@ export const filters: SpamUsersFilter[] = [
 		},
 	},
 	{
-		title: 'Flagged',
-		id: 'flagged',
+		title: 'Banned',
+		id: 'banned',
 		query: {
 			ordering: { field: 'user-created-at', direction: 'DESC' },
 			status: null,
-			hasCommunityReport: true,
+			hasCommunityBan: true,
 		},
 	},
 	{

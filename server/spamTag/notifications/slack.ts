@@ -1,4 +1,4 @@
-import type { ModerationReportReason, UserSpamTagFields } from 'types';
+import type { BanReason, UserSpamTagFields } from 'types';
 
 import { postToSlack } from 'server/utils/slack';
 
@@ -187,7 +187,7 @@ type CommunityFlagSlackOptions = {
 	userSlug: string;
 	actorName: string;
 	communitySubdomain: string;
-	reason: ModerationReportReason;
+	reason: BanReason;
 	reasonText?: string | null;
 };
 
@@ -201,9 +201,9 @@ export const postToSlackAboutCommunityFlag = async (opts: CommunityFlagSlackOpti
 	const extraReason = reasonText ? `: ${reasonText}` : '';
 
 	const headline =
-		`*<${profileUrl}|${userName}>* flagged by ${actorName} in *${communitySubdomain}*` +
+		`*<${profileUrl}|${userName}>* banned by ${actorName} in *${communitySubdomain}*` +
 		`\nReason: ${reasonLabel}${extraReason}`;
-	const fallback = `${userName} flagged by ${actorName} in ${communitySubdomain} for ${reasonLabel}`;
+	const fallback = `${userName} banned by ${actorName} in ${communitySubdomain} for ${reasonLabel}`;
 
 	await postToSlack({
 		icon_emoji: ':triangular_flag_on_post:',

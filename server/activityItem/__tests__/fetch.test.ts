@@ -9,8 +9,8 @@ import {
 	createCollectionActivityItem,
 	createCollectionPubActivityItem,
 	createCollectionUpdatedActivityItem,
+	createCommunityBanCreatedActivityItem,
 	createCommunityCreatedActivityItem,
-	createCommunityModerationReportCreatedActivityItem,
 	createCommunityUpdatedActivityItem,
 	createMemberCreatedActivityItem,
 	createMemberRemovedActivityItem,
@@ -158,21 +158,21 @@ describe('fetchActivityItems', () => {
 		expectAssociationIds(associations, { community: [community.id], user: [actor.id] });
 	});
 
-	it('fetches items for community-moderation-report-created', async () => {
+	it('fetches items for community-ban-created', async () => {
 		const { actor, loudmouth, community } = models;
-		await createCommunityModerationReportCreatedActivityItem({
+		await createCommunityBanCreatedActivityItem({
 			actorId: actor.id,
 			communityId: community.id,
-			reportedUserId: loudmouth.id,
+			bannedUserId: loudmouth.id,
 		});
 		const {
-			activityItems: [reportItem],
+			activityItems: [banItem],
 			associations,
 		} = await fetchActivityItems({
 			scope: { communityId: community.id },
 		});
-		expect(reportItem).toMatchObject({
-			kind: 'community-moderation-report-created',
+		expect(banItem).toMatchObject({
+			kind: 'community-ban-created',
 			actorId: actor.id,
 			communityId: community.id,
 			payload: {

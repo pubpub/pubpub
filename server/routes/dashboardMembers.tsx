@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Router } from 'express';
 
-import { getActiveBannedUsersForCommunity } from 'server/communityModerationReport/queries';
+import { getActiveBannedUsersForCommunity } from 'server/communityBan/queries';
 import Html from 'server/Html';
 import { handleErrors, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';

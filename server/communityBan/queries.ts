@@ -1,22 +1,22 @@
-import type { ModerationReportReason, ModerationReportStatus } from 'types';
+import type { BanReason, BanStatus } from 'types';
 
-import { Community, CommunityModerationReport, SpamTag, ThreadComment, User } from 'server/models';
+import { Community, CommunityBan, SpamTag, ThreadComment, User } from 'server/models';
 import { contextFromUser, notify } from 'server/spamTag/notifications';
 
-type CreateReportOptions = {
+type CreateBanOptions = {
 	userId: string;
 	communityId: string;
 	actorId: string;
-	reason: ModerationReportReason;
+	reason: BanReason;
 	reasonText?: string | null;
 	sourceThreadCommentId?: string | null;
 	spamTagId?: string | null;
 };
 
-export const createReport = async (options: CreateReportOptions) => {
+export const createBan = async (options: CreateBanOptions) => {
 	const { userId, communityId, actorId, reason, reasonText, sourceThreadCommentId, spamTagId } =
 		options;
-	const report = await CommunityModerationReport.create({
+	const ban = await CommunityBan.create({
 		userId,
 		communityId,
 		actorId,
@@ -25,41 +25,41 @@ export const createReport = async (options: CreateReportOptions) => {
 		sourceThreadCommentId: sourceThreadCommentId ?? null,
 		spamTagId: spamTagId ?? null,
 	});
-	return report.toJSON();
+	return ban.toJSON();
 };
 
-export const updateReportStatus = async (reportId: string, status: ModerationReportStatus) => {
-	const report = await CommunityModerationReport.findByPk(reportId);
-	if (!report) return null;
-	await report.update({ status });
-	return report.toJSON();
+export const updateBanStatus = async (banId: string, status: BanStatus) => {
+	const ban = await CommunityBan.findByPk(banId);
+	if (!ban) return null;
+	await ban.update({ status });
+	return ban.toJSON();
 };
 
-export const getActiveReportsForUserInCommunity = async (
+export const getActiveBansForUserInCommunity = async (
 	userId: string,
 	communityId: string,
-): Promise<CommunityModerationReport[]> => {
-	return CommunityModerationReport.findAll({
+): Promise<CommunityBan[]> => {
+	return CommunityBan.findAll({
 		where: { userId, communityId, status: 'active' },
 	});
 };
 
-export const isUserReportedInCommunity = async (
+export const isUserBannedInCommunity = async (
 	userId: string,
 	communityId: string,
 ): Promise<boolean> => {
-	const user = await CommunityModerationReport.findOne({
+	const user = await CommunityBan.findOne({
 		where: { userId, communityId, status: 'active' },
 	});
 	return user !== null;
 };
 
-export const isUserReportedInCommunityByHostname = async (
+export const isUserBannedInCommunityByHostname = async (
 	userId: string,
 	hostname: string,
 ): Promise<boolean> => {
 	const subdomain = hostname.replace(/\.pubpub\.org$|\.duqduq\.org$/, '');
-	const user = await CommunityModerationReport.findOne({
+	const user = await CommunityBan.findOne({
 		raw: true,
 		where: { userId, status: 'active', '$community.subdomain$': subdomain },
 		include: [{ model: Community, as: 'community', where: { subdomain } }],
@@ -67,8 +67,8 @@ export const isUserReportedInCommunityByHostname = async (
 	return user !== null;
 };
 
-export const getReportsForCommunity = async (communityId: string) => {
-	return CommunityModerationReport.findAll({
+export const getBansForCommunity = async (communityId: string) => {
+	return CommunityBan.findAll({
 		where: { communityId },
 		order: [['createdAt', 'DESC']],
 		include: [
@@ -81,7 +81,7 @@ export const getReportsForCommunity = async (communityId: string) => {
 };
 
 export const getActiveBannedUsersForCommunity = async (communityId: string) => {
-	return CommunityModerationReport.findAll({
+	return CommunityBan.findAll({
 		where: { communityId, status: 'active' },
 		order: [['createdAt', 'DESC']],
 		include: [
@@ -95,8 +95,8 @@ export const getActiveBannedUsersForCommunity = async (communityId: string) => {
 	});
 };
 
-export const getAllActiveReports = async () => {
-	return CommunityModerationReport.findAll({
+export const getAllActiveBans = async () => {
+	return CommunityBan.findAll({
 		where: { status: 'active' },
 		order: [['createdAt', 'DESC']],
 		include: [
@@ -109,8 +109,8 @@ export const getAllActiveReports = async () => {
 	});
 };
 
-export const getReportById = async (reportId: string) => {
-	return CommunityModerationReport.findByPk(reportId, {
+export const getBanById = async (banId: string) => {
+	return CommunityBan.findByPk(banId, {
 		include: [
 			{ model: User, as: 'user', attributes: ['id', 'fullName', 'slug', 'email'] },
 			{ model: User, as: 'actor', attributes: ['id', 'fullName', 'slug'] },
@@ -120,35 +120,35 @@ export const getReportById = async (reportId: string) => {
 	});
 };
 
-export const getActiveReportCountForUser = async (userId: string): Promise<number> => {
-	return CommunityModerationReport.count({
+export const getActiveBanCountForUser = async (userId: string): Promise<number> => {
+	return CommunityBan.count({
 		where: { userId, status: 'active' },
 	});
 };
 
-export const getReportByIdAndActor = async (
-	reportId: string,
+export const getBanByIdAndActor = async (
+	banId: string,
 	actorId: string,
-): Promise<CommunityModerationReport | null> => {
-	return CommunityModerationReport.findOne({
-		where: { id: reportId, actorId },
+): Promise<CommunityBan | null> => {
+	return CommunityBan.findOne({
+		where: { id: banId, actorId },
 	});
 };
 
-export const getActiveReportIdsForUserInCommunity = async (
+export const getActiveBanIdsForUserInCommunity = async (
 	userId: string,
 	communityId: string,
 ): Promise<string[]> => {
-	const reports = await CommunityModerationReport.findAll({
+	const bans = await CommunityBan.findAll({
 		where: { userId, communityId, status: 'active' },
 		attributes: ['id'],
 	});
-	return reports.map((r) => r.id);
+	return bans.map((r) => r.id);
 };
 
-export const notifyReportersOfCommunityFlagResolution = async (
+export const notifyBannersOfCommunityBanResolution = async (
 	userId: string,
-	reportedUser: {
+	bannedUser: {
 		id: string;
 		email?: string | null;
 		fullName?: string | null;
@@ -157,13 +157,13 @@ export const notifyReportersOfCommunityFlagResolution = async (
 	},
 	resolution: string,
 ) => {
-	const reports = await CommunityModerationReport.findAll({
+	const bans = await CommunityBan.findAll({
 		where: { userId, status: 'active' },
 		attributes: ['actorId', 'communityId'],
 	});
-	if (reports.length === 0) return;
+	if (bans.length === 0) return;
 
-	const actorIds = [...new Set(reports.map((r) => r.actorId))];
+	const actorIds = [...new Set(bans.map((r) => r.actorId))];
 	const actors = await User.findAll({
 		where: { id: actorIds },
 		attributes: ['id', 'email', 'fullName', 'slug'],
@@ -171,13 +171,13 @@ export const notifyReportersOfCommunityFlagResolution = async (
 	const actorMap = new Map(actors.map((u) => [u.id, u]));
 
 	await Promise.all(
-		reports.map((report) => {
-			const actor = actorMap.get(report.actorId);
+		bans.map((ban) => {
+			const actor = actorMap.get(ban.actorId);
 			if (!actor?.email) return Promise.resolve();
 			return notify(
 				'community-flag-resolved',
-				contextFromUser(reportedUser, {
-					communityId: report.communityId,
+				contextFromUser(bannedUser, {
+					communityId: ban.communityId,
 					actorFullName: actor.fullName ?? '',
 					actorSlug: actor.slug ?? '',
 					actorEmail: actor.email,

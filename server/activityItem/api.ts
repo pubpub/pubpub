@@ -10,10 +10,7 @@ import { fetchActivityItems } from './fetch';
 
 export const router = Router();
 
-const moderationKinds: ActivityItemKind[] = [
-	'community-moderation-report-created',
-	'community-moderation-report-retracted',
-];
+const moderationKinds: ActivityItemKind[] = ['community-ban-created', 'community-ban-retracted'];
 
 const unwrapRequest = (req) => {
 	const { body, user } = req;

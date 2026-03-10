@@ -1,6 +1,6 @@
-import type { ModerationReportReason } from 'types';
+import type { BanReason } from 'types';
 
-export const moderationReasonLabels: Record<ModerationReportReason, string> = {
+export const moderationReasonLabels: Record<BanReason, string> = {
 	'spam-content': 'Spam',
 	'hateful-language': 'Hateful language',
 	harassment: 'Harassment',
@@ -8,5 +8,5 @@ export const moderationReasonLabels: Record<ModerationReportReason, string> = {
 	other: 'Other',
 };
 
-export const getReasonLabel = (reason: ModerationReportReason): string =>
+export const getReasonLabel = (reason: BanReason): string =>
 	moderationReasonLabels[reason] ?? reason;

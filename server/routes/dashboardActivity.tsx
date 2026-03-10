@@ -11,10 +11,7 @@ import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 
-const moderationKinds: ActivityItemKind[] = [
-	'community-moderation-report-created',
-	'community-moderation-report-retracted',
-];
+const moderationKinds: ActivityItemKind[] = ['community-ban-created', 'community-ban-retracted'];
 
 export const router = Router();
 

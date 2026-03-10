@@ -1,4 +1,4 @@
-import type { ModerationReportReason, UserSpamTagFields } from 'types';
+import type { BanReason, UserSpamTagFields } from 'types';
 
 import stripIndent from 'strip-indent';
 
@@ -137,7 +137,7 @@ export const sendCommunityFlagDevEmail = ({
 	actorFullName: string;
 	actorSlug: string;
 	communitySubdomain: string;
-	flagReason: ModerationReportReason;
+	flagReason: BanReason;
 	flagReasonText?: string | null;
 }) => {
 	const reviewUrl = `https://pubpub.org${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userName)}`;
@@ -169,11 +169,11 @@ export const sendCommunityFlagResolvedEmail = ({
 }) => {
 	return sendEmail({
 		to: [toEmail],
-		subject: `Update on your report of ${userName} on PubPub`,
+		subject: `Update on your ban of ${userName} on PubPub`,
 		text: stripIndent(`
 			Hello${actorName ? ` ${actorName}` : ''},
 
-			Thank you for flagging ${userName} in your community. We have reviewed the report and the outcome is: ${resolution}.
+			Thank you for flagging ${userName} in your community. We have reviewed the ban and the outcome is: ${resolution}.
 
 			If you have further concerns, please contact us at hello@pubpub.org.
 

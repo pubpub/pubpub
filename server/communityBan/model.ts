@@ -1,6 +1,6 @@
 import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
 
-import type { ModerationReportStatus, SerializedModel } from 'types';
+import type { BanStatus, SerializedModel } from 'types';
 
 import {
 	AllowNull,
@@ -17,17 +17,17 @@ import {
 
 import { Community, SpamTag, ThreadComment, User } from '../models';
 
-export type ModerationReportReason =
+export type BanReason =
 	| 'spam-content'
 	| 'hateful-language'
 	| 'harassment'
 	| 'impersonation'
 	| 'other';
 
-@Table({ tableName: 'CommunityModerationReports' })
-export class CommunityModerationReport extends Model<
-	InferAttributes<CommunityModerationReport>,
-	InferCreationAttributes<CommunityModerationReport>
+@Table({ tableName: 'CommunityBans' })
+export class CommunityBan extends Model<
+	InferAttributes<CommunityBan>,
+	InferCreationAttributes<CommunityBan>
 > {
 	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
@@ -54,7 +54,7 @@ export class CommunityModerationReport extends Model<
 	@Column(
 		DataType.ENUM('spam-content', 'hateful-language', 'harassment', 'impersonation', 'other'),
 	)
-	declare reason: ModerationReportReason;
+	declare reason: BanReason;
 
 	@Column(DataType.TEXT)
 	declare reasonText: string | null;
@@ -68,7 +68,7 @@ export class CommunityModerationReport extends Model<
 	@AllowNull(false)
 	@Default('active')
 	@Column(DataType.ENUM('active', 'retracted'))
-	declare status: CreationOptional<ModerationReportStatus>;
+	declare status: CreationOptional<BanStatus>;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' })
 	declare user?: User;
@@ -77,7 +77,7 @@ export class CommunityModerationReport extends Model<
 	declare community?: Community;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'actor', foreignKey: 'actorId' })
-	/** last user to interact with the report, not necessarily the one who created it */
+	/** last user to interact with the ban, not necessarily the one who created it */
 	declare actor?: User;
 
 	@BelongsTo(() => ThreadComment, {
@@ -87,7 +87,7 @@ export class CommunityModerationReport extends Model<
 	})
 	declare sourceThreadComment?: ThreadComment;
 
-	// if the spam tag is deleted, delete the report
+	// if the spam tag is deleted, delete the ban
 	@BelongsTo(() => SpamTag, { onDelete: 'CASCADE', as: 'spamTag', foreignKey: 'spamTagId' })
 	declare spamTag?: SpamTag;
 }

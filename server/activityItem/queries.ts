@@ -100,15 +100,15 @@ const buildMemberActivityItemParams = <
 	};
 };
 
-type ModerationReportActivityOptions = {
+type BanActivityOptions = {
 	actorId: null | string;
 	communityId: string;
-	reportedUserId: string;
-	reason?: types.ModerationReportReason | null;
+	bannedUserId: string;
+	reason?: types.BanReason | null;
 	sourceThreadCommentId?: string | null;
 };
 
-const resolveModerationReportSource = async (sourceThreadCommentId?: string | null) => {
+const resolveBanSource = async (sourceThreadCommentId?: string | null) => {
 	if (!sourceThreadCommentId) return {};
 	const comment = await ThreadComment.findOne({
 		where: { id: sourceThreadCommentId },
@@ -148,39 +148,35 @@ const resolveModerationReportSource = async (sourceThreadCommentId?: string | nu
 	};
 };
 
-const buildModerationPayload = async (options: ModerationReportActivityOptions) => {
-	const { communityId, reportedUserId, reason, sourceThreadCommentId } = options;
+const buildModerationPayload = async (options: BanActivityOptions) => {
+	const { communityId, bannedUserId, reason, sourceThreadCommentId } = options;
 	const [community, source] = await Promise.all([
 		Community.findOne({ where: { id: communityId }, useMaster: true }).then(expect),
-		resolveModerationReportSource(sourceThreadCommentId),
+		resolveBanSource(sourceThreadCommentId),
 	]);
 	return {
-		userId: reportedUserId,
+		userId: bannedUserId,
 		community: { title: community.title },
 		reason: reason ?? null,
 		...source,
 	};
 };
 
-export const createCommunityModerationReportCreatedActivityItem = async (
-	options: ModerationReportActivityOptions,
-) => {
+export const createCommunityBanCreatedActivityItem = async (options: BanActivityOptions) => {
 	const payload = await buildModerationPayload(options);
 	return createActivityItem({
 		actorId: options.actorId,
-		kind: 'community-moderation-report-created' as const,
+		kind: 'community-ban-created' as const,
 		communityId: options.communityId,
 		payload,
 	});
 };
 
-export const createCommunityModerationReportRetractedActivityItem = async (
-	options: ModerationReportActivityOptions,
-) => {
+export const createCommunityBanRetractedActivityItem = async (options: BanActivityOptions) => {
 	const payload = await buildModerationPayload(options);
 	return createActivityItem({
 		actorId: options.actorId,
-		kind: 'community-moderation-report-retracted' as const,
+		kind: 'community-ban-retracted' as const,
 		communityId: options.communityId,
 		payload,
 	});

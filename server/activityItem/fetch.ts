@@ -75,10 +75,7 @@ const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilte
 		pubId: { [Op.not]: null },
 	},
 	member: memberItemKindFilter(),
-	moderation: itemKindFilter([
-		'community-moderation-report-created',
-		'community-moderation-report-retracted',
-	]),
+	moderation: itemKindFilter(['community-ban-created', 'community-ban-retracted']),
 	review: itemKindFilter([
 		'pub-review-created',
 		'pub-review-updated',
@@ -242,8 +239,8 @@ const getActivityItemAssociationIds = (
 		) {
 			page.add(item.payload.page.id);
 		} else if (
-			item.kind === 'community-moderation-report-created' ||
-			item.kind === 'community-moderation-report-retracted'
+			item.kind === 'community-ban-created' ||
+			item.kind === 'community-ban-retracted'
 		) {
 			user.add(item.payload.userId);
 			if (item.payload.sourcePubId) {

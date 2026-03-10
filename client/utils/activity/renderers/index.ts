@@ -10,10 +10,7 @@ import {
 import { renderCommunityCreated, renderCommunityUpdated } from './community';
 import { renderFacetInstanceUpdated } from './facet';
 import { renderMemberCreated, renderMemberRemoved, renderMemberUpdated } from './member';
-import {
-	renderCommunityModerationReportCreated,
-	renderCommunityModerationReportRetracted,
-} from './moderation';
+import { renderCommunityBanCreated, renderCommunityBanRetracted } from './moderation';
 import { renderPageCreated, renderPageRemoved, renderPageUpdated } from './page';
 import {
 	renderPubCreated,
@@ -54,7 +51,7 @@ export const activityItemRenderers: ActivityItemRenderers = {
 	'member-created': renderMemberCreated,
 	'member-updated': renderMemberUpdated,
 	'member-removed': renderMemberRemoved,
-	'community-moderation-report-created': renderCommunityModerationReportCreated,
-	'community-moderation-report-retracted': renderCommunityModerationReportRetracted,
+	'community-ban-created': renderCommunityBanCreated,
+	'community-ban-retracted': renderCommunityBanRetracted,
 	'submission-status-updated': renderSubmissionUpdated,
 };

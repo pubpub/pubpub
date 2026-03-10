@@ -1,4 +1,4 @@
-import type { ModerationReportReason, SpamStatus, UserSpamTagFields } from 'types';
+import type { BanReason, SpamStatus, UserSpamTagFields } from 'types';
 
 import {
 	sendBanDevEmail,
@@ -65,7 +65,7 @@ type CommunityFlagContext = SharedContext & {
 	actorFullName: string;
 	actorSlug: string;
 	actorEmail: string;
-	flagReason: ModerationReportReason;
+	flagReason: BanReason;
 	flagReasonText?: string | null;
 };
 

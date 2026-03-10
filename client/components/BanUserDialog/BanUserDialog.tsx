@@ -1,5 +1,5 @@
-import type { CommunityModerationReport } from 'server/models';
-import type { ModerationReportReason, SerializedModel } from 'types';
+import type { CommunityBan } from 'server/models';
+import type { BanReason, SerializedModel } from 'types';
 
 import React, { useCallback, useState } from 'react';
 
@@ -8,7 +8,7 @@ import { Button, Callout, Classes, Dialog, HTMLSelect, Intent, TextArea } from '
 import { apiFetch } from 'client/utils/apiFetch';
 import { moderationReasonLabels } from 'utils/moderationReasons';
 
-const reasons = (Object.entries(moderationReasonLabels) as [ModerationReportReason, string][]).map(
+const reasons = (Object.entries(moderationReasonLabels) as [BanReason, string][]).map(
 	([value, label]) => ({ value, label }),
 );
 
@@ -19,12 +19,12 @@ type Props = {
 	communityId: string;
 	threadCommentId?: string | null;
 	userName?: string;
-	onBanned?: (moderationReportData: SerializedModel<CommunityModerationReport>) => void;
+	onBanned?: (banData: SerializedModel<CommunityBan>) => void;
 };
 
 const BanUserDialog = (props: Props) => {
 	const { isOpen, onClose, userId, communityId, threadCommentId, userName, onBanned } = props;
-	const [reason, setReason] = useState<ModerationReportReason>('spam-content');
+	const [reason, setReason] = useState<BanReason>('spam-content');
 	const [reasonText, setReasonText] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -33,14 +33,14 @@ const BanUserDialog = (props: Props) => {
 		setIsLoading(true);
 		setError(null);
 		try {
-			const moderationReportData = await apiFetch.post('/api/communityModerationReports', {
+			const banData = await apiFetch.post('/api/communityBans', {
 				userId,
 				communityId,
 				reason,
 				reasonText: reasonText.trim() || null,
 				sourceThreadCommentId: threadCommentId ?? null,
 			});
-			onBanned?.(moderationReportData);
+			onBanned?.(banData);
 			onClose();
 		} catch (err: any) {
 			setError(err?.message ?? 'Failed to ban user');
@@ -79,7 +79,7 @@ const BanUserDialog = (props: Props) => {
 					<HTMLSelect
 						id="flag-reason"
 						value={reason}
-						onChange={(e) => setReason(e.target.value as ModerationReportReason)}
+						onChange={(e) => setReason(e.target.value as BanReason)}
 						fill
 						style={{ marginTop: 4 }}
 					>

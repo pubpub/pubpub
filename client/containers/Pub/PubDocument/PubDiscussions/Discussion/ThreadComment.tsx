@@ -22,7 +22,7 @@ import { getPartsOfFullName } from 'utils/names';
 
 import './threadComment.scss';
 
-import type { CommunityModerationReport } from 'server/models';
+import type { CommunityBan } from 'server/models';
 
 type Props = {
 	discussionData: PubPageDiscussion;
@@ -109,7 +109,7 @@ const ThreadComment = (props: Props) => {
 	);
 
 	const handleBanned = useCallback(
-		(moderationReportData: SerializedModel<CommunityModerationReport>) => {
+		(banData: SerializedModel<CommunityBan>) => {
 			const targetUserId = threadCommentData.userId;
 			updateLocalData('pub', {
 				discussions: pubData.discussions.map((discussion) => ({
@@ -122,9 +122,9 @@ const ThreadComment = (props: Props) => {
 								...comment,
 								author: {
 									...comment.author,
-									communityModerationReports: [
-										...(comment.author?.communityModerationReports ?? []),
-										moderationReportData,
+									communityBans: [
+										...(comment.author?.communityBans ?? []),
+										banData,
 									],
 								},
 							};
@@ -137,15 +137,15 @@ const ThreadComment = (props: Props) => {
 	);
 
 	const handleRetractBan = useCallback(async () => {
-		const reportIds = threadCommentData.author?.communityModerationReports
-			?.filter((r) => r.status === 'active')
-			?.map((r) => r.id);
-		if (!reportIds?.length) return;
+		const banIds = threadCommentData.author?.communityBans
+			?.filter((ban) => ban.status === 'active')
+			?.map((ban) => ban.id);
+		if (!banIds?.length) return;
 		setIsRetracting(true);
 		try {
 			await Promise.all(
-				reportIds.map((id) =>
-					apiFetch.put(`/api/communityModerationReports/${id}`, {
+				banIds.map((id) =>
+					apiFetch.put(`/api/communityBans/${id}`, {
 						status: 'retracted',
 					}),
 				),
@@ -162,7 +162,7 @@ const ThreadComment = (props: Props) => {
 								...comment,
 								author: {
 									...comment.author,
-									communityModerationReports: [],
+									communityBans: [],
 								},
 							};
 						}),
@@ -191,8 +191,8 @@ const ThreadComment = (props: Props) => {
 	};
 	const commenterName = discussionData.commenter?.name ?? threadCommentData.commenter?.name;
 	const isAuthorSpam = threadCommentData.author?.spamTag?.status === 'confirmed-spam';
-	const isAuthorBanned = threadCommentData.author?.communityModerationReports?.some(
-		(report) => report.status === 'active',
+	const isAuthorBanned = threadCommentData.author?.communityBans?.some(
+		(ban) => ban.status === 'active',
 	);
 	const showBanButton =
 		!isPreview &&

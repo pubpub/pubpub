@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { isUserReportedInCommunityByHostname } from 'server/communityModerationReport/queries';
+import { isUserBannedInCommunityByHostname } from 'server/communityBan/queries';
 
 const MUTATING_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
 
@@ -19,7 +19,7 @@ const EXEMPT_PATHS = new Set([
 const isExempt = (path: string) => {
 	if (EXEMPT_PATHS.has(path)) return true;
 	// community moderation endpoints must remain accessible so admins can retract flags
-	if (path.startsWith('/api/communityModerationReports')) return true;
+	if (path.startsWith('/api/communityBans')) return true;
 	// superadmin spam management must not be blocked
 	if (path.startsWith('/api/spamTags')) return true;
 
@@ -30,7 +30,7 @@ const isExempt = (path: string) => {
  * this prevents users which are banned from a community from performing actions on that community
  * somewhat costly, because we need to query the database for each mutating request, but it's alright
  */
-export const communityModerationGuard = () => {
+export const communityBanGuard = () => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		if (
 			!MUTATING_METHODS.has(req.method) ||
@@ -45,9 +45,9 @@ export const communityModerationGuard = () => {
 			return next();
 		}
 
-		const reported = await isUserReportedInCommunityByHostname(userId, req.hostname);
+		const banned = await isUserBannedInCommunityByHostname(userId, req.hostname);
 
-		if (!reported) {
+		if (!banned) {
 			return next();
 		}
 

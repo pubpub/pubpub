@@ -48,7 +48,7 @@ export type SpamUserAffiliation = {
 	discussionCount: number;
 };
 
-export type SpamUserCommunityReport = {
+export type SpamUserCommunityBan = {
 	id: string;
 	communitySubdomain: string;
 	communityTitle: string | null;
@@ -78,7 +78,7 @@ export type SpamUserQuery = {
 	activeBefore?: string;
 	minActivities?: number;
 	maxActivities?: number;
-	hasCommunityReport?: boolean;
+	hasCommunityBan?: boolean;
 	spamFieldsFilter?: SpamFieldsFilterKey[];
 };
 
@@ -114,31 +114,31 @@ export type HoneypotContext = {
 	content?: string;
 };
 
-export type ModerationReportReason =
+export type BanReason =
 	| 'spam-content'
 	| 'hateful-language'
 	| 'harassment'
 	| 'impersonation'
 	| 'other';
 
-/** @deprecated use ModerationReportReason */
-export type UserCommunityFlagReason = ModerationReportReason;
+/** @deprecated use BanReason */
+export type UserCommunityFlagReason = BanReason;
 
-export type ModerationReportStatus = 'active' | 'retracted';
+export type BanStatus = 'active' | 'retracted';
 
-/** @deprecated use ModerationReportStatus */
-export type UserCommunityFlagStatus = ModerationReportStatus;
+/** @deprecated use BanStatus */
+export type UserCommunityFlagStatus = BanStatus;
 
-export type SerializedCommunityModerationReport = {
+export type SerializedCommunityBan = {
 	id: string;
 	userId: string;
 	communityId: string;
 	actorId: string;
-	reason: ModerationReportReason;
+	reason: BanReason;
 	reasonText: string | null;
 	sourceThreadCommentId: string | null;
 	spamTagId: string | null;
-	status: ModerationReportStatus;
+	status: BanStatus;
 	createdAt: string;
 	updatedAt: string;
 	user?: { fullName: string; slug: string; email?: string };
@@ -146,8 +146,8 @@ export type SerializedCommunityModerationReport = {
 	community?: { subdomain: string };
 };
 
-/** @deprecated use SerializedCommunityModerationReport */
-export type SerializedUserCommunityFlag = SerializedCommunityModerationReport;
+/** @deprecated use SerializedCommunityBan */
+export type SerializedUserCommunityFlag = SerializedCommunityBan;
 
 export type UserSpamTagFields = {
 	suspiciousFiles?: string[];
