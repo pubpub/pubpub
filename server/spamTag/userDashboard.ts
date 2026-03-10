@@ -262,7 +262,7 @@ const getCommunityReportsForUserIds = async (
 	const reports = await CommunityModerationReport.findAll({
 		raw: true,
 		where: { userId: { [Op.in]: userIds }, status: 'active' },
-		attributes: ['userId', 'reason', 'reasonText', 'status', 'createdAt'],
+		attributes: ['id', 'userId', 'reason', 'reasonText', 'status', 'createdAt'],
 		include: [
 			{ model: Community, as: 'community', attributes: ['subdomain', 'title'] },
 			{
@@ -270,6 +270,7 @@ const getCommunityReportsForUserIds = async (
 				as: 'actor',
 				attributes: ['id', 'fullName', 'slug'],
 			},
+			// very elegant
 			{
 				model: ThreadComment,
 				as: 'sourceThreadComment',
@@ -302,8 +303,10 @@ const getCommunityReportsForUserIds = async (
 	const map = new Map<string, types.SpamUserCommunityReport[]>();
 	for (const r of reports) {
 		const raw = r as any;
+		// this raw stuff is a bit rough, but it's much more performant with these deeply nested includes
 		const commentText = raw['sourceThreadComment.text'] as string | undefined;
 		const entry: types.SpamUserCommunityReport = {
+			id: raw.id,
 			communityTitle: raw['community.title'] ?? null,
 			communitySubdomain: raw['community.subdomain'] ?? 'unknown',
 			reason: raw.reason,

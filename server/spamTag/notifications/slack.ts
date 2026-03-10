@@ -245,9 +245,9 @@ export const postToSlackAboutCommunityFlagRetracted = async (opts: CommunityFlag
 	const extraReason = reasonText ? `: ${reasonText}` : '';
 
 	const headline =
-		`*<${profileUrl}|${userName}>* flagged by ${actorName} in *${communitySubdomain}*` +
-		`\nReason: ${reasonLabel}${extraReason}`;
-	const fallback = `${userName} flag retracted by ${actorName} in ${communitySubdomain}`;
+		`*<${profileUrl}|${userName}>* ban retracted by ${actorName} in *${communitySubdomain}*` +
+		`\nOriginal reason: ${reasonLabel}${extraReason}`;
+	const fallback = `${userName} ban retracted by ${actorName} in ${communitySubdomain}`;
 
 	await postToSlack({
 		icon_emoji: ':triangular_flag_on_post:',

@@ -1,11 +1,12 @@
 import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
 
-import type { SerializedModel } from 'types';
+import type { ModerationReportStatus, SerializedModel } from 'types';
 
 import {
 	AllowNull,
 	BelongsTo,
 	Column,
+	createIndexDecorator,
 	DataType,
 	Default,
 	Index,
@@ -22,8 +23,6 @@ export type ModerationReportReason =
 	| 'harassment'
 	| 'impersonation'
 	| 'other';
-
-export type ModerationReportStatus = 'active' | 'retracted';
 
 @Table({ tableName: 'CommunityModerationReports' })
 export class CommunityModerationReport extends Model<
@@ -78,6 +77,7 @@ export class CommunityModerationReport extends Model<
 	declare community?: Community;
 
 	@BelongsTo(() => User, { onDelete: 'CASCADE', as: 'actor', foreignKey: 'actorId' })
+	/** last user to interact with the report, not necessarily the one who created it */
 	declare actor?: User;
 
 	@BelongsTo(() => ThreadComment, {

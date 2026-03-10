@@ -49,6 +49,7 @@ export type SpamUserAffiliation = {
 };
 
 export type SpamUserCommunityReport = {
+	id: string;
 	communitySubdomain: string;
 	communityTitle: string | null;
 	reason: string;

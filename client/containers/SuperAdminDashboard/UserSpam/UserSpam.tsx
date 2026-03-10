@@ -1,4 +1,4 @@
-import type { SpamFieldsFilterKey, SpamUserQueryOrdering } from 'types';
+import type { SpamFieldsFilterKey, SpamStatus, SpamUserQueryOrdering } from 'types';
 
 import type { SpamUsersFilter } from './filters';
 import type { SpamUser } from './types';
@@ -240,17 +240,15 @@ const UserSpam = (props: Props) => {
 		spamFieldsFilter,
 	]);
 
-	const handleSpamTagRemoved = useCallback(
-		(userId: string) => {
-			updateUser(userId, { spamTag: null } as unknown as Partial<SpamUser>);
-		},
-		[updateUser],
-	);
-
 	const handleStatusChanged = useCallback(
-		(userId: string, status: string) => {
+		(userId: string, status: SpamStatus | null) => {
+			if (status === null) {
+				updateUser(userId, { spamTag: undefined });
+				return;
+			}
+
 			updateUser(userId, {
-				spamTag: { status } as SpamUser['spamTag'],
+				spamTag: { status },
 			} as Partial<SpamUser>);
 		},
 		[updateUser],
@@ -537,7 +535,6 @@ const UserSpam = (props: Props) => {
 					<UserSpamEntry
 						user={user}
 						key={user.id}
-						onSpamTagRemoved={handleSpamTagRemoved}
 						onStatusChanged={handleStatusChanged}
 					/>
 				))}

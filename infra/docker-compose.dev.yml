@@ -15,7 +15,7 @@ services:
                     curl -f http://localhost:3000
             interval: 10s
             retries: 5
-            start_period: 30s
+            start_period: 120s
             timeout: 3s
         environment:
             IS_DUQDUQ: ""

@@ -1,13 +1,13 @@
 import type { SpamStatus, UserSpamTagFields } from 'types';
 
+import type { SpamAction } from './MarkSpamStatusButton';
+
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { Button, ButtonGroup, type Intent, Spinner, Tag, Tooltip } from '@blueprintjs/core';
+import { Button, type Intent, Spinner, Tag } from '@blueprintjs/core';
 
 import { apiFetch } from 'client/utils/apiFetch';
 import { formatDate } from 'utils/dates';
-
-import MarkSpamStatusButton from './MarkSpamStatusButton';
 
 import './userSpamEntry.scss';
 
@@ -15,10 +15,11 @@ import type { RecentDiscussion, SpamUser } from './types';
 
 import { Popover } from 'client/components';
 
+import UserSpamActions from './UserSpamActions';
+
 type Props = {
 	user: SpamUser;
-	onSpamTagRemoved?: (userId: string) => void;
-	onStatusChanged?: (userId: string, status: SpamStatus) => void;
+	onStatusChanged?: (userId: string, status: SpamStatus | null) => void;
 };
 
 const getIntentForSpamScore = (spamScore: number): Intent => {
@@ -60,16 +61,16 @@ const DiscussionItem = ({ discussion }: { discussion: RecentDiscussion }) => {
 };
 
 const UserSpamEntry = (props: Props) => {
-	const { user, onSpamTagRemoved, onStatusChanged: onStatusChangedProp } = props;
+	const { user, onStatusChanged: onStatusChangedProp } = props;
 	const { fullName, email, slug, createdAt, spamTag, affiliation, communityReports } = user;
 	const hasTag = spamTag != null;
 	const initialStatus = hasTag ? spamTag.status : null;
 	const [status, setUpdatedStatus] = useState<null | SpamStatus>(initialStatus);
 
 	const handleStatusChanged = useCallback(
-		(newStatus: SpamStatus) => {
-			setUpdatedStatus(newStatus);
-			onStatusChangedProp?.(user.id, newStatus);
+		(action: SpamAction) => {
+			setUpdatedStatus(action === 'remove' ? null : action);
+			onStatusChangedProp?.(user.id, action === 'remove' ? null : action);
 		},
 		[user.id, onStatusChangedProp],
 	);
@@ -130,110 +131,7 @@ const UserSpamEntry = (props: Props) => {
 		);
 	};
 
-	const [removeLoading, setRemoveLoading] = useState(false);
-	const handleRemoveTag = useCallback(async () => {
-		setRemoveLoading(true);
-		try {
-			await apiFetch.delete('/api/spamTags/user', { userId: user.id });
-			setUpdatedStatus(null);
-			onSpamTagRemoved?.(user.id);
-		} finally {
-			setRemoveLoading(false);
-		}
-	}, [user.id, onSpamTagRemoved]);
-
-	const renderActions = () => {
-		if (!hasTag || status === null) {
-			return (
-				<ButtonGroup>
-					<MarkSpamStatusButton
-						userId={user.id}
-						status="unreviewed"
-						onStatusChanged={handleStatusChanged}
-					/>
-					<MarkSpamStatusButton
-						userId={user.id}
-						status="confirmed-not-spam"
-						onStatusChanged={handleStatusChanged}
-					/>
-					<MarkSpamStatusButton
-						userId={user.id}
-						status="confirmed-spam"
-						onStatusChanged={handleStatusChanged}
-					/>
-				</ButtonGroup>
-			);
-		}
-		if (status === 'unreviewed') {
-			return (
-				<ButtonGroup>
-					<MarkSpamStatusButton
-						userId={user.id}
-						status="confirmed-not-spam"
-						onStatusChanged={handleStatusChanged}
-					/>
-					<MarkSpamStatusButton
-						userId={user.id}
-						status="confirmed-spam"
-						onStatusChanged={handleStatusChanged}
-					/>
-					<Tooltip content="Remove spam tag">
-						<Button
-							minimal
-							small
-							icon="remove"
-							loading={removeLoading}
-							onClick={handleRemoveTag}
-						></Button>
-					</Tooltip>
-				</ButtonGroup>
-			);
-		}
-		if (status === 'confirmed-spam') {
-			return (
-				<ButtonGroup>
-					<MarkSpamStatusButton
-						userId={user.id}
-						status="confirmed-not-spam"
-						onStatusChanged={handleStatusChanged}
-						label="Mark as not spam"
-					/>
-					<MarkSpamStatusButton
-						userId={user.id}
-						status="unreviewed"
-						onStatusChanged={handleStatusChanged}
-					/>
-					<Tooltip content="Remove spam tag">
-						<Button
-							minimal
-							small
-							icon="remove"
-							loading={removeLoading}
-							onClick={handleRemoveTag}
-						></Button>
-					</Tooltip>
-				</ButtonGroup>
-			);
-		}
-		return (
-			<ButtonGroup>
-				<MarkSpamStatusButton
-					userId={user.id}
-					status="confirmed-spam"
-					onStatusChanged={handleStatusChanged}
-					label="Mark as spam"
-				/>
-				<MarkSpamStatusButton
-					userId={user.id}
-					status="unreviewed"
-					onStatusChanged={handleStatusChanged}
-				/>
-				<Tooltip content="Remove spam tag">
-					<Button minimal small icon="remove" onClick={handleRemoveTag}></Button>
-				</Tooltip>
-			</ButtonGroup>
-		);
-	};
+	const [_removeLoading, _setRemoveLoading] = useState(false);
 
 	const renderSuspiciousFiles = () => {
 		const list = fields?.suspiciousFiles;
@@ -383,6 +281,7 @@ const UserSpamEntry = (props: Props) => {
 					return (
 						<Popover
 							aria-label="Flag details"
+							key={`${report.id}-${index}`}
 							placement="bottom"
 							content={
 								<div className="flag-detail-popover">
@@ -430,7 +329,7 @@ const UserSpamEntry = (props: Props) => {
 												</a>{' '}
 												in{' '}
 												<a
-													href={`https://${report.communitySubdomain}`}
+													href={`https://${report.communitySubdomain}.pubpub.org`}
 													target="_blank"
 													rel="noopener noreferrer"
 												>
@@ -476,7 +375,13 @@ const UserSpamEntry = (props: Props) => {
 					<Tag minimal>Created: {formatDate(createdAt)}</Tag>
 					{renderAffiliation()}
 				</div>
-				<div className="actions">{renderActions()}</div>
+				<div className="actions">
+					<UserSpamActions
+						userId={user.id}
+						status={status}
+						handleAction={handleStatusChanged}
+					/>
+				</div>
 			</div>
 			{renderCommunityReports()}
 		</div>

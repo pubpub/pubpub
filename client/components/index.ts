@@ -5,6 +5,7 @@ export { default as AttributionEditor } from './AttributionEditor/AttributionEdi
 export { default as Avatar } from './Avatar/Avatar';
 export { default as Avatars } from './Avatars/Avatars';
 export { default as Banner } from './Banner/Banner';
+export { default as BanUserDialog } from './BanUserDialog/BanUserDialog';
 export { default as Byline } from './Byline/Byline';
 export { default as ClickToCopyButton } from './ClickToCopyButton/ClickToCopyButton';
 export { ClientOnlyContext, default as ClientOnly } from './ClientOnly/ClientOnly';
@@ -39,7 +40,6 @@ export {
 	type FacetsState,
 } from './FacetsStateProvider';
 export { default as FileUploadButton } from './FileUploadButton/FileUploadButton';
-export { default as FlagUserDialog } from './FlagUserDialog/FlagUserDialog';
 export { default as Footer } from './Footer/Footer';
 export { default as FormattingBar } from './FormattingBar/FormattingBar';
 export { default as GlobalControls } from './GlobalControls';

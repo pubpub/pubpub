@@ -1,7 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { isUserReportedInCommunity } from 'server/communityModerationReport/queries';
-import { findCommunityByHostname } from 'utils/ensureUserIsCommunityAdmin';
+import { isUserReportedInCommunityByHostname } from 'server/communityModerationReport/queries';
 
 const MUTATING_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
 
@@ -11,6 +10,10 @@ const EXEMPT_PATHS = new Set([
 	'/api/password-reset',
 	'/api/signup',
 	'/api/health',
+	'/api/pubs/many',
+	'/api/activityItems',
+	'/api/analytics/track',
+	'/api/subscribe',
 ]);
 
 const isExempt = (path: string) => {
@@ -19,28 +22,34 @@ const isExempt = (path: string) => {
 	if (path.startsWith('/api/communityModerationReports')) return true;
 	// superadmin spam management must not be blocked
 	if (path.startsWith('/api/spamTags')) return true;
-	// read-like POSTs that don't mutate community content
-	if (path === '/api/activityItems') return true;
-	if (path === '/api/pubs/many') return true;
-	if (path === '/api/analytics/track') return true;
-	if (path === '/api/subscribe') return true;
+
 	return false;
 };
 
+/**
+ * this prevents users which are banned from a community from performing actions on that community
+ * somewhat costly, because we need to query the database for each mutating request, but it's alright
+ */
 export const communityModerationGuard = () => {
 	return async (req: Request, res: Response, next: NextFunction) => {
-		if (!MUTATING_METHODS.has(req.method)) return next();
-		if (!req.path.startsWith('/api')) return next();
-		if (isExempt(req.path)) return next();
+		if (
+			!MUTATING_METHODS.has(req.method) ||
+			!req.path.startsWith('/api') ||
+			isExempt(req.path)
+		) {
+			return next();
+		}
 
 		const userId = req.user?.id;
-		if (!userId) return next();
+		if (!userId) {
+			return next();
+		}
 
-		const community = await findCommunityByHostname(req.hostname).catch(() => null);
-		if (!community) return next();
+		const reported = await isUserReportedInCommunityByHostname(userId, req.hostname);
 
-		const reported = await isUserReportedInCommunity(userId, community.id);
-		if (!reported) return next();
+		if (!reported) {
+			return next();
+		}
 
 		return res.status(403).json({
 			error: 'communityBanned',

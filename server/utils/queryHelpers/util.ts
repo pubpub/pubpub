@@ -1,3 +1,5 @@
+import type { IncludeOptions } from 'sequelize';
+
 import {
 	Commenter,
 	CommunityModerationReport,
@@ -68,8 +70,9 @@ const authorWithModeration = (communityId?: string) => ({
 						model: CommunityModerationReport,
 						as: 'communityModerationReports',
 						where: { communityId, status: 'active' },
+						duplicating: false,
 						required: false,
-					},
+					} as IncludeOptions,
 				]
 			: []),
 	],

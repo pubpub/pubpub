@@ -1,4 +1,5 @@
-import type { ModerationReportReason } from 'types';
+import type { CommunityModerationReport } from 'server/models';
+import type { ModerationReportReason, SerializedModel } from 'types';
 
 import React, { useCallback, useState } from 'react';
 
@@ -18,11 +19,11 @@ type Props = {
 	communityId: string;
 	threadCommentId?: string | null;
 	userName?: string;
-	onFlagged?: () => void;
+	onBanned?: (moderationReportData: SerializedModel<CommunityModerationReport>) => void;
 };
 
-const FlagUserDialog = (props: Props) => {
-	const { isOpen, onClose, userId, communityId, threadCommentId, userName, onFlagged } = props;
+const BanUserDialog = (props: Props) => {
+	const { isOpen, onClose, userId, communityId, threadCommentId, userName, onBanned } = props;
 	const [reason, setReason] = useState<ModerationReportReason>('spam-content');
 	const [reasonText, setReasonText] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
@@ -32,21 +33,21 @@ const FlagUserDialog = (props: Props) => {
 		setIsLoading(true);
 		setError(null);
 		try {
-			await apiFetch.post('/api/communityModerationReports', {
+			const moderationReportData = await apiFetch.post('/api/communityModerationReports', {
 				userId,
 				communityId,
 				reason,
 				reasonText: reasonText.trim() || null,
 				sourceThreadCommentId: threadCommentId ?? null,
 			});
-			onFlagged?.();
+			onBanned?.(moderationReportData);
 			onClose();
 		} catch (err: any) {
 			setError(err?.message ?? 'Failed to ban user');
 		} finally {
 			setIsLoading(false);
 		}
-	}, [userId, communityId, reason, reasonText, threadCommentId, onFlagged, onClose]);
+	}, [userId, communityId, reason, reasonText, threadCommentId, onBanned, onClose]);
 
 	return (
 		<Dialog
@@ -130,4 +131,4 @@ const FlagUserDialog = (props: Props) => {
 	);
 };
 
-export default FlagUserDialog;
+export default BanUserDialog;

@@ -48,10 +48,23 @@ export const isUserReportedInCommunity = async (
 	userId: string,
 	communityId: string,
 ): Promise<boolean> => {
-	const count = await CommunityModerationReport.count({
+	const user = await CommunityModerationReport.findOne({
 		where: { userId, communityId, status: 'active' },
 	});
-	return count > 0;
+	return user !== null;
+};
+
+export const isUserReportedInCommunityByHostname = async (
+	userId: string,
+	hostname: string,
+): Promise<boolean> => {
+	const subdomain = hostname.replace(/\.pubpub\.org$|\.duqduq\.org$/, '');
+	const user = await CommunityModerationReport.findOne({
+		raw: true,
+		where: { userId, status: 'active', '$community.subdomain$': subdomain },
+		include: [{ model: Community, as: 'community', where: { subdomain } }],
+	});
+	return user !== null;
 };
 
 export const getReportsForCommunity = async (communityId: string) => {
