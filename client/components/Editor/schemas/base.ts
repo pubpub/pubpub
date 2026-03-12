@@ -249,7 +249,6 @@ export const baseMarks = {
 			href: { default: '' },
 			title: { default: null },
 			target: { default: null },
-			rel: { default: null },
 			pubEdgeId: { default: null },
 		},
 		parseDOM: [
@@ -263,7 +262,6 @@ export const baseMarks = {
 						href: dom.getAttribute('href'),
 						title: dom.getAttribute('title'),
 						target: dom.getAttribute('target'),
-						rel: dom.getAttribute('rel'),
 						pubEdgeId: dom.getAttribute('data-pub-edge-id'),
 					};
 				},
@@ -277,17 +275,13 @@ export const baseMarks = {
 			if (attrs.target && typeof attrs.target !== 'string') {
 				attrs.target = null;
 			}
-			if (attrs.rel && typeof attrs.rel !== 'string') {
-				attrs.rel = null;
-			}
-			const { pubEdgeId, target: _target, rel: _rel, ...restAttrs } = attrs;
+
+			const { pubEdgeId, ...restAttrs } = attrs;
 			return [
 				'a',
 				{
 					'data-pub-edge-id': pubEdgeId,
 					...restAttrs,
-					target: '_blank',
-					rel: 'nofollow noopener noreferrer',
 				},
 			] as DOMOutputSpec;
 		},
