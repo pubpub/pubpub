@@ -152,7 +152,7 @@ describe('/api/users', () => {
 			.expect(201);
 	});
 
-	it('restricts and does not authenticate users when website honeypot is filled within 5 seconds', async () => {
+	it('restricts and does not authenticate users when password honeypot is filled within 5 seconds', async () => {
 		const { restrictedSignup } = models;
 		const agent = await login();
 		await agent
@@ -168,9 +168,6 @@ describe('/api/users', () => {
 			})
 			.expect(403);
 		const createdUser = await User.findOne({ where: { email: restrictedSignup.email } });
-		// if (!createdUser) {
-		// 	throw new Error('Expected user to be created');
-		// }
 		expect(createdUser).toBeDefined();
 		const { getSpamTagForUser } = await import('server/spamTag/userQueries');
 		const spamTag = await getSpamTagForUser(createdUser!.id);
