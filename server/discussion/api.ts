@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { autoBanForNewAccountLinkComment } from 'server/spamTag/commentSpam';
 import { verifyCaptchaPayload } from 'server/utils/captcha';
 import { BadRequestError, ForbiddenError } from 'server/utils/errors';
 import { handleHoneypotTriggered, isHoneypotFilled } from 'server/utils/honeypot';
@@ -13,6 +14,7 @@ export const router = Router();
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
+
 	return {
 		userId: user.id,
 		discussionId: req.body.discussionId || null,
@@ -36,9 +38,12 @@ router.post(
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}
-		const userId = (req.user?.id as string) || null;
+
+		const userId = req.user?.id as string;
 		const options = { ...req.body, userId };
+
 		const newDiscussion = await createDiscussion(options);
+
 		return res.status(201).json(newDiscussion);
 	}),
 );
@@ -72,10 +77,24 @@ router.post(
 		if (!ok) {
 			throw new BadRequestError(new Error('Please complete the verification and try again.'));
 		}
-		const userId = (req.user?.id as string) || null;
+
+		const userId = req.user?.id as string;
 		const { altcha: _altcha, _honeypot, ...rest } = req.body;
 		const options = { ...rest, userId };
+
+		const isAutoBanned = await autoBanForNewAccountLinkComment({
+			userId,
+			text: options.text,
+			content: options.content,
+			source: 'discussion',
+		});
+
+		if (isAutoBanned) {
+			throw new ForbiddenError();
+		}
+
 		const newDiscussion = await createDiscussion(options);
+
 		return res.status(201).json(newDiscussion);
 	}),
 );
