@@ -50,21 +50,22 @@ const { deleteSessionsForUser } = vitest.hoisted(() => {
 	};
 });
 
+vitest.mock(import('server/utils/session'), async (importOriginal) => {
+	const og = await importOriginal();
+	return {
+		...og,
+		deleteSessionsForUser: deleteSessionsForUser,
+	};
+});
+vitest.mock(import('server/spamTag/notifications'), async (importOriginal) => {
+	const og = await importOriginal();
+	return {
+		...og,
+		notify: vitest.fn().mockResolvedValue(undefined),
+	};
+});
+
 setup(beforeAll, async () => {
-	vitest.mock(import('server/utils/session'), async (importOriginal) => {
-		const og = await importOriginal();
-		return {
-			...og,
-			deleteSessionsForUser: deleteSessionsForUser,
-		};
-	});
-	vitest.mock(import('server/spamTag/notifications'), async (importOriginal) => {
-		const og = await importOriginal();
-		return {
-			...og,
-			notify: vitest.fn().mockResolvedValue(undefined),
-		};
-	});
 	await models.resolve();
 });
 
