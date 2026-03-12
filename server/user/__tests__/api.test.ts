@@ -1,6 +1,6 @@
-/** biome-ignore-all lint/correctness/noUndeclaredVariables: <explanation> */
+import { vitest } from 'vitest';
+
 import { User } from 'server/models';
-// import { getSpamTagForUser } from 'server/spamTag/userQueries';
 import { login, modelize, setup, teardown } from 'stubstub';
 
 const tonyEmail = `${crypto.randomUUID()}@gmail.com`;
@@ -44,29 +44,25 @@ const models = modelize`
 	User suggestionUser {}
 `;
 
-const { deleteSessionsForUser } = vi.hoisted(() => {
+const { deleteSessionsForUser } = vitest.hoisted(() => {
 	return {
-		deleteSessionsForUser: vi.fn().mockResolvedValue(undefined),
+		deleteSessionsForUser: vitest.fn().mockResolvedValue(undefined),
 	};
 });
 
 setup(beforeAll, async () => {
-	vi.mock('server/utils/session', (importOriginal) => {
-		const og = importOriginal();
+	vitest.mock(import('server/utils/session'), async (importOriginal) => {
+		const og = await importOriginal();
 		return {
 			...og,
 			deleteSessionsForUser: deleteSessionsForUser,
 		};
 	});
-	vi.mock('server/spamTag/notifications', (importOriginal) => {
-		const og = importOriginal();
+	vitest.mock(import('server/spamTag/notifications'), async (importOriginal) => {
+		const og = await importOriginal();
 		return {
 			...og,
-			contextFromUser: vi.fn().mockReturnValue({
-				userId: '123',
-				userEmail: 'test@test.com',
-			}),
-			notify: vi.fn().mockResolvedValue(undefined),
+			notify: vitest.fn().mockResolvedValue(undefined),
 		};
 	});
 	await models.resolve();
