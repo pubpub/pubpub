@@ -173,4 +173,10 @@ export type UserSpamTagFields = {
 		userName: string;
 		at: string;
 	}[];
+	automatedScan?: {
+		score: number;
+		signals: string[];
+		signalHits?: { name: string; score: number; evidence: string[] }[];
+		scannedAt: string;
+	}[];
 };
