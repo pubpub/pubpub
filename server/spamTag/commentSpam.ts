@@ -15,8 +15,6 @@ const parsedWindowMinutes = parseInt(
 	10,
 );
 
-console.log('PARSED WINDOW MINUTES', parsedWindowMinutes);
-
 const IS_WINDOW_MINUTES_VALID = Number.isFinite(parsedWindowMinutes) && parsedWindowMinutes > 0;
 
 const NEW_ACCOUNT_LINK_COMMENT_WINDOW_MINUTES = IS_WINDOW_MINUTES_VALID
@@ -45,6 +43,43 @@ const extractUrlFromString = (value: string): string | null => {
 	}
 
 	return matchedUrl.slice(0, MAX_TRIGGER_VALUE_LENGTH);
+};
+
+const hasValidContentShape = (value: unknown): value is DocJson => {
+	if (!value || typeof value !== 'object') {
+		return false;
+	}
+
+	const content = value as { type?: unknown };
+	return typeof content.type === 'string';
+};
+
+const extractFirstLinkFromContent = (content: DocJson): string | null => {
+	if (!hasValidContentShape(content)) {
+		return null;
+	}
+
+	try {
+		const contentTree = Node.fromJSON(editorSchema, content);
+		const links: Mark[] = [];
+
+		contentTree.descendants((node) => {
+			node.marks.forEach((mark) => {
+				if (mark.type.name === 'link') {
+					links.push(mark);
+				}
+			});
+		});
+
+		const linkFromTree = links[0]?.attrs.href;
+		if (typeof linkFromTree !== 'string' || !linkFromTree.length) {
+			return null;
+		}
+
+		return linkFromTree.slice(0, MAX_TRIGGER_VALUE_LENGTH);
+	} catch {
+		return null;
+	}
 };
 
 const getAccountAgeMs = (createdAt: Date | null | undefined): number => {
@@ -83,25 +118,13 @@ export const autoBanForNewAccountLinkComment = async (
 	});
 
 	const accountAgeMs = getAccountAgeMs(user?.createdAt);
-
-	const contentTree = Node.fromJSON(editorSchema, content);
-
-	const links: Mark[] = [];
-
-	contentTree.descendants((node) => {
-		node.marks.forEach((mark) => {
-			if (mark.type.name === 'link') {
-				links.push(mark);
-			}
-		});
-	});
 	const shouldSkipAutoBan = !user || accountAgeMs > NEW_ACCOUNT_LINK_COMMENT_WINDOW_MS;
 
 	if (shouldSkipAutoBan) {
 		return false;
 	}
 
-	const linkFromTree = links[0]?.attrs.href;
+	const linkFromTree = extractFirstLinkFromContent(content);
 	const linkFromText = extractUrlFromString(text);
 
 	const firstLink = linkFromTree || linkFromText;

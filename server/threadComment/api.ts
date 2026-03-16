@@ -41,6 +41,20 @@ router.post(
 
 		const options = { ...req.body, userId };
 
+		let isAutoBanned = false;
+		if (userId) {
+			isAutoBanned = await autoBanForNewAccountLinkComment({
+				userId,
+				text: options.text,
+				content: options.content,
+				source: 'thread-comment',
+			});
+		}
+
+		if (isAutoBanned) {
+			throw new ForbiddenError();
+		}
+
 		const newThreadComment = await createThreadComment(options);
 
 		return res.status(201).json(newThreadComment);
