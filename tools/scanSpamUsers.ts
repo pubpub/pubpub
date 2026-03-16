@@ -62,13 +62,13 @@ import { ThreadComment, User } from 'server/models';
 import { extractLinksFromContent, extractUrlsFromString } from 'server/spamTag/commentSpam';
 import { containsLink } from 'server/spamTag/contentAnalysis';
 import { upsertSpamTag } from 'server/spamTag/userQueries';
-import { type SignalHit, computeUserSpamReport } from 'server/spamTag/userScore';
+import { computeUserSpamReport, type SignalHit } from 'server/spamTag/userScore';
 import { asyncMap } from 'utils/async';
 import { JsonArrayWriter } from 'utils/jsonArrayWriter';
 
-const BATCH_SIZE = 50;
+const BATCH_SIZE = 200;
 const DEFAULT_MIN_SCORE = 5;
-const DEFAULT_ANALYZE_CONCURRENCY = 10;
+const DEFAULT_ANALYZE_CONCURRENCY = 5;
 const DEFAULT_EXECUTE_CONCURRENCY = 5;
 
 type CommentEvidence = {
