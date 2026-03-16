@@ -1,47 +1,21 @@
 import type { DocJson } from 'types';
 
-const URL_PATTERN = /https?:\/\/[^\s<>"']+|www\.[^\s<>"']+/gi;
-
-type DocNode = {
-	type?: string;
-	marks?: Array<{ type: string; attrs?: Record<string, unknown> }>;
-	content?: DocNode[];
-	text?: string;
-};
-
-export const extractLinksFromDocJson = (doc: DocJson | null | undefined): string[] => {
-	if (!doc) return [];
-	const links: string[] = [];
-	walkDocNodes(doc, links);
-	return [...new Set(links)];
-};
-
-const walkDocNodes = (node: DocNode, links: string[]): void => {
-	if (node.marks) {
-		for (const mark of node.marks) {
-			if (mark.type === 'link' && typeof mark.attrs?.href === 'string' && mark.attrs.href) {
-				links.push(mark.attrs.href);
-			}
-		}
-	}
-	if (node.content) {
-		for (const child of node.content) {
-			walkDocNodes(child, links);
-		}
-	}
-};
-
-export const extractLinksFromText = (text: string | null | undefined): string[] => {
-	if (!text) return [];
-	const matches = text.match(URL_PATTERN);
-	return matches ? [...new Set(matches)] : [];
-};
+import { extractFirstLinkFromContent, extractUrlsFromString } from './commentSpam';
 
 export const containsLink = (
 	doc: DocJson | null | undefined,
 	text: string | null | undefined,
 ): boolean => {
-	return extractLinksFromDocJson(doc).length > 0 || extractLinksFromText(text).length > 0;
+	if (!doc && !text) return false;
+	if (doc) {
+		return extractFirstLinkFromContent(doc) !== null;
+	}
+
+	if (text) {
+		return extractUrlsFromString(text) !== null;
+	}
+
+	return false;
 };
 
 // these are template phrases that show up in spam comments that try to look like genuine engagement.
@@ -78,22 +52,4 @@ export const matchesCommentSpamTemplate = (text: string | null | undefined): str
 	if (!text) return [];
 	const lower = text.toLowerCase();
 	return commentSpamTemplates.filter((template) => lower.includes(template));
-};
-
-export const stripLinksFromDocJson = (doc: DocJson): DocJson => {
-	return walkAndStripLinks(doc) as DocJson;
-};
-
-const walkAndStripLinks = (node: DocNode): DocNode => {
-	const result = { ...node };
-	if (result.marks) {
-		result.marks = result.marks.filter((mark) => mark.type !== 'link');
-		if (result.marks.length === 0) {
-			delete result.marks;
-		}
-	}
-	if (result.content) {
-		result.content = result.content.map(walkAndStripLinks);
-	}
-	return result;
 };
