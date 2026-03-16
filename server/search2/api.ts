@@ -20,14 +20,14 @@ router.get('/api/search2', async (req, res) => {
 		let fields: SearchFields[] | undefined;
 		if (req.query.fields) {
 			const raw = (req.query.fields as string).split(',');
-			fields = raw.filter((f): f is SearchFields =>
-				ALL_FIELDS.includes(f as SearchFields),
-			);
+			fields = raw.filter((f): f is SearchFields => ALL_FIELDS.includes(f as SearchFields));
 			if (fields.length === 0) fields = undefined;
 		}
 
 		if (!q.trim()) {
-			return res.status(200).json({ results: [], total: 0, page, limit, facets: { authors: [] } });
+			return res
+				.status(200)
+				.json({ results: [], total: 0, page, limit, facets: { authors: [] } });
 		}
 
 		if (mode === 'communities') {

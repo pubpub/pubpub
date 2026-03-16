@@ -85,7 +85,9 @@ export const searchPubs = async (
 	const searchContent = searchFields.includes('content');
 
 	const communityFilter = communityId ? `AND p."communityId" = :communityId` : '';
-	const authorFilter = author ? `AND EXISTS (SELECT 1 FROM "PubAttributions" af LEFT JOIN "Users" au ON au.id = af."userId" WHERE af."pubId" = p.id AND af."isAuthor" = true AND (af.name ILIKE :authorFilter OR au."fullName" ILIKE :authorFilter))` : '';
+	const authorFilter = author
+		? `AND EXISTS (SELECT 1 FROM "PubAttributions" af LEFT JOIN "Users" au ON au.id = af."userId" WHERE af."pubId" = p.id AND af."isAuthor" = true AND (af.name ILIKE :authorFilter OR au."fullName" ILIKE :authorFilter))`
+		: '';
 	const ilikeTerm = `%${searchTerm.trim().replace(/[%_]/g, '')}%`;
 
 	// Two-phase approach:
@@ -155,7 +157,9 @@ export const searchPubs = async (
       ) @@ to_tsquery('english', :tsQuery)
       ${searchTitle ? `OR rp.title ILIKE :ilikeTerm` : ''}
     ),
-    ${searchContent ? `
+    ${
+		searchContent
+			? `
     -- Phase 2: full-text content search (only for pubs not already matched)
     content_matches AS (
       SELECT
@@ -184,7 +188,9 @@ export const searchPubs = async (
       WHERE rp.id NOT IN (SELECT mm.id FROM metadata_matches mm)
         AND to_tsvector('english', coalesce(doc_plain.plain_text, ''))
             @@ to_tsquery('english', :tsQuery)
-    ),` : ''}
+    ),`
+			: ''
+	}
     -- Combine both phases
     combined AS (
       SELECT * FROM metadata_matches

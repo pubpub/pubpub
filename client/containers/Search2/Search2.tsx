@@ -1,6 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Button, Checkbox, Classes, InputGroup, NonIdealState, Spinner, Tab, Tabs } from '@blueprintjs/core';
+import {
+	Button,
+	Checkbox,
+	Classes,
+	InputGroup,
+	NonIdealState,
+	Spinner,
+	Tab,
+	Tabs,
+} from '@blueprintjs/core';
 
 import { Icon } from 'components';
 import { usePageContext, useThrottled } from 'utils/hooks';
@@ -447,7 +456,9 @@ const Search2 = () => {
 
 										{/* Pagination */}
 										{numPages > 1 && (
-											<div className={`${Classes.BUTTON_GROUP} ${Classes.LARGE}`}>
+											<div
+												className={`${Classes.BUTTON_GROUP} ${Classes.LARGE}`}
+											>
 												{pages.map((_: any, index: number) => {
 													const key = `page-button-${index}`;
 													return (
