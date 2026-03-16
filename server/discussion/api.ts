@@ -42,12 +42,15 @@ router.post(
 		const userId: string | undefined | null = req.user?.id ?? null;
 		const options = { ...req.body, userId };
 
-		const isAutoBanned = await autoBanForNewAccountLinkComment({
-			userId,
-			text: options.text,
-			content: options.content,
-			source: 'discussion',
-		});
+		let isAutoBanned = false;
+		if (userId) {
+			isAutoBanned = await autoBanForNewAccountLinkComment({
+				userId,
+				text: options.text,
+				content: options.content,
+				source: 'discussion',
+			});
+		}
 
 		if (isAutoBanned) {
 			throw new ForbiddenError();
