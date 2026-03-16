@@ -39,8 +39,19 @@ router.post(
 			throw new ForbiddenError();
 		}
 
-		const userId = req.user?.id as string;
+		const userId: string | undefined | null = req.user?.id ?? null;
 		const options = { ...req.body, userId };
+
+		const isAutoBanned = await autoBanForNewAccountLinkComment({
+			userId,
+			text: options.text,
+			content: options.content,
+			source: 'discussion',
+		});
+
+		if (isAutoBanned) {
+			throw new ForbiddenError();
+		}
 
 		const newDiscussion = await createDiscussion(options);
 
@@ -78,16 +89,19 @@ router.post(
 			throw new BadRequestError(new Error('Please complete the verification and try again.'));
 		}
 
-		const userId = req.user?.id as string;
+		const userId: string | undefined | null = req.user?.id ?? null;
 		const { altcha: _altcha, _honeypot, ...rest } = req.body;
 		const options = { ...rest, userId };
 
-		const isAutoBanned = await autoBanForNewAccountLinkComment({
-			userId,
-			text: options.text,
-			content: options.content,
-			source: 'discussion',
-		});
+		let isAutoBanned = false;
+		if (userId) {
+			isAutoBanned = await autoBanForNewAccountLinkComment({
+				userId,
+				text: options.text,
+				content: options.content,
+				source: 'discussion',
+			});
+		}
 
 		if (isAutoBanned) {
 			throw new ForbiddenError();

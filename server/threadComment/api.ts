@@ -30,7 +30,7 @@ router.post(
 	'/api/threadComment',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
-		const userId = req.user?.id as string;
+		const userId = req.user?.id ?? null;
 
 		const permissions = await getPermissions(requestIds);
 
@@ -52,7 +52,7 @@ router.post(
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 
-		const userId = req.user?.id as string;
+		const userId = req.user?.id ?? null;
 
 		const permissions = await getPermissions(requestIds);
 
@@ -86,12 +86,15 @@ router.post(
 		const { altcha: _altcha, _honeypot, ...rest } = req.body;
 		const options = { ...rest, userId };
 
-		const isAutoBanned = await autoBanForNewAccountLinkComment({
-			userId,
-			text: options.text,
-			content: options.content,
-			source: 'thread-comment',
-		});
+		let isAutoBanned = false;
+		if (userId) {
+			isAutoBanned = await autoBanForNewAccountLinkComment({
+				userId,
+				text: options.text,
+				content: options.content,
+				source: 'thread-comment',
+			});
+		}
 
 		if (isAutoBanned) {
 			throw new ForbiddenError();
