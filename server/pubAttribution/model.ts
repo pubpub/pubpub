@@ -16,7 +16,15 @@ import {
 
 import { Pub, User } from '../models';
 
-@Table
+@Table({
+	indexes: [
+		{
+			name: 'pubattributions_pubid_isauthor_idx',
+			fields: ['pubId'],
+			where: { isAuthor: true },
+		},
+	],
+})
 export class PubAttribution extends Model<
 	InferAttributes<PubAttribution>,
 	InferCreationAttributes<PubAttribution>

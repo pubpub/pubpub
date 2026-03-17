@@ -44,6 +44,7 @@ import { router as pageRouter } from './page'; // Route: ['/', '/:slug']
 import { router as passwordResetRouter } from './passwordReset'; // Route: ['/password-reset', '/password-reset/:resetHash/:slug']
 import { router as robotsRouter } from './robots'; // Route: /robots.txt
 import { router as searchRouter } from './search'; // Route: '/search'
+import { router as search2Router } from './search2'; // Route: '/search2'
 import { router as signupRouter } from './signup'; // Route: '/signup'
 import { router as sitemapRouter } from './sitemap'; // Route: /sitemap-*.xml
 import { router as superAdminDashboardRouter } from './superAdminDashboard'; // Route: /superadmin
@@ -84,6 +85,7 @@ rootRouter
 	.use(authenticateRouter)
 	.use(legalRouter)
 	.use(searchRouter)
+	.use(search2Router)
 	.use(signupRouter)
 	.use(superAdminDashboardRouter)
 	.use(passwordResetRouter)
