@@ -122,11 +122,8 @@ export const knexInstance = knex({ client: 'pg' });
 if (process.env.NODE_ENV !== 'test') {
 	sequelize.sync({ force: false }).then(async () => {
 		// Install search triggers and backfill tsvector columns
-		const {
-			installSearchTriggers,
-			backfillPubSearchVectors,
-			backfillCommunitySearchVectors,
-		} = await import('server/search2/searchTriggers');
+		const { installSearchTriggers, backfillPubSearchVectors, backfillCommunitySearchVectors } =
+			await import('server/search2/searchTriggers');
 		await installSearchTriggers();
 		await backfillPubSearchVectors();
 		await backfillCommunitySearchVectors();
