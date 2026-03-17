@@ -36,9 +36,11 @@ import {
 } from '../models';
 
 @Table
+// GIN index on searchVector is created in searchTriggers.ts
+// after the column is added via ALTER TABLE.
 export class Community extends Model<
-	InferAttributes<Community>,
-	InferCreationAttributes<Community>
+	InferAttributes<Community, { omit: 'searchVector' }>,
+	InferCreationAttributes<Community, { omit: 'searchVector' }>
 > {
 	public declare toJSON: <M extends Model>(this: M) => SerializedModel<M>;
 
@@ -226,6 +228,14 @@ export class Community extends Model<
 
 	@Column(DataType.UUID)
 	declare spamTagId: string | null;
+
+	/**
+	 * Pre-computed tsvector for full-text search.
+	 * Weights: A=title, B=description.
+	 * Updated by Postgres trigger on Communities.
+	 */
+	@Column(DataType.TSVECTOR)
+	declare searchVector: any | null;
 
 	@Column(DataType.UUID)
 	declare organizationId: string | null;

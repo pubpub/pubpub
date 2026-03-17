@@ -120,15 +120,15 @@ export const knexInstance = knex({ client: 'pg' });
 /* Change to true to update the model in the database. */
 /* NOTE: This being set to true will erase your data. */
 if (process.env.NODE_ENV !== 'test') {
-	sequelize.sync({ force: false }).then(() => {
-		// Create GIN tsvector indexes for search — these use expressions that
-		// can't be declared through Sequelize model definitions.
-		const ginIndexes = [
-			`CREATE INDEX IF NOT EXISTS "pubs_title_tsvector_idx" ON "Pubs" USING gin(to_tsvector('english', coalesce(title, '')))`,
-			`CREATE INDEX IF NOT EXISTS "pubs_description_tsvector_idx" ON "Pubs" USING gin(to_tsvector('english', coalesce(description, '')))`,
-			`CREATE INDEX IF NOT EXISTS "communities_title_tsvector_idx" ON "Communities" USING gin(to_tsvector('english', coalesce(title, '')))`,
-			`CREATE INDEX IF NOT EXISTS "communities_description_tsvector_idx" ON "Communities" USING gin(to_tsvector('english', coalesce(description, '')))`,
-		];
-		return Promise.allSettled(ginIndexes.map((sql) => sequelize.query(sql)));
+	sequelize.sync({ force: false }).then(async () => {
+		// Install search triggers and backfill tsvector columns
+		const {
+			installSearchTriggers,
+			backfillPubSearchVectors,
+			backfillCommunitySearchVectors,
+		} = await import('server/search2/searchTriggers');
+		await installSearchTriggers();
+		await backfillPubSearchVectors();
+		await backfillCommunitySearchVectors();
 	});
 }
