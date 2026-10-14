@@ -53,7 +53,7 @@ export type AssetWarning = {
  * invalidates exactly once and unchanged pubs are re-mapped with the new shape instead of silently
  * re-emitting stale hashes. Bump on any change to a type's emitted fields.
  */
-export const MAPPING_VERSION = '10';
+export const MAPPING_VERSION = '11';
 
 export type ManifestEntry = { id: string; type: string; hash: string; private?: boolean };
 
@@ -154,7 +154,9 @@ export type CollectionInput = {
 	doi?: string | null;
 	isPublic?: boolean | null;
 	avatar?: string | null;
+	/** Kind-specific fields (volume, issue, publicationDate, printIssn, isbn, …), emitted as-is. */
 	metadata?: Record<string, unknown> | null;
+	createdAt?: string | Date | null;
 };
 
 export type AttributionInput = {
@@ -226,12 +228,24 @@ export type PubInput = {
 	/** Scholarly kind (JournalArticle / Preprint / BookChapter / …), derived by the caller. */
 	kind?: string | null;
 	attributions?: AttributionInput[] | null;
-	collectionPubs?: { collectionId: string }[] | null;
+	/** `rank` orders the pub within that collection (feeds `Collection.pubIds`). */
+	collectionPubs?: { collectionId: string; rank?: string | null }[] | null;
 	releases?: ReleaseInput[] | null;
 	outboundEdges?: PubEdgeInput[] | null;
 	/** Per-format export artifacts (pdf/epub/…) from PubPub's exports table, matched to a release by
 	 * historyKey. `url` is the S3 asset URL (only non-null entries are passed in). */
 	exports?: { format: string; url: string; historyKey: number }[] | null;
+	/**
+	 * PubPub's `Pub.downloads`: files an editor uploaded to stand for the pub, notably the typeset
+	 * "formatted" PDF (`{ type: 'formatted', url, createdAt }`). Not tied to a release.
+	 */
+	downloads?: PubDownloadInput[] | null;
+};
+
+export type PubDownloadInput = {
+	type?: string | null;
+	url?: string | null;
+	createdAt?: string | Date | null;
 };
 
 const FILE_PREFIX = 'sha256:';
@@ -311,6 +325,14 @@ const guessContentType = (url: string): string => {
 			return 'image/x-icon';
 		case 'pdf':
 			return 'application/pdf';
+		case 'epub':
+			return 'application/epub+zip';
+		case 'docx':
+			return EXPORT_MIME.docx;
+		case 'odt':
+			return EXPORT_MIME.odt;
+		case 'zip':
+			return 'application/zip';
 		default:
 			return 'application/octet-stream';
 	}
@@ -343,6 +365,23 @@ const fileRefSchema = {
 		originalUrl: { type: 'string' },
 	},
 	required: ['$file'],
+};
+
+/**
+ * An editor-uploaded download on a Pub (PubPub's `Pub.downloads`), tagged with its PubPub `type`
+ * (only "formatted" today) and the upload time, so a consumer can tell whether it predates a release.
+ */
+const downloadRefSchema = {
+	type: 'object',
+	properties: {
+		type: { type: 'string' },
+		createdAt: { type: 'string', format: 'date-time' },
+		$file: { type: 'string' },
+		fileName: { type: 'string' },
+		mimeType: { type: 'string' },
+		originalUrl: { type: 'string' },
+	},
+	required: ['type', '$file'],
 };
 
 /** A downloadable export file reference on a Release, tagged with its format. */
@@ -401,7 +440,15 @@ export const underlaySchemas: Record<string, JsonSchema> = {
 			doi: { type: 'string' },
 			isPublic: { type: 'boolean' },
 			avatar: fileRefSchema,
+			// Kind-specific fields as stored by PubPub (issue: volume, issue, printIssn,
+			// electronicIssn, publicationDate, printPublicationDate; book: isbn, edition, …).
+			// Permissive object so sparse and kind-dependent keys pass.
+			metadata: { type: 'object' },
+			createdAt: { type: 'string', format: 'date-time' },
 			communityId: { type: 'string', 'x-ref-type': 'Community' },
+			// Every pub in the collection that this push exports, in the collection's own order
+			// (CollectionPub.rank), as PubPub shows it on the collection page.
+			pubIds: { type: 'array', items: { type: 'string', 'x-ref-type': 'Pub' } },
 		},
 	},
 	/**
@@ -448,6 +495,9 @@ export const underlaySchemas: Record<string, JsonSchema> = {
 			description: { type: 'string' },
 			htmlDescription: { type: 'string' },
 			avatar: fileRefSchema,
+			// Editor-uploaded files for the pub, oldest first; PubPub serves the newest "formatted"
+			// one as the pub's PDF download.
+			downloads: { type: 'array', items: downloadRefSchema },
 			// External identifiers (bibcode, mtg_id, …); permissive object so sparse keys pass.
 			metadata: { type: 'object' },
 			labels: {
@@ -645,9 +695,61 @@ const mapCommunity = async (
 	}),
 });
 
+/** Collection metadata without empty values, or undefined when nothing is left. */
+const collectionMetadata = (
+	metadata: Record<string, unknown> | null | undefined,
+): Record<string, Json> | undefined => {
+	if (!metadata) {
+		return undefined;
+	}
+	const out: Record<string, Json> = {};
+	for (const [key, value] of Object.entries(metadata)) {
+		if (value !== null && value !== undefined && value !== '') {
+			out[key] = value as Json;
+		}
+	}
+	return Object.keys(out).length > 0 ? out : undefined;
+};
+
+/** ISO timestamp for a value that may be missing or unparseable (legacy JSON), else undefined. */
+const optionalIso = (value: string | Date | null | undefined): string | undefined => {
+	if (value === null || value === undefined || value === '') {
+		return undefined;
+	}
+	const date = value instanceof Date ? value : new Date(value);
+	return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+};
+
+/**
+ * Pub ids per collection in collection order (CollectionPub.rank). Ranks are base36 strings, so a
+ * plain code-point comparison gives the same order PubPub's `sortByRank` does, without depending on
+ * the worker's locale. Ties (should not happen) fall back to the pub id so the order is stable.
+ */
+export const orderedPubIdsByCollection = (pubs: PubInput[]): Map<string, string[]> => {
+	const entries = new Map<string, { pubId: string; rank: string }[]>();
+	for (const pub of pubs) {
+		for (const cp of pub.collectionPubs ?? []) {
+			const list = entries.get(cp.collectionId) ?? [];
+			list.push({ pubId: pub.id, rank: cp.rank ?? '' });
+			entries.set(cp.collectionId, list);
+		}
+	}
+	const byCode = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+	const out = new Map<string, string[]>();
+	for (const [collectionId, list] of entries) {
+		list.sort((a, b) => byCode(a.rank, b.rank) || byCode(a.pubId, b.pubId));
+		out.set(
+			collectionId,
+			list.map((e) => e.pubId),
+		);
+	}
+	return out;
+};
+
 const mapCollection = async (
 	collection: CollectionInput,
 	communityId: string,
+	pubIds: string[],
 	localizeToRef: LocalizeToRef,
 ): Promise<UnderlayRecord> => ({
 	id: collection.id,
@@ -659,7 +761,10 @@ const mapCollection = async (
 		doi: collection.doi ?? undefined,
 		isPublic: collection.isPublic ?? undefined,
 		avatar: await localizeToRef(collection.avatar),
+		metadata: collectionMetadata(collection.metadata),
+		createdAt: optionalIso(collection.createdAt),
 		communityId,
+		pubIds,
 	}),
 });
 
@@ -760,9 +865,14 @@ export const mapCommunityScopeRecords = async (
 		ctx.registerCachedHash,
 	);
 	const records: UnderlayRecord[] = [await mapCommunity(community, localizeToRef)];
+	// Collection order lives here, not on the per-pub records: reordering a collection updates
+	// CollectionPub rows without touching the pub, so a per-pub cache entry would never see it.
+	// Scope records are recomputed on every push, so this is always current.
+	const pubIdsByCollection = orderedPubIdsByCollection(pubs);
 	for (const collection of collections) {
+		const pubIds = pubIdsByCollection.get(collection.id) ?? [];
 		// biome-ignore lint/performance/noAwaitInLoops: sequential to reuse the localizer memo + bound memory
-		records.push(await mapCollection(collection, community.id, localizeToRef));
+		records.push(await mapCollection(collection, community.id, pubIds, localizeToRef));
 	}
 	const seenUsers = new Set<string>();
 	for (const pub of pubs) {
@@ -779,6 +889,61 @@ export const mapCommunityScopeRecords = async (
 		}
 	}
 	return records;
+};
+
+/** Lowercase file extension of a URL's last path segment, if it has one. */
+const urlExtension = (url: string): string | undefined => {
+	const name = assetFileName(url);
+	const dot = name.lastIndexOf('.');
+	return dot > 0 ? name.slice(dot + 1).toLowerCase() : undefined;
+};
+
+/**
+ * The pub's editor-uploaded downloads (PubPub `Pub.downloads`, today only `type: 'formatted'`) as
+ * file references, oldest first. They are localized like any other asset, so they follow the
+ * includeAssets toggle and a failed download warns and is skipped. The file is named after the pub
+ * (as Release exports are) because uploaded asset names are random.
+ *
+ * These stay on the Pub rather than a Release: PubPub stores them on the pub with no release
+ * reference and serves the newest one whichever release is viewed. `createdAt` lets a consumer
+ * compare the upload with a release date instead of the export guessing a pairing.
+ */
+const mapPubDownloads = async (
+	pub: PubInput,
+	localizeToRef: LocalizeToRef,
+): Promise<Record<string, Json>[] | undefined> => {
+	const seen = new Set<string>();
+	const candidates = (pub.downloads ?? [])
+		.filter((d): d is PubDownloadInput & { url: string } => {
+			if (!d || d.type !== 'formatted' || !d.url || seen.has(d.url)) {
+				return false;
+			}
+			seen.add(d.url);
+			return true;
+		})
+		.map((d) => ({ url: d.url, type: d.type as string, createdAt: optionalIso(d.createdAt) }))
+		.sort(
+			(a, b) =>
+				(a.createdAt ?? '').localeCompare(b.createdAt ?? '') || a.url.localeCompare(b.url),
+		);
+	const refs: Record<string, Json>[] = [];
+	for (const download of candidates) {
+		// biome-ignore lint/performance/noAwaitInLoops: sequential to reuse the localizer memo + bound memory
+		const ref = await localizeToRef(download.url, pub.id);
+		if (!ref) {
+			continue;
+		}
+		const ext = urlExtension(download.url);
+		refs.push(
+			compact({
+				type: download.type,
+				createdAt: download.createdAt,
+				...ref,
+				fileName: ext ? `${pub.slug}.${ext}` : ref.fileName,
+			}),
+		);
+	}
+	return refs.length > 0 ? refs : undefined;
 };
 
 /**
@@ -821,6 +986,7 @@ export const mapPubRecords = async (
 	const publishedAtSource = pub.customPublishedAt ?? releases[0]?.createdAt ?? pub.createdAt;
 
 	const avatarRef = await localizeToRef(pub.avatar, pub.id);
+	const downloads = await mapPubDownloads(pub, localizeToRef);
 	const labels =
 		pub.labels && pub.labels.length > 0
 			? pub.labels.map((l) => ({ id: l.id, title: l.title }))
@@ -979,6 +1145,7 @@ export const mapPubRecords = async (
 			description: pub.description ?? undefined,
 			htmlDescription: pub.htmlDescription ?? undefined,
 			avatar: avatarRef,
+			downloads,
 			metadata,
 			labels,
 			doi: pub.doi ?? undefined,

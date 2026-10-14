@@ -195,6 +195,7 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 			isPublic: c.isPublic,
 			avatar: c.avatar,
 			metadata: (c.metadata as Record<string, unknown> | null) ?? null,
+			createdAt: c.createdAt,
 		}));
 
 		// Map collectionId → kind so a pub's scholarly `kind` can be derived from its memberships
@@ -285,6 +286,7 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 				})),
 				collectionPubs: (pub.collectionPubs ?? []).map((cp) => ({
 					collectionId: cp.collectionId,
+					rank: cp.rank,
 				})),
 				releases: (pub.releases ?? []).map((r) => ({
 					id: r.id,
@@ -304,6 +306,11 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 								doi: e.externalPublication.doi,
 							}
 						: null,
+				})),
+				downloads: (pub.downloads ?? []).map((d) => ({
+					type: d?.type ?? null,
+					url: d?.url ?? null,
+					createdAt: d?.createdAt ?? null,
 				})),
 				exports: (pub.exports ?? [])
 					.filter((e) => e.url)
