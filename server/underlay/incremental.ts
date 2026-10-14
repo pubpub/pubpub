@@ -59,6 +59,8 @@ export type IncrementalPushInput = {
 	 * pubId → hash of that pub's fully-resolved facet cascade. Facet edits at community/collection/pub
 	 * scope change the resolved value (and thus this hash) without bumping `updatedAt` or adding a
 	 * release, so this is the signal that invalidates a pub whose rendered content changed via facets.
+	 * The worker also folds in the pub's collection memberships and the kind derived from them, which
+	 * change the Pub record the same way: through other rows, without touching the pub.
 	 */
 	pubFacetsSignature?: Record<string, string>;
 	options: PushOptions;

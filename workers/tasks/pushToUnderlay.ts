@@ -376,7 +376,6 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 					continue;
 				}
 				resolvedFacetsByPubId.set(pubId, chunkFacets.pub[pubId]);
-				pubFacetsSignature[pubId] = computeFacetsSignature(chunkFacets.pub[pubId]);
 				pubUpdatedAt[pubId] = pub.updatedAt;
 				attributionsByPubId.set(
 					pubId,
@@ -390,7 +389,21 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 					}
 				}
 				releaseIdsByPubId.set(pubId, releaseIds);
-				pubInputs.push(toPubInput(pub));
+				const pubInput = toPubInput(pub);
+				pubInputs.push(pubInput);
+				// The Pub record also carries `collectionIds` and a `kind` derived from those
+				// collections. Adding a pub to a collection, removing it, or changing a collection's
+				// kind writes CollectionPub/Collection rows without bumping the pub's updatedAt, so
+				// they are folded into the same signature as the facets. Otherwise a cache hit would
+				// keep re-emitting the old memberships. Ranks are left out: collection order lives on
+				// the Collection record, which is recomputed every push.
+				pubFacetsSignature[pubId] = computeFacetsSignature({
+					facets: chunkFacets.pub[pubId] ?? null,
+					collectionIds: (pubInput.collectionPubs ?? [])
+						.map((cp) => cp.collectionId)
+						.sort(),
+					kind: pubInput.kind ?? null,
+				});
 			}
 		}
 
