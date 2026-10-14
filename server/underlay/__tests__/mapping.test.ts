@@ -3,6 +3,7 @@ import type {
 	AssetWarning,
 	CollectionInput,
 	CommunityInput,
+	PageInput,
 	PubInput,
 	PushOptions,
 } from '../mapping';
@@ -1063,16 +1064,51 @@ describe('underlay/mapping — emitted fields match the declared schemas', () =>
 					avatar: 'https://assets.pubpub.org/x/col.png',
 					metadata: { volume: '1' },
 					createdAt: '2026-01-01T00:00:00.000Z',
+					layoutBlocks: [
+						{
+							id: 'i1',
+							type: 'text',
+							html: '<img src="https://assets.pubpub.org/x/j.png"/>',
+						},
+					],
 				},
 			],
 			pubs: [pub],
+			pages: [
+				{
+					id: 'page1',
+					title: 'About',
+					slug: 'about',
+					description: 'Who we are',
+					avatar: 'https://assets.pubpub.org/x/page.png',
+					isPublic: true,
+					createdAt: '2026-01-01T00:00:00.000Z',
+					updatedAt: '2026-01-02T00:00:00.000Z',
+					blocks: [
+						{
+							id: 'b1',
+							type: 'text',
+							html: '<img src="https://assets.pubpub.org/x/i.png"/>',
+						},
+						{ id: 'b2', type: 'pubs', title: 'Latest' },
+					],
+				},
+			],
 			options: { ...OPTIONS, exportFormats: ['pdf'] },
 			renderReleaseHtml,
 			fetchAsset,
 		});
 		const types = new Set(payload.records.map((r) => r.type));
 		expect(types).toEqual(
-			new Set(['Community', 'Collection', 'User', 'PubAttribution', 'Pub', 'Release']),
+			new Set([
+				'Community',
+				'Collection',
+				'Page',
+				'User',
+				'PubAttribution',
+				'Pub',
+				'Release',
+			]),
 		);
 		const problems = payload.records.flatMap((r) =>
 			undeclared(r.data, payload.schemas[r.type] as Schema, `${r.type}:${r.id}`),
@@ -1081,5 +1117,133 @@ describe('underlay/mapping — emitted fields match the declared schemas', () =>
 		const pubRecord = payload.records.find((r) => r.type === 'Pub')!;
 		expect(pubRecord.data.downloads).toHaveLength(1);
 		expect(payload.records.find((r) => r.type === 'Collection')!.data.pubIds).toEqual(['p1']);
+	});
+});
+
+describe('underlay/mapping — Pages and collection intros', () => {
+	const urlFetch = async (url: string) => Buffer.from(url);
+	const scope = (
+		collections: CollectionInput[],
+		pages: PageInput[],
+		options: PushOptions = OPTIONS,
+	) =>
+		mapCommunityScopeRecords(
+			community,
+			collections,
+			[],
+			{
+				addFile: (bytes) => `h-${bytes.toString().split('/').pop()}`,
+				fetchAsset: urlFetch,
+				options,
+			},
+			pages,
+		);
+
+	const about: PageInput = {
+		id: 'pg-about',
+		title: 'About',
+		slug: 'about',
+		description: 'About the journal',
+		isPublic: true,
+		createdAt: '2020-01-01T00:00:00.000Z',
+		updatedAt: '2024-05-01T00:00:00.000Z',
+		blocks: [
+			{ id: 'b0', type: 'banner' },
+			{
+				id: 'b1',
+				type: 'text',
+				html: '<h2>About</h2><img srcSet="x 1x" src="https://assets.pubpub.org/a/team.png?width=800&amp;fit=bounds"/>',
+			},
+			{ id: 'b2', type: 'pubs', title: 'Latest' },
+			{ id: 'b3', type: 'html', html: '<p>Contact us</p>' },
+			{ id: 'b4', type: 'text', html: '' },
+		],
+	};
+
+	it('exports a public page with blocks in layout order, joined html, and localized images', async () => {
+		const records = await scope([], [about]);
+		const page = records.find((r) => r.type === 'Page')!;
+		expect(page).toEqual({
+			id: 'pg-about',
+			type: 'Page',
+			data: {
+				title: 'About',
+				slug: 'about',
+				description: 'About the journal',
+				isPublic: true,
+				communityId: 'c1',
+				createdAt: '2020-01-01T00:00:00.000Z',
+				updatedAt: '2024-05-01T00:00:00.000Z',
+				html: '<h2>About</h2><img src="sha256:h-team.png"/>\n<p>Contact us</p>',
+				blocks: [
+					{ id: 'b0', type: 'banner' },
+					{
+						id: 'b1',
+						type: 'text',
+						html: '<h2>About</h2><img src="sha256:h-team.png"/>',
+					},
+					{ id: 'b2', type: 'pubs', title: 'Latest' },
+					{ id: 'b3', type: 'html', html: '<p>Contact us</p>' },
+					{ id: 'b4', type: 'text' },
+				],
+				assets: [
+					{
+						$file: 'sha256:h-team.png',
+						fileName: 'team.png',
+						mimeType: 'image/png',
+						originalUrl: 'https://assets.pubpub.org/a/team.png',
+					},
+				],
+			},
+		});
+	});
+
+	it('keeps original image URLs when assets are excluded', async () => {
+		const records = await scope([], [about], { ...OPTIONS, includeAssets: false });
+		const page = records.find((r) => r.type === 'Page')!;
+		expect(page.data.html).toContain('https://assets.pubpub.org/a/team.png');
+		expect(page.data).not.toHaveProperty('assets');
+	});
+
+	it('exports the home page (slug "") but no private page', async () => {
+		const records = await scope(
+			[],
+			[
+				{ ...about, id: 'pg-home', slug: '', title: 'Home' },
+				{ ...about, id: 'pg-draft', slug: 'draft', isPublic: false },
+				{ ...about, id: 'pg-unset', slug: 'unset', isPublic: null },
+			],
+		);
+		expect(records.filter((r) => r.type === 'Page').map((r) => [r.id, r.data.slug])).toEqual([
+			['pg-home', ''],
+		]);
+	});
+
+	it('gives a public collection introHtml from its layout text, and nothing when empty or private', async () => {
+		const withIntro: CollectionInput = {
+			id: 'col-a',
+			title: 'Issue 1',
+			isPublic: true,
+			layoutBlocks: [
+				{ id: 'h', type: 'collection-header' },
+				{ id: 't', type: 'text', html: '<p>Editorial intro</p>' },
+				{ id: 'p', type: 'pubs', title: 'Articles' },
+			],
+		};
+		const records = await scope(
+			[
+				withIntro,
+				{ ...withIntro, id: 'col-private', isPublic: false },
+				{ ...withIntro, id: 'col-empty', layoutBlocks: [{ id: 'p', type: 'pubs' }] },
+				{ ...withIntro, id: 'col-none', layoutBlocks: undefined },
+			],
+			[],
+		);
+		const byId = new Map(records.map((r) => [r.id, r.data]));
+		expect(byId.get('col-a')!.introHtml).toBe('<p>Editorial intro</p>');
+		expect(byId.get('col-a')).not.toHaveProperty('introAssets');
+		for (const id of ['col-private', 'col-empty', 'col-none']) {
+			expect(byId.get(id)).not.toHaveProperty('introHtml');
+		}
 	});
 });

@@ -10,6 +10,7 @@ import {
 	Export,
 	ExternalPublication,
 	includeUserModel,
+	Page,
 	Pub,
 	PubAttribution,
 	PubEdge,
@@ -23,13 +24,16 @@ import { licenseDetailsByKind } from 'utils/licenses';
 import { formatUnderlayError, UnderlayClient } from '../../server/underlay/client';
 import { hashBytes } from '../../server/underlay/hash';
 import { buildIncrementalPush, computeFacetsSignature } from '../../server/underlay/incremental';
+import { renderLayoutBlocks } from '../../server/underlay/layoutHtml';
 import {
 	type AssetCacheContext,
 	type AssetWarning,
 	type CollectionInput,
 	type CommunityInput,
 	type Json,
+	layoutAssetUrls,
 	mapPubRecords,
+	type PageInput,
 	type PubInput,
 	type UnderlayFile,
 } from '../../server/underlay/mapping';
@@ -117,6 +121,7 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 		}
 
 		const collections = await Collection.findAll({ where: { communityId } });
+		const pages = await Page.findAll({ where: { communityId } });
 
 		// Release → docId and pub → releaseIds, so docs can be fetched lazily by pub.
 		const docIdByReleaseId = new Map<string, string>();
@@ -186,6 +191,16 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 			email: community.email,
 		};
 
+		// A layout block that fails to render is exported as a bare marker; say so in the push log.
+		const layoutWarnings: AssetWarning[] = [];
+		const warnLayoutBlock = (where: string, blockId: string, error: unknown) => {
+			const reason = `Layout block ${blockId} of ${where} could not be rendered: ${
+				error instanceof Error ? error.message : String(error)
+			}`;
+			console.warn(`[underlay] ${reason}`);
+			layoutWarnings.push({ reason });
+		};
+
 		const collectionInputs: CollectionInput[] = collections.map((c) => ({
 			id: c.id,
 			title: c.title,
@@ -196,6 +211,26 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 			avatar: c.avatar,
 			metadata: (c.metadata as Record<string, unknown> | null) ?? null,
 			createdAt: c.createdAt,
+			layoutBlocks: renderLayoutBlocks(c.layout?.blocks, (block, error) =>
+				warnLayoutBlock(`collection ${c.slug}`, block.id, error),
+			),
+		}));
+
+		const pageInputs: PageInput[] = pages.map((p) => ({
+			id: p.id,
+			title: p.title,
+			slug: p.slug,
+			description: p.description,
+			avatar: p.avatar,
+			isPublic: p.isPublic,
+			createdAt: p.createdAt,
+			updatedAt: p.updatedAt,
+			// Private pages are not exported, so don't spend time rendering them.
+			blocks: p.isPublic
+				? renderLayoutBlocks(p.layout, (block, error) =>
+						warnLayoutBlock(`page "${p.slug}"`, block.id, error),
+					)
+				: [],
 		}));
 
 		// Map collectionId → kind so a pub's scholarly `kind` can be derived from its memberships
@@ -477,6 +512,9 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 		const assetWarnings = new Map<string, AssetWarning>();
 		const collectAssetWarning = (warning: AssetWarning) =>
 			assetWarnings.set(`${warning.pubId ?? 'community'}|${warning.assetUrl}`, warning);
+		for (const warning of layoutWarnings) {
+			assetWarnings.set(`layout|${warning.reason}`, warning);
+		}
 
 		// Map ONE pub → records + the files those records reference (renders on demand).
 		const mapPub = async (pub: PubInput) => {
@@ -519,6 +557,15 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 		addScopeUrl(communityInput.heroBackgroundImage);
 		for (const collection of collectionInputs) {
 			addScopeUrl(collection.avatar);
+			for (const url of layoutAssetUrls(collection.layoutBlocks)) {
+				addScopeUrl(url);
+			}
+		}
+		for (const page of pageInputs) {
+			addScopeUrl(page.avatar);
+			for (const url of layoutAssetUrls(page.blocks)) {
+				addScopeUrl(url);
+			}
 		}
 		for (const pub of pubInputs) {
 			for (const attribution of pub.attributions ?? []) {
@@ -560,6 +607,7 @@ export const pushToUnderlayTask = async (input: PushToUnderlayInput) => {
 		const incremental = await buildIncrementalPush({
 			community: communityInput,
 			collections: collectionInputs,
+			pages: pageInputs,
 			pubs: pubInputs,
 			pubUpdatedAt,
 			pubFacetsSignature,
