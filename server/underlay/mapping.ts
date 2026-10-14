@@ -157,7 +157,7 @@ export type CollectionInput = {
 	/** Kind-specific fields (volume, issue, publicationDate, printIssn, isbn, …), emitted as-is. */
 	metadata?: Record<string, unknown> | null;
 	createdAt?: string | Date | null;
-	/** The collection's layout blocks; their text/html becomes `introHtml`. */
+	/** The collection's layout blocks; their text/html becomes `layoutHtml`. */
 	layoutBlocks?: LayoutBlockInput[] | null;
 };
 
@@ -508,10 +508,10 @@ export const underlaySchemas: Record<string, JsonSchema> = {
 			// Every pub in the collection that this push exports, in the collection's own order
 			// (CollectionPub.rank), as PubPub shows it on the collection page.
 			pubIds: { type: 'array', items: { type: 'string', 'x-ref-type': 'Pub' } },
-			// The text/html blocks of the collection's layout (an issue's intro), rendered and
-			// joined. Images point at `sha256:<hex>`, resolved through `introAssets`.
-			introHtml: { type: 'string' },
-			introAssets: { type: 'array', items: fileRefSchema },
+			// The text/html blocks of the collection's layout (often an issue's intro), rendered and
+			// joined, as Page.html. Images point at `sha256:<hex>`, resolved through `layoutAssets`.
+			layoutHtml: { type: 'string' },
+			layoutAssets: { type: 'array', items: fileRefSchema },
 		},
 	},
 	/**
@@ -932,7 +932,7 @@ const mapCollection = async (
 	communityId: string,
 	pubIds: string[],
 	localizeToRef: LocalizeToRef,
-	intro: { html?: string; assets: Record<string, Json>[] },
+	layout: { html?: string; assets: Record<string, Json>[] },
 ): Promise<UnderlayRecord> => ({
 	id: collection.id,
 	type: 'Collection',
@@ -947,8 +947,8 @@ const mapCollection = async (
 		createdAt: optionalIso(collection.createdAt),
 		communityId,
 		pubIds,
-		introHtml: intro.html,
-		introAssets: intro.assets.length > 0 ? intro.assets : undefined,
+		layoutHtml: layout.html,
+		layoutAssets: layout.assets.length > 0 ? layout.assets : undefined,
 	}),
 });
 
@@ -1081,14 +1081,14 @@ export const mapCommunityScopeRecords = async (
 	const pubIdsByCollection = orderedPubIdsByCollection(pubs);
 	for (const collection of collections) {
 		const pubIds = pubIdsByCollection.get(collection.id) ?? [];
-		// A private collection's record is already public metadata (title, slug), but the intro
+		// A private collection's record is already public metadata (title, slug), but the layout
 		// text editors write for it is content, so it stays out until the collection is public.
-		const intro =
+		const layout =
 			collection.isPublic === false
 				? { assets: [] }
 				: // biome-ignore lint/performance/noAwaitInLoops: sequential to reuse the localizer memo + bound memory
 					await mapLayoutBlocks(collection.layoutBlocks ?? [], localize, localizeHtml);
-		records.push(await mapCollection(collection, community.id, pubIds, localizeToRef, intro));
+		records.push(await mapCollection(collection, community.id, pubIds, localizeToRef, layout));
 	}
 	// Only public pages: an Underlay collection is usually public, and a private PubPub page is a
 	// draft or an internal page nobody outside the community should read.

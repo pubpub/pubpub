@@ -1120,7 +1120,7 @@ describe('underlay/mapping — emitted fields match the declared schemas', () =>
 	});
 });
 
-describe('underlay/mapping — Pages and collection intros', () => {
+describe('underlay/mapping — Pages and collection layout text', () => {
 	const urlFetch = async (url: string) => Buffer.from(url);
 	const scope = (
 		collections: CollectionInput[],
@@ -1219,7 +1219,7 @@ describe('underlay/mapping — Pages and collection intros', () => {
 		]);
 	});
 
-	it('gives a public collection introHtml from its layout text, and nothing when empty or private', async () => {
+	it('gives a public collection layoutHtml from its layout text, and nothing when empty or private', async () => {
 		const withIntro: CollectionInput = {
 			id: 'col-a',
 			title: 'Issue 1',
@@ -1240,10 +1240,10 @@ describe('underlay/mapping — Pages and collection intros', () => {
 			[],
 		);
 		const byId = new Map(records.map((r) => [r.id, r.data]));
-		expect(byId.get('col-a')!.introHtml).toBe('<p>Editorial intro</p>');
-		expect(byId.get('col-a')).not.toHaveProperty('introAssets');
+		expect(byId.get('col-a')!.layoutHtml).toBe('<p>Editorial intro</p>');
+		expect(byId.get('col-a')).not.toHaveProperty('layoutAssets');
 		for (const id of ['col-private', 'col-empty', 'col-none']) {
-			expect(byId.get(id)).not.toHaveProperty('introHtml');
+			expect(byId.get(id)).not.toHaveProperty('layoutHtml');
 		}
 	});
 });
