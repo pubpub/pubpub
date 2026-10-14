@@ -431,7 +431,7 @@ const downloadRefSchema = {
 	required: ['type', '$file'],
 };
 
-/** One layout block of a Page, in layout order. `html` only on text/html blocks. */
+/** One layout block of a Page or Collection, in layout order. `html` only on text/html blocks. */
 const layoutBlockSchema = {
 	type: 'object',
 	properties: {
@@ -512,6 +512,9 @@ export const underlaySchemas: Record<string, JsonSchema> = {
 			// joined, as Page.html. Images point at `sha256:<hex>`, resolved through `layoutAssets`.
 			layoutHtml: { type: 'string' },
 			layoutAssets: { type: 'array', items: fileRefSchema },
+			// Every block of the collection's layout in order, as Page.blocks: text/html blocks carry
+			// their html, the rest (header, pub lists, …) are bare markers with id, type and title.
+			layoutBlocks: { type: 'array', items: layoutBlockSchema },
 		},
 	},
 	/**
@@ -932,7 +935,7 @@ const mapCollection = async (
 	communityId: string,
 	pubIds: string[],
 	localizeToRef: LocalizeToRef,
-	layout: { html?: string; assets: Record<string, Json>[] },
+	layout: { blocks?: Record<string, Json>[]; html?: string; assets: Record<string, Json>[] },
 ): Promise<UnderlayRecord> => ({
 	id: collection.id,
 	type: 'Collection',
@@ -949,6 +952,7 @@ const mapCollection = async (
 		pubIds,
 		layoutHtml: layout.html,
 		layoutAssets: layout.assets.length > 0 ? layout.assets : undefined,
+		layoutBlocks: layout.blocks?.length ? layout.blocks : undefined,
 	}),
 });
 

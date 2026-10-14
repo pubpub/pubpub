@@ -1219,7 +1219,7 @@ describe('underlay/mapping — Pages and collection layout text', () => {
 		]);
 	});
 
-	it('gives a public collection layoutHtml from its layout text, and nothing when empty or private', async () => {
+	it('gives a public collection layoutHtml and layoutBlocks from its layout, and no text when empty or private', async () => {
 		const withIntro: CollectionInput = {
 			id: 'col-a',
 			title: 'Issue 1',
@@ -1242,8 +1242,17 @@ describe('underlay/mapping — Pages and collection layout text', () => {
 		const byId = new Map(records.map((r) => [r.id, r.data]));
 		expect(byId.get('col-a')!.layoutHtml).toBe('<p>Editorial intro</p>');
 		expect(byId.get('col-a')).not.toHaveProperty('layoutAssets');
+		expect(byId.get('col-a')!.layoutBlocks).toEqual([
+			{ id: 'h', type: 'collection-header' },
+			{ id: 't', type: 'text', html: '<p>Editorial intro</p>' },
+			{ id: 'p', type: 'pubs', title: 'Articles' },
+		]);
+		expect(byId.get('col-empty')!.layoutBlocks).toEqual([{ id: 'p', type: 'pubs' }]);
 		for (const id of ['col-private', 'col-empty', 'col-none']) {
 			expect(byId.get(id)).not.toHaveProperty('layoutHtml');
+		}
+		for (const id of ['col-private', 'col-none']) {
+			expect(byId.get(id)).not.toHaveProperty('layoutBlocks');
 		}
 	});
 });
