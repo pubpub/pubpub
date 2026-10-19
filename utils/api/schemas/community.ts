@@ -100,6 +100,7 @@ export const communitySchema = baseSchema.extend({
 	spamTagId: z.string().uuid().nullable(),
 	scopeSummaryId: z.string().uuid().nullable(),
 	templateId: z.string().uuid().nullable(),
+	orgId: z.string().uuid().nullable(),
 	cmsMode: z.boolean().default(false),
 	canonicalBaseUrl: z.string().url().nullable(),
 	canonicalPubUrlTemplate: z
@@ -149,6 +150,7 @@ export const communityUpdateSchema = communitySchema
 		id: true,
 		createdAt: true,
 		updatedAt: true,
+		orgId: true,
 	})
 	.extend({
 		communityId: communitySchema.shape.id,

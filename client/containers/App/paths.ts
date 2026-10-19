@@ -24,15 +24,15 @@ import {
 	DashboardSubmissions,
 	DashboardSubmissionWorkflow,
 	Explore,
-	HubData,
-	HubDirectory,
-	HubDocs,
-	HubLanding,
-	HubPricing,
 	Landing,
 	Legal,
 	Login,
 	NoMatch,
+	OrgData,
+	OrgDirectory,
+	OrgDocs,
+	OrgLanding,
+	OrgPricing,
 	Page,
 	PasswordReset,
 	Pricing,
@@ -56,7 +56,7 @@ export default (viewData, locationData, chunkName) => {
 		CommunityCreate: {
 			ActiveComponent: CommunityCreate,
 			hideNav: true,
-			hideHeader: !!viewData?.hubData,
+			hideHeader: !!viewData?.orgData,
 			hideFooter: true,
 		},
 		CommunityServices: {
@@ -166,28 +166,28 @@ export default (viewData, locationData, chunkName) => {
 			hideNav: locationData.isBasePubPub,
 			hideFooter: true,
 		},
-		HubData: {
-			ActiveComponent: HubData,
+		OrgData: {
+			ActiveComponent: OrgData,
 			hideNav: true,
 			hideHeader: true,
 			hideFooter: true,
 		},
-		HubDirectory: {
-			ActiveComponent: HubDirectory,
+		OrgDirectory: {
+			ActiveComponent: OrgDirectory,
 			hideNav: locationData.isBasePubPub,
 		},
-		HubDocs: {
-			ActiveComponent: HubDocs,
+		OrgDocs: {
+			ActiveComponent: OrgDocs,
 			hideNav: locationData.isBasePubPub,
 		},
-		HubLanding: {
-			ActiveComponent: HubLanding,
+		OrgLanding: {
+			ActiveComponent: OrgLanding,
 			hideNav: true,
 			hideHeader: true,
 			hideFooter: true,
 		},
-		HubPricing: {
-			ActiveComponent: HubPricing,
+		OrgPricing: {
+			ActiveComponent: OrgPricing,
 			hideNav: locationData.isBasePubPub,
 		},
 		Page: {

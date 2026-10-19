@@ -15,13 +15,14 @@ import {
 } from 'sequelize-typescript';
 
 import { Community } from '../community/model';
-import { Hub } from '../hub/model';
+import { Org } from '../org/model';
 
 @Table({
 	indexes: [
 		{
 			unique: true,
-			fields: ['hubId', 'communityId'],
+			fields: ['orgId', 'communityId'],
+			// Keeps its pre-rename name so sync() sees it as present. The table goes in phase 2.
 			name: 'HubCommunities_hubId_communityId_unique',
 		},
 	],
@@ -35,33 +36,33 @@ export class HubCommunity extends Model<
 	@Column(DataType.UUID)
 	declare id: CreationOptional<string>;
 
-	@ForeignKey(() => Hub)
+	@ForeignKey(() => Org)
 	@Column(DataType.UUID)
-	declare hubId: string;
+	declare orgId: string;
 
 	@ForeignKey(() => Community)
 	@Column(DataType.UUID)
 	declare communityId: string;
 
-	/** Whether this community appears on the hub's public landing page. */
+	/** Whether this community appears on the org's public landing page. */
 	@AllowNull(false)
 	@Default(true)
 	@Column(DataType.BOOLEAN)
 	declare showOnLandingPage: CreationOptional<boolean>;
 
 	/**
-	 * Level of data the hub can see for this community.
+	 * Level of data the org can see for this community.
 	 *  - 'none'      — aggregate stats only (default)
-	 *  - 'requested' — hub has asked for deeper access; awaiting community approval
-	 *  - 'granted'   — hub can see community managers, detailed analytics, etc.
+	 *  - 'requested' — org has asked for deeper access; awaiting community approval
+	 *  - 'granted'   — org can see community managers, detailed analytics, etc.
 	 */
 	@AllowNull(false)
 	@Default('none')
 	@Column(DataType.ENUM('none', 'requested', 'granted'))
 	declare dataAccess: CreationOptional<'none' | 'requested' | 'granted'>;
 
-	@BelongsTo(() => Hub, { onDelete: 'CASCADE', foreignKey: 'hubId' })
-	declare hub?: Hub;
+	@BelongsTo(() => Org, { onDelete: 'CASCADE', foreignKey: 'orgId' })
+	declare org?: Org;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE', foreignKey: 'communityId' })
 	declare community?: Community;

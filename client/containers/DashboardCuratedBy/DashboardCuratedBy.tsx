@@ -21,7 +21,7 @@ type CuratingOrg = {
 };
 
 type Props = {
-	curatingHubs: CuratingOrg[];
+	curatingOrgs: CuratingOrg[];
 	scopeType?: 'community' | 'pub';
 };
 
@@ -29,7 +29,7 @@ const DashboardCuratedBy = (props: Props) => {
 	const { communityData, scopeData } = usePageContext();
 	const scopeType = props.scopeType ?? 'community';
 	const pubId = scopeData.elements.activePub?.id;
-	const [orgs, setOrgs] = useState<CuratingOrg[]>(props.curatingHubs);
+	const [orgs, setOrgs] = useState<CuratingOrg[]>(props.curatingOrgs);
 	const [togglingId, setTogglingId] = useState<string | null>(null);
 
 	const scopeLabel = scopeType === 'pub' ? 'pub' : 'community';
@@ -39,8 +39,8 @@ const DashboardCuratedBy = (props: Props) => {
 		async (orgId: string) => {
 			setTogglingId(orgId);
 			try {
-				await apiFetch.post(`/api/communities/${communityData.id}/hub-opt-out`, {
-					hubId: orgId,
+				await apiFetch.post(`/api/communities/${communityData.id}/org-opt-out`, {
+					orgId: orgId,
 				});
 				setOrgs((prev) => prev.map((o) => (o.id === orgId ? { ...o, rejected: true } : o)));
 			} finally {
@@ -55,7 +55,7 @@ const DashboardCuratedBy = (props: Props) => {
 		async (orgId: string) => {
 			setTogglingId(orgId);
 			try {
-				await apiFetch.delete(`/api/communities/${communityData.id}/hub-opt-out/${orgId}`);
+				await apiFetch.delete(`/api/communities/${communityData.id}/org-opt-out/${orgId}`);
 				setOrgs((prev) =>
 					prev.map((o) => (o.id === orgId ? { ...o, rejected: false } : o)),
 				);
@@ -66,13 +66,13 @@ const DashboardCuratedBy = (props: Props) => {
 		[communityData.id],
 	);
 
-	// Pub-scope: remove from hub entirely
+	// Pub-scope: remove from org entirely
 	const handleRemove = useCallback(
 		async (orgId: string) => {
 			if (!pubId) return;
 			setTogglingId(orgId);
 			try {
-				await apiFetch.delete(`/api/pubs/${pubId}/curating-hubs/${orgId}`);
+				await apiFetch.delete(`/api/pubs/${pubId}/curating-orgs/${orgId}`);
 				setOrgs((prev) => prev.filter((o) => o.id !== orgId));
 			} finally {
 				setTogglingId(null);
@@ -87,8 +87,8 @@ const DashboardCuratedBy = (props: Props) => {
 			try {
 				const basePath =
 					scopeType === 'pub'
-						? `/api/pubs/${pubId}/curating-hubs/${orgId}/data-access`
-						: `/api/communities/${communityData.id}/curating-hubs/${orgId}/data-access`;
+						? `/api/pubs/${pubId}/curating-orgs/${orgId}/data-access`
+						: `/api/communities/${communityData.id}/curating-orgs/${orgId}/data-access`;
 				await apiFetch.put(basePath, {
 					dataAccess: grant ? 'granted' : 'none',
 				});
@@ -111,19 +111,19 @@ const DashboardCuratedBy = (props: Props) => {
 		<DashboardFrame
 			title="Curated By"
 			className="dashboard-curated-by-component"
-			details={`Manage which hubs can include this ${scopeLabel} in their curated collections.`}
+			details={`Manage which orgs can include this ${scopeLabel} in their curated collections.`}
 		>
 			<div className="curated-by-content">
 				<p className="curated-by-intro">
 					{scopeType === 'pub' ? (
 						<>
-							Hubs listed here have added this pub to their curated collection. You
-							can remove this pub from a hub or manage analytics access.
+							Orgs listed here have added this pub to their curated collection. You
+							can remove this pub from an org or manage analytics access.
 						</>
 					) : (
 						<>
-							Hubs listed here have added this community to their curated collection.
-							You can reject specific hubs to remove this community from their landing
+							Orgs listed here have added this community to their curated collection.
+							You can reject specific orgs to remove this community from their landing
 							pages, data dashboards, and suggested community lists.
 						</>
 					)}
@@ -131,7 +131,7 @@ const DashboardCuratedBy = (props: Props) => {
 
 				{orgs.length === 0 ? (
 					<div className="curated-by-empty">
-						No hubs are currently curating this {scopeLabel}.
+						No orgs are currently curating this {scopeLabel}.
 					</div>
 				) : (
 					<>
@@ -149,7 +149,7 @@ const DashboardCuratedBy = (props: Props) => {
 										<Card key={org.id} className="curated-by-org-card">
 											<div className="curated-by-org-row">
 												<a
-													href={`/hub/${org.slug}`}
+													href={`/org/${org.slug}`}
 													className="curated-by-org-link"
 													target="_blank"
 													rel="noopener noreferrer"
@@ -276,7 +276,7 @@ const DashboardCuratedBy = (props: Props) => {
 										>
 											<div className="curated-by-org-row">
 												<a
-													href={`/hub/${org.slug}`}
+													href={`/org/${org.slug}`}
 													className="curated-by-org-link"
 													target="_blank"
 													rel="noopener noreferrer"

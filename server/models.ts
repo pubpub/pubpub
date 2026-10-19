@@ -30,14 +30,14 @@ import { FeatureFlag } from './featureFlag/model';
 import { FeatureFlagCommunity } from './featureFlagCommunity/model';
 import { FeatureFlagUser } from './featureFlagUser/model';
 import { FtpTarget } from './ftpTarget/model';
-import { Hub } from './hub/model';
 import { HubCommunity } from './hubCommunity/model';
-import { HubManager } from './hubManager/model';
 import { HubOptOut } from './hubOptOut/model';
-import { HubPub } from './hubPub/model';
 import { IntegrationDataOAuth1 } from './integrationDataOAuth1/model';
 import { LandingPageFeature } from './landingPageFeature/model';
 import { Member } from './member/model';
+import { Org } from './org/model';
+import { OrgFeaturedPub } from './orgFeaturedPub/model';
+import { OrgMember } from './orgMember/model';
 import { Page } from './page/model';
 import { Pub } from './pub/model';
 import { PubAttribution } from './pubAttribution/model';
@@ -103,10 +103,10 @@ sequelize.addModels([
 	LandingPageFeature,
 	Member,
 	CommunityTemplate,
-	Hub,
+	Org,
 	HubCommunity,
-	HubManager,
-	HubPub,
+	OrgMember,
+	OrgFeaturedPub,
 	Page,
 	Pub,
 	PubAttribution,
@@ -204,10 +204,10 @@ export {
 	IntegrationDataOAuth1,
 	LandingPageFeature,
 	Member,
-	Hub,
+	Org,
 	HubCommunity,
-	HubManager,
-	HubPub,
+	OrgMember,
+	OrgFeaturedPub,
 	CommunityTemplate,
 	Page,
 	Pub,

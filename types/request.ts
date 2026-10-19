@@ -80,7 +80,7 @@ export type ScopeData = {
 	activeCounts: {
 		reviews: number;
 		submissions: number;
-		curatingHubCount: number;
+		curatingOrgCount: number;
 	};
 	scope: ScopeId;
 	memberData: Member[];
