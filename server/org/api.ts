@@ -1,10 +1,13 @@
+import type { MemberPermission } from 'types';
+
 import { Router } from 'express';
 
-import { Community, HubCommunity, HubOptOut, Member, Pub, User } from 'server/models';
+import { Community, OrgMember, Pub, User } from 'server/models';
 import { OrgFeaturedPub } from 'server/orgFeaturedPub/model';
 import { addPubToOrg, getOrgFeaturedPubs, removePubFromOrg } from 'server/orgFeaturedPub/queries';
-import { ForbiddenError, NotFoundError } from 'server/utils/errors';
+import { BadRequestError, ForbiddenError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
+import { memberPermissions } from 'types';
 
 import { fetchBrandAssets } from './brandHelper';
 import { getOrgDataDashboard } from './dataQueries';
@@ -14,11 +17,11 @@ import {
 	createOrg,
 	destroyOrg,
 	getAllOrgsWithCommunityCounts,
-	getHubCommunities,
 	getOrgById,
 	getOrgBySlug,
+	getOrgCommunities,
 	getOrgMembers,
-	getOrgsForCommunity,
+	isUserOrgAdmin,
 	isUserOrgMember,
 	removeCommunityFromOrg,
 	removeOrgMember,
@@ -38,19 +41,43 @@ const requireSuperAdmin = async (req) => {
 	return initialData;
 };
 
-/** Require superadmin OR org manager for dashboard-level routes */
-const requireSuperAdminOrOrgManager = async (req, orgId: string) => {
+/** Require superadmin OR an org member at any level, for read-only org routes */
+const requireOrgMember = async (req, orgId: string) => {
 	const initialData = await getInitialData(req);
 	if (initialData.loginData.isSuperAdmin) {
 		return initialData;
 	}
-	if (initialData.loginData.id) {
-		const isMgr = await isUserOrgMember(initialData.loginData.id, orgId);
-		if (isMgr) {
-			return initialData;
-		}
+	if (initialData.loginData.id && (await isUserOrgMember(initialData.loginData.id, orgId))) {
+		return initialData;
 	}
 	throw new ForbiddenError();
+};
+
+/** Require superadmin OR an org admin, for routes that manage the org */
+const requireOrgAdmin = async (req, orgId: string) => {
+	const initialData = await getInitialData(req);
+	if (initialData.loginData.isSuperAdmin) {
+		return initialData;
+	}
+	if (initialData.loginData.id && (await isUserOrgAdmin(initialData.loginData.id, orgId))) {
+		return initialData;
+	}
+	throw new ForbiddenError();
+};
+
+const isMemberPermission = (value: unknown): value is MemberPermission =>
+	memberPermissions.includes(value as MemberPermission);
+
+/** An org keeps at least one admin, unless a superadmin is the one changing it */
+const assertNotLastAdmin = async (orgId: string, userId: string, isSuperAdmin: boolean) => {
+	if (isSuperAdmin) return;
+	const otherAdmins = await OrgMember.count({
+		where: { orgId, permissions: 'admin' },
+	});
+	const isAdmin = await isUserOrgAdmin(userId, orgId);
+	if (isAdmin && otherAdmins <= 1) {
+		throw new BadRequestError(new Error('An org needs at least one admin'));
+	}
 };
 
 // GET /api/orgs - list all orgs (superadmin)
@@ -71,6 +98,7 @@ router.post('/api/orgs', async (req, res, next) => {
 		const {
 			slug,
 			title,
+			kfOrgId,
 			subtitle,
 			description,
 			avatar,
@@ -85,9 +113,13 @@ router.post('/api/orgs', async (req, res, next) => {
 			isActive,
 			isPrivate,
 		} = req.body;
+		if (typeof kfOrgId !== 'string' || !kfOrgId.trim()) {
+			throw new BadRequestError(new Error('kfOrgId (the KF Account) is required'));
+		}
 		const org = await createOrg({
 			slug,
 			title,
+			kfOrgId: kfOrgId.trim(),
 			subtitle,
 			description,
 			avatar,
@@ -109,7 +141,7 @@ router.post('/api/orgs', async (req, res, next) => {
 });
 
 /* ------------------------------------------------------------------ */
-/* Brand Helper — any logged-in user                                   */
+/* Brand Helper — superadmins and org admins                           */
 /* ------------------------------------------------------------------ */
 
 // GET /api/orgs/brand-helper?domain=mit.edu
@@ -117,12 +149,11 @@ router.get('/api/orgs/brand-helper', async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req);
 		if (!initialData.loginData.isSuperAdmin) {
-			// Check if user is a manager of any org
+			// Check if user is an admin of any org
 			const userId = initialData.loginData.id;
 			if (!userId) throw new ForbiddenError();
-			const { OrgMember } = await import('server/orgMember/model');
-			const mgr = await OrgMember.findOne({ where: { userId } });
-			if (!mgr) throw new ForbiddenError();
+			const orgAdmin = await OrgMember.findOne({ where: { userId, permissions: 'admin' } });
+			if (!orgAdmin) throw new ForbiddenError();
 		}
 		const { domain } = req.query;
 		if (!domain || typeof domain !== 'string') {
@@ -142,9 +173,8 @@ router.get('/api/orgs/brand-helper/proxy-image', async (req, res, next) => {
 		if (!initialData.loginData.isSuperAdmin) {
 			const userId = initialData.loginData.id;
 			if (!userId) throw new ForbiddenError();
-			const { OrgMember } = await import('server/orgMember/model');
-			const mgr = await OrgMember.findOne({ where: { userId } });
-			if (!mgr) throw new ForbiddenError();
+			const orgAdmin = await OrgMember.findOne({ where: { userId, permissions: 'admin' } });
+			if (!orgAdmin) throw new ForbiddenError();
 		}
 		const { url } = req.query;
 		if (!url || typeof url !== 'string') {
@@ -207,10 +237,10 @@ router.get('/api/orgs/brand-helper/proxy-image', async (req, res, next) => {
 	}
 });
 
-// PUT /api/orgs/:id - update org (superadmin or manager)
+// PUT /api/orgs/:id - update org (superadmin or org admin)
 router.put('/api/orgs/:id', async (req, res, next) => {
 	try {
-		const initialData = await requireSuperAdminOrOrgManager(req, req.params.id);
+		const initialData = await requireOrgAdmin(req, req.params.id);
 		const {
 			title,
 			subtitle,
@@ -241,8 +271,11 @@ router.put('/api/orgs/:id', async (req, res, next) => {
 		};
 		// Only superadmins can change privileged fields
 		if (initialData.loginData.isSuperAdmin) {
-			const { isActive, isPrivate, slug, domains, pubSearchTerms } = req.body;
+			const { isActive, isPrivate, slug, domains, pubSearchTerms, kfOrgId } = req.body;
 			Object.assign(values, { isActive, isPrivate, slug, domains, pubSearchTerms });
+			if (typeof kfOrgId === 'string' && kfOrgId.trim()) {
+				values.kfOrgId = kfOrgId.trim();
+			}
 		}
 		// Remove undefined keys so we don't null out fields
 		Object.keys(values).forEach((k) => {
@@ -269,10 +302,10 @@ router.delete('/api/orgs/:id', async (req, res, next) => {
 	}
 });
 
-// GET /api/orgs/:id - get org by id (superadmin or manager)
+// GET /api/orgs/:id - get org by id (superadmin or org member)
 router.get('/api/orgs/:id', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireOrgMember(req, req.params.id);
 		const org = await getOrgById(req.params.id);
 		if (!org) {
 			throw new NotFoundError();
@@ -283,21 +316,26 @@ router.get('/api/orgs/:id', async (req, res, next) => {
 	}
 });
 
-// GET /api/orgs/:id/communities - list communities in org (superadmin or manager)
+/* ------------------------------------------------------------------ */
+/* Owned communities                                                   */
+/* ------------------------------------------------------------------ */
+
+// GET /api/orgs/:id/communities - communities the org owns (superadmin or org member)
 router.get('/api/orgs/:id/communities', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
-		const communities = await getHubCommunities(req.params.id);
+		await requireOrgMember(req, req.params.id);
+		const communities = await getOrgCommunities(req.params.id);
 		return res.status(200).json(communities);
 	} catch (err) {
 		return next(err);
 	}
 });
 
-// POST /api/orgs/:id/communities - add community to org (superadmin or manager)
+// POST /api/orgs/:id/communities - give a community to the org (superadmin, until invites exist)
+// body: { communityId } or { subdomain }
 router.post('/api/orgs/:id/communities', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireSuperAdmin(req);
 		let { communityId } = req.body;
 		const { subdomain } = req.body;
 		if (!communityId && subdomain) {
@@ -313,17 +351,19 @@ router.post('/api/orgs/:id/communities', async (req, res, next) => {
 		if (!communityId) {
 			return res.status(400).json({ error: 'communityId or subdomain is required' });
 		}
-		const record = await addCommunityToOrg(req.params.id, communityId);
-		return res.status(201).json(record);
+		if (!(await addCommunityToOrg(req.params.id, communityId))) {
+			throw new NotFoundError();
+		}
+		return res.status(201).json({ success: true });
 	} catch (err) {
 		return next(err);
 	}
 });
 
-// DELETE /api/orgs/:id/communities/:communityId - remove community from org (superadmin or manager)
+// DELETE /api/orgs/:id/communities/:communityId - release a community from the org (org admin)
 router.delete('/api/orgs/:id/communities/:communityId', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireOrgAdmin(req, req.params.id);
 		await removeCommunityFromOrg(req.params.id, req.params.communityId);
 		return res.status(200).json({ success: true });
 	} catch (err) {
@@ -338,7 +378,7 @@ router.get('/api/orgs/slug/:slug/data', async (req, res, next) => {
 		const { slug } = req.params;
 		const org = await getOrgBySlug(slug);
 		if (!org) throw new NotFoundError();
-		const initialData = await requireSuperAdminOrOrgManager(req, org.id);
+		const initialData = await requireOrgMember(req, org.id);
 
 		// Inactive orgs: only superadmins can access the dashboard
 		if (!org.isActive && !initialData.loginData.isSuperAdmin) {
@@ -352,6 +392,7 @@ router.get('/api/orgs/slug/:slug/data', async (req, res, next) => {
 			startDate,
 			endDate,
 			userId: initialData.loginData.id,
+			isSuperAdmin: initialData.loginData.isSuperAdmin,
 		});
 		if (!orgData) throw new NotFoundError();
 		return res.status(200).json(orgData);
@@ -360,86 +401,31 @@ router.get('/api/orgs/slug/:slug/data', async (req, res, next) => {
 	}
 });
 
-// PUT /api/orgs/:id/communities/:communityId — update HubCommunity settings
-// body: { showOnLandingPage?, dataAccess? }
-router.put('/api/orgs/:id/communities/:communityId', async (req, res, next) => {
+/* ------------------------------------------------------------------ */
+/* Org members                                                         */
+/* ------------------------------------------------------------------ */
+
+// GET /api/orgs/:id/members (superadmin or org member)
+router.get('/api/orgs/:id/members', async (req, res, next) => {
 	try {
-		const initialData = await requireSuperAdminOrOrgManager(req, req.params.id);
-		const { orgId, communityId } = {
-			orgId: req.params.id,
-			communityId: req.params.communityId,
-		};
-		const record = await HubCommunity.findOne({ where: { orgId, communityId } });
-		if (!record) {
-			throw new NotFoundError();
-		}
-
-		const updates: Record<string, any> = {};
-
-		// showOnLandingPage — any org manager can toggle
-		if (typeof req.body.showOnLandingPage === 'boolean') {
-			updates.showOnLandingPage = req.body.showOnLandingPage;
-		}
-
-		// dataAccess — org managers can request; granting requires community admin or superadmin
-		if (req.body.dataAccess) {
-			const { dataAccess } = req.body;
-			if (dataAccess === 'requested' && record.dataAccess === 'none') {
-				// Org manager requesting access
-				updates.dataAccess = 'requested';
-			} else if (dataAccess === 'granted') {
-				// Must be superadmin, or both org manager AND community admin
-				if (!initialData.loginData.isSuperAdmin) {
-					const member = await Member.findOne({
-						where: {
-							userId: initialData.loginData.id!,
-							communityId,
-							permissions: 'admin',
-						},
-					});
-					if (!member) {
-						return res.status(403).json({
-							error: 'Must be a community admin to grant data access',
-						});
-					}
-				}
-				updates.dataAccess = 'granted';
-			} else if (dataAccess === 'none') {
-				// Org manager can withdraw request, or revoke granted access
-				updates.dataAccess = 'none';
-			}
-		}
-
-		if (Object.keys(updates).length > 0) {
-			await record.update(updates);
-		}
-		return res.status(200).json(record.toJSON());
+		await requireOrgMember(req, req.params.id);
+		const members = await getOrgMembers(req.params.id);
+		return res.status(200).json(members);
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/* ------------------------------------------------------------------ */
-/* Org Managers — superadmin or org manager                    */
-/* ------------------------------------------------------------------ */
-
-// GET /api/orgs/:id/managers
-router.get('/api/orgs/:id/managers', async (req, res, next) => {
+// POST /api/orgs/:id/members — body: { slug } (user slug) or { userId }, and permissions
+// Adds the member, or changes the level of an existing one (superadmin or org admin)
+router.post('/api/orgs/:id/members', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
-		const managers = await getOrgMembers(req.params.id);
-		return res.status(200).json(managers);
-	} catch (err) {
-		return next(err);
-	}
-});
-
-// POST /api/orgs/:id/managers — body: { slug } (user slug) or { userId }
-router.post('/api/orgs/:id/managers', async (req, res, next) => {
-	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		const initialData = await requireOrgAdmin(req, req.params.id);
 		let { userId } = req.body;
-		const { slug } = req.body;
+		const { slug, permissions = 'view' } = req.body;
+		if (!isMemberPermission(permissions)) {
+			return res.status(400).json({ error: `Unknown permission level "${permissions}"` });
+		}
 		if (!userId && slug) {
 			const user = await User.findOne({
 				where: { slug: slug.toLowerCase() },
@@ -453,17 +439,25 @@ router.post('/api/orgs/:id/managers', async (req, res, next) => {
 		if (!userId) {
 			return res.status(400).json({ error: 'userId or slug is required' });
 		}
-		const record = await addOrgMember(req.params.id, userId);
+		if (permissions !== 'admin') {
+			await assertNotLastAdmin(req.params.id, userId, initialData.loginData.isSuperAdmin);
+		}
+		const record = await addOrgMember(req.params.id, userId, permissions);
 		return res.status(201).json(record);
 	} catch (err) {
 		return next(err);
 	}
 });
 
-// DELETE /api/orgs/:id/managers/:userId
-router.delete('/api/orgs/:id/managers/:userId', async (req, res, next) => {
+// DELETE /api/orgs/:id/members/:userId (superadmin or org admin)
+router.delete('/api/orgs/:id/members/:userId', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		const initialData = await requireOrgAdmin(req, req.params.id);
+		await assertNotLastAdmin(
+			req.params.id,
+			req.params.userId,
+			initialData.loginData.isSuperAdmin,
+		);
 		await removeOrgMember(req.params.id, req.params.userId);
 		return res.status(200).json({ success: true });
 	} catch (err) {
@@ -472,13 +466,13 @@ router.delete('/api/orgs/:id/managers/:userId', async (req, res, next) => {
 });
 
 /* ------------------------------------------------------------------ */
-/* Suggested Communities — superadmin or org manager                    */
+/* Suggested Communities — superadmin or org admin                     */
 /* ------------------------------------------------------------------ */
 
 // GET /api/orgs/:id/suggested-communities
 router.get('/api/orgs/:id/suggested-communities', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireOrgAdmin(req, req.params.id);
 		const suggestions = await getSuggestedCommunities(req.params.id);
 		return res.status(200).json(suggestions);
 	} catch (err) {
@@ -487,13 +481,13 @@ router.get('/api/orgs/:id/suggested-communities', async (req, res, next) => {
 });
 
 /* ------------------------------------------------------------------ */
-/* Curated Pubs — superadmin or org manager                            */
+/* Featured Pubs — from communities the org owns                       */
 /* ------------------------------------------------------------------ */
 
-// GET /api/orgs/:id/pubs — list curated pubs for this org
+// GET /api/orgs/:id/pubs — list featured pubs for this org (superadmin or org member)
 router.get('/api/orgs/:id/pubs', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireOrgMember(req, req.params.id);
 		const pubs = await getOrgFeaturedPubs(req.params.id);
 		return res.status(200).json(pubs);
 	} catch (err) {
@@ -501,18 +495,26 @@ router.get('/api/orgs/:id/pubs', async (req, res, next) => {
 	}
 });
 
-// POST /api/orgs/:id/pubs — add a pub to the org's curated list
+// POST /api/orgs/:id/pubs — feature a pub from an owned community (superadmin or org admin)
 // body: { pubId, rank?, showOnLandingPage? }
 router.post('/api/orgs/:id/pubs', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireOrgAdmin(req, req.params.id);
 		const { pubId, rank, showOnLandingPage } = req.body;
 		if (!pubId) {
 			return res.status(400).json({ error: 'pubId is required' });
 		}
-		const pub = await Pub.findByPk(pubId, { attributes: ['id'] });
+		const pub = await Pub.findByPk(pubId, {
+			attributes: ['id'],
+			include: [{ model: Community, as: 'community', attributes: ['orgId'] }],
+		});
 		if (!pub) {
 			return res.status(404).json({ error: 'Pub not found' });
+		}
+		if (pub.community?.orgId !== req.params.id) {
+			return res
+				.status(400)
+				.json({ error: 'Only pubs from communities this org owns can be featured' });
 		}
 		const record = await addPubToOrg(req.params.id, pubId, { rank, showOnLandingPage });
 		return res.status(201).json(record);
@@ -521,10 +523,10 @@ router.post('/api/orgs/:id/pubs', async (req, res, next) => {
 	}
 });
 
-// PUT /api/orgs/:id/pubs/:pubId — update OrgFeaturedPub settings (rank, showOnLandingPage, request/grant dataAccess)
+// PUT /api/orgs/:id/pubs/:pubId — update rank or showOnLandingPage (superadmin or org admin)
 router.put('/api/orgs/:id/pubs/:pubId', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireOrgAdmin(req, req.params.id);
 		const record = await OrgFeaturedPub.findOne({
 			where: { orgId: req.params.id, pubId: req.params.pubId },
 		});
@@ -538,46 +540,6 @@ router.put('/api/orgs/:id/pubs/:pubId', async (req, res, next) => {
 		if (typeof req.body.rank === 'string') {
 			updates.rank = req.body.rank;
 		}
-		// Org managers can request data access (none → requested)
-		if (req.body.dataAccess === 'requested' && record.dataAccess === 'none') {
-			updates.dataAccess = 'requested';
-		}
-		// Superadmins, pub admins/managers, and community admins can directly grant/revoke
-		if (req.body.dataAccess === 'granted' || req.body.dataAccess === 'none') {
-			const initialData = await getInitialData(req);
-			let canGrant = initialData.loginData.isSuperAdmin;
-			if (!canGrant && initialData.loginData.id) {
-				// Check pub-level manage/admin
-				const pubMember = await Member.findOne({
-					where: {
-						userId: initialData.loginData.id,
-						pubId: req.params.pubId,
-						permissions: ['manage', 'admin'],
-					},
-				});
-				if (pubMember) {
-					canGrant = true;
-				} else {
-					// Check community-level admin
-					const pub = await Pub.findByPk(req.params.pubId, {
-						attributes: ['communityId'],
-					});
-					if (pub) {
-						const communityMember = await Member.findOne({
-							where: {
-								userId: initialData.loginData.id,
-								communityId: pub.communityId,
-								permissions: 'admin',
-							},
-						});
-						if (communityMember) canGrant = true;
-					}
-				}
-			}
-			if (canGrant) {
-				updates.dataAccess = req.body.dataAccess;
-			}
-		}
 		if (Object.keys(updates).length > 0) {
 			await record.update(updates);
 		}
@@ -587,10 +549,10 @@ router.put('/api/orgs/:id/pubs/:pubId', async (req, res, next) => {
 	}
 });
 
-// DELETE /api/orgs/:id/pubs/:pubId — remove a pub from the org's curated list
+// DELETE /api/orgs/:id/pubs/:pubId — stop featuring a pub (superadmin or org admin)
 router.delete('/api/orgs/:id/pubs/:pubId', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireOrgAdmin(req, req.params.id);
 		await removePubFromOrg(req.params.id, req.params.pubId);
 		return res.status(200).json({ success: true });
 	} catch (err) {
@@ -598,216 +560,14 @@ router.delete('/api/orgs/:id/pubs/:pubId', async (req, res, next) => {
 	}
 });
 
-// GET /api/orgs/:id/suggested-pubs
+// GET /api/orgs/:id/suggested-pubs — search the owned communities' pubs (superadmin or org admin)
 router.get('/api/orgs/:id/suggested-pubs', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgManager(req, req.params.id);
+		await requireOrgAdmin(req, req.params.id);
 		const limit = Math.min(parseInt(String(req.query.limit), 10) || 50, 200);
 		const offset = Math.max(parseInt(String(req.query.offset), 10) || 0, 0);
-		const excludeCommunityIds = req.query.excludeCommunityIds
-			? String(req.query.excludeCommunityIds).split(',')
-			: [];
-		const result = await getSuggestedPubs(req.params.id, {
-			limit,
-			offset,
-			excludeCommunityIds,
-		});
+		const result = await getSuggestedPubs(req.params.id, { limit, offset });
 		return res.status(200).json(result);
-	} catch (err) {
-		return next(err);
-	}
-});
-
-/* ------------------------------------------------------------------ */
-/* Community curation endpoints                                        */
-/* ------------------------------------------------------------------ */
-
-/** Helper: require that the requesting user is a community admin or superadmin */
-const requireCommunityAdmin = async (req, communityId: string) => {
-	const initialData = await getInitialData(req);
-	if (initialData.loginData.isSuperAdmin) {
-		return initialData;
-	}
-	if (!initialData.loginData.id) {
-		throw new ForbiddenError();
-	}
-	const member = await Member.findOne({
-		where: {
-			userId: initialData.loginData.id,
-			communityId,
-			permissions: 'admin',
-		},
-	});
-	if (!member) {
-		throw new ForbiddenError();
-	}
-	return initialData;
-};
-
-// GET /api/communities/:communityId/curating-orgs — list orgs curating this community
-// Includes a `rejected` flag per org if the community has opted out of that org
-// Includes `dataAccess` from HubCommunity so community admins can approve/deny requests
-router.get('/api/communities/:communityId/curating-orgs', async (req, res, next) => {
-	try {
-		await requireCommunityAdmin(req, req.params.communityId);
-		const orgs = await getOrgsForCommunity(req.params.communityId);
-		// Get all opt-outs for this community
-		const optOuts = await HubOptOut.findAll({
-			where: { communityId: req.params.communityId },
-			attributes: ['orgId'],
-		});
-		const rejectedOrgIds = new Set(optOuts.map((o) => (o as any).orgId));
-		// Get data access status for each org
-		const hubCommunities = await HubCommunity.findAll({
-			where: { communityId: req.params.communityId },
-			attributes: ['orgId', 'dataAccess'],
-		});
-		const dataAccessMap = new Map(
-			hubCommunities.map((hc) => [(hc as any).orgId, (hc as any).dataAccess]),
-		);
-		const orgsWithStatus = orgs.map((org: any) => ({
-			...org,
-			rejected: rejectedOrgIds.has(org.id),
-			dataAccess: dataAccessMap.get(org.id) || 'none',
-		}));
-		return res.status(200).json(orgsWithStatus);
-	} catch (err) {
-		return next(err);
-	}
-});
-
-// POST /api/communities/:communityId/org-opt-out — reject a specific org (community admin)
-// body: { orgId }
-router.post('/api/communities/:communityId/org-opt-out', async (req, res, next) => {
-	try {
-		await requireCommunityAdmin(req, req.params.communityId);
-		const { orgId } = req.body;
-		if (!orgId) {
-			return res.status(400).json({ error: 'orgId is required' });
-		}
-		await HubOptOut.findOrCreate({
-			where: { communityId: req.params.communityId, orgId },
-		});
-		return res.status(200).json({ rejected: true });
-	} catch (err) {
-		return next(err);
-	}
-});
-
-// DELETE /api/communities/:communityId/org-opt-out/:orgId — un-reject an org
-router.delete('/api/communities/:communityId/org-opt-out/:orgId', async (req, res, next) => {
-	try {
-		await requireCommunityAdmin(req, req.params.communityId);
-		await HubOptOut.destroy({
-			where: {
-				communityId: req.params.communityId,
-				orgId: req.params.orgId,
-			},
-		});
-		return res.status(200).json({ rejected: false });
-	} catch (err) {
-		return next(err);
-	}
-});
-
-// PUT /api/communities/:communityId/curating-orgs/:orgId/data-access — grant or deny data access (community admin)
-// body: { dataAccess: 'granted' | 'none' }
-router.put(
-	'/api/communities/:communityId/curating-orgs/:orgId/data-access',
-	async (req, res, next) => {
-		try {
-			await requireCommunityAdmin(req, req.params.communityId);
-			const { dataAccess } = req.body;
-			if (!dataAccess || !['granted', 'none'].includes(dataAccess)) {
-				return res.status(400).json({ error: "dataAccess must be 'granted' or 'none'" });
-			}
-			const record = await HubCommunity.findOne({
-				where: {
-					orgId: req.params.orgId,
-					communityId: req.params.communityId,
-				},
-			});
-			if (!record) {
-				throw new NotFoundError();
-			}
-			await record.update({ dataAccess });
-			return res.status(200).json({ dataAccess: record.dataAccess });
-		} catch (err) {
-			return next(err);
-		}
-	},
-);
-
-/* ------------------------------------------------------------------ */
-/* Pub curation endpoints (pub-scope "Curated By")                     */
-/* ------------------------------------------------------------------ */
-
-/** Helper: require that the requesting user is a pub admin/manager or superadmin */
-const requirePubManager = async (req, pubId: string) => {
-	const initialData = await getInitialData(req);
-	if (initialData.loginData.isSuperAdmin) {
-		return initialData;
-	}
-	if (!initialData.loginData.id) {
-		throw new ForbiddenError();
-	}
-	const member = await Member.findOne({
-		where: {
-			userId: initialData.loginData.id,
-			pubId,
-			permissions: ['manage', 'admin'],
-		},
-	});
-	if (!member) {
-		throw new ForbiddenError();
-	}
-	return initialData;
-};
-
-// GET /api/pubs/:pubId/curating-orgs — list orgs curating this pub
-router.get('/api/pubs/:pubId/curating-orgs', async (req, res, next) => {
-	try {
-		await requirePubManager(req, req.params.pubId);
-		const { getOrgsForPub } = await import('server/orgFeaturedPub/queries');
-		const orgs = await getOrgsForPub(req.params.pubId);
-		return res.status(200).json(orgs);
-	} catch (err) {
-		return next(err);
-	}
-});
-
-// DELETE /api/pubs/:pubId/curating-orgs/:orgId — remove this pub from an org (pub manager opt-out)
-router.delete('/api/pubs/:pubId/curating-orgs/:orgId', async (req, res, next) => {
-	try {
-		await requirePubManager(req, req.params.pubId);
-		const { removePubFromOrg } = await import('server/orgFeaturedPub/queries');
-		await removePubFromOrg(req.params.orgId, req.params.pubId);
-		return res.status(200).json({ success: true });
-	} catch (err) {
-		return next(err);
-	}
-});
-
-// PUT /api/pubs/:pubId/curating-orgs/:orgId/data-access — grant or revoke data access (pub manager)
-// body: { dataAccess: 'granted' | 'none' }
-router.put('/api/pubs/:pubId/curating-orgs/:orgId/data-access', async (req, res, next) => {
-	try {
-		await requirePubManager(req, req.params.pubId);
-		const { dataAccess } = req.body;
-		if (!dataAccess || !['granted', 'none'].includes(dataAccess)) {
-			return res.status(400).json({ error: "dataAccess must be 'granted' or 'none'" });
-		}
-		const record = await OrgFeaturedPub.findOne({
-			where: {
-				orgId: req.params.orgId,
-				pubId: req.params.pubId,
-			},
-		});
-		if (!record) {
-			throw new NotFoundError();
-		}
-		await record.update({ dataAccess });
-		return res.status(200).json({ dataAccess: record.dataAccess });
 	} catch (err) {
 		return next(err);
 	}

@@ -23,7 +23,7 @@ export type SuggestedCommunity = {
 	pubCount: number;
 	managerCount: number;
 	authorCount: number;
-	/** true if the community is already in HubCommunities for this org */
+	/** true if this org already owns the community */
 	alreadyAdded: boolean;
 };
 
@@ -171,7 +171,7 @@ export const getSuggestedCommunities = async (orgId: string): Promise<SuggestedC
 	});
 	replacements.orgId = orgId;
 
-	// 6. Fetch community info (excluding opted-out communities)
+	// 6. Fetch community info (excluding communities another org owns)
 	const communityQuery = `
 		SELECT
 			"Communities"."id" AS "communityId",
@@ -183,19 +183,13 @@ export const getSuggestedCommunities = async (orgId: string): Promise<SuggestedC
 			"Communities"."accentColorDark",
 			"Communities"."accentColorLight",
 			"Communities"."createdAt",
-			CASE WHEN oc."communityId" IS NOT NULL THEN true ELSE false END AS "alreadyAdded"
+			("Communities"."orgId" IS NOT NULL AND "Communities"."orgId" = :orgId) AS "alreadyAdded"
 		FROM "Communities"
-		LEFT JOIN "HubCommunities" oc
-			ON oc."communityId" = "Communities"."id"
-			AND oc."orgId" = :orgId
-		LEFT JOIN "HubOptOuts" coo
-			ON coo."communityId" = "Communities"."id"
-			AND coo."orgId" = :orgId
 		LEFT JOIN "SpamTags" st
 			ON st."id" = "Communities"."spamTagId"
 		WHERE "Communities"."id" IN (${placeholders})
-		  AND coo."id" IS NULL
-		  AND (st."status" IS NULL OR st."status" != 'confirmed')
+		  AND ("Communities"."orgId" IS NULL OR "Communities"."orgId" = :orgId)
+		  AND (st."status" IS NULL OR st."status" != 'confirmed-spam')
 		ORDER BY "Communities"."title" ASC
 	`;
 

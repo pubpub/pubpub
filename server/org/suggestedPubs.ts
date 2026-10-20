@@ -5,7 +5,8 @@
  * Pubs.searchVector column (GIN-indexed, maintained by triggers). Results
  * include a ts_headline snippet showing where the match occurred.
  *
- * Only publicly released pubs are returned. Spam communities are excluded.
+ * Only publicly released pubs from communities the org owns are returned, since an org
+ * features only its own pubs. Spam communities are excluded.
  */
 import { QueryTypes } from 'sequelize';
 
@@ -58,11 +59,10 @@ const buildTsQuery = (searchTerm: string): string | null => {
  */
 export const getSuggestedPubs = async (
 	orgId: string,
-	opts: { limit?: number; offset?: number; excludeCommunityIds?: string[] } = {},
+	opts: { limit?: number; offset?: number } = {},
 ): Promise<SuggestedPubsResult> => {
 	const limit = opts.limit ?? 50;
 	const offset = opts.offset ?? 0;
-	const excludeCommunityIds = opts.excludeCommunityIds ?? [];
 	// 1. Get the org's configured search terms
 	const org = await sequelize.query<{ pubSearchTerms: string[] | null }>(
 		`SELECT "pubSearchTerms" FROM "Orgs" WHERE "id" = :orgId`,
@@ -108,11 +108,11 @@ export const getSuggestedPubs = async (
 			INNER JOIN "Communities" c ON c.id = p."communityId"
 			LEFT JOIN "SpamTags" st ON st.id = c."spamTagId"
 			LEFT JOIN "OrgFeaturedPubs" hp ON hp."pubId" = p.id AND hp."orgId" = :orgId
-			WHERE (st.status IS NULL OR st.status != 'confirmed')
+			WHERE c."orgId" = :orgId
+			  AND (st.status IS NULL OR st.status != 'confirmed-spam')
 			  AND p."searchVector" IS NOT NULL
 			  AND p."searchVector" @@ to_tsquery('english', :tsQuery)
 			  AND EXISTS (SELECT 1 FROM "Releases" r WHERE r."pubId" = p.id)
-			  ${excludeCommunityIds.length > 0 ? 'AND p."communityId" NOT IN (:excludeCommunityIds)' : ''}
 			ORDER BY rank DESC
 			LIMIT 200
 		),
@@ -150,9 +150,6 @@ export const getSuggestedPubs = async (
 	`;
 
 	const replacements: Record<string, any> = { tsQuery: combinedTsQuery, orgId, limit, offset };
-	if (excludeCommunityIds.length > 0) {
-		replacements.excludeCommunityIds = excludeCommunityIds;
-	}
 
 	const results = await sequelize.query<SuggestedPub & { totalCount: string }>(query, {
 		replacements,

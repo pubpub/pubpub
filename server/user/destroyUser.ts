@@ -73,27 +73,27 @@ export const getUserDeletionAudit = async (userId: string) => {
 				).map((c) => ({ id: c.id, title: c.title, subdomain: c.subdomain }))
 			: [];
 
-	// Find orgs where this user is the only manager
-	const orgMemberships = await OrgMember.findAll({
-		where: { userId },
+	// Find orgs where this user is the only admin
+	const orgAdminships = await OrgMember.findAll({
+		where: { userId, permissions: 'admin' },
 		attributes: ['orgId'],
 	});
 
-	const otherManagerCounts = await Promise.all(
-		orgMemberships.map((hm) =>
+	const otherOrgAdminCounts = await Promise.all(
+		orgAdminships.map((m) =>
 			OrgMember.count({
-				where: { orgId: (hm as any).orgId, userId: { [Op.ne]: userId } },
-			}).then((count) => ({ orgId: (hm as any).orgId, count })),
+				where: { orgId: m.orgId, userId: { [Op.ne]: userId }, permissions: 'admin' },
+			}).then((count) => ({ orgId: m.orgId, count })),
 		),
 	);
 
-	const soleManagerOrgIds = otherManagerCounts.filter((r) => r.count === 0).map((r) => r.orgId);
+	const soleAdminOrgIds = otherOrgAdminCounts.filter((r) => r.count === 0).map((r) => r.orgId);
 
-	const soleManagerOrgs =
-		soleManagerOrgIds.length > 0
+	const soleAdminOrgs =
+		soleAdminOrgIds.length > 0
 			? (
 					await Org.findAll({
-						where: { id: soleManagerOrgIds },
+						where: { id: soleAdminOrgIds },
 						attributes: ['id', 'title', 'slug'],
 					})
 				).map((h) => ({ id: h.id, title: (h as any).title, slug: (h as any).slug }))
@@ -107,7 +107,7 @@ export const getUserDeletionAudit = async (userId: string) => {
 		collectionAttributionCount,
 		commentCount,
 		soleAdminCommunities,
-		soleManagerOrgs,
+		soleAdminOrgs,
 	};
 };
 

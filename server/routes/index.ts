@@ -12,7 +12,6 @@ import { router as dashboardActivityRouter } from './dashboardActivity';
 import { router as dashboardCollectionLayoutRouter } from './dashboardCollectionLayout';
 import { router as dashboardCollectionOverviewRouter } from './dashboardCollectionOverview';
 import { router as dashboardCommunityOverviewRouter } from './dashboardCommunityOverview';
-import { router as dashboardCuratedByRouter } from './dashboardCuratedBy';
 import { router as dashboardCustomScriptsRouter } from './dashboardCustomScripts';
 import { router as dashboardDiscussionsRouter } from './dashboardDiscussions';
 import { router as dashboardEdgesRouter } from './dashboardEdges';
@@ -75,7 +74,6 @@ rootRouter
 	.use(dashboardImpact2Router)
 	.use(dashboardMembersRouter)
 	.use(dashboardCommunityOverviewRouter)
-	.use(dashboardCuratedByRouter)
 	.use(dashboardCollectionOverviewRouter)
 	.use(dashboardCustomScriptsRouter)
 	.use(dashboardPubOverviewRouter)

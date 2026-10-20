@@ -46,11 +46,13 @@ setup(beforeAll, async () => {
 		slug: `test-org-${uuid.v4().slice(0, 8)}`,
 		title: 'Test Org',
 		communityCreationEnabled: true,
+		kfOrgId: 'kf-test-account',
 	});
 	otherOrg = await Org.create({
 		slug: `other-org-${uuid.v4().slice(0, 8)}`,
 		title: 'Other Org',
 		communityCreationEnabled: true,
+		kfOrgId: 'kf-test-account',
 	});
 });
 teardown(afterAll);
@@ -408,6 +410,8 @@ describe('POST /api/communities with templateId', () => {
 		const community = await Community.findOne({ where: { subdomain } });
 		expect(community).toBeTruthy();
 		expect(community!.heroTitle).toBe('From Template');
+		// A community created through an org belongs to it
+		expect(community!.orgId).toBe(testOrg.id);
 
 		// Verify page was created
 		const aboutPage = await Page.findOne({

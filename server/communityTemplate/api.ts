@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { isUserOrgMember } from 'server/org/queries';
+import { isUserOrgAdmin } from 'server/org/queries';
 import { ForbiddenError, HTTPStatusError, NotFoundError } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 
@@ -31,13 +31,13 @@ const requireSuperAdmin = async (req: any) => {
 	return initialData;
 };
 
-const requireSuperAdminOrOrgMember = async (req: any, orgId: string) => {
+const requireSuperAdminOrOrgAdmin = async (req: any, orgId: string) => {
 	const initialData = await getInitialData(req);
 	if (initialData.loginData.isSuperAdmin) {
 		return initialData;
 	}
 	if (initialData.loginData.id) {
-		const isMgr = await isUserOrgMember(initialData.loginData.id, orgId);
+		const isMgr = await isUserOrgAdmin(initialData.loginData.id, orgId);
 		if (isMgr) {
 			return initialData;
 		}
@@ -46,8 +46,8 @@ const requireSuperAdminOrOrgMember = async (req: any, orgId: string) => {
 };
 
 /**
- * For template-level operations: allows superadmin, or org manager if the template
- * belongs to an org they manage.
+ * For template-level operations: allows superadmin, or an org admin if the template
+ * belongs to their org.
  */
 const requireSuperAdminOrTemplateOwner = async (req: any, templateId: string) => {
 	const initialData = await getInitialData(req);
@@ -59,7 +59,7 @@ const requireSuperAdminOrTemplateOwner = async (req: any, templateId: string) =>
 		throw new NotFoundError();
 	}
 	if (template.orgId && initialData.loginData.id) {
-		const isMgr = await isUserOrgMember(initialData.loginData.id, template.orgId);
+		const isMgr = await isUserOrgAdmin(initialData.loginData.id, template.orgId);
 		if (isMgr) {
 			return initialData;
 		}
@@ -199,7 +199,7 @@ router.delete('/api/communityTemplates/:id', async (req, res, next) => {
 // GET /api/orgs/:orgId/templates — list templates belonging to this org
 router.get('/api/orgs/:orgId/templates', async (req, res, next) => {
 	try {
-		await requireSuperAdminOrOrgMember(req, req.params.orgId);
+		await requireSuperAdminOrOrgAdmin(req, req.params.orgId);
 		const templates = await getTemplatesForOrg(req.params.orgId);
 		return res.status(200).json(templates.map((t) => t.toJSON()));
 	} catch (err) {
@@ -210,7 +210,7 @@ router.get('/api/orgs/:orgId/templates', async (req, res, next) => {
 // POST /api/orgs/:orgId/templates — create a new template owned by this org
 router.post('/api/orgs/:orgId/templates', async (req, res, next) => {
 	try {
-		const initialData = await requireSuperAdminOrOrgMember(req, req.params.orgId);
+		const initialData = await requireSuperAdminOrOrgAdmin(req, req.params.orgId);
 		const template = await createTemplate({
 			...pickTemplateFields(req.body),
 			orgId: req.params.orgId,
@@ -225,7 +225,7 @@ router.post('/api/orgs/:orgId/templates', async (req, res, next) => {
 // POST /api/orgs/:orgId/templates/from-community — clone template from community, owned by org
 router.post('/api/orgs/:orgId/templates/from-community', async (req, res, next) => {
 	try {
-		const initialData = await requireSuperAdminOrOrgMember(req, req.params.orgId);
+		const initialData = await requireSuperAdminOrOrgAdmin(req, req.params.orgId);
 		const { title, slug, description, includePages, includeCollections } = req.body;
 
 		const resolvedCommunityId = await resolveCommunityId(req.body);
