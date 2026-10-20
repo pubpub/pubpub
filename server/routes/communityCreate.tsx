@@ -2,14 +2,14 @@ import React from 'react';
 
 import { Router } from 'express';
 
-import { getActiveTemplatesForHub } from 'server/communityTemplate/queries';
+import { getActiveTemplatesForOrg } from 'server/communityTemplate/queries';
 import Html from 'server/Html';
 import {
-	getHubBySlug,
 	getHubCommunities,
-	getHubWithCommunities,
-	isUserHubManager,
-} from 'server/hub/queries';
+	getOrgBySlug,
+	getOrgWithCommunities,
+	isUserOrgMember,
+} from 'server/org/queries';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
@@ -22,36 +22,36 @@ router.get('/community/create', (req, res, next) => {
 		return next();
 	}
 
-	const hubSlug = req.query.hub as string | undefined;
+	const orgSlug = req.query.org as string | undefined;
 
 	return Promise.all([
 		getInitialData(req),
-		hubSlug ? getHubBySlug(hubSlug) : Promise.resolve(null),
+		orgSlug ? getOrgBySlug(orgSlug) : Promise.resolve(null),
 	])
-		.then(async ([initialData, hubData]) => {
-			const templates = hubData ? await getActiveTemplatesForHub(hubData.id) : [];
+		.then(async ([initialData, orgData]) => {
+			const templates = orgData ? await getActiveTemplatesForOrg(orgData.id) : [];
 
-			// Fetch hub communities for the clone-from-community picker
+			// Fetch org communities for the clone-from-community picker
 			let hubCommunities: {
 				id: string;
 				title: string;
 				subdomain: string;
 				avatar?: string;
 			}[] = [];
-			if (hubData && hubData.communityCloneAccess !== 'off') {
+			if (orgData && orgData.communityCloneAccess !== 'off') {
 				const userId = initialData.loginData?.id;
 				const isSuperAdmin = initialData.loginData?.isSuperAdmin;
-				const isManager = userId ? await isUserHubManager(userId, hubData.id) : false;
+				const isManager = userId ? await isUserOrgMember(userId, orgData.id) : false;
 
 				// 'managers' mode: only load communities for managers/superadmins
 				// 'everyone' mode: load for all users
 				const canSeeClone =
-					hubData.communityCloneAccess === 'everyone' || isSuperAdmin || isManager;
+					orgData.communityCloneAccess === 'everyone' || isSuperAdmin || isManager;
 
 				if (canSeeClone) {
 					if (isSuperAdmin || isManager) {
-						// Managers/superadmins see all hub communities
-						const allCommunities = await getHubCommunities(hubData.id);
+						// Managers/superadmins see all org communities
+						const allCommunities = await getHubCommunities(orgData.id);
 						hubCommunities = allCommunities.map((c: any) => ({
 							id: c.id,
 							title: c.title,
@@ -60,9 +60,9 @@ router.get('/community/create', (req, res, next) => {
 						}));
 					} else {
 						// Regular users see only landing-page-visible communities
-						const hubWithCommunities = await getHubWithCommunities(hubSlug!);
-						if (hubWithCommunities?.communities) {
-							hubCommunities = hubWithCommunities.communities.map((c: any) => ({
+						const orgWithCommunities = await getOrgWithCommunities(orgSlug!);
+						if (orgWithCommunities?.communities) {
+							hubCommunities = orgWithCommunities.communities.map((c: any) => ({
 								id: c.id,
 								title: c.title,
 								subdomain: c.subdomain,
@@ -73,15 +73,15 @@ router.get('/community/create', (req, res, next) => {
 				}
 			}
 
-			const title = hubData
-				? `Create Community · ${hubData.title}`
+			const title = orgData
+				? `Create Community · ${orgData.title}`
 				: 'Create New Community · PubPub';
 			return renderToNodeStream(
 				res,
 				<Html
 					chunkName="CommunityCreate"
 					initialData={initialData}
-					viewData={{ hubData, templates, hubCommunities }}
+					viewData={{ orgData, templates, hubCommunities }}
 					headerComponents={generateMetaComponents({
 						initialData,
 						title,

@@ -388,7 +388,7 @@ router.get('/api/kf/branding', requireInternalKey, async (req: any, res: any) =>
 	}
 });
 
-// ─── Community detail (for Hubs dashboard) ───────────────────────────
+// ─── Community detail (for the standalone kf/hubs app) ───────────────
 
 router.get('/api/kf/community/:id/detail', requireInternalKey, async (req: any, res: any) => {
 	try {

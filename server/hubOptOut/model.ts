@@ -15,12 +15,12 @@ import {
 } from 'sequelize-typescript';
 
 import { Community } from '../community/model';
-import { Hub } from '../hub/model';
+import { Org } from '../org/model';
 
 /**
- * Per-hub opt-out.
- * When a row exists for (communityId, hubId), that community
- * has rejected association with that specific hub.
+ * Per-org opt-out.
+ * When a row exists for (communityId, orgId), that community
+ * has rejected association with that specific org.
  */
 @Table({ tableName: 'HubOptOuts' })
 export class HubOptOut extends Model<
@@ -42,15 +42,15 @@ export class HubOptOut extends Model<
 	declare communityId: string;
 
 	@AllowNull(false)
-	@ForeignKey(() => Hub)
+	@ForeignKey(() => Org)
 	@Column(DataType.UUID)
-	declare hubId: string;
+	declare orgId: string;
 
 	@BelongsTo(() => Community, { onDelete: 'CASCADE' })
 	declare community?: Community;
 
-	@BelongsTo(() => Hub, { onDelete: 'CASCADE' })
-	declare hub?: Hub;
+	@BelongsTo(() => Org, { onDelete: 'CASCADE' })
+	declare org?: Org;
 
 	declare createdAt: CreationOptional<Date>;
 	declare updatedAt: CreationOptional<Date>;

@@ -119,7 +119,7 @@ const TemplatePicker = ({
 						<div className="template-card-body">
 							<div className="template-card-title">Clone from Community</div>
 							<div className="template-card-desc">
-								Copy the layout and branding from an existing community in this hub.
+								Copy the layout and branding from an existing community in this org.
 							</div>
 						</div>
 						<div className="template-card-radio">

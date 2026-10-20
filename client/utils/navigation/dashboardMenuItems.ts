@@ -68,7 +68,7 @@ const curatedBy: MenuItem = {
 	icon: 'community',
 	dashboardMode: 'curatedBy',
 	requiredPermission: 'manage',
-	shown: (context) => context.scopeData.activeCounts.curatingHubCount > 0,
+	shown: (context) => context.scopeData.activeCounts.curatingOrgCount > 0,
 };
 
 const impact: MenuItem = {

@@ -4,7 +4,6 @@ import { Op } from 'sequelize';
 
 import { FacetsError } from 'facets';
 import { fetchFacetsForScope } from 'server/facets';
-import { HubPub } from 'server/hubPub/model';
 import {
 	Collection,
 	CollectionAttribution,
@@ -20,6 +19,7 @@ import {
 	Submission,
 	SubmissionWorkflow,
 } from 'server/models';
+import { OrgFeaturedPub } from 'server/orgFeaturedPub/model';
 import { isUserSuperAdmin } from 'server/user/queries';
 import { expect } from 'utils/assert';
 
@@ -119,20 +119,20 @@ const getActiveCounts = async (
 	scopeElements: types.ScopeData['elements'],
 ) => {
 	if (isDashboard) {
-		const [reviews, submissions, curatingHubCount] = await Promise.all([
+		const [reviews, submissions, curatingOrgCount] = await Promise.all([
 			getActiveReviewsCount(scopeElements),
 			getActiveSubmissionsCount(scopeElements),
 			scopeElements.activePub
-				? HubPub.count({
+				? OrgFeaturedPub.count({
 						where: { pubId: scopeElements.activePub.id },
 					})
 				: HubCommunity.count({
 						where: { communityId: scopeElements.activeCommunity.id },
 					}),
 		]);
-		return { reviews, submissions, curatingHubCount };
+		return { reviews, submissions, curatingOrgCount };
 	}
-	return { reviews: 0, submissions: 0, curatingHubCount: 0 };
+	return { reviews: 0, submissions: 0, curatingOrgCount: 0 };
 };
 
 const getFacets = async (includeFacets: boolean, scopeElements: types.ScopeData['elements']) => {
