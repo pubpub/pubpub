@@ -35,11 +35,13 @@ const host = 'www.pubpub.org';
 
 describe('org pages', () => {
 	it('serves the landing page and dashboard to superadmins and org managers', async () => {
-		for (const user of [models.superAdmin, models.orgManager]) {
-			const agent = await login(user);
-			await agent.get(`/org/${org.slug}`).set('Host', host).expect(200);
-			await agent.get(`/org/${org.slug}/data`).set('Host', host).expect(200);
-		}
+		await Promise.all(
+			[models.superAdmin, models.orgManager].map(async (user) => {
+				const agent = await login(user);
+				await agent.get(`/org/${org.slug}`).set('Host', host).expect(200);
+				await agent.get(`/org/${org.slug}/data`).set('Host', host).expect(200);
+			}),
+		);
 	});
 
 	it('hides org pages from other users during the private rollout', async () => {
