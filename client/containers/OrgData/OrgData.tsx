@@ -1715,8 +1715,9 @@ const SettingsTab = ({ orgData }: Props) => {
 					Members{memberSaved && <span className="settings-saved-msg">Saved!</span>}
 				</h3>
 				<p className="settings-help">
-					Admins manage this org: its members, communities, featured pubs, templates and
-					settings. Every member can see the dashboard.
+					Each member gets their level in every community this org owns. Admins also
+					manage the org itself: its members, communities, featured pubs, templates and
+					settings.
 				</p>
 				<div className="settings-row">
 					<UserAutocomplete onSelect={handleAddMember} disabled={memberLoading} />
@@ -1788,7 +1789,8 @@ const SettingsTab = ({ orgData }: Props) => {
 					{communitySaved && <span className="settings-saved-msg">Saved!</span>}
 				</h3>
 				<p className="settings-help">
-					Communities this org owns. Its dashboard and analytics cover them.
+					Communities this org owns. Org members get their level in each of them, and the
+					dashboard and analytics cover them.
 					{isSuperAdmin
 						? ' As a PubPub admin, you can add any community.'
 						: ' To add a community, ask PubPub support.'}
