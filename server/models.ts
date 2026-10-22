@@ -30,8 +30,6 @@ import { FeatureFlag } from './featureFlag/model';
 import { FeatureFlagCommunity } from './featureFlagCommunity/model';
 import { FeatureFlagUser } from './featureFlagUser/model';
 import { FtpTarget } from './ftpTarget/model';
-import { HubCommunity } from './hubCommunity/model';
-import { HubOptOut } from './hubOptOut/model';
 import { IntegrationDataOAuth1 } from './integrationDataOAuth1/model';
 import { LandingPageFeature } from './landingPageFeature/model';
 import { Member } from './member/model';
@@ -82,7 +80,6 @@ sequelize.addModels([
 	Commenter,
 	Community,
 	CrossrefDepositRecord,
-	HubOptOut,
 	CustomScript,
 	DepositTarget,
 	FtpTarget,
@@ -104,7 +101,6 @@ sequelize.addModels([
 	Member,
 	CommunityTemplate,
 	Org,
-	HubCommunity,
 	OrgMember,
 	OrgFeaturedPub,
 	Page,
@@ -186,7 +182,6 @@ export {
 	Commenter,
 	Community,
 	CrossrefDepositRecord,
-	HubOptOut,
 	CustomScript,
 	DepositTarget,
 	FtpTarget,
@@ -205,7 +200,6 @@ export {
 	LandingPageFeature,
 	Member,
 	Org,
-	HubCommunity,
 	OrgMember,
 	OrgFeaturedPub,
 	CommunityTemplate,

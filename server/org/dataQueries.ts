@@ -2,17 +2,18 @@
  * Rich data queries for the Org Data Dashboard (/org/:slug/data).
  * Pulls pubs, authors, releases, collections across all org communities.
  */
+
+import type { MemberPermission } from 'types';
+
 import { col, fn, Op, QueryTypes } from 'sequelize';
 
 import {
 	Collection,
 	CollectionPub,
 	Community,
-	HubCommunity,
-	HubOptOut,
 	Member,
 	Org,
-	OrgFeaturedPub,
+	OrgMember,
 	Pub,
 	PubAttribution,
 	Release,
@@ -86,7 +87,6 @@ export type OrgDataPayload = {
 		newestPub: string | null;
 		pageViews: number;
 		downloads: number;
-		dataAccess: 'none' | 'requested' | 'granted';
 		sparkline: Array<{ date: string; views: number }>;
 		managers: Array<{ name: string; avatar: string | null; slug: string | null }>;
 	}>;
@@ -104,71 +104,52 @@ export type OrgDataPayload = {
 		communityTitle: string;
 		pubCount: number;
 	}>;
-	grantableCommunityIds: string[];
-	grantablePubIds: string[];
+	/** The viewer's level in the org; superadmins count as admin */
+	viewerPermissions: MemberPermission | null;
 };
 
 export const getOrgDataDashboard = async (
 	slug: string,
-	opts?: { startDate?: string; endDate?: string; userId?: string | null },
+	opts?: {
+		startDate?: string;
+		endDate?: string;
+		userId?: string | null;
+		isSuperAdmin?: boolean;
+	},
 ): Promise<OrgDataPayload | null> => {
 	const org = await Org.findOne({ where: { slug } });
 	if (!org) return null;
 
-	// Get all community IDs + dataAccess from join table
-	const associations = await HubCommunity.findAll({
+	const viewerMembership =
+		opts?.userId && !opts.isSuperAdmin
+			? await OrgMember.findOne({ where: { orgId: org.id, userId: opts.userId } })
+			: null;
+	const viewerPermissions: MemberPermission | null = opts?.isSuperAdmin
+		? 'admin'
+		: (viewerMembership?.permissions ?? null);
+
+	const ownedCommunities = await Community.findAll({
 		where: { orgId: org.id },
-		attributes: ['dataAccess'],
-		include: [
-			{
-				model: Community,
-				attributes: [
-					'id',
-					'subdomain',
-					'domain',
-					'title',
-					'description',
-					'accentColorDark',
-					'accentColorLight',
-					'heroLogo',
-					'createdAt',
-				],
-				include: [
-					{
-						model: SpamTag,
-						as: 'spamTag',
-						attributes: ['status'],
-						required: false,
-					},
-				],
-			},
+		attributes: [
+			'id',
+			'subdomain',
+			'domain',
+			'title',
+			'description',
+			'accentColorDark',
+			'accentColorLight',
+			'heroLogo',
+			'createdAt',
 		],
+		include: [{ model: SpamTag, as: 'spamTag', attributes: ['status'], required: false }],
 	});
 
-	const allCommunities = associations.map((a) => (a as any).community).filter(Boolean);
-
-	// Filter out spam communities
-	const isSpam = (c: any) => c.spamTag?.status === 'confirmed';
-
-	// Build a map of communityId -> dataAccess from the join table
-	const dataAccessMap = new Map<string, string>();
-	for (const a of associations) {
-		const aj = a as any;
-		if (aj.community) {
-			dataAccessMap.set(aj.community.id, aj.dataAccess || 'none');
-		}
-	}
-
-	// Filter out communities that have opted out of curation by this org
-	const optOuts = await HubOptOut.findAll({
-		where: { orgId: org.id },
-		attributes: ['communityId'],
-	});
-	const rejectedCommunityIds = new Set(optOuts.map((o: any) => o.communityId));
-
-	const communities: CommunityInfo[] = allCommunities
-		.filter((c: any) => !rejectedCommunityIds.has(c.id) && !isSpam(c))
-		.map((c: any) => c.toJSON());
+	const communities: CommunityInfo[] = ownedCommunities
+		.filter((c) => c.spamTag?.status !== 'confirmed-spam')
+		.map((c) => {
+			const { spamTag: _spamTag, ...community } = c.toJSON() as any;
+			return community;
+		});
 
 	const communityIds = communities.map((c) => c.id);
 	if (communityIds.length === 0) {
@@ -193,8 +174,7 @@ export const getOrgDataDashboard = async (
 			dailyViews: [],
 			analyticsScope: { grantedCount: 0, totalCount: 0, grantedNames: [] },
 			topCollections: [],
-			grantableCommunityIds: [],
-			grantablePubIds: [],
+			viewerPermissions,
 		};
 	}
 
@@ -526,11 +506,9 @@ export const getOrgDataDashboard = async (
 		.slice(0, 30);
 
 	// ── Analytics from materialized views ──
-	// Only query analytics for communities with dataAccess === 'granted'
-	const analyticsGrantedIds = communityIds.filter((id) => dataAccessMap.get(id) === 'granted');
-	const grantedNames = communities
-		.filter((c) => analyticsGrantedIds.includes(c.id))
-		.map((c) => c.title);
+	// The org owns these communities, so it sees analytics for all of them
+	const analyticsGrantedIds = communityIds;
+	const grantedNames = communities.map((c) => c.title);
 
 	// Time range for analytics
 	const endDate = opts?.endDate || now.toISOString().slice(0, 10);
@@ -710,7 +688,7 @@ export const getOrgDataDashboard = async (
 		}
 	}
 
-	// ── Community managers (for communities with dataAccess granted) ──
+	// ── Community managers ──
 	const communityManagers = new Map<
 		string,
 		Array<{ name: string; avatar: string | null; slug: string | null }>
@@ -752,72 +730,9 @@ export const getOrgDataDashboard = async (
 		...cs,
 		pageViews: communityPageViews.get(cs.id) || 0,
 		downloads: communityDownloads.get(cs.id) || 0,
-		dataAccess: (dataAccessMap.get(cs.id) || 'none') as 'none' | 'requested' | 'granted',
 		sparkline: communitySparklines.get(cs.id) || [],
 		managers: communityManagers.get(cs.id) || [],
 	}));
-
-	// ── Grantable community IDs (communities the current user can grant data access to) ──
-	let grantableCommunityIds: string[] = [];
-	let grantablePubIds: string[] = [];
-	const userId = opts?.userId;
-	if (userId) {
-		try {
-			const adminMemberships = await Member.findAll({
-				where: {
-					userId,
-					communityId: communityIds,
-					permissions: 'admin',
-				},
-				attributes: ['communityId'],
-				raw: true,
-			});
-			grantableCommunityIds = adminMemberships.map((m: any) => m.communityId);
-		} catch {
-			// non-fatal
-		}
-
-		// Grantable pub IDs: pubs the user can directly grant data access to
-		try {
-			const orgFeaturedPubs = await OrgFeaturedPub.findAll({
-				where: { orgId: org.id },
-				attributes: ['pubId'],
-				raw: true,
-			});
-			const curatedPubIds = orgFeaturedPubs.map((hp: any) => hp.pubId);
-			if (curatedPubIds.length > 0) {
-				// Pubs where user is manage/admin member
-				const pubMemberships = await Member.findAll({
-					where: {
-						userId,
-						pubId: curatedPubIds,
-						permissions: ['manage', 'admin'],
-					},
-					attributes: ['pubId'],
-					raw: true,
-				});
-				const directGrantable = new Set(pubMemberships.map((m: any) => m.pubId));
-
-				// Pubs in communities where user is admin
-				const adminCommunitySet = new Set(grantableCommunityIds);
-				const pubsInAdminCommunities = await Pub.findAll({
-					where: {
-						id: curatedPubIds,
-						communityId: [...adminCommunitySet],
-					},
-					attributes: ['id'],
-					raw: true,
-				});
-				for (const p of pubsInAdminCommunities) {
-					directGrantable.add((p as any).id);
-				}
-
-				grantablePubIds = [...directGrantable];
-			}
-		} catch {
-			// non-fatal
-		}
-	}
 
 	return {
 		org: org.toJSON(),
@@ -844,7 +759,6 @@ export const getOrgDataDashboard = async (
 			grantedNames,
 		},
 		topCollections,
-		grantableCommunityIds,
-		grantablePubIds,
+		viewerPermissions,
 	};
 };

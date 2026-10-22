@@ -104,11 +104,11 @@ export class Org extends Model<InferAttributes<Org>, InferCreationAttributes<Org
 	declare pubSearchTerms: CreationOptional<string[]>;
 
 	/** KF Account (console org) this org belongs to, for billing and aggregate usage.
-	 *  Several orgs may share one. Nullable until existing orgs are assigned one. */
-	@AllowNull
+	 *  Several orgs may share one. */
+	@AllowNull(false)
 	@Index
 	@Column(DataType.TEXT)
-	declare kfOrgId: CreationOptional<string | null>;
+	declare kfOrgId: string;
 
 	// Timestamps
 	declare createdAt: CreationOptional<Date>;

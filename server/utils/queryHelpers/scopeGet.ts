@@ -9,7 +9,6 @@ import {
 	CollectionAttribution,
 	CollectionPub,
 	Community,
-	HubCommunity,
 	Member,
 	Pub,
 	PubAttribution,
@@ -19,7 +18,6 @@ import {
 	Submission,
 	SubmissionWorkflow,
 } from 'server/models';
-import { OrgFeaturedPub } from 'server/orgFeaturedPub/model';
 import { isUserSuperAdmin } from 'server/user/queries';
 import { expect } from 'utils/assert';
 
@@ -119,20 +117,13 @@ const getActiveCounts = async (
 	scopeElements: types.ScopeData['elements'],
 ) => {
 	if (isDashboard) {
-		const [reviews, submissions, curatingOrgCount] = await Promise.all([
+		const [reviews, submissions] = await Promise.all([
 			getActiveReviewsCount(scopeElements),
 			getActiveSubmissionsCount(scopeElements),
-			scopeElements.activePub
-				? OrgFeaturedPub.count({
-						where: { pubId: scopeElements.activePub.id },
-					})
-				: HubCommunity.count({
-						where: { communityId: scopeElements.activeCommunity.id },
-					}),
 		]);
-		return { reviews, submissions, curatingOrgCount };
+		return { reviews, submissions };
 	}
-	return { reviews: 0, submissions: 0, curatingOrgCount: 0 };
+	return { reviews: 0, submissions: 0 };
 };
 
 const getFacets = async (includeFacets: boolean, scopeElements: types.ScopeData['elements']) => {

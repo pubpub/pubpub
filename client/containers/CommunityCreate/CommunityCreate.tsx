@@ -85,7 +85,7 @@ const CommunityCreatedView = ({ subdomain, orgName }: { subdomain: string; orgNa
 type Props = {
 	orgData?: Org | null;
 	templates?: CommunityTemplate[];
-	hubCommunities?: { id: string; title: string; subdomain: string; avatar?: string | null }[];
+	orgCommunities?: { id: string; title: string; subdomain: string; avatar?: string | null }[];
 };
 
 const OrgBrandedHeader = ({ org }: { org: Org }) => {
@@ -109,7 +109,7 @@ const OrgBrandedHeader = ({ org }: { org: Org }) => {
 };
 
 const CommunityCreate = (props: Props) => {
-	const { orgData, templates = [], hubCommunities = [] } = props;
+	const { orgData, templates = [], orgCommunities = [] } = props;
 	const { loginData, locationData } = usePageContext();
 	const altchaRef = useRef<import('components').AltchaRef>(null);
 	const orgSlug = orgData?.slug || locationData?.query?.org || null;
@@ -265,10 +265,10 @@ const CommunityCreate = (props: Props) => {
 									templates={templates}
 									selectedTemplateId={selectedTemplateId}
 									onSelect={setSelectedTemplateId}
-									hubCommunities={hubCommunities}
+									orgCommunities={orgCommunities}
 									cloneEnabled={
 										orgData?.communityCloneAccess !== 'off' &&
-										hubCommunities.length > 0
+										orgCommunities.length > 0
 									}
 									cloneCommunityId={cloneCommunityId}
 									onCloneCommunitySelect={setCloneCommunityId}

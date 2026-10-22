@@ -7,7 +7,6 @@ import {
 	DashboardCollectionLayout,
 	DashboardCollectionOverview,
 	DashboardCommunityOverview,
-	DashboardCuratedBy,
 	DashboardCustomScripts,
 	DashboardDiscussions,
 	DashboardEdges,
@@ -98,10 +97,6 @@ export default (viewData, locationData, chunkName) => {
 		},
 		DashboardCollectionOverview: {
 			ActiveComponent: DashboardCollectionOverview,
-			isDashboard: true,
-		},
-		DashboardCuratedBy: {
-			ActiveComponent: DashboardCuratedBy,
 			isDashboard: true,
 		},
 		DashboardPubOverview: {

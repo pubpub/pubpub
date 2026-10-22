@@ -1,7 +1,6 @@
 import { QueryTypes } from 'sequelize';
 
 import { Community } from 'server/community/model';
-import { Org } from 'server/org/model';
 import { OrgFeaturedPub } from 'server/orgFeaturedPub/model';
 import { Pub } from 'server/pub/model';
 import { PubAttribution } from 'server/pubAttribution/model';
@@ -42,7 +41,7 @@ export const getOrgFeaturedPubs = async (orgId: string) => {
 	});
 	return records
 		.map((r) => r.toJSON())
-		.filter((r: any) => r.pub && r.pub.community?.spamTag?.status !== 'confirmed');
+		.filter((r: any) => r.pub && r.pub.community?.spamTag?.status !== 'confirmed-spam');
 };
 
 /** Featured pubs for the org landing page (showOnLandingPage + has releases) */
@@ -105,7 +104,7 @@ export const getLandingPagePubs = async (orgId: string) => {
 		records
 			.filter((r) => {
 				const pub = (r as any).pub;
-				return pub && pub.community?.spamTag?.status !== 'confirmed';
+				return pub && pub.community?.spamTag?.status !== 'confirmed-spam';
 			})
 			.map(async (r) => {
 				const json = r.toJSON() as any;
@@ -157,30 +156,4 @@ export const addPubToOrg = async (
 
 export const removePubFromOrg = async (orgId: string, pubId: string) => {
 	return OrgFeaturedPub.destroy({ where: { orgId, pubId } });
-};
-
-/* ------------------------------------------------------------------ */
-/* Pub-side queries (for pub admins/managers via "Curated By" tab)      */
-/* ------------------------------------------------------------------ */
-
-export const getOrgsForPub = async (pubId: string) => {
-	const associations = await OrgFeaturedPub.findAll({
-		where: { pubId },
-		include: [{ model: Org }],
-	});
-	return associations
-		.map((a) => {
-			const json = a.toJSON() as any;
-			return json.org
-				? {
-						...json.org,
-						dataAccess: json.dataAccess,
-					}
-				: null;
-		})
-		.filter(Boolean);
-};
-
-export const getOrgFeaturedPubRecord = async (orgId: string, pubId: string) => {
-	return OrgFeaturedPub.findOne({ where: { orgId, pubId } });
 };

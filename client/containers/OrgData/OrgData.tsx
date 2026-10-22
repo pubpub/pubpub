@@ -1,4 +1,5 @@
 import type { OrgDataPayload } from 'server/org/dataQueries';
+import type { MemberPermission } from 'types';
 
 import type { ApplyTarget } from './BrandHelper';
 
@@ -536,22 +537,17 @@ const OverviewTab = ({
 									<td className="num">{c.authorCount.toLocaleString()}</td>
 									{hasAnalytics && (
 										<td className="num">
-											{c.dataAccess === 'granted' && c.downloads
-												? c.downloads.toLocaleString()
-												: '—'}
+											{c.downloads ? c.downloads.toLocaleString() : '—'}
 										</td>
 									)}
 									{hasAnalytics && (
 										<td className="num">
-											{c.dataAccess === 'granted' && c.pageViews
-												? c.pageViews.toLocaleString()
-												: '—'}
+											{c.pageViews ? c.pageViews.toLocaleString() : '—'}
 										</td>
 									)}
 									{hasAnalytics && (
 										<td className="sparkline-col">
-											{c.dataAccess === 'granted' &&
-											c.sparkline?.length > 0 ? (
+											{c.sparkline?.length > 0 ? (
 												<MiniSparkline
 													data={c.sparkline}
 													color={c.accentColorDark || accent}
@@ -833,7 +829,7 @@ const CommunityCard = ({
 				>
 					{c.title}
 				</a>
-				{c.sparkline?.length > 0 && c.dataAccess === 'granted' && (
+				{c.sparkline?.length > 0 && (
 					<MiniSparkline
 						data={c.sparkline}
 						color={c.accentColorDark || accent}
@@ -859,13 +855,13 @@ const CommunityCard = ({
 					<span className="cds-val">{c.collectionCount.toLocaleString()}</span>
 					<span className="cds-label">Collections</span>
 				</div>
-				{c.dataAccess === 'granted' && c.pageViews > 0 && (
+				{c.pageViews > 0 && (
 					<div className="cds">
 						<span className="cds-val">{c.pageViews.toLocaleString()}</span>
 						<span className="cds-label">Views (90d)</span>
 					</div>
 				)}
-				{c.dataAccess === 'granted' && c.downloads > 0 && (
+				{c.downloads > 0 && (
 					<div className="cds">
 						<span className="cds-val">{c.downloads.toLocaleString()}</span>
 						<span className="cds-label">Downloads (90d)</span>
@@ -879,7 +875,7 @@ const CommunityCard = ({
 					This month: <strong>{c.recentPubCount}</strong>
 				</span>
 			</div>
-			{c.dataAccess === 'granted' && c.managers && c.managers.length > 0 && (
+			{c.managers && c.managers.length > 0 && (
 				<div className="community-detail-managers">
 					<div
 						ref={listRef}
@@ -980,9 +976,10 @@ const CollectionsTab = ({ orgData }: Props) => {
 
 /* ────────────────────── settings tab ────────────────────── */
 
-type SettingsManager = {
+type SettingsMember = {
 	id: string;
 	userId: string;
+	permissions: MemberPermission;
 	user: {
 		id: string;
 		fullName: string;
@@ -992,6 +989,13 @@ type SettingsManager = {
 		email: string;
 	} | null;
 };
+
+const memberPermissionOptions = [
+	{ value: 'view', label: 'View' },
+	{ value: 'edit', label: 'Edit' },
+	{ value: 'manage', label: 'Manage' },
+	{ value: 'admin', label: 'Admin' },
+];
 
 type UserSearchResult = {
 	id: string;
@@ -1350,11 +1354,6 @@ const SettingsTab = ({ orgData }: Props) => {
 	const org = orgData.org;
 	const { loginData } = usePageContext();
 	const isSuperAdmin = loginData.isSuperAdmin;
-	const grantableSet = useMemo(
-		() => new Set(orgData.grantableCommunityIds || []),
-		[orgData.grantableCommunityIds],
-	);
-	const canGrant = (communityId: string) => isSuperAdmin || grantableSet.has(communityId);
 
 	// Org info form
 	const [title, setTitle] = useState(org.title || '');
@@ -1378,11 +1377,12 @@ const SettingsTab = ({ orgData }: Props) => {
 	const [brandHelperOpen, setBrandHelperOpen] = useState(false);
 	const [brandHelperDomain, setBrandHelperDomain] = useState('');
 
-	// Managers
-	const [managers, setManagers] = useState<SettingsManager[]>([]);
-	const [managerLoading, setManagerLoading] = useState(false);
-	const [managerError, setManagerError] = useState('');
-	const [managerSaved, setManagerSaved] = useState(false);
+	// Members
+	const [members, setMembers] = useState<SettingsMember[]>([]);
+	const [newMemberPermissions, setNewMemberPermissions] = useState<MemberPermission>('view');
+	const [memberLoading, setMemberLoading] = useState(false);
+	const [memberError, setMemberError] = useState('');
+	const [memberSaved, setMemberSaved] = useState(false);
 
 	// Communities
 	const [communities, setCommunities] = useState<any[]>([]);
@@ -1394,11 +1394,6 @@ const SettingsTab = ({ orgData }: Props) => {
 	const [curatedPubs, setCuratedPubs] = useState<any[]>([]);
 	const [pubSaved, setPubSaved] = useState(false);
 	const [pubError, setPubError] = useState('');
-	const grantablePubSet = useMemo(
-		() => new Set(orgData.grantablePubIds || []),
-		[orgData.grantablePubIds],
-	);
-	const canGrantPub = (pubId: string) => isSuperAdmin || grantablePubSet.has(pubId);
 
 	// Domains (read-only for managers)
 
@@ -1408,11 +1403,11 @@ const SettingsTab = ({ orgData }: Props) => {
 		if (loadedRef.current) return;
 		loadedRef.current = true;
 		Promise.all([
-			apiFetch.get(`/api/orgs/${org.id}/managers`),
+			apiFetch.get(`/api/orgs/${org.id}/members`),
 			apiFetch.get(`/api/orgs/${org.id}/communities`),
 			apiFetch.get(`/api/orgs/${org.id}/pubs`),
-		]).then(([mgrs, comms, pubs]) => {
-			setManagers(mgrs as any);
+		]).then(([mems, comms, pubs]) => {
+			setMembers(mems as any);
 			setCommunities(comms as any);
 			setCuratedPubs(pubs as any);
 		});
@@ -1443,33 +1438,54 @@ const SettingsTab = ({ orgData }: Props) => {
 		}
 	};
 
-	const flashManagerSaved = () => {
-		setManagerSaved(true);
-		setTimeout(() => setManagerSaved(false), 2000);
+	const flashMemberSaved = () => {
+		setMemberSaved(true);
+		setTimeout(() => setMemberSaved(false), 2000);
 	};
 
-	const handleAddManager = async (user: UserSearchResult) => {
-		setManagerLoading(true);
-		setManagerError('');
+	const reloadMembers = async () => {
+		const mems = await apiFetch.get(`/api/orgs/${org.id}/members`);
+		setMembers(mems as any);
+	};
+
+	const handleAddMember = async (user: UserSearchResult) => {
+		setMemberLoading(true);
+		setMemberError('');
 		try {
-			await apiFetch.post(`/api/orgs/${org.id}/managers`, { userId: user.id });
-			const mgrs = await apiFetch.get(`/api/orgs/${org.id}/managers`);
-			setManagers(mgrs as any);
-			flashManagerSaved();
+			await apiFetch.post(`/api/orgs/${org.id}/members`, {
+				userId: user.id,
+				permissions: newMemberPermissions,
+			});
+			await reloadMembers();
+			flashMemberSaved();
 		} catch (e: any) {
-			setManagerError(e?.message || 'Failed to add manager');
+			setMemberError(e?.message || 'Failed to add member');
 		} finally {
-			setManagerLoading(false);
+			setMemberLoading(false);
 		}
 	};
 
-	const handleRemoveManager = async (userId: string) => {
+	const handleChangeMemberPermissions = async (userId: string, permissions: MemberPermission) => {
+		setMemberError('');
 		try {
-			await apiFetch.delete(`/api/orgs/${org.id}/managers/${userId}`);
-			setManagers((prev) => prev.filter((m) => m.userId !== userId));
-			flashManagerSaved();
+			await apiFetch.post(`/api/orgs/${org.id}/members`, { userId, permissions });
+			setMembers((prev) =>
+				prev.map((m) => (m.userId === userId ? { ...m, permissions } : m)),
+			);
+			flashMemberSaved();
 		} catch (e: any) {
-			setManagerError(e?.message || 'Failed to remove manager');
+			setMemberError(e?.message || 'Failed to change level');
+		}
+	};
+
+	const handleRemoveMember = async (userId: string) => {
+		setMemberError('');
+		try {
+			await apiFetch.delete(`/api/orgs/${org.id}/members/${userId}`);
+			setMembers((prev) => prev.filter((m) => m.userId !== userId));
+			flashMemberSaved();
+		} catch (e: any) {
+			setMemberError(e?.message || 'Failed to remove member');
 		}
 	};
 
@@ -1505,50 +1521,6 @@ const SettingsTab = ({ orgData }: Props) => {
 		}
 	};
 
-	const handleToggleLandingPage = async (communityId: string, show: boolean) => {
-		try {
-			await apiFetch.put(`/api/orgs/${org.id}/communities/${communityId}`, {
-				showOnLandingPage: show,
-			});
-			setCommunities((prev) =>
-				prev.map((c) => (c.id === communityId ? { ...c, showOnLandingPage: show } : c)),
-			);
-			flashCommunitySaved();
-		} catch (e: any) {
-			setCommunityError(e?.message || 'Failed to update');
-		}
-	};
-
-	const handleRequestDataAccess = async (communityId: string) => {
-		try {
-			await apiFetch.put(`/api/orgs/${org.id}/communities/${communityId}`, {
-				dataAccess: 'requested',
-			});
-			setCommunities((prev) =>
-				prev.map((c) => (c.id === communityId ? { ...c, dataAccess: 'requested' } : c)),
-			);
-			flashCommunitySaved();
-		} catch (e: any) {
-			setCommunityError(e?.message || 'Failed to request data access');
-		}
-	};
-
-	const handleGrantDataAccess = async (communityId: string) => {
-		try {
-			await apiFetch.put(`/api/orgs/${org.id}/communities/${communityId}`, {
-				dataAccess: 'granted',
-			});
-			setCommunities((prev) =>
-				prev.map((c) => (c.id === communityId ? { ...c, dataAccess: 'granted' } : c)),
-			);
-			flashCommunitySaved();
-		} catch (e: any) {
-			setCommunityError(
-				e?.message || 'You must be a community admin or superadmin to grant access',
-			);
-		}
-	};
-
 	const flashPubSaved = () => {
 		setPubSaved(true);
 		setTimeout(() => setPubSaved(false), 2000);
@@ -1573,34 +1545,6 @@ const SettingsTab = ({ orgData }: Props) => {
 			flashPubSaved();
 		} catch (e: any) {
 			setPubError(e?.message || 'Failed to add pub');
-		}
-	};
-
-	const handleRequestPubDataAccess = async (pubId: string) => {
-		try {
-			await apiFetch.put(`/api/orgs/${org.id}/pubs/${pubId}`, {
-				dataAccess: 'requested',
-			});
-			setCuratedPubs((prev) =>
-				prev.map((p) => (p.pubId === pubId ? { ...p, dataAccess: 'requested' } : p)),
-			);
-			flashPubSaved();
-		} catch (e: any) {
-			setPubError(e?.message || 'Failed to request data access');
-		}
-	};
-
-	const handleGrantPubDataAccess = async (pubId: string) => {
-		try {
-			await apiFetch.put(`/api/orgs/${org.id}/pubs/${pubId}`, {
-				dataAccess: 'granted',
-			});
-			setCuratedPubs((prev) =>
-				prev.map((p) => (p.pubId === pubId ? { ...p, dataAccess: 'granted' } : p)),
-			);
-			flashPubSaved();
-		} catch (e: any) {
-			setPubError(e?.message || 'You must be a pub or community admin to grant access');
 		}
 	};
 
@@ -1749,7 +1693,7 @@ const SettingsTab = ({ orgData }: Props) => {
 							>
 								<option value="off">Off</option>
 								<option value="everyone">Everyone</option>
-								<option value="managers">Org managers only</option>
+								<option value="managers">Org members only</option>
 							</HTMLSelect>
 						</FormGroup>
 					</div>
@@ -1765,19 +1709,32 @@ const SettingsTab = ({ orgData }: Props) => {
 				</div>
 			</div>
 
-			{/* ─── Managers ─── */}
+			{/* ─── Members ─── */}
 			<div className="settings-section">
 				<h3 className="settings-section-title">
-					Managers{managerSaved && <span className="settings-saved-msg">Saved!</span>}
+					Members{memberSaved && <span className="settings-saved-msg">Saved!</span>}
 				</h3>
-				<UserAutocomplete onSelect={handleAddManager} disabled={managerLoading} />
-				{managerError && (
+				<p className="settings-help">
+					Admins manage this org: its members, communities, featured pubs, templates and
+					settings. Every member can see the dashboard.
+				</p>
+				<div className="settings-row">
+					<UserAutocomplete onSelect={handleAddMember} disabled={memberLoading} />
+					<HTMLSelect
+						value={newMemberPermissions}
+						onChange={(e) =>
+							setNewMemberPermissions(e.target.value as MemberPermission)
+						}
+						options={memberPermissionOptions}
+					/>
+				</div>
+				{memberError && (
 					<Callout intent="danger" className="settings-error">
-						{managerError}
+						{memberError}
 					</Callout>
 				)}
 				<div className="settings-list">
-					{managers.map((m) => (
+					{members.map((m) => (
 						<div className="settings-list-item" key={m.userId}>
 							<span className="settings-list-name">
 								{m.user?.avatar ? (
@@ -1796,17 +1753,30 @@ const SettingsTab = ({ orgData }: Props) => {
 									<span className="settings-list-slug">@{m.user.slug}</span>
 								)}
 							</span>
-							<Button
-								small
-								minimal
-								intent="danger"
-								icon="cross"
-								onClick={() => handleRemoveManager(m.userId)}
-							/>
+							<span>
+								<HTMLSelect
+									minimal
+									value={m.permissions}
+									onChange={(e) =>
+										handleChangeMemberPermissions(
+											m.userId,
+											e.target.value as MemberPermission,
+										)
+									}
+									options={memberPermissionOptions}
+								/>
+								<Button
+									small
+									minimal
+									intent="danger"
+									icon="cross"
+									onClick={() => handleRemoveMember(m.userId)}
+								/>
+							</span>
 						</div>
 					))}
-					{managers.length === 0 && (
-						<div className="settings-empty">No managers added yet.</div>
+					{members.length === 0 && (
+						<div className="settings-empty">No members added yet.</div>
 					)}
 				</div>
 			</div>
@@ -1817,7 +1787,18 @@ const SettingsTab = ({ orgData }: Props) => {
 					Communities
 					{communitySaved && <span className="settings-saved-msg">Saved!</span>}
 				</h3>
-				<CommunityAutocomplete onSelect={handleAddCommunity} disabled={communityLoading} />
+				<p className="settings-help">
+					Communities this org owns. Its dashboard and analytics cover them.
+					{isSuperAdmin
+						? ' As a PubPub admin, you can add any community.'
+						: ' To add a community, ask PubPub support.'}
+				</p>
+				{isSuperAdmin && (
+					<CommunityAutocomplete
+						onSelect={handleAddCommunity}
+						disabled={communityLoading}
+					/>
+				)}
 				{communityError && (
 					<Callout intent="danger" className="settings-error">
 						{communityError}
@@ -1828,8 +1809,6 @@ const SettingsTab = ({ orgData }: Props) => {
 						<thead>
 							<tr>
 								<th>Community</th>
-								<th className="col-toggle">Landing Page</th>
-								<th className="col-access">Data Access</th>
 								<th className="col-actions" />
 							</tr>
 						</thead>
@@ -1852,65 +1831,6 @@ const SettingsTab = ({ orgData }: Props) => {
 											{c.subdomain}.pubpub.org
 										</span>
 									</td>
-									<td className="col-toggle">
-										<Switch
-											checked={c.showOnLandingPage !== false}
-											onChange={() =>
-												handleToggleLandingPage(
-													c.id,
-													c.showOnLandingPage === false,
-												)
-											}
-											innerLabel="off"
-											innerLabelChecked="on"
-										/>
-									</td>
-									<td className="col-access">
-										{c.dataAccess === 'granted' && (
-											<Tag minimal intent="success">
-												Granted
-											</Tag>
-										)}
-										{c.dataAccess === 'requested' &&
-											(canGrant(c.id) ? (
-												<span className="col-access-pending">
-													<Tag minimal intent="warning">
-														Pending
-													</Tag>
-													<Button
-														small
-														minimal
-														intent="success"
-														icon="tick"
-														text="Grant"
-														onClick={() => handleGrantDataAccess(c.id)}
-													/>
-												</span>
-											) : (
-												<Tag minimal intent="warning">
-													Pending
-												</Tag>
-											))}
-										{(!c.dataAccess || c.dataAccess === 'none') &&
-											(canGrant(c.id) ? (
-												<Button
-													small
-													minimal
-													intent="success"
-													icon="tick"
-													text="Grant"
-													onClick={() => handleGrantDataAccess(c.id)}
-												/>
-											) : (
-												<Button
-													small
-													minimal
-													icon="lock"
-													text="Request"
-													onClick={() => handleRequestDataAccess(c.id)}
-												/>
-											))}
-									</td>
 									<td className="col-actions">
 										<Button
 											small
@@ -1925,19 +1845,22 @@ const SettingsTab = ({ orgData }: Props) => {
 						</tbody>
 					</table>
 					{communities.length === 0 && (
-						<div className="settings-empty">No communities added yet.</div>
+						<div className="settings-empty">
+							This org doesn&rsquo;t own any communities yet.
+						</div>
 					)}
 				</div>
 			</div>
 
-			{/* ─── Curated Pubs ─── */}
+			{/* ─── Featured Pubs ─── */}
 			<div className="settings-section">
 				<h3 className="settings-section-title">
-					Curated Pubs
+					Featured Pubs
 					{pubSaved && <span className="settings-saved-msg">Saved!</span>}
 				</h3>
 				<p className="settings-help">
-					Pubs curated by this org. Use the Suggested Pubs tab to discover and add pubs.
+					Pubs from this org&rsquo;s communities to feature on its landing page. Use the
+					Suggested Pubs tab to find them.
 				</p>
 				<PubAutocomplete onSelect={handleAddPub} />
 				{pubError && (
@@ -1952,7 +1875,6 @@ const SettingsTab = ({ orgData }: Props) => {
 								<th>Pub</th>
 								<th>Community</th>
 								<th className="col-toggle">Landing Page</th>
-								<th className="col-access">Data Access</th>
 								<th className="col-actions" />
 							</tr>
 						</thead>
@@ -2010,58 +1932,6 @@ const SettingsTab = ({ orgData }: Props) => {
 											innerLabelChecked="on"
 										/>
 									</td>
-									<td className="col-access">
-										{cp.dataAccess === 'granted' && (
-											<Tag minimal intent="success">
-												Granted
-											</Tag>
-										)}
-										{cp.dataAccess === 'requested' &&
-											(canGrantPub(cp.pubId) ? (
-												<span className="col-access-pending">
-													<Tag minimal intent="warning">
-														Pending
-													</Tag>
-													<Button
-														small
-														minimal
-														intent="success"
-														icon="tick"
-														text="Grant"
-														onClick={() =>
-															handleGrantPubDataAccess(cp.pubId)
-														}
-													/>
-												</span>
-											) : (
-												<Tag minimal intent="warning">
-													Pending
-												</Tag>
-											))}
-										{(!cp.dataAccess || cp.dataAccess === 'none') &&
-											(canGrantPub(cp.pubId) ? (
-												<Button
-													small
-													minimal
-													intent="success"
-													icon="tick"
-													text="Grant"
-													onClick={() =>
-														handleGrantPubDataAccess(cp.pubId)
-													}
-												/>
-											) : (
-												<Button
-													small
-													minimal
-													icon="lock"
-													text="Request"
-													onClick={() =>
-														handleRequestPubDataAccess(cp.pubId)
-													}
-												/>
-											))}
-									</td>
 									<td className="col-actions">
 										<Button
 											small
@@ -2077,8 +1947,8 @@ const SettingsTab = ({ orgData }: Props) => {
 					</table>
 					{curatedPubs.length === 0 && (
 						<div className="settings-empty">
-							No pubs curated yet. Use the Suggested Pubs tab to discover and add
-							pubs.
+							No featured pubs yet. Use the Suggested Pubs tab to find pubs from this
+							org&rsquo;s communities.
 						</div>
 					)}
 				</div>
@@ -2163,6 +2033,7 @@ const suggestedSortAccessors: Record<SuggestedSortKey, (s: SuggestedCommunity) =
 	};
 
 const SuggestedCommunitiesTab = ({ orgId }: { orgId: string }) => {
+	const { loginData } = usePageContext();
 	const [suggestions, setSuggestions] = useState<SuggestedCommunity[] | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [filter, setFilter] = useState('');
@@ -2263,7 +2134,7 @@ const SuggestedCommunitiesTab = ({ orgId }: { orgId: string }) => {
 				</span>
 				<span className="sg-summary-sep" />
 				<span className="sg-summary-stat">
-					<strong>{addedCount}</strong> already added
+					<strong>{addedCount}</strong> owned
 				</span>
 				<span className="sg-summary-sep" />
 				<span className="sg-summary-stat">
@@ -2280,7 +2151,9 @@ const SuggestedCommunitiesTab = ({ orgId }: { orgId: string }) => {
 			</div>
 			<div className="sg-help">
 				Based on your org&rsquo;s email domains. Counts reflect only managers, authors, and
-				pubs associated with users whose email matches your configured domains.
+				pubs associated with users whose email matches your configured domains. Communities
+				another org owns aren&rsquo;t listed, and only PubPub admins can add a community for
+				now.
 			</div>
 			<div className="data-table-wrapper">
 				<table className="data-table sg-table">
@@ -2331,7 +2204,7 @@ const SuggestedCommunitiesTab = ({ orgId }: { orgId: string }) => {
 								<td className="sg-td-status">
 									{s.alreadyAdded && (
 										<Tag minimal intent="success">
-											Added
+											Owned
 										</Tag>
 									)}
 								</td>
@@ -2346,14 +2219,16 @@ const SuggestedCommunitiesTab = ({ orgId }: { orgId: string }) => {
 											onClick={() => handleRemove(s.communityId)}
 										/>
 									) : (
-										<Button
-											small
-											minimal
-											intent="primary"
-											icon="plus"
-											text="Add"
-											onClick={() => handleAdd(s.communityId)}
-										/>
+										loginData.isSuperAdmin && (
+											<Button
+												small
+												minimal
+												intent="primary"
+												icon="plus"
+												text="Add"
+												onClick={() => handleAdd(s.communityId)}
+											/>
+										)
 									)}
 								</td>
 							</tr>
@@ -2394,13 +2269,7 @@ const suggestedPubSortAccessors: Record<SuggestedPubSortKey, (s: SuggestedPub) =
 		status: (s) => (s.alreadyAdded ? 1 : 0),
 	};
 
-const SuggestedPubsTab = ({
-	orgId,
-	curatedCommunityIds,
-}: {
-	orgId: string;
-	curatedCommunityIds: string[];
-}) => {
+const SuggestedPubsTab = ({ orgId }: { orgId: string }) => {
 	const [suggestions, setSuggestions] = useState<SuggestedPub[] | null>(null);
 	const [total, setTotal] = useState(0);
 	const [loading, setLoading] = useState(false);
@@ -2408,19 +2277,15 @@ const SuggestedPubsTab = ({
 	const [sortKey, setSortKey] = useState<SuggestedPubSortKey>('published');
 	const [sortDir, setSortDir] = useState<SortDir>('desc');
 	const [expandedSnippets, setExpandedSnippets] = useState<Set<string>>(new Set());
-	const [hideCuratedCommunityPubs, setHideCuratedCommunityPubs] = useState(true);
 	const [page, setPage] = useState(0);
 	const pageSize = 50;
 	const fetchedRef = useRef(false);
 
 	const fetchPage = useCallback(
-		async (pageNum: number, excludeCurated: boolean = hideCuratedCommunityPubs) => {
+		async (pageNum: number) => {
 			setLoading(true);
 			try {
-				let url = `/api/orgs/${orgId}/suggested-pubs?limit=${pageSize}&offset=${pageNum * pageSize}`;
-				if (excludeCurated && curatedCommunityIds.length > 0) {
-					url += `&excludeCommunityIds=${curatedCommunityIds.join(',')}`;
-				}
+				const url = `/api/orgs/${orgId}/suggested-pubs?limit=${pageSize}&offset=${pageNum * pageSize}`;
 				const data = await apiFetch.get(url);
 				const result = data as any;
 				setSuggestions(result.pubs ?? result);
@@ -2433,7 +2298,7 @@ const SuggestedPubsTab = ({
 				setLoading(false);
 			}
 		},
-		[orgId, curatedCommunityIds, hideCuratedCommunityPubs],
+		[orgId],
 	);
 
 	useEffect(() => {
@@ -2526,17 +2391,6 @@ const SuggestedPubsTab = ({
 				<span className="sg-summary-stat">
 					<strong>{addedCount}</strong> added on this page
 				</span>
-				<Switch
-					style={{ marginBottom: 0, marginLeft: 8 }}
-					checked={hideCuratedCommunityPubs}
-					label="Only show pubs from non-curated communities"
-					onChange={() => {
-						const next = !hideCuratedCommunityPubs;
-						setHideCuratedCommunityPubs(next);
-						fetchPage(0, next);
-					}}
-					inline
-				/>
 				<InputGroup
 					className="sg-filter"
 					leftIcon="search"
@@ -2755,6 +2609,7 @@ const OrgData = (props: Props) => {
 	);
 
 	const hasAnalytics = orgData.analyticsScope && orgData.analyticsScope.grantedCount > 0;
+	const isOrgAdmin = orgData.viewerPermissions === 'admin';
 
 	return (
 		<div className="org-data-component">
@@ -2878,31 +2733,34 @@ const OrgData = (props: Props) => {
 							panel={<CollectionsTab orgData={orgData} />}
 						/>
 						<Tab id="graph" title="Graphs" panel={<OrgGraphTab orgData={orgData} />} />
-						<Tab
-							id="suggested"
-							title="Suggested Communities"
-							panel={<SuggestedCommunitiesTab orgId={org.id} />}
-						/>
-						<Tab
-							id="suggested-pubs"
-							title="Suggested Pubs"
-							panel={
-								<SuggestedPubsTab
-									orgId={org.id}
-									curatedCommunityIds={orgData.communities.map((c: any) => c.id)}
-								/>
-							}
-						/>
-						<Tab
-							id="templates"
-							title="Templates"
-							panel={<OrgTemplatesTab orgId={org.id} />}
-						/>
-						<Tab
-							id="settings"
-							title="Settings"
-							panel={<SettingsTab orgData={orgData} />}
-						/>
+						{isOrgAdmin && (
+							<Tab
+								id="suggested"
+								title="Suggested Communities"
+								panel={<SuggestedCommunitiesTab orgId={org.id} />}
+							/>
+						)}
+						{isOrgAdmin && (
+							<Tab
+								id="suggested-pubs"
+								title="Suggested Pubs"
+								panel={<SuggestedPubsTab orgId={org.id} />}
+							/>
+						)}
+						{isOrgAdmin && (
+							<Tab
+								id="templates"
+								title="Templates"
+								panel={<OrgTemplatesTab orgId={org.id} />}
+							/>
+						)}
+						{isOrgAdmin && (
+							<Tab
+								id="settings"
+								title="Settings"
+								panel={<SettingsTab orgData={orgData} />}
+							/>
+						)}
 					</Tabs>
 				</div>
 			</div>

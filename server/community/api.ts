@@ -21,7 +21,6 @@ import { createGetRequestIds } from 'utils/getRequestIds';
 import { applyTemplate } from '../communityTemplate/applyTemplate';
 import { CommunityTemplate } from '../communityTemplate/model';
 import { createTemplateFromCommunity } from '../communityTemplate/queries';
-import { HubCommunity } from '../hubCommunity/model';
 import { addCommunityToOrg, getOrgBySlug, isUserOrgMember } from '../org/queries';
 import { addSpamTagToCommunity, updateSpamTagForCommunity } from '../spamTag/communityQueries';
 import { destroyCommunity, getCommunityDeletionAudit } from './destroyCommunity';
@@ -250,11 +249,12 @@ export const communityServer = s.router(contract.community, {
 							`Clone access denied for user ${req.user!.id} on org ${validatedOrg.id} (access: ${cloneAccess})`,
 						);
 					} else {
-						// Verify the source community belongs to this org
-						const orgAssoc = await HubCommunity.findOne({
-							where: { orgId: validatedOrg.id, communityId: cloneCommunityId },
+						// Verify the org owns the source community
+						const ownedSource = await Community.findOne({
+							where: { id: cloneCommunityId, orgId: validatedOrg.id },
+							attributes: ['id'],
 						});
-						if (orgAssoc) {
+						if (ownedSource) {
 							const created = await Community.findOne({
 								where: { subdomain: newCommunity.subdomain },
 								attributes: ['id'],
@@ -299,7 +299,7 @@ export const communityServer = s.router(contract.community, {
 				}
 			}
 
-			// Auto-tag community with org if domain validation passed
+			// A community created through an org belongs to it, if domain validation passed
 			if (validatedOrg) {
 				try {
 					const created = await Community.findOne({
@@ -307,10 +307,7 @@ export const communityServer = s.router(contract.community, {
 						attributes: ['id'],
 					});
 					if (created) {
-						await addCommunityToOrg(validatedOrg.id, created.id, {
-							dataAccess: 'granted',
-							showOnLandingPage: false,
-						});
+						await addCommunityToOrg(validatedOrg.id, created.id);
 						// Ensure spam tag exists, then mark as not-spam
 						await addSpamTagToCommunity(created.id);
 						await updateSpamTagForCommunity({

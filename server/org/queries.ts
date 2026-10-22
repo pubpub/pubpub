@@ -1,14 +1,6 @@
-import {
-	Community,
-	HubCommunity,
-	HubOptOut,
-	Org,
-	OrgMember,
-	Pub,
-	Release,
-	SpamTag,
-	User,
-} from 'server/models';
+import type { MemberPermission } from 'types';
+
+import { Community, Org, OrgMember, Pub, Release, SpamTag, User } from 'server/models';
 
 export const getOrgBySlug = async (slug: string) => {
 	return Org.findOne({ where: { slug } });
@@ -23,50 +15,7 @@ export const getOrgWithCommunities = async (slug: string) => {
 	if (!org) {
 		return null;
 	}
-	const associations = await HubCommunity.findAll({
-		where: { orgId: org.id, showOnLandingPage: true },
-		include: [
-			{
-				model: Community,
-				attributes: [
-					'id',
-					'subdomain',
-					'domain',
-					'title',
-					'description',
-					'heroBackgroundImage',
-					'heroLogo',
-					'accentColorLight',
-					'accentColorDark',
-					'headerLogo',
-					'headerColorType',
-					'createdAt',
-					'updatedAt',
-				],
-				include: [
-					{
-						model: SpamTag,
-						as: 'spamTag',
-						attributes: ['status'],
-						required: false,
-					},
-				],
-			},
-		],
-	});
-
-	// Get per-org opt-outs for this org
-	const optOuts = await HubOptOut.findAll({
-		where: { orgId: org.id },
-		attributes: ['communityId'],
-	});
-	const rejectedCommunityIds = new Set(optOuts.map((o) => (o as any).communityId));
-
-	const communities = associations
-		.map((a) => (a as any).community)
-		.filter(Boolean)
-		.filter((c: any) => !rejectedCommunityIds.has(c.id) && c.spamTag?.status !== 'confirmed')
-		.map((c: any) => c.toJSON());
+	const communities = (await getOwnedCommunities(org.id)).map((c) => c.toJSON());
 
 	// Add pub counts (released pubs only)
 	const communitiesWithCounts = await Promise.all(
@@ -94,7 +43,7 @@ export const getAllOrgsWithCommunityCounts = async () => {
 	const orgs = await Org.findAll({ order: [['title', 'ASC']] });
 	const result = await Promise.all(
 		orgs.map(async (org) => {
-			const communityCount = await HubCommunity.count({
+			const communityCount = await Community.count({
 				where: { orgId: org.id },
 			});
 			return { ...org.toJSON(), communityCount };
@@ -112,27 +61,7 @@ export const getAllOrgsForDirectory = async () => {
 	});
 	const result = await Promise.all(
 		orgs.map(async (org) => {
-			const associations = await HubCommunity.findAll({
-				where: { orgId: org.id },
-				include: [
-					{
-						model: Community,
-						attributes: ['id'],
-						include: [
-							{
-								model: SpamTag,
-								as: 'spamTag',
-								attributes: ['status'],
-								required: false,
-							},
-						],
-					},
-				],
-			});
-			const communityIds = associations
-				.map((a) => (a as any).community)
-				.filter((c: any) => c && c.spamTag?.status !== 'confirmed')
-				.map((c: any) => c.id);
+			const communityIds = (await getOwnedCommunities(org.id, ['id'])).map((c) => c.id);
 			const communityCount = communityIds.length;
 			const pubCount =
 				communityCount > 0
@@ -150,6 +79,7 @@ export const getAllOrgsForDirectory = async () => {
 export const createOrg = async (values: {
 	slug: string;
 	title: string;
+	kfOrgId: string;
 	subtitle?: string | null;
 	description?: string | null;
 	avatar?: string | null;
@@ -188,6 +118,7 @@ export const updateOrg = async (
 		isPrivate: boolean;
 		domains: string[];
 		pubSearchTerms: string[];
+		kfOrgId: string;
 	}>,
 ) => {
 	await Org.update(values, { where: { id } });
@@ -198,93 +129,57 @@ export const destroyOrg = async (id: string) => {
 	return Org.destroy({ where: { id } });
 };
 
-export const addCommunityToOrg = async (
+const ownedCommunityAttributes = [
+	'id',
+	'subdomain',
+	'domain',
+	'title',
+	'description',
+	'heroBackgroundImage',
+	'heroLogo',
+	'accentColorLight',
+	'accentColorDark',
+	'headerLogo',
+	'headerColorType',
+	'createdAt',
+	'updatedAt',
+];
+
+/** Communities the org owns, minus confirmed spam */
+export const getOwnedCommunities = async (
 	orgId: string,
-	communityId: string,
-	opts?: { dataAccess?: 'none' | 'requested' | 'granted'; showOnLandingPage?: boolean },
+	attributes: string[] = ownedCommunityAttributes,
 ) => {
-	const [record, created] = await HubCommunity.findOrCreate({
-		where: { orgId, communityId },
-		defaults: {
-			dataAccess: opts?.dataAccess ?? 'none',
-			...(opts?.showOnLandingPage !== undefined && {
-				showOnLandingPage: opts.showOnLandingPage,
-			}),
-		} as any,
+	const communities = await Community.findAll({
+		where: { orgId },
+		attributes,
+		include: [{ model: SpamTag, as: 'spamTag', attributes: ['status'], required: false }],
+		order: [['title', 'ASC']],
 	});
-	// If the record already exists and we're upgrading access, update it
-	if (!created && opts?.dataAccess && record.dataAccess !== opts.dataAccess) {
-		await record.update({ dataAccess: opts.dataAccess });
-	}
-	return record.toJSON();
+	return communities.filter((c) => c.spamTag?.status !== 'confirmed-spam');
+};
+
+export const getOrgCommunities = async (orgId: string) => {
+	const communities = await getOwnedCommunities(orgId);
+	return communities.map((c) => {
+		const { spamTag: _spamTag, ...community } = c.toJSON() as any;
+		return community;
+	});
+};
+
+/** Give a community to an org. Moves it if another org owns it. */
+export const addCommunityToOrg = async (orgId: string, communityId: string) => {
+	const [count] = await Community.update({ orgId }, { where: { id: communityId } });
+	return count > 0;
 };
 
 export const removeCommunityFromOrg = async (orgId: string, communityId: string) => {
-	return HubCommunity.destroy({
-		where: { orgId, communityId },
-	});
-};
-
-export const getHubCommunities = async (orgId: string) => {
-	const associations = await HubCommunity.findAll({
-		where: { orgId },
-		include: [
-			{
-				model: Community,
-				attributes: [
-					'id',
-					'subdomain',
-					'domain',
-					'title',
-					'description',
-					'heroBackgroundImage',
-					'heroLogo',
-					'accentColorLight',
-					'accentColorDark',
-					'headerLogo',
-					'headerColorType',
-					'createdAt',
-					'updatedAt',
-				],
-				include: [
-					{
-						model: SpamTag,
-						as: 'spamTag',
-						attributes: ['status'],
-						required: false,
-					},
-				],
-			},
-		],
-	});
-	return associations
-		.map((a) => {
-			const aj = a.toJSON() as any;
-			const community = aj.community;
-			if (!community) return null;
-			if (community.spamTag?.status === 'confirmed') return null;
-			return {
-				...community,
-				showOnLandingPage: aj.showOnLandingPage,
-				dataAccess: aj.dataAccess,
-			};
-		})
-		.filter(Boolean);
-};
-
-/**
- * Find all orgs a community belongs to.
- */
-export const getOrgsForCommunity = async (communityId: string) => {
-	const associations = await HubCommunity.findAll({
-		where: { communityId },
-		include: [{ model: Org }],
-	});
-	return associations.map((a) => (a as any).org?.toJSON()).filter(Boolean);
+	const [count] = await Community.update({ orgId: null }, { where: { id: communityId, orgId } });
+	return count > 0;
 };
 
 /* ------------------------------------------------------------------ */
-/* Org Managers                                               */
+/* Org Members                                                         */
 /* ------------------------------------------------------------------ */
 
 export const getOrgMembers = async (orgId: string) => {
@@ -303,15 +198,24 @@ export const getOrgMembers = async (orgId: string) => {
 			id: mj.id,
 			userId: mj.userId,
 			orgId: mj.orgId,
+			permissions: mj.permissions,
 			user: mj.user || null,
 		};
 	});
 };
 
-export const addOrgMember = async (orgId: string, userId: string) => {
-	const [record] = await OrgMember.findOrCreate({
+export const addOrgMember = async (
+	orgId: string,
+	userId: string,
+	permissions: MemberPermission = 'view',
+) => {
+	const [record, created] = await OrgMember.findOrCreate({
 		where: { orgId, userId },
+		defaults: { orgId, userId, permissions },
 	});
+	if (!created && record.permissions !== permissions) {
+		await record.update({ permissions });
+	}
 	return record.toJSON();
 };
 
@@ -319,8 +223,14 @@ export const removeOrgMember = async (orgId: string, userId: string) => {
 	return OrgMember.destroy({ where: { orgId, userId } });
 };
 
-/** Check whether a user is a manager of any org */
+/** Check whether a user is a member of an org, at any level */
 export const isUserOrgMember = async (userId: string, orgId: string): Promise<boolean> => {
 	const count = await OrgMember.count({ where: { orgId, userId } });
+	return count > 0;
+};
+
+/** Check whether a user is an admin of an org: admins manage the org itself */
+export const isUserOrgAdmin = async (userId: string, orgId: string): Promise<boolean> => {
+	const count = await OrgMember.count({ where: { orgId, userId, permissions: 'admin' } });
 	return count > 0;
 };

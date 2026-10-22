@@ -1,11 +1,9 @@
-import type { HubCommunity as HubCommunityModel } from 'server/hubCommunity/model';
 import type { Org as OrgModel } from 'server/org/model';
 import type { OrgFeaturedPub as OrgFeaturedPubModel } from 'server/orgFeaturedPub/model';
 
 import type { SerializedModel } from './serializedModel';
 
 export type Org = SerializedModel<OrgModel>;
-export type HubCommunity = SerializedModel<HubCommunityModel>;
 export type OrgFeaturedPub = SerializedModel<OrgFeaturedPubModel>;
 
 /** The shape returned by the org landing page query */

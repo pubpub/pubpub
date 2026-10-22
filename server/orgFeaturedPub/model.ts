@@ -54,17 +54,6 @@ export class OrgFeaturedPub extends Model<
 	@Column(DataType.BOOLEAN)
 	declare showOnLandingPage: CreationOptional<boolean>;
 
-	/**
-	 * Level of data the org can see for this pub.
-	 *  - 'none'      — listing only (default)
-	 *  - 'requested' — org has asked for analytics access; awaiting pub admin approval
-	 *  - 'granted'   — org can see analytics for this pub
-	 */
-	@AllowNull(false)
-	@Default('none')
-	@Column(DataType.ENUM('none', 'requested', 'granted'))
-	declare dataAccess: CreationOptional<'none' | 'requested' | 'granted'>;
-
 	@BelongsTo(() => Org, { onDelete: 'CASCADE', foreignKey: 'orgId' })
 	declare org?: Org;
 

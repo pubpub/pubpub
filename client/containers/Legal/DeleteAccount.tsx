@@ -15,7 +15,7 @@ type DeletionAudit = {
 	collectionAttributionCount: number;
 	commentCount: number;
 	soleAdminCommunities: { id: string; title: string; subdomain: string }[];
-	soleManagerOrgs: { id: string; title: string; slug: string }[];
+	soleAdminOrgs: { id: string; title: string; slug: string }[];
 };
 
 const DeleteAccount = () => {
@@ -61,7 +61,7 @@ const DeleteAccount = () => {
 	const canDelete =
 		audit &&
 		audit.soleAdminCommunities.length === 0 &&
-		audit.soleManagerOrgs.length === 0 &&
+		audit.soleAdminOrgs.length === 0 &&
 		password.length > 0;
 
 	return (
@@ -102,15 +102,15 @@ const DeleteAccount = () => {
 						</p>
 					</>
 				)}
-				{audit && audit.soleManagerOrgs.length > 0 && (
+				{audit && audit.soleAdminOrgs.length > 0 && (
 					<Callout intent="warning" style={{ marginBottom: 15 }}>
 						<p>
-							You cannot delete your account because you are the only manager of{' '}
-							<b>{audit.soleManagerOrgs.length}</b>{' '}
-							{audit.soleManagerOrgs.length === 1 ? 'org' : 'orgs'}:
+							You cannot delete your account because you are the only admin of{' '}
+							<b>{audit.soleAdminOrgs.length}</b>{' '}
+							{audit.soleAdminOrgs.length === 1 ? 'org' : 'orgs'}:
 						</p>
 						<ul style={{ margin: '8px 0' }}>
-							{audit.soleManagerOrgs.map((h) => (
+							{audit.soleAdminOrgs.map((h) => (
 								<li key={h.id}>
 									<a
 										href={`/org/${h.slug}/data`}
@@ -123,14 +123,14 @@ const DeleteAccount = () => {
 							))}
 						</ul>
 						<p>
-							Please add another manager to{' '}
-							{audit.soleManagerOrgs.length === 1 ? 'this org' : 'these orgs'} first.
+							Please add another admin to{' '}
+							{audit.soleAdminOrgs.length === 1 ? 'this org' : 'these orgs'} first.
 						</p>
 					</Callout>
 				)}
 				{audit &&
 					audit.soleAdminCommunities.length === 0 &&
-					audit.soleManagerOrgs.length === 0 && (
+					audit.soleAdminOrgs.length === 0 && (
 						<div style={{ marginBottom: 15 }}>
 							<p>Here is what will happen when you delete your account:</p>
 							<ul style={{ margin: '8px 0' }}>
@@ -171,7 +171,7 @@ const DeleteAccount = () => {
 					)}
 				{audit &&
 					audit.soleAdminCommunities.length === 0 &&
-					audit.soleManagerOrgs.length === 0 && (
+					audit.soleAdminOrgs.length === 0 && (
 						<>
 							<p>Enter your password to confirm account deletion.</p>
 							<InputField

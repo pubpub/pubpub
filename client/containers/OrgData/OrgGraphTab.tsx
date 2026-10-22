@@ -77,7 +77,6 @@ const OrgGraphTab = ({ orgData }: Props) => {
 				title: c.title,
 				pubCount: c.pubCount,
 				authorCount: c.authorCount,
-				dataAccess: c.dataAccess,
 				managers: c.managers?.map((m) => m.name) || [],
 			})),
 			graph: {

@@ -43,6 +43,7 @@ type OrgDetail = {
 	website: string | null;
 	email: string | null;
 	communityCreationEnabled: boolean;
+	kfOrgId: string;
 	isActive: boolean;
 	isPrivate: boolean;
 	domains: string[];
@@ -64,9 +65,11 @@ const Orgs = (props: Props) => {
 	const [createSlug, setCreateSlug] = useState('');
 	const [createTitle, setCreateTitle] = useState('');
 	const [createDescription, setCreateDescription] = useState('');
+	const [createKfOrgId, setCreateKfOrgId] = useState('');
 
 	// Edit form state (superadmin-only fields)
 	const [editSlug, setEditSlug] = useState('');
+	const [editKfOrgId, setEditKfOrgId] = useState('');
 	const [editIsActive, setEditIsActive] = useState(false);
 	const [editIsPrivate, setEditIsPrivate] = useState(false);
 
@@ -98,6 +101,7 @@ const Orgs = (props: Props) => {
 			const org = await apiFetch.get(`/api/orgs/${orgId}`);
 			const o = org as any as OrgDetail;
 			setEditSlug(o.slug);
+			setEditKfOrgId(o.kfOrgId);
 			setEditIsActive(o.isActive);
 			setEditIsPrivate(o.isPrivate);
 			setSelectedOrg(o);
@@ -113,16 +117,18 @@ const Orgs = (props: Props) => {
 				slug: createSlug,
 				title: createTitle,
 				description: createDescription || null,
+				kfOrgId: createKfOrgId.trim(),
 			});
 			setIsCreateOpen(false);
 			setCreateSlug('');
 			setCreateTitle('');
 			setCreateDescription('');
+			setCreateKfOrgId('');
 			await refreshOrgs();
 		} finally {
 			setIsLoading(false);
 		}
-	}, [createSlug, createTitle, createDescription, refreshOrgs]);
+	}, [createSlug, createTitle, createDescription, createKfOrgId, refreshOrgs]);
 
 	const handleSave = useCallback(async () => {
 		if (!selectedOrg) return;
@@ -130,6 +136,7 @@ const Orgs = (props: Props) => {
 		try {
 			await apiFetch.put(`/api/orgs/${selectedOrg.id}`, {
 				slug: editSlug,
+				kfOrgId: editKfOrgId,
 				isActive: editIsActive,
 				isPrivate: editIsPrivate,
 			});
@@ -138,7 +145,7 @@ const Orgs = (props: Props) => {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [selectedOrg, editSlug, editIsActive, editIsPrivate, refreshOrgs, selectOrg]);
+	}, [selectedOrg, editSlug, editKfOrgId, editIsActive, editIsPrivate, refreshOrgs, selectOrg]);
 
 	const handleDelete = useCallback(async () => {
 		if (!selectedOrg) return;
@@ -225,6 +232,17 @@ const Orgs = (props: Props) => {
 						/>
 						<div className="slug-preview">pubpub.org/org/{createSlug || '[slug]'}</div>
 					</FormGroup>
+					<FormGroup
+						label="KF Account"
+						labelInfo="(required)"
+						helperText="The KF Console account ID this org bills to. Several orgs can share one."
+					>
+						<InputGroup
+							value={createKfOrgId}
+							onChange={(e) => setCreateKfOrgId(e.target.value)}
+							placeholder="KF Console account ID"
+						/>
+					</FormGroup>
 					<FormGroup label="Description">
 						<TextArea
 							fill
@@ -241,7 +259,7 @@ const Orgs = (props: Props) => {
 							intent="primary"
 							text="Create"
 							loading={isLoading}
-							disabled={!createSlug || !createTitle}
+							disabled={!createSlug || !createTitle || !createKfOrgId.trim()}
 							onClick={handleCreate}
 						/>
 					</div>
@@ -394,6 +412,16 @@ const Orgs = (props: Props) => {
 								<div className="slug-preview">
 									pubpub.org/org/{editSlug || '[slug]'}
 								</div>
+							</div>
+
+							<div className="detail-section">
+								<div className="section-label">KF Account</div>
+								<InputGroup
+									small
+									value={editKfOrgId}
+									onChange={(e) => setEditKfOrgId(e.target.value)}
+									placeholder="KF Console account ID"
+								/>
 							</div>
 
 							<div className="save-section">

@@ -1,8 +1,9 @@
 import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
 
-import type { SerializedModel } from 'types';
+import type { MemberPermission, SerializedModel } from 'types';
 
 import {
+	AllowNull,
 	BelongsTo,
 	Column,
 	DataType,
@@ -43,6 +44,12 @@ export class OrgMember extends Model<
 	@Index
 	@Column(DataType.UUID)
 	declare userId: string;
+
+	/** Level inherited in every community the org owns. Admins also manage the org itself. */
+	@AllowNull(false)
+	@Default('view')
+	@Column(DataType.ENUM('view', 'edit', 'manage', 'admin'))
+	declare permissions: CreationOptional<MemberPermission>;
 
 	@BelongsTo(() => Org, { onDelete: 'CASCADE', foreignKey: 'orgId' })
 	declare org?: Org;
